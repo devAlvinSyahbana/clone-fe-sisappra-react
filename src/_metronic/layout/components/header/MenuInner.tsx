@@ -122,6 +122,64 @@ export function MenuInner() {
       </MenuInnerWithSub>
 
       <MenuInnerWithSub
+        title='Apps'
+        to='/dashboard'
+        menuPlacement='bottom-start'
+        menuTrigger='click'
+      >
+        {/* PAGES */}
+        <MenuInnerWithSub
+          title='Dashboard'
+          to='/dashboard'
+          icon='/media/icons/duotune/communication/com012.svg'
+          hasArrow={true}
+          menuPlacement='right-start'
+          menuTrigger={`{default:'click', lg: 'hover'}`}
+        >
+          <MenuItem
+            to='/dashboard/dashboard-kepegawaian'
+            title='Dashboard Kepegawaian'
+            hasBullet={true}
+          />
+          <MenuItem
+            to='/dashboard/dashboard-sarana-dan-prasarana'
+            title='Dashboard Kepegawaian'
+            hasBullet={true}
+          />
+          <MenuItem
+            to='/dashboard/dashboard-penegakan-perda-dan-perkada'
+            title='Dashboard Kepegawaian'
+            hasBullet={true}
+          />
+          <MenuItem
+            to='/dashboard/dashboard-ketentraman-dan-ketertiban-umum'
+            title='Dashboard Kepegawaian'
+            hasBullet={true}
+          />
+          <MenuItem
+            to='/dashboard/dashboard-wasdak-protokol-kesehatan'
+            title='Peta Titik Rawan'
+            hasBullet={true}
+          />
+          <MenuItem
+            to='/dashboard/dashboard-wasdak-protokol-kesehatan'
+            title='Peta Titik Reklame'
+            hasBullet={true}
+          />
+          <MenuItem
+            to='/dashboard/dashboard-wasdak-protokol-kesehatan'
+            title='Peta Kejadian'
+            hasBullet={true}
+          />
+          <MenuItem
+            to='/dashboard/dashboard-wasdak-protokol-kesehatan'
+            title='Peta Ploting Anggota'
+            hasBullet={true}
+          />
+        </MenuInnerWithSub>
+      </MenuInnerWithSub>
+
+      <MenuInnerWithSub
         isMega={true}
         title='Mega menu'
         to='/mega-menu'
