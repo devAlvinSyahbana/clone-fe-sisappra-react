@@ -21,13 +21,13 @@ const Topbar: FC = () => {
   return (
     <div className='d-flex align-items-stretch flex-shrink-0'>
       {/* Search */}
-      <div className={clsx('d-flex align-items-stretch', toolbarButtonMarginClass)}>
+      {/* <div className={clsx('d-flex align-items-stretch', toolbarButtonMarginClass)}>
         <Search />
-      </div>
+      </div> */}
       {/* Activities */}
       <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
         {/* begin::Drawer toggle */}
-        <div
+        {/* <div
           className={clsx(
             'btn btn-icon btn-active-light-primary btn-custom',
             toolbarButtonHeightClass
@@ -38,14 +38,14 @@ const Topbar: FC = () => {
             path='/media/icons/duotune/general/gen032.svg'
             className={toolbarButtonIconSizeClass}
           />
-        </div>
+        </div> */}
         {/* end::Drawer toggle */}
       </div>
 
       {/* NOTIFICATIONS */}
       <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
         {/* begin::Menu- wrapper */}
-        <div
+        {/* <div
           className={clsx(
             'btn btn-icon btn-active-light-primary btn-custom',
             toolbarButtonHeightClass
@@ -60,14 +60,14 @@ const Topbar: FC = () => {
             className={toolbarButtonIconSizeClass}
           />
         </div>
-        <HeaderNotificationsMenu />
+        <HeaderNotificationsMenu /> */}
         {/* end::Menu wrapper */}
       </div>
 
       {/* CHAT */}
       <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
         {/* begin::Menu wrapper */}
-        <div
+        {/* <div
           className={clsx(
             'btn btn-icon btn-active-light-primary btn-custom position-relative',
             toolbarButtonHeightClass
@@ -80,14 +80,14 @@ const Topbar: FC = () => {
           />
 
           <span className='bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink'></span>
-        </div>
+        </div> */}
         {/* end::Menu wrapper */}
       </div>
 
       {/* Quick links */}
       <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
         {/* begin::Menu wrapper */}
-        <div
+        {/* <div
           className={clsx(
             'btn btn-icon btn-active-light-primary btn-custom',
             toolbarButtonHeightClass
@@ -102,7 +102,7 @@ const Topbar: FC = () => {
             className={toolbarButtonIconSizeClass}
           />
         </div>
-        <QuickLinks />
+        <QuickLinks /> */}
         {/* end::Menu wrapper */}
       </div>
 

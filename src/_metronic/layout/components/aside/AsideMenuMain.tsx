@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from 'react'
-import {useIntl} from 'react-intl'
-import {KTSVG} from '../../../helpers'
-import {AsideMenuItemWithSub} from './AsideMenuItemWithSub'
-import {AsideMenuItem} from './AsideMenuItem'
+import { useIntl } from 'react-intl'
+import { KTSVG } from '../../../helpers'
+import { AsideMenuItemWithSub } from './AsideMenuItemWithSub'
+import { AsideMenuItem } from './AsideMenuItem'
 
 export function AsideMenuMain() {
   const intl = useIntl()
@@ -13,7 +13,7 @@ export function AsideMenuMain() {
       <AsideMenuItem
         to='/dashboard'
         icon='/media/icons/duotune/art/art002.svg'
-        title={intl.formatMessage({id: 'MENU.DASHBOARD'})}
+        title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
         fontIcon='bi-app-indicator'
       />
       <AsideMenuItem
@@ -22,6 +22,19 @@ export function AsideMenuMain() {
         title='Layout Builder'
         fontIcon='bi-layers'
       />
+      <AsideMenuItemWithSub
+        to='/kepegawaian'
+        title='Kepegawaian'
+        fontIcon='bi-archive'
+        icon='/media/icons/duotune/general/gen022.svg'
+      >
+        <AsideMenuItem to='/kepegawaian/InformasiDataPegawai' title='Informasi Data Pegawai' hasBullet={true} />
+        <AsideMenuItem to='/kepegawaian/HirarkiPegawai' title='Hirarki Pegawai' hasBullet={true} />
+        <AsideMenuItem to='/kepegawaian/LaporanRekapitulasiPegawai' title='Laporan Rekapitulasi Pegawai' hasBullet={true} />
+        <AsideMenuItem to='/kepegawaian/PenyidikPegawaiNegeriSipil' title='Penyidik Pegawai Negeri Sipil (PPNS)' hasBullet={true} />
+        <AsideMenuItem to='/kepegawaian/KehadiranPegawai' title='Kehadiran Pegawai' hasBullet={true} />
+        <AsideMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} />
+      </AsideMenuItemWithSub>
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Crafted</span>
