@@ -4,7 +4,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {KTSVG, toAbsoluteUrl} from '../../../helpers'
 import {useLayout} from '../../core'
-import {Header} from './Header'
+// import {Header} from './Header'
 import {DefaultTitle} from './page-title/DefaultTitle'
 import {Topbar} from './Topbar'
 
@@ -59,7 +59,7 @@ export function HeaderWrapper() {
           {/* begin::Navbar */}
           {header.left === 'menu' && (
             <div className='d-flex align-items-stretch' id='kt_header_nav'>
-              <Header />
+              {/* <Header /> */}
             </div>
           )}
 
