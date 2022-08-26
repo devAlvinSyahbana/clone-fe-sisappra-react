@@ -10,18 +10,50 @@ export function AsideMenuMain() {
 
   return (
     <>
-      <AsideMenuItem
+      <AsideMenuItemWithSub
         to='/dashboard'
         icon='/media/icons/duotune/art/art002.svg'
         title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
         fontIcon='bi-app-indicator'
-      />
-      <AsideMenuItem
-        to='/builder'
-        icon='/media/icons/duotune/general/gen019.svg'
-        title='Layout Builder'
-        fontIcon='bi-layers'
-      />
+      >
+        <AsideMenuItem
+          to='/dashboard/dashboard-kepegawaian'
+          title='Dashboard Kepegawaian'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/dashboard/dashboard-sarana-dan-prasarana'
+          title='Dashboard Sarana dan Prasarana'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/dashboard/dashboard-penegakan-perda-dan-perkada'
+          title='Dashboard Penegakan Perda dan Perkada'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/dashboard/dashboard-ketentraman-dan-ketertiban-umum'
+          title='Dashboard Ketentraman dan Ketertiban Umum'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/dashboard/dashboard-wasdak-protokol-kesehatan'
+          title='Dashboard Wasdak Protokol Kesehatan (PPKM)'
+          hasBullet={true}
+        />
+        <AsideMenuItem to='/dashboard/peta-titik-rawan' title='Peta Titik Rawan' hasBullet={true} />
+        <AsideMenuItem
+          to='/dashboard/peta-titik-reklame'
+          title='Peta Titik Reklame'
+          hasBullet={true}
+        />
+        <AsideMenuItem to='/dashboard/peta-kejadian' title='Peta Kejadian' hasBullet={true} />
+        <AsideMenuItem
+          to='/dashboard/peta-ploting-anggota'
+          title='Peta Ploting Anggota'
+          hasBullet={true}
+        />
+      </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/kepegawaian'
         title='Kepegawaian'
