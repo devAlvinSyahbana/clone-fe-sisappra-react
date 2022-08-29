@@ -67,6 +67,21 @@ export function AsideMenuMain() {
         <AsideMenuItem to='/kepegawaian/KehadiranPegawai' title='Kehadiran Pegawai' hasBullet={true} />
         <AsideMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} />
       </AsideMenuItemWithSub>
+      
+      
+      
+      
+      <AsideMenuItemWithSub
+        to='/sarana_prasarana'
+        title='Sarana & Prasarana'
+        fontIcon='bi-archive'
+        icon='/media/icons/duotune/general/gen022.svg'
+      >
+        <AsideMenuItem to='/sarana_prasarana/SaranaPrasaranaPage' title='Laporan Sarana & Prasarana' hasBullet={true} />
+      </AsideMenuItemWithSub>
+
+     
+     
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Crafted</span>
