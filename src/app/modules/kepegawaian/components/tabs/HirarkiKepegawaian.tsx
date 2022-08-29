@@ -1,11 +1,11 @@
 import React from 'react'
-import {KTSVG, toAbsoluteUrl} from '../../../../_metronic/helpers'
+import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
-import {Dropdown1} from '../../../../_metronic/partials'
+import {Dropdown1} from '../../../../../_metronic/partials'
 import {useLocation} from 'react-router-dom'
 
 
-export function DetailInformasiDataPegawai() {
+export function HirarkiKepegawaian() {
   const location = useLocation()
 
   return (
@@ -26,7 +26,7 @@ export function DetailInformasiDataPegawai() {
               <div className='d-flex flex-column'>
                 <div className='d-flex align-items-center mb-2'>
                   <a href='#' className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
-                    Max Smith
+                    Dummy
                   </a>
                   <a href='#'>
                     <KTSVG
@@ -55,7 +55,7 @@ export function DetailInformasiDataPegawai() {
                       path='/media/icons/duotune/general/gen018.svg'
                       className='svg-icon-4 me-1'
                     />
-                    SF, Bay Area
+                    Dummy
                   </a>
                   <a
                     href='#'
@@ -65,7 +65,7 @@ export function DetailInformasiDataPegawai() {
                       path='/media/icons/duotune/communication/com011.svg'
                       className='svg-icon-4 me-1'
                     />
-                    max@kt.com
+                    Dummy
                   </a>
                 </div>
               </div>
@@ -172,9 +172,9 @@ export function DetailInformasiDataPegawai() {
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/projects' && 'active')
+                  (location.pathname === '/kepegawaian/DataKeluarga' && 'active')
                 }
-                to='/crafted/pages/profile/projects'
+                to='/kepegawaian/DataKeluarga'
               >
                 Data Keluarga
               </Link>
@@ -183,9 +183,9 @@ export function DetailInformasiDataPegawai() {
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/campaigns' && 'active')
+                  (location.pathname === '/kepegawaian/Pendidikan' && 'active')
                 }
-                to='/crafted/pages/profile/campaigns'
+                to='/kepegawaian/Pendidikan'
               >
                 Pendidikan
               </Link>
@@ -194,9 +194,9 @@ export function DetailInformasiDataPegawai() {
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/documents' && 'active')
+                  (location.pathname === '/kepegawaian/DataKepegawaian' && 'active')
                 }
-                to='/crafted/pages/profile/documents'
+                to='/kepegawaian/DataKepegawaian'
               >
                 Data Kepegawaian
               </Link>
@@ -205,9 +205,9 @@ export function DetailInformasiDataPegawai() {
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/connections' && 'active')
+                  (location.pathname === '/kepegawaian/HirarkiKepegawaian' && 'active')
                 }
-                to='/crafted/pages/profile/connections'
+                to='/kepegawaian/HirarkiKepegawaian'
               >
                 Hirarki Kepegawaian
               </Link>
