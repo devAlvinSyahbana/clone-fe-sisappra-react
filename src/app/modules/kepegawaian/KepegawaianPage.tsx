@@ -2,12 +2,13 @@ import React from 'react'
 import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 import { InformasiDataPegawai } from './components/InformasiDataPegawai'
-import { FormInformasiDataPegawai } from './components/FormInformasiDataPegawai'
+import { DetailInformasiDataPegawai } from './components/DetailInformasiDataPegawai'
 import { HirarkiPegawai } from './components/HirarkiPegawai'
 import { LaporanRekapitulasiPegawai } from './components/LaporanRekapitulasiPegawai'
 import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSipil'
 import { KehadiranPegawai } from './components/KehadiranPegawai'
 import { JadwalPiket } from './components/JadwalPiket'
+import { DataPegawaiHeader } from './DataPegawaiHeader'
 
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
@@ -30,7 +31,7 @@ const KepegawaianPage: React.FC = () => {
     <Routes>
       <Route
         element={
-          <>
+          <>          
             <Outlet />
           </>
         }
@@ -45,11 +46,11 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='FormInformasiDataPegawai'
+          path='DetailInformasiDataPegawai'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Tambah Informasi Data Pegawai</PageTitle>
-              <FormInformasiDataPegawai />
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Informasi Data Pegawai</PageTitle>
+              <DetailInformasiDataPegawai />
             </>
           }
         />
