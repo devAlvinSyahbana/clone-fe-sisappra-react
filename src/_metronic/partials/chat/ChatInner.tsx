@@ -13,7 +13,7 @@ import {
 type Props = {
   isDrawer?: boolean
 }
-
+<h5>bulohhhhh</h5>
 const bufferMessages = defaultMessages
 
 const ChatInner: FC<Props> = ({isDrawer = false}) => {
