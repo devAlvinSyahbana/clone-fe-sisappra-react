@@ -1,15 +1,17 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
-import {KTSVG, toAbsoluteUrl} from '../../../_metronic/helpers'
+import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
-import {Dropdown1} from '../../../_metronic/partials'
+import {Dropdown1} from '../../../../../_metronic/partials'
 import {useLocation} from 'react-router-dom'
 
-const DataPegawaiHeader: React.FC = () => {
+
+export function DataKepegawaian() {
   const location = useLocation()
 
   return (
-    <div className='card mb-5 mb-xl-10'>
+    <div className={`card`}>
+      {/* begin::Body */}
+      <div className='card mb-5 mb-xl-10'>
       <div className='card-body pt-9 pb-0'>
         <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
           <div className='me-7 mb-4'>
@@ -24,7 +26,7 @@ const DataPegawaiHeader: React.FC = () => {
               <div className='d-flex flex-column'>
                 <div className='d-flex align-items-center mb-2'>
                   <a href='#' className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
-                    Max Smith
+                    Dummy
                   </a>
                   <a href='#'>
                     <KTSVG
@@ -43,7 +45,7 @@ const DataPegawaiHeader: React.FC = () => {
                       path='/media/icons/duotune/communication/com006.svg'
                       className='svg-icon-4 me-1'
                     />
-                    Developer
+                    Dummy
                   </a>
                   <a
                     href='#'
@@ -53,7 +55,7 @@ const DataPegawaiHeader: React.FC = () => {
                       path='/media/icons/duotune/general/gen018.svg'
                       className='svg-icon-4 me-1'
                     />
-                    SF, Bay Area
+                    Dummy
                   </a>
                   <a
                     href='#'
@@ -63,12 +65,12 @@ const DataPegawaiHeader: React.FC = () => {
                       path='/media/icons/duotune/communication/com011.svg'
                       className='svg-icon-4 me-1'
                     />
-                    max@kt.com
+                    Dummy
                   </a>
                 </div>
               </div>
 
-              <div className='d-flex my-4'>
+              {/* <div className='d-flex my-4'>
                 <a href='#' className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
                   <KTSVG
                     path='/media/icons/duotune/arrows/arr012.svg'
@@ -100,7 +102,7 @@ const DataPegawaiHeader: React.FC = () => {
                   </button>
                   <Dropdown1 />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className='d-flex flex-wrap flex-stack'>
@@ -108,29 +110,21 @@ const DataPegawaiHeader: React.FC = () => {
                 <div className='d-flex flex-wrap'>
                   <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                     <div className='d-flex align-items-center'>
-                      <KTSVG
-                        path='/media/icons/duotune/arrows/arr066.svg'
-                        className='svg-icon-3 svg-icon-success me-2'
-                      />
-                      <div className='fs-2 fw-bolder'>4500$</div>
+                      <div className='fs-2 fw-bolder'>Dummy</div>
                     </div>
 
-                    <div className='fw-bold fs-6 text-gray-400'>Earnings</div>
+                    <div className='fw-bold fs-6 text-gray-400'>Jumlah Anggota Keluarga</div>
                   </div>
 
                   <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                     <div className='d-flex align-items-center'>
-                      <KTSVG
-                        path='/media/icons/duotune/arrows/arr065.svg'
-                        className='svg-icon-3 svg-icon-danger me-2'
-                      />
-                      <div className='fs-2 fw-bolder'>75</div>
+                      <div className='fs-2 fw-bolder'>Dummy</div>
                     </div>
 
-                    <div className='fw-bold fs-6 text-gray-400'>Projects</div>
+                    <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
                   </div>
 
-                  <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                  {/* <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                     <div className='d-flex align-items-center'>
                       <KTSVG
                         path='/media/icons/duotune/arrows/arr066.svg'
@@ -140,11 +134,11 @@ const DataPegawaiHeader: React.FC = () => {
                     </div>
 
                     <div className='fw-bold fs-6 text-gray-400'>Success Rate</div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
-              <div className='d-flex align-items-center w-200px w-sm-300px flex-column mt-3'>
+              {/* <div className='d-flex align-items-center w-200px w-sm-300px flex-column mt-3'>
                 <div className='d-flex justify-content-between w-100 mt-auto mb-2'>
                   <span className='fw-bold fs-6 text-gray-400'>Profile Compleation</span>
                   <span className='fw-bolder fs-6'>50%</span>
@@ -156,7 +150,7 @@ const DataPegawaiHeader: React.FC = () => {
                     style={{width: '50%'}}
                   ></div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -167,62 +161,62 @@ const DataPegawaiHeader: React.FC = () => {
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/overview' && 'active')
+                  (location.pathname === '/kepegawaian/DataPribadi' && 'active')
                 }
-                to='/crafted/pages/profile/overview'
+                to='/kepegawaian/DataPribadi'
               >
-                Overview
+                Data Pribadi
               </Link>
             </li>
             <li className='nav-item'>
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/projects' && 'active')
+                  (location.pathname === '/kepegawaian/DataKeluarga' && 'active')
                 }
-                to='/crafted/pages/profile/projects'
+                to='/kepegawaian/DataKeluarga'
               >
-                Projects
+                Data Keluarga
               </Link>
             </li>
             <li className='nav-item'>
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/campaigns' && 'active')
+                  (location.pathname === '/kepegawaian/Pendidikan' && 'active')
                 }
-                to='/crafted/pages/profile/campaigns'
+                to='/kepegawaian/Pendidikan'
               >
-                Campaigns
+                Pendidikan
               </Link>
             </li>
             <li className='nav-item'>
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/documents' && 'active')
+                  (location.pathname === '/kepegawaian/DataKepegawaian' && 'active')
                 }
-                to='/crafted/pages/profile/documents'
+                to='/kepegawaian/DataKepegawaian'
               >
-                Documents
+                Data Kepegawaian
               </Link>
             </li>
             <li className='nav-item'>
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
-                  (location.pathname === '/crafted/pages/profile/connections' && 'active')
+                  (location.pathname === '/kepegawaian/HirarkiKepegawaian' && 'active')
                 }
-                to='/crafted/pages/profile/connections'
+                to='/kepegawaian/HirarkiKepegawaian'
               >
-                Connections
+                Hirarki Kepegawaian
               </Link>
             </li>
           </ul>
         </div>
       </div>
     </div>
+      {/* end::Body */}
+    </div>
   )
 }
-
-export {DataPegawaiHeader}

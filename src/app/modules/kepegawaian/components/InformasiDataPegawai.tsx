@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import { BrowserRouter as Router, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import DataTable from 'react-data-table-component';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 export function InformasiDataPegawai() {
 
   useEffect(() => {
-    fetchUsers(1); // fetch page 1 of users
-
+    fetchUsers(1);
   }, []);
 
   const LoadingAnimation = (props: any) => {
@@ -43,6 +45,42 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'email',
     },
+    {
+      name: 'Aksi',
+      sortable: false,
+      text: "Action",
+      className: "action",
+      align: "left",
+      cell: (record: any) => {
+        return (
+          <Fragment>
+
+            <div className="mb-2">
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size="sm"
+                    variant="light"
+                    title="Aksi">
+                    <Dropdown.Item>
+                      <Link to="/kepegawaian/DetailInformasiDataPegawai">
+                        Detail
+                      </Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item href="#/action-2">Ubah</Dropdown.Item>
+                    <Dropdown.Item href="#/action-2">Hapus</Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
+        );
+      },
+    },
+
   ];
 
   const [data, setData] = useState([]);
@@ -138,19 +176,17 @@ export function InformasiDataPegawai() {
             </button>
           </Link>
         </div>
-        <div className='col-md-6 col-lg-6 col-sm-12 d-flex justify-content-end'>
-          <Link to='/kepegawaian/DetailInformasiDataPegawai'>
-            <button className='btn btn-secondary'>
-              <i className="fa-solid fa-download"></i>
-              Excel
-            </button>
-          </Link>
+        <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
+          <DropdownButton id="dropdown-basic-button" title="Unduh" variant="light">
+            <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">PDF</Dropdown.Item>
+          </DropdownButton>
         </div>
       </div>
 
       <div className='table-responsive mt-5 ms-5 me-5'>
         <DataTable
-          title="Users"
+          title="Data Kepegawaian"
           columns={columns}
           data={data}
           progressPending={loading}
@@ -169,6 +205,10 @@ export function InformasiDataPegawai() {
   )
 }
 function orderBy(data: never[], sortField: any, sortDirection: any): React.SetStateAction<never[]> {
+  throw new Error('Function not implemented.');
+}
+
+function onEdit(record: any) {
   throw new Error('Function not implemented.');
 }
 
