@@ -2,12 +2,17 @@ import React from 'react'
 import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 import { InformasiDataPegawai } from './components/InformasiDataPegawai'
-import { FormInformasiDataPegawai } from './components/FormInformasiDataPegawai'
+import { DetailInformasiDataPegawai } from './components/DetailInformasiDataPegawai'
 import { HirarkiPegawai } from './components/HirarkiPegawai'
 import { LaporanRekapitulasiPegawai } from './components/LaporanRekapitulasiPegawai'
 import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSipil'
 import { KehadiranPegawai } from './components/KehadiranPegawai'
 import { JadwalPiket } from './components/JadwalPiket'
+import { DataPribadi } from './components/tabs/DataPribadi'
+import { DataKeluarga } from './components/tabs/DataKeluarga'
+import { Pendidikan } from './components/tabs/Pendidikan'
+import { DataKepegawaian } from './components/tabs/DataKepegawaian'
+import { HirarkiKepegawaian } from './components/tabs/HirarkiKepegawaian'
 
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
@@ -30,7 +35,7 @@ const KepegawaianPage: React.FC = () => {
     <Routes>
       <Route
         element={
-          <>
+          <>          
             <Outlet />
           </>
         }
@@ -45,11 +50,11 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='FormInformasiDataPegawai'
+          path='DetailInformasiDataPegawai'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Tambah Informasi Data Pegawai</PageTitle>
-              <FormInformasiDataPegawai />
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Informasi Data Pegawai</PageTitle>
+              <DetailInformasiDataPegawai />
             </>
           }
         />
@@ -98,6 +103,52 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
+        <Route
+          path='DataPribadi'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Pribadi</PageTitle>
+              <DataPribadi/>
+            </>
+          }
+        />
+        <Route
+          path='DataKeluarga'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Keluarga</PageTitle>
+              <DataKeluarga/>
+            </>
+          }
+        />
+        <Route
+          path='Pendidikan'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Pendidikan</PageTitle>
+              <Pendidikan/>
+            </>
+          }
+        />
+        <Route
+          path='DataKepegawaian'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Kepegawaian</PageTitle>
+              <DataKepegawaian/>
+            </>
+          }
+        />
+        <Route
+          path='HirarkiKepegawaian'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Hirarki Kepegawaian</PageTitle>
+              <HirarkiKepegawaian/>
+            </>
+          }
+        />
+        
         <Route index element={<Navigate to='/kepegawaian' />} />
       </Route>
     </Routes>
