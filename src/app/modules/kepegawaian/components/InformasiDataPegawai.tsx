@@ -165,9 +165,6 @@ export function InformasiDataPegawai() {
                 <option value="3">PJLP</option>
               </select>
             </div>
-            {showResults.isShowed && showResults.val === "1" ? (<>
-              punten
-            </>) : null}
           </div>
           <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12">
             <label htmlFor="" className="mb-3">Nama</label>
@@ -187,42 +184,53 @@ export function InformasiDataPegawai() {
               placeholder="NRK"
             />
           </div>
-          <div
-            className="col-xxl-6 col-lg-6 col-md-6 col-sm-12"
-            id="fil_nip"
-          >
-            <label htmlFor="" className="mb-3">NIP</label>
-            <input
-              type="text"
-              className="form-control form-control form-control-solid"
-              name="tags"
-              placeholder="NIP"
-            />
-          </div>
-          <div
-            className="col-xxl-6 col-lg-6 col-md-6 col-sm-12"
-            id="fil_nptt"
-          >
-            <label htmlFor="" className="mb-3">NPTT</label>
-            <input
-              type="text"
-              className="form-control form-control form-control-solid"
-              name="tags"
-              placeholder="NPTT"
-            />
-          </div>
-          <div
-            className="col-xxl-6 col-lg-6 col-md-6 col-sm-12"
-            id="fil_npjlp"
-          >
-            <label htmlFor="" className="mb-3">NPJLP</label>
-            <input
-              type="text"
-              className="form-control form-control form-control-solid"
-              name="tags"
-              placeholder="NPJLP"
-            />
-          </div>
+
+          {showResults.isShowed && showResults.val === "1" ? (<>
+            <div
+              className="col-xxl-6 col-lg-6 col-md-6 col-sm-12"
+              id="fil_nip"
+            >
+              <label htmlFor="" className="mb-3">NIP</label>
+              <input
+                type="text"
+                className="form-control form-control form-control-solid"
+                name="tags"
+                placeholder="NIP"
+              />
+            </div>
+          </>) : null
+            ||
+            showResults.isShowed && showResults.val === "2" ? (<>
+              <div
+                className="col-xxl-6 col-lg-6 col-md-6 col-sm-12"
+                id="fil_nptt"
+              >
+                <label htmlFor="" className="mb-3">NPTT</label>
+                <input
+                  type="text"
+                  className="form-control form-control form-control-solid"
+                  name="tags"
+                  placeholder="NPTT"
+                />
+              </div>
+            </>) : null
+              ||
+              showResults.isShowed && showResults.val === "3" ? (<>
+                <div
+                  className="col-xxl-6 col-lg-6 col-md-6 col-sm-12"
+                  id="fil_npjlp"
+                >
+                  <label htmlFor="" className="mb-3">NPJLP</label>
+                  <input
+                    type="text"
+                    className="form-control form-control form-control-solid"
+                    name="tags"
+                    placeholder="NPJLP"
+                  />
+                </div>
+              </>) : null
+          }
+
           <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12">
             <div className="form-group">
               <label htmlFor="" className="mb-3"
@@ -237,41 +245,6 @@ export function InformasiDataPegawai() {
                 <option value="2">Tidak</option>
               </select>
             </div>
-          </div>
-        </div>
-      </div>
-      <div className="row g-8 mt-2 ms-5 me-5">
-        <div className='col-12'>
-          <div className='form-group'>
-            <label htmlFor="" className='mb-3'>Status Kepegawaian</label>
-            <select className="form-select form-select-solid" aria-label="Select example">
-              <option>Pilih</option>
-              <option value="1">PNS</option>
-              <option value="2">PTT</option>
-              <option value="3">PJLP</option>
-            </select>
-          </div>
-        </div>
-        <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12">
-          <label htmlFor="" className='mb-3'>Nama</label>
-          <input type="text" className="form-control form-control form-control-solid" name="tags" placeholder="Nama" />
-        </div>
-        <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12">
-          <label htmlFor="" className='mb-3'>NRK</label>
-          <input type="text" className="form-control form-control form-control-solid" name="tags" placeholder="NRK" />
-        </div>
-        <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12">
-          <label htmlFor="" className='mb-3'>NIP</label>
-          <input type="text" className="form-control form-control form-control-solid" name="tags" placeholder="NIP" />
-        </div>
-        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-          <div className='form-group'>
-            <label htmlFor="" className='mb-3'>Mendekati Pensiun</label>
-            <select className="form-select form-select-solid" aria-label="Select example">
-              <option>Pilih</option>
-              <option value="1">Ya</option>
-              <option value="2">Tidak</option>
-            </select>
           </div>
         </div>
       </div>
