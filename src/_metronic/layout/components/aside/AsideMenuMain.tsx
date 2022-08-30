@@ -89,7 +89,7 @@ export function AsideMenuMain() {
         fontIcon='bi-archive'
         icon='/media/icons/duotune/general/gen022.svg'
       >
-        <AsideMenuItem to='/sarana_prasarana/SaranaPrasaranaPage' title='Laporan Sarana & Prasarana' hasBullet={true} />
+        <AsideMenuItem to='/sarana_prasarana/LaporanSaranaPrasarana' title='Laporan Sarana & Prasarana' hasBullet={true} />
       </AsideMenuItemWithSub>
 
      
