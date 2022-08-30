@@ -55,6 +55,18 @@ export function AsideMenuMain() {
         />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
+        to='/pelaporan'
+        title='Pelaporan'
+        fontIcon='bi-archive'
+        icon='/media/icons/duotune/general/gen022.svg'
+      >
+        <AsideMenuItem to='/pelaporan/LaporanKegiatan' title='Laporan Kegiatan' hasBullet={true} />
+        <AsideMenuItem to='/pelaporan/LaporanKejadian' title='Laporan Kejadian' hasBullet={true} />
+        <AsideMenuItem to='/pelaporan/LaporanPengawasan' title='Laporan Pengawasan' hasBullet={true} />
+        <AsideMenuItem to='/pelaporan/LaporanTamuDaerah' title='Laporan Tamu Daerah' hasBullet={true} />
+        <AsideMenuItem to='/pelaporan/LaporanPPNS' title='Laporan PPNS' hasBullet={true} />
+      </AsideMenuItemWithSub>
+      <AsideMenuItemWithSub
         to='/kepegawaian'
         title='Kepegawaian'
         fontIcon='bi-archive'

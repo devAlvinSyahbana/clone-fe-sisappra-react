@@ -10,6 +10,7 @@ import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
+  const PelaporanPage = lazy(() => import('../modules/pelaporan/PelaporanPage'))
   const KepegawaianPage = lazy(() => import('../modules/kepegawaian/KepegawaianPage'))
   const SaranaPrasaranaPage = lazy(() => import('../modules/sarana_prasarana/SaranaPrasaranaPage'))
   const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
@@ -29,6 +30,14 @@ const PrivateRoutes = () => {
         <Route path='builder' element={<BuilderPageWrapper />} />
         <Route path='menu-test' element={<MenuTestPage />} />
         {/* Lazy Modules */}
+        <Route
+          path='pelaporan/*'
+          element={
+            <SuspensedView>
+              <PelaporanPage />
+            </SuspensedView>
+          }
+        />
         <Route
           path='kepegawaian/*'
           element={
