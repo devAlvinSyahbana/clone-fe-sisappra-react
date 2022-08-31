@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export function TambahLaporanKegiatan() {
   return (
@@ -10,22 +11,9 @@ export function TambahLaporanKegiatan() {
               <h1
                 className="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
               </h1>
-              <ul className="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                <li className="breadcrumb-item text-muted">
-                  <a href="../../demo1/dist/index.html"
-                    className="text-muted text-hover-primary">Modul</a>
-                </li>
-                <li className="breadcrumb-item">
-                  <span className="bullet bg-gray-400 w-5px h-2px"></span>
-                </li>
-                <li className="breadcrumb-item text-muted">Pelaporan</li>
-                <li className="breadcrumb-item">
-                  <span className="bullet bg-gray-400 w-5px h-2px"></span>
-                </li>
-                <li className="breadcrumb-item text-muted">
-                  Tambah Laporan Kegiatan
-                </li>
-              </ul>
+              <h1 className="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                Isi Data Tambah Laporan Kegiatan
+              </h1>
             </div>
           </div>
         </div>
@@ -100,21 +88,24 @@ export function TambahLaporanKegiatan() {
                       <div className="col-md-2">
                         <label className="col-form-label fw-semibold fs-6">Kegiatan</label>
                       </div>
-                      <div className="col-md-4">
-                        <input type="text"
-                          className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"> </input>
-                      </div>
                     </div>
                   </div>
                 </form>
               </div>
               <div className="card-footer">
                 <div className="d-grid gap-2 d-md-flex justify-content-md-center">
-                  <a href="../../demo1/dist/sisappra/laporan/laporan-kegiatan/read.html"
-                    className="btn btn-secondary"><i className="fa-solid fa-arrow-left"></i>
-                    Kembali</a>
-                  <a href="./components/LaporanKegiatan" className="btn btn-primary"><i className="fa-solid fa-paper-plane"></i>
-                    Simpan</a>
+                  <Link to="/pelaporan/LaporanKegiatan">
+                    <button className="btn btn-secondary">
+                    <i className="fa-solid fa-arrow-left"></i>
+                    Kembali
+                    </button>
+                    </Link>
+                    <Link to="/pelaporan/LaporanKegiatan">
+                      <button className="btn btn-primary">
+                      <i className="fa-solid fa-paper-plane"></i>
+                      Simpan
+                      </button>
+                    </Link>
                 </div>
               </div>
             </div>
@@ -122,5 +113,5 @@ export function TambahLaporanKegiatan() {
         </div>
       </div>
       </div>
-      )
+  )
 }
