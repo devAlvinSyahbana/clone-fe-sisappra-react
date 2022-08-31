@@ -5,7 +5,7 @@ import { LaporanSaranaPrasarana } from './components/LaporanSaranaPrasarana'
 
 const sarana_prasaranaBreadCrumbs: Array<PageLink> = [
   {
-    title: 'sarana_prasarana',
+    title: 'sarana & prasarana',
     path: '/sarana_prasarana/LaporanSaranaPrasarana',
     isSeparator: false,
     isActive: false,
@@ -18,12 +18,12 @@ const sarana_prasaranaBreadCrumbs: Array<PageLink> = [
   },
 ]
 
-const SaranaPrasaranaPage : React.FC = () => {
+const SaranaPrasaranaPage: React.FC = () => {
   return (
     <Routes>
       <Route
         element={
-          <>
+          <>          
             <Outlet />
           </>
         }
@@ -37,6 +37,7 @@ const SaranaPrasaranaPage : React.FC = () => {
             </>
           }
         />
+        
         <Route index element={<Navigate to='/sarana_prasarana' />} />
       </Route>
     </Routes>
