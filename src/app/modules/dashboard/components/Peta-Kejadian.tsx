@@ -1,9 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FC} from 'react'
 import '../Layout.css'
+import jsonPetaKejadian from '../maps/peta-general.json'
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
 
 function PetaKejadian() {
+  const filterTempat = jsonPetaKejadian.filter(
+    (petaKejadian) => petaKejadian.address.country === 'Italy'
+  )
+
   return (
     <div className='card card-flush'>
       <div className='card-body'>
@@ -12,26 +17,26 @@ function PetaKejadian() {
             <div className='row'>
               <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
                 <div className='card card-bordered'>
-                  <MapContainer center={[-6.183216, 106.830378]} zoom={50} scrollWheelZoom={true}>
+                  <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                     />
-                    <Marker position={[-6.2, 106.816666]}>
-                      <Popup>
-                        Peta Ploting <br /> Anggota
-                      </Popup>
-                    </Marker>
-                    <Marker position={[-6.183339, 106.830137]}>
-                      <Popup>
-                        Peta Ploting <br /> Anggota2
-                      </Popup>
-                    </Marker>
-                    <Marker position={[-6.182993, 106.830782]}>
-                      <Popup>
-                        Peta Ploting <br /> Anggota3
-                      </Popup>
-                    </Marker>
+
+                    {filterTempat.map((petaKejadian) => (
+                      <Marker
+                        key={petaKejadian.id}
+                        position={[petaKejadian.gps.latitude, petaKejadian.gps.longitude]}
+                      >
+                        <Popup position={[petaKejadian.gps.latitude, petaKejadian.gps.longitude]}>
+                          <div>
+                            <h2>{'Nama : ' + petaKejadian.name}</h2>
+                            <p>{'Status : ' + petaKejadian.status}</p>
+                            <p>{'Number of Charging Area : ' + petaKejadian.stallCount}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))}
                   </MapContainer>
                 </div>
               </div>

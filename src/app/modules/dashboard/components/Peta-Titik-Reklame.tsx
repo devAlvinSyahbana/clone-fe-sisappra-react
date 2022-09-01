@@ -1,9 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FC} from 'react'
 import '../Layout.css'
+import jsonpetatitikreklame from '../maps/peta-general.json'
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
 
 function PetaTitikReklame() {
+  const filterTempat = jsonpetatitikreklame.filter(
+    (petatitikreklame) => petatitikreklame.address.country === 'Italy'
+  )
+
   return (
     <div className='card card-flush'>
       <div className='card-body'>
@@ -12,16 +17,28 @@ function PetaTitikReklame() {
             <div className='row'>
               <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
                 <div className='card card-bordered'>
-                  <MapContainer center={[-6.183216, 106.830378]} zoom={20} scrollWheelZoom={true}>
+                  <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                     />
-                    <Marker position={[-6.183216, 106.830378]}>
-                      <Popup>
-                        Peta Titik <br /> Reklame
-                      </Popup>
-                    </Marker>
+
+                    {filterTempat.map((petatitikreklame) => (
+                      <Marker
+                        key={petatitikreklame.id}
+                        position={[petatitikreklame.gps.latitude, petatitikreklame.gps.longitude]}
+                      >
+                        <Popup
+                          position={[petatitikreklame.gps.latitude, petatitikreklame.gps.longitude]}
+                        >
+                          <div>
+                            <h2>{'Nama : ' + petatitikreklame.name}</h2>
+                            <p>{'Status : ' + petatitikreklame.status}</p>
+                            <p>{'Number of Charging Area : ' + petatitikreklame.stallCount}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))}
                   </MapContainer>
                 </div>
               </div>

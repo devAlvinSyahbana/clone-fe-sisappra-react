@@ -1,9 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FC} from 'react'
 import '../Layout.css'
+import jsonpetaTitikRawan from '../maps/peta-general.json'
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
 
 function PetaTitikRawan() {
+  const filterTempat = jsonpetaTitikRawan.filter(
+    (petaTitikRawan) => petaTitikRawan.address.country === 'Italy'
+  )
+
   return (
     <div className='card card-flush'>
       <div className='card-body'>
@@ -11,17 +16,53 @@ function PetaTitikRawan() {
           <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
             <div className='row'>
               <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
+                <div className='button-group'>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Bencana
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Kebakaran
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    PKL
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    PMKS
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Politik
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Tramtibum
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
                 <div className='card card-bordered'>
-                  <MapContainer center={[-6.183216, 106.830378]} zoom={20} scrollWheelZoom={true}>
+                  <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                     />
-                    <Marker position={[-6.183216, 106.830378]}>
-                      <Popup>
-                        Data Titik Rawan <br /> PMKS
-                      </Popup>
-                    </Marker>
+
+                    {filterTempat.map((petaTitikRawan) => (
+                      <Marker
+                        key={petaTitikRawan.id}
+                        position={[petaTitikRawan.gps.latitude, petaTitikRawan.gps.longitude]}
+                      >
+                        <Popup
+                          position={[petaTitikRawan.gps.latitude, petaTitikRawan.gps.longitude]}
+                        >
+                          <div>
+                            <h2>{'Nama : ' + petaTitikRawan.name}</h2>
+                            <p>{'Status : ' + petaTitikRawan.status}</p>
+                            <p>{'Number of Charging Area : ' + petaTitikRawan.stallCount}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))}
                   </MapContainer>
                 </div>
               </div>
