@@ -5,8 +5,9 @@ import DataTable from 'react-data-table-component';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const LOGIN_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
+export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 
 export function LaporanSaranaPrasarana() {
 
@@ -31,31 +32,37 @@ export function LaporanSaranaPrasarana() {
   const columns = [
     {
       name: 'Jenis Sarana & Prasarana',
-      selector: (row: any) => row.first_name,
+      selector: (row: any) => row.jenis_sarana_prasarana,
       sortable: true,
       sortField: 'jenis_sarana_prasarana',
     },
     {
       name: 'Status Sarana & Prasarana',
-      selector: (row: any) => row.last_name,
+      selector: (row: any) => row.status_sarana_prasarana,
       sortable: true,
       sortField: 'status_sarana_prasarana',
     },
     {
       name: 'Jumlah',
-      selector: (row: any) => row.email,
+      selector: (row: any) => row.jumlah,
       sortable: true,
       sortField: 'jumlah',
     },
     {
+      name: 'Kondisi',
+      selector: (row: any) => row.kondisi,
+      sortable: true,
+      sortField: 'kondisi',
+    },
+    {
       name: 'Keterangan',
-      selector: (row: any) => row.email,
+      selector: (row: any) => row.keterangan,
       sortable: true,
       sortField: 'keterangan',
     },
     {
       name: 'Dokumentasi',
-      selector: (row: any) => row.email,
+      selector: (row: any) => row.dokumentasi,
       sortable: true,
       sortField: 'dokumentasi',
     },
@@ -80,12 +87,12 @@ export function LaporanSaranaPrasarana() {
                     variant="light"
                     title="Aksi">
                     <Dropdown.Item>
-                      <Link to="/sarana_prasarana/LaporanSaranaPrasarana">
+                      <Link to="/sarana-prasarana/LaporanSaranaPrasarana">
                         Detail
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">Ubah</Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">Hapus</Dropdown.Item>
+                    <Dropdown.Item href="#">Ubah</Dropdown.Item>
+                    <Dropdown.Item href="#">Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -101,17 +108,23 @@ export function LaporanSaranaPrasarana() {
   const [loading, setLoading] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
+   
+  const [temp, setTemp] = useState([]);
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const {data} = await axios.get(`${LOGIN_URL}/find`);
-    console.log('cek response api:',data)
+    const value = await axios.get(SARANA_PRASARANA_URL + "/find");
+
+    setTemp(value.data.data);
+    console.log('cek response api:',temp);
 
     
     const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`);
     setData(response.data.data);
+   
     setTotalRows(response.data.total);
     setLoading(false);
+    console.log('cek ahhh :' ,data);
     return [data, setData] as const;
   };
 
@@ -122,7 +135,7 @@ export function LaporanSaranaPrasarana() {
   const handlePerRowsChange = async (newPerPage: any, page: any) => {
     setLoading(true);
 
-    const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${newPerPage}&delay=1`);
+    const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${newPerPage}delay=1`);
 
     setData(response.data.data);
     setPerPage(newPerPage);
@@ -200,7 +213,14 @@ export function LaporanSaranaPrasarana() {
             </button>
           </Link>
         </div>
+        
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
+          <Link to='#i'>
+            <button className='btn btn-primary'>
+              <i className="fa-solid fa-plus"></i>
+              Tambah
+            </button>
+          </Link>
           <DropdownButton id="dropdown-basic-button" title="Unduh" variant="light">
             <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
             <Dropdown.Item href="#/action-2">PDF</Dropdown.Item>
@@ -208,7 +228,12 @@ export function LaporanSaranaPrasarana() {
         </div>
       </div>
       <div className='table-responsive mt-5 ms-5 me-5'>
-        <DataTable
+      <DataTable
+            columns={columns}
+            data={temp}
+            pagination
+        />
+        {/* <DataTable
           columns={columns}
           data={data}
           progressPending={loading}
@@ -220,7 +245,7 @@ export function LaporanSaranaPrasarana() {
           onSort={handleSort}
           onChangeRowsPerPage={handlePerRowsChange}
           onChangePage={handlePageChange}
-        />
+        /> */}
       </div>
       {/* end::Body */}
     </div>
