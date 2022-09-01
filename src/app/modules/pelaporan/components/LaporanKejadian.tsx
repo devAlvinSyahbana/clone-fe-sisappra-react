@@ -98,21 +98,6 @@ export function LaporanKejadian() {
               <h1 className="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
                 Daftar Laporan Kejadian
               </h1>
-              <ul className="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                <li className="breadcrumb-item text-muted">
-                  <a href="../../demo1/dist/index.html" className="text-muted text-hover-primary">Modul</a>
-                </li>
-                <li className="breadcrumb-item">
-                  <span className="bullet bg-gray-400 w-5px h-2px"></span>
-                </li>
-                <li className="breadcrumb-item text-muted">Pelaporan</li>
-                <li className="breadcrumb-item">
-                  <span className="bullet bg-gray-400 w-5px h-2px"></span>
-                </li>
-                <li className="breadcrumb-item text-muted">
-                  Daftar Laporan Kejadian
-                </li>
-              </ul>
             </div>
           </div>
         </div>
