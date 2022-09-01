@@ -8,7 +8,11 @@ import { LaporanRekapitulasiPegawai } from './components/LaporanRekapitulasiPega
 import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSipil'
 import { KehadiranPegawai } from './components/KehadiranPegawai'
 import { JadwalPiket } from './components/JadwalPiket'
-import { DataPegawaiHeader } from './DataPegawaiHeader'
+import { DataPribadi } from './components/tabs/DataPribadi'
+import { DataKeluarga } from './components/tabs/DataKeluarga'
+import { Pendidikan } from './components/tabs/Pendidikan'
+import { DataKepegawaian } from './components/tabs/DataKepegawaian'
+import { HirarkiKepegawaian } from './components/tabs/HirarkiKepegawaian'
 
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
@@ -99,6 +103,52 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
+        <Route
+          path='DataPribadi'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Pribadi</PageTitle>
+              <DataPribadi/>
+            </>
+          }
+        />
+        <Route
+          path='DataKeluarga'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Keluarga</PageTitle>
+              <DataKeluarga/>
+            </>
+          }
+        />
+        <Route
+          path='Pendidikan'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Pendidikan</PageTitle>
+              <Pendidikan/>
+            </>
+          }
+        />
+        <Route
+          path='DataKepegawaian'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Kepegawaian</PageTitle>
+              <DataKepegawaian/>
+            </>
+          }
+        />
+        <Route
+          path='HirarkiKepegawaian'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Hirarki Kepegawaian</PageTitle>
+              <HirarkiKepegawaian/>
+            </>
+          }
+        />
+        
         <Route index element={<Navigate to='/kepegawaian' />} />
       </Route>
     </Routes>
