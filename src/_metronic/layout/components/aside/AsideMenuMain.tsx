@@ -64,7 +64,6 @@ export function AsideMenuMain() {
         <AsideMenuItem to='/pelaporan/LaporanKejadian' title='Laporan Kejadian' hasBullet={true} />
         <AsideMenuItem to='/pelaporan/LaporanPengawasan' title='Laporan Pengawasan' hasBullet={true} />
         <AsideMenuItem to='/pelaporan/LaporanTamuDaerah' title='Laporan Tamu Daerah' hasBullet={true} />
-        <AsideMenuItem to='/pelaporan/LaporanPPNS' title='Laporan PPNS' hasBullet={true} />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/kepegawaian'

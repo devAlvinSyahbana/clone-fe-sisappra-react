@@ -25,22 +25,23 @@ function Pie(props: {chartID: any}) {
     // Define data
     var data = [
       {
-        country: 'PNS',
-        sales: 100000,
+        category: 'PNS',
+        sales: 501.9,
       },
       {
-        country: 'PTT',
-        sales: 160000,
+        category: 'PTT',
+        sales: 301.9,
       },
       {
-        country: 'PJLP',
-        sales: 80000,
+        category: 'PJLP',
+        sales: 201.1,
       },
     ]
 
     // Create series
     var series = chart.series.push(
       am5percent.PieSeries.new(root, {
+        name: 'Series',
         valueField: 'sales',
         categoryField: 'country',
       })
@@ -55,6 +56,7 @@ function Pie(props: {chartID: any}) {
         layout: root.horizontalLayout,
       })
     )
+
     legend.data.setAll(series.dataItems)
   }, [chartID])
 

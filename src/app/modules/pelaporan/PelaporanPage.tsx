@@ -2,10 +2,10 @@ import React from 'react'
 import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 import { LaporanKegiatan } from './components/LaporanKegiatan'
+import { TambahLaporanKegiatan } from './components/TambahLaporanKegiatan'
 import { LaporanKejadian } from './components/LaporanKejadian'
 import { LaporanPengawasan } from './components/LaporanPengawasan'
 import { LaporanTamuDaerah } from './components/LaporanTamuDaerah'
-import { LaporanPPNS } from './components/LaporanPPNS'
 
 
 const pelaporanBreadCrumbs: Array<PageLink> = [
@@ -43,6 +43,15 @@ const PelaporanPage: React.FC = () => {
           }
         />
         <Route
+          path='TambahLaporanKegiatan'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Kegiatan</PageTitle>
+              <TambahLaporanKegiatan />
+            </>
+          }
+        />
+        <Route
           path='LaporanKejadian'
           element={
             <>
@@ -66,15 +75,6 @@ const PelaporanPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Tamu Daerah</PageTitle>
               <LaporanTamuDaerah />
-            </>
-          }
-        />
-        <Route
-          path='LaporanPPNS'
-          element={
-            <>
-              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan PPNS</PageTitle>
-              <LaporanPPNS />
             </>
           }
         />

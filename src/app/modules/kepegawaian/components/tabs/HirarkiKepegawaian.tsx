@@ -9,7 +9,7 @@ export function HirarkiKepegawaian() {
   const location = useLocation()
 
   return (
-    <div className={`card`}>
+    <div>
       {/* begin::Body */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card mb-5 mb-xl-10'>
