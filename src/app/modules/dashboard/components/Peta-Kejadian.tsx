@@ -16,6 +16,30 @@ function PetaKejadian() {
           <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
             <div className='row'>
               <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
+                <div className='button-group'>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Bencana
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Kebakaran
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    PKL
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    PMKS
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Politik
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Tramtibum
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
                 <div className='card card-bordered'>
                   <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
                     <TileLayer
