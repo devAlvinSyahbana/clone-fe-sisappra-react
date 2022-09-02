@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import DataTable from 'react-data-table-component';
 
 export function LaporanKejadian() {
@@ -206,8 +207,10 @@ export function LaporanKejadian() {
                                 <option value="2">Pdf</option>
                               </select>
                             </div>
-                            <a href="../../demo1/dist/sisappra/laporan/laporan-kejadian/creat.html"
-                              className="btn btn-sm btn-success me-2" data-bs-toggle="modal">Tambah</a>
+                            <Link to="/pelaporan/TambahLaporanKejadian">
+                              <button className="btn btn-sm btn-success me-2" data-bs-toggle="modal">Tambah
+                              </button>
+                            </Link>
                             <div className="my-1 me-0">
                               <select className="form-select form-select-sm form-select-solid w-200px"
                                 data-control="select2" data-placeholder="Select Hours" data-hide-search="true">

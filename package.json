@@ -1,8 +1,8 @@
 {
-  "name": "demo1",
-  "version": "8.1.0",
+  "name": "SISAPPRA",
+  "version": "2.0",
   "private": true,
-  "homepage": "/metronic8/react/demo1",
+  "homepage": "/#",
   "dependencies": {
     "@amcharts/amcharts5": "^5.2.19",
     "@amcharts/amcharts5-geodata": "^5.0.3",
@@ -37,6 +37,7 @@
     "react-query": "3.38.0",
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.4.0",
     "react-table": "^7.7.0",
     "react-topbar-progress-indicator": "4.1.1",
     "sass": "1.50.1",

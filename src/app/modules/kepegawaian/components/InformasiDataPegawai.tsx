@@ -77,7 +77,6 @@ export function InformasiDataPegawai() {
                         Ubah
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item href="/#/action-2">Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}

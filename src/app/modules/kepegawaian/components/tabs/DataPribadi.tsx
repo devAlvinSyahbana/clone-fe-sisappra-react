@@ -302,6 +302,11 @@ export function DataPribadi() {
               <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Nomor HP"
                 value="081238303082" disabled />
             </div>
+
+            <div className="col-12">
+              <hr className="fg-gray" />
+            </div>
+
             <div className="col-12">
               <div className="row">
                 <div className="col-xxl-10 col-md-10 col-lg-10 col-sm-12">
@@ -363,6 +368,11 @@ export function DataPribadi() {
                 </div>
               </div>
             </div>
+
+            <div className="col-12">
+              <hr className="fg-gray" />
+            </div>
+
             <div className="col-12 mt-4">
               <div className="row">
                 <div className="col-xxl-10 col-md-10 col-lg-10 col-sm-12">

@@ -166,9 +166,9 @@ export function UpdateInformasiDataPegawai() {
                 <Link
                   className={
                     `nav-link text-active-primary me-6 ` +
-                    (location.pathname === '/kepegawaian/DataKeluarga' && 'active')
+                    (location.pathname === '/kepegawaian/UpdateDataKeluarga' && 'active')
                   }
-                  to='/kepegawaian/DataKeluarga'
+                  to='/kepegawaian/UpdateDataKeluarga'
                 >
                   Data Keluarga
                 </Link>

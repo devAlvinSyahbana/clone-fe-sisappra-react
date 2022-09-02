@@ -842,20 +842,11 @@ export function HirarkiKepegawaian() {
             </Link>
             <Link
               className="text-reset text-decoration-none"
-              to="/kepegawaian/Pendidikan"
+              to="/kepegawaian/DataKepegawaian"
             >
               <button className="float-none btn btn-success align-self-center m-1">
                 <i className="fa-solid fa-arrow-left"></i>
                 Kembali
-              </button>
-            </Link>
-            <Link
-              className="text-reset text-decoration-none"
-              to="/kepegawaian/HirarkiKepegawaian"
-            >
-              <button className="float-none btn btn-primary align-self-center m-1">
-                <i className="fa-solid fa-arrow-right"></i>
-                Lanjut
               </button>
             </Link>
           </div>
