@@ -1,14 +1,20 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { Link } from 'react-router-dom'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
 import { useLocation } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
-import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
+import { Button, ButtonGroup, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
 
 
 export function UpdateDataKeluarga() {
   const location = useLocation()
+
+  const [show, setShow] = useState(false);
+  const [lgShow, setLgShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const columns = [
     {
@@ -329,11 +335,82 @@ export function UpdateDataKeluarga() {
         </div>
         <div className="card-body p-9">
           <div className="d-flex justify-content-end">
-            <a href="/#" type="reset" className="btn btn-primary fw-semibold me-2 px-6">
+            <Button type="reset" onClick={() => setLgShow(true)} className="btn btn-primary fw-semibold me-2 px-6">
               <i className="fa fa-plus"></i>
               Tambah
-            </a>
+            </Button>
           </div>
+          <Modal
+            size="lg"
+            show={lgShow}
+            onHide={() => setLgShow(false)}
+            aria-labelledby="example-modal-sizes-title-lg"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-lg">Tambah Data Keluarga</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form id="kt_modal_add_user_form" className="form" action="#">
+                <div className="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_user_scroll"
+                  data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}"
+                  data-kt-scroll-max-height="auto"
+                  data-kt-scroll-dependencies="#kt_modal_add_user_header"
+                  data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                  <div className="fv-row mb-7">
+                    <label className="required fw-semibold fs-6 mb-2">Nama</label>
+                    <input type="text" name="kode_e" id="kode_id_e"
+                      className="form-control form-control-solid mb-3 mb-lg-0" placeholder="Nama"
+                      value="" />
+                  </div>
+                  <div className="fv-row mb-7">
+                    <label className="required fw-semibold fs-6 mb-2">Hubungan
+                      Keluarga</label>
+                    <input type="text" name="jenis_pelanggaran_e"
+                      className=" form-control form-control-solid mb-3 mb-lg-0"
+                      placeholder="Hubungan Keluarga" value="" />
+                  </div>
+                  <div className="fv-row mb-7">
+                    <div id="kt_docs_repeater_basic">
+                      <div className="form-group">
+                        <div data-repeater-list="kt_docs_repeater_basic">
+                          <div data-repeater-item>
+                            <div className="form-group row">
+                              <label className="form-label">Tempat, Tanggal Lahir</label>
+                              <div className="col-4">
+                                <input type="text" className="form-control form-control-solid mb-3 mb-lg-0"
+                                  placeholder="Tempat" />
+                              </div>
+                              <div className="col-8">
+                                <input type="date" className="form-control form-control-solid" placeholder="Tanggal Lahir"
+                                  value="" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="fv-row mb-7 mt-7">
+                        <label className="required fw-semibold fs-6 mb-2">Jenis Kelamin</label>
+                        <select className="form-select form-select-solid" data-control="select2"
+                          data-placeholder="Jenis Kelamin">
+                          <option></option>
+                          <option value="1">LAKI-LAKI</option>
+                          <option value="2">PEREMPUAN</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Discard
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
+                Submit
+              </Button>
+            </Modal.Footer>
+          </Modal>
           <DataTable
             columns={columns}
             data={data}
