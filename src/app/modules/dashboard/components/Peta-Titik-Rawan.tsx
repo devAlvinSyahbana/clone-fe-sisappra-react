@@ -41,7 +41,7 @@ function PetaTitikRawan() {
             <div className='row'>
               <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
                 <div className='card card-bordered'>
-                  <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
+                  <MapContainer center={[-6.1554057, 106.8926634]} zoom={5} scrollWheelZoom={true}>
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
