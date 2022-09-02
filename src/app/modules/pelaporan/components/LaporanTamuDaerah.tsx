@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import { DropdownButton, ButtonGroup, Dropdown } from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
 
@@ -99,7 +100,7 @@ export function LaporanTamuDaerah() {
     {
       id: 2,
       no: '2',
-      pelaksanaan: '20/12/2021',
+      pelaksanaan: '21/12/2021',
       tanggalkunjungan: '07:00:00',
       waktumulaikunjungan: '08:00:00',
       waktuselesaikunjungan: 'A',
@@ -185,10 +186,12 @@ export function LaporanTamuDaerah() {
                               <i className="fa-solid fa-filter"></i>
                               Filter
                             </button>
-                            <a href="../../demo1/dist/sisappra/laporan/laporan-tamu-daerah/creat.html"
-                              className="btn btn-sm btn-primary me-1" data-bs-toggle="modal"><i
-                                className="fa-solid fa-plus"></i>
-                              Tambah</a>
+                            <Link to="/pelaporan/TambahTamuDaerah">
+                            <button className="btn btn-sm btn-primary me-1" data-bs-toggle="modal"><i
+                                  className="fa-solid fa-plus"></i>
+                                Tambah
+                              </button>
+                              </Link>
                             <div className="my-1 me-0">
                               <select className="form-select form-select-sm form-select-solid w-100px"
                                 data-control="select2" data-placeholder="Download" data-hide-search="true">
