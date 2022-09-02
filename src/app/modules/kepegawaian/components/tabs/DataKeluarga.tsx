@@ -36,9 +36,9 @@ export function DataKeluarga() {
     {
       id: 1,
       name: 'RAHMI FITRIA ASRIL',
-      hubungan: '1988',
-      ttl: '1988',
-      jk: '1988',
+      hubungan: 'Istri',
+      ttl: 'JAKARTA, 27-05-1988',
+      jk: 'PEREMPUAN',
     },
   ];
 
@@ -81,11 +81,8 @@ export function DataKeluarga() {
                         href="/#"
                         className='d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2'
                       >
-                        <KTSVG
-                          path='/media/icons/duotune/communication/com005.svg'
-                          className='svg-icon-4 me-1'
-                        />
-                        081238303082
+                        <i className="fas fa-phone"></i
+                        >&nbsp;&nbsp;082929929292
                       </a>
                       <a
                         href="/#"
@@ -96,6 +93,14 @@ export function DataKeluarga() {
                           className='svg-icon-4 me-1'
                         />
                         agux.aprianto@satpol.dki.com
+                      </a>
+                      <a
+                        href="/#"
+                        className="d-flex align-items-center text-gray-400 text-hover-primary me-5 ms-5 mb-2"
+                      >
+                        <i className="fa-solid fa-address-card me-1"></i
+                        >PENGELOLA PENGENDALIAN DAN
+                        OPERASIONAL
                       </a>
                     </div>
                   </div>

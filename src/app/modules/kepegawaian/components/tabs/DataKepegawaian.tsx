@@ -3,7 +3,6 @@ import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { Link } from 'react-router-dom'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
 import { useLocation } from 'react-router-dom'
-// import PDF from '../../../../../../public/media/svg/files/pdf.svg'
 
 
 export function DataKepegawaian() {
@@ -47,11 +46,8 @@ export function DataKepegawaian() {
                         href="/#"
                         className='d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2'
                       >
-                        <KTSVG
-                          path='/media/icons/duotune/communication/com005.svg'
-                          className='svg-icon-4 me-1'
-                        />
-                        081238303082
+                        <i className="fas fa-phone"></i
+                        >&nbsp;&nbsp;082929929292
                       </a>
                       <a
                         href="/#"
@@ -62,6 +58,14 @@ export function DataKepegawaian() {
                           className='svg-icon-4 me-1'
                         />
                         agux.aprianto@satpol.dki.com
+                      </a>
+                      <a
+                        href="/#"
+                        className="d-flex align-items-center text-gray-400 text-hover-primary me-5 ms-5 mb-2"
+                      >
+                        <i className="fa-solid fa-address-card me-1"></i
+                        >PENGELOLA PENGENDALIAN DAN
+                        OPERASIONAL
                       </a>
                     </div>
                   </div>

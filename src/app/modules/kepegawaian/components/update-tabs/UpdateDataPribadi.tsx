@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 
 
-export function DataPribadi() {
+export function UpdateDataPribadi() {
   const location = useLocation()
 
   return (
@@ -229,19 +229,19 @@ export function DataPribadi() {
           <div className="row">
             <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
               <label htmlFor="" className="mb-3">Nama</label>
-              <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Nama"
-                value="AGUS APRIANTO" disabled />
+              <input type="text" className="form-control form-control-solid mb-4" name="tags" placeholder="Nama"
+                value="AGUS APRIANTO" />
             </div>
             <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
               <label htmlFor="" className="mb-3">Tempat, Tanggal Lahir</label>
               <div className="row">
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
-                  <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Tempat"
-                    value="PALEMBANG" disabled />
+                  <input type="text" className="form-control form-control-solid mb-4" name="tags" placeholder="Tempat"
+                    value="PALEMBANG" />
                 </div>
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <input className="form-control form-control-solid" placeholder="Tanggal Lahir" id="kt_datepicker_tgl_expired"
-                    value="10-08-1982" disabled />
+                    value="10-08-1982" />
                 </div>
               </div>
             </div>
@@ -249,7 +249,7 @@ export function DataPribadi() {
               <div className="row">
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Jenis Kelamin</label>
-                  <select className="form-select form-select-solid" aria-label="Select example" disabled>
+                  <select className="form-select form-select-solid" aria-label="Select example" >
                     <option>Pilih</option>
                     <option value="1" selected>Laki-laki</option>
                     <option value="2">Perempuan</option>
@@ -257,7 +257,7 @@ export function DataPribadi() {
                 </div>
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Agama</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="3175">Islam</option>
                     <option value="3101" selected>Katolik</option>
@@ -271,12 +271,12 @@ export function DataPribadi() {
                 <div className="col-6">
                   <label htmlFor="" className="mb-3">NIK</label>
                   <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="NIK"
-                    value="3172021008820023" disabled />
+                    value="3172021008820023" />
                 </div>
                 <div className="col-6">
                   <label htmlFor="" className="mb-3">Nomor KK</label>
                   <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Nomor KK"
-                    value="3172023010141005" disabled />
+                    value="3172023010141005" />
                 </div>
               </div>
             </div>
@@ -284,7 +284,7 @@ export function DataPribadi() {
               <div className="row">
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Status Perkawinan</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="0" selected>KAWIN</option>
                     <option value="1">BELUM KAWIN</option>
@@ -293,26 +293,26 @@ export function DataPribadi() {
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Umur</label>
                   <input type="number" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Umur"
-                    value="36" disabled />
+                    value="36" />
                 </div>
               </div>
             </div>
             <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
               <label htmlFor="" className="mb-3">Nomor HP</label>
               <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Nomor HP"
-                value="081238303082" disabled />
+                value="081238303082" />
             </div>
             <div className="col-12">
               <div className="row">
                 <div className="col-xxl-10 col-md-10 col-lg-10 col-sm-12">
                   <label htmlFor="" className="mb-3">Alamat Sesuai KTP</label>
                   <input type="text" className="form-control form-control form-control-solid mb-3" name="tags" placeholder="Alamat Sesuai KTP"
-                    value="JL. WARAKAS VI GG XVIII NO. 105 B KEL. PAPANGGO KEC. TANJUNG PRIUK JAKARTA UTARA" disabled />
+                    value="JL. WARAKAS VI GG XVIII NO. 105 B KEL. PAPANGGO KEC. TANJUNG PRIUK JAKARTA UTARA" />
                 </div>
                 <div className="col-xxl-2 col-md-2 col-lg-2 col-sm-12">
                   <label htmlFor="" className="mb-3">RT/RW</label>
                   <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="RT/RW"
-                    value="009 / 005" disabled />
+                    value="009 / 005" />
                 </div>
               </div>
             </div>
@@ -320,7 +320,7 @@ export function DataPribadi() {
               <div className="row">
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Provinsi</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="12" selected>DKI JAKARTA</option>
                     <option value="13">JAWA BARAT</option>
@@ -329,7 +329,7 @@ export function DataPribadi() {
                 </div>
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Kab/Kota</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="12" selected>KOTA JAKARTA UTARA</option>
                     <option value="13">KELAPA GADING BARAT</option>
@@ -343,7 +343,7 @@ export function DataPribadi() {
               <div className="row">
                 <div className="col-xxl-6 col-md-10 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Kecamatan</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="12" selected>TANJUNG PRIOK</option>
                     <option value="13">KELAPA GADING BARAT</option>
@@ -353,7 +353,7 @@ export function DataPribadi() {
                 </div>
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Kelurahan</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="12" selected>PAPANGO</option>
                     <option value="13">KELAPA GADING BARAT</option>
@@ -368,12 +368,12 @@ export function DataPribadi() {
                 <div className="col-xxl-10 col-md-10 col-lg-10 col-sm-12">
                   <label htmlFor="" className="mb-3">Alamat Domisili</label>
                   <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Alamat Domisili"
-                    value="JL. WARAKAS VI GG XVIII NO. 105 B KEL. PAPANGGO KEC. TANJUNG PRIUK JAKARTA UTARA" disabled />
+                    value="JL. WARAKAS VI GG XVIII NO. 105 B KEL. PAPANGGO KEC. TANJUNG PRIUK JAKARTA UTARA" />
                 </div>
                 <div className="col-xxl-2 col-md-2 col-lg-2 col-sm-12">
                   <label htmlFor="" className="mb-3">RT/RW</label>
                   <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="RT/RW"
-                    value="009 / 005" disabled />
+                    value="009 / 005" />
                 </div>
               </div>
             </div>
@@ -381,7 +381,7 @@ export function DataPribadi() {
               <div className="row">
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Provinsi</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="12" selected>DKI JAKARTA</option>
                     <option value="13">JAWA BARAT</option>
@@ -390,7 +390,7 @@ export function DataPribadi() {
                 </div>
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Kab/Kota</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="12" selected> KOTA JAKARTA UTARA</option>
                     <option value="13">KELAPA GADING BARAT</option>
@@ -404,7 +404,7 @@ export function DataPribadi() {
               <div className="row">
                 <div className="col-xxl-6 col-md-10 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Kecamatan</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="12" selected>TANJUNG PRIOK</option>
                     <option value="13">KELAPA GADING BARAT</option>
@@ -414,7 +414,7 @@ export function DataPribadi() {
                 </div>
                 <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                   <label htmlFor="" className="mb-3">Kelurahan</label>
-                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" disabled>
+                  <select className="form-select form-select-solid" data-control="select2" data-placeholder="Pilih" >
                     <option></option>
                     <option value="12" selected>PAPANGO</option>
                     <option value="13">KELAPA GADING BARAT</option>

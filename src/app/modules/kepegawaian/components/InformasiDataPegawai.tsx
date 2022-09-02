@@ -67,11 +67,15 @@ export function InformasiDataPegawai() {
                     variant="light"
                     title="Aksi">
                     <Dropdown.Item>
-                      <Link to="/kepegawaian/DetailInformasiDataPegawai">
+                      <Link className="text-reset" to="/kepegawaian/DetailInformasiDataPegawai">
                         Detail
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item href="/#/action-2">Ubah</Dropdown.Item>
+                    <Dropdown.Item>
+                      <Link className="text-reset" to="/kepegawaian/UpdateInformasiDataPegawai">
+                        Ubah
+                      </Link>
+                    </Dropdown.Item>
                     <Dropdown.Item href="/#/action-2">Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
@@ -253,14 +257,14 @@ export function InformasiDataPegawai() {
         <div className='col-md-6 col-lg-6 col-sm-12'>
           <Link to='#' className='me-2'>
             <button className='btn btn-primary'>
-              <i className="fa-solid fa-filter"></i>
-              Filter
-            </button>
-          </Link>
-          <Link to='#i'>
-            <button className='btn btn-primary'>
               <i className="fa-solid fa-arrows-rotate"></i>
               Reset
+            </button>
+          </Link>
+          <Link to='#'>
+            <button className='btn btn-primary'>
+              <i className="fa-solid fa-search"></i>
+              Cari
             </button>
           </Link>
         </div>

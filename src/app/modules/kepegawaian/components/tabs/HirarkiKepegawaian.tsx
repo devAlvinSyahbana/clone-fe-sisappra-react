@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { Link } from 'react-router-dom'
+import { Button, Collapse } from 'react-bootstrap'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
 import { useLocation } from 'react-router-dom'
+// import abatar from '../../../../../../public/media/avatars/300-11.jpg'
 
 
 export function HirarkiKepegawaian() {
   const location = useLocation()
+  const [open, setOpen] = useState(false);
 
   return (
     <div>
@@ -46,11 +49,8 @@ export function HirarkiKepegawaian() {
                         href="/#"
                         className='d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2'
                       >
-                        <KTSVG
-                          path='/media/icons/duotune/communication/com005.svg'
-                          className='svg-icon-4 me-1'
-                        />
-                        081238303082
+                        <i className="fas fa-phone"></i
+                        >&nbsp;&nbsp;082929929292
                       </a>
                       <a
                         href="/#"
@@ -61,6 +61,14 @@ export function HirarkiKepegawaian() {
                           className='svg-icon-4 me-1'
                         />
                         agux.aprianto@satpol.dki.com
+                      </a>
+                      <a
+                        href="/#"
+                        className="d-flex align-items-center text-gray-400 text-hover-primary me-5 ms-5 mb-2"
+                      >
+                        <i className="fa-solid fa-address-card me-1"></i
+                        >PENGELOLA PENGENDALIAN DAN
+                        OPERASIONAL
                       </a>
                     </div>
                   </div>
@@ -209,6 +217,647 @@ export function HirarkiKepegawaian() {
                 </li>
               </ul>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Second Card */}
+      <div className="d-flex flex-wrap flex-stack mb-6">
+        <h3 className="fw-bold my-2">
+          Bawahan
+          <span className="fs-6 text-gray-400 fw-semibold ms-1"
+          >(29)</span
+          >
+        </h3>
+      </div>
+      <div className='row g-6 mb-6 g-xl-9 mb-xl-9'>
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <img
+                  src={toAbsoluteUrl('/media/avatars/300-11.jpg')}
+                  alt="image"
+                />
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Patric Watson</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                FUNGSIONAL POL PP PELAKSANA / TERAMPIL
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <img
+                  src={toAbsoluteUrl('/media/avatars/300-6.jpg')}
+                  alt="image"
+                />
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Olivia Larson</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                PENGADMINISTRASI UMUM
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <span className="symbol-label fs-2x fw-semibold text-warning bg-light-warning">A</span>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Adam Williams</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                PETUGAS KEAMANAN
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <span className="symbol-label fs-2x fw-semibold text-info bg-light-info">P</span>
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Paul Marcus</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                FUNGSIONAL POL PP PELAKSANA / TERAMPIL
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <span className="symbol-label fs-2x fw-semibold text-info bg-light-info">N</span>
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Neil Owen</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                PENYUSUN KEBUTUHAN BARANG INVENTARIS
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <span className="symbol-label fs-2x fw-semibold text-primary bg-light-primary">S</span>
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Sean Paul</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                PENGELOLA KEAMANAN DAN KETERTIBAN
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <img
+                  src={toAbsoluteUrl('/media/avatars/300-1.jpg')}
+                  alt="image"
+                />
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Kitona Johnson</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                PENGADMINISTRASI UMUM SEKSI PPNS DAN PENINDAKAN
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <img
+                  src={toAbsoluteUrl('/media/avatars/300-14.jpg')}
+                  alt="image"
+                />
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Robert Doe</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                Marketing Analytic at Avito Ltd.
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <img
+                  src={toAbsoluteUrl('/media/avatars/300-12.jpg')}
+                  alt="image"
+                />
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Soul Jacob</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                FUNGSIONAL POL PP PELAKSANA / TERAMPIL
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <img
+                  src={toAbsoluteUrl('/media/avatars/300-7.jpg')}
+                  alt="image"
+                />
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Nina Strong</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                KOMANDAN PETUGAS KEAMANAN
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <img
+                  src={toAbsoluteUrl('/media/avatars/300-11.jpg')}
+                  alt="image"
+                />
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Patric Watson</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                FUNGSIONAL POL PP PELAKSANA / TERAMPIL
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body d-flex flex-center flex-column py-9 px-5">
+              <div className="symbol symbol-65px symbol-circle mb-5">
+                <img
+                  src={toAbsoluteUrl('/media/avatars/300-6.jpg')}
+                  alt="image"
+                />
+                <div
+                  className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                ></div>
+              </div>
+              <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Olivia Larson</a>
+              <div className="fw-semibold text-gray-400 mb-6">
+                PENGADMINISTRASI UMUM
+              </div>
+              <div className="d-flex flex-center flex-wrap mb-5">
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">2</div>
+                  <div className="fw-semibold text-gray-400">
+                    Jumlah Anggota Keluarga
+                  </div>
+                </div>
+                <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                  <div className="fs-6 fw-bold text-gray-700">S1</div>
+                  <div className="fw-semibold text-gray-400">
+                    Pendidikan Terakhir
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Collapse in={open}>
+          <div id="example-collapse-text">
+
+            <div className='row g-6 mb-6 g-xl-9 mb-xl-9'>
+              <div className="col-md-6">
+                <div className="card">
+                  <div className="card-body d-flex flex-center flex-column py-9 px-5">
+                    <div className="symbol symbol-65px symbol-circle mb-5">
+                      <img
+                        src={toAbsoluteUrl('/media/avatars/300-11.jpg')}
+                        alt="image"
+                      />
+                      <div
+                        className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                      ></div>
+                    </div>
+                    <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Patric Watson</a>
+                    <div className="fw-semibold text-gray-400 mb-6">
+                      FUNGSIONAL POL PP PELAKSANA / TERAMPIL
+                    </div>
+                    <div className="d-flex flex-center flex-wrap mb-5">
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">2</div>
+                        <div className="fw-semibold text-gray-400">
+                          Jumlah Anggota Keluarga
+                        </div>
+                      </div>
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">S1</div>
+                        <div className="fw-semibold text-gray-400">
+                          Pendidikan Terakhir
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="card">
+                  <div className="card-body d-flex flex-center flex-column py-9 px-5">
+                    <div className="symbol symbol-65px symbol-circle mb-5">
+                      <img
+                        src={toAbsoluteUrl('/media/avatars/300-6.jpg')}
+                        alt="image"
+                      />
+                      <div
+                        className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                      ></div>
+                    </div>
+                    <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Olivia Larson</a>
+                    <div className="fw-semibold text-gray-400 mb-6">
+                      PENGADMINISTRASI UMUM
+                    </div>
+                    <div className="d-flex flex-center flex-wrap mb-5">
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">2</div>
+                        <div className="fw-semibold text-gray-400">
+                          Jumlah Anggota Keluarga
+                        </div>
+                      </div>
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">S1</div>
+                        <div className="fw-semibold text-gray-400">
+                          Pendidikan Terakhir
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="card">
+                  <div className="card-body d-flex flex-center flex-column py-9 px-5">
+                    <div className="symbol symbol-65px symbol-circle mb-5">
+                      <span className="symbol-label fs-2x fw-semibold text-warning bg-light-warning">A</span>
+                    </div>
+                    <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Adam Williams</a>
+                    <div className="fw-semibold text-gray-400 mb-6">
+                      PETUGAS KEAMANAN
+                    </div>
+                    <div className="d-flex flex-center flex-wrap mb-5">
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">2</div>
+                        <div className="fw-semibold text-gray-400">
+                          Jumlah Anggota Keluarga
+                        </div>
+                      </div>
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">S1</div>
+                        <div className="fw-semibold text-gray-400">
+                          Pendidikan Terakhir
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="card">
+                  <div className="card-body d-flex flex-center flex-column py-9 px-5">
+                    <div className="symbol symbol-65px symbol-circle mb-5">
+                      <span className="symbol-label fs-2x fw-semibold text-info bg-light-info">P</span>
+                      <div
+                        className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                      ></div>
+                    </div>
+                    <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Paul Marcus</a>
+                    <div className="fw-semibold text-gray-400 mb-6">
+                      FUNGSIONAL POL PP PELAKSANA / TERAMPIL
+                    </div>
+                    <div className="d-flex flex-center flex-wrap mb-5">
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">2</div>
+                        <div className="fw-semibold text-gray-400">
+                          Jumlah Anggota Keluarga
+                        </div>
+                      </div>
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">S1</div>
+                        <div className="fw-semibold text-gray-400">
+                          Pendidikan Terakhir
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="card">
+                  <div className="card-body d-flex flex-center flex-column py-9 px-5">
+                    <div className="symbol symbol-65px symbol-circle mb-5">
+                      <span className="symbol-label fs-2x fw-semibold text-info bg-light-info">N</span>
+                      <div
+                        className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                      ></div>
+                    </div>
+                    <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Neil Owen</a>
+                    <div className="fw-semibold text-gray-400 mb-6">
+                      PENYUSUN KEBUTUHAN BARANG INVENTARIS
+                    </div>
+                    <div className="d-flex flex-center flex-wrap mb-5">
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">2</div>
+                        <div className="fw-semibold text-gray-400">
+                          Jumlah Anggota Keluarga
+                        </div>
+                      </div>
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">S1</div>
+                        <div className="fw-semibold text-gray-400">
+                          Pendidikan Terakhir
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="card">
+                  <div className="card-body d-flex flex-center flex-column py-9 px-5">
+                    <div className="symbol symbol-65px symbol-circle mb-5">
+                      <span className="symbol-label fs-2x fw-semibold text-primary bg-light-primary">S</span>
+                      <div
+                        className="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3"
+                      ></div>
+                    </div>
+                    <a href="/#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0">Sean Paul</a>
+                    <div className="fw-semibold text-gray-400 mb-6">
+                      PENGELOLA KEAMANAN DAN KETERTIBAN
+                    </div>
+                    <div className="d-flex flex-center flex-wrap mb-5">
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">2</div>
+                        <div className="fw-semibold text-gray-400">
+                          Jumlah Anggota Keluarga
+                        </div>
+                      </div>
+                      <div className="border border-dashed rounded min-w-90px py-3 px-4 mx-2 mb-3">
+                        <div className="fs-6 fw-bold text-gray-700">S1</div>
+                        <div className="fw-semibold text-gray-400">
+                          Pendidikan Terakhir
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </Collapse>
+        <div className="d-flex flex-center">
+          <Button className="btn btn-primary"
+            onClick={() => setOpen(!open)}
+            aria-controls="example-collapse-text"
+            aria-expanded={open}
+          >Show More
+          </Button>
+        </div>
+
+        <div className="p-0 mt-6">
+          <div className="text-center">
+            <Link
+              className="text-reset text-decoration-none"
+              to="/kepegawaian/InformasiDataPegawai"
+            >
+              <button className="float-none btn btn-secondary align-self-center m-1">
+                <i className="fa fa-close"></i>
+                Batal
+              </button>
+            </Link>
+            <Link
+              className="text-reset text-decoration-none"
+              to="/kepegawaian/Pendidikan"
+            >
+              <button className="float-none btn btn-success align-self-center m-1">
+                <i className="fa-solid fa-arrow-left"></i>
+                Kembali
+              </button>
+            </Link>
+            <Link
+              className="text-reset text-decoration-none"
+              to="/kepegawaian/HirarkiKepegawaian"
+            >
+              <button className="float-none btn btn-primary align-self-center m-1">
+                <i className="fa-solid fa-arrow-right"></i>
+                Lanjut
+              </button>
+            </Link>
           </div>
         </div>
       </div>
