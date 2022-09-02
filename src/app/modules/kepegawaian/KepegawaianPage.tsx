@@ -18,6 +18,7 @@ import { DataKepegawaian } from './components/tabs/DataKepegawaian'
 import { HirarkiKepegawaian } from './components/tabs/HirarkiKepegawaian'
 
 import { UpdateDataPribadi } from './components/update-tabs/UpdateDataPribadi'
+import { UpdateDataKeluarga } from './components/update-tabs/UpdateDataKeluarga'
 
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
@@ -167,8 +168,17 @@ const KepegawaianPage: React.FC = () => {
           path='UpdateDataPribadi'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Update Data Pribadi</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Pribadi</PageTitle>
               <UpdateDataPribadi />
+            </>
+          }
+        />
+        <Route
+          path='UpdateDataKeluarga'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Keluarga</PageTitle>
+              <UpdateDataKeluarga />
             </>
           }
         />
