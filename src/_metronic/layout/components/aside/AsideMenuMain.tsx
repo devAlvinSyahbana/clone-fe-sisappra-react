@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from 'react'
-import { useIntl } from 'react-intl'
-import { KTSVG } from '../../../helpers'
-import { AsideMenuItemWithSub } from './AsideMenuItemWithSub'
-import { AsideMenuItem } from './AsideMenuItem'
+import {useIntl} from 'react-intl'
+import {KTSVG} from '../../../helpers'
+import {AsideMenuItemWithSub} from './AsideMenuItemWithSub'
+import {AsideMenuItem} from './AsideMenuItem'
 
 export function AsideMenuMain() {
   const intl = useIntl()
@@ -18,7 +18,7 @@ export function AsideMenuMain() {
       <AsideMenuItemWithSub
         to='/dashboard'
         icon='/media/icons/duotune/art/art002.svg'
-        title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
+        title={intl.formatMessage({id: 'MENU.DASHBOARD'})}
         fontIcon='bi-app-indicator'
       >
         <AsideMenuItem
@@ -67,8 +67,16 @@ export function AsideMenuMain() {
       >
         <AsideMenuItem to='/pelaporan/LaporanKegiatan' title='Laporan Kegiatan' hasBullet={true} />
         <AsideMenuItem to='/pelaporan/LaporanKejadian' title='Laporan Kejadian' hasBullet={true} />
-        <AsideMenuItem to='/pelaporan/LaporanPengawasan' title='Laporan Pengawasan' hasBullet={true} />
-        <AsideMenuItem to='/pelaporan/LaporanTamuDaerah' title='Laporan Tamu Daerah' hasBullet={true} />
+        <AsideMenuItem
+          to='/pelaporan/LaporanPengawasan'
+          title='Laporan Pengawasan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/pelaporan/LaporanTamuDaerah'
+          title='Laporan Tamu Daerah'
+          hasBullet={true}
+        />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/kepegawaian'
@@ -76,28 +84,43 @@ export function AsideMenuMain() {
         fontIcon='bi-archive'
         icon='/media/icons/duotune/general/gen022.svg'
       >
-        <AsideMenuItem to='/kepegawaian/InformasiDataPegawai' title='Informasi Data Pegawai' hasBullet={true} />
+        <AsideMenuItem
+          to='/kepegawaian/InformasiDataPegawai'
+          title='Informasi Data Pegawai'
+          hasBullet={true}
+        />
         <AsideMenuItem to='/kepegawaian/HirarkiPegawai' title='Hirarki Pegawai' hasBullet={true} />
-        <AsideMenuItem to='/kepegawaian/LaporanRekapitulasiPegawai' title='Laporan Rekapitulasi Pegawai' hasBullet={true} />
-        <AsideMenuItem to='/kepegawaian/PenyidikPegawaiNegeriSipil' title='Penyidik Pegawai Negeri Sipil (PPNS)' hasBullet={true} />
-        <AsideMenuItem to='/kepegawaian/KehadiranPegawai' title='Kehadiran Pegawai' hasBullet={true} />
+        <AsideMenuItem
+          to='/kepegawaian/LaporanRekapitulasiPegawai'
+          title='Laporan Rekapitulasi Pegawai'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/kepegawaian/PenyidikPegawaiNegeriSipil'
+          title='Penyidik Pegawai Negeri Sipil (PPNS)'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/kepegawaian/KehadiranPegawai'
+          title='Kehadiran Pegawai'
+          hasBullet={true}
+        />
         <AsideMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} />
       </AsideMenuItemWithSub>
-      
-      
-      
-      
+
       <AsideMenuItemWithSub
         to='/sarana_prasarana'
         title='Sarana & Prasarana'
         fontIcon='bi-archive'
         icon='/media/icons/duotune/general/gen022.svg'
       >
-        <AsideMenuItem to='/sarana_prasarana/LaporanSaranaPrasarana' title='Laporan Sarana & Prasarana' hasBullet={true} />
+        <AsideMenuItem
+          to='/sarana_prasarana/LaporanSaranaPrasarana'
+          title='Laporan Sarana & Prasarana'
+          hasBullet={true}
+        />
       </AsideMenuItemWithSub>
 
-     
-     
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Crafted</span>
