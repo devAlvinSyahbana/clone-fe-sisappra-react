@@ -2,6 +2,21 @@ export interface AuthModel {
   api_token: string
 }
 
+export interface KontakPICModel {
+  // id: number
+  // nama: string
+  // telepon: string
+  // status_pic: number
+  code: string
+  message: string
+  data: {
+    id: number
+    nama: string
+    telepon: string
+    status_pic: number
+  }
+}
+
 export interface UserAddressModel {
   addressLine: string
   city: string
@@ -63,4 +78,13 @@ export interface UserModel {
   communication?: UserCommunicationModel
   address?: UserAddressModel
   socialNetworks?: UserSocialNetworksModel
+}
+
+export interface PenggunaModel {
+  id: number
+  id_pegawai: string
+  no_pegawai: number
+  email?: number | undefined
+  hak_akses: number
+  status_pengguna: number
 }
