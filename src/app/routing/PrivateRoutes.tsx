@@ -13,6 +13,7 @@ const PrivateRoutes = () => {
   const PelaporanPage = lazy(() => import('../modules/pelaporan/PelaporanPage'))
   const KepegawaianPage = lazy(() => import('../modules/kepegawaian/KepegawaianPage'))
   const SaranaPrasaranaPage = lazy(() => import('../modules/sarana_prasarana/SaranaPrasaranaPage'))
+  const MasterPage = lazy(() => import('../modules/master/MasterPage'))
   const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
   const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
   const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
@@ -43,6 +44,14 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <KepegawaianPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='master/*'
+          element={
+            <SuspensedView>
+              <MasterPage />
             </SuspensedView>
           }
         />

@@ -220,7 +220,7 @@ export function LaporanSaranaPrasarana() {
               <i className="fa-solid fa-plus"></i>
               Tambah
             </button>
-          </Link>
+          </Link>&nbsp;
           <DropdownButton id="dropdown-basic-button" title="Unduh" variant="light">
             <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
             <Dropdown.Item href="#/action-2">PDF</Dropdown.Item>

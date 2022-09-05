@@ -117,6 +117,83 @@ export function AsideMenuMain() {
           hasBullet={true}
         />
       </AsideMenuItemWithSub>
+      <AsideMenuItemWithSub
+        to='/master'
+        title='Master'
+        fontIcon='bi-archive'
+        icon='/media/icons/duotune/general/gen022.svg'
+      >
+        <AsideMenuItem
+          to='/Kota/Master'
+          title='Kota'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/Kecamatan/Master'
+          title='Kecamatan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/Kelurahan/Master'
+          title='Kelurahan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/JenisKegiatan/Master'
+          title='Jenis Kegiatan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/InstansiTerkait/Master'
+          title='Instansi Terkait'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/JenisBantuan/Master'
+          title='Jenis Bantuan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/KorbanMaterial/Master'
+          title='Korban Material '
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/KorbanJiwa/Master'
+          title='Korban Jiwa'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/Kelurahan/Master'
+          title='Kelurahan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/JenisPertolongan/Master'
+          title='Jenis Pertolongan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/JenisPerdaPerkada/Master'
+          title='Jenis Perda'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/JenisPerdaPerkada/Master'
+          title='Jenis Perkada'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/JenisPenindakan/Master'
+          title='Jenis Penindakan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/JenisPelanggaran/Master'
+          title='Jenis Pelanggaran'
+          hasBullet={true}
+        />
+      </AsideMenuItemWithSub>
     </>
   )
 }

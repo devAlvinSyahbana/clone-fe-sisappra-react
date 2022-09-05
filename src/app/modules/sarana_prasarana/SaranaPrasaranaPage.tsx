@@ -5,7 +5,7 @@ import { LaporanSaranaPrasarana } from './components/LaporanSaranaPrasarana'
 
 const sarana_prasaranaBreadCrumbs: Array<PageLink> = [
   {
-    title: 'sarana & prasarana',
+    title: 'Sarana & Prasarana',
     path: '/sarana_prasarana/LaporanSaranaPrasarana',
     isSeparator: false,
     isActive: false,
