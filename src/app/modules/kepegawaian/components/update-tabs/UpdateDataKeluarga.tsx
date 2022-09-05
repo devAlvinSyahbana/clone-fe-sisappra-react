@@ -292,9 +292,9 @@ export function UpdateDataKeluarga() {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/kepegawaian/Pendidikan' && 'active')
+                      (location.pathname === '/kepegawaian/UpdatePendidikan' && 'active')
                     }
-                    to='/kepegawaian/Pendidikan'
+                    to='/kepegawaian/UpdatePendidikan'
                   >
                     Pendidikan
                   </Link>
@@ -420,7 +420,7 @@ export function UpdateDataKeluarga() {
             <div className="text-center">
               <Link
                 className="text-reset text-decoration-none"
-                to="/kepegawaian/InformasiDataPegawai"
+                to="/kepegawaian/UpdateInformasiDataPegawai"
               >
                 <button className="float-none btn btn-secondary align-self-center m-1">
                   <i className="fa fa-close"></i>
@@ -429,7 +429,7 @@ export function UpdateDataKeluarga() {
               </Link>
               <Link
                 className="text-reset text-decoration-none"
-                to="/kepegawaian/DataPribadi"
+                to="/kepegawaian/UpdateDataPribadi"
               >
                 <button className="float-none btn btn-success align-self-center m-1">
                   <i className="fa-solid fa-arrow-left"></i>
@@ -438,7 +438,7 @@ export function UpdateDataKeluarga() {
               </Link>
               <Link
                 className="text-reset text-decoration-none"
-                to="/kepegawaian/Pendidikan"
+                to="/kepegawaian/UpdatePendidikan"
               >
                 <button className="float-none btn btn-primary align-self-center m-1">
                   <i className="fa-solid fa-arrow-right"></i>

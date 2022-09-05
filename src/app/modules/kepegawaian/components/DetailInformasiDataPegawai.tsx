@@ -61,6 +61,14 @@ export function DetailInformasiDataPegawai() {
                       />
                       agux.aprianto@satpol.dki.com
                     </a>
+                    <a
+                      href="/#"
+                      className="d-flex align-items-center text-gray-400 text-hover-primary me-5 ms-5 mb-2"
+                    >
+                      <i className="fa-solid fa-address-card me-1"></i
+                      >PENGELOLA PENGENDALIAN DAN
+                      OPERASIONAL
+                    </a>
                   </div>
                 </div>
 
