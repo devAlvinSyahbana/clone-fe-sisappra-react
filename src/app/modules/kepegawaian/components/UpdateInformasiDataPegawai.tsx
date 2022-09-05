@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 
 
-export function DetailInformasiDataPegawai() {
+export function UpdateInformasiDataPegawai() {
   const location = useLocation()
 
   return (
@@ -155,9 +155,9 @@ export function DetailInformasiDataPegawai() {
                 <Link
                   className={
                     `nav-link text-active-primary me-6 ` +
-                    (location.pathname === '/kepegawaian/DataPribadi' && 'active')
+                    (location.pathname === '/kepegawaian/InformasiDataPegawai' && 'active')
                   }
-                  to='/kepegawaian/DataPribadi'
+                  to='/kepegawaian/UpdateDataPribadi'
                 >
                   Data Pribadi
                 </Link>
@@ -166,9 +166,9 @@ export function DetailInformasiDataPegawai() {
                 <Link
                   className={
                     `nav-link text-active-primary me-6 ` +
-                    (location.pathname === '/kepegawaian/DataKeluarga' && 'active')
+                    (location.pathname === '/kepegawaian/UpdateDataKeluarga' && 'active')
                   }
-                  to='/kepegawaian/DataKeluarga'
+                  to='/kepegawaian/UpdateDataKeluarga'
                 >
                   Data Keluarga
                 </Link>
@@ -195,7 +195,7 @@ export function DetailInformasiDataPegawai() {
                   Data Kepegawaian
                 </Link>
               </li>
-              <li className='nav-item'>
+              {/* <li className='nav-item'>
                 <Link
                   className={
                     `nav-link text-active-primary me-6 ` +
@@ -205,7 +205,7 @@ export function DetailInformasiDataPegawai() {
                 >
                   Hirarki Kepegawaian
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

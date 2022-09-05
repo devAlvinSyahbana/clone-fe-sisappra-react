@@ -9,14 +9,10 @@ import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 
 const PrivateRoutes = () => {
-  const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
+  const PelaporanPage = lazy(() => import('../modules/pelaporan/PelaporanPage'))
   const KepegawaianPage = lazy(() => import('../modules/kepegawaian/KepegawaianPage'))
-  const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
-  const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
-  const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
-  const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
+  const SaranaPrasaranaPage = lazy(() => import('../modules/sarana_prasarana/SaranaPrasaranaPage'))
   const DashboardPage = lazy(() => import('../modules/dashboard/DashboardPage'))
-  const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
 
   return (
     <Routes>
@@ -29,6 +25,14 @@ const PrivateRoutes = () => {
         <Route path='menu-test' element={<MenuTestPage />} />
         {/* Lazy Modules */}
         <Route
+          path='pelaporan/*'
+          element={
+            <SuspensedView>
+              <PelaporanPage />
+            </SuspensedView>
+          }
+        />
+        <Route
           path='kepegawaian/*'
           element={
             <SuspensedView>
@@ -37,58 +41,18 @@ const PrivateRoutes = () => {
           }
         />
         <Route
-          path='crafted/pages/profile/*'
+          path='sarana_prasarana/*'
           element={
             <SuspensedView>
-              <ProfilePage />
+              <SaranaPrasaranaPage />
             </SuspensedView>
           }
         />
         <Route
-          path='crafted/pages/wizards/*'
-          element={
-            <SuspensedView>
-              <WizardsPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='crafted/widgets/*'
-          element={
-            <SuspensedView>
-              <WidgetsPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='crafted/account/*'
-          element={
-            <SuspensedView>
-              <AccountPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='apps/chat/*'
-          element={
-            <SuspensedView>
-              <ChatPage />
-            </SuspensedView>
-          }
-        />
-          <Route
           path='dashboard/*'
           element={
             <SuspensedView>
               <DashboardPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='apps/user-management/*'
-          element={
-            <SuspensedView>
-              <UsersPage />
             </SuspensedView>
           }
         />

@@ -1,120 +1,69 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FC} from 'react'
+import '../Layout.css'
+import jsonpetatitikreklame from '../maps/peta-general.json'
+import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
 
-const PetaTitikReklame: FC = () => {
+function PetaTitikReklame() {
+  const filterTempat = jsonpetatitikreklame.filter(
+    (petatitikreklame) => petatitikreklame.address.country === 'Italy'
+  )
+
   return (
     <div className='card card-flush'>
       <div className='card-body'>
         <div className='tab-content' id='myTabContent'>
           <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
             <div className='row'>
-              <div className='col-md-6 col-lg-6 col-sm-12 mb-4'>
-                <div className='card card-bordered'>
-                  {/* <div className='card-header'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Per Wilayah
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PieW chartID='pie-one' />
-                  </div> */}
+              <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
+                <div className='button-group'>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Bencana
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Kebakaran
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    PKL
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    PMKS
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Politik
+                  </a>
+                  <a href='#' className='btn btn-light-primary me-2'>
+                    Tramtibum
+                  </a>
                 </div>
               </div>
-              <div className='col-md-6 col-lg-6 col-sm-12'>
+            </div>
+            <div className='row'>
+              <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
                 <div className='card card-bordered'>
-                  {/* <div className='card-header'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Berdasarkan Status Kepegawaian (PNS, PTT, PJLP)
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PieK chartID='pie-two' />
-                  </div> */}
-                </div>
-              </div>
-              <div className='col-md-6 col-lg-6 col-sm-12 mb-4'>
-                <div className='card card-bordered'>
-                  {/* <div className='card-header'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Berdasarkan Tingkat Pendidikan Terakhir (SMA, S1,
-                      S2, S3)
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PieTPT chartID='pie-three' />
-                  </div> */}
-                </div>
-              </div>
-              <div className='col-md-6 col-lg-6 col-sm-12'>
-                <div className='card card-bordered'>
-                  {/* <div className='card-header'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Berdasarkan Golongan
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PieG chartID='pie-four' />
-                  </div> */}
-                </div>
-              </div>
-              <div className='col-md-6 col-lg-6 col-sm-12 mb-4'>
-                <div className='card card-bordered'>
-                  {/* <div className='card-header'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Berdasarkan Jenis Eselon
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PieJE chartID='pie-five' />
-                  </div> */}
-                </div>
-              </div>
-              <div className='col-md-6 col-lg-6 col-sm-12'>
-                <div className='card card-bordered'>
-                  {/* <div className='card-header'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Berdasarkan Jenis Kediklatan
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PieJK chartID='pie-six' />
-                  </div> */}
-                </div>
-              </div>
-              <div className='col-md-6 col-lg-6 col-sm-12 mb-4'>
-                <div className='card card-bordered'>
-                  {/* <div className='card-header'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Berdasarkan Usia
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PieU chartID='pie-seven' />
-                  </div> */}
-                </div>
-              </div>
-              <div className='col-md-6 col-lg-6 col-sm-12'>
-                <div className='card card-bordered'>
-                  {/* <div className='card-header'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Berdasarkan PPNS
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PiePPNS chartID='pie-eight' />
-                  </div> */}
-                </div>
-              </div>
-              <div className='col-md-6 col-lg-6 col-sm-12'>
-                <div className='card card-bordered'>
-                  {/* <div className='card-header justify-content-center'>
-                    <h3 className='card-title text-center'>
-                      Jumlah Personil Satpol PP Berdasarkan Usia Pensiun
-                    </h3>
-                  </div>
-                  <div className='card-body'>
-                    <PieUP chartID='pie-nine' />
-                  </div> */}
+                  <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    />
+
+                    {filterTempat.map((petatitikreklame) => (
+                      <Marker
+                        key={petatitikreklame.id}
+                        position={[petatitikreklame.gps.latitude, petatitikreklame.gps.longitude]}
+                      >
+                        <Popup
+                          position={[petatitikreklame.gps.latitude, petatitikreklame.gps.longitude]}
+                        >
+                          <div>
+                            <h2>{'Nama : ' + petatitikreklame.name}</h2>
+                            <p>{'Status : ' + petatitikreklame.status}</p>
+                            <p>{'Number of Charging Area : ' + petatitikreklame.stallCount}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))}
+                  </MapContainer>
                 </div>
               </div>
             </div>
