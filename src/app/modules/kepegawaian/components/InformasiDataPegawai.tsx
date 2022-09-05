@@ -1,6 +1,6 @@
-import {useState, useEffect, Fragment} from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -11,9 +11,6 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function InformasiDataPegawai() {
-  useEffect(() => {
-    fetchUsers(1)
-  }, [])
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -132,19 +129,44 @@ export function InformasiDataPegawai() {
     },
   ]
 
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '72px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  };
+
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
+  useEffect(() => {
+    fetchUsers(1)
+  }, [])
+
   const fetchUsers = async (page: number) => {
     setLoading(true)
     if (!showResults || (showResults.isShowed && showResults.val === '1')) {
+    } else {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}`)
       setData(response.data.data)
       setTotalRows(response.data.total_data)
+      setLoading(false)
     }
-    setLoading(false)
     return [data, setData] as const
   }
 
@@ -162,16 +184,16 @@ export function InformasiDataPegawai() {
     setLoading(false)
   }
 
-  const [showResults, setShowResults] = useState({isShowed: false, val: ''})
-  const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
+  const [showResults, setShowResults] = useState({ isShowed: false, val: '' })
+  const Find = (event: { preventDefault: () => void; target: { value: string } }) => {
     if (event.target.value === '1') {
-      setShowResults({isShowed: true, val: event.target.value})
+      setShowResults({ isShowed: true, val: event.target.value })
     }
     if (event.target.value === '2') {
-      setShowResults({isShowed: true, val: event.target.value})
+      setShowResults({ isShowed: true, val: event.target.value })
     }
     if (event.target.value === '3') {
-      setShowResults({isShowed: true, val: event.target.value})
+      setShowResults({ isShowed: true, val: event.target.value })
     }
   }
 
@@ -301,6 +323,7 @@ export function InformasiDataPegawai() {
           paginationTotalRows={totalRows}
           onChangeRowsPerPage={handlePerRowsChange}
           onChangePage={handlePageChange}
+          customStyles={customStyles}
         />
       </div>
       {/* end::Body */}
