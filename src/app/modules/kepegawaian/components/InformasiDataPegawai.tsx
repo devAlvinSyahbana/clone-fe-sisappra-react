@@ -6,6 +6,10 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+
 export function InformasiDataPegawai() {
   useEffect(() => {
     fetchUsers(1)
@@ -31,12 +35,12 @@ export function InformasiDataPegawai() {
       selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'nama',
+      wrap: true,
     },
     {
       name: 'Tempat Lahir',
       selector: (row: any) => row.tempat_lahir,
       sortable: true,
-      minWidth: '15%',
       sortField: 'tempat_lahir',
       wrap: true,
     },
@@ -45,47 +49,59 @@ export function InformasiDataPegawai() {
       selector: (row: any) => row.tgl_lahir,
       sortable: true,
       sortField: 'tgl_lahir',
+      wrap: true,
+      minWidth: '15',
     },
     {
       name: 'NRK',
       selector: (row: any) => row.kepegawaian_nrk,
       sortable: true,
       sortField: 'kepegawaian_nrk',
+      wrap: true,
+      center: true,
     },
     {
       name: 'Tipe Pegawai',
       selector: (row: any) => row.kepegawaian_status_pegawai,
       sortable: true,
       sortField: 'kepegawaian_status_pegawai',
+      wrap: true,
+      center: true,
     },
     {
       name: 'Jenis Kelamin',
       selector: (row: any) => row.jenis_kelamin,
       sortable: true,
       sortField: 'jenis_kelamin',
+      wrap: true,
+      center: true,
     },
     {
       name: 'Agama',
       selector: (row: any) => row.agama,
       sortable: true,
       sortField: 'agama',
+      wrap: true,
+      center: true,
     },
     {
       name: 'No. HP',
       selector: (row: any) => row.no_hp,
       sortable: true,
       sortField: 'no_hp',
+      wrap: true,
     },
     {
       name: 'Aksi',
       sortable: false,
       text: 'Aksi',
       className: 'action',
-      align: 'right',
+      center: true,
+      allowOverflow: true,
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='mb-2'>
+            <div className='mb-2 mt-2'>
               {[DropdownButton].map((DropdownType, idx) => (
                 <>
                   <DropdownType
@@ -119,24 +135,35 @@ export function InformasiDataPegawai() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(10)
 
-  const fetchUsers = async (page: any) => {
+  const fetchUsers = async (page: number) => {
     setLoading(true)
-
-    console.log('page', page)
-    const response = await axios.get(`http://localhost:3000/kepegawaian/find`)
-    const response_count = await axios.get(`http://localhost:3000/kepegawaian/count-all`)
-
-    setData(response.data.data)
-    setTotalRows(response_count.data.total)
+    if (!showResults || (showResults.isShowed && showResults.val === '1')) {
+      const response = await axios.get(`${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}`)
+      setData(response.data.data)
+      setTotalRows(response.data.total_data)
+    }
     setLoading(false)
     return [data, setData] as const
   }
 
+  const handlePageChange = (page: number) => {
+    fetchUsers(page)
+  }
+
+  const handlePerRowsChange = async (newPerPage: number, page: number) => {
+    setLoading(true)
+
+    const response = await axios.get(`${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}`)
+
+    setData(response.data.data)
+    setPerPage(newPerPage)
+    setLoading(false)
+  }
+
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
   const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
-    console.log(typeof event.target.value)
-
     if (event.target.value === '1') {
       setShowResults({isShowed: true, val: event.target.value})
     }
@@ -270,7 +297,10 @@ export function InformasiDataPegawai() {
           progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
+          paginationServer
           paginationTotalRows={totalRows}
+          onChangeRowsPerPage={handlePerRowsChange}
+          onChangePage={handlePageChange}
         />
       </div>
       {/* end::Body */}
