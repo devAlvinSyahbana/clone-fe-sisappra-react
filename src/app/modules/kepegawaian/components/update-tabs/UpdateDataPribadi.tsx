@@ -253,22 +253,11 @@ export function UpdateDataPribadi() {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/kepegawaian/DataKepegawaian' && 'active')
+                      (location.pathname === '/kepegawaian/UpdateDataKepegawaian' && 'active')
                     }
-                    to='/kepegawaian/DataKepegawaian'
+                    to='/kepegawaian/UpdateDataKepegawaian'
                   >
                     Data Kepegawaian
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link
-                    className={
-                      `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/kepegawaian/HirarkiKepegawaian' && 'active')
-                    }
-                    to='/kepegawaian/HirarkiKepegawaian'
-                  >
-                    Hirarki Kepegawaian
                   </Link>
                 </li>
               </ul>
