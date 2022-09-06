@@ -124,72 +124,72 @@ export function AsideMenuMain() {
         icon='/media/icons/duotune/general/gen022.svg'
       >
         <AsideMenuItem
-          to='/Kota/Master'
+          to='/master/Kota'
           title='Kota'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/Kecamatan/Master'
+          to='/master/Kecamatan'
           title='Kecamatan'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/Kelurahan/Master'
+          to='/master/Kelurahan'
           title='Kelurahan'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/JenisKegiatan/Master'
+          to='/master/JenisKegiatan'
           title='Jenis Kegiatan'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/InstansiTerkait/Master'
+          to='/master/JenisKejadian'
+          title='Jenis Kejadian'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/InstansiTerkait'
           title='Instansi Terkait'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/JenisBantuan/Master'
+          to='/master/JenisBantuan'
           title='Jenis Bantuan'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/KorbanMaterial/Master'
+          to='/master/KorbanMaterial'
           title='Korban Material '
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/KorbanJiwa/Master'
+          to='/master/KorbanJiwa'
           title='Korban Jiwa'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/Kelurahan/Master'
-          title='Kelurahan'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/JenisPertolongan/Master'
+          to='/master/JenisPertolongan'
           title='Jenis Pertolongan'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/JenisPerdaPerkada/Master'
+          to='/master/JenisPerda'
           title='Jenis Perda'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/JenisPerdaPerkada/Master'
+          to='/master/JenisPerkada'
           title='Jenis Perkada'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/JenisPenindakan/Master'
+          to='/master/JenisPenindakan'
           title='Jenis Penindakan'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/JenisPelanggaran/Master'
+          to='/master/JenisPelanggaran'
           title='Jenis Pelanggaran'
           hasBullet={true}
         />
