@@ -124,7 +124,7 @@ export function LaporanSaranaPrasarana() {
    
     setTotalRows(response.data.total);
     setLoading(false);
-    console.log('cek ahhh :' ,data);
+    console.log('cek :' ,data);
     return [data, setData] as const;
   };
 
@@ -200,10 +200,10 @@ export function LaporanSaranaPrasarana() {
       </div>
       <div className="row g-8 mt-2 ms-5 me-5">
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#' className='me-2'>
-            <button className='btn btn-primary'>
-              <i className="fa-solid fa-filter"></i>
-              Filter
+        <Link to='#'>
+            <button className='btn btn-primary me-2'>
+              <i className='fa-solid fa-search'></i>
+              Cari
             </button>
           </Link>
           <Link to='#i'>
@@ -215,7 +215,7 @@ export function LaporanSaranaPrasarana() {
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-          <Link to='#i'>
+          <Link to='/Sarana_prasarana/TambahSaranaPrasarana'>
             <button className='btn btn-primary'>
               <i className="fa-solid fa-plus"></i>
               Tambah

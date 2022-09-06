@@ -52,11 +52,11 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
-          path='Kecamtana'
+          path='Kecamatan'
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Kecamatan</PageTitle>
-              <Kecamatan />
+              <Kecamatan/>
             </>
           }
         />
@@ -133,7 +133,7 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
-          path='KorbanJiwa '
+          path='KorbanJiwa'
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Korban Jiwa </PageTitle>
