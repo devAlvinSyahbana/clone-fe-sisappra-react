@@ -61,6 +61,14 @@ export function UpdateInformasiDataPegawai() {
                       />
                       agux.aprianto@satpol.dki.com
                     </a>
+                    <a
+                      href="/#"
+                      className="d-flex align-items-center text-gray-400 text-hover-primary me-5 ms-5 mb-2"
+                    >
+                      <i className="fa-solid fa-address-card me-1"></i
+                      >PENGELOLA PENGENDALIAN DAN
+                      OPERASIONAL
+                    </a>
                   </div>
                 </div>
 
@@ -177,9 +185,9 @@ export function UpdateInformasiDataPegawai() {
                 <Link
                   className={
                     `nav-link text-active-primary me-6 ` +
-                    (location.pathname === '/kepegawaian/Pendidikan' && 'active')
+                    (location.pathname === '/kepegawaian/UpdatePendidikan' && 'active')
                   }
-                  to='/kepegawaian/Pendidikan'
+                  to='/kepegawaian/UpdatePendidikan'
                 >
                   Pendidikan
                 </Link>
