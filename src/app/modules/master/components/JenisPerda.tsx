@@ -9,7 +9,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 
-export function LaporanSaranaPrasarana() {
+export function JenisPerda() {
 
   useEffect(() => {
     fetchUsers(1);
@@ -124,7 +124,7 @@ export function LaporanSaranaPrasarana() {
    
     setTotalRows(response.data.total);
     setLoading(false);
-    console.log('cek :' ,data);
+    console.log('cek ahhh :' ,data);
     return [data, setData] as const;
   };
 
@@ -158,73 +158,32 @@ export function LaporanSaranaPrasarana() {
   return (
     <div className={`card`}>
       {/* begin::Body */}
-      
       <div className="row g-8 mt-2 ms-5 me-5">
-        <div className='col-md-6'>
-          <div className='form-group'>
-            <label htmlFor="" className='mb-3'>Jenis Sarana & Prasarana</label>
-            <select className="form-select form-select-solid" aria-label="Select example">
-              <option>Pilih</option>
-              <option value="1"></option>
-              <option value="2"></option>
-              <option value="3"></option>
-            </select>
+          <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
+            <label htmlFor='' className='mb-3'>
+              Kota
+            </label>
+            <input
+              type='text' className='form-control form-control form-control-solid' name='tags'/>
           </div>
-        </div>
-      </div>
-      <div className="row g-8 mt-2 ms-5 me-5">
-        <div className='col-md-6'>
-          <div className='form-group'>
-            <label htmlFor="" className='mb-3'>Status Sarana & Prasarana</label>
-            <select className="form-select form-select-solid" aria-label="Select example">
-              <option>Pilih</option>
-              <option value="1"></option>
-              <option value="2"></option>
-              <option value="3"></option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div className="row g-8 mt-2 ms-5 me-5">
-        <div className='col-md-6'>
-          <div className='form-group'>
-            <label htmlFor="" className='mb-3'>Kondisi</label>
-            <select className="form-select form-select-solid" aria-label="Select example">
-              <option>Pilih</option>
-              <option value="1"></option>
-              <option value="2"></option>
-              <option value="3"></option>
-            </select>
-          </div>
-        </div>
       </div>
       <div className="row g-8 mt-2 ms-5 me-5">
         <div className='col-md-6 col-lg-6 col-sm-12'>
         <Link to='#'>
-            <button className='btn btn-primary me-2'>
+            <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
-            </button>
-          </Link>
-          <Link to='#i'>
-            <button className='btn btn-primary'>
-              <i className="fa-solid fa-arrows-rotate"></i>
-              Reset
             </button>
           </Link>
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-          <Link to='/Sarana_prasarana/TambahSaranaPrasarana'>
-            <button className='btn btn-primary'>
+          <Link to='#i'>
+            <button className='btn btn-primary me-5'>
               <i className="fa-solid fa-plus"></i>
               Tambah
             </button>
-          </Link>&nbsp;
-          <DropdownButton id="dropdown-basic-button" title="Unduh" variant="light">
-            <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">PDF</Dropdown.Item>
-          </DropdownButton>
+          </Link>
         </div>
       </div>
       <div className='table-responsive mt-5 ms-5 me-5'>
