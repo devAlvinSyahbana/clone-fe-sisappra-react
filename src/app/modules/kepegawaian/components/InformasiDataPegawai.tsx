@@ -12,6 +12,18 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function InformasiDataPegawai() {
+  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
+  const [valFilterNama, setFilterNama] = useState({val: ''})
+  const [valFilterNRK, setFilterNRK] = useState({val: ''})
+  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
+  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
+
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(10)
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -74,7 +86,14 @@ export function InformasiDataPegawai() {
       minWidth: '15',
     },
     {
-      name: 'NRK',
+      name:
+        valStatPegawai.val !== ''
+          ? valStatPegawai.val === 'PTT'
+            ? 'NPTT'
+            : valStatPegawai.val === 'PJLP'
+            ? 'NPJLP'
+            : 'NRK'
+          : 'NRK',
       selector: (row: any) => row.kepegawaian_nrk,
       sortable: true,
       sortField: 'kepegawaian_nrk',
@@ -137,7 +156,7 @@ export function InformasiDataPegawai() {
                       {/* <Link className='text-reset' to='/kepegawaian/DetailInformasiDataPegawai'>
                         Detail
                       </Link> */}
-                      <Link className='text-reset' to='/kepegawaian/DataPribadi'>
+                      <Link className='text-reset' to={'/kepegawaian/DataPribadi/' + record?.id}>
                         Detail
                       </Link>
                     </Dropdown.Item>
@@ -145,7 +164,10 @@ export function InformasiDataPegawai() {
                       {/* <Link className='text-reset' to='/kepegawaian/UpdateInformasiDataPegawai'>
                         Ubah
                       </Link> */}
-                      <Link className='text-reset' to='/kepegawaian/UpdateDataPribadi'>
+                      <Link
+                        className='text-reset'
+                        to={'/kepegawaian/UpdateDataPribadi/' + record?.id}
+                      >
                         Ubah
                       </Link>
                     </Dropdown.Item>
@@ -178,12 +200,6 @@ export function InformasiDataPegawai() {
       },
     },
   }
-
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
 
   useEffect(() => {
     fetchData(1)
@@ -240,11 +256,6 @@ export function InformasiDataPegawai() {
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
-  const [valFilterNama, setFilterNama] = useState({val: ''})
-  const [valFilterNRK, setFilterNRK] = useState({val: ''})
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
   const handleChangeStatPegawai = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -307,19 +318,21 @@ export function InformasiDataPegawai() {
               placeholder='Nama'
             />
           </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <label htmlFor='' className='mb-3'>
-              NRK
-            </label>
-            <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              name='nrk'
-              value={valFilterNRK.val}
-              onChange={handleChangeInputNRK}
-              placeholder='NRK'
-            />
-          </div>
+          {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                NRK
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='nrk'
+                value={valFilterNRK.val}
+                onChange={handleChangeInputNRK}
+                placeholder='NRK'
+              />
+            </div>
+          ) : null}
           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
             <label htmlFor='' className='mb-3'>
               {valStatPegawai.val === 'PNS'
@@ -366,8 +379,8 @@ export function InformasiDataPegawai() {
         </div>
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
           <DropdownButton id='dropdown-basic-button' title='Unduh' variant='light'>
-            <Dropdown.Item href='/#/action-1'>Excel</Dropdown.Item>
-            <Dropdown.Item href='/#/action-2'>PDF</Dropdown.Item>
+            <Dropdown.Item href='/#'>Excel</Dropdown.Item>
+            <Dropdown.Item href='/#'>PDF</Dropdown.Item>
           </DropdownButton>
         </div>
       </div>
