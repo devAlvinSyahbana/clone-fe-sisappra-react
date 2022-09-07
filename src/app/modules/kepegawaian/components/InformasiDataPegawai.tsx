@@ -1,17 +1,17 @@
-import { useState, useEffect, Fragment } from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function InformasiDataPegawai() {
-
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -32,7 +32,20 @@ export function InformasiDataPegawai() {
       selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'nama',
+      width: '200px',
       wrap: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='d-flex align-items-center'>
+              <div className='symbol symbol-50px me-5'>
+                <img alt='Logo' src={toAbsoluteUrl('/media/avatars/300-1.jpg')} />
+              </div>
+              <div className='d-flex flex-column'>{record?.nama}</div>
+            </div>
+          </Fragment>
+        )
+      },
     },
     {
       name: 'Tempat Lahir',
@@ -147,54 +160,97 @@ export function InformasiDataPegawai() {
         paddingRight: '8px',
       },
     },
-  };
+  }
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
+  const [qParamFind, setUriFind] = useState({strparam: ''})
 
   useEffect(() => {
-    fetchUsers(1)
-  }, [])
+    fetchData(1)
+  }, [qParamFind])
 
-  const fetchUsers = async (page: number) => {
+  const fetchData = async (page: number) => {
     setLoading(true)
-    if (!showResults || (showResults.isShowed && showResults.val === '1')) {
-    } else {
-      const response = await axios.get(`${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}`)
-      setData(response.data.data)
-      setTotalRows(response.data.total_data)
-      setLoading(false)
-    }
+    const response = await axios.get(
+      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+    )
+    setData(response.data.data)
+    setTotalRows(response.data.total_data)
+    setLoading(false)
+
     return [data, setData] as const
   }
 
   const handlePageChange = (page: number) => {
-    fetchUsers(page)
+    fetchData(page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
-
-    const response = await axios.get(`${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}`)
-
+    const response = await axios.get(
+      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+    )
     setData(response.data.data)
     setPerPage(newPerPage)
     setLoading(false)
   }
 
-  const [showResults, setShowResults] = useState({ isShowed: false, val: '' })
-  const Find = (event: { preventDefault: () => void; target: { value: string } }) => {
-    if (event.target.value === '1') {
-      setShowResults({ isShowed: true, val: event.target.value })
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valStatPegawai.val !== '') {
+      uriParam += `&status=${valStatPegawai.val}`
     }
-    if (event.target.value === '2') {
-      setShowResults({ isShowed: true, val: event.target.value })
+    if (valFilterNama.val !== '') {
+      uriParam += `&nama=${valFilterNama.val}`
     }
-    if (event.target.value === '3') {
-      setShowResults({ isShowed: true, val: event.target.value })
+    if (valFilterNRK.val !== '') {
+      uriParam += `&nrk=${valFilterNRK.val}`
     }
+    if (valFilterNoPegawai.val !== '') {
+      uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+    }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterReset = () => {
+    setValStatPegawai({val: ''})
+    setFilterNama({val: ''})
+    setFilterNRK({val: ''})
+    setFilterNoPegawai({val: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+
+  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
+  const [valFilterNama, setFilterNama] = useState({val: ''})
+  const [valFilterNRK, setFilterNRK] = useState({val: ''})
+  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
+  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
+  const handleChangeStatPegawai = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setValStatPegawai({val: event.target.value})
+  }
+  const handleChangeInputNama = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterNama({val: event.target.value})
+  }
+  const handleChangeInputNRK = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterNRK({val: event.target.value})
+  }
+  const handleChangeInputNoPegawai = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterNoPegawai({val: event.target.value})
   }
 
   return (
@@ -210,13 +266,14 @@ export function InformasiDataPegawai() {
               <select
                 className='form-select form-select-solid'
                 aria-label='Select example'
-                id='select_status'
-                onChange={Find}
+                value={valStatPegawai.val}
+                onChange={handleChangeStatPegawai}
+                name='val'
               >
-                <option>Pilih</option>
-                <option value='1'>PNS</option>
-                <option value='2'>PTT</option>
-                <option value='3'>PJLP</option>
+                <option value=''>Pilih</option>
+                {arrStatPegawai.map((val: string) => {
+                  return <option value={val}>{val}</option>
+                })}
               </select>
             </div>
           </div>
@@ -227,7 +284,9 @@ export function InformasiDataPegawai() {
             <input
               type='text'
               className='form-control form-control form-control-solid'
-              name='tags'
+              name='nama'
+              value={valFilterNama.val}
+              onChange={handleChangeInputNama}
               placeholder='Nama'
             />
           </div>
@@ -238,67 +297,51 @@ export function InformasiDataPegawai() {
             <input
               type='text'
               className='form-control form-control form-control-solid'
-              name='tags'
+              name='nrk'
+              value={valFilterNRK.val}
+              onChange={handleChangeInputNRK}
               placeholder='NRK'
             />
           </div>
-
-          {showResults.isShowed && showResults.val === '1' ? (
-            <>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nip'>
-                <label htmlFor='' className='mb-3'>
-                  NIP
-                </label>
-                <input
-                  type='text'
-                  className='form-control form-control form-control-solid'
-                  name='tags'
-                  placeholder='NIP'
-                />
-              </div>
-            </>
-          ) : null || (showResults.isShowed && showResults.val === '2') ? (
-            <>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nptt'>
-                <label htmlFor='' className='mb-3'>
-                  NPTT
-                </label>
-                <input
-                  type='text'
-                  className='form-control form-control form-control-solid'
-                  name='tags'
-                  placeholder='NPTT'
-                />
-              </div>
-            </>
-          ) : null || (showResults.isShowed && showResults.val === '3') ? (
-            <>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_npjlp'>
-                <label htmlFor='' className='mb-3'>
-                  NPJLP
-                </label>
-                <input
-                  type='text'
-                  className='form-control form-control form-control-solid'
-                  name='tags'
-                  placeholder='NPJLP'
-                />
-              </div>
-            </>
-          ) : null}
+          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+            <label htmlFor='' className='mb-3'>
+              {valStatPegawai.val === 'PNS'
+                ? 'NIP'
+                : valStatPegawai.val === 'PTT'
+                ? 'NPTT'
+                : valStatPegawai.val === 'PJLP'
+                ? 'NPJLP'
+                : 'NIP'}
+            </label>
+            <input
+              type='text'
+              className='form-control form-control form-control-solid'
+              value={valFilterNoPegawai.val}
+              onChange={handleChangeInputNoPegawai}
+              placeholder={
+                valStatPegawai.val === 'PNS'
+                  ? 'NIP'
+                  : valStatPegawai.val === 'PTT'
+                  ? 'NPTT'
+                  : valStatPegawai.val === 'PJLP'
+                  ? 'NPJLP'
+                  : 'NIP'
+              }
+            />
+          </div>
         </div>
       </div>
 
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#' className='me-2'>
+          <Link to='#' onClick={handleFilterReset} className='me-2'>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-arrows-rotate'></i>
               Reset
             </button>
           </Link>
           <Link to='#'>
-            <button className='btn btn-primary'>
+            <button onClick={handleFilter} className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
             </button>
