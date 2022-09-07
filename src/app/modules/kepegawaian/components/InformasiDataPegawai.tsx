@@ -6,6 +6,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
@@ -38,10 +39,23 @@ export function InformasiDataPegawai() {
         return (
           <Fragment>
             <div className='d-flex align-items-center'>
-              <div className='symbol symbol-50px me-5'>
-                <img alt='Logo' src={toAbsoluteUrl('/media/avatars/300-1.jpg')} />
+              {/* begin:: Avatar */}
+              <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
+                <a href='#'>
+                  {record?.foto !== '' ? (
+                    <div className='symbol-label'>
+                      <img src={record?.foto} alt={record?.nama} className='w-100' />
+                    </div>
+                  ) : (
+                    <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
+                      {record?.nama.charAt(0)}
+                    </div>
+                  )}
+                </a>
               </div>
-              <div className='d-flex flex-column'>{record?.nama}</div>
+              <div className='d-flex flex-column'>
+                <span>{record?.nama}</span>
+              </div>
             </div>
           </Fragment>
         )
