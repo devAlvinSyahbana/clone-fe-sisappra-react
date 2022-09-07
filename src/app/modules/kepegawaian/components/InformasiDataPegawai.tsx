@@ -5,7 +5,6 @@ import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -41,17 +40,15 @@ export function InformasiDataPegawai() {
             <div className='d-flex align-items-center'>
               {/* begin:: Avatar */}
               <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
-                <a href='#'>
-                  {record?.foto !== '' ? (
-                    <div className='symbol-label'>
-                      <img src={record?.foto} alt={record?.nama} className='w-100' />
-                    </div>
-                  ) : (
-                    <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
-                      {record?.nama.charAt(0)}
-                    </div>
-                  )}
-                </a>
+                {record?.foto !== '' ? (
+                  <div className='symbol-label'>
+                    <img src={record?.foto} alt={record?.nama} className='w-100' />
+                  </div>
+                ) : (
+                  <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
+                    {record?.nama.charAt(0)}
+                  </div>
+                )}
               </div>
               <div className='d-flex flex-column'>
                 <span>{record?.nama}</span>
@@ -137,12 +134,18 @@ export function InformasiDataPegawai() {
                     title='Aksi'
                   >
                     <Dropdown.Item>
-                      <Link className='text-reset' to='/kepegawaian/DetailInformasiDataPegawai'>
+                      {/* <Link className='text-reset' to='/kepegawaian/DetailInformasiDataPegawai'>
+                        Detail
+                      </Link> */}
+                      <Link className='text-reset' to='/kepegawaian/DataPribadi'>
                         Detail
                       </Link>
                     </Dropdown.Item>
                     <Dropdown.Item>
-                      <Link className='text-reset' to='/kepegawaian/UpdateInformasiDataPegawai'>
+                      {/* <Link className='text-reset' to='/kepegawaian/UpdateInformasiDataPegawai'>
+                        Ubah
+                      </Link> */}
+                      <Link className='text-reset' to='/kepegawaian/UpdateDataPribadi'>
                         Ubah
                       </Link>
                     </Dropdown.Item>
