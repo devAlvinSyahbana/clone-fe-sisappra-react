@@ -205,8 +205,17 @@ export function InformasiDataPegawai() {
   }
 
   useEffect(() => {
-    fetchData(1)
-  }, [qParamFind])
+    async function fetchDT(page: number) {
+      setLoading(true)
+      const response = await axios.get(
+        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      )
+      setData(response.data.data)
+      setTotalRows(response.data.total_data)
+      setLoading(false)
+    }
+    fetchDT(1)
+  }, [qParamFind, perPage])
 
   const fetchData = async (page: number) => {
     setLoading(true)
