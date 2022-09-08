@@ -1,11 +1,9 @@
 // import React from 'react'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
-import {useLocation} from 'react-router-dom'
 import {HeaderDetailWrapper} from './HeaderDetail'
 
 export function DataKepegawaian() {
-  const location = useLocation()
 
   return (
     <div>
