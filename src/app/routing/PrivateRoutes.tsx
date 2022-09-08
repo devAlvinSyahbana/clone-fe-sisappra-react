@@ -12,6 +12,8 @@ const PrivateRoutes = () => {
   const PelaporanPage = lazy(() => import('../modules/pelaporan/PelaporanPage'))
   const KepegawaianPage = lazy(() => import('../modules/kepegawaian/KepegawaianPage'))
   const SaranaPrasaranaPage = lazy(() => import('../modules/sarana_prasarana/SaranaPrasaranaPage'))
+  const MasterPage = lazy(() => import('../modules/master/MasterPage'))
+
   const DashboardPage = lazy(() => import('../modules/dashboard/DashboardPage'))
 
   return (
@@ -37,6 +39,14 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <KepegawaianPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='master/*'
+          element={
+            <SuspensedView>
+              <MasterPage />
             </SuspensedView>
           }
         />
