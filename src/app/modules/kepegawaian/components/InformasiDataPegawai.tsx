@@ -156,7 +156,10 @@ export function InformasiDataPegawai() {
                       {/* <Link className='text-reset' to='/kepegawaian/DetailInformasiDataPegawai'>
                         Detail
                       </Link> */}
-                      <Link className='text-reset' to={'/kepegawaian/DataPribadi/' + record?.id}>
+                      <Link
+                        className='text-reset'
+                        to={`/kepegawaian/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`}
+                      >
                         Detail
                       </Link>
                     </Dropdown.Item>
