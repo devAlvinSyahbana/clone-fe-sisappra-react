@@ -3,8 +3,8 @@ import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 
 import { InformasiDataPegawai } from './components/InformasiDataPegawai'
-import { UpdateInformasiDataPegawai } from './components/UpdateInformasiDataPegawai'
-import { DetailInformasiDataPegawai } from './components/DetailInformasiDataPegawai'
+import { TabUpdateHeader } from './components/TabUpdateHeader'
+import { TabHeader } from './components/TabHeader'
 import { HirarkiPegawai } from './components/HirarkiPegawai'
 import { LaporanRekapitulasiPegawai } from './components/LaporanRekapitulasiPegawai'
 import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSipil'
@@ -62,7 +62,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Informasi Data Pegawai</PageTitle>
-              <DetailInformasiDataPegawai />
+              <TabHeader />
             </>
           }
         />
@@ -71,7 +71,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Update Informasi Data Pegawai</PageTitle>
-              <UpdateInformasiDataPegawai />
+              <TabUpdateHeader />
             </>
           }
         />
@@ -125,6 +125,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Pribadi</PageTitle>
+              <TabHeader />
               <DataPribadi />
             </>
           }
@@ -134,6 +135,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Keluarga</PageTitle>
+              <TabHeader />
               <DataKeluarga />
             </>
           }
@@ -143,6 +145,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Pendidikan</PageTitle>
+              <TabHeader />
               <Pendidikan />
             </>
           }
@@ -152,6 +155,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Kepegawaian</PageTitle>
+              <TabHeader />
               <DataKepegawaian />
             </>
           }
@@ -161,6 +165,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Hirarki Kepegawaian</PageTitle>
+              <TabHeader />
               <HirarkiKepegawaian />
             </>
           }
@@ -171,6 +176,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Pribadi</PageTitle>
+              <TabUpdateHeader />
               <UpdateDataPribadi />
             </>
           }
@@ -180,6 +186,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Keluarga</PageTitle>
+              <TabUpdateHeader />
               <UpdateDataKeluarga />
             </>
           }
@@ -189,6 +196,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Pendidikan</PageTitle>
+              <TabUpdateHeader />
               <UpdatePendidikan />
             </>
           }
@@ -198,6 +206,7 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian</PageTitle>
+              <TabUpdateHeader />
               <UpdateDataKepegawaian />
             </>
           }
