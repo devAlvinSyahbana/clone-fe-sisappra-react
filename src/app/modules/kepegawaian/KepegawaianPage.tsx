@@ -1,27 +1,27 @@
 import React from 'react'
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
+import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
+import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 
-import { InformasiDataPegawai } from './components/InformasiDataPegawai'
+import {InformasiDataPegawai} from './components/InformasiDataPegawai'
 import { TabUpdateHeader } from './components/TabUpdateHeader'
-import { TabHeader } from './components/TabHeader'
-import { HirarkiPegawai } from './components/HirarkiPegawai'
-import { LaporanRekapitulasiPegawai } from './components/LaporanRekapitulasiPegawai'
-import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSipil'
-import { KehadiranPegawai } from './components/KehadiranPegawai'
-import { JadwalPiket } from './components/JadwalPiket'
+import {UpdateInformasiDataPegawai} from './components/UpdateInformasiDataPegawai'
+import {DetailInformasiDataPegawai} from './components/DetailInformasiDataPegawai'
+import {HirarkiPegawai} from './components/HirarkiPegawai'
+import {LaporanRekapitulasiPegawai} from './components/LaporanRekapitulasiPegawai'
+import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipil'
+import {KehadiranPegawai} from './components/KehadiranPegawai'
+import {JadwalPiket} from './components/JadwalPiket'
 
-import { DataPribadi } from './components/tabs/DataPribadi'
-import { DataKeluarga } from './components/tabs/DataKeluarga'
-import { Pendidikan } from './components/tabs/Pendidikan'
-import { DataKepegawaian } from './components/tabs/DataKepegawaian'
-import { HirarkiKepegawaian } from './components/tabs/HirarkiKepegawaian'
+import {DataPribadi} from './components/tabs/DataPribadi'
+import {DataKeluarga} from './components/tabs/DataKeluarga'
+import {Pendidikan} from './components/tabs/Pendidikan'
+import {DataKepegawaian} from './components/tabs/DataKepegawaian'
+import {HirarkiKepegawaian} from './components/tabs/HirarkiKepegawaian'
 
-import { UpdateDataPribadi } from './components/update-tabs/UpdateDataPribadi'
-import { UpdateDataKeluarga } from './components/update-tabs/UpdateDataKeluarga'
-import { UpdatePendidikan } from './components/update-tabs/UpdatePendidikan'
-import { UpdateDataKepegawaian } from './components/update-tabs/UpdateDataKepegawaian'
-
+import {UpdateDataPribadi} from './components/update-tabs/UpdateDataPribadi'
+import {UpdateDataKeluarga} from './components/update-tabs/UpdateDataKeluarga'
+import {UpdatePendidikan} from './components/update-tabs/UpdatePendidikan'
+import {UpdateDataKepegawaian} from './components/update-tabs/UpdateDataKepegawaian'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -61,8 +61,10 @@ const KepegawaianPage: React.FC = () => {
           path='DetailInformasiDataPegawai'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Informasi Data Pegawai</PageTitle>
-              <TabHeader />
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Detail Informasi Data Pegawai
+              </PageTitle>
+              <DetailInformasiDataPegawai />
             </>
           }
         />
@@ -70,8 +72,10 @@ const KepegawaianPage: React.FC = () => {
           path='UpdateInformasiDataPegawai'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Update Informasi Data Pegawai</PageTitle>
-              <TabUpdateHeader />
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Update Informasi Data Pegawai
+              </PageTitle>
+              <UpdateInformasiDataPegawai />
             </>
           }
         />
@@ -88,7 +92,9 @@ const KepegawaianPage: React.FC = () => {
           path='LaporanRekapitulasiPegawai'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Laporan Rekapitulasi Pegawai</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Laporan Rekapitulasi Pegawai
+              </PageTitle>
               <LaporanRekapitulasiPegawai />
             </>
           }
@@ -97,7 +103,9 @@ const KepegawaianPage: React.FC = () => {
           path='PenyidikPegawaiNegeriSipil'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Penyidik Pegawai Negeri Sipil (PPNS)</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Penyidik Pegawai Negeri Sipil (PPNS)
+              </PageTitle>
               <PenyidikPegawaiNegeriSipil />
             </>
           }
@@ -121,7 +129,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='DataPribadi'
+          path='DataPribadi/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Pribadi</PageTitle>
@@ -131,7 +139,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='DataKeluarga'
+          path='DataKeluarga/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Keluarga</PageTitle>
@@ -141,7 +149,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='Pendidikan'
+          path='Pendidikan/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Pendidikan</PageTitle>
@@ -151,7 +159,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='DataKepegawaian'
+          path='DataKepegawaian/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Kepegawaian</PageTitle>
@@ -161,7 +169,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='HirarkiKepegawaian'
+          path='HirarkiKepegawaian/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Hirarki Kepegawaian</PageTitle>
