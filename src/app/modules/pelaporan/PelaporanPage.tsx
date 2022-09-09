@@ -6,7 +6,6 @@ import { TambahLaporanKegiatan } from './components/TambahLaporanKegiatan'
 import { LaporanKejadian } from './components/LaporanKejadian'
 import { TambahLaporanKejadian } from './components/TambahLaporanKejadian'
 import { LaporanPengawasan } from './components/LaporanPengawasan'
-import { TambahLaporanPengawasan } from './components/TambahLaporanPengawasan'
 import { LaporanTamuDaerah } from './components/LaporanTamuDaerah'
 import { TambahTamuDaerah } from './components/TambahTamuDaerah'
 
@@ -78,15 +77,6 @@ const PelaporanPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Pengawasan</PageTitle>
               <LaporanPengawasan />
-            </>
-          }
-        />
-        <Route
-          path='TambahLaporanPengawasan'
-          element={
-            <>
-              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Pengawasan</PageTitle>
-              <TambahLaporanPengawasan />
             </>
           }
         />

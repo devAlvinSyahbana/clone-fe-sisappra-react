@@ -1,6 +1,6 @@
-import {useState, useEffect, Fragment} from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -12,17 +12,17 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function InformasiDataPegawai() {
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
-  const [valFilterNama, setFilterNama] = useState({val: ''})
-  const [valFilterNRK, setFilterNRK] = useState({val: ''})
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
+  const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
+  const [valFilterNama, setFilterNama] = useState({ val: '' })
+  const [valFilterNRK, setFilterNRK] = useState({ val: '' })
+  const [valFilterNoPegawai, setFilterNoPegawai] = useState({ val: '' })
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -91,8 +91,8 @@ export function InformasiDataPegawai() {
           ? valStatPegawai.val === 'PTT'
             ? 'NPTT'
             : valStatPegawai.val === 'PJLP'
-            ? 'NPJLP'
-            : 'NRK'
+              ? 'NPJLP'
+              : 'NRK'
           : 'NRK',
       selector: (row: any) => row.kepegawaian_nrk,
       sortable: true,
@@ -257,40 +257,40 @@ export function InformasiDataPegawai() {
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nopegawai=${valFilterNoPegawai.val}`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterReset = () => {
-    setValStatPegawai({val: ''})
-    setFilterNama({val: ''})
-    setFilterNRK({val: ''})
-    setFilterNoPegawai({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setValStatPegawai({ val: '' })
+    setFilterNama({ val: '' })
+    setFilterNRK({ val: '' })
+    setFilterNoPegawai({ val: '' })
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   const handleChangeStatPegawai = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setValStatPegawai({val: event.target.value})
+    setValStatPegawai({ val: event.target.value })
   }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNama({val: event.target.value})
+    setFilterNama({ val: event.target.value })
   }
   const handleChangeInputNRK = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNRK({val: event.target.value})
+    setFilterNRK({ val: event.target.value })
   }
   const handleChangeInputNoPegawai = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNoPegawai({val: event.target.value})
+    setFilterNoPegawai({ val: event.target.value })
   }
 
   return (
@@ -350,10 +350,10 @@ export function InformasiDataPegawai() {
               {valStatPegawai.val === 'PNS'
                 ? 'NIP'
                 : valStatPegawai.val === 'PTT'
-                ? 'NPTT'
-                : valStatPegawai.val === 'PJLP'
-                ? 'NPJLP'
-                : 'NIP'}
+                  ? 'NPTT'
+                  : valStatPegawai.val === 'PJLP'
+                    ? 'NPJLP'
+                    : 'NIP'}
             </label>
             <input
               type='text'
@@ -364,10 +364,10 @@ export function InformasiDataPegawai() {
                 valStatPegawai.val === 'PNS'
                   ? 'NIP'
                   : valStatPegawai.val === 'PTT'
-                  ? 'NPTT'
-                  : valStatPegawai.val === 'PJLP'
-                  ? 'NPJLP'
-                  : 'NIP'
+                    ? 'NPTT'
+                    : valStatPegawai.val === 'PJLP'
+                      ? 'NPJLP'
+                      : 'NIP'
               }
             />
           </div>

@@ -1,10 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, FC} from 'react'
-import PieK from '../PieCharts/Status-Kepegawaian'
-import PieTPT from '../PieCharts/Tingkat-Pendidikan-Terakhir'
-import PieUP from '../PieCharts/Usia-Pensiun'
-import PieU from '../PieCharts/Usia'
-import PieG from '../PieCharts/Golongan'
+import BarC from '../chart/barchart/barchart'
 
 const WasdakProtokolKesehatan: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -98,15 +94,15 @@ const WasdakProtokolKesehatan: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '2') ? (
                     <>
-                      <PieTPT chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '3') ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>
@@ -150,15 +146,15 @@ const WasdakProtokolKesehatan: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <PieTPT chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>
@@ -200,15 +196,15 @@ const WasdakProtokolKesehatan: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '7' ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '8') ? (
                     <>
-                      <PieTPT chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '9') ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>
@@ -252,15 +248,15 @@ const WasdakProtokolKesehatan: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '10' ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '11') ? (
                     <>
-                      <PieTPT chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '12') ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>
@@ -304,15 +300,15 @@ const WasdakProtokolKesehatan: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '13' ? (
                     <>
-                      <PieUP chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '14') ? (
                     <>
-                      <PieU chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '15') ? (
                     <>
-                      <PieG chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>

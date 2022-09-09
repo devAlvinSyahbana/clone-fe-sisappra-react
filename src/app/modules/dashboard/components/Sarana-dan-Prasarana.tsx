@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, FC} from 'react'
-import PieK from '../PieCharts/Status-Kepegawaian'
-import PieTPT from '../PieCharts/Tingkat-Pendidikan-Terakhir'
+import PieC from '../chart/piechart/piechart'
 
 const SaranadanPrasarana: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -70,15 +69,15 @@ const SaranadanPrasarana: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <PieC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '2') ? (
                     <>
-                      <PieTPT chartID='pie-one' />
+                      <PieC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '3') ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <PieC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>
@@ -122,27 +121,21 @@ const SaranadanPrasarana: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <PieC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <PieTPT chartID='pie-one' />
+                      <PieC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <PieC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
-          <h1 className='fw-bolder text-gray-900 text-center mb-7'>COMING SOON</h1>
-          <p className='fw-bolder text-gray-900 text-center mb-7'>
-            We are currently working on our website.
-          </p>
         </div>
       </div>
     </div>

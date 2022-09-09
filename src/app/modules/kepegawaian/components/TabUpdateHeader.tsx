@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 
 
-export function TabHeader() {
+export function TabUpdateHeader() {
   const location = useLocation()
 
   return (
@@ -72,6 +72,40 @@ export function TabHeader() {
                       </a>
                     </div>
                   </div>
+
+                  {/* <div className='d-flex my-4'>
+                <a href="/#" className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
+                  <KTSVG
+                    path='/media/icons/duotune/arrows/arr012.svg'
+                    className='svg-icon-3 d-none'
+                  />
+
+                  <span className='indicator-label'>Follow</span>
+                  <span className='indicator-progress'>
+                    Please wait...
+                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                  </span>
+                </a>
+                <a
+                  href="/#"
+                  className='btn btn-sm btn-primary me-3'
+                  data-bs-toggle='modal'
+                  data-bs-target='#kt_modal_offer_a_deal'
+                >
+                  Hire Me
+                </a>
+                <div className='me-0'>
+                  <button
+                    className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
+                    data-kt-menu-trigger='click'
+                    data-kt-menu-placement='bottom-end'
+                    data-kt-menu-flip='top-end'
+                  >
+                    <i className='bi bi-three-dots fs-3'></i>
+                  </button>
+                  <Dropdown1 />
+                </div>
+              </div> */}
                 </div>
 
                 <div className='d-flex flex-wrap flex-stack'>
@@ -92,8 +126,34 @@ export function TabHeader() {
 
                         <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
                       </div>
+
+                      {/* <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                    <div className='d-flex align-items-center'>
+                      <KTSVG
+                        path='/media/icons/duotune/arrows/arr066.svg'
+                        className='svg-icon-3 svg-icon-success me-2'
+                      />
+                      <div className='fs-2 fw-bolder'>60%</div>
+                    </div>
+
+                    <div className='fw-bold fs-6 text-gray-400'>Success Rate</div>
+                  </div> */}
                     </div>
                   </div>
+
+                  {/* <div className='d-flex align-items-center w-200px w-sm-300px flex-column mt-3'>
+                <div className='d-flex justify-content-between w-100 mt-auto mb-2'>
+                  <span className='fw-bold fs-6 text-gray-400'>Profile Compleation</span>
+                  <span className='fw-bolder fs-6'>50%</span>
+                </div>
+                <div className='h-5px mx-3 w-100 bg-light mb-3'>
+                  <div
+                    className='bg-success rounded h-5px'
+                    role='progressbar'
+                    style={{width: '50%'}}
+                  ></div>
+                </div>
+              </div> */}
                 </div>
               </div>
             </div>
@@ -104,9 +164,9 @@ export function TabHeader() {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/kepegawaian/DataPribadi' && 'active')
+                      (location.pathname === '/kepegawaian/InformasiDataPegawai' && 'active')
                     }
-                    to='/kepegawaian/DataPribadi'
+                    to='/kepegawaian/UpdateDataPribadi'
                   >
                     Data Pribadi
                   </Link>
@@ -115,9 +175,9 @@ export function TabHeader() {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/kepegawaian/DataKeluarga' && 'active')
+                      (location.pathname === '/kepegawaian/UpdateDataKeluarga' && 'active')
                     }
-                    to='/kepegawaian/DataKeluarga'
+                    to='/kepegawaian/UpdateDataKeluarga'
                   >
                     Data Keluarga
                   </Link>
@@ -126,9 +186,9 @@ export function TabHeader() {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/kepegawaian/Pendidikan' && 'active')
+                      (location.pathname === '/kepegawaian/UpdatePendidikan' && 'active')
                     }
-                    to='/kepegawaian/Pendidikan'
+                    to='/kepegawaian/UpdatePendidikan'
                   >
                     Pendidikan
                   </Link>
@@ -137,24 +197,24 @@ export function TabHeader() {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/kepegawaian/DataKepegawaian' && 'active')
+                      (location.pathname === '/kepegawaian/UpdateDataKepegawaian' && 'active')
                     }
-                    to='/kepegawaian/DataKepegawaian'
+                    to='/kepegawaian/UpdateDataKepegawaian'
                   >
                     Data Kepegawaian
                   </Link>
                 </li>
-                <li className='nav-item'>
-                  <Link
-                    className={
-                      `nav-link text-active-primary me-6 ` +
-                      (location.pathname === 'HirarkiKepegawaian' && 'active')
-                    }
-                    to='/kepegawaian/HirarkiKepegawaian'
-                  >
-                    Hirarki Kepegawaian
-                  </Link>
-                </li>
+                {/* <li className='nav-item'>
+                <Link
+                  className={
+                    `nav-link text-active-primary me-6 ` +
+                    (location.pathname === 'HirarkiKepegawaian' && 'active')
+                  }
+                  to='/kepegawaian/HirarkiKepegawaian'
+                >
+                  Hirarki Kepegawaian
+                </Link>
+              </li> */}
               </ul>
             </div>
           </div>

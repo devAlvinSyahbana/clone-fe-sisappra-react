@@ -91,27 +91,9 @@ export function TambahTamuDaerah() {
                                                 <label className="col-form-label fw-semibold fs-6">Dokumentasi</label>
                                             </div>
                                         </div>
-                                        <div className="row mb-10 justify-content-center">
-                                            <div className="col-md-3">
-                                                <label htmlFor="firstimg"><i className="fa fa-plus"
-                                                    ></i></label>
-                                                <input type="file" name="" id="firstimg"></input>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <label htmlFor="firstimg"><i className="fa fa-plus"
-                                                    ></i></label>
-                                                <input type="file" name="" id="firstimg"></input>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <label htmlFor="firstimg"><i className="fa fa-plus"
-                                                    ></i></label>
-                                                <input type="file" name="" id="firstimg"></input>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <label htmlFor="firstimg"><i className="fa fa-plus"
-                                                    ></i></label>
-                                                <input type="file" name="" id="firstimg"></input>
-                                            </div>
+                                        <div className="col-4 md-2">
+                                        <label htmlFor="formFileMultiple" className="form-label"></label>
+                                            <input className="form-control" type="file" id="formFileMultiple" multiple></input>
                                         </div>
                                     </div>
                                 </form>
