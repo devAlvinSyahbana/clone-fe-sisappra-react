@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import { Button, ButtonGroup, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
+import { UpdateHeaderDetail } from './UpdateHeaderDetail'
 
 
 export function UpdateDataKeluarga() {
@@ -105,7 +106,7 @@ export function UpdateDataKeluarga() {
 
     <div>
       {/* begin::Body */}
-
+      <UpdateHeaderDetail />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className="card-header cursor-pointer">

@@ -1,7 +1,27 @@
 import React, { useState } from 'react'
 import Modal from 'react-bootstrap/Modal';
 
+import { useMemo } from 'react'
+import { useTable, ColumnInstance, Row } from 'react-table'
+import { CustomRow } from './users-list/table/columns/CustomRow'
+import { useQueryResponseData, useQueryResponseLoading } from './users-list/core/QueryResponseProvider'
+import { usersColumns } from './users-list/table/columns/_columns'
+import { User } from './users-list/core/_models'
+import { UsersListLoading } from './users-list/components/loading/UsersListLoading'
+import { UsersListPagination } from './users-list/components/pagination/UsersListPagination'
+import { KTCardBody } from '../../../../_metronic/helpers'
+import { CustomHeaderColumn } from './users-list/table/columns/CustomHeaderColumn';
+
 export function HirarkiPegawai() {
+
+  const users = useQueryResponseData()
+  const isLoading = useQueryResponseLoading()
+  const data = useMemo(() => users, [users])
+  const columns = useMemo(() => usersColumns, [])
+  const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
+    columns,
+    data,
+  })
 
   const [lgShow, setLgShow] = useState(false);
 
@@ -10,10 +30,10 @@ export function HirarkiPegawai() {
   ])
 
   const handleFormChange = (index: number, event: { preventDefault: () => void; target: { value: string; name: string } }) => {
-    let data:any = [...inputFields];
+    let data: any = [...inputFields];
     // console.log(data);
     // console.log(event.target.name);
-    
+
     data[index][event.target.name] = event.target.value;
     console.log(data)
     setInputFields(data);
@@ -246,7 +266,43 @@ export function HirarkiPegawai() {
               {/*end::Modal - Add task*/}
             </div>
           </div>
-
+          <div>
+            <KTCardBody className='py-4'>
+              <div className='table-responsive'>
+                <table
+                  id='kt_table_users'
+                  className='table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer'
+                  {...getTableProps()}
+                >
+                  <thead>
+                    <tr className='text-start text-muted fw-bolder fs-7 text-uppercase gs-0'>
+                      {headers.map((column: ColumnInstance<User>) => (
+                        <CustomHeaderColumn key={column.id} column={column} />
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className='text-gray-600 fw-bold' {...getTableBodyProps()}>
+                    {rows.length > 0 ? (
+                      rows.map((row: Row<User>, i) => {
+                        prepareRow(row)
+                        return <CustomRow row={row} key={`row-${i}-${row.id}`} />
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan={7}>
+                          <div className='d-flex text-center w-100 align-content-center justify-content-center'>
+                            No matching records found
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <UsersListPagination />
+              {isLoading && <UsersListLoading />}
+            </KTCardBody>
+          </div>
         </div>
       </div>
       {/* end::Body */}

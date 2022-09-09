@@ -3,6 +3,7 @@ import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { Link } from 'react-router-dom'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
 import { useLocation } from 'react-router-dom'
+import { UpdateHeaderDetail } from './UpdateHeaderDetail'
 
 
 export function UpdateDataKepegawaian() {
@@ -11,7 +12,7 @@ export function UpdateDataKepegawaian() {
   return (
     <div>
       {/* begin::Body */}
-      
+      <UpdateHeaderDetail />
       {/* second card */}
       <div className="card mb-5 mb-xl-10" id="kt_profile_details_view">
         <div className="card-header cursor-pointer">

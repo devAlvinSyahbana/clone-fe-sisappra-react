@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { Link } from 'react-router-dom'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
+import { UpdateHeaderDetail } from './UpdateHeaderDetail'
 import { useLocation } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import { Button, ButtonGroup, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
@@ -79,7 +80,7 @@ export function UpdatePendidikan() {
 
     <div>
       {/* begin::Body */}
-
+      <UpdateHeaderDetail />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className="card-header cursor-pointer">

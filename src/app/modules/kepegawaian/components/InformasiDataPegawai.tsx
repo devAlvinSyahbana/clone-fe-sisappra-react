@@ -169,7 +169,7 @@ export function InformasiDataPegawai() {
                       </Link> */}
                       <Link
                         className='text-reset'
-                        to={'/kepegawaian/UpdateDataPribadi/' + record?.id}
+                        to={`/kepegawaian/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`}
                       >
                         Ubah
                       </Link>
