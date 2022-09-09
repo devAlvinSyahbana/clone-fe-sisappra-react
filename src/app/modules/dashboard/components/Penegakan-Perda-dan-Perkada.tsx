@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, FC} from 'react'
-import PieK from '../PieCharts/Status-Kepegawaian'
-import PieTPT from '../PieCharts/Tingkat-Pendidikan-Terakhir'
+import BarC from '../chart/barchart/barchart'
 
 const PenegakanPerdadanPerkada: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -68,15 +67,15 @@ const PenegakanPerdadanPerkada: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '2') ? (
                     <>
-                      <PieTPT chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '3') ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>
@@ -120,15 +119,15 @@ const PenegakanPerdadanPerkada: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <PieTPT chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <PieK chartID='pie-one' />
+                      <BarC chartID='pie-one' />
                     </>
                   ) : null}
                 </div>
