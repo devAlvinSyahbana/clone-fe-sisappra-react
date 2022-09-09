@@ -1,21 +1,22 @@
 import clsx from 'clsx'
 import {FC} from 'react'
 import {toAbsoluteUrl} from '../../../helpers'
-import {HeaderUserMenu, ThemeModeSwitcher} from '../../../partials'
+// import {HeaderUserMenu, ThemeModeSwitcher} from '../../../partials'
+import {HeaderUserMenu} from '../../../partials'
 
 const toolbarButtonMarginClass = 'ms-1 ms-lg-3',
-  toolbarButtonHeightClass = 'w-30px h-30px w-md-40px h-md-40px',
+  // toolbarButtonHeightClass = 'w-30px h-30px w-md-40px h-md-40px',
   toolbarUserAvatarHeightClass = 'symbol-30px symbol-md-40px'
 
 const Topbar: FC = () => {
   return (
     <div className='d-flex align-items-stretch flex-shrink-0'>
       {/* begin::Theme mode */}
-      <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
+      {/* <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
         <ThemeModeSwitcher
           toggleBtnClass={clsx('btn-active-light-primary btn-custom', toolbarButtonHeightClass)}
         />
-      </div>
+      </div> */}
       {/* end::Theme mode */}
 
       {/* begin::User */}
