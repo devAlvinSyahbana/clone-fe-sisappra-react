@@ -13,10 +13,6 @@ const PrivateRoutes = () => {
   const KepegawaianPage = lazy(() => import('../modules/kepegawaian/KepegawaianPage'))
   const SaranaPrasaranaPage = lazy(() => import('../modules/sarana_prasarana/SaranaPrasaranaPage'))
   const MasterPage = lazy(() => import('../modules/master/MasterPage'))
-  const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
-  const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
-  const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
-  const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
 
   const DashboardPage = lazy(() => import('../modules/dashboard/DashboardPage'))
 

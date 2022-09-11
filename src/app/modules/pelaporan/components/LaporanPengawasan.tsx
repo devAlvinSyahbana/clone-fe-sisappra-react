@@ -13,28 +13,56 @@ export function LaporanPengawasan() {
       selector: (row: { no: any; }) => row.no,
     },
     {
-      name: 'Tanggal Pelaporan',
-      selector: (row: { tanggalpelaporan: any; }) => row.tanggalpelaporan,
+      name: 'NRK',
+      selector: (row: { nrk: any; }) => row.nrk,
     },
     {
-      name: 'Kota',
-      selector: (row: { kota: any; }) => row.kota,
+      name: 'Nama',
+      selector: (row: { nama: any; }) => row.nama,
     },
     {
-      name: 'Kecamatan',
-      selector: (row: { kecamatan: any; }) => row.kecamatan,
+      name: 'Tanggal Pengecekan',
+      selector: (row: { tanggalpengecekan: any; }) => row.tanggalpengecekan,
     },
     {
-      name: 'Kelurahan',
-      selector: (row: { kelurahan: any; }) => row.kelurahan,
+      name: 'Share Location',
+      selector: (row: { shareloc: any; }) => row.shareloc,
     },
     {
-      name: 'Jenis Pengawasan',
-      selector: (row: { jenispengawasan: any; }) => row.jenispengawasan,
+      name: 'Alamat',
+      selector: (row: { alamat: any; }) => row.alamat,
     },
     {
-      name: 'Deskripsi',
-      selector: (row: { deskripsi: any; }) => row.deskripsi,
+      name: 'Lokasi Tiang',
+      selector: (row: { lokasitiang: any; }) => row.lokasitiang,
+    },
+    {
+      name: 'Kawasan Kendali',
+      selector: (row: { kawasankendali: any; }) => row.kawasankendali,
+    },
+    {
+      name: 'Status',
+      selector: (row: { status: any; }) => row.status,
+    },
+    {
+      name: 'Ukuran',
+      selector: (row: { ukuran: any; }) => row.ukuran,
+    },
+    {
+      name: 'Pemilik Reklame',
+      selector: (row: { pemilikreklame: any; }) => row.pemilikreklame,
+    },
+    {
+      name: 'Konstruksi Reklame',
+      selector: (row: { konstruksireklame: any; }) => row.konstruksireklame,
+    },
+    {
+      name: 'Konten Iklan',
+      selector: (row: { konteniklan: any; }) => row.konteniklan,
+    },
+    {
+      name: 'Dokumentasi',
+      selector: (row: { docs: any; }) => row.docs,
     },
     {
       name: 'Aksi',
@@ -73,12 +101,87 @@ export function LaporanPengawasan() {
     {
       id: 1,
       no: '1',
-      tanggalpelaporan: '20/12/2021',
-      kota: 'A',
-      kecamatan: '1',
-      kelurahan: 'A',
-      jenispengawasan: 'A',
-      deskripsi: 'A',
+      nrk: '166665',
+      nama: 'Irwan Novyanto',
+      tanggalpengecekan: '08-01-2021',
+      shareloc: 'Lat: -6.1821440999999995, Long: 106.8284776',
+      alamat: 'Jalan Kebon Sirih 22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
+      lokasitiang: 'testibg',
+      kawasankendali: 'Kendali Ketat',
+      status: 'Aktif',
+      ukuran: '6x10',
+      pemilikreklame: 'a',
+      konstruksireklame: 'a',
+      konteniklan: 'a',
+      docs: '',
+    },
+    {
+      id: 2,
+      no: '2',
+      nrk: '166721',
+      nama: 'Udi Hartono',
+      tanggalpengecekan: '28-05-2021',
+      shareloc: 'Lat: -6.1833066, Long: 106.8282431',
+      alamat: 'Jalan Kebon Sirih 77A, Kebon Sirih, Kecamatan Menteng, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
+      lokasitiang: 'Balkot',
+      kawasankendali: 'Ketat',
+      status: 'Tidak',
+      ukuran: '10x10',
+      pemilikreklame: 'PT.a',
+      konstruksireklame: 'PT.b',
+      konteniklan: 'Sampo',
+      docs: '',
+    },
+    {
+      id: 3,
+      no: '3',
+      nrk: '166665',
+      nama: 'Irwan Novyanto',
+      tanggalpengecekan: '24-09-2021',
+      shareloc: 'Lat: -6.346061, Long: 106.89405099999999',
+      alamat: 'Jalan Hankam Munjul 73, Munjul, Kecamatan Cipayung, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta',
+      lokasitiang: 'Menempel Gedung',
+      kawasankendali: 'Sedang',
+      status: 'Aktif',
+      ukuran: '2x5',
+      pemilikreklame: 'aaa',
+      konstruksireklame: 'ads',
+      konteniklan: 'Rokok',
+      docs: '',
+    },
+    {
+      id: 4,
+      no: '4',
+      nrk: '166665',
+      nama: 'Irwan Novyanto',
+      tanggalpengecekan: '24-01-2022',
+      shareloc: 'Lat: -6.1820642, Long: 106.8284563',
+      alamat: 'Jalan Kebon Sirih No.22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
+      lokasitiang: 'Berdiri Sendiri',
+      kawasankendali: 'Kendali Ketat',
+      status: 'Aktif',
+      ukuran: '4x6',
+      pemilikreklame: 'aa',
+      konstruksireklame: 'abc',
+      konteniklan: 'Elektronik',
+      docs: '',
+    },
+    {
+      id: 5,
+      no: '5',
+      nrk: '166665',
+      nama: 'Irwan Novyanto',
+      tanggalpengecekan: '15-03-2022',
+      shareloc: 'Lat: -6.1820642, Long: 106.8284563',
+      alamat: 'Jalan Kebon Sirih No.22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
+      lokasitiang: 'Berdiri Sendiri',
+      kawasankendali: 'Ketat',
+      status: 'Aktif',
+      ukuran: '4x6',
+      pemilikreklame: 'asik',
+      konstruksireklame: 'PT.xxx',
+      konteniklan: 'Sampo',
+      docs: '',
     },
   ]
 
@@ -392,13 +495,6 @@ export function LaporanPengawasan() {
                                 <i className="fa fa-search"></i>
                                 Cari
                               </button>
-                              <Link to="/pelaporan/TambahLaporanPengawasan">
-                                <button className="btn btn-sm btn-primary me-1">
-                                  <i
-                                    className="fa-solid fa-plus"></i>
-                                  Tambah
-                                </button>
-                              </Link>
                               <a href="#" className="btn btn-sm btn-danger me-1"
                                 data-bs-toggle="modal"><i
                                   className="fa-solid fa-trash"></i> Hapus</a>

@@ -18,22 +18,16 @@ function PetaTitikRawan() {
               <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
                 <div className='button-group'>
                   <a href='#' className='btn btn-light-primary me-2'>
-                    Bencana
+                    Provinsi
                   </a>
                   <a href='#' className='btn btn-light-primary me-2'>
-                    Kebakaran
+                    Kota
                   </a>
                   <a href='#' className='btn btn-light-primary me-2'>
-                    PKL
+                    Kecamatan
                   </a>
                   <a href='#' className='btn btn-light-primary me-2'>
-                    PMKS
-                  </a>
-                  <a href='#' className='btn btn-light-primary me-2'>
-                    Politik
-                  </a>
-                  <a href='#' className='btn btn-light-primary me-2'>
-                    Tramtibum
+                    Kelurahan
                   </a>
                 </div>
               </div>
