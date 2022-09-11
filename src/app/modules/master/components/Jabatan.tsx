@@ -9,7 +9,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 
-export function KorbanJiwa() {
+export function Jabatan() {
 
   useEffect(() => {
     fetchUsers(1);
@@ -161,7 +161,7 @@ export function KorbanJiwa() {
       <div className="row g-8 mt-2 ms-5 me-5">
           <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
             <label htmlFor='' className='mb-3'>
-              Korban Jiwa
+              Jabatan
             </label>
             <input
               type='text' className='form-control form-control form-control-solid' name='tags'/>

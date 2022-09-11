@@ -5,6 +5,7 @@ import DataTable from 'react-data-table-component';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Select from 'react-select'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
@@ -13,6 +14,9 @@ export function LaporanSaranaPrasarana() {
 
   useEffect(() => {
     fetchUsers(1);
+    getJenisSaranaPrasarana();
+    getStatusSaranaPrasarana();
+    getKondisiSaranaPrasarana();
   }, []);
 
   const LoadingAnimation = (props: any) => {
@@ -87,11 +91,14 @@ export function LaporanSaranaPrasarana() {
                     variant="light"
                     title="Aksi">
                     <Dropdown.Item>
-                      <Link to="/sarana-prasarana/LaporanSaranaPrasarana">
+                      <Link to="/sarana_prasarana/DetailSaranaPrasarana">
                         Detail
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item href="#">Ubah</Dropdown.Item>
+                    <Dropdown.Item><Link to="/sarana_prasarana/UbahSaranaPrasarana">
+                        Ubah
+                      </Link>
+                    </Dropdown.Item>
                     <Dropdown.Item href="#">Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
@@ -116,17 +123,30 @@ export function LaporanSaranaPrasarana() {
     const value = await axios.get(SARANA_PRASARANA_URL + "/find");
 
     setTemp(value.data.data);
-    console.log('cek response api:',temp);
-
+    // console.log('cek response api:',temp);
     
     const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`);
     setData(response.data.data);
-   
+    
     setTotalRows(response.data.total);
     setLoading(false);
-    console.log('cek :' ,data);
+    // console.log('cek :' ,data);
     return [data, setData] as const;
   };
+
+
+  const getJenisSaranaPrasarana = async () =>{
+    const input = await axios.get(SARANA_PRASARANA_URL + "/find-jenis-sarana-prasarana");
+    console.log('cek :',input);
+  }
+  const getStatusSaranaPrasarana = async () =>{
+    const input = await axios.get(SARANA_PRASARANA_URL + "/find-status-sarana-prasarana");  
+    console.log('cek :',input);
+  }
+  const getKondisiSaranaPrasarana = async () =>{
+    const input = await axios.get(SARANA_PRASARANA_URL + "/find-kondisi-sarana-prasarana");  
+    console.log('cek :',input);
+  }
 
   const handlePageChange = (page: any) => {
     fetchUsers(page);
@@ -158,7 +178,6 @@ export function LaporanSaranaPrasarana() {
   return (
     <div className={`card`}>
       {/* begin::Body */}
-      
       <div className="row g-8 mt-2 ms-5 me-5">
         <div className='col-md-6'>
           <div className='form-group'>

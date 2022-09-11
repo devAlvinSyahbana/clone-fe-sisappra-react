@@ -174,13 +174,8 @@ export function AsideMenuMain() {
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/master/JenisPerda'
-          title='Jenis Perda'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/JenisPerkada'
-          title='Jenis Perkada'
+          to='/master/JenisPerdaPerkada'
+          title='Jenis Perda / Perkada'
           hasBullet={true}
         />
         <AsideMenuItem
@@ -191,6 +186,56 @@ export function AsideMenuMain() {
         <AsideMenuItem
           to='/master/JenisPelanggaran'
           title='Jenis Pelanggaran'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/Agama'
+          title='Agama'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/SKPD'
+          title='SKPD'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/JenisSaranaPrasarana'
+          title='Jenis Sarana Prasarana'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/Golongan'
+          title='Golongan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/Eselon'
+          title='Eselon'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/Jabatan'
+          title='Jabatan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/JenisPenyelesaian'
+          title='Jenis Penyelesaian'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/SumberInformasi'
+          title='Sumber Informasi'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/JenisKekerasan'
+          title='Jenis Kekerasan'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/JenisPenerbitan'
+          title='Jenis Penerbitan'
           hasBullet={true}
         />
       </AsideMenuItemWithSub>

@@ -159,13 +159,26 @@ export function Kecamatan() {
     <div className={`card`}>
       {/* begin::Body */}
       <div className="row g-8 mt-2 ms-5 me-5">
-          <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
-            <label htmlFor='' className='mb-3'>
+        <div className='col-md-6'>
+          <div className='form-group'>
+          <label htmlFor='' className='mb-3'>
               Kota
             </label>
             <input
               type='text' className='form-control form-control form-control-solid' name='tags'/>
           </div>
+        </div>
+      </div>
+      <div className="row g-8 mt-2 ms-5 me-5">
+        <div className='col-md-6'>
+          <div className='form-group'>
+          <label htmlFor='' className='mb-3'>
+              Kecamatan
+            </label>
+            <input
+              type='text' className='form-control form-control form-control-solid' name='tags'/>
+          </div>
+        </div>
       </div>
       <div className="row g-8 mt-2 ms-5 me-5">
         <div className='col-md-6 col-lg-6 col-sm-12'>

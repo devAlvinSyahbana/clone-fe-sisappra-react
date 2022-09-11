@@ -161,7 +161,7 @@ export function JenisPertolongan() {
       <div className="row g-8 mt-2 ms-5 me-5">
           <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
             <label htmlFor='' className='mb-3'>
-              Kota
+              Jenis Pertolongan
             </label>
             <input
               type='text' className='form-control form-control form-control-solid' name='tags'/>

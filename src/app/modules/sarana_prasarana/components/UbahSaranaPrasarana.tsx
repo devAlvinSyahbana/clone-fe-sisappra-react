@@ -1,13 +1,18 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
-export function TambahSaranaPrasarana() {
+
+
+
+
+
+export function UbahSaranaPrasarana() {
     return (
-        <div className="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <div className="app-main flex-column flex-row-fluid-" id="kt_app_main">
           <div className="d-flex flex-column flex-column-fluid">
             <div id="kt_app_content" className="app-content flex-column-fluid">
               <div id="kt_app_content_container" className="app-container container-xxl">
-                <div className="card mb-5 mb-xl-10">
+                <div className="card mb-5 mb-xl-10 ">
                   <div className="card-body">
                     <form>
                       <div className="form-group">

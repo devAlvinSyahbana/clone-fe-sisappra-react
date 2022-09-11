@@ -31,40 +31,10 @@ export function Kota() {
 
   const columns = [
     {
-      name: 'Jenis Sarana & Prasarana',
-      selector: (row: any) => row.jenis_sarana_prasarana,
-      sortable: true,
-      sortField: 'jenis_sarana_prasarana',
-    },
-    {
-      name: 'Status Sarana & Prasarana',
-      selector: (row: any) => row.status_sarana_prasarana,
-      sortable: true,
-      sortField: 'status_sarana_prasarana',
-    },
-    {
-      name: 'Jumlah',
-      selector: (row: any) => row.jumlah,
-      sortable: true,
-      sortField: 'jumlah',
-    },
-    {
-      name: 'Kondisi',
+      name: 'Kota',
       selector: (row: any) => row.kondisi,
       sortable: true,
-      sortField: 'kondisi',
-    },
-    {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
-      sortable: true,
-      sortField: 'keterangan',
-    },
-    {
-      name: 'Dokumentasi',
-      selector: (row: any) => row.dokumentasi,
-      sortable: true,
-      sortField: 'dokumentasi',
+      sortField: 'Kota',
     },
     {
       name: 'Aksi',

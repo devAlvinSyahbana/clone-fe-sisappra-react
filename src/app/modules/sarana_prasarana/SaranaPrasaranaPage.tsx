@@ -3,6 +3,8 @@ import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 import { LaporanSaranaPrasarana } from './components/LaporanSaranaPrasarana'
 import { TambahSaranaPrasarana } from './components/TambahSaranaPrasarana'
+import { DetailSaranaPrasarana } from './components/DetailSaranaPrasarana'
+import { UbahSaranaPrasarana } from './components/UbahSaranaPrasarana'
 
 const sarana_prasaranaBreadCrumbs: Array<PageLink> = [
   {
@@ -44,6 +46,24 @@ const SaranaPrasaranaPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={sarana_prasaranaBreadCrumbs}>Tambah Sarana & Prasarana</PageTitle>
               <TambahSaranaPrasarana />
+            </>
+          }
+        />
+        <Route
+          path='DetailSaranaPrasarana'
+          element={
+            <>
+              <PageTitle breadcrumbs={sarana_prasaranaBreadCrumbs}>Detail Sarana & Prasarana</PageTitle>
+              <DetailSaranaPrasarana />
+            </>
+          }
+        />
+        <Route
+          path='UbahSaranaPrasarana'
+          element={
+            <>
+              <PageTitle breadcrumbs={sarana_prasaranaBreadCrumbs}>Ubah Sarana & Prasarana</PageTitle>
+              <UbahSaranaPrasarana />
             </>
           }
         />

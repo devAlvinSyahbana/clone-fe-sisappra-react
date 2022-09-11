@@ -8,14 +8,22 @@ import { JenisKegiatan } from './components/JenisKegiatan'
 import { JenisKejadian } from './components/JenisKejadian'
 import { JenisPelanggaran } from './components/JenisPelanggaran'
 import { JenisPertolongan } from './components/JenisPertolongan'
-import { JenisPerda } from './components/JenisPerda'
-import { JenisPerkada } from './components/JenisPerkada'
+import { JenisPerdaPerkada } from './components/JenisPerdaPerkada'
 import { JenisPenindakan } from './components/JenisPenindakan'
 import { KorbanJiwa } from './components/KorbanJiwa'
 import { KorbanMaterial } from './components/KorbanMaterial'
 import { JenisBantuan } from './components/JenisBantuan'
 import { InstansiTerkait } from './components/InstansiTerkait'
-
+import { Agama } from './components/Agama'
+import { SKPD } from './components/SKPD'
+import { JenisSaranaPrasaran } from './components/JenisSaranaPrasarana'
+import { Golongan } from './components/Golongan'
+import { Eselon } from './components/Eselon'
+import { Jabatan } from './components/Jabatan'
+import { SumberInformasi } from './components/SumberInformasi'
+import { JenisKekerasan } from './components/JenisKekerasan'
+import { JenisPenerbitan } from './components/JenisPenerbitan'
+import { JenisPenyelesaian } from './components/JenisPenyelesaian'
 
 const masterBreadCrumbs: Array<PageLink> = [
   {
@@ -48,6 +56,33 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Kota</PageTitle>
               <Kota />
+            </>
+          }
+        />
+         <Route
+          path='SKPD'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>SKPD</PageTitle>
+              <SKPD />
+            </>
+          }
+        />
+        <Route
+          path='Golongan'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}> Golongan </PageTitle>
+              <Golongan />
+            </>
+          }
+        />
+        <Route
+          path='JenisSaranaraPrasrana'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}> Jenis Sarana Prasarana </PageTitle>
+              <JenisSaranaPrasaran />
             </>
           }
         />
@@ -88,6 +123,42 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
+          path='Agama'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}> Agama</PageTitle>
+              <Agama  />
+            </>
+          }
+        />
+        <Route
+          path='Jabatan'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}> Jabatan </PageTitle>
+              <Jabatan/>
+            </>
+          }
+        />
+        <Route
+          path='Eselon'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}> Eselon </PageTitle>
+              <Eselon/>
+            </>
+          }
+        />
+        <Route
+          path='SumberInformasi'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}> Sumber Informasi </PageTitle>
+              <SumberInformasi />
+            </>
+          }
+        />
+        <Route
           path='JenisPelanggaran'
           element={
             <>
@@ -115,20 +186,38 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
-          path='JenisPerda'
+          path='JenisPerdaPerkada'
           element={
             <>
-              <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Perda</PageTitle>
-              <JenisPerda/>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Perda / Perkada</PageTitle>
+              <JenisPerdaPerkada/>
             </>
           }
         />
         <Route
-          path='JenisPerkada'
+          path='JenisKekerasan'
           element={
             <>
-              <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Perkada</PageTitle>
-              <JenisPerkada />
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Kekerasan</PageTitle>
+              <JenisKekerasan />
+            </>
+          }
+        />
+        <Route
+          path='JenisPenerbitan'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Penerbitan</PageTitle>
+              <JenisPenerbitan />
+            </>
+          }
+        />
+         <Route
+          path='JenisPenyelesaian'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Penyelesaian</PageTitle>
+              <JenisPenyelesaian />
             </>
           }
         />
