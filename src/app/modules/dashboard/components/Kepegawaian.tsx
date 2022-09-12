@@ -1,13 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, FC} from 'react'
-import PieK from '../PieCharts/Status-Kepegawaian'
-import PieTPT from '../PieCharts/Tingkat-Pendidikan-Terakhir'
-import PieU from '../PieCharts/Usia'
-import PieG from '../PieCharts/Golongan'
-import PieJE from '../PieCharts/Jenis-Eselon'
-import PieJK from '../PieCharts/Jenis-Kediklatan'
-import PieW from '../PieCharts/Wilayah'
-import PiePPNS from '../PieCharts/PPNS'
+import React, {useState, useEffect, FC} from 'react'
+import DataTable from 'react-data-table-component'
+import axios from 'axios'
+import PieC from '../chart/piechart/piechart'
+import BarC from '../chart/barchart/barchart'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const SARANA_PRASARANA_URL = `${API_URL}/dashboard/kepegawaian/sum-status-kepegawaian`
 
 export const Kepegawaian: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -68,7 +67,6 @@ export const Kepegawaian: FC = () => {
     if (event.target.value === '18') {
       setShowResults({isShowed: true, val: event.target.value})
     }
-
     if (event.target.value === '19') {
       setShowResults({isShowed: true, val: event.target.value})
     }
@@ -96,6 +94,47 @@ export const Kepegawaian: FC = () => {
     if (event.target.value === '27') {
       setShowResults({isShowed: true, val: event.target.value})
     }
+  }
+
+  const columns = [
+    {
+      name: 'Status Kepegawaian',
+      selector: (row: any) => row.status_kepegawaian,
+      sortable: true,
+      sortField: 'status_kepegawaian',
+    },
+    {
+      name: 'Jumlah',
+      selector: (row: any) => row.count,
+      sortable: true,
+      sortField: 'count',
+    },
+  ]
+
+  const [data, setData] = useState([])
+  const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(10)
+
+  useEffect(() => {
+    fetchUsers(1)
+  }, [])
+
+  const [temp, setTemp] = useState([])
+
+  const fetchUsers = async (page: any) => {
+    const value = await axios.get(SARANA_PRASARANA_URL)
+
+    setTemp(value.data.data)
+    console.log('cek response api:', temp)
+
+    const response = await axios.get(
+      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
+    )
+    setData(response.data.data)
+
+    setTotalRows(response.data.total)
+    console.log('cek :', data)
+    return [data, setData] as const
   }
 
   return (
@@ -136,24 +175,25 @@ export const Kepegawaian: FC = () => {
                         <option value='e'>2022</option>
                       </select>
                     </div>
+                    {showResults.isShowed && showResults.val === '1' ? (
+                      <>
+                        <BarC chartID='pie-tow' />
+                      </>
+                    ) : null || (showResults.isShowed && showResults.val === '2') ? (
+                      <>
+                        <BarC chartID='pie-tow' />
+                      </>
+                    ) : null || (showResults.isShowed && showResults.val === '3') ? (
+                      <>
+                        <BarC chartID='pie-tow' />
+                      </>
+                    ) : null}
                   </div>
-                  {showResults.isShowed && showResults.val === '1' ? (
-                    <>
-                      <PieW chartID='pie-one' />
-                    </>
-                  ) : <PieW chartID='pie-one' /> ||
-                    (showResults.isShowed && showResults.val === '2') ? (
-                    <>
-                      <PieJK chartID='pie-one' />
-                    </>
-                  ) : <PieJK chartID='pie-one' /> ||
-                    (showResults.isShowed && showResults.val === '3') ? (
-                    <>
-                      <PieW chartID='pie-one' />
-                    </>
-                  ) : (
-                    <PieW chartID='pie-one' />
-                  )}
+                  <div className='row'>
+                    <div className='table-responsive mt-5 ms-5 me-5'>
+                      <DataTable columns={columns} data={temp} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -195,15 +235,15 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <PieK chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <PieJK chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <PieK chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null}
                 </div>
@@ -248,15 +288,15 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '7' ? (
                     <>
-                      <PieTPT chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '8') ? (
                     <>
-                      <PieJK chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '9') ? (
                     <>
-                      <PieTPT chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null}
                 </div>
@@ -300,15 +340,15 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '10' ? (
                     <>
-                      <PieG chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '11') ? (
                     <>
-                      <PieJK chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '12') ? (
                     <>
-                      <PieG chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null}
                 </div>
@@ -352,15 +392,15 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '13' ? (
                     <>
-                      <PieJE chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '14') ? (
                     <>
-                      <PieJK chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '15') ? (
                     <>
-                      <PieJE chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null}
                 </div>
@@ -404,15 +444,15 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '19' ? (
                     <>
-                      <PieU chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '20') ? (
                     <>
-                      <PieJK chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '21') ? (
                     <>
-                      <PieU chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null}
                 </div>
@@ -456,27 +496,21 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '22' ? (
                     <>
-                      <PiePPNS chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '23') ? (
                     <>
-                      <PieJK chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '24') ? (
                     <>
-                      <PiePPNS chartID='pie-tow' />
+                      <PieC chartID='pie-tow' />
                     </>
                   ) : null}
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
-          <h1 className='fw-bolder text-gray-900 text-center mb-7'>COMING SOON</h1>
-          <p className='fw-bolder text-gray-900 text-center mb-7'>
-            We are currently working on our website.
-          </p>
         </div>
       </div>
     </div>

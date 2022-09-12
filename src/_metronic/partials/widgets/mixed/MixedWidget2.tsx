@@ -46,21 +46,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
     <div className={`card ${className}`}>
       {/* begin::Header */}
       <div className={`card-header border-0 py-5 bg-${chartColor}`}>
-        <h3 className='card-title fw-bold text-white'>Sales Statistics</h3>
-        <div className='card-toolbar'>
-          {/* begin::Menu */}
-          <button
-            type='button'
-            className='btn btn-sm btn-icon btn-color-white btn-active-white btn-active-color- border-0 me-n3'
-            data-kt-menu-trigger='click'
-            data-kt-menu-placement='bottom-end'
-            data-kt-menu-flip='top-end'
-          >
-            <KTSVG path='/media/icons/duotune/general/gen024.svg' className='svg-icon-2' />
-          </button>
-          <Dropdown1 />
-          {/* end::Menu */}
-        </div>
+        <h3 className='card-title fw-bold text-white'>Dashboard Tramtibum</h3>
       </div>
       {/* end::Header */}
       {/* begin::Body */}
@@ -81,8 +67,8 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
                 path='/media/icons/duotune/general/gen032.svg'
                 className='svg-icon-3x svg-icon-warning d-block my-2'
               />
-              <a href='#' className='text-warning fw-semibold fs-6'>
-                Weekly Sales
+              <a href='dashboard/dashboard-kepegawaian' className='text-warning fw-semibold fs-6'>
+                Dashboard Kepegawaian
               </a>
             </div>
             {/* end::Col */}
@@ -92,8 +78,11 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
                 path='/media/icons/duotune/arrows/arr075.svg'
                 className='svg-icon-3x svg-icon-primary d-block my-2'
               />
-              <a href='#' className='text-primary fw-semibold fs-6'>
-                New Users
+              <a
+                href='dashboard/dashboard-sarana-dan-prasarana'
+                className='text-primary fw-semibold fs-6'
+              >
+                Dashboard Sarana dan Prasarana
               </a>
             </div>
             {/* end::Col */}
@@ -102,26 +91,50 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
           {/* begin::Row */}
           <div className='row g-0'>
             {/* begin::Col */}
-            <div className='col bg-light-danger px-6 py-8 rounded-2 me-7'>
+            <div className='col bg-light-danger px-6 py-8 rounded-2 me-7 mb-7'>
               <KTSVG
                 path='/media/icons/duotune/abstract/abs027.svg'
                 className='svg-icon-3x svg-icon-danger d-block my-2'
               />
-              <a href='#' className='text-danger fw-semibold fs-6 mt-2'>
-                Item Orders
+              <a
+                href='dashboard/dashboard-penegakan-perda-dan-perkada'
+                className='text-danger fw-semibold fs-6 mt-2'
+              >
+                Dashboard Penegakan Perda dan Perkada
               </a>
             </div>
             {/* end::Col */}
             {/* begin::Col */}
-            <div className='col bg-light-success px-6 py-8 rounded-2'>
+            <div className='col bg-light-success px-6 py-8 rounded-2 mb-7'>
               <KTSVG
                 path='/media/icons/duotune/communication/com010.svg'
                 className='svg-icon-3x svg-icon-success d-block my-2'
               />
-              <a href='#' className='text-success fw-semibold fs-6 mt-2'>
-                Bug Reports
+              <a
+                href='dashboard/dashboard-ketentraman-dan-ketertiban-umum'
+                className='text-success fw-semibold fs-6 mt-2'
+              >
+                Dashboard Ketentraman dan Ketertiban Umum
               </a>
             </div>
+            {/* end::Col */}
+          </div>
+          {/* end::Row */}
+          {/* begin::Row */}
+          <div className='row g-0'>
+            {/* begin::Col */}
+            <div className='col bg-light-info px-6 py-8 rounded-2 me-7'>
+              <KTSVG
+                path='/media/icons/duotune/abstract/abs027.svg'
+                className='svg-icon-3x svg-icon-info  d-block my-2'
+              />
+              <a href='dashboard/dashboard-wasdak-protokol-kesehatan' className='text-info fw-semibold fs-6 mt-2'>
+                Dashboard Wasdak dan Protokol Kesehatan (PPKM)
+              </a>
+            </div>
+            {/* end::Col */}
+            {/* begin::Col */}
+            <div className='col px-6 py-8 rounded-2'></div>
             {/* end::Col */}
           </div>
           {/* end::Row */}

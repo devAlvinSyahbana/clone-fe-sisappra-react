@@ -160,20 +160,73 @@ export function LaporanTamuDaerah() {
                     <div id="kt_accordion_2_item_1" className="fs-6 collapse show ps-10"
                       data-bs-parent="#kt_accordion_2">
                       <div className="row w-100 mt-10 mb-10">
-                        <div className="col-md-6 col-lg-6 col-sm-12">
-                          <div className="mb-10">
-                            <div className="row">
-                              <div className="col-4">
-                                <label
-                                  className="form-label align-middle">Tanggal</label>
-                              </div>
-                              <div className="col-8">
-                                <input className="form-control form-control-solid" placeholder="Pilih tanggal"
-                                  id="kt_daterangepicker_tgl" />
+                            <div className="col-md-6 col-lg-6 col-sm-12">
+                              <div className="mb-10">
+                                <div className="col-md-12 col-lg-12 col-sm-12">
+                                  <div className="mb-10">
+                                    <div className="row">
+                                      <div className="col-4">
+                                        <label htmlFor="exampleFormControlInput1"
+                                          className="form-label align-middle">Pelaksanaan
+                                          Kegiatan</label>
+                                      </div>
+                                      <div className="col-8">
+                                        <select className="form-select form-select-solid" data-control="select2"
+                                          data-placeholder="Pilih Pelaksanaan Kegiatan">
+                                          <option></option>
+                                          <option value="22">
+                                            -
+                                          </option>
+                                          <option value="23">
+                                            -
+                                          </option>
+                                          <option value="24">
+                                            -
+                                          </option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="row">
+                                  <div className="col-4">
+                                    <label className="form-label">Kota</label>
+                                  </div>
+                                  <div className="col-8">
+                                    <select className="form-select form-select-solid" data-control="select2"
+                                      data-placeholder="Pilih Kota">
+                                      <option></option>
+                                      <option value="a">Kota Jakarta Utara
+                                      </option>
+                                      <option value="b">Kota Jakarta Selatan
+                                      </option>
+                                      <option value="a">Kota Jakarta Timur
+                                      </option>
+                                      <option value="b">Kota Jakarta Barat
+                                      </option>
+                                      <option value="a">Kota Jakarta Selatan
+                                      </option>
+                                      <option value="b">Kabupaten Kepulauan Seribu
+                                      </option>
+                                    </select>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
+                            <div className="col-md-6 col-lg-6 col-sm-12">
+                              <div className="mb-10">
+                                <div className="row">
+                                  <div className="col-4">
+                                    <label
+                                      className="form-label align-middle">Tanggal</label>
+                                  </div>
+                                  <div className="col-8">
+                                    <input className="form-control form-control-solid" placeholder="Pilih tanggal"
+                                      id="kt_daterangepicker_tgl" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                         <div className="col-md-12 col-lg-12 col-sm-12">
                           <div className="d-flex">
                             <button type="submit" className="btn btn-primary fw-semibold me-auto px-6"

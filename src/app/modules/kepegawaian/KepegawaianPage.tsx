@@ -1,26 +1,25 @@
 import React from 'react'
-import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
-import {PageLink, PageTitle} from '../../../_metronic/layout/core'
+import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
+import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 
-import {InformasiDataPegawai} from './components/InformasiDataPegawai'
-import {UpdateInformasiDataPegawai} from './components/UpdateInformasiDataPegawai'
-import {DetailInformasiDataPegawai} from './components/DetailInformasiDataPegawai'
-import {HirarkiPegawai} from './components/HirarkiPegawai'
-import {LaporanRekapitulasiPegawai} from './components/LaporanRekapitulasiPegawai'
-import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipil'
-import {KehadiranPegawai} from './components/KehadiranPegawai'
-import {JadwalPiket} from './components/JadwalPiket'
+import { InformasiDataPegawai } from './components/InformasiDataPegawai'
+import { DetailInformasiDataPegawai } from './components/DetailInformasiDataPegawai'
+import { HirarkiPegawai } from './components/HirarkiPegawai'
+import { LaporanRekapitulasiPegawai } from './components/LaporanRekapitulasiPegawai'
+import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSipil'
+import { KehadiranPegawai } from './components/KehadiranPegawai'
+import { JadwalPiket } from './components/JadwalPiket'
 
-import {DataPribadi} from './components/tabs/DataPribadi'
-import {DataKeluarga} from './components/tabs/DataKeluarga'
-import {Pendidikan} from './components/tabs/Pendidikan'
-import {DataKepegawaian} from './components/tabs/DataKepegawaian'
-import {HirarkiKepegawaian} from './components/tabs/HirarkiKepegawaian'
+import { DataPribadi } from './components/tabs/DataPribadi'
+import { DataKeluarga } from './components/tabs/DataKeluarga'
+import { Pendidikan } from './components/tabs/Pendidikan'
+import { DataKepegawaian } from './components/tabs/DataKepegawaian'
+import { HirarkiKepegawaian } from './components/tabs/HirarkiKepegawaian'
 
-import {UpdateDataPribadi} from './components/update-tabs/UpdateDataPribadi'
-import {UpdateDataKeluarga} from './components/update-tabs/UpdateDataKeluarga'
-import {UpdatePendidikan} from './components/update-tabs/UpdatePendidikan'
-import {UpdateDataKepegawaian} from './components/update-tabs/UpdateDataKepegawaian'
+import { UpdateDataPribadi } from './components/update-tabs/UpdateDataPribadi'
+import { UpdateDataKeluarga } from './components/update-tabs/UpdateDataKeluarga'
+import { UpdatePendidikan } from './components/update-tabs/UpdatePendidikan'
+import { UpdateDataKepegawaian } from './components/update-tabs/UpdateDataKepegawaian'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -74,7 +73,7 @@ const KepegawaianPage: React.FC = () => {
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
                 Update Informasi Data Pegawai
               </PageTitle>
-              <UpdateInformasiDataPegawai />
+              {/* <UpdateInformasiDataPegawai /> */}
             </>
           }
         />
@@ -174,7 +173,7 @@ const KepegawaianPage: React.FC = () => {
         />
 
         <Route
-          path='UpdateDataPribadi'
+          path='UpdateDataPribadi/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Pribadi</PageTitle>
@@ -183,7 +182,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='UpdateDataKeluarga'
+          path='UpdateDataKeluarga/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Keluarga</PageTitle>
@@ -192,7 +191,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='UpdatePendidikan'
+          path='UpdatePendidikan/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Pendidikan</PageTitle>
@@ -201,7 +200,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='UpdateDataKepegawaian'
+          path='UpdateDataKepegawaian/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian</PageTitle>

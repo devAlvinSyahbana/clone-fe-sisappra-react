@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 import {Button, Collapse} from 'react-bootstrap'
@@ -23,7 +23,7 @@ export function HirarkiKepegawaian() {
           <div className='card'>
             <div className='card-body d-flex flex-center flex-column py-9 px-5'>
               <div className='symbol symbol-65px symbol-circle mb-5'>
-                <img src={toAbsoluteUrl('/media/avatars/300-11.jpg')} alt='image' />
+                <img src={toAbsoluteUrl('/media/avatars/300-11.jpg')} alt='' />
                 <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
               </div>
               <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -50,7 +50,7 @@ export function HirarkiKepegawaian() {
           <div className='card'>
             <div className='card-body d-flex flex-center flex-column py-9 px-5'>
               <div className='symbol symbol-65px symbol-circle mb-5'>
-                <img src={toAbsoluteUrl('/media/avatars/300-6.jpg')} alt='image' />
+                <img src={toAbsoluteUrl('/media/avatars/300-6.jpg')} alt='' />
                 <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
               </div>
               <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -184,7 +184,7 @@ export function HirarkiKepegawaian() {
           <div className='card'>
             <div className='card-body d-flex flex-center flex-column py-9 px-5'>
               <div className='symbol symbol-65px symbol-circle mb-5'>
-                <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='image' />
+                <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='' />
                 <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
               </div>
               <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -211,7 +211,7 @@ export function HirarkiKepegawaian() {
           <div className='card'>
             <div className='card-body d-flex flex-center flex-column py-9 px-5'>
               <div className='symbol symbol-65px symbol-circle mb-5'>
-                <img src={toAbsoluteUrl('/media/avatars/300-14.jpg')} alt='image' />
+                <img src={toAbsoluteUrl('/media/avatars/300-14.jpg')} alt='' />
                 <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
               </div>
               <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -236,7 +236,7 @@ export function HirarkiKepegawaian() {
           <div className='card'>
             <div className='card-body d-flex flex-center flex-column py-9 px-5'>
               <div className='symbol symbol-65px symbol-circle mb-5'>
-                <img src={toAbsoluteUrl('/media/avatars/300-12.jpg')} alt='image' />
+                <img src={toAbsoluteUrl('/media/avatars/300-12.jpg')} alt='' />
                 <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
               </div>
               <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -263,7 +263,7 @@ export function HirarkiKepegawaian() {
           <div className='card'>
             <div className='card-body d-flex flex-center flex-column py-9 px-5'>
               <div className='symbol symbol-65px symbol-circle mb-5'>
-                <img src={toAbsoluteUrl('/media/avatars/300-7.jpg')} alt='image' />
+                <img src={toAbsoluteUrl('/media/avatars/300-7.jpg')} alt='' />
                 <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
               </div>
               <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -288,7 +288,7 @@ export function HirarkiKepegawaian() {
           <div className='card'>
             <div className='card-body d-flex flex-center flex-column py-9 px-5'>
               <div className='symbol symbol-65px symbol-circle mb-5'>
-                <img src={toAbsoluteUrl('/media/avatars/300-11.jpg')} alt='image' />
+                <img src={toAbsoluteUrl('/media/avatars/300-11.jpg')} alt='' />
                 <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
               </div>
               <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -315,7 +315,7 @@ export function HirarkiKepegawaian() {
           <div className='card'>
             <div className='card-body d-flex flex-center flex-column py-9 px-5'>
               <div className='symbol symbol-65px symbol-circle mb-5'>
-                <img src={toAbsoluteUrl('/media/avatars/300-6.jpg')} alt='image' />
+                <img src={toAbsoluteUrl('/media/avatars/300-6.jpg')} alt='' />
                 <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
               </div>
               <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -343,7 +343,7 @@ export function HirarkiKepegawaian() {
                 <div className='card'>
                   <div className='card-body d-flex flex-center flex-column py-9 px-5'>
                     <div className='symbol symbol-65px symbol-circle mb-5'>
-                      <img src={toAbsoluteUrl('/media/avatars/300-11.jpg')} alt='image' />
+                      <img src={toAbsoluteUrl('/media/avatars/300-11.jpg')} alt='' />
                       <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
                     </div>
                     <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
@@ -370,7 +370,7 @@ export function HirarkiKepegawaian() {
                 <div className='card'>
                   <div className='card-body d-flex flex-center flex-column py-9 px-5'>
                     <div className='symbol symbol-65px symbol-circle mb-5'>
-                      <img src={toAbsoluteUrl('/media/avatars/300-6.jpg')} alt='image' />
+                      <img src={toAbsoluteUrl('/media/avatars/300-6.jpg')} alt='' />
                       <div className='bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-body h-15px w-15px ms-n3 mt-n3'></div>
                     </div>
                     <a href='/#' className='fs-4 text-gray-800 text-hover-primary fw-bold mb-0'>
