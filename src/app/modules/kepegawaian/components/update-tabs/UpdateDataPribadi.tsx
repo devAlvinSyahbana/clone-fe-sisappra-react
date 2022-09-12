@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { Link, useParams } from 'react-router-dom'
 import Select from 'react-select'
 import { UpdateHeaderDetail } from './UpdateHeaderDetail'
-import { DetailPegawaiInterface } from '../KepegawaiInterface'
-import { Formik, Field, Form, FormikHelpers } from 'formik';
-import * as ReactDOM from 'react-dom';
+import { DetailPegawaiInterface } from '../KepegawaianInterface'
+import { Formik, Field, FormikHelpers } from 'formik';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -14,19 +12,18 @@ export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export function UpdateDataPribadi() {
   const { id, status } = useParams()
   console.log('id, status', id, status)
-  const [data, setData] = useState<DetailPegawaiInterface>()
-  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [data, setData] = useState<DetailPegawaiInterface>({})
 
   useEffect(() => {
-    async function fetchDT(page: number) {
+    const fetchData = async () => {
       const response = await axios.get(
         `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
       )
-      setData(response.data.data)
-      console.log(response.data.data);
+      setData((prevstate) => ({ ...prevstate, ...response.data.data }))
+      // console.log(response.data.data);
     }
-    fetchDT(1)
-  }, [qParamFind])
+    fetchData()
+  }, [setData])
 
   const jenisKelamin = [
     { value: 'LAKI-LAKI', label: 'LAKI-LAKI' },
@@ -72,13 +69,14 @@ export function UpdateDataPribadi() {
   ]
 
   return (
-    <div>
+    <>
       {/* begin::Body */}
       <UpdateHeaderDetail />
       {/* Second Card */}
+
       <Formik
         initialValues={{
-          nama: ''
+          ...data
         }}
         onSubmit={(
           values: DetailPegawaiInterface,
@@ -89,6 +87,7 @@ export function UpdateDataPribadi() {
             setSubmitting(false);
           }, 500);
         }}
+        enableReinitialize
       >
         <div className='card mb-5 mb-xl-10'>
           <div className="card-header cursor-pointer">
@@ -100,20 +99,16 @@ export function UpdateDataPribadi() {
             <div className="row">
               <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                 <label htmlFor="" className="mb-3">Nama</label>
-                <Field id="nama" type="text" className="form-control form-control form-control-solid mb-4" name="nama" placeholder="Nama" />
-                <input type="text" className="form-control form-control form-control-solid mb-4" name="nama" placeholder="Nama"
-                  value="" />
+                <Field className="form-control form-control form-control-solid mb-4" name="nama" id="nama" placeholder="John" />
               </div>
               <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                 <label htmlFor="" className="mb-3">Tempat, Tanggal Lahir</label>
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Tempat"
-                      value="PALEMBANG" />
+                    <Field type="text" name="tempat_lahir" className="form-control form-control form-control-solid mb-4" placeholder="Tempat" />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
-                    <input type="date" className="form-control form-control-solid" placeholder="Tanggal Lahir"
-                      value="10-08-1982" />
+                    <Field type="date" name="tgl_lahir" className="form-control form-control-solid" placeholder="Tanggal Lahir" />
                   </div>
                 </div>
               </div>
@@ -121,7 +116,7 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Jenis Kelamin</label>
-                    <Select options={jenisKelamin} />
+                    <Select name="jenis_kelamin" options={jenisKelamin} />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Agama</label>
@@ -133,13 +128,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-6">
                     <label htmlFor="" className="mb-3">NIK</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="NIK"
-                      value="3172021008820023" />
+                    <Field type="text" name="nik" className="form-control form-control form-control-solid mb-4" placeholder="NIK" />
                   </div>
                   <div className="col-6">
                     <label htmlFor="" className="mb-3">Nomor KK</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Nomor KK"
-                      value="3172023010141005" />
+                    <Field type="text" name="no_kk" className="form-control form-control form-control-solid mb-4" placeholder="Nomor KK" />
                   </div>
                 </div>
               </div>
@@ -151,15 +144,13 @@ export function UpdateDataPribadi() {
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Umur</label>
-                    <input type="number" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Umur"
-                      value="36" />
+                    <Field type="number" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Umur" />
                   </div>
                 </div>
               </div>
               <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                 <label htmlFor="" className="mb-3">Nomor HP</label>
-                <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Nomor HP"
-                  value="081238303082" />
+                <Field type="text" className="form-control form-control form-control-solid mb-4" name="no_hp" placeholder="Nomor HP" />
               </div>
 
               <div className="col-12 mb-4">
@@ -170,13 +161,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-10 col-md-10 col-lg-10 col-sm-12">
                     <label htmlFor="" className="mb-3">Alamat Sesuai KTP</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-3" name="tags" placeholder="Alamat Sesuai KTP"
-                      value="JL. WARAKAS VI GG XVIII NO. 105 B KEL. PAPANGGO KEC. TANJUNG PRIUK JAKARTA UTARA" />
+                    <Field type="text" className="form-control form-control form-control-solid mb-3" name="sesuai_ktp_alamat" placeholder="Alamat Sesuai KTP" />
                   </div>
                   <div className="col-xxl-2 col-md-2 col-lg-2 col-sm-12">
                     <label htmlFor="" className="mb-3">RT/RW</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="RT/RW"
-                      value="009 / 005" />
+                    <Field type="text" className="form-control form-control form-control-solid mb-4" name="sesuai_ktp_rtrw" placeholder="RT/RW" />
                   </div>
                 </div>
               </div>
@@ -213,13 +202,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-10 col-md-10 col-lg-10 col-sm-12">
                     <label htmlFor="" className="mb-3">Alamat Domisili</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Alamat Domisili"
-                      value="JL. WARAKAS VI GG XVIII NO. 105 B KEL. PAPANGGO KEC. TANJUNG PRIUK JAKARTA UTARA" />
+                    <Field type="text" className="form-control form-control form-control-solid mb-4" name="domisili_alamat" placeholder="Alamat Domisili" />
                   </div>
                   <div className="col-xxl-2 col-md-2 col-lg-2 col-sm-12">
                     <label htmlFor="" className="mb-3">RT/RW</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="RT/RW"
-                      value="009 / 005" />
+                    <Field type="text" className="form-control form-control form-control-solid mb-4" name="domisili_rtrw" placeholder="RT/RW" />
                   </div>
                 </div>
               </div>
@@ -274,6 +261,7 @@ export function UpdateDataPribadi() {
         </div>
       </Formik>
       {/* end::Body */}
-    </div>
+    </>
+
   )
 }
