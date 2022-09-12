@@ -11,42 +11,29 @@ function Pie(props: {chartID: any}) {
   console.log({chartID})
 
   useLayoutEffect(() => {
-    // Create root and chart
     var root = am5.Root.new(chartID)
 
     root.setThemes([am5themes_Animated.new(root)])
 
     var chart = root.container.children.push(
       am5percent.PieChart.new(root, {
-        layout: root.verticalLayout,
+        layout: root.horizontalLayout,
       })
     )
 
     // Define data
     var data = [
       {
-        category: 'Diklat Struktural',
-        sales: 400.9,
+        country: 'PNS',
+        sales: 100000,
       },
       {
-        category: 'Diklat FUngsional Pol PP',
-        sales: 300.9,
+        country: 'PTT',
+        sales: 160000,
       },
       {
-        category: 'Diklat PPNS',
-        sales: 200.9,
-      },
-      {
-        category: 'Diklat Teknis',
-        sales: 100.9,
-      },
-      {
-        category: 'Diklat Dasar Pol PP',
-        sales: 400.9,
-      },
-      {
-        category: 'Diklat Lainnya',
-        sales: 300.9,
+        country: 'PJLP',
+        sales: 80000,
       },
     ]
 
@@ -56,16 +43,20 @@ function Pie(props: {chartID: any}) {
         name: 'Series',
         valueField: 'sales',
         categoryField: 'country',
+        legendLabelText: '[{fill}]{category}[/]',
+        legendValueText: '[bold {fill}]{value}[/]',
       })
     )
     series.data.setAll(data)
+    series.labels.template.set('forceHidden', true)
+    series.ticks.template.set('forceHidden', true)
 
     // Add legend
     var legend = chart.children.push(
       am5.Legend.new(root, {
-        centerX: am5.percent(50),
-        x: am5.percent(50),
-        layout: root.horizontalLayout,
+        centerY: am5.percent(50),
+        y: am5.percent(50),
+        layout: root.verticalLayout,
       })
     )
 
