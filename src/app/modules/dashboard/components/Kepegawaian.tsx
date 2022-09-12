@@ -206,7 +206,7 @@ export const Kepegawaian: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -218,7 +218,7 @@ export const Kepegawaian: FC = () => {
                         <option value='6'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -259,7 +259,7 @@ export const Kepegawaian: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -271,7 +271,7 @@ export const Kepegawaian: FC = () => {
                         <option value='9'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -311,7 +311,7 @@ export const Kepegawaian: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -323,7 +323,7 @@ export const Kepegawaian: FC = () => {
                         <option value='12'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -363,7 +363,7 @@ export const Kepegawaian: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -375,7 +375,7 @@ export const Kepegawaian: FC = () => {
                         <option value='15'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -415,7 +415,7 @@ export const Kepegawaian: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -427,7 +427,7 @@ export const Kepegawaian: FC = () => {
                         <option value='18'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -467,7 +467,7 @@ export const Kepegawaian: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -479,7 +479,7 @@ export const Kepegawaian: FC = () => {
                         <option value='21'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
