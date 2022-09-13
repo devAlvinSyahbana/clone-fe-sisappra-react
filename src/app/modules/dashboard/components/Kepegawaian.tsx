@@ -1,12 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect, FC} from 'react'
-import DataTable from 'react-data-table-component'
 import axios from 'axios'
 import PieC from '../chart/piechart/piechart'
 import BarC from '../chart/barchart/barchart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const SARANA_PRASARANA_URL = `${API_URL}/dashboard/kepegawaian/sum-status-kepegawaian`
+export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}/dashboard/kepegawaian/sum-status-kepegawaian`
+export const SUM_PENDIDIKAN_TERAKHIR_URL = `${API_URL}/dashboard/kepegawaian/sum-pendidikan-terakhir`
+export const SUM_GOLONGAN_URL = `${API_URL}/dashboard/kepegawaian/sum-golongan`
+export const SUM_ESELON_URL = `${API_URL}/dashboard/kepegawaian/sum-eselon`
+export const SUM_USIA_URL = `${API_URL}/dashboard/kepegawaian/sum-usia`
+export const SUM_STATUS_PNS_URL = `${API_URL}/dashboard/kepegawaian/sum-status-kepegawaian`
 
 export const Kepegawaian: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -98,13 +102,11 @@ export const Kepegawaian: FC = () => {
 
   const columns = [
     {
-      name: 'Status Kepegawaian',
       selector: (row: any) => row.status_kepegawaian,
       sortable: true,
       sortField: 'status_kepegawaian',
     },
     {
-      name: 'Jumlah',
       selector: (row: any) => row.count,
       sortable: true,
       sortField: 'count',
@@ -112,8 +114,6 @@ export const Kepegawaian: FC = () => {
   ]
 
   const [data, setData] = useState([])
-  const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
 
   useEffect(() => {
     fetchUsers(1)
@@ -122,17 +122,14 @@ export const Kepegawaian: FC = () => {
   const [temp, setTemp] = useState([])
 
   const fetchUsers = async (page: any) => {
-    const value = await axios.get(SARANA_PRASARANA_URL)
+    const value = await axios.get(SUM_STATUS_KEPEGAWAIAN_URL)
 
     setTemp(value.data.data)
     console.log('cek response api:', temp)
 
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
-    )
-    setData(response.data.data)
+    const response = await axios.get(`${SUM_STATUS_KEPEGAWAIAN_URL}`)
 
-    setTotalRows(response.data.total)
+    setData(response.data.data)
     console.log('cek :', data)
     return [data, setData] as const
   }
@@ -177,22 +174,17 @@ export const Kepegawaian: FC = () => {
                     </div>
                     {showResults.isShowed && showResults.val === '1' ? (
                       <>
-                        <BarC chartID='pie-tow' />
+                        <BarC chartID={columns} />
                       </>
                     ) : null || (showResults.isShowed && showResults.val === '2') ? (
                       <>
-                        <BarC chartID='pie-tow' />
+                        <BarC chartID={columns} />
                       </>
                     ) : null || (showResults.isShowed && showResults.val === '3') ? (
                       <>
-                        <BarC chartID='pie-tow' />
+                        <BarC chartID={columns} />
                       </>
                     ) : null}
-                  </div>
-                  <div className='row'>
-                    <div className='table-responsive mt-5 ms-5 me-5'>
-                      <DataTable columns={columns} data={temp} />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -235,15 +227,15 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={data} valueField='count' categoryField='status_kepegawaian' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={data} />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={data} />
                     </>
                   ) : null}
                 </div>
