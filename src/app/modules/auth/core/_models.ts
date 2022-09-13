@@ -11,8 +11,7 @@ export interface KontakPICModel {
   message: string
   data: {
     id: number
-    nama: string
-    telepon: string
+    email: string
     status_pic: number
   }
 }

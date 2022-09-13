@@ -1,71 +1,64 @@
-import React, {useLayoutEffect} from 'react'
+import React, {useEffect} from 'react'
 import * as am5 from '@amcharts/amcharts5'
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated'
 
 //chart type
 import * as am5percent from '@amcharts/amcharts5/percent'
 
-function Pie(props: {chartID: any}) {
+function Pie(props: {chartID?: any; valueField?: any; categoryField?: any}) {
   //const chart = useRef(null);
   const chartID = props.chartID
-  console.log({chartID})
+  const valueField = props.valueField
+  const categoryField = props.categoryField
+  console.log('Props Result', chartID)
 
-  useLayoutEffect(() => {
-    // Create root and chart
+  useEffect(() => {
     var root = am5.Root.new(chartID)
 
     root.setThemes([am5themes_Animated.new(root)])
 
     var chart = root.container.children.push(
       am5percent.PieChart.new(root, {
-        layout: root.verticalLayout,
+        layout: root.horizontalLayout,
       })
     )
 
-    // Define data
-    var data = [
-      {
-        category: 'Diklat Struktural',
-        sales: 400.9,
-      },
-      {
-        category: 'Diklat FUngsional Pol PP',
-        sales: 300.9,
-      },
-      {
-        category: 'Diklat PPNS',
-        sales: 200.9,
-      },
-      {
-        category: 'Diklat Teknis',
-        sales: 100.9,
-      },
-      {
-        category: 'Diklat Dasar Pol PP',
-        sales: 400.9,
-      },
-      {
-        category: 'Diklat Lainnya',
-        sales: 300.9,
-      },
-    ]
+    // // Define data
+    // var data = [
+    //   {
+    //     country: {props, chartID},
+    //     sales: {props, chartID},
+    //   },
+    //   {
+    //     country: 'PTT',
+    //     sales: 160000,
+    //   },
+    //   {
+    //     country: 'PJLP',
+    //     sales: 80000,
+    //   },
+    // ]
 
     // Create series
     var series = chart.series.push(
       am5percent.PieSeries.new(root, {
         name: 'Series',
-        valueField: 'sales',
-        categoryField: 'country',
+        valueField: 'count',
+        categoryField: 'status_kepegawaian',
+        legendLabelText: '[{fill}]{category}[/]',
+        legendValueText: '[bold {fill}]{value}[/]',
       })
     )
-    series.data.setAll(data)
+    series.data.setAll(chartID)
+    series.labels.template.set('forceHidden', true)
+    series.ticks.template.set('forceHidden', true)
 
     // Add legend
     var legend = chart.children.push(
       am5.Legend.new(root, {
-        centerX: am5.percent(50),
-        x: am5.percent(50),
-        layout: root.horizontalLayout,
+        centerY: am5.percent(50),
+        y: am5.percent(50),
+        layout: root.verticalLayout,
       })
     )
 

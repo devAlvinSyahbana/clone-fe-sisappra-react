@@ -45,6 +45,12 @@ export function HirarkiPegawai() {
     setInputFields([...inputFields, newfield])
   }
 
+  const removeFields = (index: number) => {
+    let data:any = [...inputFields];
+    data.splice(index, 1)
+    setInputFields(data)
+  }
+
 
   return (
     <div className={`card`}>
@@ -221,7 +227,7 @@ export function HirarkiPegawai() {
                                           <input type="text" name={`nama`} className="form-control mb-2 mb-md-0" placeholder="Masukkan Nama" value={input.nama} onChange={event => handleFormChange(index, event)} />
                                         </div>
                                         <div className="col-md-4">
-                                          <a href="javascript:;" data-repeater-delete className="btn btn-sm btn-light-danger mt-3 mt-md-8">
+                                          <a href="javascript:;" onClick={() => removeFields(index)} data-repeater-delete className="btn btn-sm btn-light-danger mt-3 mt-md-8">
                                             <i className="la la-trash-o" />Delete
                                           </a>
                                         </div>
