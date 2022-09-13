@@ -10,15 +10,14 @@ export function lupaKataSandi() {
 }
 
 export function ForgotPassword() {
-  const [value, setValue] = useState({nama:"string", telepon:"string"});
+  const [value, setValue] = useState({email:"string"});
   useEffect(() => {
     // declare the data fetching function
     const fetchData = async () => {
       const {data: auth}  = await  lupaKataSandi();
 
       setValue({
-        nama: auth.data.nama,
-        telepon: auth.data.telepon,
+        email: auth.data.email,
       })
     }
 
@@ -26,8 +25,6 @@ export function ForgotPassword() {
       // make sure to catch any error
       .catch(console.error);
   }, [])
-
-  
   
 
   return (
@@ -43,20 +40,13 @@ export function ForgotPassword() {
           {/* end::Title */}
 
           {/* begin::Link */}
-          <div className='text-gray-400 fw-bold fs-4'>Untuk melakukan pengaturan ulang kata sandi dapat menghubungi Admin</div>
+          <div className='text-gray-400 fw-bold fs-4'>Untuk melakukan pengaturan ulang kata sandi dapat menghubungi Admin melalui email berikut:</div>
           {/* end::Link */}
 
           {/* begin::Link */}
-            <div className='text-gray-400  fw-bold fs-1'>{value.nama}</div>
+            <div className='text-gray-400  fw-bold fs-1'>{value.email}</div>
           {/* end::Link */}
 
-          {/* begin::Link */}
-            <div className='text-gray-400 fw-bold fs-4'>Nomor:</div>
-          {/* end::Link */}
-
-          {/* begin::Link */}
-          <div className='text-gray-400  fw-bold fs-1'>{value.telepon}</div>
-          {/* end::Link */}
         </div>
       </form>
     </>
