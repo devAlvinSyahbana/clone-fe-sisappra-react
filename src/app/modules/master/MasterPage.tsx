@@ -15,7 +15,9 @@ import { KorbanMaterial } from './components/KorbanMaterial'
 import { JenisBantuan } from './components/JenisBantuan'
 import { InstansiTerkait } from './components/InstansiTerkait'
 import { Agama } from './components/Agama'
+import { TempatPelaksana } from './components/TempatPelaksana'
 import { SKPD } from './components/SKPD'
+import { Pendidikan } from './components/Pendidikan'
 import { JenisSaranaPrasaran } from './components/JenisSaranaPrasarana'
 import { Golongan } from './components/Golongan'
 import { Eselon } from './components/Eselon'
@@ -65,6 +67,15 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>SKPD</PageTitle>
               <SKPD />
+            </>
+          }
+        />
+        <Route
+          path='TempatPelaksana'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Tempat Pelaksana</PageTitle>
+              <TempatPelaksana />
             </>
           }
         />
@@ -146,6 +157,15 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Eselon </PageTitle>
               <Eselon/>
+            </>
+          }
+        />
+         <Route
+          path='Pendidikan'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}> Pendidikan </PageTitle>
+              <Pendidikan/>
             </>
           }
         />

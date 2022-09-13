@@ -5,11 +5,17 @@ import DataTable from 'react-data-table-component';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 
 export function Agama() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     fetchUsers(1);
@@ -179,13 +185,39 @@ export function Agama() {
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
           <Link to='#i'>
-            <button className='btn btn-primary me-5'>
+            <button className='btn btn-primary me-5' onClick={handleShow}>
               <i className="fa-solid fa-plus"></i>
               Tambah
             </button>
           </Link>
         </div>
       </div>
+
+      <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tambah Agama</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+        <Form.Group className="mb-3 form-control-solid">
+            <Form.Label>Agama</Form.Label>
+            <Form.Control type="text" placeholder="Agama" />
+        </Form.Group>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+          <i className="fa-solid fa-paper-plane"></i>
+            Simpan
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      </>
+
       <div className='table-responsive mt-5 ms-5 me-5'>
       <DataTable
             columns={columns}

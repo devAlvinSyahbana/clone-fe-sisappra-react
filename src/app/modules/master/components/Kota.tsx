@@ -5,11 +5,17 @@ import DataTable from 'react-data-table-component';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 
 export function Kota() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     fetchUsers(1);
@@ -31,10 +37,40 @@ export function Kota() {
 
   const columns = [
     {
-      name: 'Kota',
+      name: 'Jenis Sarana & Prasarana',
+      selector: (row: any) => row.jenis_sarana_prasarana,
+      sortable: true,
+      sortField: 'jenis_sarana_prasarana',
+    },
+    {
+      name: 'Status Sarana & Prasarana',
+      selector: (row: any) => row.status_sarana_prasarana,
+      sortable: true,
+      sortField: 'status_sarana_prasarana',
+    },
+    {
+      name: 'Jumlah',
+      selector: (row: any) => row.jumlah,
+      sortable: true,
+      sortField: 'jumlah',
+    },
+    {
+      name: 'Kondisi',
       selector: (row: any) => row.kondisi,
       sortable: true,
-      sortField: 'Kota',
+      sortField: 'kondisi',
+    },
+    {
+      name: 'Keterangan',
+      selector: (row: any) => row.keterangan,
+      sortable: true,
+      sortField: 'keterangan',
+    },
+    {
+      name: 'Dokumentasi',
+      selector: (row: any) => row.dokumentasi,
+      sortable: true,
+      sortField: 'dokumentasi',
     },
     {
       name: 'Aksi',
@@ -148,14 +184,40 @@ export function Kota() {
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-          <Link to='#i'>
-            <button className='btn btn-primary me-5'>
+          <Link to='#'>
+            <button className='btn btn-primary me-5' onClick={handleShow}>
               <i className="fa-solid fa-plus"></i>
               Tambah
             </button>
           </Link>
         </div>
       </div>
+      
+      <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tambah Kota</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+        <Form.Group className="mb-3 form-control-solid">
+            <Form.Label>Kota</Form.Label>
+            <Form.Control type="text" placeholder="Kota" />
+        </Form.Group>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+          <i className="fa-solid fa-paper-plane"></i>
+            Simpan
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      </>
+
       <div className='table-responsive mt-5 ms-5 me-5'>
       <DataTable
             columns={columns}

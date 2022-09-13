@@ -129,6 +129,21 @@ export function AsideMenuMain() {
           hasBullet={true}
         />
         <AsideMenuItem
+          to='/master/SKPD'
+          title='SKPD'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/Agama'
+          title='Agama'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/KorbanJiwa'
+          title='Korban Jiwa'
+          hasBullet={true}
+        />        
+        <AsideMenuItem
           to='/master/Kecamatan'
           title='Kecamatan'
           hasBullet={true}
@@ -162,12 +177,7 @@ export function AsideMenuMain() {
           to='/master/KorbanMaterial'
           title='Korban Material '
           hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/KorbanJiwa'
-          title='Korban Jiwa'
-          hasBullet={true}
-        />
+        />        
         <AsideMenuItem
           to='/master/JenisPertolongan'
           title='Jenis Pertolongan'
@@ -187,15 +197,15 @@ export function AsideMenuMain() {
           to='/master/JenisPelanggaran'
           title='Jenis Pelanggaran'
           hasBullet={true}
-        />
+        />        
         <AsideMenuItem
-          to='/master/Agama'
-          title='Agama'
+          to='/master/TempatPelaksana'
+          title='Tempat Pelaksana'
           hasBullet={true}
-        />
+        />      
         <AsideMenuItem
-          to='/master/SKPD'
-          title='SKPD'
+          to='/master/Pendidikan'
+          title='Pendidikan'
           hasBullet={true}
         />
         <AsideMenuItem
