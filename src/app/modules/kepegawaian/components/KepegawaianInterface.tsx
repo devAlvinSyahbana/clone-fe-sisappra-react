@@ -4,7 +4,8 @@ export interface DetailPegawaiInterface {
   tempat_lahir?: string,
   tgl_lahir?: string,
   jenis_kelamin?: string,
-  agama?: string,
+  agama_id?: string,
+  agama_name?: string,
   nik?: string,
   no_kk?: string,
   status_perkawinan?: string,
@@ -72,4 +73,9 @@ export interface JumlahKeluargaInterface {
 
 export interface PendidikanInterface {
   jenis_pendidikan?: string
+}
+
+export interface SelectOptionAutoCom {
+  readonly value: string;
+  readonly label: string;
 }
