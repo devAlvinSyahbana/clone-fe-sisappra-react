@@ -1,6 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, FC} from 'react'
+import React, {useState, useEffect, FC} from 'react'
+import axios from 'axios'
 import BarC from '../chart/barchart/barchart'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const SUM_JENIS_PERORANGAN_URL = `${API_URL}/dashboard/wasdak-protokol-kesehatan-PPKM/sum-jenis-perorangan`
+export const SUM_JENIS_TEMPAT_MAKAN_URL = `${API_URL}/dashboard/wasdak-protokol-kesehatan-PPKM/sum-jenis-tempat-makan`
+export const SUM_JENIS_PERKANTORAN_URL = `${API_URL}/dashboard/wasdak-protokol-kesehatan-PPKM/sum-jenis-perkantoran`
 
 const WasdakProtokolKesehatan: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -53,6 +59,28 @@ const WasdakProtokolKesehatan: FC = () => {
       setShowResults({isShowed: true, val: event.target.value})
     }
   }
+  const [data, setData] = useState([])
+  const [dataJPM, setDataJPM] = useState([])
+  const [dataJPK, setDataJPK] = useState([])
+
+  useEffect(() => {
+    fetchUsers(1)
+  }, [])
+
+  // const [temp, setTemp] = useState([])
+
+  const fetchUsers = async (page: any) => {
+    const response = await axios.get(`${SUM_JENIS_PERORANGAN_URL}`)
+    const responseJTM = await axios.get(`${SUM_JENIS_TEMPAT_MAKAN_URL}`)
+    const responseJP = await axios.get(`${SUM_JENIS_PERKANTORAN_URL}`)
+
+    setData(response.data.data)
+    setDataJPM(responseJTM.data.data)
+    setDataJPK(responseJP.data.data)
+
+    console.log('cek :', data)
+    return [data, setData] as const
+  }
   return (
     <div className=' card card-body'>
       <div className='tab-content' id='myTabContent'>
@@ -94,15 +122,27 @@ const WasdakProtokolKesehatan: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '2') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '3') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda'
+                      />
                     </>
                   ) : null}
                 </div>
@@ -144,19 +184,19 @@ const WasdakProtokolKesehatan: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '4' ? (
+                  {/* {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
@@ -194,19 +234,19 @@ const WasdakProtokolKesehatan: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '7' ? (
+                  {/* {showResults.isShowed && showResults.val === '7' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '8') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '9') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
@@ -246,7 +286,7 @@ const WasdakProtokolKesehatan: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '10' ? (
+                  {/* {showResults.isShowed && showResults.val === '10' ? (
                     <>
                       <BarC chartID='pie-one' />
                     </>
@@ -258,7 +298,7 @@ const WasdakProtokolKesehatan: FC = () => {
                     <>
                       <BarC chartID='pie-one' />
                     </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
@@ -298,7 +338,7 @@ const WasdakProtokolKesehatan: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '13' ? (
+                  {/* {showResults.isShowed && showResults.val === '13' ? (
                     <>
                       <BarC chartID='pie-one' />
                     </>
@@ -310,7 +350,7 @@ const WasdakProtokolKesehatan: FC = () => {
                     <>
                       <BarC chartID='pie-one' />
                     </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>

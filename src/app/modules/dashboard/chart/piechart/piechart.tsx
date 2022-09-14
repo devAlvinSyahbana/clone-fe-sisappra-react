@@ -23,28 +23,12 @@ function Pie(props: {chartID?: any; valueField?: any; categoryField?: any}) {
       })
     )
 
-    // // Define data
-    // var data = [
-    //   {
-    //     country: {props, chartID},
-    //     sales: {props, chartID},
-    //   },
-    //   {
-    //     country: 'PTT',
-    //     sales: 160000,
-    //   },
-    //   {
-    //     country: 'PJLP',
-    //     sales: 80000,
-    //   },
-    // ]
-
     // Create series
     var series = chart.series.push(
       am5percent.PieSeries.new(root, {
         name: 'Series',
-        valueField: 'count',
-        categoryField: 'status_kepegawaian',
+        valueField: valueField,
+        categoryField: categoryField,
         legendLabelText: '[{fill}]{category}[/]',
         legendValueText: '[bold {fill}]{value}[/]',
       })
@@ -53,7 +37,7 @@ function Pie(props: {chartID?: any; valueField?: any; categoryField?: any}) {
     series.labels.template.set('forceHidden', true)
     series.ticks.template.set('forceHidden', true)
 
-    // Add legend
+    // Add legendy
     var legend = chart.children.push(
       am5.Legend.new(root, {
         centerY: am5.percent(50),
@@ -63,8 +47,8 @@ function Pie(props: {chartID?: any; valueField?: any; categoryField?: any}) {
     )
 
     legend.data.setAll(series.dataItems)
-  }, [chartID])
+  }, [chartID, valueField, categoryField])
 
-  return <div id={chartID} style={{height: 200}}></div>
+  return <div id={chartID} style={{height: 350}}></div>
 }
 export default Pie
