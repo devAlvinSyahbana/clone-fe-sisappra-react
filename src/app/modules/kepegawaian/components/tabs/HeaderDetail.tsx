@@ -38,7 +38,7 @@ const HeaderDetailWrapper = () => {
     <>
       <div className='card mb-5 mb-xl-10'>
         <div className='card-body pt-9 pb-0'>
-        <div className='row'>
+          <div className='row'>
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
@@ -47,138 +47,139 @@ const HeaderDetailWrapper = () => {
                 </div>
               </div>
 
-            <div className='flex-grow-1'>
-              <div className='mb-2'>
-                <div className='d-flex align-items-center mb-2'>
-                  <a className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
-                    {data?.nama !== '' ? data?.nama : '-'}
-                  </a>
-                </div>
-                <div className='row fw-bold fs-6 mb-4 pe-2'>
-                  <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
-                    <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
-                      <KTSVG
-                        path='/media/icons/duotune/communication/com006.svg'
-                        className='svg-icon-4 me-1'
-                      />
-                      {data?.kepegawaian_status_pegawai !== ''
-                        ? data?.kepegawaian_status_pegawai
-                        : '-'}
+              <div className='flex-grow-1'>
+                <div className='mb-2'>
+                  <div className='d-flex align-items-center mb-2'>
+                    <a className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
+                      {data?.nama !== '' ? data?.nama : '-'}
                     </a>
                   </div>
-                  <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
-                    <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
-                      <KTSVG
-                        path='/media/icons/duotune/communication/com005.svg'
-                        className='svg-icon-4 me-1'
-                      />
-                      {data?.no_hp !== '' ? data?.no_hp : '-'}
-                    </a>
-                  </div>
-                  <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
-                    <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
-                      <KTSVG
-                        path='/media/icons/duotune/communication/com011.svg'
-                        className='svg-icon-4 me-1'
-                      />
-                      -
-                    </a>
-                  </div>
-                  <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
-                    <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
-                      <i className='fa-solid fa-address-card me-1'></i>
-                      {data?.kepegawaian_pangkat !== '' ? data?.kepegawaian_pangkat : '-'}
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <div className='d-flex flex-wrap flex-stack'>
-                <div className='d-flex flex-column flex-grow-1 pe-8'>
-                  <div className='d-flex flex-wrap'>
-                    <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
-                      <div className='d-flex align-items-center'>
-                        <div className='fs-2 fw-bolder'>
-                          {jkeluarga?.total !== 0 ? jkeluarga?.total : '-'}
-                        </div>
-                      </div>
-
-                      <div className='fw-bold fs-6 text-gray-400'>Jumlah Anggota Keluarga</div>
+                  <div className='row fw-bold fs-6 mb-4 pe-2'>
+                    <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                      <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                        <KTSVG
+                          path='/media/icons/duotune/communication/com006.svg'
+                          className='svg-icon-4 me-1'
+                        />
+                        {data?.kepegawaian_status_pegawai !== ''
+                          ? data?.kepegawaian_status_pegawai
+                          : '-'}
+                      </a>
                     </div>
+                    <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                      <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                        <KTSVG
+                          path='/media/icons/duotune/communication/com005.svg'
+                          className='svg-icon-4 me-1'
+                        />
+                        {data?.no_hp !== '' ? data?.no_hp : '-'}
+                      </a>
+                    </div>
+                    <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                      <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                        <KTSVG
+                          path='/media/icons/duotune/communication/com011.svg'
+                          className='svg-icon-4 me-1'
+                        />
+                        -
+                      </a>
+                    </div>
+                    <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                      <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                        <i className='fa-solid fa-address-card me-1'></i>
+                        {data?.kepegawaian_pangkat !== '' ? data?.kepegawaian_pangkat : '-'}
+                      </a>
+                    </div>
+                  </div>
+                </div>
 
-                    <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
-                      <div className='d-flex align-items-center'>
-                        <div className='fs-2 fw-bolder'>
-                          {pendidikan?.jenis_pendidikan ? pendidikan?.jenis_pendidikan : '-'}
+                <div className='d-flex flex-wrap flex-stack'>
+                  <div className='d-flex flex-column flex-grow-1 pe-8'>
+                    <div className='d-flex flex-wrap'>
+                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                        <div className='d-flex align-items-center'>
+                          <div className='fs-2 fw-bolder'>
+                            {jkeluarga?.total !== 0 ? jkeluarga?.total : '-'}
+                          </div>
                         </div>
+
+                        <div className='fw-bold fs-6 text-gray-400'>Jumlah Anggota Keluarga</div>
                       </div>
 
-                      <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
+                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                        <div className='d-flex align-items-center'>
+                          <div className='fs-2 fw-bolder'>
+                            {pendidikan?.jenis_pendidikan ? pendidikan?.jenis_pendidikan : '-'}
+                          </div>
+                        </div>
+
+                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className='d-flex overflow-auto h-55px'>
-            <ul className='nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder flex-nowrap'>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('DataPribadi') && 'active')
-                  }
-                  to={`/kepegawaian/InformasiDataPegawai/DataPribadi/${id}/${status}`}
-                >
-                  Data Pribadi
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('DataKeluarga') && 'active')
-                  }
-                  to={`/kepegawaian/InformasiDataPegawai/DataKeluarga/${id}/${status}`}
-                >
-                  Data Keluarga
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('Pendidikan') && 'active')
-                  }
-                  to={`/kepegawaian/InformasiDataPegawai/Pendidikan/${id}/${status}`}
-                >
-                  Pendidikan
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('DataKepegawaian') && 'active')
-                  }
-                  to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}
-                >
-                  Data Kepegawaian
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('HirarkiKepegawaian') && 'active')
-                  }
-                  to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/${id}/${status}`}
-                >
-                  Hirarki Kepegawaian
-                </Link>
-              </li>
-            </ul>
+            <div className='d-flex overflow-auto h-55px'>
+              <ul className='nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder flex-nowrap'>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('DataPribadi') && 'active')
+                    }
+                    to={`/kepegawaian/InformasiDataPegawai/DataPribadi/${id}/${status}`}
+                  >
+                    Data Pribadi
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('DataKeluarga') && 'active')
+                    }
+                    to={`/kepegawaian/InformasiDataPegawai/DataKeluarga/${id}/${status}`}
+                  >
+                    Data Keluarga
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('Pendidikan') && 'active')
+                    }
+                    to={`/kepegawaian/InformasiDataPegawai/Pendidikan/${id}/${status}`}
+                  >
+                    Pendidikan
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('DataKepegawaian') && 'active')
+                    }
+                    to={`/kepegawaian/DataKepegawaian/${id}/${status}`}
+                  >
+                    Data Kepegawaian
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('HirarkiKepegawaian') && 'active')
+                    }
+                    to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/${id}/${status}`}
+                  >
+                    Hirarki Kepegawaian
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
