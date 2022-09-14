@@ -1,6 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, FC} from 'react'
+import React, {useState, useEffect, FC} from 'react'
+import axios from 'axios'
 import BarC from '../chart/barchart/barchart'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const SUM_KASUS_TRAMTIBUM_URL = `${API_URL}/dashboard/ketentraman-ketertiban-umum/sum-kasus-tramtibum`
+export const SUM_JENIS_PELANGGARAN_PERDA_URL = `${API_URL}/dashboard/ketentraman-ketertiban-umum/sum-jenis-pelanggaran-perda-tramtibum`
+export const SUM_KEGIATAN_TRAMTIBUM_URL = `${API_URL}/dashboard/ketentraman-ketertiban-umum/sum-kegiatan-tramtibum`
 
 export const KetentramandanKetertibanUmum: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -35,6 +41,29 @@ export const KetentramandanKetertibanUmum: FC = () => {
       setShowResults({isShowed: true, val: event.target.value})
     }
   }
+  const [data, setData] = useState([])
+  const [dataJPP, setDataJPP] = useState([])
+  const [dataKGT, setDataKGT] = useState([])
+
+  useEffect(() => {
+    fetchUsers(1)
+  }, [])
+
+  // const [temp, setTemp] = useState([])
+
+  const fetchUsers = async (page: any) => {
+    const response = await axios.get(`${SUM_KASUS_TRAMTIBUM_URL}`)
+    const responseJPP = await axios.get(`${SUM_JENIS_PELANGGARAN_PERDA_URL}`)
+    const responseKGT = await axios.get(`${SUM_KEGIATAN_TRAMTIBUM_URL}`)
+
+    setData(response.data.data)
+    setDataJPP(responseJPP.data.data)
+    setDataKGT(responseKGT.data.data)
+
+    console.log('cek :', data)
+    return [data, setData] as const
+  }
+
   return (
     <div className=' card card-body'>
       <div className='tab-content' id='myTabContent'>
@@ -76,15 +105,15 @@ export const KetentramandanKetertibanUmum: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={data} valueField='count' categoryField='kasus_tramtibum' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '2') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={data} valueField='count' categoryField='kasus_tramtibum' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '3') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={data} valueField='count' categoryField='kasus_tramtibum' />
                     </>
                   ) : null}
                 </div>
@@ -128,15 +157,27 @@ export const KetentramandanKetertibanUmum: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={dataJPP}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda_tramtibum'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={dataJPP}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda_tramtibum'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={dataJPP}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda_tramtibum'
+                      />
                     </>
                   ) : null}
                 </div>
@@ -178,15 +219,27 @@ export const KetentramandanKetertibanUmum: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '7' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={dataKGT}
+                        valueField='count'
+                        categoryField='kegiatan_tramtibum'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '8') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={dataKGT}
+                        valueField='count'
+                        categoryField='kegiatan_tramtibum'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '9') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC
+                        chartID={dataKGT}
+                        valueField='count'
+                        categoryField='kegiatan_tramtibum'
+                      />
                     </>
                   ) : null}
                 </div>

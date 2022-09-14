@@ -10,7 +10,7 @@ export const SUM_PENDIDIKAN_TERAKHIR_URL = `${API_URL}/dashboard/kepegawaian/sum
 export const SUM_GOLONGAN_URL = `${API_URL}/dashboard/kepegawaian/sum-golongan`
 export const SUM_ESELON_URL = `${API_URL}/dashboard/kepegawaian/sum-eselon`
 export const SUM_USIA_URL = `${API_URL}/dashboard/kepegawaian/sum-usia`
-export const SUM_STATUS_PNS_URL = `${API_URL}/dashboard/kepegawaian/sum-status-kepegawaian`
+export const SUM_STATUS_PNS_URL = `${API_URL}/dashboard/kepegawaian/sum-status-ppns`
 
 export const Kepegawaian: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -100,36 +100,40 @@ export const Kepegawaian: FC = () => {
     }
   }
 
-  const columns = [
-    {
-      selector: (row: any) => row.status_kepegawaian,
-      sortable: true,
-      sortField: 'status_kepegawaian',
-    },
-    {
-      selector: (row: any) => row.count,
-      sortable: true,
-      sortField: 'count',
-    },
-  ]
-
   const [data, setData] = useState([])
+  const [dataPT, setDataPT] = useState([])
+  const [dataG, setDataG] = useState([])
+  const [dataE, setDataE] = useState([])
+  const [dataU, setDataU] = useState([])
+  const [dataSP, setDataSP] = useState([])
 
   useEffect(() => {
     fetchUsers(1)
   }, [])
 
-  const [temp, setTemp] = useState([])
+  // const [temp, setTemp] = useState([])
 
   const fetchUsers = async (page: any) => {
-    const value = await axios.get(SUM_STATUS_KEPEGAWAIAN_URL)
+    // const value = await axios.get(SUM_STATUS_KEPEGAWAIAN_URL)
+    // const valuePT = await axios.get(SUM_PENDIDIKAN_TERAKHIR_URL)
 
-    setTemp(value.data.data)
-    console.log('cek response api:', temp)
+    // setTemp(value.data.data)
+    // // setTemp(valuePT.data.dataPT)
+    // console.log('cek response api:', temp)
 
     const response = await axios.get(`${SUM_STATUS_KEPEGAWAIAN_URL}`)
+    const responsePT = await axios.get(`${SUM_PENDIDIKAN_TERAKHIR_URL}`)
+    const responseG = await axios.get(`${SUM_GOLONGAN_URL}`)
+    const responseU = await axios.get(`${SUM_USIA_URL}`)
+    const responseE = await axios.get(`${SUM_ESELON_URL}`)
+    const responseSP = await axios.get(`${SUM_STATUS_PNS_URL}`)
 
     setData(response.data.data)
+    setDataPT(responsePT.data.data)
+    setDataG(responseG.data.data)
+    setDataE(responseE.data.data)
+    setDataU(responseU.data.data)
+    setDataSP(responseSP.data.data)
     console.log('cek :', data)
     return [data, setData] as const
   }
@@ -172,19 +176,19 @@ export const Kepegawaian: FC = () => {
                         <option value='e'>2022</option>
                       </select>
                     </div>
-                    {showResults.isShowed && showResults.val === '1' ? (
+                    {/* {showResults.isShowed && showResults.val === '1' ? (
                       <>
-                        <BarC chartID={columns} />
+                        <BarC chartID={data} />
                       </>
                     ) : null || (showResults.isShowed && showResults.val === '2') ? (
                       <>
-                        <BarC chartID={columns} />
+                        <BarC chartID={data} />
                       </>
                     ) : null || (showResults.isShowed && showResults.val === '3') ? (
                       <>
-                        <BarC chartID={columns} />
+                        <BarC chartID={data} />
                       </>
-                    ) : null}
+                    ) : null} */}
                   </div>
                 </div>
               </div>
@@ -231,11 +235,11 @@ export const Kepegawaian: FC = () => {
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <PieC chartID={data} />
+                      <PieC chartID={data} valueField='count' categoryField='status_kepegawaian' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <PieC chartID={data} />
+                      <PieC chartID={data} valueField='count' categoryField='status_kepegawaian' />
                     </>
                   ) : null}
                 </div>
@@ -280,15 +284,27 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '7' ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC
+                        chartID={dataPT}
+                        valueField='count'
+                        categoryField='pendidikan_terakhir'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '8') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC
+                        chartID={dataPT}
+                        valueField='count'
+                        categoryField='pendidikan_terakhir'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '9') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC
+                        chartID={dataPT}
+                        valueField='count'
+                        categoryField='pendidikan_terakhir'
+                      />
                     </>
                   ) : null}
                 </div>
@@ -332,15 +348,15 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '10' ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataG} valueField='count' categoryField='golongan' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '11') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataG} valueField='count' categoryField='golongan' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '12') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataG} valueField='count' categoryField='golongan' />
                     </>
                   ) : null}
                 </div>
@@ -384,15 +400,15 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '13' ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataE} valueField='count' categoryField='eselon' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '14') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataE} valueField='count' categoryField='eselon' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '15') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataE} valueField='count' categoryField='eselon' />
                     </>
                   ) : null}
                 </div>
@@ -434,17 +450,17 @@ export const Kepegawaian: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '19' ? (
+                  {showResults.isShowed && showResults.val === '16' ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '20') ? (
+                  ) : null || (showResults.isShowed && showResults.val === '17') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '21') ? (
+                  ) : null || (showResults.isShowed && showResults.val === '18') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
                     </>
                   ) : null}
                 </div>
@@ -486,17 +502,17 @@ export const Kepegawaian: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '22' ? (
+                  {showResults.isShowed && showResults.val === '19' ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '23') ? (
+                  ) : null || (showResults.isShowed && showResults.val === '20') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '24') ? (
+                  ) : null || (showResults.isShowed && showResults.val === '21') ? (
                     <>
-                      <PieC chartID='pie-tow' />
+                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
                     </>
                   ) : null}
                 </div>
