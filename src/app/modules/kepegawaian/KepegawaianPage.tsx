@@ -127,7 +127,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='DataPribadi/:id/:status'
+          path='InformasiDataPegawai/DataPribadi/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Pribadi</PageTitle>
@@ -136,7 +136,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='DataKeluarga/:id/:status'
+          path='InformasiDataPegawai/DataKeluarga/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Keluarga</PageTitle>
@@ -145,7 +145,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='Pendidikan/:id/:status'
+          path='InformasiDataPegawai/Pendidikan/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Pendidikan</PageTitle>
@@ -154,7 +154,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='DataKepegawaian/:id/:status'
+          path='InformasiDataPegawai/DataKepegawaian/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Kepegawaian</PageTitle>
@@ -163,7 +163,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='HirarkiKepegawaian/:id/:status'
+          path='InformasiDataPegawai/HirarkiKepegawaian/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Hirarki Kepegawaian</PageTitle>
