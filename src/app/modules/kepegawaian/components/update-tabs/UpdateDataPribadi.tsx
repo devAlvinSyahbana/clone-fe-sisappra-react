@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
-import Select from 'react-select'
+import AsyncSelect from 'react-select/async'
 import { UpdateHeaderDetail } from './UpdateHeaderDetail'
-import { DetailPegawaiInterface } from '../KepegawaianInterface'
+import { DetailPegawaiInterface, SelectOptionAutoCom } from '../KepegawaianInterface'
 import { Formik, Field, FormikHelpers } from 'formik';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const AGAMA_URL = `${API_URL}/master/agama`
 
 export function UpdateDataPribadi() {
   const { id, status } = useParams()
@@ -25,10 +26,26 @@ export function UpdateDataPribadi() {
     fetchData()
   }, [setData])
 
-  const jenisKelamin = [
-    { value: 'LAKI-LAKI', label: 'LAKI-LAKI' },
-    { value: 'PEREMPUAN', label: 'PEREMPUAN' }
-  ]
+  const [inputValJenis  , setDataJenis] = useState({label: '', value: null})
+
+  const filterSapra = async (inputValue: string) => {
+    const response = await axios.get(`${AGAMA_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.agama, value: i.id}))
+  }
+  const loadOptionsAgama = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterSapra(inputValue))
+    }, 1000)
+  }
+  const handleInputChange = (newValue: any) => {
+    setDataJenis((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // const jenisKelamin: readonly selectJenisKelamin[] = [
+  //   { value: 'LAKI-LAKI', label: 'LAKI-LAKI' },
+  //   { value: 'PEREMPUAN', label: 'PEREMPUAN' }
+  // ]
 
   const statusPerkawinan = [
     { value: 'KAWIN', label: 'KAWIN' },
@@ -36,7 +53,7 @@ export function UpdateDataPribadi() {
   ]
 
   const agama = [
-    { value: 'Islam', label: 'Islam' },
+    { value: '1', label: 'Islam' },
     { value: 'Katolik', label: 'Katolik' },
     { value: 'Kristen Protestan', label: 'Kristen Protestan' }
   ]
@@ -67,6 +84,11 @@ export function UpdateDataPribadi() {
     { value: 'KELAPA GADING TIMUR', label: 'KELAPA GADING TIMUR' },
     { value: 'PEGANGSAAN DUA', label: 'PEGANGSAAN DUA' }
   ]
+
+  // new Date().toISOString().
+  //   replace(/ /, ' ').
+  //   replace(/+/, '')
+  //   > '2012-11-04 14:55:45'
 
   return (
     <>
@@ -108,7 +130,7 @@ export function UpdateDataPribadi() {
                     <Field type="text" name="tempat_lahir" className="form-control form-control form-control-solid mb-4" placeholder="Tempat" />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
-                    <Field type="date" name="tgl_lahir" className="form-control form-control-solid" placeholder="Tanggal Lahir" />
+                    <Field type="text" name="tgl_lahir" className="form-control form-control-solid" placeholder="Tanggal Lahir" />
                   </div>
                 </div>
               </div>
@@ -116,11 +138,24 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Jenis Kelamin</label>
-                    <Select name="jenis_kelamin" options={jenisKelamin} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsSapra}
+                      defaultOptions
+                      onChange={handleInputChange}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Agama</label>
-                    <Select options={agama} />
+                    <AsyncSelect
+                      cacheOptions
+                      loadOptions={loadOptionsAgama}
+                      defaultOptions
+                      value={{value:data?.agama_id, label:data?.agama_name}}
+                      onChange={handleInputChange}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                 </div>
               </div>
@@ -140,7 +175,7 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Status Perkawinan</label>
-                    <Select options={statusPerkawinan} />
+                    <AsyncSelect options={statusPerkawinan} />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Umur</label>
@@ -173,11 +208,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Provinsi</label>
-                    <Select options={provinsi} />
+                    <AsyncSelect options={provinsi} />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kab/Kota</label>
-                    <Select options={kabKota} />
+                    <AsyncSelect options={kabKota} />
                   </div>
                 </div>
               </div>
@@ -185,11 +220,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-10 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kecamatan</label>
-                    <Select options={kecamatan} />
+                    <AsyncSelect options={kecamatan} />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kelurahan</label>
-                    <Select options={kelurahan} />
+                    <AsyncSelect options={kelurahan} />
                   </div>
                 </div>
               </div>
@@ -214,11 +249,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Provinsi</label>
-                    <Select options={provinsi} />
+                    <AsyncSelect options={provinsi} />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kab/Kota</label>
-                    <Select options={kabKota} />
+                    <AsyncSelect options={kabKota} />
                   </div>
                 </div>
               </div>
@@ -226,11 +261,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-10 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kecamatan</label>
-                    <Select options={kecamatan} />
+                    <AsyncSelect options={kecamatan} />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kelurahan</label>
-                    <Select options={kelurahan} />
+                    <AsyncSelect options={kelurahan} />
                   </div>
                 </div>
               </div>

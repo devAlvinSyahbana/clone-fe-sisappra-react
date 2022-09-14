@@ -1,16 +1,18 @@
-import React, {useLayoutEffect} from 'react'
+import React, {useEffect} from 'react'
 import * as am5 from '@amcharts/amcharts5'
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated'
 
 //chart type
 import * as am5percent from '@amcharts/amcharts5/percent'
 
-function Pie(props: {chartID: any}) {
+function Pie(props: {chartID?: any; valueField?: any; categoryField?: any}) {
   //const chart = useRef(null);
   const chartID = props.chartID
-  console.log({chartID})
+  const valueField = props.valueField
+  const categoryField = props.categoryField
+  console.log('Props Result', chartID)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     var root = am5.Root.new(chartID)
 
     root.setThemes([am5themes_Animated.new(root)])
@@ -21,37 +23,21 @@ function Pie(props: {chartID: any}) {
       })
     )
 
-    // Define data
-    var data = [
-      {
-        country: 'PNS',
-        sales: 100000,
-      },
-      {
-        country: 'PTT',
-        sales: 160000,
-      },
-      {
-        country: 'PJLP',
-        sales: 80000,
-      },
-    ]
-
     // Create series
     var series = chart.series.push(
       am5percent.PieSeries.new(root, {
         name: 'Series',
-        valueField: 'sales',
-        categoryField: 'country',
+        valueField: valueField,
+        categoryField: categoryField,
         legendLabelText: '[{fill}]{category}[/]',
         legendValueText: '[bold {fill}]{value}[/]',
       })
     )
-    series.data.setAll(data)
+    series.data.setAll(chartID)
     series.labels.template.set('forceHidden', true)
     series.ticks.template.set('forceHidden', true)
 
-    // Add legend
+    // Add legendy
     var legend = chart.children.push(
       am5.Legend.new(root, {
         centerY: am5.percent(50),
@@ -61,8 +47,8 @@ function Pie(props: {chartID: any}) {
     )
 
     legend.data.setAll(series.dataItems)
-  }, [chartID])
+  }, [chartID, valueField, categoryField])
 
-  return <div id={chartID} style={{height: 200}}></div>
+  return <div id={chartID} style={{height: 350}}></div>
 }
 export default Pie
