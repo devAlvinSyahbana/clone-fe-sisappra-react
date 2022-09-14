@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 import DataTable from 'react-data-table-component';
+import DatePicker from 'react-date-picker';
 
 export function LaporanKejadian() {
   const columns = [
@@ -80,7 +81,9 @@ export function LaporanKejadian() {
       hilang: '0',
       pengungsi: '0',
     },
-  ]
+  ];
+
+  var [value, onChange] = useState(new Date()); //Date Picker
 
   function MyComponent() {
     return (
@@ -132,12 +135,12 @@ export function LaporanKejadian() {
                         <div className="col-md-6 col-lg-6 col-sm-12">
                           <div className="mb-10">
                             <div className="row">
-                              <div className="col-4">
-                                <label className="form-label">Kota</label>
+                              <div className="col-4 pt-2">
+                                <label className="form-label">Pelaksana Kegiatan</label>
                               </div>
                               <div className="col-8">
                                 <input type="text" className="form-control form-control-solid"
-                                  placeholder="Masukkan Kota" />
+                                  placeholder="Pilih Pelaksana Kegiatan" />
                               </div>
                             </div>
                           </div>
@@ -145,13 +148,12 @@ export function LaporanKejadian() {
                         <div className="col-md-6 col-lg-6 col-sm-12">
                           <div className="mb-10">
                             <div className="row">
-                              <div className="col-4">
+                              <div className="col-4 pt-2">
                                 <label
                                   className="form-label align-middle">Tanggal</label>
                               </div>
                               <div className="col-8">
-                                <input className="form-control form-control-solid" placeholder="Pilih tanggal"
-                                  id="kt_daterangepicker_tgl" />
+                                <DatePicker className="form-control form-control-solid" onChange={onChange} value={value} />
                               </div>
                             </div>
                           </div>
@@ -159,64 +161,137 @@ export function LaporanKejadian() {
                         <div className="col-md-6 col-lg-6 col-sm-12">
                           <div className="mb-10">
                             <div className="row">
-                              <div className="col-4">
+                              <div className="col-4 pt-2">
+                                <label
+                                  className="form-label align-middle">Kota</label>
+                              </div>
+                              <div className="col-8">
+                                <input className="form-control form-control-solid" placeholder="Pilih Kota" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-lg-6 col-sm-12">
+                          <div className="mb-10">
+                            <div className="row">
+                              <div className="col-4 pt-2">
+                                <label
+                                  className="form-label align-middle">Jenis Kejadian</label>
+                              </div>
+                              <div className="col-8">
+                                <select className="form-select form-select-solid form-control"
+                                  data-control="select2">
+                                  <option className='text-muted' value="" disabled selected>Pilih Jenis Kejadian</option>
+                                  <option value="banjir">Banjir</option>
+                                  <option value="hewan_buas_dan_berbisa">Hewan Buas Dan Berbisa</option>
+                                  <option value="kebakaran">Kebakaran</option>
+                                  <option value="kecelakaan">Kecelakaan</option>
+                                  <option value="pendampingan_kekerasan_pada_perempuan">Pendampingan Kekerasan Pada Perempuan</option>
+                                  <option value="kerusakan_konstruksi">Kerusakan Konstruksi</option>
+                                  <option value="kriminalitas">Kriminalitas</option>
+                                  <option value="pembunuhan">Pembunuhan</option>
+                                  <option value="penemuan_mayat">Penemuan Mayat</option>
+                                  <option value="penyelamatan_orang">Penyelamatan Orang</option>
+                                  <option value="pohon_tumbang">Pohon Tumbang</option>
+                                  <option value="tawuran">Tawuran</option>
+                                  <option value="terorisme">Terorisme</option>
+                                  <option value="unjuk_rasa">Unjuk Rasa</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-lg-6 col-sm-12">
+                          <div className="mb-10">
+                            <div className="row">
+                              <div className="col-4 pt-2">
                                 <label
                                   className="form-label align-middle">Kecamatan</label>
                               </div>
                               <div className="col-8">
-                                <input type="text" className="form-control form-control-solid"
-                                  placeholder="Masukkan Kecamatan" />
+                                <input className="form-control form-control-solid" placeholder="Pilih Kecamatan" />
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div className="col-md-6 col-lg-6 ">
+                        <div className="col-md-6 col-lg-6 col-sm-12">
+                          <div className="mb-10">
+                            <div className="row">
+                              <div className="col-4 pt-2">
+                                <label
+                                  className="form-label align-middle">Jenis Bantuan</label>
+                              </div>
+                              <div className="col-8">
+                                <select className="form-select form-select-solid form-control"
+                                  data-control="select2">
+                                  <option value="" disabled selected >Pilih Jenis Bantuan</option>
+                                  <option value="dibawa_ke_rumah_sakit">Dibawa Ke Rumah Sakit</option>
+                                  <option value="memanggil_pemadam_kebakaran">Memanggil Pemadam Kebakaran</option>
+                                  <option value="mengamankan">Mengamankan</option>
+                                  <option value="relokasi">Relokasi</option>
+                                  <option value="evakuasi">Evakuasi</option>
+                                  <option value="dibawa_ke_tempat_penampungan">Dibawa Ke Tempat Penampungan</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                         <div className="col-md-6 col-lg-6 col-sm-12">
                           <div className="mb-10">
                             <div className="row">
-                              <div className="col-4">
+                              <div className="col-4 pt-2">
                                 <label
                                   className="form-label align-middle">Kelurahan</label>
                               </div>
                               <div className="col-8">
                                 <input type="text" className="form-control form-control-solid"
-                                  placeholder="Masukkan Kelurahan" />
+                                  placeholder="Pilih Kelurahan" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-lg-6 col-sm-12">
+                          <div className="mb-10">
+                            <div className="row">
+                              <div className="col-4 pt-2">
+                                <label
+                                  className="form-label align-middle">Korban Jiwa</label>
+                              </div>
+                              <div className="col-8">
+                                <select className="form-select form-select-solid form-control"
+                                  data-control="select2">
+                                  <option value="" disabled selected>Pilih Jenis Korban Jiwa</option>
+                                  <option value="meninggal">Meninggal</option>
+                                  <option value="luka_berat">Luka Berat</option>
+                                  <option value="luka_ringan">Luka Ringan</option>
+                                  <option value="hilang">Hilang</option>
+                                  <option value="terserang_penyakit">Terserang Penyakit</option>
+                                  <option value="pengungsi">Pengungsi</option>
+                                  <option value="nihil">Nihil</option>
+                                </select>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div className="col-md-12 col-lg-12 col-sm-12">
-                          <div className="d-flex justify-content-end">
-                            <label>Pilih Jenis Kejadian</label>
-                          </div>
-                        </div>
-                        <div className="col-md-12 col-lg-12 col-sm-12">
                           <div className="d-flex">
-                            <button type="submit" className="btn btn-primary fw-semibold me-auto px-6"
+                            <button type="submit" className="btn btn-sm btn-primary fw-semibold me-auto px-6"
                               data-kt-menu-dismiss="true" data-kt-user-table-filter="filter">
                               <i className="fa fa-search"></i>
                               Cari
                             </button>
-                            <a href="#" className="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
-                              data-bs-target="#kt_modal_offer_a_deal"><i className="fa-solid fa-trash"></i>Hapus</a>
-                            <div className="my-1 me-2">
-                              <select className="form-select form-select-sm form-select-solid w-100px"
-                                data-control="select2" data-placeholder="Download" data-hide-search="true">
-                                <option value="1">Excell</option>
-                                <option value="2">Pdf</option>
-                              </select>
-                            </div>
                             <Link to="/pelaporan/TambahLaporanKejadian">
-                              <button className="btn btn-sm btn-success me-2" data-bs-toggle="modal">Tambah
-                              </button>
+                              <a className="btn btn-success me-1" data-bs-toggle="modal"><i
+                                className="fa-solid fa-plus"></i>Tambah</a>
                             </Link>
+                            <a href="#" className="btn btn-sm btn-danger me-1" data-bs-toggle="modal"><i
+                              className="fa-solid fa-trash"></i> Hapus</a>
                             <div className="my-1 me-0">
-                              <select className="form-select form-select-sm form-select-solid w-200px"
+                              <select className="form-select form-select-sm form-select-solid w-180px"
                                 data-control="select2" data-placeholder="Select Hours" data-hide-search="true">
-                                <option value="1">Pohon Tumbang</option>
-                                <option value="2">Kebakaran</option>
-                                <option value="3">Tawuran</option>
+                                <option disabled selected>Unduh</option>
+                                <option value="2">Excel</option>
+                                <option value="3">Pdf</option>
                               </select>
                             </div>
                           </div>
@@ -241,6 +316,6 @@ export function LaporanKejadian() {
         <div className="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
         </div>
       </div>
-    </div>
+    </div >
   )
 }

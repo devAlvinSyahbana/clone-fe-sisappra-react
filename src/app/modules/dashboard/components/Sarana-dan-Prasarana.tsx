@@ -1,6 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, FC} from 'react'
+import React, {useState, useEffect, FC} from 'react'
+import axios from 'axios'
 import PieC from '../chart/piechart/piechart'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const SUM_SARANA_PRASARANA_URL = `${API_URL}/dashboard/sarana-prasarana/sum-jenis-sarana_prasarana`
 
 const SaranadanPrasarana: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -26,6 +30,22 @@ const SaranadanPrasarana: FC = () => {
       setShowResults({isShowed: true, val: event.target.value})
     }
   }
+
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    fetchUsers(1)
+  }, [])
+
+  const fetchUsers = async (page: any) => {
+    const response = await axios.get(`${SUM_SARANA_PRASARANA_URL}`)
+
+    setData(response.data.data)
+
+    console.log('cek :', data)
+    return [data, setData] as const
+  }
+
   return (
     <div className=' card card-body'>
       <div className='tab-content' id='myTabContent'>
@@ -121,15 +141,27 @@ const SaranadanPrasarana: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <PieC chartID='pie-one' />
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <PieC chartID='pie-one' />
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <PieC chartID='pie-one' />
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
                     </>
                   ) : null}
                 </div>
