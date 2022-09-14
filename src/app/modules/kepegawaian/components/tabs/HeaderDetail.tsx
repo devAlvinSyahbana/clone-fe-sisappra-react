@@ -1,11 +1,38 @@
+import {useEffect, useState} from 'react'
 import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 import {useLocation, useParams} from 'react-router-dom'
+import axios from 'axios'
+import {
+  DetailPegawaiInterface,
+  JumlahKeluargaInterface,
+  PendidikanInterface,
+} from '../KepegawaianInterface'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 const HeaderDetailWrapper = () => {
   const location = useLocation()
   const {id, status} = useParams()
+  const [data, setData] = useState<DetailPegawaiInterface>()
+  const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
+  const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
   console.log('id, status', id, status)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
+      const keluarga = await axios.get(`${KEPEGAWAIAN_URL}/count-keluarga/${id}/${status}`)
+      const pendidikan = await axios.get(
+        `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
+      )
+      setJkeluarga(keluarga.data.data)
+      setPendidikan(pendidikan.data.data)
+      setData(response.data.data)
+    }
+    fetchData()
+  }, [])
 
   return (
     <>
@@ -20,47 +47,46 @@ const HeaderDetailWrapper = () => {
             </div>
 
             <div className='flex-grow-1'>
-              <div className='d-flex justify-content-between align-items-start flex-wrap mb-2'>
-                <div className='d-flex flex-column'>
-                  <div className='d-flex align-items-center mb-2'>
-                    <a href='/#' className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
-                      Agus Aprianto
-                    </a>
-                  </div>
-
-                  <div className='d-flex flex-wrap fw-bold fs-6 mb-4 pe-2'>
-                    <a
-                      href='/#'
-                      className='d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2'
-                    >
+              <div className='mb-2'>
+                <div className='d-flex align-items-center mb-2'>
+                  <a className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
+                    {data?.nama !== '' ? data?.nama : '-'}
+                  </a>
+                </div>
+                <div className='row fw-bold fs-6 mb-4 pe-2'>
+                  <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                    <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                       <KTSVG
                         path='/media/icons/duotune/communication/com006.svg'
                         className='svg-icon-4 me-1'
                       />
-                      PNS
+                      {data?.kepegawaian_status_pegawai !== ''
+                        ? data?.kepegawaian_status_pegawai
+                        : '-'}
                     </a>
-                    <a
-                      href='/#'
-                      className='d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2'
-                    >
-                      <i className='fas fa-phone'></i>&nbsp;&nbsp;082929929292
+                  </div>
+                  <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                    <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                      <KTSVG
+                        path='/media/icons/duotune/communication/com005.svg'
+                        className='svg-icon-4 me-1'
+                      />
+                      {data?.no_hp !== '' ? data?.no_hp : '-'}
                     </a>
-                    <a
-                      href='/#'
-                      className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'
-                    >
+                  </div>
+                  <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                    <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                       <KTSVG
                         path='/media/icons/duotune/communication/com011.svg'
                         className='svg-icon-4 me-1'
                       />
-                      agux.aprianto@satpol.dki.com
+                      -
                     </a>
-                    <a
-                      href='/#'
-                      className='d-flex align-items-center text-gray-400 text-hover-primary me-5 ms-5 mb-2'
-                    >
-                      <i className='fa-solid fa-address-card me-1'></i>PENGELOLA PENGENDALIAN DAN
-                      OPERASIONAL
+                  </div>
+                  <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                    <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                      <i className='fa-solid fa-address-card me-1'></i>
+                      {data?.kepegawaian_pangkat !== '' ? data?.kepegawaian_pangkat : '-'}
                     </a>
                   </div>
                 </div>
@@ -71,7 +97,9 @@ const HeaderDetailWrapper = () => {
                   <div className='d-flex flex-wrap'>
                     <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                       <div className='d-flex align-items-center'>
-                        <div className='fs-2 fw-bolder'>1</div>
+                        <div className='fs-2 fw-bolder'>
+                          {jkeluarga?.total !== 0 ? jkeluarga?.total : '-'}
+                        </div>
                       </div>
 
                       <div className='fw-bold fs-6 text-gray-400'>Jumlah Anggota Keluarga</div>
@@ -79,7 +107,9 @@ const HeaderDetailWrapper = () => {
 
                     <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                       <div className='d-flex align-items-center'>
-                        <div className='fs-2 fw-bolder'>S1</div>
+                        <div className='fs-2 fw-bolder'>
+                          {pendidikan?.jenis_pendidikan ? pendidikan?.jenis_pendidikan : '-'}
+                        </div>
                       </div>
 
                       <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
@@ -98,7 +128,7 @@ const HeaderDetailWrapper = () => {
                     `nav-link text-active-primary me-6 ` +
                     (location.pathname.includes('DataPribadi') && 'active')
                   }
-                  to={`/kepegawaian/DataPribadi/${id}/${status}`}
+                  to={`/kepegawaian/InformasiDataPegawai/DataPribadi/${id}/${status}`}
                 >
                   Data Pribadi
                 </Link>
@@ -109,7 +139,7 @@ const HeaderDetailWrapper = () => {
                     `nav-link text-active-primary me-6 ` +
                     (location.pathname.includes('DataKeluarga') && 'active')
                   }
-                  to={`/kepegawaian/DataKeluarga/${id}/${status}`}
+                  to={`/kepegawaian/InformasiDataPegawai/DataKeluarga/${id}/${status}`}
                 >
                   Data Keluarga
                 </Link>
@@ -120,7 +150,7 @@ const HeaderDetailWrapper = () => {
                     `nav-link text-active-primary me-6 ` +
                     (location.pathname.includes('Pendidikan') && 'active')
                   }
-                  to={`/kepegawaian/Pendidikan/${id}/${status}`}
+                  to={`/kepegawaian/InformasiDataPegawai/Pendidikan/${id}/${status}`}
                 >
                   Pendidikan
                 </Link>
@@ -131,7 +161,7 @@ const HeaderDetailWrapper = () => {
                     `nav-link text-active-primary me-6 ` +
                     (location.pathname.includes('DataKepegawaian') && 'active')
                   }
-                  to={`/kepegawaian/DataKepegawaian/${id}/${status}`}
+                  to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}
                 >
                   Data Kepegawaian
                 </Link>
@@ -142,7 +172,7 @@ const HeaderDetailWrapper = () => {
                     `nav-link text-active-primary me-6 ` +
                     (location.pathname.includes('HirarkiKepegawaian') && 'active')
                   }
-                  to={`/kepegawaian/HirarkiKepegawaian/${id}/${status}`}
+                  to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/${id}/${status}`}
                 >
                   Hirarki Kepegawaian
                 </Link>
