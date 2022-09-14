@@ -38,13 +38,14 @@ const HeaderDetailWrapper = () => {
     <>
       <div className='card mb-5 mb-xl-10'>
         <div className='card-body pt-9 pb-0'>
-          <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
-            <div className='me-7 mb-4'>
-              <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='' />
-                <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
+        <div className='row'>
+            <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
+              <div className='me-7 mb-4'>
+                <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
+                  <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metornic' />
+                  <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
+                </div>
               </div>
-            </div>
 
             <div className='flex-grow-1'>
               <div className='mb-2'>
