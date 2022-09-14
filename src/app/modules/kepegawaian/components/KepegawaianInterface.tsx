@@ -2,7 +2,7 @@ export interface DetailPegawaiInterface {
   id?: number,
   nama?: string,
   tempat_lahir?: string,
-  tgl_lahir?: string,
+  tgl_lahir?: string | undefined,
   jenis_kelamin?: string,
   agama_id?: string,
   agama_name?: string,

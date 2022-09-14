@@ -6,6 +6,7 @@ import { UpdateHeaderDetail } from './UpdateHeaderDetail'
 import axios from 'axios'
 import { DetailPegawaiInterface } from '../KepegawaianInterface'
 import { Formik, Field, FormikHelpers } from 'formik';
+import moment from 'moment'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -33,16 +34,14 @@ export function UpdateDataKepegawaian() {
       {/* second card */}
       <Formik
         initialValues={{
-          ...data
+          ...data, kepegawaian_tmtpangkat: moment(data?.kepegawaian_tmtpangkat).format('YYYY-MM-D')
         }}
-        onSubmit={(
-          values: DetailPegawaiInterface,
-          { setSubmitting }: FormikHelpers<DetailPegawaiInterface>
-        ) => {
+        onSubmit={function (values: DetailPegawaiInterface,
+          { setSubmitting }: FormikHelpers<DetailPegawaiInterface>) {
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 500);
+            alert(JSON.stringify(values, null, 2))
+            setSubmitting(false)
+          }, 500)
         }}
         enableReinitialize
       >
