@@ -1,41 +1,47 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import {Link, useParams} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import {HeaderDetailWrapper} from './HeaderDetail'
+import axios from 'axios'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function DataKeluarga() {
+  const {id, status} = useParams()
+  const [data, setData] = useState([])
   const columns = [
     {
       name: 'Nama',
-      selector: (row: {name: any}) => row.name,
+      selector: (row: any) => row.nama,
       sortable: true,
     },
     {
       name: 'Hubungan Keluarga',
-      selector: (row: {hubungan: any}) => row.hubungan,
+      selector: (row: any) => row.hubungan,
       sortable: true,
     },
     {
       name: 'Tempat, Tanggal Lahir',
-      selector: (row: {ttl: any}) => row.ttl,
+      selector: (row: any) => row.tempat_lahir,
       sortable: true,
     },
     {
       name: 'Jenis Kelamin',
-      selector: (row: {jk: any}) => row.jk,
+      selector: (row: any) => row.jenis_kelamin,
       sortable: true,
     },
   ]
 
-  const data = [
-    {
-      id: 1,
-      name: 'RAHMI FITRIA ASRIL',
-      hubungan: 'Istri',
-      ttl: 'JAKARTA, 27-05-1988',
-      jk: 'PEREMPUAN',
-    },
-  ]
+  useEffect(() => {
+    async function fetchDT() {
+      const response = await axios.get(
+        `${KEPEGAWAIAN_URL}/find-data-keluarga/${id}/${status}`
+      )
+      setData(response.data.data)
+    }
+    fetchDT()
+  }, [id, status])
 
   return (
     <div>
@@ -49,7 +55,7 @@ export function DataKeluarga() {
           </div>
         </div>
         <div className='card-body p-9'>
-          <DataTable columns={columns} data={data} defaultSortFieldId={1} />
+          <DataTable columns={columns} data={data} pagination />
           <div className='p-0 mt-6'>
             <div className='text-center'>
               <Link
