@@ -64,7 +64,7 @@ const HeaderDetailWrapper = () => {
                     </a>
                   </div>
                   <div className='row fw-bold fs-6 mb-4 pe-2'>
-                    <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
                       <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <KTSVG
                           path='/media/icons/duotune/communication/com006.svg'
@@ -75,7 +75,7 @@ const HeaderDetailWrapper = () => {
                           : '-'}
                       </a>
                     </div>
-                    <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
                       <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <KTSVG
                           path='/media/icons/duotune/communication/com005.svg'
@@ -84,7 +84,7 @@ const HeaderDetailWrapper = () => {
                         {data?.no_hp !== '' ? data?.no_hp : '-'}
                       </a>
                     </div>
-                    <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
                       <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <KTSVG
                           path='/media/icons/duotune/communication/com011.svg'
@@ -93,10 +93,10 @@ const HeaderDetailWrapper = () => {
                         -
                       </a>
                     </div>
-                    <div className='col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3'>
+                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
                       <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <i className='fa-solid fa-address-card me-1'></i>
-                        {data?.kepegawaian_pangkat !== '' ? data?.kepegawaian_pangkat : '-'}
+                        {data?.kepegawaian_pangkat_name !== '' ? data?.kepegawaian_pangkat_name : '-'}
                       </a>
                     </div>
                   </div>
