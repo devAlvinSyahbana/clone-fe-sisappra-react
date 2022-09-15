@@ -72,13 +72,13 @@ export function DataKeluarga() {
                   Batal
                 </button>
               </Link>
-              <Link className='text-reset text-decoration-none' to='/kepegawaian/DataPribadi'>
+              <Link className='text-reset text-decoration-none' to='/kepegawaian/InformasiDataPegawai/DataPribadi'>
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
                   Kembali
                 </button>
               </Link>
-              <Link className='text-reset text-decoration-none' to='/kepegawaian/Pendidikan'>
+              <Link className='text-reset text-decoration-none' to='/kepegawaian/InformasiDataPegawai/Pendidikan'>
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
                   Lanjut

@@ -97,13 +97,13 @@ export function Pendidikan() {
                   Batal
                 </button>
               </Link>
-              <Link className='text-reset text-decoration-none' to='/kepegawaian/DataKeluarga'>
+              <Link className='text-reset text-decoration-none' to='/kepegawaian/InformasiDataPegawai/DataKeluarga'>
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
                   Kembali
                 </button>
               </Link>
-              <Link className='text-reset text-decoration-none' to='/kepegawaian/DataKepegawaian'>
+              <Link className='text-reset text-decoration-none' to='/kepegawaian/InformasiDataPegawai/DataKepegawaian'>
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
                   Lanjut
