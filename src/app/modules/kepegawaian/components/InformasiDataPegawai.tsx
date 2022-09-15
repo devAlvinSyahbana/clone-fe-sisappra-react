@@ -162,7 +162,7 @@ export function InformasiDataPegawai() {
                       </Link> */}
                       <Link
                         className='text-reset'
-                        to={`/kepegawaian/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`}
+                        to={`/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`}
                       >
                         Detail
                       </Link>
