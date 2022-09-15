@@ -64,6 +64,8 @@ export interface DetailPegawaiInterface {
   kepegawaian_diklat_fungsional_pol_pp_file_sertifikat?: string
   foto?: string
   kepegawaian_pangkat?: string
+  kepegawaian_pangkat_id?: string
+  kepegawaian_pangkat_name?: string
   kepegawaian_kelurahan?: string
 }
 
