@@ -9,6 +9,18 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async'
+import {useFormik} from 'formik'
+import SweetAlert from 'react-bootstrap-sweetalert'
+
+export interface FormInput {
+  jenis_sarana_prasarana?: any
+  status_sarana_prasarana?: any
+  jumlah?: number
+  kondisi?: any
+  keterangan?: string
+  file_dokumentasi?: string
+}
+
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -22,9 +34,9 @@ export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://local
 
 export function LaporanSaranaPrasarana() {
   const [show, setShow] = useState(false)
+  const [showOtherAlert, setStateAlert] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-  
 
   const [inputValJenis, setDataJenis] = useState({label: '', value: null})
   const [inputValStatus, setDataStatus] = useState({label: '', value: null})
@@ -61,7 +73,6 @@ export function LaporanSaranaPrasarana() {
       </>
     )
   }
-
   const columns = [
     {
       name: 'Jenis Sarana & Prasarana',
@@ -123,9 +134,7 @@ export function LaporanSaranaPrasarana() {
                       <Link to='#'>Detail</Link>
                     </Dropdown.Item>
                     <Dropdown.Item>
-                      <Link to='#'>
-                        Ubah
-                      </Link>
+                      <Link to='#'>Ubah</Link>
                     </Dropdown.Item>
                     <Dropdown.Item href='#'>Hapus</Dropdown.Item>
                   </DropdownType>
@@ -137,10 +146,6 @@ export function LaporanSaranaPrasarana() {
       },
     },
   ]
-
-  ;
-
-  const [temp, setTemp] = useState([])
 
   const fetchUsers = async (page: any) => {
     setLoading(true)
@@ -236,9 +241,77 @@ export function LaporanSaranaPrasarana() {
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
+  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+
+  const handleChangeFormikSelect = (value: any, name: string) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [name]: value,
+    }))
+  }
+
+  const handleChangeFormik = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      jenis_sarana_prasarana: {value: '', label: 'Pilih'},
+      status_sarana_prasarana: {value: '', label: 'Pilih'},
+      jumlah: 0,
+      kondisi: {value: '', label: 'Pilih'},
+      keterangan: '',
+    },
+    onSubmit: async (values) => {
+      const bodyparam: FormInput = {}
+      valuesFormik?.jenis_sarana_prasarana?.value
+        ? (bodyparam.jenis_sarana_prasarana = valuesFormik.jenis_sarana_prasarana.value)
+        : delete bodyparam.jenis_sarana_prasarana
+      valuesFormik?.status_sarana_prasarana?.value
+        ? (bodyparam.status_sarana_prasarana = valuesFormik.status_sarana_prasarana.value)
+        : delete bodyparam.status_sarana_prasarana
+      valuesFormik?.kondisi?.value
+        ? (bodyparam.kondisi = valuesFormik.kondisi.value)
+        : delete bodyparam.kondisi
+      valuesFormik?.keterangan
+        ? (bodyparam.keterangan = valuesFormik.keterangan)
+        : delete bodyparam.keterangan
+      valuesFormik?.jumlah ? (bodyparam.jumlah = valuesFormik.jumlah) : delete bodyparam.jumlah
+
+      try {
+        const response = await axios.post(`${SARANA_PRASARANA_URL}/create`, bodyparam)
+        if (response) {
+          fetchUsers(1)
+          handleClose()
+          setValuesFormik({})
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  })
   return (
+    <> 
     <div className={`card`}>
       {/* begin::Body */}
+      {/* {showOtherAlert &&
+          <SweetAlert
+            type='success'
+            title='Good job!'
+            onConfirm={() => setStateAlert(false)}
+            onCancel={() => setStateAlert(false)}
+            showCancel={true}
+            focusCancelBtn={true}
+          >
+            You clicked the button!
+          </SweetAlert>
+      } */}
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6'>
           <div className='form-group'>
@@ -247,6 +320,7 @@ export function LaporanSaranaPrasarana() {
             </label>
             <AsyncSelect
               cacheOptions
+              value={inputValJenis.value ? inputValJenis : {value: '', label: 'Pilih'}}
               loadOptions={loadOptionsSapra}
               defaultOptions
               onChange={handleInputChange}
@@ -263,6 +337,7 @@ export function LaporanSaranaPrasarana() {
             </label>
             <AsyncSelect
               cacheOptions
+              value={inputValStatus.value ? inputValStatus : {value: '', label: 'Pilih'}}
               loadOptions={loadOptionsStapra}
               defaultOptions
               onChange={handleInputStapra}
@@ -274,9 +349,12 @@ export function LaporanSaranaPrasarana() {
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6'>
           <div className='form-group'>
-            Kondisi
+            <label htmlFor='' className='mb-3'>
+              Kondisi
+            </label>
             <AsyncSelect
               cacheOptions
+              value={inputValKondisi.value ? inputValKondisi : {value: '', label: 'Pilih'}}
               loadOptions={loadOptionsKonpra}
               defaultOptions
               onChange={handleInputKonpra}
@@ -330,105 +408,130 @@ export function LaporanSaranaPrasarana() {
           </Link>
           &nbsp;
           <DropdownButton id='dropdown-basic-button' title='Unduh' variant='light'>
-            <Dropdown.Item href='#/action-1'>Excel</Dropdown.Item>
-            <Dropdown.Item href='#/action-2'>PDF</Dropdown.Item>
+            <Dropdown.Item href={`${SARANA_PRASARANA_URL}/unduh?q=1${qParamFind.strparam}`}>
+              Excel
+            </Dropdown.Item>
+            <Dropdown.Item href='#'>PDF</Dropdown.Item>
           </DropdownButton>
         </div>
       </div>
-
       <>
-        
-          <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false}>
-            <Modal.Header closeButton>
-              <Modal.Title>Tambah Sarana & Prasarana</Modal.Title>
-            </Modal.Header>
+        <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Tambah Sarana & Prasarana</Modal.Title>
+          </Modal.Header>
+          <form onSubmit={formik.handleSubmit}>
             <Modal.Body>
-
-            <div className='row g-10 mt-2 ms-5 me-5'>
-                  <div className='col-md-15'>
-                    <div className='form-group'>
-                      <label htmlFor='' className='mb-3'>
-                        Jenis Sarana & Prasarana
-                      </label>
-                      <AsyncSelect
-                        cacheOptions
-                        loadOptions={loadOptionsSapra}
-                        defaultOptions
-                        onChange={handleInputChange}
-                        placeholder={'Pilih'}
-                      />
-                    </div>
+              <div className='row g-10 mt-2 ms-5 me-5'>
+                <div className='col-md-15'>
+                  <div className='form-group'>
+                    <label htmlFor='' className='mb-3'>
+                      Jenis Sarana & Prasarana
+                    </label>
+                    <AsyncSelect
+                      cacheOptions
+                      loadOptions={loadOptionsSapra}
+                      defaultOptions
+                      onChange={(e) => handleChangeFormikSelect(e, 'jenis_sarana_prasarana')}
+                      value={
+                        valuesFormik?.jenis_sarana_prasarana
+                          ? valuesFormik?.jenis_sarana_prasarana
+                          : {value: '', label: 'Pilih'}
+                      }
+                      placeholder={'Pilih'}
+                    />
                   </div>
                 </div>
-                <div className='row g-6 mt-2 ms-5 me-5'>
-                  <div className='col-md-15'>
-                    <div className='form-group'>
-                      <label htmlFor='' className='mb-3'>
-                        Status Sarana & Prasarana
-                      </label>
-                      <AsyncSelect
-                        cacheOptions
-                        loadOptions={loadOptionsStapra}
-                        defaultOptions
-                        onChange={handleInputStapra}
-                        placeholder={'Pilih'}
-                      />
-                    </div>
+              </div>
+              <div className='row g-6 mt-2 ms-5 me-5'>
+                <div className='col-md-15'>
+                  <div className='form-group'>
+                    <label htmlFor='' className='mb-3'>
+                      Status Sarana & Prasarana
+                    </label>
+                    <AsyncSelect
+                      cacheOptions
+                      loadOptions={loadOptionsStapra}
+                      defaultOptions
+                      onChange={(e) => handleChangeFormikSelect(e, 'status_sarana_prasarana')}
+                      value={
+                        valuesFormik?.status_sarana_prasarana
+                          ? valuesFormik?.status_sarana_prasarana
+                          : {value: '', label: 'Pilih'}
+                      }
+                      placeholder={'Pilih'}
+                    />
                   </div>
                 </div>
-                <div className='row g-6 mt-2 ms-5 me-5'>
-                  <div className='col-md-15'>
-                    <div className='form-group'>
+              </div>
+              <div className='row g-6 mt-2 ms-5 me-5'>
+                <div className='col-md-15'>
+                  <div className='form-group'>
                     <label htmlFor='' className='mb-3'>
                       Jumlah
                     </label>
                     <input
-                      type='text' className='form-control form-control form-control-solid'/>
-                    </div>
-                  </div>
-                </div>    
-                <div className='row g-6 mt-2 ms-5 me-5'>
-                  <div className='col-md-15'>
-                    <div className='form-group'>
-                      Kondisi
-                      <AsyncSelect                      
-                        cacheOptions
-                        loadOptions={loadOptionsKonpra}
-                        defaultOptions
-                        onChange={handleInputKonpra}
-                        placeholder={'Pilih'}
-                      />
-                    </div>
+                      className='form-control form-control form-control-solid'
+                      name='jumlah'
+                      type='number'
+                      min='0'
+                      onChange={handleChangeFormik}
+                      onBlur={formik.handleBlur}
+                      value={valuesFormik?.jumlah}
+                    />
                   </div>
                 </div>
-                <div className='row g-6 mt-2 ms-5 me-5'>
-                  <div className='col-md-15'>
-                    <div className='form-group'>
-                      <Form.Label>Keterangan</Form.Label>
-                      <Form.Control as='textarea' rows={3} />
-                    </div>
+              </div>
+              <div className='row g-6 mt-2 ms-5 me-5'>
+                <div className='col-md-15'>
+                  <div className='form-group'>
+                    Kondisi
+                    <AsyncSelect
+                      cacheOptions
+                      loadOptions={loadOptionsKonpra}
+                      defaultOptions
+                      onChange={(e) => handleChangeFormikSelect(e, 'kondisi')}
+                      value={
+                        valuesFormik?.kondisi ? valuesFormik?.kondisi : {value: '', label: 'Pilih'}
+                      }
+                      placeholder={'Pilih'}
+                    />
                   </div>
-                </div> 
-                <div className='row g-6 mt-2 ms-5 me-5'>
-                  <div className='col-md-15'>
-                    <div className='form-group'>
-                      <Form.Label>File Dokumentasi</Form.Label>
-                      <Form.Control type='file' id='firstimg' />
-                    </div>
+                </div>
+              </div>
+              <div className='row g-6 mt-2 ms-5 me-5'>
+                <div className='col-md-15'>
+                  <div className='form-group'>
+                    <Form.Label>Keterangan</Form.Label>
+                    <Form.Control
+                      as='textarea'
+                      name='keterangan'
+                      onChange={handleChangeFormik}
+                      value={valuesFormik?.keterangan}
+                    />
                   </div>
-                </div>                                     
-                            
+                </div>
+              </div>
+              <div className='row g-6 mt-2 ms-5 me-5'>
+                <div className='col-md-15'>
+                  <div className='form-group'>
+                    <Form.Label>File Dokumentasi</Form.Label>
+                    <Form.Control type='file' id='firstimg' />
+                  </div>
+                </div>
+              </div>
             </Modal.Body>
             <Modal.Footer>
               <Button variant='secondary' onClick={handleClose}>
                 Close
               </Button>
-              <Button variant='primary'>
+              <Button type='submit'>
                 <i className='fa-solid fa-paper-plane'></i>
                 Simpan
               </Button>
             </Modal.Footer>
-          </Modal>
+          </form>
+        </Modal>
       </>
 
       <div className='table-responsive mt-5 ms-5 me-5'>
@@ -446,5 +549,6 @@ export function LaporanSaranaPrasarana() {
       </div>
       {/* end::Body */}
     </div>
+    </>
   )
 }

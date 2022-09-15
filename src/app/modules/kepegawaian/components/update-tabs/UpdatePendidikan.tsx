@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react'
-import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
+// import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { Link } from 'react-router-dom'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
 import { UpdateHeaderDetail } from './UpdateHeaderDetail'
 import { useLocation } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
-import { Button, ButtonGroup, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 
 
 export function UpdatePendidikan() {

@@ -3,12 +3,125 @@ import { Link } from 'react-router-dom'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import DatePicker from 'react-date-picker';
+import { RMIUploader } from "react-multiple-image-uploader";
 
 export function TambahLaporanKejadian() {
+  const [valJenisKejadian, setValJenisKejadian] = useState({ val: '' })
+  const arrJenisKejadian = ['Banjir', 'Hewan Buas dan Berbisa', 'Kebakaran', 'Pendampingan Kekerasan Pada Perempuan Dan Anak', 'Kerusakan Konstruksi', 'Kriminalitas', 'Pembunuhan', 'Penemuan Mayat', 'Penyelamatan Orang', 'Pohon Tumbang', 'Tawuran', 'Terorisme', 'Unjuk Rasa']
+  // BEGIN::JK BANJIR
+  const [valKetinggianAir, setValKetinggianAir] = useState({ val: '' })
+  const [valJumlahPengungsi, setValJumlahPengungsi] = useState({ val: '' })
+  const [valJumlahPengungsiPerKK, setValJumlahPengungsiPerKK] = useState({ val: '' })
+  const [valLokasiPenampungan, setValLokasiPenampungan] = useState({ val: '' })
+  const [valLokasiDapurUmum, setValLokasiDapurUmum] = useState({ val: '' })
+  // END:: JK BANJIR
+
+  // Begin :: JK "Pendampingan Kekerasan"
+  const [valSumberInformasi, setValSumberInformasi] = useState({ val: '' })
+  const arrSumberInformasi = ['Pengaduan Langsung', 'Pengaduan CRM(112)', 'Media Sosial', 'Lain-lain']
+  const [valJenisKekerasan, setValJenisKekerasan] = useState({ val: '' })
+  const arrJenisKekerasan = ['KDRT/KDP (FISIK)', 'Penelantaran', 'Seksual', 'Psikis', 'Bullying']
+  // End :: JK "Pendampingan Kekerasan"
+
+  // Begin :: JK "Unjuk Rasa"
+  const [valJumlahMassa, setValJumlahMassa] = useState({ val: '' })
+  const [valTuntutan, setValTuntutan] = useState({ val: '' })
+  const [valPJUnras, setValPJUnras] = useState({ val: '' })
+  // End :: JK "Unjuk Rasa"
+
+  const handleChangeJenisKejadian = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValJenisKejadian({ val: event.target.value })
+  }
+
+  // BEGIN::JK "BANJIR"
+  const handleChangeInputKetinggianAir = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValKetinggianAir({ val: event.target.value })
+  }
+  const handleChangeInputJumlahPengungsi = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValJumlahPengungsi({ val: event.target.value })
+  }
+  const handleChangeInputJumlahPengungsiPerKK = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValJumlahPengungsiPerKK({ val: event.target.value })
+  }
+  const handleChangeInputLokasiPenampungan = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValLokasiPenampungan({ val: event.target.value })
+  }
+  const handleChangeInputLokasiDapurUmum = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValLokasiDapurUmum({ val: event.target.value })
+  }
+  // End::JK "BANJIR"
+
+  // Begin :: JK "Pendampingan Kekerasan" 
+  const handleChangeSumberInformasi = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValSumberInformasi({ val: event.target.value })
+  }
+  const handleChangeJenisKekerasan = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValJenisKekerasan({ val: event.target.value })
+  }
+  // End :: JK "Pendampingan Kekerasan"
+
+  // Begin :: JK "Unjuk Rasa" 
+  const handleChangeJumlahMassa = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValJumlahMassa({ val: event.target.value })
+  }
+  const handleChangeTuntutan = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValTuntutan({ val: event.target.value })
+  }
+  const handleChangePJUnras = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValPJUnras({ val: event.target.value })
+  }
+  // End :: JK "Unjuk Rasa"
+
+
 
   var [value, onChange] = useState(new Date()); /* Date Picker */
+  const initialState = { alt: "", src: "" };
+  const [{ alt, src }, setPreview] = useState(initialState);
 
-
+  const fileHandler = (event: { target: { files: any; }; }) => {
+    const { files } = event.target;
+    setPreview(
+      files.length
+        ? {
+          src: URL.createObjectURL(files[0]),
+          alt: files[0].name
+        }
+        : initialState
+    );
+  };
 
   return (
     <div className="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -94,26 +207,20 @@ export function TambahLaporanKejadian() {
                             <label className="col-form-label fw-semibold fs-6">Jenis Kejadian</label>
                           </div>
                           <div className="col-md-4">
-                            <select className="form-select form-select-solid" data-control="select2">
-                              <option value="Select All" className='text-muted' disabled selected>Pilih Jenis Kejadian</option>
-                              <option value="Pohon Tumbang">Pohon Tumbang</option>
-                              <option value="Kebakaran">Kebakaran</option>
-                              <option value="Tawuran">Tawuran</option>
-                              <option value="Penemuan Mayat">Penemuan Mayat</option>
-                              <option value="Kecelakaan">Kecelakaan</option>
-                              <option value="Terorisme">Terorisme</option>
-                              <option value="Penyelamatan Orang">Penyelamatan Orang</option>
-                              <option value="Kerusakan Konstruksi">Kerusakan Konstruksi</option>
-                              <option value="Unjuk Rasa">Unjuk Rasa</option>
-                              <option value="Kriminalitas">Kriminalitas</option>
-                              <option value="Hewan Buas dan Berbisa">Hewan Buas dan Berbisa</option>
-                              <option value="Pembunuhan">Pembunuhan</option>
-                              <option value="Pendampingan Kekerasan pada Ibu dan Anak">Pendampingan Kekerasan pada Ibu dan Anak</option>
-                              <option value="Banjir">Banjir</option>
+                            <select
+                              className="form-select form-select-solid"
+                              value={valJenisKejadian.val}
+                              onChange={handleChangeJenisKejadian}
+                              name='val'
+                            >
+                              <option value='' className='text-muted' disabled>Pilih Jenis Kejadian</option>
+                              {arrJenisKejadian.map((val: string) => {
+                                return <option value={val}>{val}</option>
+                              })}
                             </select>
                           </div>
                         </div>
-                        <div className="row mb-2">
+                        <div className="row mb-10">
                           <div className="col-md-2">
                             <label className="col-form-label fw-semibold fs-6">Uraian Kejadian</label>
                           </div>
@@ -122,7 +229,7 @@ export function TambahLaporanKejadian() {
                               placeholder="Telah terjadi ........................................"></textarea>
                           </div>
                         </div>
-                        <div className="row mb-2">
+                        <div className="row mb-10">
                           <div className="col-md-2">
                             <label className="col-form-label fw-semibold fs-6">Jumlah Personil Satpol PP</label>
                           </div>
@@ -138,8 +245,249 @@ export function TambahLaporanKejadian() {
                               className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
                           </div>
                         </div>
+                        {valJenisKejadian.val === 'Banjir' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                Ketinggian Air
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                name='ketinggianair'
+                                value={valKetinggianAir.val}
+                                onChange={handleChangeInputKetinggianAir}
+                                placeholder='20'
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                        {valJenisKejadian.val === 'Banjir' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Banjir'
+                                  ? 'Jumlah Pengungsi'
+                                  : 'Jumlah Pengungsi'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                value={valJumlahPengungsi.val}
+                                onChange={handleChangeInputJumlahPengungsi}
+                                placeholder={
+                                  valJenisKejadian.val === 'Banjir'
+                                    ? 'Jumlah Pengungsi'
+                                    : 'Jumlah Pengungsi'
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                        {valJenisKejadian.val === 'Banjir' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Banjir'
+                                  ? 'Jumlah Pengungsi Per KK'
+                                  : 'Jumlah Pengungsi Per KK'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                value={valJumlahPengungsiPerKK.val}
+                                onChange={handleChangeInputJumlahPengungsiPerKK}
+                                placeholder={
+                                  valJenisKejadian.val === 'Banjir'
+                                    ? 'Jumlah Pengungsi Per KK'
+                                    : 'Jumlah Pengungsi Per KK'
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                        {valJenisKejadian.val === 'Banjir' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Banjir'
+                                  ? 'Lokasi Penampungan'
+                                  : 'Lokasi Penampungan'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                value={valLokasiPenampungan.val}
+                                onChange={handleChangeInputLokasiPenampungan}
+                                placeholder={
+                                  valJenisKejadian.val === 'Banjir'
+                                    ? 'Lokasi Penampungan'
+                                    : 'Lokasi Penampungan'
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                        {valJenisKejadian.val === 'Banjir' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Banjir'
+                                  ? 'Lokasi Dapur Umum'
+                                  : 'Lokasi Dapur Umum'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                value={valLokasiDapurUmum.val}
+                                onChange={handleChangeInputLokasiDapurUmum}
+                                placeholder={
+                                  valJenisKejadian.val === 'Banjir'
+                                    ? 'Lokasi Dapur Umum'
+                                    : 'Lokasi Dapur Umum'
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : null}
                       </TabPanel>
                       <TabPanel>
+                        {/* BEGIN :: FORM PENDAMPINGAN KEKERASAN */}
+                        {valJenisKejadian.val === 'Pendampingan Kekerasan Pada Perempuan Dan Anak' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Pendampingan Kekerasan Pada Perempuan Dan Anak'
+                                  ? 'Sumber Informasi'
+                                  : 'Sumber Informasi'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <select
+                                className="form-select form-select-solid"
+                                value={valSumberInformasi.val}
+                                onChange={handleChangeSumberInformasi}
+                                name='val'
+                              >
+                                <option value='' className='text-muted' disabled>Pilih Sumber Informasi</option>
+                                {arrSumberInformasi.map((val: string) => {
+                                  return <option value={val}>{val}</option>
+                                })}
+                              </select>
+                            </div>
+                          </div>
+                        ) : null}
+                        {valJenisKejadian.val === 'Pendampingan Kekerasan Pada Perempuan Dan Anak' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Pendampingan Kekerasan Pada Perempuan Dan Anak'
+                                  ? 'Jenis Kekerasan'
+                                  : 'Jenis Kekerasan'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <select
+                                className="form-select form-select-solid"
+                                value={valJenisKekerasan.val}
+                                onChange={handleChangeJenisKekerasan}
+                                name='val'
+                              >
+                                <option value='' className='text-muted' disabled>Pilih Jenis Kekerasan</option>
+                                {arrJenisKekerasan.map((val: string) => {
+                                  return <option value={val}>{val}</option>
+                                })}
+                              </select>
+                            </div>
+                          </div>
+                        ) : null}
+                        {/* END :: FORM PENDAMPINGAN KEKERASAN */}
+
+                        {/* BEGIN :: FORM UNJUK RASA */}
+                        {valJenisKejadian.val === 'Unjuk Rasa' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Unjuk Rasa'
+                                  ? 'Jumlah Massa'
+                                  : 'Jumlah Massa'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                value={valJumlahMassa.val}
+                                onChange={handleChangeJumlahMassa}
+                                placeholder={
+                                  valJenisKejadian.val === 'Unjuk Rasa'
+                                    ? 'Masukkan Jumlah Massa'
+                                    : 'Masukkan Jumlah Massa'
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                        {valJenisKejadian.val === 'Unjuk Rasa' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Unjuk Rasa'
+                                  ? 'Tuntutan'
+                                  : 'Tuntutan'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                value={valTuntutan.val}
+                                onChange={handleChangeTuntutan}
+                                placeholder={
+                                  valJenisKejadian.val === 'Unjuk Rasa'
+                                    ? 'Masukkan Tuntutan'
+                                    : 'Masukkan Tuntutan'
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                        {valJenisKejadian.val === 'Unjuk Rasa' ? (
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">
+                                {valJenisKejadian.val === 'Unjuk Rasa'
+                                  ? 'Penanggungjawab Unras'
+                                  : 'Penanggungjawab Unras'}
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                value={valPJUnras.val}
+                                onChange={handleChangePJUnras}
+                                placeholder={
+                                  valJenisKejadian.val === 'Unjuk Rasa'
+                                    ? 'Penanggungjawab Unras'
+                                    : 'Penanggungjawab Unras'
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                        {/* END :: FORM UNJUK RASA */}
+
                         <div className="row mb-2">
                           <div className="col-md-2">
                             <label className="col-form-label fw-semibold fs-6">Jenis Bantuan</label>
@@ -262,49 +610,51 @@ export function TambahLaporanKejadian() {
                             </a>
                           </div>
                         </div>
-                        <div id="kt_docs_repeater_basic_2">
-                          <div className="form-group">
-                            <div data-repeater-list="kt_docs_repeater_basic_2">
-                              <div data-repeater-item>
-                                <div className="form-group row mb-2">
-                                  <div className="col-md-2">
-                                    <label className="col-form-label fw-semibold fs-6">Korban Material</label>
-                                  </div>
-                                  <div className="col-md-2">
-                                    <select className="form-select form-select-solid" data-control="select2"
-                                      data-placeholder="Pilih">
-                                      <option className='text-muted' disabled selected>Pilih Korban Material</option>
-                                      <option value="a">Rumah Rusak</option>
-                                      <option value="b">Rumah Tergenang</option>
-                                      <option value="a">Tempat Ibadah</option>
-                                      <option value="b">Fasilitas Umum</option>
-                                      <option value="a">Kendaraan Roda 4</option>
-                                      <option value="b">Kendaraan Roda 2</option>
-                                      <option value="a">Lain - lain</option>
-                                    </select>
-                                  </div>
-                                  <div className="col-md-2">
-                                    <label className="col-form-label fw-semibold fs-6">Jumlah Korban</label>
-                                  </div>
-                                  <div className="col-md-1">
-                                    <input type="number" placeholder="0"
-                                      className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
-                                  </div>
-                                  <div className="col-md-2">
-                                    <a href="javascript:;" data-repeater-delete className="btn btn-sm btn-light-danger">
-                                      <i className="la la-trash-o"></i>Hapus
-                                    </a>
+                        {valJenisKejadian.val != 'Pendampingan Kekerasan Pada Perempuan Dan Anak' && valJenisKejadian.val != 'Unjuk Rasa' ? (
+                          <div id="kt_docs_repeater_basic_2">
+                            <div className="form-group">
+                              <div data-repeater-list="kt_docs_repeater_basic_2">
+                                <div data-repeater-item>
+                                  <div className="form-group row mb-2">
+                                    <div className="col-md-2">
+                                      <label className="col-form-label fw-semibold fs-6">Korban Material</label>
+                                    </div>
+                                    <div className="col-md-2">
+                                      <select className="form-select form-select-solid" data-control="select2"
+                                        data-placeholder="Pilih">
+                                        <option className='text-muted' disabled selected>Pilih Korban Material</option>
+                                        <option value="a">Rumah Rusak</option>
+                                        <option value="b">Rumah Tergenang</option>
+                                        <option value="a">Tempat Ibadah</option>
+                                        <option value="b">Fasilitas Umum</option>
+                                        <option value="a">Kendaraan Roda 4</option>
+                                        <option value="b">Kendaraan Roda 2</option>
+                                        <option value="a">Lain - lain</option>
+                                      </select>
+                                    </div>
+                                    <div className="col-md-2">
+                                      <label className="col-form-label fw-semibold fs-6">Jumlah Korban</label>
+                                    </div>
+                                    <div className="col-md-1">
+                                      <input type="number" placeholder="0"
+                                        className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+                                    </div>
+                                    <div className="col-md-2">
+                                      <a href="javascript:;" data-repeater-delete className="btn btn-sm btn-light-danger">
+                                        <i className="la la-trash-o"></i>Hapus
+                                      </a>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
+                            <div className="form-group mt-5">
+                              <a href="javascript:;" data-repeater-create className="btn btn-light-primary">
+                                <i className="la la-plus"></i>Tambah
+                              </a>
+                            </div>
                           </div>
-                          <div className="form-group mt-5">
-                            <a href="javascript:;" data-repeater-create className="btn btn-light-primary">
-                              <i className="la la-plus"></i>Tambah
-                            </a>
-                          </div>
-                        </div>
+                        ) : null}
                         <div className="row mb-2">
                           <div className="col-md-2">
                             <label className="col-form-label fw-semibold fs-6">Dokumentasi</label>
@@ -313,7 +663,10 @@ export function TambahLaporanKejadian() {
                         <div className="row mb-10 justify-content-center">
                           <div className="col-md-3">
                             <label htmlFor="firstimg"></label>
-                            <input type="file" name="" id="firstimg"></input>
+                            <div className="image-input image-input-empty image-input-outline" id="kt_image_5">
+                              <img className="preview image-input-wrapper" src={src} alt={alt} />
+                              <input accept="image/*" type="file" onChange={fileHandler} />
+                            </div>
                           </div>
                           <div className="col-md-3">
                             <label htmlFor="firstimg"></label>
@@ -348,8 +701,8 @@ export function TambahLaporanKejadian() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </div >
   )
 }

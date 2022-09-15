@@ -1,12 +1,12 @@
 import {useState} from 'react'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {Link} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import {Button, Collapse} from 'react-bootstrap'
 import {HeaderDetailWrapper} from './HeaderDetail'
 
 export function HirarkiKepegawaian() {
   const [open, setOpen] = useState(false)
-
+  const {id, status} = useParams()
   return (
     <div>
       {/* Header */}
@@ -523,12 +523,12 @@ export function HirarkiKepegawaian() {
               className='text-reset text-decoration-none'
               to='/kepegawaian/InformasiDataPegawai'
             >
-              <button className='float-none btn btn-secondary align-self-center m-1'>
-                <i className='fa fa-close'></i>
-                Batal
-              </button>
+              <button className='float-none btn btn-secondary align-self-center m-1'>Keluar</button>
             </Link>
-            <Link className='text-reset text-decoration-none' to='/kepegawaian/DataKepegawaian'>
+            <Link
+              className='text-reset text-decoration-none'
+              to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}
+            >
               <button className='float-none btn btn-success align-self-center m-1'>
                 <i className='fa-solid fa-arrow-left'></i>
                 Kembali

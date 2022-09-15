@@ -8,6 +8,7 @@ import { TambahLaporanKejadian } from './components/TambahLaporanKejadian'
 import { LaporanPengawasan } from './components/LaporanPengawasan'
 import { LaporanTamuDaerah } from './components/LaporanTamuDaerah'
 import { TambahTamuDaerah } from './components/TambahTamuDaerah'
+import { DetailLaporanKegiatan } from './components/DetailLaporanKegiatan'
 
 
 const pelaporanBreadCrumbs: Array<PageLink> = [
@@ -50,6 +51,15 @@ const PelaporanPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Kegiatan</PageTitle>
               <TambahLaporanKegiatan />
+            </>
+          }
+        />
+        <Route
+          path='DetailLaporanKegiatan'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Detail Laporan Kegiatan</PageTitle>
+              <DetailLaporanKegiatan />
             </>
           }
         />

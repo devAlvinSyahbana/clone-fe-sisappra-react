@@ -134,6 +134,11 @@ export function AsideMenuMain() {
           hasBullet={true}
         />
         <AsideMenuItem
+          to='/master/Pangkat'
+          title='Pangkat'
+          hasBullet={true}
+        />
+        <AsideMenuItem
           to='/master/Agama'
           title='Agama'
           hasBullet={true}

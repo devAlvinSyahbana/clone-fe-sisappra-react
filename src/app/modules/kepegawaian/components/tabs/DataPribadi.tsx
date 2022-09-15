@@ -1,32 +1,30 @@
 import axios from 'axios'
-import { Field, Formik, FormikHelpers } from 'formik'
+import {Field, Formik, FormikHelpers} from 'formik'
 import moment from 'moment'
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
-import { DetailPegawaiInterface } from '../KepegawaianInterface'
-import { HeaderDetailWrapper } from './HeaderDetail'
+import {useEffect, useState} from 'react'
+import {Link} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
+import {DetailPegawaiInterface} from '../KepegawaianInterface'
+import {HeaderDetailWrapper} from './HeaderDetail'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function DataPribadi() {
-  const { id, status } = useParams()
+  const {id, status} = useParams()
 
   const [data, setData] = useState<DetailPegawaiInterface>({})
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
-      )
-      setData((prevstate) => ({ ...prevstate, ...response.data.data }))
+      const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
+      setData((prevstate) => ({...prevstate, ...response.data.data}))
     }
     fetchData()
-  }, [setData])
+  }, [setData, id, status])
 
   const ageFromDateOfBirthday = (dateOfBirth: any): number => {
-    return moment().diff(dateOfBirth, 'years');
+    return moment().diff(dateOfBirth, 'years')
   }
 
   return (
@@ -36,12 +34,14 @@ export function DataPribadi() {
       {/* Second Card */}
       <Formik
         initialValues={{
-          ...data, 
-          tgl_lahir: moment(data?.tgl_lahir).format('YYYY-MM-D'), 
-          umur: ageFromDateOfBirthday(moment(data?.tgl_lahir).format('YYYY-MM-D'))
+          ...data,
+          tgl_lahir: moment(data?.tgl_lahir).format('D MMMM YYYY'),
+          umur: ageFromDateOfBirthday(moment(data?.tgl_lahir).format('YYYY-MM-D')),
         }}
-        onSubmit={function (values: DetailPegawaiInterface,
-          { setSubmitting }: FormikHelpers<DetailPegawaiInterface>) {
+        onSubmit={function (
+          values: DetailPegawaiInterface,
+          {setSubmitting}: FormikHelpers<DetailPegawaiInterface>
+        ) {
           setTimeout(() => {
             alert(JSON.stringify(values, null, 2))
             setSubmitting(false)
@@ -86,7 +86,7 @@ export function DataPribadi() {
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <Field
                       className='form-control form-control-solid'
-                      name="tgl_lahir"
+                      name='tgl_lahir'
                       placeholder='Tanggal Lahir'
                       disabled
                     />
@@ -101,7 +101,7 @@ export function DataPribadi() {
                     </label>
                     <Field
                       className='form-control form-control-solid'
-                      name="jenis_kelamin"
+                      name='jenis_kelamin'
                       placeholder='Jenis Kelamin'
                       disabled
                     />
@@ -112,7 +112,7 @@ export function DataPribadi() {
                     </label>
                     <Field
                       className='form-control form-control-solid'
-                      name="agama_name"
+                      name='agama_name'
                       placeholder='Agama'
                       disabled
                     />
@@ -189,7 +189,7 @@ export function DataPribadi() {
               </div>
 
               <div className='col-12'>
-                <hr className='fg-gray' />
+                <div className='separator border-3 my-10'></div>
               </div>
 
               <div className='col-12'>
@@ -278,7 +278,7 @@ export function DataPribadi() {
               </div>
 
               <div className='col-12'>
-                <hr className='fg-gray' />
+                <div className='separator border-3 my-10'></div>
               </div>
 
               <div className='col-12 mt-4'>
@@ -373,11 +373,13 @@ export function DataPribadi() {
                   to='/kepegawaian/InformasiDataPegawai'
                 >
                   <button className='float-none btn btn-secondary align-self-center m-1'>
-                    <i className='fa fa-close'></i>
-                    Batal
+                    Keluar
                   </button>
                 </Link>
-                <Link className='text-reset text-decoration-none' to='/kepegawaian/DataKeluarga'>
+                <Link
+                  className='text-reset text-decoration-none'
+                  to={`/kepegawaian/InformasiDataPegawai/DataKeluarga/${id}/${status}`}
+                >
                   <button className='float-none btn btn-primary align-self-center m-1'>
                     <i className='fa-solid fa-arrow-right'></i>
                     Lanjut
