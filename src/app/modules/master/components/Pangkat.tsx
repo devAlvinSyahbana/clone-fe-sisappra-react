@@ -10,9 +10,9 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const PENDIDIKAN_URL = `${API_URL}/master/pendidikan` //http://localhost:3000/master/pendidikan
+export const PANGKAT_URL = `${API_URL}/master/pangkat` //http://localhost:3000/master/pangkat
 
-export function Pendidikan() {
+export function Pangkat() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -37,10 +37,10 @@ export function Pendidikan() {
 
   const columns = [
     {
-      name: 'Pendidikan',
-      selector: (row: any) => row.pendidikan,
+      name: 'Pangkat',
+      selector: (row: any) => row.pangkat,
       sortable: true,
-      sortField: 'pendidikan',
+      sortField: 'pangkat',
     },
     {
       name: 'Aksi',
@@ -89,7 +89,7 @@ export function Pendidikan() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(PENDIDIKAN_URL + "/find");
+    const value = await axios.get(PANGKAT_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);
@@ -137,7 +137,7 @@ export function Pendidikan() {
       <div className="row g-8 mt-2 ms-5 me-5">
           <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
             <label htmlFor='' className='mb-3'>
-              Pendidikan
+              Pangkat
             </label>
             <input
               type='text' className='form-control form-control form-control-solid' name='tags'/>

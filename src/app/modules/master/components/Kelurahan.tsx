@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
+export const KELURAHAN_URL = `${API_URL}/master/kelurahan` //http://localhost:3000/master/kelurahan
 
 export function Kelurahan() {
   const [show, setShow] = useState(false);
@@ -38,40 +38,28 @@ export function Kelurahan() {
 
   const columns = [
     {
-      name: 'Jenis Sarana & Prasarana',
-      selector: (row: any) => row.jenis_sarana_prasarana,
+      name: 'Kelurahan',
+      selector: (row: any) => row.kode_kelurahan,
       sortable: true,
-      sortField: 'jenis_sarana_prasarana',
+      sortField: 'kelurahan',
     },
     {
-      name: 'Status Sarana & Prasarana',
-      selector: (row: any) => row.status_sarana_prasarana,
+      name: 'Kelurahan',
+      selector: (row: any) => row.kelurahan,
       sortable: true,
-      sortField: 'status_sarana_prasarana',
+      sortField: 'kelurahan',
     },
     {
-      name: 'Jumlah',
-      selector: (row: any) => row.jumlah,
+      name: 'Kode Kecamatan',
+      selector: (row: any) => row.kode_kecamatan,
       sortable: true,
-      sortField: 'jumlah',
+      sortField: 'Kode kecamatan',
     },
     {
-      name: 'Kondisi',
-      selector: (row: any) => row.kondisi,
+      name: 'Kecamatan',
+      selector: (row: any) => row.kecamatan,
       sortable: true,
-      sortField: 'kondisi',
-    },
-    {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
-      sortable: true,
-      sortField: 'keterangan',
-    },
-    {
-      name: 'Dokumentasi',
-      selector: (row: any) => row.dokumentasi,
-      sortable: true,
-      sortField: 'dokumentasi',
+      sortField: 'kecamatan',
     },
     {
       name: 'Aksi',
@@ -120,7 +108,7 @@ export function Kelurahan() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(SARANA_PRASARANA_URL + "/find");
+    const value = await axios.get(KELURAHAN_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);
