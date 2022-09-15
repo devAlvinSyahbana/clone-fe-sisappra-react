@@ -61,7 +61,7 @@ export function LaporanKegiatan() {
                     size="sm"
                     variant="light"
                     title="Aksi">
-                    <Dropdown.Item href="/#/action-2">Detail</Dropdown.Item>
+                    <Dropdown.Item href="/pelaporan/DetailLaporanKegiatan">Detail</Dropdown.Item>
                     <Dropdown.Item href="/#/action-2">Ubah</Dropdown.Item>
                     <Dropdown.Item href="/#/action-2">Hapus</Dropdown.Item>
                   </DropdownType>
@@ -433,7 +433,7 @@ export function LaporanKegiatan() {
               </div>
             </div>
             <Collapse in={open}>
-            <div className="card-body py-4">
+              <div className="card-body py-4">
                 <div className="row">
                   <div className="col fs-4 mb-2 fw-semibold text-center">
                     LAPORAN HASIL KEGIATAN
@@ -455,7 +455,7 @@ export function LaporanKegiatan() {
                   pagination
                 />
                 <div className="row">
-                  <div className="col-8">
+                  <div className="col-8"></div>
                     <div className="col-4 fs-6 mb-2 fw-semibold text-center">
                       Jakarta, ..............................20...
                       <div className="col fs-6 mb-15 fw-semibold text-center">
@@ -469,9 +469,8 @@ export function LaporanKegiatan() {
                         NIP. ......................
                       </div>
                     </div>
-                  </div>
                 </div>
-            </div>
+              </div>
             </Collapse>
           </div>
         </div>
