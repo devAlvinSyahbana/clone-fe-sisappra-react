@@ -21,7 +21,7 @@ export function DataPribadi() {
       setData((prevstate) => ({...prevstate, ...response.data.data}))
     }
     fetchData()
-  }, [setData])
+  }, [setData, id, status])
 
   const ageFromDateOfBirthday = (dateOfBirth: any): number => {
     return moment().diff(dateOfBirth, 'years')

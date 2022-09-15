@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
@@ -32,7 +32,7 @@ const HeaderDetailWrapper = () => {
       setData(response.data.data)
     }
     fetchData()
-  }, [])
+  }, [id, status])
 
   return (
     <>
@@ -47,7 +47,9 @@ const HeaderDetailWrapper = () => {
                       <img src={data?.foto} alt={data?.nama} className='w-100' />
                     </div>
                   ) : (
-                    <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}>
+                    <div
+                      className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}
+                    >
                       {data?.nama?.charAt(0)}
                     </div>
                   )}
@@ -59,13 +61,13 @@ const HeaderDetailWrapper = () => {
               <div className='flex-grow-1'>
                 <div className='mb-2'>
                   <div className='d-flex align-items-center mb-2'>
-                    <a className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
+                    <div className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
                       {data?.nama !== '' ? data?.nama : '-'}
-                    </a>
+                    </div>
                   </div>
                   <div className='row fw-bold fs-6 mb-4 pe-2'>
                     <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
-                      <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <KTSVG
                           path='/media/icons/duotune/communication/com006.svg'
                           className='svg-icon-4 me-1'
@@ -73,31 +75,33 @@ const HeaderDetailWrapper = () => {
                         {data?.kepegawaian_status_pegawai !== ''
                           ? data?.kepegawaian_status_pegawai
                           : '-'}
-                      </a>
+                      </div>
                     </div>
                     <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
-                      <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <KTSVG
                           path='/media/icons/duotune/communication/com005.svg'
                           className='svg-icon-4 me-1'
                         />
                         {data?.no_hp !== '' ? data?.no_hp : '-'}
-                      </a>
+                      </div>
                     </div>
                     <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
-                      <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <KTSVG
                           path='/media/icons/duotune/communication/com011.svg'
                           className='svg-icon-4 me-1'
                         />
                         -
-                      </a>
+                      </div>
                     </div>
                     <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
-                      <a className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <i className='fa-solid fa-address-card me-1'></i>
-                        {data?.kepegawaian_pangkat_name !== '' ? data?.kepegawaian_pangkat_name : '-'}
-                      </a>
+                        {data?.kepegawaian_pangkat_name !== ''
+                          ? data?.kepegawaian_pangkat_name
+                          : '-'}
+                      </div>
                     </div>
                   </div>
                 </div>
