@@ -4,8 +4,8 @@ import axios from 'axios'
 import BarC from '../chart/barchart/barchart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const SUM_KASUS_PERDA_URL = `${API_URL}/dashboard/penegakan-perda-perkada/sum-kasus-perda`
-export const SUM_STATUS_PERDA_URL = `${API_URL}/dashboard/penegakan-perda-perkada/sum-jenis-perda`
+export const SUM_KASUS_PERDA_URL = `${API_URL}/dashboard/sum-kasus-perda`
+export const SUM_STATUS_PERDA_URL = `${API_URL}/dashboard/sum-jenis-perda`
 
 const PenegakanPerdadanPerkada: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
