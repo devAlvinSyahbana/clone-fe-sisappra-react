@@ -3,6 +3,7 @@ import {Link, useParams} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import {HeaderDetailWrapper} from './HeaderDetail'
 import axios from 'axios'
+import moment from 'moment'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -23,8 +24,12 @@ export function DataKeluarga() {
     },
     {
       name: 'Tempat, Tanggal Lahir',
-      selector: (row: any) => row.tempat_lahir,
-      sortable: true,
+      sortable: false,
+      cell: (record: any) => {
+        return (
+          `${record.tempat_lahir}, ${moment(record.tgl_lahir).format('D MMMM YYYY')}` 
+        )
+      },
     },
     {
       name: 'Jenis Kelamin',
