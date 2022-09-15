@@ -37,7 +37,7 @@ export function DataPribadi() {
       <Formik
         initialValues={{
           ...data, 
-          tgl_lahir: moment(data?.tgl_lahir).format('YYYY-MM-D'), 
+          tgl_lahir: moment(data?.tgl_lahir).format('D MMMM YYYY'), 
           umur: ageFromDateOfBirthday(moment(data?.tgl_lahir).format('YYYY-MM-D'))
         }}
         onSubmit={function (values: DetailPegawaiInterface,
