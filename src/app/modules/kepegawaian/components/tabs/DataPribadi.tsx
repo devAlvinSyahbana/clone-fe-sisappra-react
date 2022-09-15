@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Field, Formik, FormikHelpers } from 'formik'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { DetailPegawaiInterface } from '../KepegawaianInterface'
@@ -27,6 +27,10 @@ export function DataPribadi() {
     fetchData()
   }, [setData])
 
+  const ageFromDateOfBirthday = (dateOfBirth: any): number => {
+    return moment().diff(dateOfBirth, 'years');
+  }
+
   return (
     <>
       {/* Header */}
@@ -34,7 +38,9 @@ export function DataPribadi() {
       {/* Second Card */}
       <Formik
         initialValues={{
-          ...data, tgl_lahir: moment(data?.tgl_lahir).format('YYYY-MM-D')
+          ...data, 
+          tgl_lahir: moment(data?.tgl_lahir).format('YYYY-MM-D'), 
+          umur: ageFromDateOfBirthday(moment(data?.tgl_lahir).format('YYYY-MM-D'))
         }}
         onSubmit={function (values: DetailPegawaiInterface,
           { setSubmitting }: FormikHelpers<DetailPegawaiInterface>) {
@@ -108,8 +114,8 @@ export function DataPribadi() {
                     </label>
                     <Field
                       className='form-control form-control-solid'
-                      name="agama"
-                      placeholder='agama'
+                      name="agama_name"
+                      placeholder='Agama'
                       disabled
                     />
                   </div>
@@ -164,9 +170,8 @@ export function DataPribadi() {
                     <Field
                       type='number'
                       className='form-control form-control form-control-solid mb-4'
-                      name='tags'
+                      name='umur'
                       placeholder='Umur'
-                      value='36'
                       disabled
                     />
                   </div>
