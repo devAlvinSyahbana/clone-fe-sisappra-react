@@ -2,7 +2,7 @@
 import {FC} from 'react'
 import {Link} from 'react-router-dom'
 import {useAuth} from '../../../../app/modules/auth'
-import {toAbsoluteUrl} from '../../../helpers'
+import clsx from 'clsx'
 
 const HeaderUserMenu: FC = () => {
   const {currentUser, logout} = useAuth()
@@ -14,7 +14,15 @@ const HeaderUserMenu: FC = () => {
       <div className='menu-item px-3'>
         <div className='menu-content d-flex align-items-center px-3'>
           <div className='symbol symbol-50px me-5'>
-            <img alt='Logo' src={toAbsoluteUrl('/media/avatars/300-1.jpg')} />
+            {currentUser?.foto && currentUser?.foto !== '' ? (
+              <div className='symbol-label'>
+                <img src={currentUser?.foto} alt={currentUser?.email} className='w-100' />
+              </div>
+            ) : (
+              <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}>
+                {currentUser?.nama && currentUser?.nama !== '' ? currentUser?.nama.charAt(0) : '?'}
+              </div>
+            )}
           </div>
 
           <div className='d-flex flex-column'>
@@ -28,7 +36,7 @@ const HeaderUserMenu: FC = () => {
         </div>
       </div>
       <div className='separator my-2'></div>
-      
+
       <div className='menu-item px-5'>
         <Link to={'/crafted/pages/profile'} className='menu-link px-5'>
           Profil Saya

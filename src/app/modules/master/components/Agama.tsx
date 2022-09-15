@@ -10,9 +10,9 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
+export const AGAMA_URL = `${API_URL}/master/agama` //http://localhost:3000/master/agama
 
-export function JenisKegiatan() {
+export function Agama() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -36,42 +36,22 @@ export function JenisKegiatan() {
   }
 
   const columns = [
+    
     {
-      name: 'Jenis Sarana & Prasarana',
-      selector: (row: any) => row.jenis_sarana_prasarana,
+      name: 'No',
+      selector: (row: any) => row.id,
       sortable: true,
-      sortField: 'jenis_sarana_prasarana',
+      sortField: 'no',
     },
+    {},
     {
-      name: 'Status Sarana & Prasarana',
-      selector: (row: any) => row.status_sarana_prasarana,
+      name: 'Agama',
+      selector: (row: any) => row.agama,
       sortable: true,
-      sortField: 'status_sarana_prasarana',
+      sortField: 'agama',
     },
-    {
-      name: 'Jumlah',
-      selector: (row: any) => row.jumlah,
-      sortable: true,
-      sortField: 'jumlah',
-    },
-    {
-      name: 'Kondisi',
-      selector: (row: any) => row.kondisi,
-      sortable: true,
-      sortField: 'kondisi',
-    },
-    {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
-      sortable: true,
-      sortField: 'keterangan',
-    },
-    {
-      name: 'Dokumentasi',
-      selector: (row: any) => row.dokumentasi,
-      sortable: true,
-      sortField: 'dokumentasi',
-    },
+    {},
+    {},
     {
       name: 'Aksi',
       sortable: false,
@@ -119,7 +99,7 @@ export function JenisKegiatan() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(SARANA_PRASARANA_URL + "/find");
+    const value = await axios.get(AGAMA_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);
@@ -167,7 +147,7 @@ export function JenisKegiatan() {
       <div className="row g-8 mt-2 ms-5 me-5">
           <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
             <label htmlFor='' className='mb-3'>
-              Jenis Kegiatan
+              Agama
             </label>
             <input
               type='text' className='form-control form-control form-control-solid' name='tags'/>
@@ -184,7 +164,7 @@ export function JenisKegiatan() {
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-          <Link to='#'>
+          <Link to='#i'>
             <button className='btn btn-primary me-5' onClick={handleShow}>
               <i className="fa-solid fa-plus"></i>
               Tambah
@@ -192,16 +172,17 @@ export function JenisKegiatan() {
           </Link>
         </div>
       </div>
+
       <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Tambah Jenis Kegiatan</Modal.Title>
+          <Modal.Title>Tambah Agama</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
         <Form.Group className="mb-3 form-control-solid">
-            <Form.Label>Jenis Kegiatan</Form.Label>
-            <Form.Control type="text" placeholder="Jenis Kegiatan" />
+            <Form.Label>Agama</Form.Label>
+            <Form.Control type="text" placeholder="Agama" />
         </Form.Group>
 
         </Modal.Body>

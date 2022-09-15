@@ -1,67 +1,77 @@
-import {Fragment} from 'react'
-import {Link} from 'react-router-dom'
+import {useEffect, useState, Fragment} from 'react'
+import {Link, useParams} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import {HeaderDetailWrapper} from './HeaderDetail'
+import axios from 'axios'
+import moment from 'moment'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function Pendidikan() {
+  const {id, status} = useParams()
+  const [data, setData] = useState([])
   const columns = [
     {
       name: 'Jenis Pendidikan',
-      selector: (row: {pendidikan: any}) => row.pendidikan,
+      selector: (row: any) => row.jenis_pendidikan,
       sortable: true,
     },
     {
       name: 'Nama Sekolah',
-      selector: (row: {namaSekolah: any}) => row.namaSekolah,
+      selector: (row: any) => row.nama_sekolah,
       sortable: true,
     },
     {
       name: 'Nomor Ijazah',
-      selector: (row: {nomorIjazah: any}) => row.nomorIjazah,
+      selector: (row: any) => row.nomor_ijazah,
       sortable: true,
     },
     {
       name: 'Tanggal Ijazah',
-      selector: (row: {tglIjazah: any}) => row.tglIjazah,
+      selector: (row: any) => row.tgl_ijazah,
       sortable: true,
+      cell: (record: any) => {
+        return (
+          `${moment(record.tgl_ijazah).format('D MMMM YYYY')}` 
+        )
+      },
     },
     {
       name: 'Jurusan',
-      selector: (row: {jurusan: any}) => row.jurusan,
+      selector: (row: any) => row.jurusan,
       sortable: true,
     },
     {
       name: 'Fakultas',
-      selector: (row: {fakultas: any}) => row.fakultas,
+      selector: (row: any) => row.fakultas,
       sortable: true,
     },
     {
       name: 'File Ijazah',
       sortable: false,
-      text: 'Action',
+      text: 'Aksi',
       className: 'action',
       align: 'left',
       cell: (record: any) => {
         return (
           <Fragment>
-            <Link to='/#'>Lihat</Link>
+            <Link to={`${record.file_ijazah}`}>Lihat</Link>
           </Fragment>
         )
       },
     },
   ]
 
-  const data = [
-    {
-      id: 1,
-      pendidikan: '	SMA',
-      namaSekolah: 'SMA Tegar Beriman',
-      nomorIjazah: '090909090909',
-      tglIjazah: '18-09-1999',
-      jurusan: 'RPL',
-      fakultas: 'Rekayasa Perangkat Lunak',
-    },
-  ]
+  useEffect(() => {
+    async function fetchDT() {
+      const response = await axios.get(
+        `${KEPEGAWAIAN_URL}/find-data-pendidikan/${id}/${status}`
+      )
+      setData(response.data.data)
+    }
+    fetchDT()
+  }, [id, status])
 
   return (
     <div>
@@ -75,7 +85,7 @@ export function Pendidikan() {
           </div>
         </div>
         <div className='card-body p-9'>
-          <DataTable columns={columns} data={data} defaultSortFieldId={1} />
+          <DataTable columns={columns} data={data} pagination />
           <div className='p-0 mt-6'>
             <div className='text-center'>
               <Link
@@ -83,17 +93,16 @@ export function Pendidikan() {
                 to='/kepegawaian/InformasiDataPegawai'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
-                  <i className='fa fa-close'></i>
-                  Batal
+                  Keluar
                 </button>
               </Link>
-              <Link className='text-reset text-decoration-none' to='/kepegawaian/DataKeluarga'>
+              <Link className='text-reset text-decoration-none' to={`/kepegawaian/InformasiDataPegawai/DataKeluarga/${id}/${status}`}>
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
                   Kembali
                 </button>
               </Link>
-              <Link className='text-reset text-decoration-none' to='/kepegawaian/DataKepegawaian'>
+              <Link className='text-reset text-decoration-none' to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}>
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
                   Lanjut

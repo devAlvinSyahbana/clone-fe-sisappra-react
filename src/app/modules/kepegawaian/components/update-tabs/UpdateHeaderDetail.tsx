@@ -3,7 +3,8 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { DetailPegawaiInterface, JumlahKeluargaInterface, PendidikanInterface } from '../KepegawaiInterface'
+import { DetailPegawaiInterface, JumlahKeluargaInterface, PendidikanInterface } from '../KepegawaianInterface'
+import { Kepegawaian } from '../../../dashboard/components/Kepegawaian'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -16,24 +17,42 @@ const UpdateHeaderDetail = () => {
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
   console.log('id, status', id, status)
 
+  // useEffect(() => {
+  //   async function fetchDT(page: number) {
+  //     const response = await axios.get(
+  //       `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
+  //     )
+  //     // const keluarga = await axios.get(
+  //     //   `${KEPEGAWAIAN_URL}/count-keluarga/${id}/${status}`
+  //     // )
+  //     // const pendidikan = await axios.get(
+  //     //   `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
+  //     // )
+  //     setData(response.data.data)
+  //     // setJkeluarga(keluarga.data.data)
+  //     // setPendidikan(pendidikan.data.data)
+  //     console.log(response.data.data);
+  //   }
+  //   // fetchDT(1)
+  // }, [data, jkeluarga, pendidikan])
+
   useEffect(() => {
-    async function fetchDT(page: number) {
+    const fetchData = async () => {
       const response = await axios.get(
         `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
       )
-      const keluarga = await axios.get(
+          const keluarga = await axios.get(
         `${KEPEGAWAIAN_URL}/count-keluarga/${id}/${status}`
       )
       const pendidikan = await axios.get(
         `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
       )
-      setData(response.data.data)
       setJkeluarga(keluarga.data.data)
       setPendidikan(pendidikan.data.data)
-      console.log(response.data.data, keluarga.data.data);
+      setData(response.data.data)
     }
-    fetchDT(1)
-  })
+    fetchData()
+  }, [])
 
   return (
     <>
@@ -72,10 +91,7 @@ const UpdateHeaderDetail = () => {
                         href='/#'
                         className='d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2'
                       >
-                        <KTSVG
-                          path='/media/icons/duotune/communication/com005.svg'
-                          className='svg-icon-4 me-1'
-                        />
+                        <i className='fas fa-phone'></i>
                         {data?.no_hp !== "" ? data?.no_hp : "-"}
                       </a>
                       <a

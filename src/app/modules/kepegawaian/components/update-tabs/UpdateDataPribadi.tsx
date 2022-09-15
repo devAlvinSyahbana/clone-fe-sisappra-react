@@ -1,94 +1,240 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { Link, useParams } from 'react-router-dom'
-import Select from 'react-select'
+import AsyncSelect from 'react-select/async'
 import { UpdateHeaderDetail } from './UpdateHeaderDetail'
-import { DetailPegawaiInterface } from '../KepegawaiInterface'
-import { Formik, Field, Form, FormikHelpers } from 'formik';
-import * as ReactDOM from 'react-dom';
+import { DetailPegawaiInterface, SelectOptionAutoCom } from '../KepegawaianInterface'
+import { Formik, Field, FormikHelpers } from 'formik';
+import moment from 'moment'
+// import {DatePicker} from 'react-datepicker';
+
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const AGAMA_URL = `${API_URL}/master/agama`
+export const KOTA_URL = `${API_URL}/master/kota`
+export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
+export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 
 export function UpdateDataPribadi() {
   const { id, status } = useParams()
   console.log('id, status', id, status)
-  const [data, setData] = useState<DetailPegawaiInterface>()
-  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [data, setData] = useState<DetailPegawaiInterface>({})
 
   useEffect(() => {
-    async function fetchDT(page: number) {
+    const fetchData = async () => {
       const response = await axios.get(
         `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
       )
-      setData(response.data.data)
-      console.log(response.data.data);
+      setData((prevstate) => ({ ...prevstate, ...response.data.data }))
+      // console.log(response.data.data);
     }
-    fetchDT(1)
-  }, [qParamFind])
+    fetchData()
+  }, [setData])
+
+  const [inputValAgama, setDataAgama] = useState({ label: '', value: null })
+  const [inputValJenis, setDataJenis] = useState({ label: '', value: null })
+  const [inputValStatus, setDataStatus] = useState({ label: '', value: null })
+  const [inputValProvKtp, setDataProvKtp] = useState({ label: '', value: null })
+  const [inputValKotKtp, setDataKotKtp] = useState({ label: '', value: null })
+  const [inputValKecKtp, setDataKecKtp] = useState({ label: '', value: null })
+  const [inputValKelKtp, setDataKelKtp] = useState({ label: '', value: null })
+  const [inputValProvDom, setDataProvDom] = useState({ label: '', value: null })
+  const [inputValKotDom, setDataKotDom] = useState({ label: '', value: null })
+  const [inputValKecDom, setDataKecDom] = useState({ label: '', value: null })
+  const [inputValKelDom, setDataKelDom] = useState({ label: '', value: null })
+
+  // Select Agama
+  const filterAgama = async (inputValue: string) => {
+    const response = await axios.get(`${AGAMA_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.agama, value: i.id }))
+  }
+  const loadOptionsAgama = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterAgama(inputValue))
+    }, 1000)
+  }
+  const handleInputAgama = (newValue: any) => {
+    setDataAgama((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+
+  // Select Jenis Kelamin
+  const filterJenis = async (inputValue: string) => {
+    return jenisKelamin.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  }
+  const loadOptionsJenis = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async() => {
+      callback(await filterJenis(inputValue));
+    }, 1000);
+  };
+  const handleInputJenis = (newValue: any) => {
+    setDataJenis((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
 
   const jenisKelamin = [
-    { value: 'LAKI-LAKI', label: 'LAKI-LAKI' },
-    { value: 'PEREMPUAN', label: 'PEREMPUAN' }
-  ]
+    { value: 'L', label: 'Laki-Laki' },
+    { value: 'P', label: 'Perempuan' },
+  ];
 
-  const statusPerkawinan = [
-    { value: 'KAWIN', label: 'KAWIN' },
-    { value: 'BELUM KAWIN', label: 'BELUM KAWIN' }
-  ]
+  // Select Status Perkawinan
+  const filterStat = async (inputValue: string) => {
+    // const response = await axios.get(`${AGAMA_URL}/filter/${inputValue}`)
+    // const json = await response.data.data
+    // return json.map((i: any) => ({ label: i.agama, value: i.id }))
+  }
+  const loadOptionsStat = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      // callback(await filterStat(inputValue))
+    }, 1000)
+  }
+  const handleInputStat = (newValue: any) => {
+    setDataStatus((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
 
-  const agama = [
-    { value: 'Islam', label: 'Islam' },
-    { value: 'Katolik', label: 'Katolik' },
-    { value: 'Kristen Protestan', label: 'Kristen Protestan' }
-  ]
+  // Select Provinsi sesuai KTP
+  const filterProvKtp = async (inputValue: string) => {
+    // const response = await axios.get(`${AGAMA_URL}/filter/${inputValue}`)
+    // const json = await response.data.data
+    // return json.map((i: any) => ({ label: i.agama, value: i.id }))
+  }
+  const loadOptionsProvKtp = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      // callback(await filterProvKtp(inputValue))
+    }, 1000)
+  }
+  const handleInputProvKtp = (newValue: any) => {
+    setDataProvKtp((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
 
-  const provinsi = [
-    { value: 'DKI JAKARTA', label: 'DKI JAKARTA' },
-    { value: 'JAWA BARAT', label: 'JAWA BARAT' },
-    { value: 'JAWA TIMUR', label: 'JAWA TIMUR' }
-  ]
+  // Select Kab/Kota sesuai KTP
+  const filterKotKtp = async (inputValue: string) => {
+    const response = await axios.get(`${KOTA_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    // return json.map((i: any) => ({ label: i.kota, value: i.id }))
+  }
+  const loadOptionsKotKtp = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      // callback(await filterKot(inputValue))
+    }, 1000)
+  }
+  const handleInputKotKtp = (newValue: any) => {
+    setDataKotKtp((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
 
-  const kabKota = [
-    { value: 'KOTA JAKARTA UTARA', label: 'KOTA JAKARTA UTARA' },
-    { value: 'KELAPA GADING BARAT', label: 'KELAPA GADING BARAT' },
-    { value: 'KELAPA GADING TIMUR', label: 'KELAPA GADING TIMUR' },
-    { value: 'PEGANGSAAN DUA', label: 'PEGANGSAAN DUA' }
-  ]
+  // Select Kecamatan
+  const filterKecKtp = async (inputValue: string) => {
+    const response = await axios.get(`${KECAMATAN_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.agama, value: i.id }))
+  }
+  const loadOptionsKecKtp = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKecKtp(inputValue))
+    }, 1000)
+  }
+  const handleInputKecKtp = (newValue: any) => {
+    setDataKecKtp((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
 
-  const kecamatan = [
-    { value: 'TANJUNG PRIOK', label: 'TANJUNG PRIOK' },
-    { value: 'KELAPA GADING BARAT', label: 'KELAPA GADING BARAT' },
-    { value: 'KELAPA GADING TIMUR', label: 'KELAPA GADING TIMUR' },
-    { value: 'PEGANGSAAN DUA', label: 'PEGANGSAAN DUA' }
-  ]
+  // Select Kelurahan sesuai KTP
+  const filterKelKtp = async (inputValue: string) => {
+    const response = await axios.get(`${KELURAHAN_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.agama, value: i.id }))
+  }
+  const loadOptionsKelKtp = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKelKtp(inputValue))
+    }, 1000)
+  }
+  const handleInputKelKtp = (newValue: any) => {
+    setDataKecKtp((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
 
-  const kelurahan = [
-    { value: 'PAPANGO', label: 'PAPANGO' },
-    { value: 'KELAPA GADING BARAT', label: 'KELAPA GADING BARAT' },
-    { value: 'KELAPA GADING TIMUR', label: 'KELAPA GADING TIMUR' },
-    { value: 'PEGANGSAAN DUA', label: 'PEGANGSAAN DUA' }
-  ]
+  // Select Provinsi Alamat Domisili
+  const filterProvDom = async (inputValue: string) => {
+    // const response = await axios.get(`${AGAMA_URL}/filter/${inputValue}`)
+    // const json = await response.data.data
+    // return json.map((i: any) => ({ label: i.agama, value: i.id }))
+  }
+  const loadOptionsProvDom = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      // callback(await filterProvDom(inputValue))
+    }, 1000)
+  }
+  const handleInputProvDom = (newValue: any) => {
+    setDataProvDom((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+
+  // Select Kab/Kota Alamat Domisili
+  const filterKotDom = async (inputValue: string) => {
+    const response = await axios.get(`${KOTA_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    // return json.map((i: any) => ({ label: i.kota, value: i.id }))
+  }
+  const loadOptionsKotDom = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      // callback(await filterKot(inputValue))
+    }, 1000)
+  }
+  const handleInputKotDom = (newValue: any) => {
+    setDataKotDom((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+
+  // Select Kecamatan
+  const filterKecDom = async (inputValue: string) => {
+    const response = await axios.get(`${KECAMATAN_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.agama, value: i.id }))
+  }
+  const loadOptionsKecDom = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKecDom(inputValue))
+    }, 1000)
+  }
+  const handleInputKecDom = (newValue: any) => {
+    setDataKecDom((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+
+  // Select Kelurahan Alamat Domisili
+  const filterKelDom = async (inputValue: string) => {
+    const response = await axios.get(`${KELURAHAN_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.agama, value: i.id }))
+  }
+  const loadOptionsKelDom = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKelDom(inputValue))
+    }, 1000)
+  }
+  const handleInputKelDom = (newValue: any) => {
+    setDataKecDom((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
 
   return (
-    <div>
+    <>
       {/* begin::Body */}
       <UpdateHeaderDetail />
       {/* Second Card */}
+
       <Formik
         initialValues={{
-          nama: ''
+          ...data, tgl_lahir: moment(data?.tgl_lahir).format('YYYY-MM-D')
         }}
-        onSubmit={(
-          values: DetailPegawaiInterface,
-          { setSubmitting }: FormikHelpers<DetailPegawaiInterface>
-        ) => {
+        onSubmit={function (values: DetailPegawaiInterface,
+          { setSubmitting }: FormikHelpers<DetailPegawaiInterface>) {
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 500);
+            alert(JSON.stringify(values, null, 2))
+            setSubmitting(false)
+          }, 500)
         }}
+        enableReinitialize
       >
         <div className='card mb-5 mb-xl-10'>
           <div className="card-header cursor-pointer">
@@ -100,20 +246,20 @@ export function UpdateDataPribadi() {
             <div className="row">
               <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                 <label htmlFor="" className="mb-3">Nama</label>
-                <Field id="nama" type="text" className="form-control form-control form-control-solid mb-4" name="nama" placeholder="Nama" />
-                <input type="text" className="form-control form-control form-control-solid mb-4" name="nama" placeholder="Nama"
-                  value="" />
+                <Field className="form-control form-control form-control-solid mb-4" name="nama" id="nama" placeholder="John" />
               </div>
               <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                 <label htmlFor="" className="mb-3">Tempat, Tanggal Lahir</label>
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Tempat"
-                      value="PALEMBANG" />
+                    <Field type="text" name="tempat_lahir" className="form-control form-control form-control-solid mb-4" placeholder="Tempat" />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
-                    <input type="date" className="form-control form-control-solid" placeholder="Tanggal Lahir"
-                      value="10-08-1982" />
+                    <Field type="date" name="tgl_lahir" className="form-control form-control-solid" placeholder="Tanggal Lahir" />
+                    {/* <DatePicker
+                      dateFormat="MM/dd/yyyy"
+                      name="tgl_lahir"
+                    /> */}
                   </div>
                 </div>
               </div>
@@ -121,11 +267,25 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Jenis Kelamin</label>
-                    <Select options={jenisKelamin} />
+                    <AsyncSelect
+                      cacheOptions
+                      loadOptions={loadOptionsJenis}
+                      defaultOptions
+                      value={{ value: data?.jenis_kelamin, label: data?.jenis_kelamin ? data?.jenis_kelamin : "-" }}
+                      onChange={handleInputJenis}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Agama</label>
-                    <Select options={agama} />
+                    <AsyncSelect
+                      cacheOptions
+                      loadOptions={loadOptionsAgama}
+                      defaultOptions
+                      value={{ value: data?.agama_id, label: data?.agama_name }}
+                      onChange={handleInputAgama}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                 </div>
               </div>
@@ -133,13 +293,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-6">
                     <label htmlFor="" className="mb-3">NIK</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="NIK"
-                      value="3172021008820023" />
+                    <Field type="text" name="nik" className="form-control form-control form-control-solid mb-4" placeholder="NIK" />
                   </div>
                   <div className="col-6">
                     <label htmlFor="" className="mb-3">Nomor KK</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Nomor KK"
-                      value="3172023010141005" />
+                    <Field type="text" name="no_kk" className="form-control form-control form-control-solid mb-4" placeholder="Nomor KK" />
                   </div>
                 </div>
               </div>
@@ -147,19 +305,24 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Status Perkawinan</label>
-                    <Select options={statusPerkawinan} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsAgama}
+                      defaultOptions
+                      value={{ value: data?.status_perkawinan, label: data?.status_perkawinan ? data?.status_perkawinan : "-" }}
+                      onChange={handleInputStat}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Umur</label>
-                    <input type="number" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Umur"
-                      value="36" />
+                    <Field type="number" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Umur" />
                   </div>
                 </div>
               </div>
               <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                 <label htmlFor="" className="mb-3">Nomor HP</label>
-                <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Nomor HP"
-                  value="081238303082" />
+                <Field type="text" className="form-control form-control form-control-solid mb-4" name="no_hp" placeholder="Nomor HP" />
               </div>
 
               <div className="col-12 mb-4">
@@ -169,14 +332,12 @@ export function UpdateDataPribadi() {
               <div className="col-12">
                 <div className="row">
                   <div className="col-xxl-10 col-md-10 col-lg-10 col-sm-12">
-                    <label htmlFor="" className="mb-3">Alamat Sesuai KTP</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-3" name="tags" placeholder="Alamat Sesuai KTP"
-                      value="JL. WARAKAS VI GG XVIII NO. 105 B KEL. PAPANGGO KEC. TANJUNG PRIUK JAKARTA UTARA" />
+                    <label htmlFor="" className="mb-3">Alamat Alamat Domisili</label>
+                    <Field type="text" className="form-control form-control form-control-solid mb-3" name="sesuai_ktp_alamat" placeholder="Alamat Alamat Domisili" />
                   </div>
                   <div className="col-xxl-2 col-md-2 col-lg-2 col-sm-12">
                     <label htmlFor="" className="mb-3">RT/RW</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="RT/RW"
-                      value="009 / 005" />
+                    <Field type="text" className="form-control form-control form-control-solid mb-4" name="sesuai_ktp_rtrw" placeholder="RT/RW" />
                   </div>
                 </div>
               </div>
@@ -184,11 +345,25 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Provinsi</label>
-                    <Select options={provinsi} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsAgama}
+                      defaultOptions
+                      value={{ value: data?.sesuai_ktp_provinsi, label: data?.sesuai_ktp_provinsi ? data?.sesuai_ktp_provinsi : "-" }}
+                      onChange={handleInputProvKtp}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kab/Kota</label>
-                    <Select options={kabKota} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsKot}
+                      defaultOptions
+                      value={{ value: data?.sesuai_ktp_kabkota, label: data?.sesuai_ktp_kabkota ? data?.sesuai_ktp_kabkota : "-" }}
+                      onChange={handleInputKotKtp}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                 </div>
               </div>
@@ -196,11 +371,25 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-10 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kecamatan</label>
-                    <Select options={kecamatan} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsKec}
+                      defaultOptions
+                      value={{ value: data?.sesuai_ktp_kecamatan, label: data?.sesuai_ktp_kecamatan ? data?.sesuai_ktp_kecamatan : "-" }}
+                      onChange={handleInputKecKtp}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kelurahan</label>
-                    <Select options={kelurahan} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsKel}
+                      defaultOptions
+                      value={{ value: data?.sesuai_ktp_kelurahan, label: data?.sesuai_ktp_kelurahan ? data?.sesuai_ktp_kelurahan : "-" }}
+                      onChange={handleInputKelKtp}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                 </div>
               </div>
@@ -213,13 +402,11 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-10 col-md-10 col-lg-10 col-sm-12">
                     <label htmlFor="" className="mb-3">Alamat Domisili</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Alamat Domisili"
-                      value="JL. WARAKAS VI GG XVIII NO. 105 B KEL. PAPANGGO KEC. TANJUNG PRIUK JAKARTA UTARA" />
+                    <Field type="text" className="form-control form-control form-control-solid mb-4" name="domisili_alamat" placeholder="Alamat Domisili" />
                   </div>
                   <div className="col-xxl-2 col-md-2 col-lg-2 col-sm-12">
                     <label htmlFor="" className="mb-3">RT/RW</label>
-                    <input type="text" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="RT/RW"
-                      value="009 / 005" />
+                    <Field type="text" className="form-control form-control form-control-solid mb-4" name="domisili_rtrw" placeholder="RT/RW" />
                   </div>
                 </div>
               </div>
@@ -227,11 +414,25 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Provinsi</label>
-                    <Select options={provinsi} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsProvDom}
+                      defaultOptions
+                      value={{ value: data?.domisili_provinsi, label: data?.domisili_provinsi ? data?.domisili_provinsi : "-" }}
+                      onChange={handleInputProvDom}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kab/Kota</label>
-                    <Select options={kabKota} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsKotDom}
+                      defaultOptions
+                      value={{ value: data?.domisili_kabkota, label: data?.domisili_kabkota ? data?.domisili_kabkota : "-" }}
+                      onChange={handleInputKotDom}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                 </div>
               </div>
@@ -239,11 +440,25 @@ export function UpdateDataPribadi() {
                 <div className="row">
                   <div className="col-xxl-6 col-md-10 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kecamatan</label>
-                    <Select options={kecamatan} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsKecDom}
+                      defaultOptions
+                      value={{ value: data?.domisili_kecamatan, label: data?.domisili_kecamatan ? data?.domisili_kelurahan : "-" }}
+                      onChange={handleInputKecDom}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Kelurahan</label>
-                    <Select options={kelurahan} />
+                    <AsyncSelect
+                      cacheOptions
+                      // loadOptions={loadOptionsKelDom}
+                      defaultOptions
+                      value={{ value: data?.domisili_kelurahan, label: data?.domisili_kelurahan ? data?.domisili_kelurahan : "-" }}
+                      onChange={handleInputKelDom}
+                      placeholder={'Pilih'}
+                    />
                   </div>
                 </div>
               </div>
@@ -274,6 +489,7 @@ export function UpdateDataPribadi() {
         </div>
       </Formik>
       {/* end::Body */}
-    </div>
+    </>
+
   )
 }

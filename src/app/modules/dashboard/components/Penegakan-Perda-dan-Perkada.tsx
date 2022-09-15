@@ -1,6 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, FC} from 'react'
+import React, {useState, useEffect, FC} from 'react'
+import axios from 'axios'
 import BarC from '../chart/barchart/barchart'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const SUM_KASUS_PERDA_URL = `${API_URL}/dashboard/penegakan-perda-perkada/sum-kasus-perda`
+export const SUM_STATUS_PERDA_URL = `${API_URL}/dashboard/penegakan-perda-perkada/sum-jenis-perda`
 
 const PenegakanPerdadanPerkada: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -26,6 +31,26 @@ const PenegakanPerdadanPerkada: FC = () => {
       setShowResults({isShowed: true, val: event.target.value})
     }
   }
+  const [data, setData] = useState([])
+  const [dataJS, setDataJS] = useState([])
+
+  useEffect(() => {
+    fetchUsers(1)
+  }, [])
+
+  // const [temp, setTemp] = useState([])
+
+  const fetchUsers = async (page: any) => {
+    const response = await axios.get(`${SUM_KASUS_PERDA_URL}`)
+    const responseJS = await axios.get(`${SUM_STATUS_PERDA_URL}`)
+
+    setData(response.data.data)
+    setDataJS(responseJS.data.data)
+
+    console.log('cek :', data)
+    return [data, setData] as const
+  }
+
   return (
     <div className=' card card-body'>
       <div className='tab-content' id='myTabContent'>
@@ -67,15 +92,15 @@ const PenegakanPerdadanPerkada: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={data} valueField='count' categoryField='kasus_perda' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '2') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={data} valueField='count' categoryField='kasus_perda' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '3') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={data} valueField='count' categoryField='kasus_perda' />
                     </>
                   ) : null}
                 </div>
@@ -119,15 +144,15 @@ const PenegakanPerdadanPerkada: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
                     </>
                   ) : null}
                 </div>

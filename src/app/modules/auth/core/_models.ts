@@ -11,8 +11,7 @@ export interface KontakPICModel {
   message: string
   data: {
     id: number
-    nama: string
-    telepon: string
+    email: string
     status_pic: number
   }
 }
@@ -60,6 +59,8 @@ export interface UserSocialNetworksModel {
 export interface UserModel {
   id: number
   username: string
+  foto: string
+  nama: string
   password: string | undefined
   email: string
   first_name: string

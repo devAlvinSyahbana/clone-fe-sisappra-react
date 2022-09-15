@@ -12,7 +12,7 @@ import Form from 'react-bootstrap/Form';
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 
-export function JenisKegiatan() {
+export function JenisPerdaPerkada() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -167,7 +167,16 @@ export function JenisKegiatan() {
       <div className="row g-8 mt-2 ms-5 me-5">
           <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
             <label htmlFor='' className='mb-3'>
-              Jenis Kegiatan
+              Judul Perda / Perkada
+            </label>
+            <input
+              type='text' className='form-control form-control form-control-solid' name='tags'/>
+          </div>
+      </div>
+      <div className="row g-8 mt-2 ms-5 me-5">
+          <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
+            <label htmlFor='' className='mb-3'>
+              Deskripsi
             </label>
             <input
               type='text' className='form-control form-control form-control-solid' name='tags'/>
@@ -184,7 +193,7 @@ export function JenisKegiatan() {
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-          <Link to='#'>
+          <Link to='#i'>
             <button className='btn btn-primary me-5' onClick={handleShow}>
               <i className="fa-solid fa-plus"></i>
               Tambah
@@ -195,13 +204,13 @@ export function JenisKegiatan() {
       <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Tambah Jenis Kegiatan</Modal.Title>
+          <Modal.Title>Tambah Jenis Perda / Perkada</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
         <Form.Group className="mb-3 form-control-solid">
-            <Form.Label>Jenis Kegiatan</Form.Label>
-            <Form.Control type="text" placeholder="Jenis Kegiatan" />
+            <Form.Label>Perda / Perkada</Form.Label>
+            <Form.Control type="text" placeholder="Perda / Perkada" />
         </Form.Group>
 
         </Modal.Body>
@@ -216,7 +225,6 @@ export function JenisKegiatan() {
         </Modal.Footer>
       </Modal>
       </>
-
       <div className='table-responsive mt-5 ms-5 me-5'>
       <DataTable
             columns={columns}

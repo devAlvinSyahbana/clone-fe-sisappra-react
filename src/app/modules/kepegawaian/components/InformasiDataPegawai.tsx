@@ -1,28 +1,32 @@
-import { useState, useEffect, Fragment } from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import Button from 'react-bootstrap/Button'
 import clsx from 'clsx'
+import FileDownload from 'js-file-download'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 
 export function InformasiDataPegawai() {
-  const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
-  const [valFilterNama, setFilterNama] = useState({ val: '' })
-  const [valFilterNRK, setFilterNRK] = useState({ val: '' })
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({ val: '' })
+  const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
+  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
+  const [valFilterNama, setFilterNama] = useState({val: ''})
+  const [valFilterNRK, setFilterNRK] = useState({val: ''})
+  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [qParamFind, setUriFind] = useState({strparam: ''})
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -91,8 +95,8 @@ export function InformasiDataPegawai() {
           ? valStatPegawai.val === 'PTT'
             ? 'NPTT'
             : valStatPegawai.val === 'PJLP'
-              ? 'NPJLP'
-              : 'NRK'
+            ? 'NPJLP'
+            : 'NRK'
           : 'NRK',
       selector: (row: any) => row.kepegawaian_nrk,
       sortable: true,
@@ -158,7 +162,7 @@ export function InformasiDataPegawai() {
                       </Link> */}
                       <Link
                         className='text-reset'
-                        to={`/kepegawaian/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`}
+                        to={`/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`}
                       >
                         Detail
                       </Link>
@@ -257,40 +261,57 @@ export function InformasiDataPegawai() {
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nopegawai=${valFilterNoPegawai.val}`
     }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
-    setValStatPegawai({ val: '' })
-    setFilterNama({ val: '' })
-    setFilterNRK({ val: '' })
-    setFilterNoPegawai({ val: '' })
-    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
+    setValStatPegawai({val: ''})
+    setFilterNama({val: ''})
+    setFilterNRK({val: ''})
+    setFilterNoPegawai({val: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
   const handleChangeStatPegawai = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setValStatPegawai({ val: event.target.value })
+    setValStatPegawai({val: event.target.value})
   }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setFilterNama({ val: event.target.value })
+    setFilterNama({val: event.target.value})
   }
   const handleChangeInputNRK = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setFilterNRK({ val: event.target.value })
+    setFilterNRK({val: event.target.value})
   }
   const handleChangeInputNoPegawai = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setFilterNoPegawai({ val: event.target.value })
+    setFilterNoPegawai({val: event.target.value})
+  }
+
+  const handleUnduh = async () => {
+    setbtnLoadingUnduh(true)
+    await axios({
+      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
+        valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
+      }`,
+      method: 'GET',
+      responseType: 'blob', // Important
+    }).then((response) => {
+      FileDownload(
+        response.data,
+        'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
+      )
+      setbtnLoadingUnduh(false)
+    })
   }
 
   return (
@@ -350,10 +371,10 @@ export function InformasiDataPegawai() {
               {valStatPegawai.val === 'PNS'
                 ? 'NIP'
                 : valStatPegawai.val === 'PTT'
-                  ? 'NPTT'
-                  : valStatPegawai.val === 'PJLP'
-                    ? 'NPJLP'
-                    : 'NIP'}
+                ? 'NPTT'
+                : valStatPegawai.val === 'PJLP'
+                ? 'NPJLP'
+                : 'NIP'}
             </label>
             <input
               type='text'
@@ -364,10 +385,10 @@ export function InformasiDataPegawai() {
                 valStatPegawai.val === 'PNS'
                   ? 'NIP'
                   : valStatPegawai.val === 'PTT'
-                    ? 'NPTT'
-                    : valStatPegawai.val === 'PJLP'
-                      ? 'NPJLP'
-                      : 'NIP'
+                  ? 'NPTT'
+                  : valStatPegawai.val === 'PJLP'
+                  ? 'NPJLP'
+                  : 'NIP'
               }
             />
           </div>
@@ -390,10 +411,25 @@ export function InformasiDataPegawai() {
           </Link>
         </div>
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <DropdownButton id='dropdown-basic-button' title='Unduh' variant='light'>
-            <Dropdown.Item href='/#'>Excel</Dropdown.Item>
-            <Dropdown.Item href='/#'>PDF</Dropdown.Item>
-          </DropdownButton>
+          <Dropdown as={ButtonGroup}>
+            <Button variant='light'>
+              {btnLoadingUnduh ? (
+                <>
+                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                  Memproses...
+                </>
+              ) : (
+                'Unduh'
+              )}
+            </Button>
+
+            <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
+              <Dropdown.Item>PDF</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
       </div>
 

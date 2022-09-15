@@ -45,6 +45,12 @@ export function HirarkiPegawai() {
     setInputFields([...inputFields, newfield])
   }
 
+  const removeFields = (index: number) => {
+    let data:any = [...inputFields];
+    data.splice(index, 1)
+    setInputFields(data)
+  }
+
 
   return (
     <div className={`card`}>
@@ -65,7 +71,7 @@ export function HirarkiPegawai() {
             </div>
             <div className="card-toolbar">
               <div className="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                <button type="button" className="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                {/* <button type="button" className="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                   <span className="svg-icon svg-icon-2">
                     <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
@@ -111,7 +117,7 @@ export function HirarkiPegawai() {
                       <path opacity="0.3" d="M18.75 8.25H17.75C17.1977 8.25 16.75 8.69772 16.75 9.25C16.75 9.80228 17.1977 10.25 17.75 10.25C18.3023 10.25 18.75 10.6977 18.75 11.25V18.25C18.75 18.8023 18.3023 19.25 17.75 19.25H5.75C5.19772 19.25 4.75 18.8023 4.75 18.25V11.25C4.75 10.6977 5.19771 10.25 5.75 10.25C6.30229 10.25 6.75 9.80228 6.75 9.25C6.75 8.69772 6.30229 8.25 5.75 8.25H4.75C3.64543 8.25 2.75 9.14543 2.75 10.25V19.25C2.75 20.3546 3.64543 21.25 4.75 21.25H18.75C19.8546 21.25 20.75 20.3546 20.75 19.25V10.25C20.75 9.14543 19.8546 8.25 18.75 8.25Z" fill="currentColor" />
                     </svg>
                   </span>Export
-                </button>
+                </button> */}
                 <button type="button" className="btn btn-primary" onClick={() => setLgShow(true)}>
                   <span className="svg-icon svg-icon-2">
                     <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -221,7 +227,7 @@ export function HirarkiPegawai() {
                                           <input type="text" name={`nama`} className="form-control mb-2 mb-md-0" placeholder="Masukkan Nama" value={input.nama} onChange={event => handleFormChange(index, event)} />
                                         </div>
                                         <div className="col-md-4">
-                                          <a href="javascript:;" data-repeater-delete className="btn btn-sm btn-light-danger mt-3 mt-md-8">
+                                          <a href="javascript:;" onClick={() => removeFields(index)} data-repeater-delete className="btn btn-sm btn-light-danger mt-3 mt-md-8">
                                             <i className="la la-trash-o" />Delete
                                           </a>
                                         </div>
