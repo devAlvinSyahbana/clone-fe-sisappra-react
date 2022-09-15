@@ -4,9 +4,11 @@ import axios from 'axios'
 import BarC from '../chart/barchart/barchart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const SUM_JENIS_PERORANGAN_URL = `${API_URL}/dashboard/wasdak-protokol-kesehatan-PPKM/sum-jenis-perorangan`
-export const SUM_JENIS_TEMPAT_MAKAN_URL = `${API_URL}/dashboard/wasdak-protokol-kesehatan-PPKM/sum-jenis-tempat-makan`
-export const SUM_JENIS_PERKANTORAN_URL = `${API_URL}/dashboard/wasdak-protokol-kesehatan-PPKM/sum-jenis-perkantoran`
+export const SUM_JENIS_PERORANGAN_URL = `${API_URL}/dashboard/sum-jenis-perorangan`
+export const SUM_JENIS_TEMPAT_MAKAN_URL = `${API_URL}/dashboard/sum-jenis-tempat-makan`
+export const SUM_JENIS_PERKANTORAN_URL = `${API_URL}/dashboard/sum-jenis-perkantoran`
+export const SUM_JENIS_USAHA_URL = `${API_URL}/dashboard/sum-jenis-usaha`
+export const SUM_JENIS_KERUMUNAN_URL = `${API_URL}/dashboard/sum-jenis-kerumunan`
 
 const WasdakProtokolKesehatan: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -60,8 +62,10 @@ const WasdakProtokolKesehatan: FC = () => {
     }
   }
   const [data, setData] = useState([])
-  const [dataJPM, setDataJPM] = useState([])
-  const [dataJPK, setDataJPK] = useState([])
+  const [dataJTM, setDataJTM] = useState([])
+  const [dataJP, setDataJP] = useState([])
+  const [dataJU, setDataJU] = useState([])
+  const [dataJK, setDataJK] = useState([])
 
   useEffect(() => {
     fetchUsers(1)
@@ -73,10 +77,14 @@ const WasdakProtokolKesehatan: FC = () => {
     const response = await axios.get(`${SUM_JENIS_PERORANGAN_URL}`)
     const responseJTM = await axios.get(`${SUM_JENIS_TEMPAT_MAKAN_URL}`)
     const responseJP = await axios.get(`${SUM_JENIS_PERKANTORAN_URL}`)
+    const responseJU = await axios.get(`${SUM_JENIS_USAHA_URL}`)
+    const responseJK = await axios.get(`${SUM_JENIS_KERUMUNAN_URL}`)
 
     setData(response.data.data)
-    setDataJPM(responseJTM.data.data)
-    setDataJPK(responseJP.data.data)
+    setDataJTM(responseJTM.data.data)
+    setDataJP(responseJP.data.data)
+    setDataJU(responseJU.data.data)
+    setDataJK(responseJK.data.data)
 
     console.log('cek :', data)
     return [data, setData] as const
@@ -122,35 +130,23 @@ const WasdakProtokolKesehatan: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
-                      <BarC
-                        chartID={data}
-                        valueField='count'
-                        categoryField='jenis_pelanggaran_perda'
-                      />
+                      <BarC chartID={data} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '2') ? (
                     <>
-                      <BarC
-                        chartID={data}
-                        valueField='count'
-                        categoryField='jenis_pelanggaran_perda'
-                      />
+                      <BarC chartID={data} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '3') ? (
                     <>
-                      <BarC
-                        chartID={data}
-                        valueField='count'
-                        categoryField='jenis_pelanggaran_perda'
-                      />
+                      <BarC chartID={data} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null}
                 </div>
               </div>
             </div>
-            <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
-                <div className='card-header bg-primary'>
+                <div className='card-header bg-primary justify-content-center'>
                   <h3 className='card-title text-center text-white'>
                     Data Jumlah Pengawasan dan Penindakan Warung Makan, Restoran, dan Kafe
                   </h3>
@@ -184,23 +180,23 @@ const WasdakProtokolKesehatan: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {/* {showResults.isShowed && showResults.val === '4' ? (
+                  {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC chartID={dataJTM} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC chartID={dataJTM} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC chartID={dataJTM} valueField='count' categoryField='jenis_wasdak' />
                     </>
-                  ) : null} */}
+                  ) : null}
                 </div>
               </div>
             </div>
-            <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
                   <h3 className='card-title text-white'>Data Jumlah Penindakan Perkantoran</h3>
@@ -234,23 +230,23 @@ const WasdakProtokolKesehatan: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {/* {showResults.isShowed && showResults.val === '7' ? (
+                  {showResults.isShowed && showResults.val === '7' ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC chartID={dataJP} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '8') ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC chartID={dataJP} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '9') ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC chartID={dataJP} valueField='count' categoryField='jenis_wasdak' />
                     </>
-                  ) : null} */}
+                  ) : null}
                 </div>
               </div>
             </div>
-            <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
                   <h3 className='card-title text-white'>
@@ -286,23 +282,23 @@ const WasdakProtokolKesehatan: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {/* {showResults.isShowed && showResults.val === '10' ? (
+                  {showResults.isShowed && showResults.val === '10' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJU} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '11') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJU} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '12') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJU} valueField='count' categoryField='jenis_wasdak' />
                     </>
-                  ) : null} */}
+                  ) : null}
                 </div>
               </div>
             </div>
-            <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
                   <h3 className='card-title text-white'>
@@ -338,19 +334,19 @@ const WasdakProtokolKesehatan: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {/* {showResults.isShowed && showResults.val === '13' ? (
+                  {showResults.isShowed && showResults.val === '13' ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJK} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '14') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJK} valueField='count' categoryField='jenis_wasdak' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '15') ? (
                     <>
-                      <BarC chartID='pie-one' />
+                      <BarC chartID={dataJK} valueField='count' categoryField='jenis_wasdak' />
                     </>
-                  ) : null} */}
+                  ) : null}
                 </div>
               </div>
             </div>

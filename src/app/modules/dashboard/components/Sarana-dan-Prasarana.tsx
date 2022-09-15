@@ -4,7 +4,7 @@ import axios from 'axios'
 import PieC from '../chart/piechart/piechart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const SUM_SARANA_PRASARANA_URL = `${API_URL}/dashboard/sarana-prasarana/sum-jenis-sarana_prasarana`
+export const SUM_SARANA_PRASARANA_URL = `${API_URL}/dashboard/sum-jenis-sarana_prasarana`
 
 const SaranadanPrasarana: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})

@@ -8,15 +8,15 @@ const DashboardPage: FC = () => (
   <>
     {/* begin::Row */}
     <div className='row gy-5 g-xl-8'>
-      <div className='col-xxl-4'>
+      <div className='col-xxl-12'>
         <MixedWidget2
           className='card-xl-stretch mb-xl-8'
-          chartColor='danger'
+          chartColor='primary'
           chartHeight='200px'
           strokeColor='#cb1e46'
         />
       </div>
-      <div className='col-xxl-4'>
+      <div className='col-xxl-12'>
         <MixedWidget10
           className='card-xxl-stretch-50 mb-5 mb-xl-8'
           chartColor='primary'

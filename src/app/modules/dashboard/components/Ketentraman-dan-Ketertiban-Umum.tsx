@@ -4,15 +4,16 @@ import axios from 'axios'
 import BarC from '../chart/barchart/barchart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const SUM_KASUS_TRAMTIBUM_URL = `${API_URL}/dashboard/ketentraman-ketertiban-umum/sum-kasus-tramtibum`
-export const SUM_JENIS_PELANGGARAN_PERDA_URL = `${API_URL}/dashboard/ketentraman-ketertiban-umum/sum-jenis-pelanggaran-perda-tramtibum`
-export const SUM_KEGIATAN_TRAMTIBUM_URL = `${API_URL}/dashboard/ketentraman-ketertiban-umum/sum-kegiatan-tramtibum`
+export const SUM_KASUS_TRAMTIBUM_URL = `${API_URL}/dashboard/sum-kasus-tramtibum`
+export const SUM_JENIS_PELANGGARAN_PERDA_URL = `${API_URL}/dashboard/sum-jenis-pelanggaran-perda-tramtibum`
+export const SUM_KEGIATAN_TRAMTIBUM_URL = `${API_URL}/dashboard/sum-kegiatan-tramtibum`
 
 export const KetentramandanKetertibanUmum: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
   const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
     console.log(typeof event.target.value)
 
+    setShowResults({isShowed: true, val: event.target.value})
     if (event.target.value === '1') {
       setShowResults({isShowed: true, val: event.target.value})
     }
@@ -38,6 +39,9 @@ export const KetentramandanKetertibanUmum: FC = () => {
       setShowResults({isShowed: true, val: event.target.value})
     }
     if (event.target.value === '9') {
+      setShowResults({isShowed: true, val: event.target.value})
+    }
+    if (event.target.value === '') {
       setShowResults({isShowed: true, val: event.target.value})
     }
   }
@@ -103,25 +107,25 @@ export const KetentramandanKetertibanUmum: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '1' ? (
+                  {/* {showResults.isShowed && showResults.val === '1' ? (
                     <>
                       <BarC chartID={data} valueField='count' categoryField='kasus_tramtibum' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '2') ? (
+                  ) : null && showResults.isShowed && showResults.val === '2' ? (
                     <>
                       <BarC chartID={data} valueField='count' categoryField='kasus_tramtibum' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '3') ? (
+                  ) : null && showResults.isShowed && showResults.val === '3' ? (
                     <>
                       <BarC chartID={data} valueField='count' categoryField='kasus_tramtibum' />
                     </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
-            <div className='col-md-6 col-lg-6 col-sm-12'>
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
-                <div className='card-header bg-primary'>
+                <div className='card-header bg-primary justify-content-center'>
                   <h3 className='card-title text-center text-white'>
                     Data Jumlah Jenis Pelanggaran Perda/ Perkada Terkait dengan Tramtibum
                   </h3>
@@ -183,7 +187,7 @@ export const KetentramandanKetertibanUmum: FC = () => {
                 </div>
               </div>
             </div>
-            <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
                   <h3 className='card-title text-white'>Data Jumlah Kegiatan Tramtibum</h3>
