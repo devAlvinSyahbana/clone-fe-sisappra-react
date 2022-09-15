@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom'
+import { DropdownButton, ButtonGroup, Dropdown } from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
 import DatePicker from 'react-date-picker';
 
@@ -10,56 +11,103 @@ export function LaporanKejadian() {
       selector: (row: { no: any; }) => row.no,
     },
     {
-      name: 'Jam',
-      selector: (row: { jam: any; }) => row.jam,
+      name: 'Bidang/Wilayah',
+      selector: (row: { bidangwilayah: any; }) => row.bidangwilayah,
     },
     {
-      name: 'Tanggal',
-      selector: (row: { tanggal: any; }) => row.tanggal,
+      name: 'Jumlah Kejadian',
+      selector: (row: { jumlahkejadian: any; }) => row.jumlahkejadian,
     },
     {
-      name: 'Jenis Kejadian',
-      selector: (row: { jeniskejadian: any; }) => row.jeniskejadian,
+      name: 'Banjir',
+      selector: (row: { banjir: any; }) => row.banjir,
     },
     {
-      name: 'Uraian Kejadian',
-      selector: (row: { uraiankejadian: any; }) => row.uraiankejadian,
+      name: 'Hewan Buas Dan Berbisa',
+      selector: (row: { hewanbuasdanberbisa: any; }) => row.hewanbuasdanberbisa,
     },
     {
-      name: 'Kota',
-      selector: (row: { kota: any; }) => row.kota,
+      name: 'Kebakaran',
+      selector: (row: { kebakaran: any; }) => row.kebakaran,
     },
     {
-      name: 'Kecamatan',
-      selector: (row: { kecamatan: any; }) => row.kecamatan,
+      name: 'Kecelakaan',
+      selector: (row: { kecelakaan: any; }) => row.kecelakaan,
     },
     {
-      name: 'Kelurahan',
-      selector: (row: { kelurahan: any; }) => row.kelurahan,
+      name: 'Pendampingan Kekerasan Pada Perempuan Dan Anak',
+      selector: (row: { pendampingankekerasan: any; }) => row.pendampingankekerasan,
     },
     {
-      name: 'Meninggal',
-      selector: (row: { meninggal: any; }) => row.meninggal,
+      name: 'Kerusakan Konstruksi',
+      selector: (row: { kerusakankonstruksi: any; }) => row.kerusakankonstruksi,
     },
     {
-      name: 'Luka-Luka Berat',
-      selector: (row: { lukalukaberat: any; }) => row.lukalukaberat,
+      name: 'Kriminalitas',
+      selector: (row: { kriminalitas: any; }) => row.kriminalitas,
     },
     {
-      name: 'Luka-Luka Ringan',
-      selector: (row: { lukalukaringan: any; }) => row.lukalukaringan,
+      name: 'Pembunuhan',
+      selector: (row: { pembunuhan: any; }) => row.pembunuhan,
     },
     {
-      name: 'Terserang Penyakit',
-      selector: (row: { terserangpenyakit: any; }) => row.terserangpenyakit,
+      name: 'Penemuan Mayat',
+      selector: (row: { penemuanmayat: any; }) => row.penemuanmayat,
     },
     {
-      name: 'Hilang',
-      selector: (row: { hilang: any; }) => row.hilang,
+      name: 'Penyelamatan Orang',
+      selector: (row: { penyelamatanorang: any; }) => row.penyelamatanorang,
     },
     {
-      name: 'Pengungsi',
-      selector: (row: { pengungsi: any; }) => row.pengungsi,
+      name: 'Pohon Tumbang',
+      selector: (row: { pohontumbang: any; }) => row.pohontumbang,
+    },
+    {
+      name: 'Tawuran',
+      selector: (row: { tawuran: any; }) => row.tawuran,
+    },
+    {
+      name: 'Terorisme',
+      selector: (row: { terorisme: any; }) => row.terorisme,
+    },
+    {
+      name: 'Unjuk Rasa',
+      selector: (row: { unjukrasa: any; }) => row.unjukrasa,
+    },
+    {
+      name: 'Ket',
+      selector: (row: { ket: any; }) => row.ket,
+    },
+    {
+      name: 'Aksi',
+      sortable: false,
+      text: "Action",
+      className: "action",
+      align: "left",
+      cell: (record: any) => {
+        return (
+          <Fragment>
+
+            <div className="mb-2">
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size="sm"
+                    variant="light"
+                    title="Aksi">
+                    <Dropdown.Item href="/#/action-2">Detail</Dropdown.Item>
+                    <Dropdown.Item href="/#/action-2">Ubah</Dropdown.Item>
+                    <Dropdown.Item href="/#/action-2">Hapus</Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
+        );
+      },
     },
   ];
 
@@ -67,19 +115,46 @@ export function LaporanKejadian() {
     {
       id: 1,
       no: '1',
-      jam: '07:00:00',
-      tanggal: '21/12/2021',
-      jeniskejadian: 'Pohon Tumbang',
-      uraiankejadian: 'Pohon Tumbang karena angin kencang yang menimpa Mobil Aqya Minibus',
-      kota: 'Jakarta Selatan',
-      kecamatan: 'Jagakarsa',
-      kelurahan: 'Ciganjut',
-      meninggal: '0',
-      lukalukaberat: '0',
-      lukalukaringan: '0',
-      terserangpenyakit: '0',
-      hilang: '0',
-      pengungsi: '0',
+      bidangwilayah: 'Jakarta',
+      jumlahkejadian: '1',
+      banjir: '1',
+      hewanbuasdanberbisa: '1',
+      kebakaran: '1',
+      kecelakaan: '1',
+      pendampingankekerasan: '1',
+      kerusakankonstruksi: '0',
+      kriminalitas: '0',
+      pembunuhan: '0',
+      penemuanmayat: '0',
+      penyelamatanorang: '0',
+      pohontumbang: '0',
+      tawuran: '0',
+      terorisme: '0',
+      unjukrasa: '0',
+      ket: '',
+      aksi: '',
+    },
+    {
+      id: 2,
+      no: '1',
+      bidangwilayah: 'Jakarta',
+      jumlahkejadian: '1',
+      banjir: '1',
+      hewanbuasdanberbisa: '1',
+      kebakaran: '1',
+      kecelakaan: '1',
+      pendampingankekerasan: '1',
+      kerusakankonstruksi: '0',
+      kriminalitas: '0',
+      pembunuhan: '0',
+      penemuanmayat: '0',
+      penyelamatanorang: '0',
+      pohontumbang: '0',
+      tawuran: '0',
+      terorisme: '0',
+      unjukrasa: '0',
+      ket: '',
+      aksi: '',
     },
   ];
 
@@ -302,11 +377,42 @@ export function LaporanKejadian() {
                 </div>
               </div>
               <div className="card-body py-4">
+                <div className="row">
+                  <div className="col fs-4 mb-2 fw-semibold text-center">
+                    LAPORAN HASIL KEGIATAN
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col fs-4 mb-2 fw-semibold text-center">
+                    PADA SATPOL PP......................................
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col fs-4 mb-6 fw-semibold text-center">
+                    PERIODE .................... s/d .......................
+                  </div>
+                </div>
                 <DataTable
                   columns={columns}
                   data={data}
                   pagination
                 />
+              </div>
+              <div className="row">
+                <div className="col-8"></div>
+                <div className="col-4 fs-6 mb-2 fw-semibold text-center">
+                  Jakarta, ..............................20...
+                  <div className="col fs-6 mb-15 fw-semibold text-center">
+                    KEPALA SATUAN POLISI PAMONG PRAJA
+                    ...............................................................
+                  </div>
+                  <div className="col fs-6 mb-2 fw-semibold text-center">
+                    NAMA
+                  </div>
+                  <div className="col fs-6 mb-2 fw-semibold text-center">
+                    NIP. ......................
+                  </div>
+                </div>
               </div>
             </div>
           </div>
