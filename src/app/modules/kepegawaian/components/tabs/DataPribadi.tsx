@@ -12,7 +12,6 @@ export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function DataPribadi() {
   const { id, status } = useParams()
-  console.log('id, status', id, status)
 
   const [data, setData] = useState<DetailPegawaiInterface>({})
 
@@ -22,7 +21,6 @@ export function DataPribadi() {
         `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
       )
       setData((prevstate) => ({ ...prevstate, ...response.data.data }))
-      // console.log(response.data.data);
     }
     fetchData()
   }, [setData])
