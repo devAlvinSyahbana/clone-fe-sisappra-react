@@ -3,6 +3,7 @@ import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
+import clsx from 'clsx'
 import {
   DetailPegawaiInterface,
   JumlahKeluargaInterface,
@@ -18,7 +19,6 @@ const HeaderDetailWrapper = () => {
   const [data, setData] = useState<DetailPegawaiInterface>()
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
-  console.log('id, status', id, status)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +42,16 @@ const HeaderDetailWrapper = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metornic' />
+                  {data?.foto !== '' ? (
+                    <div className='symbol-label'>
+                      <img src={data?.foto} alt={data?.nama} className='w-100' />
+                    </div>
+                  ) : (
+                    <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}>
+                      {data?.nama?.charAt(0)}
+                    </div>
+                  )}
+                  {/* <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metornic' /> */}
                   <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
               </div>
@@ -162,7 +171,7 @@ const HeaderDetailWrapper = () => {
                       `nav-link text-active-primary me-6 ` +
                       (location.pathname.includes('DataKepegawaian') && 'active')
                     }
-                    to={`/kepegawaian/DataKepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}
                   >
                     Data Kepegawaian
                   </Link>

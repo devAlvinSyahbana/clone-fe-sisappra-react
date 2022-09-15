@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import {FC} from 'react'
-import {toAbsoluteUrl} from '../../../helpers'
+import {useAuth} from '../../../../app/modules/auth'
 // import {HeaderUserMenu, ThemeModeSwitcher} from '../../../partials'
 import {HeaderUserMenu} from '../../../partials'
 
@@ -9,6 +9,7 @@ const toolbarButtonMarginClass = 'ms-1 ms-lg-3',
   toolbarUserAvatarHeightClass = 'symbol-30px symbol-md-40px'
 
 const Topbar: FC = () => {
+  const {currentUser} = useAuth()
   return (
     <div className='d-flex align-items-stretch flex-shrink-0'>
       {/* begin::Theme mode */}
@@ -32,7 +33,15 @@ const Topbar: FC = () => {
           data-kt-menu-placement='bottom-end'
           data-kt-menu-flip='bottom'
         >
-          <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='metronic' />
+          {currentUser?.foto && currentUser?.foto !== '' ? (
+            <div className='symbol-label'>
+              <img src={currentUser?.foto} alt={currentUser?.email} className='w-100' />
+            </div>
+          ) : (
+            <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}>
+              {currentUser?.nama && currentUser?.nama !== '' ? currentUser?.nama.charAt(0) : '?'}
+            </div>
+          )}
         </div>
         <HeaderUserMenu />
         {/* end::Toggle */}
