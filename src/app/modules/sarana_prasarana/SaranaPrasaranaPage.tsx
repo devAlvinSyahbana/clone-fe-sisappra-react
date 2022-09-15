@@ -40,6 +40,7 @@ const SaranaPrasaranaPage: React.FC = () => {
           }
         />
         
+        
   
         
         <Route index element={<Navigate to='/sarana_prasarana' />} />

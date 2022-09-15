@@ -10,7 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
+export const JABATAN_URL = `${API_URL}/master/jabatan` //http://localhost:3000/sarana-prasarana
 
 export function Jabatan() {
   const [show, setShow] = useState(false);
@@ -38,41 +38,11 @@ export function Jabatan() {
 
   const columns = [
     {
-      name: 'Jenis Sarana & Prasarana',
-      selector: (row: any) => row.jenis_sarana_prasarana,
+      name: 'Jabatan',
+      selector: (row: any) => row.jabatan,
       sortable: true,
-      sortField: 'jenis_sarana_prasarana',
-    },
-    {
-      name: 'Status Sarana & Prasarana',
-      selector: (row: any) => row.status_sarana_prasarana,
-      sortable: true,
-      sortField: 'status_sarana_prasarana',
-    },
-    {
-      name: 'Jumlah',
-      selector: (row: any) => row.jumlah,
-      sortable: true,
-      sortField: 'jumlah',
-    },
-    {
-      name: 'Kondisi',
-      selector: (row: any) => row.kondisi,
-      sortable: true,
-      sortField: 'kondisi',
-    },
-    {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
-      sortable: true,
-      sortField: 'keterangan',
-    },
-    {
-      name: 'Dokumentasi',
-      selector: (row: any) => row.dokumentasi,
-      sortable: true,
-      sortField: 'dokumentasi',
-    },
+      sortField: 'jabatan',
+    },    
     {
       name: 'Aksi',
       sortable: false,
@@ -120,7 +90,7 @@ export function Jabatan() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(SARANA_PRASARANA_URL + "/find");
+    const value = await axios.get(JABATAN_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);

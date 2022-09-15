@@ -15,6 +15,7 @@ import { KorbanMaterial } from './components/KorbanMaterial'
 import { JenisBantuan } from './components/JenisBantuan'
 import { InstansiTerkait } from './components/InstansiTerkait'
 import { Agama } from './components/Agama'
+import { Pangkat } from './components/Pangkat'
 import { TempatPelaksana } from './components/TempatPelaksana'
 import { SKPD } from './components/SKPD'
 import { Pendidikan } from './components/Pendidikan'
@@ -67,6 +68,15 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>SKPD</PageTitle>
               <SKPD />
+            </>
+          }
+        />
+        <Route
+          path='Pangkat'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Pangkat</PageTitle>
+              <Pangkat />
             </>
           }
         />
