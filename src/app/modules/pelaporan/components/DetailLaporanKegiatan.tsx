@@ -5,7 +5,7 @@ import DataTable from 'react-data-table-component';
 import 'react-tabs/style/react-tabs.css';
 import DatePicker from 'react-date-picker';
 
-export function TambahLaporanKegiatan() {
+export function DetailLaporanKegiatan() {
 
   var [value, onChange] = useState(new Date()); /* Date Picker */
 
