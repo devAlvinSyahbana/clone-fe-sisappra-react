@@ -2,6 +2,8 @@ import React from 'react'
 import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 import { LaporanSaranaPrasarana } from './components/LaporanSaranaPrasarana'
+import { UbahLaporanSarana } from './components/UbahLaporanSarana'
+import { LihatLaporanSarana } from './components/LihatLaporanSarana'
 
 
 
@@ -38,10 +40,25 @@ const SaranaPrasaranaPage: React.FC = () => {
               <LaporanSaranaPrasarana />
             </>
           }
+        />     
+        <Route
+          path='UbahLaporanSarana/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={sarana_prasaranaBreadCrumbs}>Ubah Laporan Sarana</PageTitle>
+              <UbahLaporanSarana />
+            </>
+          }
         />
-        
-        
-  
+        <Route
+          path='LihatLaporanSarana/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={sarana_prasaranaBreadCrumbs}>Lihat Laporan Sarana</PageTitle>
+              <LihatLaporanSarana />
+            </>
+          }
+        />
         
         <Route index element={<Navigate to='/sarana_prasarana' />} />
       </Route>

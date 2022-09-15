@@ -127,19 +127,6 @@ export function Eselon() {
     setLoading(false);
   };
 
-  const handleSort = (column: any, sortDirection: any) => {
-    // simulate server sort
-    console.log(column, sortDirection);
-    setLoading(true);
-
-    // instead of setTimeout this is where you would handle your API call.
-    setTimeout(() => {
-      setData(orderBy(data, column.sortField, sortDirection));
-      setLoading(false);
-    }, 100);
-  };
-
-
   return (
     <div className={`card`}>
       {/* begin::Body */}
@@ -221,11 +208,5 @@ export function Eselon() {
     </div>
   )
 }
-function orderBy(data: never[], sortField: any, sortDirection: any): React.SetStateAction<never[]> {
-  throw new Error('Function not implemented.');
-}
 
-function onEdit(record: any) {
-  throw new Error('Function not implemented.');
-}
 

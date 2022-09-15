@@ -3675,12 +3675,7 @@ cjs-module-lexer@^1.0.0:
   resolved "https://registry.npmjs.org/cjs-module-lexer/-/cjs-module-lexer-1.2.2.tgz"
   integrity sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==
 
-classnames@^2.2.6:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
-  integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
-
-classnames@^2.2.6:
+classnames@^2.2.5, classnames@^2.2.6:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
   integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
@@ -5532,6 +5527,11 @@ find-up@^5.0.0:
   dependencies:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
+
+fire-alert@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/fire-alert/-/fire-alert-0.0.4.tgz#70283d9fc278aa1072acac3e05559b0b4467d365"
+  integrity sha512-n/6VKueaTRCt31HVzCWU4qzaki+ovNZhu05HuNzq+kURa4Gb9QP0sHaMlVhUuQr/OkLuUpwAgtR4MGfjbk2RoQ==
 
 flat-cache@^3.0.4:
   version "3.0.4"
@@ -8686,6 +8686,16 @@ react-dev-utils@^12.0.1:
     strip-ansi "^6.0.1"
     text-table "^0.2.0"
 
+react-dom@^16.2.0:
+  version "16.14.0"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
+  integrity sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.19.1"
+
 react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
@@ -8708,6 +8718,13 @@ react-fast-compare@^3.0.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
+
+react-fire-alert@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-fire-alert/-/react-fire-alert-1.0.0.tgz#c7d962ffeeea8efeb794b974c3f41883ed1b3816"
+  integrity sha512-5GaFZO3R9+a1faeeIsM4EiiH02sz6d/tvDf5+QnVNOvcgvH1y4KUuKxZ62oMIgue3fzW7hLoaaRDNmH6shVp9w==
+  dependencies:
+    react-simple-toast "^1.0.10"
 
 react-fit@^1.4.0:
   version "1.4.0"
@@ -8886,6 +8903,15 @@ react-select@^5.4.0:
     prop-types "^15.6.0"
     react-transition-group "^4.3.0"
 
+react-simple-toast@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/react-simple-toast/-/react-simple-toast-1.0.10.tgz#ca66a70ffa86740a9a30a0dc4d1589af15c65a6d"
+  integrity sha512-5/hduBhI/AfnDHPeYjMx0W0D/L0o7Vx8Z4ABk4eVNEMfOWo8fog4UF2Ovpx1cq2NvFGr3a1CHlRU1qBz47sftA==
+  dependencies:
+    classnames "^2.2.5"
+    react "^16.2.0"
+    react-dom "^16.2.0"
+
 react-table@^7.7.0:
   version "7.7.0"
   resolved "https://registry.npmjs.org/react-table/-/react-table-7.7.0.tgz"
@@ -8924,6 +8950,15 @@ react-transition-group@^4.4.2:
     "@babel/runtime" "^7.5.5"
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
+    prop-types "^15.6.2"
+
+react@^16.2.0:
+  version "16.14.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
+  integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
     prop-types "^15.6.2"
 
 react@^18.2.0:
@@ -9239,6 +9274,14 @@ saxes@^5.0.1:
   integrity sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==
   dependencies:
     xmlchars "^2.2.0"
+
+scheduler@^0.19.1:
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"
+  integrity sha512-n/zwRWRYSUj0/3g/otKDRPMh6qv2SYMWNq85IEa8iZyAv8od9zDYpGSnpBEjNgcMNq6Scbu5KfIPxNF72R/2EA==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 scheduler@^0.23.0:
   version "0.23.0"

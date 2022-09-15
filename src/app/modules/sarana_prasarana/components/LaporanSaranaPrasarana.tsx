@@ -73,6 +73,12 @@ export function LaporanSaranaPrasarana() {
       </>
     )
   }
+
+  
+  const mostrarAlerta=()=>{
+    alert("Are you sure");
+  }
+
   const columns = [
     {
       name: 'Jenis Sarana & Prasarana',
@@ -131,12 +137,12 @@ export function LaporanSaranaPrasarana() {
                     title='Aksi'
                   >
                     <Dropdown.Item>
-                      <Link to='#'>Detail</Link>
+                      <Link to={"/sarana_prasarana/LihatLaporanSarana/"+record.id}>Detail</Link>
                     </Dropdown.Item>
                     <Dropdown.Item>
-                      <Link to='#'>Ubah</Link>
+                      <Link to={"/sarana_prasarana/UbahLaporanSarana/"+record.id}>Ubah</Link>
                     </Dropdown.Item>
-                    <Dropdown.Item href='#'>Hapus</Dropdown.Item>
+                    <Dropdown.Item href='#'onClick={()=>mostrarAlerta()}>Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -146,6 +152,7 @@ export function LaporanSaranaPrasarana() {
       },
     },
   ]
+
 
   const fetchUsers = async (page: any) => {
     setLoading(true)
@@ -422,7 +429,7 @@ export function LaporanSaranaPrasarana() {
           </Modal.Header>
           <form onSubmit={formik.handleSubmit}>
             <Modal.Body>
-              <div className='row g-10 mt-2 ms-5 me-5'>
+              <div className='row g-6 mt-2 ms-5 me-5'>
                 <div className='col-md-15'>
                   <div className='form-group'>
                     <label htmlFor='' className='mb-3'>
