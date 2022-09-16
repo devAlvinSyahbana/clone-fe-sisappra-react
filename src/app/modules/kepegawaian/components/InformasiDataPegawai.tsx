@@ -1,6 +1,6 @@
 import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -15,6 +15,8 @@ export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 
 export function InformasiDataPegawai() {
+  const navigate = useNavigate()
+
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
   const [valStatPegawai, setValStatPegawai] = useState({val: ''})
   const [valFilterNama, setFilterNama] = useState({val: ''})
@@ -156,27 +158,27 @@ export function InformasiDataPegawai() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item>
-                      {/* <Link className='text-reset' to='/kepegawaian/DetailInformasiDataPegawai'>
-                        Detail
-                      </Link> */}
-                      <Link
-                        className='text-reset'
-                        to={`/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`}
-                      >
-                        Detail
-                      </Link>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Detail
                     </Dropdown.Item>
-                    <Dropdown.Item>
-                      {/* <Link className='text-reset' to='/kepegawaian/UpdateInformasiDataPegawai'>
-                        Ubah
-                      </Link> */}
-                      <Link
-                        className='text-reset'
-                        to={`/kepegawaian/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`}
-                      >
-                        Ubah
-                      </Link>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Ubah
                     </Dropdown.Item>
                   </DropdownType>
                 </>
