@@ -289,7 +289,7 @@ export function UbahLaporanSarana() {
                           onChange={handleChangeFormik}
                           onBlur={formik.handleBlur}
                           value={
-                            valuesFormik?.jumlah
+                            valuesFormik?.jumlah || valuesFormik?.jumlah === 0
                               ? valuesFormik?.jumlah
                               : valuesFormikExist?.jumlah
                               ? valuesFormikExist?.jumlah
@@ -351,7 +351,7 @@ export function UbahLaporanSarana() {
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.keterangan
+                            valuesFormik?.keterangan || valuesFormik?.keterangan === ''
                               ? valuesFormik?.keterangan
                               : valuesFormikExist?.keterangan
                               ? valuesFormikExist?.keterangan
