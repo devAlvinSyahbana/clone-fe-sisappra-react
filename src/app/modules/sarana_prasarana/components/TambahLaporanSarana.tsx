@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
@@ -94,6 +94,8 @@ export function TambahLaporanSarana() {
       keterangan: '',
     },
     onSubmit: async (values) => {
+      console.log(selectedFile)
+      let formData = new FormData()
       const bodyparam: FormInput = {
         jenis_sarana_prasarana: valuesFormik?.jenis_sarana_prasarana?.value
           ? valuesFormik.jenis_sarana_prasarana.value
@@ -109,11 +111,29 @@ export function TambahLaporanSarana() {
       try {
         const response = await axios.post(`${SARANA_PRASARANA_URL}/create`, bodyparam)
         if (response) {
+          if (selectedFile) {
+            formData.append('file_dokumentasi', selectedFile)
+            const responseFile = await axios.post(
+              `${SARANA_PRASARANA_URL}/upload-file/${response.data.data.return_id}`,
+              formData
+            )
+            if (responseFile) {
+              console.log('File success uploaded!')
+              Swal.fire({
+                icon: 'success',
+                title: 'Data berhasil disimpan',
+                showConfirmButton: false,
+                timer: 1500,
+              })
+              navigate('/sarana_prasarana/LaporanSaranaPrasarana', {replace: true})
+            }
+            return
+          }
           Swal.fire({
             icon: 'success',
             title: 'Data berhasil disimpan',
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           })
           navigate('/sarana_prasarana/LaporanSaranaPrasarana', {replace: true})
         }
@@ -122,12 +142,14 @@ export function TambahLaporanSarana() {
           icon: 'error',
           title: 'Data gagal disimpan, harap mencoba lagi',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         })
         console.error(error)
       }
     },
   })
+
+  const [selectedFile, setSelectedFile] = useState(null)
 
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
@@ -218,7 +240,12 @@ export function TambahLaporanSarana() {
                           type='file'
                           className='form-control form-control-solid'
                           id='firstimg'
+                          onChange={(event: {target: any}) =>
+                            setSelectedFile(event.target.files[0])
+                          }
+                          accept="image/jpeg,image/png,application/pdf"
                         />
+                        <small className='mt-4'>*File yang dapat di upload berformat (.pdf, .jpeg, .png)</small>
                       </div>
                     </div>
                     <div className='col-12 mb-6'>
