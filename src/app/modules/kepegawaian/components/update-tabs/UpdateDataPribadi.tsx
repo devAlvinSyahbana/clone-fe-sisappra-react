@@ -35,10 +35,12 @@ export function UpdateDataPribadi() {
   const [inputValAgama, setDataAgama] = useState({ label: '', value: null })
   const [inputValJenis, setDataJenis] = useState({ label: '', value: null })
   const [inputValStatus, setDataStatus] = useState({ label: '', value: null })
+
   const [inputValProvKtp, setDataProvKtp] = useState({ label: '', value: null })
   const [inputValKotKtp, setDataKotKtp] = useState({ label: '', value: null })
   const [inputValKecKtp, setDataKecKtp] = useState({ label: '', value: null })
   const [inputValKelKtp, setDataKelKtp] = useState({ label: '', value: null })
+
   const [inputValProvDom, setDataProvDom] = useState({ label: '', value: null })
   const [inputValKotDom, setDataKotDom] = useState({ label: '', value: null })
   const [inputValKecDom, setDataKecDom] = useState({ label: '', value: null })
@@ -316,7 +318,7 @@ export function UpdateDataPribadi() {
                   </div>
                   <div className="col-xxl-6 col-md-6 col-lg-6 col-sm-12">
                     <label htmlFor="" className="mb-3">Umur</label>
-                    <Field type="number" className="form-control form-control form-control-solid mb-4" name="tags" placeholder="Umur" />
+                    <Field type="number" className="form-control form-control form-control-solid mb-4" name="umur" placeholder="Umur" />
                   </div>
                 </div>
               </div>

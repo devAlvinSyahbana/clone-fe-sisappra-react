@@ -17,6 +17,7 @@
     "bootstrap-icons": "^1.5.0",
     "chart.js": "3.7.1",
     "clsx": "1.1.1",
+    "fire-alert": "^0.0.4",
     "formik": "2.2.9",
     "js-file-download": "^0.4.12",
     "leaflet": "^1.8.0",
@@ -30,7 +31,6 @@
     "react": "^18.2.0",
     "react-apexcharts": "1.4.0",
     "react-bootstrap": "^2.5.0",
-    "react-bootstrap-sweetalert": "^5.2.0",
     "react-copy-to-clipboard": "5.1.0",
     "react-data-table-component": "^7.5.2",
     "react-date-picker": "^8.4.0",
@@ -41,6 +41,7 @@
     "react-intl": "5.25.0",
     "react-leaflet": "^4.0.2",
     "react-multi-date-picker": "^3.3.1",
+    "react-multiple-image-uploader": "^1.0.3",
     "react-query": "3.38.0",
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.1",
@@ -51,6 +52,7 @@
     "sass": "1.50.1",
     "socicon": "3.0.5",
     "styled-components": "^5.3.5",
+    "sweetalert2": "^11.4.33",
     "yup": "0.32.11"
   },
   "devDependencies": {

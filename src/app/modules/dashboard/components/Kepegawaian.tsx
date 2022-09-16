@@ -5,12 +5,12 @@ import PieC from '../chart/piechart/piechart'
 import BarC from '../chart/barchart/barchart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}/dashboard/kepegawaian/sum-status-kepegawaian`
-export const SUM_PENDIDIKAN_TERAKHIR_URL = `${API_URL}/dashboard/kepegawaian/sum-pendidikan-terakhir`
-export const SUM_GOLONGAN_URL = `${API_URL}/dashboard/kepegawaian/sum-golongan`
-export const SUM_ESELON_URL = `${API_URL}/dashboard/kepegawaian/sum-eselon`
-export const SUM_USIA_URL = `${API_URL}/dashboard/kepegawaian/sum-usia`
-export const SUM_STATUS_PNS_URL = `${API_URL}/dashboard/kepegawaian/sum-status-ppns`
+export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}/dashboard/sum-status-kepegawaian`
+export const SUM_PENDIDIKAN_TERAKHIR_URL = `${API_URL}/dashboard/sum-pendidikan-terakhir`
+export const SUM_GOLONGAN_URL = `${API_URL}/dashboard/sum-golongan`
+export const SUM_ESELON_URL = `${API_URL}/dashboard/sum-eselon`
+export const SUM_USIA_URL = `${API_URL}/dashboard/sum-usia`
+export const SUM_STATUS_PNS_URL = `${API_URL}/dashboard/sum-status-ppns`
 
 export const Kepegawaian: FC = () => {
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
@@ -313,7 +313,7 @@ export const Kepegawaian: FC = () => {
             <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title text-white'>
+                  <h3 className='card-title text-center text-white'>
                     Jumlah Personil Satpol PP Berdasarkan Golongan
                   </h3>
                 </div>

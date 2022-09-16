@@ -38,11 +38,21 @@ export function Jabatan() {
 
   const columns = [
     {
+      name: 'No',
+      selector: (row: any) => row.id,
+      sortable: true,
+      sortField: 'no',
+    },
+    {
+    },    
+    {
       name: 'Jabatan',
       selector: (row: any) => row.jabatan,
       sortable: true,
       sortField: 'jabatan',
     },    
+    {
+    },   
     {
       name: 'Aksi',
       sortable: false,

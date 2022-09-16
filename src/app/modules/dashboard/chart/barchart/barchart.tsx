@@ -45,7 +45,6 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
     // Create series
     var series1 = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        name: 'Series',
         xAxis: xAxis,
         yAxis: yAxis,
         valueYField: valueField,

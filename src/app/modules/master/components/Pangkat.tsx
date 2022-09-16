@@ -37,10 +37,20 @@ export function Pangkat() {
 
   const columns = [
     {
+      name: 'No',
+      selector: (row: any) => row.id,
+      sortable: true,
+      sortField: 'no',
+    },
+    {
+    },
+    {
       name: 'Pangkat',
       selector: (row: any) => row.pangkat,
       sortable: true,
       sortField: 'pangkat',
+    },
+    {
     },
     {
       name: 'Aksi',
