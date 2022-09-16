@@ -33,8 +33,7 @@ export function HirarkiPegawai() {
   const { id, status } = useParams()
   console.log('id, status', id, status)
   const [lgShow, setLgShow] = useState(false);
-  const [inputValAtasan, setDataAtasan] = useState({ label: '', value: null })
-  const [inputValBawahan, setDataBawahan] = useState({ label: '', value: null })
+  const [inputValAtasan, setDataPegawai] = useState({ label: '', value: null })
 
   const initialValues = {
     friends: [
@@ -45,35 +44,19 @@ export function HirarkiPegawai() {
     ],
   };
 
-  // Autocomplete Atasan
-  const filterAtasan = async (inputValue: string) => {
+  // Autocomplete Pegawai
+  const filterPegawai = async (inputValue: string) => {
     const response = await axios.get(`${ATASAN_URL}/auto-search-pegawai?status=${inputValue}&nomor=${inputValue}`)
     const json = await response.data.data
     return json.map((i: any) => ({ label: i.no_pegawai + " - " + i.nama, value: i.id }))
   }
-  const loadOptionsAtasan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+  const loadOptionsPegawai = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
     setTimeout(async () => {
-      callback(await filterAtasan(inputValue))
+      callback(await filterPegawai(inputValue))
     }, 1000)
   }
-  const handleInputAtasan = (newValue: any) => {
-    setDataAtasan((prevstate: any) => ({ ...prevstate, ...newValue }))
-  }
-
-
-
-  const filterBawahan = async (inputValue: string) => {
-    // const response = await axios.get(`${ATASAN_URL}/filter/${inputValue}`)
-    // const json = await response.data.data
-    // return json.map((i: any) => ({ label: i.agama, value: i.id }))
-  }
-  const loadOptionsBawahan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
-    setTimeout(async () => {
-      // callback(await filterAtasan(inputValue))
-    }, 1000)
-  }
-  const handleInputBawahan = (newValue: any) => {
-    setDataBawahan((prevstate: any) => ({ ...prevstate, ...newValue }))
+  const handleInputPegawai = (newValue: any) => {
+    setDataPegawai((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   return (
@@ -193,9 +176,9 @@ export function HirarkiPegawai() {
                                         <label className="fw-semibold fs-6 mb-2">NRK/NPTT/NPJLP</label>
                                         <AsyncSelect
                                           cacheOptions
-                                          loadOptions={loadOptionsAtasan}
+                                          loadOptions={loadOptionsPegawai}
                                           defaultOptions
-                                          onChange={handleInputAtasan}
+                                          onChange={handleInputPegawai}
                                           placeholder={'Masukkan NRK/NPTT/NPJLP'}
                                         />
                                       </div>
@@ -209,12 +192,19 @@ export function HirarkiPegawai() {
                                           <div className="row" key={index}>
                                             <div className="col-md-5">
                                               <label className="form-label">NRK:</label>
-                                              <Field
+                                              <AsyncSelect
+                                                cacheOptions
+                                                loadOptions={loadOptionsPegawai}
+                                                defaultOptions
+                                                onChange={handleInputPegawai}
+                                                placeholder={'Masukkan NRK/NPTT/NPJLP'}
+                                              />
+                                              {/* <Field
                                                 name={`friends.${index}.nama`}
                                                 className="form-control mb-2 mb-md-0"
                                                 placeholder="Masukkan NRK/NPTT/NPJLP"
                                                 type="text"
-                                              />
+                                              /> */}
                                               <ErrorMessage
                                                 name={`friends.${index}.nama`}
                                                 component="div"
@@ -223,13 +213,20 @@ export function HirarkiPegawai() {
                                             </div>
                                             <div className="col-md-4">
                                               <label className="form-label">Nama:</label>
-                                              <Field
+                                              <AsyncSelect
+                                                cacheOptions
+                                                loadOptions={loadOptionsPegawai}
+                                                defaultOptions
+                                                onChange={handleInputPegawai}
+                                                placeholder={'Masukkan Nama'}
+                                              />
+                                              {/* <Field
                                                 name={`friends.${index}.nrk`}
                                                 className="form-control mb-2 mb-md-0"
                                                 placeholder="Masukkan Nama"
                                                 type="text"
                                                 readonly
-                                              />
+                                              /> */}
                                               <ErrorMessage
                                                 name={`friends.${index}.nama`}
                                                 component="div"
