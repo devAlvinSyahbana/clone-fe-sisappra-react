@@ -26,6 +26,9 @@ export function HirarkiPegawai() {
   const isLoading = useQueryResponseLoading()
   const data = useMemo(() => users, [users])
   const columns = useMemo(() => usersColumns, [])
+  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
+  const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
+
   const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
     columns,
     data,
@@ -46,7 +49,7 @@ export function HirarkiPegawai() {
 
   // Autocomplete Pegawai
   const filterPegawai = async (inputValue: string) => {
-    const response = await axios.get(`${ATASAN_URL}/auto-search-pegawai?status=${inputValue}&nomor=${inputValue}`)
+    const response = await axios.get(`${ATASAN_URL}/auto-search-pegawai?status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}&nomor=${inputValue}`)
     const json = await response.data.data
     return json.map((i: any) => ({ label: i.no_pegawai + " - " + i.nama, value: i.id }))
   }
@@ -57,6 +60,13 @@ export function HirarkiPegawai() {
   }
   const handleInputPegawai = (newValue: any) => {
     setDataPegawai((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+
+  const handleChangeStatPegawai = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValStatPegawai({ val: event.target.value })
   }
 
   return (
@@ -172,6 +182,23 @@ export function HirarkiPegawai() {
                                 <div className="modal-content">
                                   <div className="modal-body scroll-y mx-5 mx-xl-15 my-7">
                                     <div className="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                                      <div className='form-group'>
+                                        <label htmlFor='' className='fw-semibold fs-6 mb-2'>
+                                          Status Kepegawaian
+                                        </label>
+                                        <select
+                                          className='form-select form-select-solid mb-5'
+                                          aria-label='Select example'
+                                          value={valStatPegawai.val}
+                                          onChange={handleChangeStatPegawai}
+                                          name='val'
+                                        >
+                                          <option value=''>Pilih</option>
+                                          {arrStatPegawai.map((val: string) => {
+                                            return <option value={val}>{val}</option>
+                                          })}
+                                        </select>
+                                      </div>
                                       <div className="fv-row mb-7">
                                         <label className="fw-semibold fs-6 mb-2">NRK/NPTT/NPJLP</label>
                                         <AsyncSelect
@@ -179,10 +206,13 @@ export function HirarkiPegawai() {
                                           loadOptions={loadOptionsPegawai}
                                           defaultOptions
                                           onChange={handleInputPegawai}
-                                          placeholder={'Masukkan NRK/NPTT/NPJLP'}
+                                          placeholder={'Cari NRK/NPTT/NPJLP'}
                                         />
                                       </div>
                                     </div>
+
+                                    <div className='separator border-3 my-10'></div>
+
                                     <label className="fw-semibold fs-6 mb-7">Tambah bawahan</label>
                                     {values.friends.length > 0 &&
                                       values.friends.map((friend, index) => (
@@ -190,42 +220,20 @@ export function HirarkiPegawai() {
 
                                         <div className='form-group mb-5'>
                                           <div className="row" key={index}>
-                                            <div className="col-md-5">
+                                            <div className="col-md-9">
                                               <label className="form-label">NRK:</label>
                                               <AsyncSelect
                                                 cacheOptions
                                                 loadOptions={loadOptionsPegawai}
                                                 defaultOptions
                                                 onChange={handleInputPegawai}
-                                                placeholder={'Masukkan NRK/NPTT/NPJLP'}
+                                                placeholder={'Cari NRK/NPTT/NPJLP'}
                                               />
                                               {/* <Field
                                                 name={`friends.${index}.nama`}
                                                 className="form-control mb-2 mb-md-0"
                                                 placeholder="Masukkan NRK/NPTT/NPJLP"
                                                 type="text"
-                                              /> */}
-                                              <ErrorMessage
-                                                name={`friends.${index}.nama`}
-                                                component="div"
-                                                className="field-error"
-                                              />
-                                            </div>
-                                            <div className="col-md-4">
-                                              <label className="form-label">Nama:</label>
-                                              <AsyncSelect
-                                                cacheOptions
-                                                loadOptions={loadOptionsPegawai}
-                                                defaultOptions
-                                                onChange={handleInputPegawai}
-                                                placeholder={'Masukkan Nama'}
-                                              />
-                                              {/* <Field
-                                                name={`friends.${index}.nrk`}
-                                                className="form-control mb-2 mb-md-0"
-                                                placeholder="Masukkan Nama"
-                                                type="text"
-                                                readonly
                                               /> */}
                                               <ErrorMessage
                                                 name={`friends.${index}.nama`}
