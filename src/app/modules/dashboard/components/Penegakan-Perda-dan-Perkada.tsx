@@ -59,7 +59,9 @@ const PenegakanPerdadanPerkada: FC = () => {
             <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title text-white'>Data Jumlah Kasus Per Wilayah</h3>
+                  <h3 className='card-title text-white'>
+                    Data Jumlah Per Kasus Pelanggaran Perda / Perkada
+                  </h3>
                 </div>
                 <div className='card-body'>
                   <div className='row'>
@@ -144,15 +146,27 @@ const PenegakanPerdadanPerkada: FC = () => {
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC
+                        chartID={dataJS}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '5') ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC
+                        chartID={dataJS}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda'
+                      />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '6') ? (
                     <>
-                      <BarC chartID={dataJS} valueField='count' categoryField='jenis_pelanggaran_perda' />
+                      <BarC
+                        chartID={dataJS}
+                        valueField='count'
+                        categoryField='jenis_pelanggaran_perda'
+                      />
                     </>
                   ) : null}
                 </div>
