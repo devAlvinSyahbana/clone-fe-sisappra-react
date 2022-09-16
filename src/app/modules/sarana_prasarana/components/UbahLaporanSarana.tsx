@@ -351,7 +351,7 @@ export function UbahLaporanSarana() {
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.keterangan
+                            valuesFormik?.keterangan || valuesFormik?.keterangan === ''
                               ? valuesFormik?.keterangan
                               : valuesFormikExist?.keterangan
                               ? valuesFormikExist?.keterangan
