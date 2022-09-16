@@ -289,7 +289,7 @@ export function UbahLaporanSarana() {
                           onChange={handleChangeFormik}
                           onBlur={formik.handleBlur}
                           value={
-                            valuesFormik?.jumlah
+                            valuesFormik?.jumlah || valuesFormik?.jumlah === 0
                               ? valuesFormik?.jumlah
                               : valuesFormikExist?.jumlah
                               ? valuesFormikExist?.jumlah
