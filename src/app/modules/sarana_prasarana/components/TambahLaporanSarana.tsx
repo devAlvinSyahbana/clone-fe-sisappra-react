@@ -120,7 +120,7 @@ export function TambahLaporanSarana() {
       } catch (error) {
         Swal.fire({
           icon: 'error',
-          title: 'Data gagal disimpan, harap coba kembali',
+          title: 'Data gagal disimpan, harap mencoba lagi',
           showConfirmButton: false,
           timer: 1500
         })
