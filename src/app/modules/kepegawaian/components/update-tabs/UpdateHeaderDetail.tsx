@@ -1,11 +1,14 @@
-import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
-import { DetailPegawaiInterface, JumlahKeluargaInterface, PendidikanInterface } from '../KepegawaianInterface'
-import { Kepegawaian } from '../../../dashboard/components/Kepegawaian'
+import { KTSVG } from '../../../../../_metronic/helpers'
+import { Link } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
+import axios from 'axios'
 import clsx from 'clsx'
+import {
+  DetailPegawaiInterface,
+  JumlahKeluargaInterface,
+  PendidikanInterface,
+} from '../KepegawaianInterface'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -16,35 +19,11 @@ const UpdateHeaderDetail = () => {
   const [data, setData] = useState<DetailPegawaiInterface>()
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
-  console.log('id, status', id, status)
-
-  // useEffect(() => {
-  //   async function fetchDT(page: number) {
-  //     const response = await axios.get(
-  //       `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
-  //     )
-  //     // const keluarga = await axios.get(
-  //     //   `${KEPEGAWAIAN_URL}/count-keluarga/${id}/${status}`
-  //     // )
-  //     // const pendidikan = await axios.get(
-  //     //   `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
-  //     // )
-  //     setData(response.data.data)
-  //     // setJkeluarga(keluarga.data.data)
-  //     // setPendidikan(pendidikan.data.data)
-  //     console.log(response.data.data);
-  //   }
-  //   // fetchDT(1)
-  // }, [data, jkeluarga, pendidikan])
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
-      )
-      const keluarga = await axios.get(
-        `${KEPEGAWAIAN_URL}/count-keluarga/${id}/${status}`
-      )
+      const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
+      const keluarga = await axios.get(`${KEPEGAWAIAN_URL}/count-keluarga/${id}/${status}`)
       const pendidikan = await axios.get(
         `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
       )
@@ -53,7 +32,7 @@ const UpdateHeaderDetail = () => {
       setData(response.data.data)
     }
     fetchData()
-  }, [])
+  }, [id, status])
 
   return (
     <>
@@ -154,55 +133,56 @@ const UpdateHeaderDetail = () => {
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className='d-flex overflow-auto h-55px'>
-            <ul className='nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder flex-nowrap'>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('UpdateDataPribadi') && 'active')
-                  }
-                  to={`/kepegawaian/UpdateDataPribadi/${id}/${status}`}
-                >
-                  Data Pribadi
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('UpdateDataKeluarga') && 'active')
-                  }
-                  to={`/kepegawaian/UpdateDataKeluarga/${id}/${status}`}
-                >
-                  Data Keluarga
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('UpdatePendidikan') && 'active')
-                  }
-                  to={`/kepegawaian/UpdatePendidikan/${id}/${status}`}
-                >
-                  Pendidikan
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link
-                  className={
-                    `nav-link text-active-primary me-6 ` +
-                    (location.pathname.includes('UpdateDataKepegawaian') && 'active')
-                  }
-                  to={`/kepegawaian/UpdateDataKepegawaian/${id}/${status}`}
-                >
-                  Data Kepegawaian
-                </Link>
-              </li>
-            </ul>
+
+            <div className='d-flex overflow-auto h-55px'>
+              <ul className='nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder flex-nowrap'>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('UpdateDataPribadi') && 'active')
+                    }
+                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${id}/${status}`}
+                  >
+                    Data Pribadi
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('UpdateDataKeluarga') && 'active')
+                    }
+                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataKeluarga/${id}/${status}`}
+                  >
+                    Data Keluarga
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('UpdatePendidikan') && 'active')
+                    }
+                    to={`/kepegawaian/InformasiDataPegawai/UpdatePendidikan/${id}/${status}`}
+                  >
+                    Pendidikan
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('UpdateDataKepegawaian') && 'active')
+                    }
+                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataKepegawaian/${id}/${status}`}
+                  >
+                    Data Kepegawaian
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
