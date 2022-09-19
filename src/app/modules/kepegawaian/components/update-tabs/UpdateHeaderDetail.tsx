@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { DetailPegawaiInterface, JumlahKeluargaInterface, PendidikanInterface } from '../KepegawaianInterface'
 import { Kepegawaian } from '../../../dashboard/components/Kepegawaian'
+import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -41,7 +42,7 @@ const UpdateHeaderDetail = () => {
       const response = await axios.get(
         `${KEPEGAWAIAN_URL}/findone/${id}/${status}`
       )
-          const keluarga = await axios.get(
+      const keluarga = await axios.get(
         `${KEPEGAWAIAN_URL}/count-keluarga/${id}/${status}`
       )
       const pendidikan = await axios.get(
@@ -62,55 +63,66 @@ const UpdateHeaderDetail = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metornic' />
+                  {data?.foto !== '' ? (
+                    <div className='symbol-label'>
+                      <img src={data?.foto} alt={data?.nama} className='w-100' />
+                    </div>
+                  ) : (
+                    <div
+                      className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}
+                    >
+                      {data?.nama?.charAt(0)}
+                    </div>
+                  )}
+                  {/* <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metornic' /> */}
                   <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
               </div>
 
               <div className='flex-grow-1'>
-                <div className='d-flex justify-content-between align-items-start flex-wrap mb-2'>
-                  <div className='d-flex flex-column'>
-                    <div className='d-flex align-items-center mb-2'>
-                      <a href='/#' className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
-                        {data?.nama !== "" ? data?.nama : "-"}
-                      </a>
+                <div className='mb-2'>
+                  <div className='d-flex align-items-center mb-2'>
+                    <div className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
+                      {data?.nama !== '' ? data?.nama : '-'}
                     </div>
-
-                    <div className='d-flex flex-wrap fw-bold fs-6 mb-4 pe-2'>
-                      <a
-                        href='/#'
-                        className='d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2'
-                      >
+                  </div>
+                  <div className='row fw-bold fs-6 mb-4 pe-2'>
+                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
+                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <KTSVG
                           path='/media/icons/duotune/communication/com006.svg'
                           className='svg-icon-4 me-1'
                         />
-                        {data?.kepegawaian_status_pegawai !== "" ? data?.kepegawaian_status_pegawai : "-"}
-                      </a>
-                      <a
-                        href='/#'
-                        className='d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2'
-                      >
-                        <i className='fas fa-phone'></i>
-                        {data?.no_hp !== "" ? data?.no_hp : "-"}
-                      </a>
-                      <a
-                        href='/#'
-                        className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'
-                      >
+                        {data?.kepegawaian_status_pegawai !== ''
+                          ? data?.kepegawaian_status_pegawai
+                          : '-'}
+                      </div>
+                    </div>
+                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
+                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                        <KTSVG
+                          path='/media/icons/duotune/communication/com005.svg'
+                          className='svg-icon-4 me-1'
+                        />
+                        {data?.no_hp !== '' ? data?.no_hp : '-'}
+                      </div>
+                    </div>
+                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
+                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <KTSVG
                           path='/media/icons/duotune/communication/com011.svg'
                           className='svg-icon-4 me-1'
                         />
-
-                      </a>
-                      <a
-                        href='/#'
-                        className='d-flex align-items-center text-gray-400 text-hover-primary me-5 ms-5 mb-2'
-                      >
-                        <i className='fa-solid fa-address-card me-1'></i
-                        >{data?.kepegawaian_pangkat !== "" ? data?.kepegawaian_pangkat : "-"}
-                      </a>
+                        -
+                      </div>
+                    </div>
+                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
+                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
+                        <i className='fa-solid fa-address-card me-1'></i>
+                        {data?.kepegawaian_pangkat_name !== ''
+                          ? data?.kepegawaian_pangkat_name
+                          : '-'}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -120,7 +132,9 @@ const UpdateHeaderDetail = () => {
                     <div className='d-flex flex-wrap'>
                       <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
-                          <div className='fs-2 fw-bolder'>{jkeluarga?.total !== 0 ? jkeluarga?.total : "-"}</div>
+                          <div className='fs-2 fw-bolder'>
+                            {jkeluarga?.total !== 0 ? jkeluarga?.total : '-'}
+                          </div>
                         </div>
 
                         <div className='fw-bold fs-6 text-gray-400'>Jumlah Anggota Keluarga</div>
@@ -128,7 +142,9 @@ const UpdateHeaderDetail = () => {
 
                       <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
-                          <div className='fs-2 fw-bolder'>{pendidikan?.jenis_pendidikan ? pendidikan?.jenis_pendidikan : "-"}</div>
+                          <div className='fs-2 fw-bolder'>
+                            {pendidikan?.jenis_pendidikan ? pendidikan?.jenis_pendidikan : '-'}
+                          </div>
                         </div>
 
                         <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
