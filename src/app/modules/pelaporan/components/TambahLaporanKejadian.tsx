@@ -4,6 +4,14 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import DatePicker from 'react-date-picker';
 import { RMIUploader } from "react-multiple-image-uploader";
+import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik';
+import AsyncSelect from 'react-select/async';
+import { SelectOptionAutoCom } from '../../kepegawaian/components/KepegawaianInterface';
+import axios from 'axios';
+
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KOTA_URL = `${API_URL}/master/kota`
 
 export function TambahLaporanKejadian() {
   const [valJenisKejadian, setValJenisKejadian] = useState({ val: '' })
@@ -105,7 +113,28 @@ export function TambahLaporanKejadian() {
   }
   // End :: JK "Unjuk Rasa"
 
+  const [inputValAtasan, setDataAtasan] = useState({ label: '', value: null })
+  const filterAtasan = async (inputValue: string) => {
+    const response = await axios.get(KOTA_URL + "/find");
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.kota, value: i.kota }))
+  }
 
+  const loadOptionsAtasan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterAtasan(inputValue))
+    }, 1000)
+  }
+  const handleInputAtasan = (newValue: any) => {
+    setDataAtasan((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+  const initialValues = {
+    friends: [
+      {
+        Jrnis_bantuan: '',
+      },
+    ],
+  };
 
   var [value, onChange] = useState(new Date()); /* Date Picker */
   const initialState = { alt: "", src: "" };
@@ -499,6 +528,84 @@ export function TambahLaporanKejadian() {
                             <label className="col-form-label fw-semibold fs-6">Instansi Terkait</label>
                           </div>
                         </div>
+                        {/* <Formik
+                          initialValues={initialValues}
+                          onSubmit={async (values) => {
+                            await new Promise((r) => setTimeout(r, 500));
+                            alert(JSON.stringify(values, null, 2));
+                          }}
+                        >
+                          {({ values }) => (
+
+                            <FieldArray name="friends">
+                              {({ insert, remove, push }) => (
+                                <div>
+                                  <div className="form-group bg-info">
+                                    <div className="modal-body scroll-y mx-5 mx-xl-15 my-7 bg-info">
+                                      {values.friends.length > 0 &&
+                                        values.friends.map((friend, index) => (
+
+
+
+                                          <div className="row bg-danger" key={index}>
+                                            <div className="col-md-5 bg-warning">
+                                              <AsyncSelect
+                                                cacheOptions
+                                                loadOptions={loadOptionsAtasan}
+                                                defaultOptions
+                                                onChange={handleInputAtasan}
+                                                placeholder={'Masukkan NRK/NPTT/NPJLP'}
+                                              />
+                                              <ErrorMessage
+                                                name={`friends.${index}.nama`}
+                                                component="div"
+                                                className="field-error"
+                                              />
+                                            </div>
+                                            <div className="col-md-4 bg-info">
+                                              <Field
+                                                name={`friends.${index}.nrk`}
+                                                className="form-control mb-2 mb-md-0"
+                                                placeholder="Masukkan Nama"
+                                                type="text"
+                                                readonly
+                                              />
+                                              <ErrorMessage
+                                                name={`friends.${index}.nama`}
+                                                component="div"
+                                                className="field-error"
+                                              />
+                                            </div>
+                                            <div className="col-md-3">
+                                              <button
+                                                type="button"
+                                                className="btn btn-sm btn-light-danger mt-3 mb-md-8"
+                                                onClick={() => remove(index)}
+                                              >
+                                                <i className="la la-trash-o" />
+                                                Delete
+                                              </button>
+                                            </div>
+                                          </div>
+
+                                        ))}
+                                      <div className="form-group mt-5">
+                                        <button
+                                          type="button"
+                                          className="btn btn-sm btn-light-primary"
+                                          onClick={() => push({ name: '', email: '' })}
+                                        >
+                                          <i className="la la-plus" />
+                                          Tambah
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </FieldArray>
+                          )}
+                        </Formik> */}
                         <div id="kt_docs_repeater_nested">
                           <div className="form-group">
                             <div data-repeater-list="kt_docs_repeater_nested_outer">
@@ -661,25 +768,26 @@ export function TambahLaporanKejadian() {
                           </div>
                         </div>
                         <div className="row mb-10 justify-content-center">
-                          <div className="col-md-3">
+                          <label htmlFor="firstimg">
+                            {/* <MultiFileUploadComponent /> */}
+                          </label>
+                          <input className="form-control" type="file"
+                            id="formFileMultiple" multiple></input>
+                          {/* <div className="col-md-3">
                             <label htmlFor="firstimg"></label>
                             <div className="image-input image-input-empty image-input-outline" id="kt_image_5">
                               <img className="preview image-input-wrapper" src={src} alt={alt} />
                               <input accept="image/*" type="file" onChange={fileHandler} />
                             </div>
-                          </div>
-                          <div className="col-md-3">
+                          </div> */}
+                          {/* <div className="col-md-3">
                             <label htmlFor="firstimg"></label>
                             <input type="file" name="" id="firstimg"></input>
                           </div>
                           <div className="col-md-3">
                             <label htmlFor="firstimg"></label>
                             <input type="file" name="" id="firstimg"></input>
-                          </div>
-                          <div className="col-md-3">
-                            <label htmlFor="firstimg"></label>
-                            <input type="file" name="" id="firstimg"></input>
-                          </div>
+                          </div> */}
                         </div>
                       </TabPanel>
                     </div>
