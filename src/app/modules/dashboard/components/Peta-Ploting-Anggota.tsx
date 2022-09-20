@@ -101,38 +101,33 @@ function PetaPlotingAnggota() {
               </div>
             </div>
             <div className='row mt-5'>
-              <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
-                <div className='card card-bordered'>
-                  <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-                    />
+              <div className='d-flex col-md-12 col-lg-12 col-sm-12 mb-4'>
+                <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                  />
 
-                    {filterTempat.map((petaplotinganggota) => (
-                      <Marker
-                        key={petaplotinganggota.id}
+                  {filterTempat.map((petaplotinganggota) => (
+                    <Marker
+                      key={petaplotinganggota.id}
+                      position={[petaplotinganggota.gps.latitude, petaplotinganggota.gps.longitude]}
+                    >
+                      <Popup
                         position={[
                           petaplotinganggota.gps.latitude,
                           petaplotinganggota.gps.longitude,
                         ]}
                       >
-                        <Popup
-                          position={[
-                            petaplotinganggota.gps.latitude,
-                            petaplotinganggota.gps.longitude,
-                          ]}
-                        >
-                          <div>
-                            <h2>{'Nama : ' + petaplotinganggota.name}</h2>
-                            <p>{'Status : ' + petaplotinganggota.status}</p>
-                            <p>{'Number of Charging Area : ' + petaplotinganggota.stallCount}</p>
-                          </div>
-                        </Popup>
-                      </Marker>
-                    ))}
-                  </MapContainer>
-                </div>
+                        <div>
+                          <h2>{'Nama : ' + petaplotinganggota.name}</h2>
+                          <p>{'Status : ' + petaplotinganggota.status}</p>
+                          <p>{'Number of Charging Area : ' + petaplotinganggota.stallCount}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+                </MapContainer>
               </div>
             </div>
           </div>

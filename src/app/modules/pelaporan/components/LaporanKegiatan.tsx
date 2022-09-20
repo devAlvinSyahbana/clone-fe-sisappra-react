@@ -395,34 +395,44 @@ export function LaporanKegiatan() {
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="col-md-12 col-sm-lg-12 col-sm-12">
-                            <div className="d-flex">
-                              <Button type="submit"
-                                className='btn btn-primary fw-semibold me-auto px-6'
-                                data-kt-menu-dismiss="true" data-kt-user-table-filter="filter"
-                                onClick={() => setOpen(!open)}
-                                aria-controls='example-collapse-text'
-                                aria-expanded={open}
-                              ><i className="fa fa-search"></i>
-                                Cari
-                              </Button>
-                            </div>
-                            <Link to="/pelaporan/TambahLaporanKegiatan">
-                              <button className="btn btn-sm btn-primary me-1" data-bs-toggle="modal"><i
-                                className="fa-solid fa-plus"></i>
-                                Tambah
-                              </button>
-                            </Link>
-                            <a href="#" className="btn btn-sm btn-danger me-1" data-bs-toggle="modal"><i
-                              className="fa-solid fa-trash"></i> Hapus</a>
-                            <div className="my-1 me-0">
-                              <select className="form-select form-select-sm form-select-solid w-180px"
-                                data-control="select2" data-placeholder="Select Hours" data-hide-search="true">
-                                <option value="1">Unduh</option>
-                                <option value="2">Excell</option>
-                                <option value="3">Pdf</option>
-                              </select>
+                            <div className='row g-8'>
+                              <div className='col-md-6 col-lg-6 col-sm-12'>
+                                <Button type="submit"
+                                  className='btn btn-sm btn-primary fw-semibold me-auto px-6'
+                                  data-kt-menu-dismiss="true" data-kt-user-table-filter="filter"
+                                  onClick={() => setOpen(!open)}
+                                  aria-controls='example-collapse-text'
+                                  aria-expanded={open}
+                                ><i className="fa fa-search"></i>
+                                  Cari
+                                </Button>
+                              </div>
+                              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                <Link to="/pelaporan/TambahLaporanKegiatan">
+                                  <Button className="btn btn-sm btn-primary me-1" data-bs-toggle="modal"><i
+                                    className="fa-solid fa-plus"></i>
+                                    Tambah
+                                  </Button>
+                                </Link>
+                                <Link to="/pelaporan/TambahLaporanKegiatan">
+                                  <Button className="btn btn-sm btn-danger me-1" data-bs-toggle="modal"><i
+                                    className="fa-solid fa-trash"></i>
+                                    Hapus
+                                  </Button>
+                                </Link>
+                                <div className='justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                      Unduh
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                      <Dropdown.Item>Excel</Dropdown.Item>
+                                      <Dropdown.Item>PDF</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -433,29 +443,30 @@ export function LaporanKegiatan() {
               </div>
             </div>
             <Collapse in={open}>
-              <div className="card-body py-4">
-                <div className="row">
-                  <div className="col fs-4 mb-2 fw-semibold text-center">
-                    LAPORAN HASIL KEGIATAN
+              <div className='card'>
+                <div className="card-body py-4">
+                  <div className="row">
+                    <div className="col fs-4 mb-2 fw-semibold text-center">
+                      LAPORAN HASIL KEGIATAN
+                    </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col fs-4 mb-2 fw-semibold text-center">
-                    PADA SATPOL PP......................................
+                  <div className="row">
+                    <div className="col fs-4 mb-2 fw-semibold text-center">
+                      PADA SATPOL PP......................................
+                    </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col fs-4 mb-6 fw-semibold text-center">
-                    PERIODE .................... s/d .......................
+                  <div className="row">
+                    <div className="col fs-4 mb-6 fw-semibold text-center">
+                      PERIODE .................... s/d .......................
+                    </div>
                   </div>
-                </div>
-                <DataTable
-                  columns={columns}
-                  data={data}
-                  pagination
-                />
-                <div className="row">
-                  <div className="col-8"></div>
+                  <DataTable
+                    columns={columns}
+                    data={data}
+                    pagination
+                  />
+                  <div className="row">
+                    <div className="col-8"></div>
                     <div className="col-4 fs-6 mb-2 fw-semibold text-center">
                       Jakarta, ..............................20...
                       <div className="col fs-6 mb-15 fw-semibold text-center">
@@ -469,6 +480,7 @@ export function LaporanKegiatan() {
                         NIP. ......................
                       </div>
                     </div>
+                  </div>
                 </div>
               </div>
             </Collapse>

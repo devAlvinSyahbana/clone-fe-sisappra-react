@@ -130,8 +130,7 @@ function PetaTitikReklame() {
               </div>
             </div>
             <div className='row mt-5'>
-              <div className='col-md-12 col-lg-12 col-sm-12 mb-4'>
-                <div className='card card-bordered'>
+              <div className='d-flex col-md-12 col-lg-12 col-sm-12 mb-4'>
                   <MapContainer center={[43.437399, 11.777607]} zoom={5} scrollWheelZoom={true}>
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -156,7 +155,6 @@ function PetaTitikReklame() {
                     ))}
                   </MapContainer>
                 </div>
-              </div>
             </div>
           </div>
           <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>

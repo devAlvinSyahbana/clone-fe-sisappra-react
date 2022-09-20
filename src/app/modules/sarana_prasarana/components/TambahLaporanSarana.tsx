@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import axios from 'axios'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
-import {KTSVG} from '../../../../_metronic/helpers'
 
 export interface FormInput {
   jenis_sarana_prasarana?: any
@@ -13,8 +12,8 @@ export interface FormInput {
   jumlah?: number
   kondisi?: any
   keterangan?: string
-  file_dokumentasi?: any
-  updated_by?: string
+  file_dokumentasi?: string
+  created_by?: string
 }
 
 export interface SelectOption {
@@ -25,52 +24,11 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-interface GetDataInterface {
-  id?: number
-  jenis_sarana_prasarana_id?: number
-  jenis_sarana_prasarana_name?: string
-  status_sarana_prasarana_id?: 0
-  status_sarana_prasarana_name?: string
-  jumlah?: number
-  kondisi_id?: 0
-  kondisi_name?: string
-  keterangan?: string
-  dokumentasi?: string
-}
-
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 
-export function UbahLaporanSarana() {
+export function TambahLaporanSarana() {
   const navigate = useNavigate()
-  const {id} = useParams()
-  const [selectedFile, setSelectedFile] = useState(null)
-  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
-  const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(`${SARANA_PRASARANA_URL}/findone/${id}`)
-      const jsonD: GetDataInterface = response.data.data
-      const paramValue: FormInput = {
-        jenis_sarana_prasarana: {
-          value: jsonD.jenis_sarana_prasarana_id,
-          label: jsonD.jenis_sarana_prasarana_name,
-        },
-        status_sarana_prasarana: {
-          value: jsonD.status_sarana_prasarana_id,
-          label: jsonD.status_sarana_prasarana_name,
-        },
-        kondisi: {value: jsonD.kondisi_id, label: jsonD.kondisi_name},
-        jumlah: jsonD.jumlah,
-        keterangan: jsonD.keterangan,
-        file_dokumentasi: jsonD.dokumentasi,
-        updated_by: '',
-      }
-      setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
-    }
-    fetchData()
-  }, [valuesFormik, id])
 
   // AUTOCOMPLITE JENIS SARANA & PRASANAN
   const filterSapra = async (inputValue: string) => {
@@ -108,6 +66,8 @@ export function UbahLaporanSarana() {
     }, 1000)
   }
 
+  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+
   const handleChangeFormikSelect = (value: any, name: string) => {
     setValuesFormik((prevValues: any) => ({
       ...prevValues,
@@ -134,42 +94,27 @@ export function UbahLaporanSarana() {
       keterangan: '',
     },
     onSubmit: async (values) => {
+      console.log(selectedFile)
       let formData = new FormData()
       const bodyparam: FormInput = {
         jenis_sarana_prasarana: valuesFormik?.jenis_sarana_prasarana?.value
           ? valuesFormik.jenis_sarana_prasarana.value
-          : valuesFormikExist?.jenis_sarana_prasarana?.value
-          ? valuesFormikExist.jenis_sarana_prasarana.value
           : 0,
         status_sarana_prasarana: valuesFormik?.status_sarana_prasarana?.value
           ? valuesFormik.status_sarana_prasarana.value
-          : valuesFormikExist?.status_sarana_prasarana?.value
-          ? valuesFormikExist.status_sarana_prasarana.value
           : 0,
-        kondisi: valuesFormik?.kondisi?.value
-          ? valuesFormik.kondisi.value
-          : valuesFormikExist?.kondisi?.value
-          ? valuesFormikExist.kondisi.value
-          : 0,
-        keterangan: valuesFormik?.keterangan
-          ? valuesFormik.keterangan
-          : valuesFormikExist?.keterangan
-          ? valuesFormikExist.keterangan
-          : '',
-        jumlah: valuesFormik?.jumlah
-          ? valuesFormik.jumlah
-          : valuesFormikExist?.jumlah
-          ? valuesFormikExist.jumlah
-          : 0,
-        updated_by: '',
+        kondisi: valuesFormik?.kondisi?.value ? valuesFormik.kondisi.value : 0,
+        keterangan: valuesFormik?.keterangan ? valuesFormik.keterangan : '',
+        jumlah: valuesFormik?.jumlah ? valuesFormik.jumlah : 0,
+        created_by: '',
       }
       try {
-        const response = await axios.put(`${SARANA_PRASARANA_URL}/update/${id}`, bodyparam)
+        const response = await axios.post(`${SARANA_PRASARANA_URL}/create`, bodyparam)
         if (response) {
           if (selectedFile) {
             formData.append('file_dokumentasi', selectedFile)
             const responseFile = await axios.post(
-              `${SARANA_PRASARANA_URL}/upload-file/${id}`,
+              `${SARANA_PRASARANA_URL}/upload-file/${response.data.data.return_id}`,
               formData
             )
             if (responseFile) {
@@ -204,6 +149,8 @@ export function UbahLaporanSarana() {
     },
   })
 
+  const [selectedFile, setSelectedFile] = useState(null)
+
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
       <div className='d-flex flex-column flex-column-fluid'>
@@ -226,8 +173,6 @@ export function UbahLaporanSarana() {
                           value={
                             valuesFormik?.jenis_sarana_prasarana
                               ? valuesFormik?.jenis_sarana_prasarana
-                              : valuesFormikExist?.jenis_sarana_prasarana?.value !== 0
-                              ? valuesFormikExist?.jenis_sarana_prasarana
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
@@ -247,8 +192,6 @@ export function UbahLaporanSarana() {
                           value={
                             valuesFormik?.status_sarana_prasarana
                               ? valuesFormik?.status_sarana_prasarana
-                              : valuesFormikExist?.status_sarana_prasarana?.value !== 0
-                              ? valuesFormikExist?.status_sarana_prasarana
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
@@ -268,8 +211,6 @@ export function UbahLaporanSarana() {
                           value={
                             valuesFormik?.kondisi
                               ? valuesFormik?.kondisi
-                              : valuesFormikExist?.kondisi?.value !== 0
-                              ? valuesFormikExist?.kondisi
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
@@ -288,13 +229,7 @@ export function UbahLaporanSarana() {
                           min='0'
                           onChange={handleChangeFormik}
                           onBlur={formik.handleBlur}
-                          value={
-                            valuesFormik?.jumlah || valuesFormik?.jumlah === 0
-                              ? valuesFormik?.jumlah
-                              : valuesFormikExist?.jumlah
-                              ? valuesFormikExist?.jumlah
-                              : 0
-                          }
+                          value={valuesFormik?.jumlah}
                         />
                       </div>
                     </div>
@@ -308,38 +243,9 @@ export function UbahLaporanSarana() {
                           onChange={(event: {target: any}) =>
                             setSelectedFile(event.target.files[0])
                           }
-                          accept='image/jpeg,image/png,application/pdf'
+                          accept="image/jpeg,image/png,application/pdf"
                         />
-                        <small className='mt-4'>
-                          *File yang dapat di upload berformat (.pdf, .jpeg, .png)
-                        </small>
-                        {valuesFormikExist?.file_dokumentasi &&
-                        valuesFormikExist?.file_dokumentasi !== '' ? (
-                          <>
-                            <div className='card h-100 mt-3'>
-                              <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                                <a
-                                  className='text-gray-800 text-hover-primary d-flex flex-column'
-                                  target='_blank'
-                                  rel="noreferrer"
-                                  href={`${API_URL}/${valuesFormikExist?.file_dokumentasi}`}
-                                >
-                                  <div className='symbol symbol-75px mb-5'>
-                                    <KTSVG
-                                      className='theme-light-show svg-icon svg-icon-5x me-1'
-                                      path='/media/icons/duotune/files/fil003.svg'
-                                    />
-                                    <KTSVG
-                                      className='theme-dark-show svg-icon svg-icon-5x me-1'
-                                      path='/media/icons/duotune/files/fil003.svg'
-                                    />
-                                  </div>
-                                  <div className='fs-5 fw-bold mb-2'>File Dokumentasi</div>
-                                </a>
-                              </div>
-                            </div>
-                          </>
-                        ) : null}
+                        <small className='mt-4'>*File yang dapat di upload berformat (.pdf, .jpeg, .png)</small>
                       </div>
                     </div>
                     <div className='col-12 mb-6'>
@@ -350,13 +256,7 @@ export function UbahLaporanSarana() {
                           name='keterangan'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
-                          value={
-                            valuesFormik?.keterangan || valuesFormik?.keterangan === ''
-                              ? valuesFormik?.keterangan
-                              : valuesFormikExist?.keterangan
-                              ? valuesFormikExist?.keterangan
-                              : ''
-                          }
+                          value={valuesFormik?.keterangan}
                         />
                       </div>
                     </div>
