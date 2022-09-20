@@ -158,14 +158,30 @@ export function AsideMenuMain() {
           title='Kelurahan'
           hasBullet={true}
         />
+         <AsideMenuItem
+          to='/master/Pendidikan'
+          title='Pendidikan'
+          hasBullet={true}
+        />
+       
         <AsideMenuItem
-          to='/master/JenisKegiatan'
-          title='Jenis Kegiatan'
+          to='/master/Golongan'
+          title='Golongan'
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/master/JenisKejadian'
-          title='Jenis Kejadian'
+          to='/master/Eselon'
+          title='Eselon'
+          hasBullet={true}
+        />
+        <AsideMenuItem
+          to='/master/Jabatan'
+          title='Jabatan'
+          hasBullet={true}
+        />
+         <AsideMenuItem
+          to='/master/SumberInformasi'
+          title='Sumber Informasi'
           hasBullet={true}
         />
         <AsideMenuItem
@@ -182,67 +198,27 @@ export function AsideMenuMain() {
           to='/master/KorbanMaterial'
           title='Korban Material '
           hasBullet={true}
-        />        
-        <AsideMenuItem
-          to='/master/JenisPertolongan'
-          title='Jenis Pertolongan'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/JenisPerdaPerkada'
-          title='Jenis Perda / Perkada'
+        /> 
+         <AsideMenuItem
+          to='/master/TempatPelaksana'
+          title='Tempat Pelaksana'
           hasBullet={true}
         />
         <AsideMenuItem
           to='/master/JenisPenindakan'
           title='Jenis Penindakan'
           hasBullet={true}
+        />                    
+         <AsideMenuItem
+          to='/master/JenisKegiatan'
+          title='Jenis Kegiatan'
+          hasBullet={true}
         />
         <AsideMenuItem
-          to='/master/JenisPelanggaran'
-          title='Jenis Pelanggaran'
-          hasBullet={true}
-        />        
-        <AsideMenuItem
-          to='/master/TempatPelaksana'
-          title='Tempat Pelaksana'
+          to='/master/JenisKejadian'
+          title='Jenis Kejadian'
           hasBullet={true}
         />      
-        <AsideMenuItem
-          to='/master/Pendidikan'
-          title='Pendidikan'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/JenisSaranaPrasarana'
-          title='Jenis Sarana Prasarana'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/Golongan'
-          title='Golongan'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/Eselon'
-          title='Eselon'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/Jabatan'
-          title='Jabatan'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/JenisPenyelesaian'
-          title='Jenis Penyelesaian'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/master/SumberInformasi'
-          title='Sumber Informasi'
-          hasBullet={true}
-        />
         <AsideMenuItem
           to='/master/JenisKekerasan'
           title='Jenis Kekerasan'
@@ -253,7 +229,33 @@ export function AsideMenuMain() {
           title='Jenis Penerbitan'
           hasBullet={true}
         />
+         <AsideMenuItem
+          to='/master/JenisPertolongan'
+          title='Jenis Pertolongan'
+          hasBullet={true}
+        />  
+         <AsideMenuItem
+          to='/master/JenisPelanggaran'
+          title='Jenis Pelanggaran'
+          hasBullet={true}
+        />        
+        <AsideMenuItem
+          to='/master/JenisPenyelesaian'
+          title='Jenis Penyelesaian'
+          hasBullet={true}
+        /> 
+        <AsideMenuItem
+          to='/master/JenisPerdaPerkada'
+          title='Jenis Perda / Perkada'
+          hasBullet={true}
+        />
+         <AsideMenuItem
+          to='/master/JenisSaranaPrasarana'
+          title='Jenis Sarana Prasarana'
+          hasBullet={true}
+        />
       </AsideMenuItemWithSub>
+
     </>
   )
 }
