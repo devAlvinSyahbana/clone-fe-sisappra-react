@@ -97,7 +97,7 @@ export function AsideMenuMain() {
           to='/kepegawaian/PenyidikPegawaiNegeriSipil'
           title='Penyidik Pegawai Negeri Sipil (PPNS)'
           hasBullet={true}
-        />
+        />        
         <AsideMenuItem
           to='/kepegawaian/KehadiranPegawai'
           title='Kehadiran Pegawai'

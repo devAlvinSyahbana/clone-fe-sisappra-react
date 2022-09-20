@@ -26,6 +26,7 @@ export function Kota() {
   const [qParamFind, setUriFind] = useState({strparam: ''})
 
   const [valFilterKota, setFilterKota] = useState({val: ''})
+  
 
   useEffect(() => {
     fetchUsers(1);
