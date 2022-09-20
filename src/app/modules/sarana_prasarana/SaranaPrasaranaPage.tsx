@@ -1,10 +1,10 @@
 import React from 'react'
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import { LaporanSaranaPrasarana } from './components/LaporanSaranaPrasarana'
-import { TambahLaporanSarana } from './components/TambahLaporanSarana'
-import { UbahLaporanSarana } from './components/UbahLaporanSarana'
-import { LihatLaporanSarana } from './components/LihatLaporanSarana'
+import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
+import {PageLink, PageTitle} from '../../../_metronic/layout/core'
+import {LaporanSaranaPrasarana} from './components/LaporanSaranaPrasarana'
+import {TambahLaporanSarana} from './components/TambahLaporanSarana'
+import {UbahLaporanSarana} from './components/UbahLaporanSarana'
+import {LihatLaporanSarana} from './components/LihatLaporanSarana'
 
 const sarana_prasaranaBreadCrumbs: Array<PageLink> = [
   {
@@ -26,7 +26,7 @@ const SaranaPrasaranaPage: React.FC = () => {
     <Routes>
       <Route
         element={
-          <>          
+          <>
             <Outlet />
           </>
         }
@@ -35,11 +35,13 @@ const SaranaPrasaranaPage: React.FC = () => {
           path='LaporanSaranaPrasarana'
           element={
             <>
-              <PageTitle breadcrumbs={sarana_prasaranaBreadCrumbs}>Laporan Sarana & Prasarana</PageTitle>
+              <PageTitle breadcrumbs={sarana_prasaranaBreadCrumbs}>
+                Laporan Sarana & Prasarana
+              </PageTitle>
               <LaporanSaranaPrasarana />
             </>
           }
-        />     
+        />
         <Route
           path='LaporanSaranaPrasarana/TambahLaporanSarana'
           element={
@@ -67,11 +69,11 @@ const SaranaPrasaranaPage: React.FC = () => {
             </>
           }
         />
-        
+
         <Route index element={<Navigate to='/sarana_prasarana' />} />
       </Route>
     </Routes>
   )
 }
 
-export default SaranaPrasaranaPage 
+export default SaranaPrasaranaPage

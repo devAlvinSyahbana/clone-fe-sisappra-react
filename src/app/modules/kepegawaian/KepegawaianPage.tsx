@@ -1,25 +1,26 @@
 import React from 'react'
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
+import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
+import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 
-import { InformasiDataPegawai } from './components/InformasiDataPegawai'
-import { DetailInformasiDataPegawai } from './components/DetailInformasiDataPegawai'
-import { HirarkiPegawai } from './components/HirarkiPegawai'
-import { LaporanRekapitulasiPegawai } from './components/LaporanRekapitulasiPegawai'
-import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSipil'
-import { KehadiranPegawai } from './components/KehadiranPegawai'
-import { JadwalPiket } from './components/JadwalPiket'
+import {InformasiDataPegawai} from './components/InformasiDataPegawai'
+import {DetailInformasiDataPegawai} from './components/DetailInformasiDataPegawai'
+import {HirarkiPegawai} from './components/HirarkiPegawai'
+import {LaporanRekapitulasiPegawai} from './components/LaporanRekapitulasiPegawai'
+import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipil'
+import {KehadiranPegawai} from './components/KehadiranPegawai'
+import {JadwalPiket} from './components/JadwalPiket'
+import {DaftarUrutKepangkatan} from './components/DaftarUrutKepangkatan'
 
-import { DataPribadi } from './components/tabs/DataPribadi'
-import { DataKeluarga } from './components/tabs/DataKeluarga'
-import { Pendidikan } from './components/tabs/Pendidikan'
-import { DataKepegawaian } from './components/tabs/DataKepegawaian'
-import { HirarkiKepegawaian } from './components/tabs/HirarkiKepegawaian'
+import {DataPribadi} from './components/tabs/DataPribadi'
+import {DataKeluarga} from './components/tabs/DataKeluarga'
+import {Pendidikan} from './components/tabs/Pendidikan'
+import {DataKepegawaian} from './components/tabs/DataKepegawaian'
+import {HirarkiKepegawaian} from './components/tabs/HirarkiKepegawaian'
 
-import { UpdateDataPribadi } from './components/update-tabs/UpdateDataPribadi'
-import { UpdateDataKeluarga } from './components/update-tabs/UpdateDataKeluarga'
-import { UpdatePendidikan } from './components/update-tabs/UpdatePendidikan'
-import { UpdateDataKepegawaian } from './components/update-tabs/UpdateDataKepegawaian'
+import {UpdateDataPribadi} from './components/update-tabs/UpdateDataPribadi'
+import {UpdateDataKeluarga} from './components/update-tabs/UpdateDataKeluarga'
+import {UpdatePendidikan} from './components/update-tabs/UpdatePendidikan'
+import {UpdateDataKepegawaian} from './components/update-tabs/UpdateDataKepegawaian'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -123,6 +124,15 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Jadwal Piket</PageTitle>
               <JadwalPiket />
+            </>
+          }
+        />
+        <Route
+          path='DaftarUrutKepangkatan'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Daftar Urut Kepangkatan</PageTitle>
+              <DaftarUrutKepangkatan />
             </>
           }
         />

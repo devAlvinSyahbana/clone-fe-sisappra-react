@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {FC} from 'react'
 import '../Layout.css'
-import axios from 'axios'
+import React, {useState} from 'react'
 import {Link} from 'react-router-dom'
 import jsonpetaTitikRawan from '../maps/peta-general.json'
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
+import ToggleButton from 'react-bootstrap/ToggleButton'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}`
@@ -13,87 +13,86 @@ function PetaTitikRawan() {
   const filterTempat = jsonpetaTitikRawan.filter(
     (petaTitikRawan) => petaTitikRawan.address.country === 'Italy'
   )
+  const [checked, setChecked] = useState(false)
 
   return (
     <div className='card card-flush'>
       <div className='card-body'>
         <div className='tab-content' id='myTabContent'>
           <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
-            <div className='row'>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Provinsi
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Kota
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className='row mt-4'>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Kecamatan
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Kelurahan
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className='row mt-4'>
-              <div className='col-md-6 col-lg-6 col-sm-12'>
+            <div className='row mt'>
+              <div className='col-md-12 col-lg-12 col-sm-12'>
                 <Link to='#'>
-                  <button className='btn btn-primary'>
-                    <i className='fa-solid fa-search'></i>
-                    Cari
-                  </button>
+                  <ToggleButton
+                    className='mb-2'
+                    id='toggle-check'
+                    type='checkbox'
+                    variant='outline-primary'
+                    checked={checked}
+                    value='1'
+                  >
+                    Bencana
+                  </ToggleButton>
+                </Link>
+                <Link to='#'>
+                  <ToggleButton
+                    className='mb-2'
+                    id='toggle-check2'
+                    type='checkbox'
+                    variant='outline-primary'
+                    checked={checked}
+                    value='2'
+                  >
+                    Kebakaran
+                  </ToggleButton>
+                </Link>
+                <Link to='#'>
+                  <ToggleButton
+                    className='mb-2'
+                    id='toggle-check3'
+                    type='checkbox'
+                    variant='outline-primary'
+                    checked={checked}
+                    value='3'
+                  >
+                    PKL
+                  </ToggleButton>
+                </Link>
+                <Link to='#'>
+                  <ToggleButton
+                    className='mb-2'
+                    id='toggle-check4'
+                    type='checkbox'
+                    variant='outline-primary'
+                    checked={checked}
+                    value='4'
+                  >
+                    PMKS
+                  </ToggleButton>
+                </Link>
+                <Link to='#'>
+                  <ToggleButton
+                    className='mb-2'
+                    id='toggle-check5'
+                    type='checkbox'
+                    variant='outline-primary'
+                    checked={checked}
+                    value='5'
+                  >
+                    Politik
+                  </ToggleButton>
+                </Link>
+                <Link to='#'>
+                  <ToggleButton
+                    className='mb-2'
+                    id='toggle-check6'
+                    type='checkbox'
+                    variant='outline-primary'
+                    checked={checked}
+                    value='6'
+                  >
+                    Tramtibum
+                  </ToggleButton>
                 </Link>
               </div>
             </div>
