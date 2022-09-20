@@ -183,7 +183,7 @@ const KepegawaianPage: React.FC = () => {
         />
 
         <Route
-          path='UpdateDataPribadi/:id/:status'
+          path='InformasiDataPegawai/UpdateDataPribadi/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Pribadi</PageTitle>
@@ -192,7 +192,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='UpdateDataKeluarga/:id/:status'
+          path='InformasiDataPegawai/UpdateDataKeluarga/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Keluarga</PageTitle>
@@ -201,7 +201,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='UpdatePendidikan/:id/:status'
+          path='InformasiDataPegawai/UpdatePendidikan/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Pendidikan</PageTitle>
@@ -210,7 +210,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='UpdateDataKepegawaian/:id/:status'
+          path='InformasiDataPegawai/UpdateDataKepegawaian/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian</PageTitle>
