@@ -23,56 +23,6 @@ function PetaPlotingAnggota() {
               <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                 <div className='form-group'>
                   <label htmlFor='' className='mb-3'>
-                    Kota
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Kecamatan
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className='row mt-4'>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Kelurahan
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
                     Jam Penjagaan
                   </label>
                   <select

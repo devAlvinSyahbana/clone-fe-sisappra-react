@@ -1,8 +1,21 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import { DropdownButton, ButtonGroup, Dropdown } from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
-import DatePicker from 'react-date-picker';
+import DatePicker, { DateObject } from "react-multi-date-picker";
+import AsyncSelect from 'react-select/async';
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KOTA_URL = `${API_URL}/master/kota`
+
+export interface SelectOption {
+  readonly value: string
+  readonly label: string
+  readonly color: string
+  readonly isFixed?: boolean
+  readonly isDisabled?: boolean
+}
 
 export function LaporanKejadian() {
   const columns = [
@@ -157,8 +170,32 @@ export function LaporanKejadian() {
       aksi: '',
     },
   ];
-
+  const customStyles = {};
   var [value, onChange] = useState(new Date()); //Date Picker
+
+  // GET DATA
+  interface SelectOptionAutoCom {
+    readonly value: string
+    readonly label: string
+  }
+
+  // GET KOTA
+  const [inputValKota, setDataKota] = useState({ label: '', value: null })
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(KOTA_URL + "/find");
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.kota, value: i.kota }))
+  }
+  const loadOptionsKota = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleInputKota = (newValue: any) => {
+    setDataKota((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+  // END :: GET KOTA
+
 
   function MyComponent() {
     return (
@@ -228,7 +265,12 @@ export function LaporanKejadian() {
                                   className="form-label align-middle">Tanggal</label>
                               </div>
                               <div className="col-8">
-                                <DatePicker className="form-control form-control-solid" onChange={onChange} value={value} />
+                                <DatePicker
+                                  className='form-control form-control-solid'
+                                  value={value}
+                                  range
+                                  numberOfMonths={2}
+                                />
                               </div>
                             </div>
                           </div>
@@ -241,7 +283,14 @@ export function LaporanKejadian() {
                                   className="form-label align-middle">Kota</label>
                               </div>
                               <div className="col-8">
-                                <input className="form-control form-control-solid" placeholder="Pilih Kota" />
+                                {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
+                                <AsyncSelect
+                                  cacheOptions
+                                  loadOptions={loadOptionsKota}
+                                  defaultOptions
+                                  onChange={handleInputKota}
+                                  placeholder={'Pilih Kota'}
+                                />
                               </div>
                             </div>
                           </div>
