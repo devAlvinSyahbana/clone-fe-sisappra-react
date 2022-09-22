@@ -9,7 +9,6 @@ import {LaporanRekapitulasiPegawai} from './components/LaporanRekapitulasiPegawa
 import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipil'
 import {KehadiranPegawai} from './components/KehadiranPegawai'
 import {JadwalPiket} from './components/JadwalPiket'
-import {DaftarUrutKepangkatan} from './components/DaftarUrutKepangkatan'
 
 import {DataPribadi} from './components/tabs/DataPribadi'
 import {DataKeluarga} from './components/tabs/DataKeluarga'
@@ -21,7 +20,14 @@ import {UpdateDataPribadi} from './components/update-tabs/UpdateDataPribadi'
 import {UpdateDataKeluarga} from './components/update-tabs/UpdateDataKeluarga'
 import {UpdatePendidikan} from './components/update-tabs/UpdatePendidikan'
 import {UpdateDataKepegawaian} from './components/update-tabs/UpdateDataKepegawaian'
-import { TabLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-tabs/TabLaporanRekapitulasiPegawai'
+import {TabLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-tabs/TabLaporanRekapitulasiPegawai'
+import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
+import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
+
+import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPribadDUK'
+import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKeluargaDUK'
+import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikanDUK'
+import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -111,6 +117,26 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
+          path='LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Daftar Urut Kepangkatan</PageTitle>
+              <TabDaftarUrutKepangkatan />
+            </>
+          }
+        />
+        <Route
+          path='PenyidikPegawaiNegeriSipil/TabDataPPNS'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Penyidik Pegawai Negeri Sipil
+              </PageTitle>
+              <TabDataPPNS />
+            </>
+          }
+        />
+        <Route
           path='PenyidikPegawaiNegeriSipil'
           element={
             <>
@@ -136,15 +162,6 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Jadwal Piket</PageTitle>
               <JadwalPiket />
-            </>
-          }
-        />
-        <Route
-          path='DaftarUrutKepangkatan'
-          element={
-            <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Daftar Urut Kepangkatan</PageTitle>
-              <DaftarUrutKepangkatan />
             </>
           }
         />
@@ -230,6 +247,46 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
+
+        {/* Update DUK */}
+        <Route
+          path='TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <UpdateDataPribadiDUK />
+            </>
+          }
+        />
+        <Route
+          path='TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <UpdateDataKeluargaDUK />
+            </>
+          }
+        />
+        <Route
+          path='TabDaftarUrutKepangkatan/UpdatePendidikanDUK/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <UpdatePendidikanDUK />
+            </>
+          }
+        />
+        <Route
+          path='TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <UpdateDataKepegawaianDUK />
+            </>
+          }
+        />
+
+        {/* End update DUK */}
 
         <Route index element={<Navigate to='/kepegawaian' />} />
       </Route>

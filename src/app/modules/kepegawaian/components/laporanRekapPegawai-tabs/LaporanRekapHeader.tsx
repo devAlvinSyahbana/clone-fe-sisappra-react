@@ -31,9 +31,9 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('DataKeluarga') && 'active')
+                      (location.pathname.includes('TabDaftarUrutKepangkatan') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/DataKeluarga/`}
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan/`}
                   >
                     Daftar Urut Kepangkatan
                   </Link>
