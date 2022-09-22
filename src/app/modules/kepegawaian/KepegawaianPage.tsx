@@ -28,6 +28,7 @@ import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPriba
 import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKeluargaDUK'
 import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikanDUK'
 import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
+import { TabRekapitulasiDataPegawaiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -133,6 +134,17 @@ const KepegawaianPage: React.FC = () => {
                 Penyidik Pegawai Negeri Sipil
               </PageTitle>
               <TabDataPPNS />
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPejabatStruktural'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Laporan Rekapitulasi Pegawai
+              </PageTitle>
+              <TabRekapitulasiDataPegawaiPejabatStruktural />
             </>
           }
         />

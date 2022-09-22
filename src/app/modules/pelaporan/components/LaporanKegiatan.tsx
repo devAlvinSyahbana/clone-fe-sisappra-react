@@ -5,7 +5,19 @@ import DataTable from 'react-data-table-component';
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import Footer from "react-multi-date-picker/plugins/range_picker_footer";
 import { Button, Collapse } from 'react-bootstrap'
+import AsyncSelect from 'react-select/async';
+import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KOTA_URL = `${API_URL}/master/kota`
+
+export interface SelectOption {
+  readonly value: string
+  readonly label: string
+  readonly color: string
+  readonly isFixed?: boolean
+  readonly isDisabled?: boolean
+}
 
 export function LaporanKegiatan() {
 
@@ -140,6 +152,29 @@ export function LaporanKegiatan() {
     },
   ]
 
+  // GET DATA
+  interface SelectOptionAutoCom {
+    readonly value: string
+    readonly label: string
+  }
+
+  // GET KOTA
+  const [inputValKota, setDataKota] = useState({ label: '', value: null })
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(KOTA_URL + "/find");
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.kota, value: i.kota }))
+  }
+  const loadOptionsKota = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleInputKota = (newValue: any) => {
+    setDataKota((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+  // END :: GET KOTA
+
   function MyComponent() {
     return (
       <DataTable
@@ -236,15 +271,14 @@ export function LaporanKegiatan() {
                                 <label className="form-label align-middle">Kota</label>
                               </div>
                               <div className="col-8">
-                                <select className="form-select form-select-solid" data-control="select2"
-                                  data-placeholder="Pilih">
-                                  <option></option>
-                                  <option value="a">Kota Jakarta Utara</option>
-                                  <option value="b">Kota Jakarta Selatan</option>
-                                  <option value="a">Kota Jakarta Timur</option>
-                                  <option value="b">Kota Jakarta Barat</option>
-                                  <option value="a">Kabupaten Kepulauan Seribu</option>
-                                </select>
+                                {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
+                                <AsyncSelect
+                                  cacheOptions
+                                  loadOptions={loadOptionsKota}
+                                  defaultOptions
+                                  onChange={handleInputKota}
+                                  placeholder={'Pilih Kota'}
+                                />
                               </div>
                             </div>
                           </div>
