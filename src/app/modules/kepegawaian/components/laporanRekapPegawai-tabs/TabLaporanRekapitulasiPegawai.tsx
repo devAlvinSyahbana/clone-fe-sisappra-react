@@ -72,10 +72,9 @@ export function TabLaporanRekapitulasiPegawai() {
 
           <div className="col-xl-12 mb-xl-12">
             <div className="card card-flush h-xl-100">
-              <img src={toAbsoluteUrl('/media/svg/shapes/top-green.png')} alt="metronic" />
               <div
                 className="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px"
-                style={{backgroundImage: toAbsoluteUrl('/public/media/svg/shapes/top-green.png')}} data-theme="light">
+                style={{backgroundImage: "url(" + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ")"}} data-theme="light">
                 <h3 className="card-title align-items-start flex-column text-white pt-10">
                   <span className="fw-bold fs-1 mb-3">Jumlah Pegawai Satuan Polisi Pamong Praja</span>
                   <div className="fs-4 text-white">
@@ -163,7 +162,7 @@ export function TabLaporanRekapitulasiPegawai() {
             <div className="card card-flush h-xl-100">
               <div
                 className="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px"
-                style={{ backgroundImage: 'url("assets/media/svg/shapes/top-green.png' }} data-theme="light">
+                style={{backgroundImage: "url(" + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ")"}} data-theme="light">
                 <h3 className="card-title align-items-start flex-column text-white pt-10">
                   <span className="fw-bold fs-1 mb-3">Rincian Pegawai Satuan Polisi Pamong Praja</span>
                 </h3>
