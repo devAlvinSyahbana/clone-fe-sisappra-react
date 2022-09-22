@@ -109,6 +109,11 @@ export function AsideMenuMain() {
           title='Daftar Urut Kepangkatan'
           hasBullet={true}
         />
+        <AsideMenuItem
+          to='/kepegawaian/DataPegawaiYangNaikPangkat'
+          title='Data Pegawai Yang Naik Pangkat'
+          hasBullet={true}
+        />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/sarana_prasarana'

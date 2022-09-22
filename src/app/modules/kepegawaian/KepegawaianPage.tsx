@@ -8,8 +8,14 @@ import {HirarkiPegawai} from './components/HirarkiPegawai'
 import {LaporanRekapitulasiPegawai} from './components/LaporanRekapitulasiPegawai'
 import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipil'
 import {KehadiranPegawai} from './components/KehadiranPegawai'
+
 import {JadwalPiket} from './components/JadwalPiket'
+import {TambahPiket} from './components/Tambah-tabs/TambahPiket'
 import {DaftarUrutKepangkatan} from './components/DaftarUrutKepangkatan'
+import {DataPegawaiYangNaikPangkat} from './components/DataPegawaiYangNaikPangkat'
+import {UpdateNaikPangkat} from './components/update-tabs/UpdateNaikPangkat'
+import {DataPiket} from './components/tabs/DataPiket'
+
 
 import {DataPribadi} from './components/tabs/DataPribadi'
 import {DataKeluarga} from './components/tabs/DataKeluarga'
@@ -128,11 +134,47 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
+          path='JadwalPiket/TambahPiket'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Tambah Piket</PageTitle>
+              <TambahPiket />
+            </>
+          }
+        />
+        <Route
+          path='JadwalPiket/DataPiket/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Piket</PageTitle>
+              <DataPiket />
+            </>
+          }
+        />
+        <Route
           path='DaftarUrutKepangkatan'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Daftar Urut Kepangkatan</PageTitle>
               <DaftarUrutKepangkatan />
+            </>
+          }
+        />
+        <Route
+          path='DataPegawaiYangNaikPangkat'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Pegawai Yang Naik Pangkat</PageTitle>
+              <DataPegawaiYangNaikPangkat />
+            </>
+          }
+        />
+        <Route
+          path='DataPegawaiYangNaikPangkat/UpdateNaikPangkat/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Update Naik Pangkat</PageTitle>
+              <UpdateNaikPangkat />
             </>
           }
         />
