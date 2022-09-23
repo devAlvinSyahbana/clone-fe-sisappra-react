@@ -33,6 +33,7 @@ import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikan
 import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
 import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 import { TabRekapitulasiDataPegawaiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
+import { TabRekapitulasiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -160,6 +161,17 @@ const KepegawaianPage: React.FC = () => {
                 Laporan Rekapitulasi Pegawai
               </PageTitle>
               <TabRekapitulasiDataPegawaiPejabatStruktural />
+            </>
+          }
+        />
+         <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatStruktural'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Rekapitulasi Pejabat Struktural
+              </PageTitle>
+              <TabRekapitulasiPejabatStruktural />
             </>
           }
         />

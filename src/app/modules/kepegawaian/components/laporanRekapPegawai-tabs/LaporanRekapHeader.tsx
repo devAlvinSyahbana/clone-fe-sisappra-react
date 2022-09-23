@@ -75,6 +75,17 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('TabRekapitulasiPejabatStruktural') && 'active')
+                    }
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatStruktural/`}
+                  >
+                    Rekapitulasi Data Pejabat Struktural
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
                       (location.pathname.includes('HirarkiKepegawaian') && 'active')
                     }
                     to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/`}
