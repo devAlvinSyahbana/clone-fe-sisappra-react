@@ -2,31 +2,18 @@ import axios from 'axios'
 import { Field, Formik, FormikHelpers } from 'formik'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers'
-import { DetailPegawaiInterface } from '../KepegawaianInterface'
 import { LaporanRekapHeader } from './LaporanRekapHeader'
+import Dropdown from 'react-bootstrap/Dropdown';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function TabLaporanRekapitulasiPegawai() {
   const { id, status } = useParams()
-
-  const [data, setData] = useState<DetailPegawaiInterface>({})
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
-      setData((prevstate) => ({ ...prevstate, ...response.data.data }))
-    }
-    fetchData()
-  }, [setData, id, status])
-
-  const ageFromDateOfBirthday = (dateOfBirth: any): number => {
-    return moment().diff(dateOfBirth, 'years')
-  }
+  const navigate = useNavigate()
 
   return (
     <>
@@ -46,26 +33,19 @@ export function TabLaporanRekapitulasiPegawai() {
             </div>
             <div className="col-12">
               <div className="d-flex justify-content-end">
-                <button type="button" className="btn btn-light rotate" data-kt-menu-trigger="click"
-                  data-kt-menu-placement="bottom-start" data-kt-menu-offset="10px, 10px">
-                  Unduh
-                  <span className="svg-icon svg-icon-3 rotate-180 ms-3 me-0">▼</span>
-                </button>
-                <div
-                  className="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
-                  data-kt-menu="true">
-                  <div className="menu-item px-3">
-                    <div className="menu-content fs-6 text-dark fw-bold px-3 py-4">
-                      <a className="text-reset text-decoration-none" href="#">Docx</a>
-                    </div>
-                  </div>
-                  <div className="menu-item px-3">
-                    <div className="menu-content fs-6 text-dark fw-bold px-3 py-4">
-                      <a className="text-reset text-decoration-none"
-                        href="../dist/sisappra/kepegawaian/laporan-rekapitulasi-pegawai/UnduhLaporanRekapPegawai.html">PDF</a>
-                    </div>
-                  </div>
-                </div>
+                <Dropdown>
+                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    Unduh
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="#">Docx</Dropdown.Item>
+                    <Dropdown.Item href="#" onClick={() =>
+                      navigate(
+                        `/kepegawaian/LaporanRekapitulasiPegawai/UnduhLaporanRekapitulasiPegawai`
+                      )
+                    }>PDF</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               </div>
             </div>
           </div>
@@ -74,7 +54,7 @@ export function TabLaporanRekapitulasiPegawai() {
             <div className="card card-flush h-xl-100">
               <div
                 className="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px"
-                style={{backgroundImage: "url(" + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ")"}} data-theme="light">
+                style={{ backgroundImage: "url(" + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ")" }} data-theme="light">
                 <h3 className="card-title align-items-start flex-column text-white pt-10">
                   <span className="fw-bold fs-1 mb-3">Jumlah Pegawai Satuan Polisi Pamong Praja</span>
                   <div className="fs-4 text-white">
@@ -162,7 +142,7 @@ export function TabLaporanRekapitulasiPegawai() {
             <div className="card card-flush h-xl-100">
               <div
                 className="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px"
-                style={{backgroundImage: "url(" + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ")"}} data-theme="light">
+                style={{ backgroundImage: "url(" + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ")" }} data-theme="light">
                 <h3 className="card-title align-items-start flex-column text-white pt-10">
                   <span className="fw-bold fs-1 mb-3">Rincian Pegawai Satuan Polisi Pamong Praja</span>
                 </h3>
@@ -322,15 +302,45 @@ export function TabLaporanRekapitulasiPegawai() {
                               <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
                                 className="text-gray-800 text-hover-primary">1</a>
                             </td>
-                            <td className="text-center">DOKTOR (S3)</td>
+                            <td className="text-center">I</td>
                             <td className="text-end">
-                              <a href="#" className="text-gray-600 text-hover-primary">1 Orang</a>
+                              <a href="#" className="text-gray-600 text-hover-primary">40 Orang</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-center">
+                              <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
+                                className="text-gray-800 text-hover-primary">2</a>
+                            </td>
+                            <td className="text-center">II</td>
+                            <td className="text-end">
+                              <a href="#" className="text-gray-600 text-hover-primary">2323 Orang</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-center">
+                              <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
+                                className="text-gray-800 text-hover-primary">3</a>
+                            </td>
+                            <td className="text-center">III</td>
+                            <td className="text-end">
+                              <a href="#" className="text-gray-600 text-hover-primary">626 Orang</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-center">
+                              <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
+                                className="text-gray-800 text-hover-primary">4</a>
+                            </td>
+                            <td className="text-center">IV</td>
+                            <td className="text-end">
+                              <a href="#" className="text-gray-600 text-hover-primary">33 Orang</a>
                             </td>
                           </tr>
                           <tr>
                             <td className="text-center table-primary" colSpan={2}>Jumlah Keseluruhan</td>
                             <td className="text-end table-success">
-                              <a href="#" className="text-gray-600 text-hover-primary">396 Orang</a>
+                              <a href="#" className="text-gray-600 text-hover-primary">3022 Orang</a>
                             </td>
                           </tr>
                         </tbody>
@@ -362,15 +372,65 @@ export function TabLaporanRekapitulasiPegawai() {
                               <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
                                 className="text-gray-800 text-hover-primary">1</a>
                             </td>
-                            <td className="text-center">DOKTOR (S3)</td>
+                            <td className="text-center">DIKLAT STRUKTURAL</td>
                             <td className="text-end">
-                              <a href="#" className="text-gray-600 text-hover-primary">1 Orang</a>
+                              <a href="#" className="text-gray-600 text-hover-primary">15 Orang</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-center">
+                              <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
+                                className="text-gray-800 text-hover-primary">2</a>
+                            </td>
+                            <td className="text-center">DIKLAT FUNGSIONAL POL PP</td>
+                            <td className="text-end">
+                              <a href="#" className="text-gray-600 text-hover-primary">2833 Orang</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-center">
+                              <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
+                                className="text-gray-800 text-hover-primary">3</a>
+                            </td>
+                            <td className="text-center">DIKLAT PPNS</td>
+                            <td className="text-end">
+                              <a href="#" className="text-gray-600 text-hover-primary">243 Orang</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-center">
+                              <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
+                                className="text-gray-800 text-hover-primary">4</a>
+                            </td>
+                            <td className="text-center">DIKLAT TEKNIS</td>
+                            <td className="text-end">
+                              <a href="#" className="text-gray-600 text-hover-primary">0 Orang</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-center">
+                              <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
+                                className="text-gray-800 text-hover-primary">5</a>
+                            </td>
+                            <td className="text-center">DIKLAT DASAR POL PP</td>
+                            <td className="text-end">
+                              <a href="#" className="text-gray-600 text-hover-primary">168 Orang</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-center">
+                              <a href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
+                                className="text-gray-800 text-hover-primary">6</a>
+                            </td>
+                            <td className="text-center">DIKLAT LAINNYA</td>
+                            <td className="text-end">
+                              <a href="#" className="text-gray-600 text-hover-primary">218 Orang</a>
                             </td>
                           </tr>
                           <tr>
                             <td className="text-center table-primary" colSpan={2}>Jumlah Keseluruhan</td>
                             <td className="text-end table-success">
-                              <a href="#" className="text-gray-600 text-hover-primary">396 Orang</a>
+                              <a href="#" className="text-gray-600 text-hover-primary">3477 Orang</a>
                             </td>
                           </tr>
                         </tbody>
@@ -378,23 +438,6 @@ export function TabLaporanRekapitulasiPegawai() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-
-          
-          <div className="row">
-            <div className="col-8"></div>
-            <div className="col-4 fs-6 mb-2 fw-semibold text-center">
-              ..........................................
-              <div className="col fs-6 mb-15 fw-semibold text-center">
-                Kepala Satpol PP................................
-              </div>
-
-
-              <div className="col fs-6 mb-2 fw-semibold text-center">
-                ..........................................
               </div>
             </div>
           </div>
