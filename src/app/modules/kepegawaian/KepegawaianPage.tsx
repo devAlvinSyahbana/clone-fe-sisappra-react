@@ -24,7 +24,7 @@ import {TabLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-ta
 import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
 
-import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPribadDUK'
+import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPribadiDUK'
 import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKeluargaDUK'
 import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikanDUK'
 import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'

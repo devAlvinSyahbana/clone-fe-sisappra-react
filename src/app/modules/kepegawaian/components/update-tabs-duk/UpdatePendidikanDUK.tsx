@@ -2,7 +2,7 @@ import React, {Fragment, useState} from 'react'
 // import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
-import {UpdateHeaderDetail} from './UpdateHeaderDetailDUK'
+import {UpdateHeaderDetailDUK} from './UpdateHeaderDetailDUK'
 import {useLocation} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import {Button, Modal} from 'react-bootstrap'
@@ -78,7 +78,7 @@ export function UpdatePendidikanDUK() {
   return (
     <div>
       {/* begin::Body */}
-      <UpdateHeaderDetail />
+      <UpdateHeaderDetailDUK />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
@@ -220,7 +220,7 @@ export function UpdatePendidikanDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/DaftarUrutKepangkatan'
+                to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan/'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
                   <i className='fa fa-close'></i>
@@ -229,7 +229,7 @@ export function UpdatePendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/UpdateDataKeluarga'
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -238,7 +238,7 @@ export function UpdatePendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/UpdateDataKepegawaian'
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
