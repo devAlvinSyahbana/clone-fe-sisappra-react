@@ -1,13 +1,40 @@
-import React, {Fragment, useState} from 'react'
+import React, {Fragment, useState, useEffect} from 'react'
 import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {Link} from 'react-router-dom'
+import axios from 'axios'
+import {Link, useParams} from 'react-router-dom'
 import {useLocation} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import {Button, ButtonGroup, Dropdown, DropdownButton, Modal} from 'react-bootstrap'
-import {UpdateHeaderDetail} from './UpdateHeaderDetailDUK'
+import {UpdateHeaderDetailDUK} from './UpdateHeaderDetailDUK'
+import {
+  DetailPegawaiInterface,
+  JumlahKeluargaInterface,
+  PendidikanInterface,
+} from '../KepegawaianInterface'
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function UpdateDataKeluargaDUK() {
-  const location = useLocation()
+  // const location = useLocation()
+  const {id, status} = useParams()
+  const [dpi, setDpi] = useState<DetailPegawaiInterface>()
+  const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
+  const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
+      const keluarga = await axios.get(`${KEPEGAWAIAN_URL}/count-keluarga/${id}/${status}`)
+      const pendidikan = await axios.get(
+        `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
+      )
+      setJkeluarga(keluarga.data.data)
+      setPendidikan(pendidikan.data.data)
+      setDpi(response.data.data)
+    }
+    fetchData()
+  }, [id, status])
 
   const [show, setShow] = useState(false)
   const [lgShow, setLgShow] = useState(false)
@@ -103,7 +130,7 @@ export function UpdateDataKeluargaDUK() {
   return (
     <div>
       {/* begin::Body */}
-      <UpdateHeaderDetail />
+      <UpdateHeaderDetailDUK />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
@@ -221,7 +248,7 @@ export function UpdateDataKeluargaDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/UpdateInformasiDataPegawai'
+                to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan/'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
                   <i className='fa fa-close'></i>
@@ -230,14 +257,17 @@ export function UpdateDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/UpdateDataPribadiDUK'
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePribadiDUK/${id}/${status}`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
                   Kembali
                 </button>
               </Link>
-              <Link className='text-reset text-decoration-none' to='/kepegawaian/UpdatePendidikan'>
+              <Link
+                className='text-reset text-decoration-none'
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPendidikanDUK`}
+              >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
                   Lanjut

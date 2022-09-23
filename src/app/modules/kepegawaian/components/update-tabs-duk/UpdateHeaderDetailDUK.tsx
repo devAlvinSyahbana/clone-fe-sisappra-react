@@ -13,7 +13,7 @@ import {
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-const UpdateHeaderDetail = () => {
+const UpdateHeaderDetailDUK = () => {
   const location = useLocation()
   const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>()
@@ -140,9 +140,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataPribadi') && 'active')
+                      (location.pathname.includes('UpdateDataPribadiDUK') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${id}/${status}`}
                   >
                     Data Pribadi
                   </Link>
@@ -151,9 +151,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataKeluarga') && 'active')
+                      (location.pathname.includes('UpdateDataKeluargaDUK') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataKeluarga/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
                   >
                     Data Keluarga
                   </Link>
@@ -162,9 +162,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdatePendidikan') && 'active')
+                      (location.pathname.includes('UpdatePendidikanDUK') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdatePendidikan/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePendidikanDUK/${id}/${status}`}
                   >
                     Pendidikan
                   </Link>
@@ -173,9 +173,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataKepegawaian') && 'active')
+                      (location.pathname.includes('UpdateDataKepegawaianDUK') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataKepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK/${id}/${status}`}
                   >
                     Data Kepegawaian
                   </Link>
@@ -190,4 +190,4 @@ const UpdateHeaderDetail = () => {
   )
 }
 
-export {UpdateHeaderDetail}
+export {UpdateHeaderDetailDUK}

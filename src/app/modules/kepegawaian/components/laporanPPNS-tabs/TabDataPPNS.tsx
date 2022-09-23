@@ -52,12 +52,24 @@ export function TabDataPPNS() {
     )
   }
 
+  let no = 1
+
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.kepegawaian_nrk,
       sortable: true,
       sortField: 'kepegawaian_nrk',
+      wrap: true,
+      cell: (record: any) => {
+        return <div className='mt-5 mb-5'>{no++}</div>
+      },
+    },
+    {
+      name: 'SKPD',
+      selector: (row: any) => row.SKPD,
+      sortable: true,
+      sortField: 'skpd',
+      width: '200px',
       wrap: true,
     },
     {
@@ -65,600 +77,66 @@ export function TabDataPPNS() {
       selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'nama',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Tempat Lahir',
-      selector: (row: any) => row.tempat_lahir,
-      sortable: true,
-      sortField: 'tempat_lahir',
       width: '150px',
       wrap: true,
     },
     {
-      name: 'Tanggal Lahir',
-      selector: (row: any) => row.tgl_lahir,
+      name: 'NPM/NRK',
+      selector: (row: any) => row.nip,
       sortable: true,
-      sortField: 'tgl_lahir',
+      sortField: 'nip',
       wrap: true,
       width: '150px',
     },
     {
-      name: 'Jenis Kelamin',
-      selector: (row: any) => row.jenis_kelamin,
+      name: 'Pangkat / GOL',
+      selector: (row: any) => row.golongan,
       sortable: true,
-      sortField: 'jenis_kelamin',
+      sortField: 'golongan',
       wrap: true,
       width: '150px',
       center: true,
     },
     {
-      name: 'Agama',
-      selector: (row: any) => row.agama,
+      name: 'No. SK. PPNS',
+      selector: (row: any) => row.no_sk_ppns,
       sortable: true,
-      sortField: 'agama',
+      sortField: 'no_sk_ppns',
+      width: '150px',
       wrap: true,
       center: true,
     },
     {
-      name:
-        valStatPegawai.val !== ''
-          ? valStatPegawai.val === 'PTT'
-            ? 'NPTT'
-            : valStatPegawai.val === 'PJLP'
-            ? 'NPJLP'
-            : 'NRK'
-          : 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
+      name: 'No. KTP PPNS',
+      selector: (row: any) => row.no_ktp,
       sortable: true,
-      sortField: 'kepegawaian_nrk',
+      sortField: 'no_ktp',
       wrap: true,
+      width: '150px',
       center: true,
     },
     {
-      name: 'Nomor KK',
-      selector: (row: any) => row.kepegawaian_status_pegawai,
+      name: 'Masa Berlaku KTP PPNS',
+      selector: (row: any) => row.masa_berlaku_ktp_ppns,
       sortable: true,
-      sortField: 'kepegawaian_status_pegawai',
-      wrap: true,
-      center: true,
-    },
-    {
-      name: 'Status Perkawinan',
-      selector: (row: any) => row.kepegawaian_nrk,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Umur',
-      selector: (row: any) => row.kepegawaian_nrk,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Nomor HP',
-      selector: (row: any) => row.kepegawaian_nrk,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Alamat Sesuai KTP',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'RT/RW',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Provinsi',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Kab/Kota',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Kecamatan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Kelurahan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Alamat Domisili',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'RT/RW',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Provinsi',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Kab/Kota',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Kecamatan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Kelurahan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Nama',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Hubungan Keluarga',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
       width: '200px',
+      sortField: 'masa_berlaku_ktp_ppns',
       wrap: true,
     },
     {
-      name: 'Nama',
-      selector: (row: any) => row.no_hp,
+      name: 'Wilayah Kerja',
+      selector: (row: any) => row.ppns_wilayah_kerja,
       sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Tempat Lahir',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Jenis Kelamin',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Lahir',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Jenis Pendidikan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nama Sekolah / Universitas',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
       width: '200px',
+      sortField: 'ppns_wilayah_kerja',
       wrap: true,
     },
     {
-      name: 'Nomor Ijazah',
-      selector: (row: any) => row.no_hp,
+      name: 'UU yang dikawal',
+      selector: (row: any) => row.uu_yang_dikawal,
       sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Ijazah',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Jurusan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Fakultas',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Upload Ijazah',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'NRK',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'NIP',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Pangkat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Golongan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'TMT Pangkat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Pendidikan pada SK',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '180px',
-      wrap: true,
-    },
-    {
-      name: 'Jabatan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Eselon',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Tempat Tugas',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Subbag/Seksi/Kecamatan',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Status Pegawai',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Rekening',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor KARPEG',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor KARIS/KARSU',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor TASPEN',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'NPWP',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Nomor BPJS/ASKES',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'TMT CPNS',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Upload SK CPNS',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'TMT PNS',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal SK PNS',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Upload SK PNS',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor SK Pangkat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal SK',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '100px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Upload SK Terakhir',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Diklat Pol PP Dasar',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Upload Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Diklat Struktural',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Upload Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Diklat PPNS',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Upload Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Diklat Fungsional',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Upload Sertifikat',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Upload Foto',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      width: '150px',
-      sortField: 'no_hp',
+      width: '250px',
+      sortField: 'uu_yang_dikawal',
       wrap: true,
     },
     {
@@ -716,6 +194,17 @@ export function TabDataPPNS() {
           </Fragment>
         )
       },
+    },
+  ]
+
+  const columns2 = [
+    {
+      name: '1',
+      selector: (row: any) => row.kepegawaian_status_pegawai,
+      sortable: true,
+      sortField: 'kepegawaian_status_pegawai',
+      wrap: true,
+      center: true,
     },
   ]
 
@@ -947,12 +436,12 @@ export function TabDataPPNS() {
         <div className='table-responsive mt-5 ms-5 me-5 w'>
           <div className='card-body py-8 mt-4'>
             <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>DAFTAR URUT KEPANGKATAN (DUK)</div>
+              <div className='col fs-4 mb-2 fw-bold text-center'>
+                DATA PEJABAT PENYIDIK PEGAWAI NEGERI SIPIL (PPNS)
+              </div>
             </div>
             <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>
-                SATUAN POLISI PAMONG PRAJA..................
-              </div>
+              <div className='col fs-4 mb-2 fw-bold text-center'>PROVINSI DKI JAKARTA</div>
             </div>
           </div>
           <DataTable
@@ -972,16 +461,10 @@ export function TabDataPPNS() {
         <div className='row me-2'>
           <div className='col-8'></div>
           <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
-            .......................................
-            <div className='col fs-6 mb-15 fw-semibold text-center'>
-              Kepala Satpol PP ....................................
-            </div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>
-              ..........................................................
-            </div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>
-              NIP. ..........................................................
-            </div>
+            Kepala Satuan Polisi Pamong Praja
+            <div className='col fs-6 mb-15 fw-semibold text-center'>Provinsi DKI Jakara</div>
+            <div className='col fs-6 mb-2 fw-semibold text-center'>(Drs. Arifin, M.AP)</div>
+            <div className='col fs-6 mb-2 fw-semibold text-center'>NIP. 197206221992031003</div>
           </div>
         </div>
       </div>

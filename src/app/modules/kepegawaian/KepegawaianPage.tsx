@@ -24,13 +24,16 @@ import {UpdateDataKepegawaian} from './components/update-tabs/UpdateDataKepegawa
 import {TabLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-tabs/TabLaporanRekapitulasiPegawai'
 import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
+import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
+import {UpdateNaikPangkat} from './components/update-tabs/UpdateNaikPangkat'
 
-import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPribadDUK'
+import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPribadiDUK'
 import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKeluargaDUK'
 import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikanDUK'
 import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
 import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 import { TabRekapitulasiDataPegawaiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
+import { TabRekapitulasiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -158,6 +161,37 @@ const KepegawaianPage: React.FC = () => {
                 Laporan Rekapitulasi Pegawai
               </PageTitle>
               <TabRekapitulasiDataPegawaiPejabatStruktural />
+            </>
+          }
+        />
+         <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatStruktural'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Rekapitulasi Pejabat Struktural
+              </PageTitle>
+              <TabRekapitulasiPejabatStruktural />
+            </>
+          }
+        />
+         <Route
+          path='LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+              TabData Pegawai Yang Naik Pangkat
+              </PageTitle>
+              <TabDataPegawaiYangNaikPangkat />
+            </>
+          }
+        />
+        <Route
+          path='TabDataPegawaiYangNaikPangkat/UpdateNaikPangkat/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Update Naik Pangkat</PageTitle>
+              <UpdateNaikPangkat />
             </>
           }
         />
