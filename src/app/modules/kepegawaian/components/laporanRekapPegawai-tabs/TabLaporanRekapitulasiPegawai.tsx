@@ -1,19 +1,31 @@
 import axios from 'axios'
-import { Field, Formik, FormikHelpers } from 'formik'
-import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { LaporanRekapHeader } from './LaporanRekapHeader'
 import Dropdown from 'react-bootstrap/Dropdown';
+import { JumlahSeluruhSatpol, JumlahSatpolDiklat } from '../LaporanRekapPegawaiInterface'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function TabLaporanRekapitulasiPegawai() {
-  const { id, status } = useParams()
   const navigate = useNavigate()
+
+  const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
+  const [jsatpoldik, setJsatpoldik] = useState<JumlahSatpolDiklat>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp`)
+      const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp-by-diklat`)
+
+      setJpegawaisatpol(jsatpol.data.data)
+      setJsatpoldik(jsatpoldik.data.data)
+    }
+    fetchData()
+  }, [])
 
   return (
     <>
@@ -41,7 +53,7 @@ export function TabLaporanRekapitulasiPegawai() {
                     <Dropdown.Item href="#">Docx</Dropdown.Item>
                     <Dropdown.Item href="#" onClick={() =>
                       navigate(
-                        `/kepegawaian/LaporanRekapitulasiPegawai/UnduhLaporanRekapitulasiPegawai`
+                        `/kepegawaian/LaporanRekapitulasiPegawai/TabLaporanRekapitulasiPegawai/UnduhLaporanRekapitulasiPegawai`
                       )
                     }>PDF</Dropdown.Item>
                   </Dropdown.Menu>
@@ -58,12 +70,11 @@ export function TabLaporanRekapitulasiPegawai() {
                 <h3 className="card-title align-items-start flex-column text-white pt-10">
                   <span className="fw-bold fs-1 mb-3">Jumlah Pegawai Satuan Polisi Pamong Praja</span>
                   <div className="fs-4 text-white">
-                    <span className="opacity-75">Total :</span>
+                    <span className="opacity-75">Total : </span>
                     <span className="position-relative d-inline-block">
-                      <a href="../../demo1/dist/pages/user-profile/projects.html"
-                        className="link-white opacity-75-hover fw-bold fs-1 d-block mb-1">5296 Orang</a>
-                      <span
-                        className="position-absolute opacity-50 bottom-0 start-0 border-2 border-body border-bottom w-100"></span>
+                      <div className="opacity-75-hover fw-bold fs-1 d-block mb-1">
+                        {jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp : '-'} Orang
+                      </div>
                     </span>
                   </div>
                 </h3>
@@ -74,8 +85,8 @@ export function TabLaporanRekapitulasiPegawai() {
                     <div className="col-6 d-flex flex-wrap">
                       <div className="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100">
                         <div className="m-0">
-                          <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">2883
-                            Orang</span>
+                          <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{jpegawaisatpol?.jmlh_seluruh_pns ? jpegawaisatpol?.jmlh_seluruh_pns : '- '} 
+                              Orang</span>
                           <span className="text-gray-500 fw-semibold fs-6">Pegawai Negeri Sipil (PNS)</span>
                         </div>
                       </div>
@@ -83,7 +94,7 @@ export function TabLaporanRekapitulasiPegawai() {
                     <div className="col-6 d-flex flex-wrap">
                       <div className="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100">
                         <div className="m-0">
-                          <span className="text-gray-700 fw-bolder d-block fs-2x lh-1 ls-n1 mb-1">102
+                          <span className="text-gray-700 fw-bolder d-block fs-2x lh-1 ls-n1 mb-1">{jpegawaisatpol?.jmlh_seluruh_cpns ? jpegawaisatpol?.jmlh_seluruh_cpns : '- '} 
                             Orang</span>
                           <span className="text-gray-500 fw-semibold fs-6">Calon Pegawai Negeri Sipil
                             (CPNS)</span>
@@ -93,19 +104,19 @@ export function TabLaporanRekapitulasiPegawai() {
                     <div className="col-12 d-flex flex-wrap">
                       <div className="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100">
                         <div className="m-0 border-bottom border-secondary border-2 pb-1 mb-2">
-                          <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">2361
+                          <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{jpegawaisatpol?.jmlh_seluruh_non_pns ? jpegawaisatpol?.jmlh_seluruh_non_pns : '- '} 
                             Orang</span>
                           <span className="text-gray-500 fw-semibold fs-6">Non Pegawai Negeri Sipil</span>
                         </div>
                         <div className="row">
                           <div className="col-6 border-end border-secondary pt-2">
-                            <span className="text-gray-700 fw-bolder d-block fs-3 lh-1 ls-n1 mb-1">1575
+                            <span className="text-gray-700 fw-bolder d-block fs-3 lh-1 ls-n1 mb-1">{jpegawaisatpol?.jmlh_seluruh_non_pns_ptt ? jpegawaisatpol?.jmlh_seluruh_non_pns_ptt : '- '} 
                               Orang</span>
                             <span className="text-gray-500 fw-semibold fs-6">Anggota PolPP Non PPNS
                               (PTT)</span>
                           </div>
                           <div className="col-6 border-start border-secondary pt-2">
-                            <span className="text-gray-700 fw-bolder d-block fs-3 lh-1 ls-n1 mb-1">786
+                            <span className="text-gray-700 fw-bolder d-block fs-3 lh-1 ls-n1 mb-1">{jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp ? jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp : '- '} 
                               Orang</span>
                             <span className="text-gray-500 fw-semibold fs-6">Anggota PolPP Non PPNS
                               (PJLP)</span>
@@ -116,7 +127,7 @@ export function TabLaporanRekapitulasiPegawai() {
                     <div className="col-6 d-flex flex-wrap">
                       <div className="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100">
                         <div className="m-0">
-                          <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">243
+                          <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp : '- '} 
                             Orang</span>
                           <span className="text-gray-500 fw-semibold fs-6">PPNS Satuan Polisi Pamong
                             Praja</span>
@@ -126,7 +137,7 @@ export function TabLaporanRekapitulasiPegawai() {
                     <div className="col-6 d-flex flex-wrap">
                       <div className="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100">
                         <div className="m-0">
-                          <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">301
+                          <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain : '- '} 
                             Orang</span>
                           <span className="text-gray-500 fw-semibold fs-6">PPNS Unit Kerja Lainnya</span>
                         </div>
@@ -374,7 +385,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                             <td className="text-center">DIKLAT STRUKTURAL</td>
                             <td className="text-end">
-                              <a href="#" className="text-gray-600 text-hover-primary">15 Orang</a>
+                              <a href="#" className="text-gray-600 text-hover-primary">{jsatpoldik?.diklat_pol_pp_strutural ? jsatpoldik?.diklat_pol_pp_strutural : '- '}  Orang</a>
                             </td>
                           </tr>
                           <tr>
@@ -384,7 +395,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                             <td className="text-center">DIKLAT FUNGSIONAL POL PP</td>
                             <td className="text-end">
-                              <a href="#" className="text-gray-600 text-hover-primary">2833 Orang</a>
+                              <a href="#" className="text-gray-600 text-hover-primary">{jsatpoldik?.diklat_fungsional_pol_pp ? jsatpoldik?.diklat_fungsional_pol_pp : '- '} Orang</a>
                             </td>
                           </tr>
                           <tr>
@@ -394,7 +405,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                             <td className="text-center">DIKLAT PPNS</td>
                             <td className="text-end">
-                              <a href="#" className="text-gray-600 text-hover-primary">243 Orang</a>
+                              <a href="#" className="text-gray-600 text-hover-primary">{jsatpoldik?.diklat_pol_pp_ppns ? jsatpoldik?.diklat_pol_pp_ppns : '- '} Orang</a>
                             </td>
                           </tr>
                           <tr>
@@ -414,7 +425,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                             <td className="text-center">DIKLAT DASAR POL PP</td>
                             <td className="text-end">
-                              <a href="#" className="text-gray-600 text-hover-primary">168 Orang</a>
+                              <a href="#" className="text-gray-600 text-hover-primary">{jsatpoldik?.diklat_pol_pp_dasar ? jsatpoldik?.diklat_pol_pp_dasar : '- '} Orang</a>
                             </td>
                           </tr>
                           <tr>
@@ -447,3 +458,7 @@ export function TabLaporanRekapitulasiPegawai() {
     </>
   )
 }
+function setData(data: any) {
+  throw new Error('Function not implemented.')
+}
+
