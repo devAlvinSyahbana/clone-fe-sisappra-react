@@ -53,6 +53,10 @@ export function JadwalPiket() {
       wrap: true,
     },
     {
+      name: 'Penanggungjawab Piket',
+      colSpan :"4",
+    },
+    {
       name: 'Tanggal',
       selector: (row: any) => row.tanggal,
       sortable: true,

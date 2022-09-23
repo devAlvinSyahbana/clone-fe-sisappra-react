@@ -104,16 +104,6 @@ export function AsideMenuMain() {
           hasBullet={true}
         />
         <AsideMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} />
-        <AsideMenuItem
-          to='/kepegawaian/DaftarUrutKepangkatan'
-          title='Daftar Urut Kepangkatan'
-          hasBullet={true}
-        />
-        <AsideMenuItem
-          to='/kepegawaian/DataPegawaiYangNaikPangkat'
-          title='Data Pegawai Yang Naik Pangkat'
-          hasBullet={true}
-        />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/sarana_prasarana'
