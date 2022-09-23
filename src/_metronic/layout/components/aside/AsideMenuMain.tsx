@@ -97,7 +97,7 @@ export function AsideMenuMain() {
           to='/kepegawaian/PenyidikPegawaiNegeriSipil'
           title='Penyidik Pegawai Negeri Sipil (PPNS)'
           hasBullet={true}
-        />
+        />        
         <AsideMenuItem
           to='/kepegawaian/KehadiranPegawai'
           title='Kehadiran Pegawai'
@@ -158,6 +158,7 @@ export function AsideMenuMain() {
         <AsideMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
         <AsideMenuItem to='/master/JenisPenerbitan' title='Jenis Penerbitan' hasBullet={true} />
       </AsideMenuItemWithSub>
+
     </>
   )
 }

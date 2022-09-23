@@ -8,6 +8,7 @@ import {HirarkiPegawai} from './components/HirarkiPegawai'
 import {LaporanRekapitulasiPegawai} from './components/LaporanRekapitulasiPegawai'
 import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipil'
 import {KehadiranPegawai} from './components/KehadiranPegawai'
+
 import {JadwalPiket} from './components/JadwalPiket'
 
 import {DataPribadi} from './components/tabs/DataPribadi'
@@ -29,6 +30,7 @@ import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKelu
 import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikanDUK'
 import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
 import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
+import { TabRekapitulasiDataPegawaiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -145,6 +147,17 @@ const KepegawaianPage: React.FC = () => {
                 Penyidik Pegawai Negeri Sipil
               </PageTitle>
               <TabDataPPNS />
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPejabatStruktural'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Laporan Rekapitulasi Pegawai
+              </PageTitle>
+              <TabRekapitulasiDataPegawaiPejabatStruktural />
             </>
           }
         />

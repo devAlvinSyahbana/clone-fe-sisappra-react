@@ -10,9 +10,9 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
+export const JENIS_SARANA_PRASARANA_URL = `${API_URL}/master/jenis-sarana-prasarana` //http://localhost:3000/master/sarana-prasarana
 
-export function JenisSaranaPrasaran() {
+export function JenisSaranaPrasarana() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -120,7 +120,7 @@ export function JenisSaranaPrasaran() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(SARANA_PRASARANA_URL + "/find");
+    const value = await axios.get(JENIS_SARANA_PRASARANA_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);
