@@ -38,7 +38,13 @@ export function Kelurahan() {
 
   const columns = [
     {
-      name: 'Kelurahan',
+      name: 'No',
+      selector: (row: any) => row.id,
+      sortable: true,
+      sortField: 'no',
+    },
+    {
+      name: 'Kode Kelurahan',
       selector: (row: any) => row.kode_kelurahan,
       sortable: true,
       sortField: 'kelurahan',

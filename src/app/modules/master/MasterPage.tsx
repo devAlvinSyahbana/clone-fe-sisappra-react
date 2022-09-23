@@ -19,7 +19,7 @@ import { Pangkat } from './components/Pangkat'
 import { TempatPelaksana } from './components/TempatPelaksana'
 import { SKPD } from './components/SKPD'
 import { Pendidikan } from './components/Pendidikan'
-import { JenisSaranaPrasaran } from './components/JenisSaranaPrasarana'
+import { JenisSaranaPrasarana } from './components/JenisSaranaPrasarana'
 import { Golongan } from './components/Golongan'
 import { Eselon } from './components/Eselon'
 import { Jabatan } from './components/Jabatan'
@@ -99,11 +99,11 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
-          path='JenisSaranaraPrasrana'
+          path='JenisSaranaPrasarana'
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Jenis Sarana Prasarana </PageTitle>
-              <JenisSaranaPrasaran />
+              <JenisSaranaPrasarana />
             </>
           }
         />
