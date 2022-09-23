@@ -89,7 +89,7 @@ export function AsideMenuMain() {
         />
         <AsideMenuItem to='/kepegawaian/HirarkiPegawai' title='Hirarki Pegawai' hasBullet={true} />
         <AsideMenuItem
-          to='/kepegawaian/LaporanRekapitulasiPegawai'
+          to='/kepegawaian/LaporanRekapitulasiPegawai/TabLaporanRekapitulasiPegawai'
           title='Laporan Rekapitulasi Pegawai'
           hasBullet={true}
         />

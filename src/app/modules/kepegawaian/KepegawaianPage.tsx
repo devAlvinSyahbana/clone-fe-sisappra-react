@@ -28,6 +28,7 @@ import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPriba
 import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKeluargaDUK'
 import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikanDUK'
 import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
+import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -95,13 +96,24 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='LaporanRekapitulasiPegawai'
+          path='LaporanRekapitulasiPegawai/TabLaporanRekapitulasiPegawai'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
                 Laporan Rekapitulasi Pegawai
               </PageTitle>
-              <LaporanRekapitulasiPegawai />
+              <TabLaporanRekapitulasiPegawai />
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/UnduhLaporanRekapitulasiPegawai'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Laporan Rekapitulasi Pegawai
+              </PageTitle>
+              <UnduhLaporanRekapitulasiPegawai />
             </>
           }
         />
