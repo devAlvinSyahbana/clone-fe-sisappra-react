@@ -25,6 +25,7 @@ import {TabLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-ta
 import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
 import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
+import {UpdateNaikPangkat} from './components/update-tabs/UpdateNaikPangkat'
 
 import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPribadDUK'
 import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKeluargaDUK'
@@ -170,6 +171,15 @@ const KepegawaianPage: React.FC = () => {
               TabData Pegawai Yang Naik Pangkat
               </PageTitle>
               <TabDataPegawaiYangNaikPangkat />
+            </>
+          }
+        />
+        <Route
+          path='TabDataPegawaiYangNaikPangkat/UpdateNaikPangkat/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Update Naik Pangkat</PageTitle>
+              <UpdateNaikPangkat />
             </>
           }
         />

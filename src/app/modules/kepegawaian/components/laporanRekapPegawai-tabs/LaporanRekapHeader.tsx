@@ -53,7 +53,7 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('DataPegawaiYangNaikPangkat') && 'active')
+                      (location.pathname.includes('TabDataPegawaiYangNaikPangkat') && 'active')
                     }
                     to={`/kepegawaian/LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat/`}
                   >

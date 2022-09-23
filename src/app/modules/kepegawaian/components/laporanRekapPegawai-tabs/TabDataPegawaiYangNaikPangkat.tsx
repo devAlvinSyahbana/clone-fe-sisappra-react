@@ -6,8 +6,10 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
+import {LaporanRekapHeader} from './LaporanRekapHeader'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
+
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
@@ -193,7 +195,7 @@ export function TabDataPegawaiYangNaikPangkat() {
                         href='#'
                         onClick={() =>
                           navigate(
-                            `/kepegawaian/DataPegawaiYangNaikPangkat/UpdateNaikPangkat/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                            `/kepegawaian/TabDataPegawaiYangNaikPangkat/UpdateNaikPangkat/${record?.id}/${record?.kepegawaian_status_pegawai}`,
                             {replace: true}
                           )
                         }
@@ -337,6 +339,8 @@ export function TabDataPegawaiYangNaikPangkat() {
   }
 
   return (
+    <>
+    <LaporanRekapHeader />
     <div className={`card`}>
       {/* begin::Body */}
       <div id='kt_advanced_search_form'>
@@ -535,5 +539,6 @@ export function TabDataPegawaiYangNaikPangkat() {
                   </div>
       {/* end::Body */}
     </div>
+   </>
   )
 }
