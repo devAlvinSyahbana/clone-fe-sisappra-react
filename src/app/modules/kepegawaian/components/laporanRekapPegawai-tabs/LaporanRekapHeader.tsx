@@ -86,9 +86,9 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('HirarkiKepegawaian') && 'active')
+                      (location.pathname.includes('TabRekapitulasiPejabatFungsional') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/`}
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/`}
                   >
                     Rekapitulasi Data Pejabat Fungsional Pol PP (JFT)
                   </Link>

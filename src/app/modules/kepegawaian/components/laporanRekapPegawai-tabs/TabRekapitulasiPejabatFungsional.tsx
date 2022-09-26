@@ -1,43 +1,37 @@
-import {useState, useEffect, Fragment} from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
-import {LaporanPPNSHeader} from './LaporanPPNSHeader'
+import { LaporanRekapHeader } from './LaporanRekapHeader'
+import { number } from 'yup/lib/locale'
+import { Form } from 'react-bootstrap'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_DATA_KELUARGA_URL = `${API_URL}/kepegawaian/find-data-keluarga`
-export const KEPEGAWAIAN_DATA_PENDIDIKAN_URL = `${API_URL}/kepegawaian/find-data-pendidikan/`
-export const KEPEGAWAIAN_DATA_PENDIDKAN_TERAKHIR_URL = `${API_URL}/kepegawaian/get-pendidikan-terakhir`
-export const KEPEGAWAIAN_AUTO_SEARCH_PEGAWAI_URL = `${API_URL}/kepegawaian/auto-search-pegawai`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 
-export function TabDataPPNS() {
+export function TabRekapitulasiPejabatFungsional() {
   const navigate = useNavigate()
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
-  const [valFilterNama, setFilterNama] = useState({val: ''})
-  const [valFilterNRK, setFilterNRK] = useState({val: ''})
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const [valFilterWilayah, setFilterWilayah] = useState({val: ''})
-  const [valFilterKecamatanSeksi, setFilterKecamatanSeksi] = useState({val: ''})
-  const [valFilterKelurahan, setFilterKelurahan] = useState({val: ''})
-  const arrStatPegawai = ['CPNS', 'PNS', 'PTT', 'PJLP']
+  const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
+  const [valFilterNama, setFilterNama] = useState({ val: '' })
+  const [valFilterNRK, setFilterNRK] = useState({ val: '' })
+  const [valFilterNoPegawai, setFilterNoPegawai] = useState({ val: '' })
+  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -57,88 +51,81 @@ export function TabDataPPNS() {
 
   const columns = [
     {
-      name: 'No',
-      sortable: true,
-      sortField: 'kepegawaian_nrk',
-      wrap: true,
-      cell: (record: any) => {
-        return <div className='mt-5 mb-5'>{no++}</div>
-      },
-    },
-    {
-      name: 'SKPD',
-      selector: (row: any) => row.SKPD,
-      sortable: true,
-      sortField: 'skpd',
-      width: '200px',
-      wrap: true,
-    },
-    {
       name: 'Nama',
       selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'nama',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'NPM/NRK',
-      selector: (row: any) => row.nip,
-      sortable: true,
-      sortField: 'nip',
-      wrap: true,
-      width: '150px',
-    },
-    {
-      name: 'Pangkat / GOL',
-      selector: (row: any) => row.golongan,
-      sortable: true,
-      sortField: 'golongan',
-      wrap: true,
-      width: '150px',
-      center: true,
-    },
-    {
-      name: 'No. SK. PPNS',
-      selector: (row: any) => row.no_sk_ppns,
-      sortable: true,
-      sortField: 'no_sk_ppns',
-      width: '150px',
-      wrap: true,
-      center: true,
-    },
-    {
-      name: 'No. KTP PPNS',
-      selector: (row: any) => row.no_ktp,
-      sortable: true,
-      sortField: 'no_ktp',
-      wrap: true,
-      width: '150px',
-      center: true,
-    },
-    {
-      name: 'Masa Berlaku KTP PPNS',
-      selector: (row: any) => row.masa_berlaku_ktp_ppns,
-      sortable: true,
       width: '200px',
-      sortField: 'masa_berlaku_ktp_ppns',
+      wrap: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='d-flex align-items-center'>
+              {/* begin:: Avatar */}
+              <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
+                {record?.foto !== '' ? (
+                  <div className='symbol-label'>
+                    <img src={record?.foto} alt={record?.nama} className='w-100' />
+                  </div>
+                ) : (
+                  <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
+                    {record?.nama.charAt(0)}
+                  </div>
+                )}
+              </div>
+              <div className='d-flex flex-column'>
+                <span>{record?.nama}</span>
+              </div>
+            </div>
+          </Fragment>
+        )
+      },
+    },
+    {
+      name: 'NIP',
+      selector: (row: any) => row.kepegawaian_nip,
+      sortable: true,
+      sortField: 'kepegawaian_nip',
       wrap: true,
     },
     {
-      name: 'Wilayah Kerja',
-      selector: (row: any) => row.ppns_wilayah_kerja,
+      name:
+        valStatPegawai.val !== ''
+          ? valStatPegawai.val === 'PTT'
+            ? 'NPTT'
+            : valStatPegawai.val === 'PJLP'
+              ? 'NPJLP'
+              : 'NRK'
+          : 'NRK',
+      selector: (row: any) => row.kepegawaian_nrk,
       sortable: true,
-      width: '200px',
-      sortField: 'ppns_wilayah_kerja',
+      sortField: 'kepegawaian_nrk',
       wrap: true,
+      center: true,
     },
     {
-      name: 'UU yang dikawal',
-      selector: (row: any) => row.uu_yang_dikawal,
+      name: 'Jabatan',
+      // selector: (row: any) => row.kepegawaian_status_pegawai,
       sortable: true,
-      width: '250px',
-      sortField: 'uu_yang_dikawal',
+      // sortField: 'kepegawaian_status_pegawai',
       wrap: true,
+      center: true,
+    },
+    {
+      name: 'Tempat Tugas',
+      // selector: (row: any) => row.jenis_kelamin,
+      sortable: true,
+      // sortField: 'jenis_kelamin',
+      wrap: true,
+      center: true,
+    },
+    {
+      name: 'Keterangan',
+      // selector: (row: any) => row.agama,
+      sortable: true,
+      // sortField: 'agama',
+      wrap: true,
+      center: true,
     },
     {
       name: 'Aksi',
@@ -161,28 +148,23 @@ export function TabDataPPNS() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          { replace: true }
+                        )
+                      }
+                    >
                       Detail
                     </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
+                          `/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          { replace: true }
                         )
                       }
                     >
@@ -195,17 +177,6 @@ export function TabDataPPNS() {
           </Fragment>
         )
       },
-    },
-  ]
-
-  const columns2 = [
-    {
-      name: '1',
-      selector: (row: any) => row.kepegawaian_status_pegawai,
-      sortable: true,
-      sortField: 'kepegawaian_status_pegawai',
-      wrap: true,
-      center: true,
     },
   ]
 
@@ -282,48 +253,47 @@ export function TabDataPPNS() {
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nopegawai=${valFilterNoPegawai.val}`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterReset = () => {
-    setValStatPegawai({val: ''})
-    setFilterNama({val: ''})
-    setFilterNRK({val: ''})
-    setFilterNoPegawai({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setValStatPegawai({ val: '' })
+    setFilterNama({ val: '' })
+    setFilterNRK({ val: '' })
+    setFilterNoPegawai({ val: '' })
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   const handleChangeStatPegawai = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setValStatPegawai({val: event.target.value})
+    setValStatPegawai({ val: event.target.value })
   }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNama({val: event.target.value})
+    setFilterNama({ val: event.target.value })
   }
   const handleChangeInputNRK = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNRK({val: event.target.value})
+    setFilterNRK({ val: event.target.value })
   }
   const handleChangeInputNoPegawai = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNoPegawai({val: event.target.value})
+    setFilterNoPegawai({ val: event.target.value })
   }
 
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
-        valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-      }`,
+      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
+        }`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
@@ -337,7 +307,7 @@ export function TabDataPPNS() {
 
   return (
     <>
-      <LaporanPPNSHeader />
+      <LaporanRekapHeader />
       <div className='card'>
         {/* begin::Body */}
         <div id='kt_advanced_search_form'>
@@ -356,22 +326,9 @@ export function TabDataPPNS() {
               />
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <label htmlFor='' className='mb-3'>
-                NRK
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                name='nama'
-                value={valFilterNama.val}
-                onChange={handleChangeInputNama}
-                placeholder='Nama'
-              />
-            </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <div className='form-group'>
                 <label htmlFor='' className='mb-3'>
-                  SKPD
+                  Status Kepegawaian
                 </label>
                 <select
                   className='form-select form-select-solid'
@@ -387,8 +344,83 @@ export function TabDataPPNS() {
                 </select>
               </div>
             </div>
+            <div className='col-xxl-6'>
+              <label htmlFor='' className='mb-3'>
+                Wilayah/Bidang
+              </label>
+              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
+                <option>Pilih</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </Form.Select>
+            </div>
+            <div className='col-xxl-6'>
+              <label htmlFor='' className='mb-3'>
+                Kecamatan/Seksi
+              </label>
+              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
+                <option>Pilih</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </Form.Select>
+            </div>
+            <div className='col-xxl-6'>
+              <label htmlFor='' className='mb-3'>
+                Kelurahan
+              </label>
+              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
+                <option>Pilih</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </Form.Select>
+            </div>
+            {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
+              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
+                  NRK
+                </label>
+                <input
+                  type='text'
+                  className='form-control form-control form-control-solid'
+                  name='nrk'
+                  value={valFilterNRK.val}
+                  onChange={handleChangeInputNRK}
+                  placeholder='NRK'
+                />
+              </div>
+            ) : null}
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+              <label htmlFor='' className='mb-3'>
+                {valStatPegawai.val === 'PNS'
+                  ? 'NIP'
+                  : valStatPegawai.val === 'PTT'
+                    ? 'NPTT'
+                    : valStatPegawai.val === 'PJLP'
+                      ? 'NPJLP'
+                      : 'NIP'}
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                value={valFilterNoPegawai.val}
+                onChange={handleChangeInputNoPegawai}
+                placeholder={
+                  valStatPegawai.val === 'PNS'
+                    ? 'NIP'
+                    : valStatPegawai.val === 'PTT'
+                      ? 'NPTT'
+                      : valStatPegawai.val === 'PJLP'
+                        ? 'NPJLP'
+                        : 'NIP'
+                }
+              />
+            </div>
           </div>
         </div>
+
         <div className='row g-8 mt-2 ms-5 me-5'>
           <div className='col-md-6 col-lg-6 col-sm-12'>
             <Link to='#'>
@@ -405,11 +437,7 @@ export function TabDataPPNS() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link
-              to='/kepegawaian/TabDataPPNS/AddDataPPNS/'
-              onClick={handleFilterReset}
-              className='me-2'
-            >
+            <Link to='#' onClick={handleFilterReset} className='me-2'>
               <button className='btn btn-primary'>
                 <i className='fa-solid fa-plus'></i>
                 Tambah
@@ -436,58 +464,45 @@ export function TabDataPPNS() {
             </Dropdown>
           </div>
         </div>
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card card-flush h-xl-100'>
-            <div
-              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-              style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
-              }}
-              data-theme='light'
-            >
-              <div className='card-body py-8 mt-4 fw-bold text-white'>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>
-                    DATA PEJABAT PENYIDIK PEGAWAI NEGERI SIPIL (PPNS)
-                  </div>
-                </div>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>PROVINSI DKI JAKARTA</div>
-                </div>
-              </div>
-            </div>
 
-            <div className='card-body mt-n20'>
-              <div className='mt-n20 position-relatve'>
-                <div className='card border card-flush h-xl-100'>
-                  <div className='table-responsive mt-5 ms-5 me-5 w'>
-                    <DataTable
-                      columns={columns}
-                      data={data}
-                      progressPending={loading}
-                      progressComponent={<LoadingAnimation />}
-                      pagination
-                      paginationServer
-                      paginationTotalRows={totalRows}
-                      onChangeRowsPerPage={handlePerRowsChange}
-                      onChangePage={handlePageChange}
-                      customStyles={customStyles}
-                    />
-                  </div>
-                </div>
+        <div className='table-responsive mt-10 mb-1 ms-5 me-5 w'>
+          <div className='card-body py-8 mt-4 '>
+            <div className='row'>
+              <div className='col fs-4 mb-2 d-flex justify-content-start fw-bold text-center'>DAFTAR PEJABAT FUNGSIONAL</div>
+            </div>
+            <div className='row'>
+              <div className='col fs-4 mb-2 d-flex justify-content-start fw-bold text-center'>
+                SATPOL PP PROVINSI DKI JAKARTA
               </div>
             </div>
           </div>
+          <DataTable
+            columns={columns}
+            data={data}
+            progressPending={loading}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+            customStyles={customStyles}
+          />
         </div>
-
         {/* end::Body */}
         <div className='row me-2'>
           <div className='col-8'></div>
           <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
-            Kepala Satuan Polisi Pamong Praja
-            <div className='col fs-6 mb-15 fw-semibold text-center'>Provinsi DKI Jakara</div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>(Drs. Arifin, M.AP)</div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>NIP. 197206221992031003</div>
+            .......................................
+            <div className='col fs-6 mb-15 fw-semibold text-center'>
+              Kepala Satpol PP ....................................
+            </div>
+            <div className='col fs-6 mb-2 fw-semibold text-center'>
+              ..........................................................
+            </div>
+            <div className='col fs-6 mb-2 fw-semibold text-center'>
+              NIP. ..........................................................
+            </div>
           </div>
         </div>
       </div>

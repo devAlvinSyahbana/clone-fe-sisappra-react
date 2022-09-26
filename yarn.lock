@@ -9719,6 +9719,11 @@ react-router@6.3.0:
   dependencies:
     history "^5.2.0"
 
+react-script@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-script/-/react-script-2.0.5.tgz#9dac20f97cff1fb40f5b4084e3f44b82e3001572"
+  integrity sha512-hLFLMFAH3Rr0VJisBz/bPyaJxMEimQGvuVOBXyn3t/nmlbV6mF+nghCPoY1V4dzIi+M1A8iyyXId1cgg8eS6XA==
+
 react-scripts@5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/react-scripts/-/react-scripts-5.0.1.tgz"
@@ -9786,6 +9791,13 @@ react-select@^5.4.0:
     memoize-one "^5.0.0"
     prop-types "^15.6.0"
     react-transition-group "^4.3.0"
+
+react-sticky-box@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-sticky-box/-/react-sticky-box-1.0.2.tgz#7e72a0f237bdf8270cec9254337f49519a411174"
+  integrity sha512-Kyvtppdtv1KqJyNU4DtrSMI0unyQRgtraZvVQ0GAazVbYiTsIVpyhpr+5R0Aavzu4uJNSe1awj2rk/qI7i6Zfw==
+  dependencies:
+    resize-observer-polyfill "^1.5.1"
 
 react-table@^7.7.0:
   version "7.7.0"
