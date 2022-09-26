@@ -6,6 +6,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
+import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanPPNSHeader} from './LaporanPPNSHeader'
@@ -167,7 +168,7 @@ export function TabDataPPNS() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
                           {
                             replace: true,
                           }
@@ -180,7 +181,7 @@ export function TabDataPPNS() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
                           {replace: true}
                         )
                       }
@@ -388,7 +389,6 @@ export function TabDataPPNS() {
             </div>
           </div>
         </div>
-
         <div className='row g-8 mt-2 ms-5 me-5'>
           <div className='col-md-6 col-lg-6 col-sm-12'>
             <Link to='#'>
@@ -405,7 +405,11 @@ export function TabDataPPNS() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link to='#' onClick={handleFilterReset} className='me-2'>
+            <Link
+              to='/kepegawaian/TabDataPPNS/AddDataPPNS/'
+              onClick={handleFilterReset}
+              className='me-2'
+            >
               <button className='btn btn-primary'>
                 <i className='fa-solid fa-plus'></i>
                 Tambah
@@ -432,31 +436,50 @@ export function TabDataPPNS() {
             </Dropdown>
           </div>
         </div>
-
-        <div className='table-responsive mt-5 ms-5 me-5 w'>
-          <div className='card-body py-8 mt-4'>
-            <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>
-                DATA PEJABAT PENYIDIK PEGAWAI NEGERI SIPIL (PPNS)
+        <div className='col-xl-12 mb-xl-12 mt-6'>
+          <div className='card card-flush h-xl-100'>
+            <div
+              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
+              style={{
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
+              }}
+              data-theme='light'
+            >
+              <div className='card-body py-8 mt-4 fw-bold text-white'>
+                <div className='row'>
+                  <div className='col fs-4 mb-2 fw-bold text-center'>
+                    DATA PEJABAT PENYIDIK PEGAWAI NEGERI SIPIL (PPNS)
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col fs-4 mb-2 fw-bold text-center'>PROVINSI DKI JAKARTA</div>
+                </div>
               </div>
             </div>
-            <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>PROVINSI DKI JAKARTA</div>
+
+            <div className='card-body mt-n20'>
+              <div className='mt-n20 position-relatve'>
+                <div className='card border card-flush h-xl-100'>
+                  <div className='table-responsive mt-5 ms-5 me-5 w'>
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      progressPending={loading}
+                      progressComponent={<LoadingAnimation />}
+                      pagination
+                      paginationServer
+                      paginationTotalRows={totalRows}
+                      onChangeRowsPerPage={handlePerRowsChange}
+                      onChangePage={handlePageChange}
+                      customStyles={customStyles}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <DataTable
-            columns={columns}
-            data={data}
-            progressPending={loading}
-            progressComponent={<LoadingAnimation />}
-            pagination
-            paginationServer
-            paginationTotalRows={totalRows}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-            customStyles={customStyles}
-          />
         </div>
+
         {/* end::Body */}
         <div className='row me-2'>
           <div className='col-8'></div>
