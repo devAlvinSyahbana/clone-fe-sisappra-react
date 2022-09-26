@@ -125,7 +125,7 @@ export function TambahLaporanSarana() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/sarana_prasarana/LaporanSaranaPrasarana', {replace: true})
+              navigate('/sarana-prasarana/LaporanSaranaPrasarana', {replace: true})
             }
             return
           }
@@ -135,7 +135,7 @@ export function TambahLaporanSarana() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/sarana_prasarana/LaporanSaranaPrasarana', {replace: true})
+          navigate('/sarana-prasarana/LaporanSaranaPrasarana', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -262,7 +262,7 @@ export function TambahLaporanSarana() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/sarana_prasarana/LaporanSaranaPrasarana'>
+                    <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali
