@@ -9,7 +9,7 @@ import {LihatLaporanSarana} from './components/LihatLaporanSarana'
 const sarana_prasaranaBreadCrumbs: Array<PageLink> = [
   {
     title: 'Sarana & Prasarana',
-    path: '/sarana_prasarana/LaporanSaranaPrasarana',
+    path: '/sarana-prasarana/LaporanSaranaPrasarana',
     isSeparator: false,
     isActive: false,
   },
@@ -70,7 +70,7 @@ const SaranaPrasaranaPage: React.FC = () => {
           }
         />
 
-        <Route index element={<Navigate to='/sarana_prasarana' />} />
+        <Route index element={<Navigate to='/sarana-prasarana' />} />
       </Route>
     </Routes>
   )
