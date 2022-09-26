@@ -1,6 +1,6 @@
-import {useState, useEffect, Fragment} from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -8,6 +8,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
+import { JadwalPiketHeader } from './piket-tabs/JadwalPiketHeader'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
@@ -18,17 +19,17 @@ export function JadwalPiket() {
   const navigate = useNavigate()
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
-  const [valFilterNama, setFilterNama] = useState({val: ''})
-  const [valFilterNRK, setFilterNRK] = useState({val: ''})
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
+  const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
+  const [valFilterNama, setFilterNama] = useState({ val: '' })
+  const [valFilterNRK, setFilterNRK] = useState({ val: '' })
+  const [valFilterNoPegawai, setFilterNoPegawai] = useState({ val: '' })
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -54,7 +55,7 @@ export function JadwalPiket() {
     },
     {
       name: 'Penanggungjawab Piket',
-      colSpan :"4",
+      colSpan: "4",
     },
     {
       name: 'Tanggal',
@@ -154,7 +155,7 @@ export function JadwalPiket() {
                       onClick={() =>
                         navigate(
                           `/kepegawaian/JadwalPiket/DataPiket/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
+                          { replace: true }
                         )
                       }
                     >
@@ -165,7 +166,7 @@ export function JadwalPiket() {
                       onClick={() =>
                         navigate(
                           `/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
+                          { replace: true }
                         )
                       }
                     >
@@ -254,48 +255,47 @@ export function JadwalPiket() {
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nopegawai=${valFilterNoPegawai.val}`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterReset = () => {
-    setValStatPegawai({val: ''})
-    setFilterNama({val: ''})
-    setFilterNRK({val: ''})
-    setFilterNoPegawai({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setValStatPegawai({ val: '' })
+    setFilterNama({ val: '' })
+    setFilterNRK({ val: '' })
+    setFilterNoPegawai({ val: '' })
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   const handleChangeStatPegawai = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setValStatPegawai({val: event.target.value})
+    setValStatPegawai({ val: event.target.value })
   }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNama({val: event.target.value})
+    setFilterNama({ val: event.target.value })
   }
   const handleChangeInputNRK = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNRK({val: event.target.value})
+    setFilterNRK({ val: event.target.value })
   }
   const handleChangeInputNoPegawai = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setFilterNoPegawai({val: event.target.value})
+    setFilterNoPegawai({ val: event.target.value })
   }
 
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
-        valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-      }`,
+      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
+        }`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
@@ -308,65 +308,67 @@ export function JadwalPiket() {
   }
 
   return (
-    <div className={`card`}>
-      {/* begin::Body */}
-      <div id='kt_advanced_search_form'>
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <label htmlFor='' className='mb-3'>
-              Nama
-            </label>
-            <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              name='nama'
-              value={valFilterNama.val}
-              onChange={handleChangeInputNama}
-              placeholder='Nama'
-            />
-          </div>
-          {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
+    <>
+      <JadwalPiketHeader />
+      <div className={`card`}>
+        {/* begin::Body */}
+        <div id='kt_advanced_search_form'>
+          <div className='row g-8 mt-2 ms-5 me-5'>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                NRK
+                Nama
               </label>
               <input
                 type='text'
                 className='form-control form-control form-control-solid'
-                name='nrk'
-                value={valFilterNRK.val}
-                onChange={handleChangeInputNRK}
-                placeholder='NRK'
+                name='nama'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Nama'
               />
             </div>
-          ) : null}
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-            <label htmlFor='' className='mb-3'>
-              {valStatPegawai.val === 'PNS'
-                ? 'NIP'
-                : valStatPegawai.val === 'PTT'
-                ? 'NPTT'
-                : valStatPegawai.val === 'PJLP'
-                ? 'NPJLP'
-                : 'NIP'}
-            </label>
-            <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              value={valFilterNoPegawai.val}
-              onChange={handleChangeInputNoPegawai}
-              placeholder={
-                valStatPegawai.val === 'PNS'
+            {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
+              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
+                  NRK
+                </label>
+                <input
+                  type='text'
+                  className='form-control form-control form-control-solid'
+                  name='nrk'
+                  value={valFilterNRK.val}
+                  onChange={handleChangeInputNRK}
+                  placeholder='NRK'
+                />
+              </div>
+            ) : null}
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+              <label htmlFor='' className='mb-3'>
+                {valStatPegawai.val === 'PNS'
                   ? 'NIP'
                   : valStatPegawai.val === 'PTT'
-                  ? 'NPTT'
-                  : valStatPegawai.val === 'PJLP'
-                  ? 'NPJLP'
-                  : 'NIP'
-              }
-            />
-          </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                    ? 'NPTT'
+                    : valStatPegawai.val === 'PJLP'
+                      ? 'NPJLP'
+                      : 'NIP'}
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                value={valFilterNoPegawai.val}
+                onChange={handleChangeInputNoPegawai}
+                placeholder={
+                  valStatPegawai.val === 'PNS'
+                    ? 'NIP'
+                    : valStatPegawai.val === 'PTT'
+                      ? 'NPTT'
+                      : valStatPegawai.val === 'PJLP'
+                        ? 'NPJLP'
+                        : 'NIP'
+                }
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
                 NIK
               </label>
@@ -379,83 +381,83 @@ export function JadwalPiket() {
                 placeholder='NIK'
               />
             </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Wilayah / Bidang
-              </label>
-              <select
-                className='form-select form-select-solid'
-                aria-label='Select example'
-                value={valStatPegawai.val}
-                onChange={handleChangeStatPegawai}
-                name='val'
-              >
-                <option value=''>Pilih</option>
-                {arrStatPegawai.map((val: string) => {
-                  return <option value={val}>{val}</option>
-                })}
-              </select>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Wilayah / Bidang
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })}
+                </select>
+              </div>
             </div>
-          </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Kecamatan / Seksi
-              </label>
-              <select
-                className='form-select form-select-solid'
-                aria-label='Select example'
-                value={valStatPegawai.val}
-                onChange={handleChangeStatPegawai}
-                name='val'
-              >
-                <option value=''>Pilih</option>
-                {arrStatPegawai.map((val: string) => {
-                  return <option value={val}>{val}</option>
-                })}
-              </select>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Kecamatan / Seksi
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })}
+                </select>
+              </div>
             </div>
-          </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Kelurahan
-              </label>
-              <select
-                className='form-select form-select-solid'
-                aria-label='Select example'
-                value={valStatPegawai.val}
-                onChange={handleChangeStatPegawai}
-                name='val'
-              >
-                <option value=''>Pilih</option>
-                {arrStatPegawai.map((val: string) => {
-                  return <option value={val}>{val}</option>
-                })}
-              </select>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Kelurahan
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })}
+                </select>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
-            <button onClick={handleFilter} className='btn btn-primary me-2'>
-              <i className='fa-solid fa-search'></i>
-              Cari
-            </button>
-          </Link>
-          <Link to='#' onClick={handleFilterReset} className=''>
-            <button className='btn btn-primary'>
-              <i className='fa-solid fa-arrows-rotate'></i>
-              Reset
-            </button>
-          </Link>
-        </div>
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-        <Link to='/kepegawaian/JadwalPiket/TambahPiket'>
+        <div className='row g-8 mt-2 ms-5 me-5'>
+          <div className='col-md-6 col-lg-6 col-sm-12'>
+            <Link to='#'>
+              <button onClick={handleFilter} className='btn btn-primary me-2'>
+                <i className='fa-solid fa-search'></i>
+                Cari
+              </button>
+            </Link>
+            <Link to='#' onClick={handleFilterReset} className=''>
+              <button className='btn btn-primary'>
+                <i className='fa-solid fa-arrows-rotate'></i>
+                Reset
+              </button>
+            </Link>
+          </div>
+          <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+            <Link to='/kepegawaian/JadwalPiket/TambahPiket'>
               <Button variant='primary'>
                 <span className='svg-icon svg-icon-2'>
                   <svg
@@ -478,77 +480,78 @@ export function JadwalPiket() {
                     <rect x='4.36396' y='11.364' width={16} height={2} rx={1} fill='currentColor' />
                   </svg>
                 </span>
-                Tambah 
+                Tambah
               </Button>
             </Link>
-          <Dropdown as={ButtonGroup}>
-            <Button variant='light'>
-              {btnLoadingUnduh ? (
-                <>
-                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                  Memproses...
-                </>
-              ) : (
-                'Unduh'
-              )}
-            </Button>
+            <Dropdown as={ButtonGroup}>
+              <Button variant='light'>
+                {btnLoadingUnduh ? (
+                  <>
+                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                    Memproses...
+                  </>
+                ) : (
+                  'Unduh'
+                )}
+              </Button>
 
-            <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+              <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
 
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-              <Dropdown.Item>PDF</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </div>
-
-      <div className='table-responsive mt-6 ms-5 me-5'>
-        <div className='card-body py-4 mt-4'>
-          <div className='row'>
-            <div className='col fs-4 mb-2 fw-bold text-center'>DAFTAR PIKET</div>
-          </div>
-          <div className='row'>
-            <div className='col fs-4 mb-2 fw-bold text-center'>
-            PADA SATUAN POLISIPAMONG PRAJA.................................
-            </div>
-          </div>
-          <div className="row">
-            <div className="col fs-4 mb-6 fw-semibold text-center">
-              BULAN.................................
-            </div>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
+                <Dropdown.Item>PDF</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
         </div>
-        <DataTable
-          columns={columns}
-          data={data}
-          progressPending={loading}
-          progressComponent={<LoadingAnimation />}
-          pagination
-          paginationServer
-          paginationTotalRows={totalRows}
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-          customStyles={customStyles}
-        />
+
+        <div className='table-responsive mt-6 ms-5 me-5'>
+          <div className='card-body py-4 mt-4'>
+            <div className='row'>
+              <div className='col fs-4 mb-2 fw-bold text-center'>DAFTAR PIKET</div>
+            </div>
+            <div className='row'>
+              <div className='col fs-4 mb-2 fw-bold text-center'>
+                PADA SATUAN POLISIPAMONG PRAJA.................................
+              </div>
+            </div>
+            <div className="row">
+              <div className="col fs-4 mb-6 fw-semibold text-center">
+                BULAN.................................
+              </div>
+            </div>
+          </div>
+          <DataTable
+            columns={columns}
+            data={data}
+            progressPending={loading}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+            customStyles={customStyles}
+          />
+        </div>
+        <div className="row">
+          <div className="col-7 p-10"></div>
+          <div className="col-4 fs-8 mb-4 fw-semibold text-center">
+            .................................
+            <div className="col fs-6 mb-15 fw-semibold text-center">
+              Kepala Satpol PP
+              ...............................................................
+            </div>
+            <div className="col fs-6 mb-2 fw-semibold text-center">
+              ......................
+            </div>
+            <div className="col fs-6 mb-2 fw-semibold text-center">
+              NIP. ......................
+            </div>
+          </div>
+        </div>
+        {/* end::Body */}
       </div>
-      <div className="row">
-                    <div className="col-7 p-10"></div>
-                    <div className="col-4 fs-8 mb-4 fw-semibold text-center">
-                      .................................
-                      <div className="col fs-6 mb-15 fw-semibold text-center">
-                      Kepala Satpol PP 
-                        ...............................................................
-                      </div>
-                      <div className="col fs-6 mb-2 fw-semibold text-center">
-                             ......................
-                      </div>
-                      <div className="col fs-6 mb-2 fw-semibold text-center">
-                        NIP. ......................
-                      </div>
-                    </div>
-                  </div>
-      {/* end::Body */}
-    </div>
+    </>
   )
 }

@@ -6,7 +6,7 @@ import clsx from 'clsx'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-const PiketHeader = () => {
+const JadwalPiketHeader = () => {
     const location = useLocation()
 
     return (
@@ -20,18 +20,18 @@ const PiketHeader = () => {
                                     <Link
                                         className={
                                             `nav-link text-active-primary me-6 ` +
-                                            (location.pathname.includes('#') && 'active')
+                                            (location.pathname.includes('TabLaporanRekapitulasiPegawai') && 'active')
                                         }
-                                        to={`/kepegawaian/PenyidikPegawaiNegeriSipil/TabDataPPNS/`}
+                                        to={`/kepegawaian/LaporanRekapitulasiPegawai/TabLaporanRekapitulasiPegawai/`}
                                     >
-                                        Daftar Piket
+                                        Laporan Rekapitulasi Pegawai
                                     </Link>
                                 </li>
                                 <li className='nav-item'>
                                     <Link
                                         className={
                                             `nav-link text-active-primary me-6 ` +
-                                            (location.pathname.includes('TabRekapitulasiPiketPegawai') && 'active')
+                                            (location.pathname.includes('TabDaftarUrutKepangkatan') && 'active')
                                         }
                                         to={`/kepegawaian/JadwalPiket/TabRekapitulasiPiketPegawai/`}
                                     >
@@ -47,4 +47,4 @@ const PiketHeader = () => {
     )
 }
 
-export { PiketHeader }
+export { JadwalPiketHeader }
