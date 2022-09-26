@@ -206,7 +206,7 @@ export function LihatLaporanSarana() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/sarana_prasarana/LaporanSaranaPrasarana'>
+                    <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali
