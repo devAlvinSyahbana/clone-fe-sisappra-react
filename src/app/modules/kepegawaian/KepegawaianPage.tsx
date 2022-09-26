@@ -10,7 +10,7 @@ import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSi
 import { KehadiranPegawai } from './components/KehadiranPegawai'
 
 import { JadwalPiket } from './components/JadwalPiket'
-import { TabRekapitulasiPiketPegawai } from './components/piket-tabs/TabRekapitulasiPiketPegawai'
+import { TabRekapitulasiPiketPegawai } from './components/jadwalPiket-tabs/TabRekapitulasiPiketPegawai'
 
 import { DataPribadi } from './components/tabs/DataPribadi'
 import { DataKeluarga } from './components/tabs/DataKeluarga'
@@ -269,7 +269,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='TabRekapitulasiPiketPegawai'
+          path='JadwalPiket/TabRekapitulasiPiketPegawai'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Rekapitulasi Piket Pegawai</PageTitle>

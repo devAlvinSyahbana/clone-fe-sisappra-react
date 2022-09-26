@@ -22,16 +22,16 @@ const JadwalPiketHeader = () => {
                                             `nav-link text-active-primary me-6 ` +
                                             (location.pathname.includes('TabLaporanRekapitulasiPegawai') && 'active')
                                         }
-                                        to={`/kepegawaian/LaporanRekapitulasiPegawai/TabLaporanRekapitulasiPegawai/`}
+                                        to={`/kepegawaian/JadwalPiket/`}
                                     >
-                                        Laporan Rekapitulasi Pegawai
+                                        Daftar Piket
                                     </Link>
                                 </li>
                                 <li className='nav-item'>
                                     <Link
                                         className={
                                             `nav-link text-active-primary me-6 ` +
-                                            (location.pathname.includes('TabDaftarUrutKepangkatan') && 'active')
+                                            (location.pathname.includes('TabRekapitulasiPiketPegawai') && 'active')
                                         }
                                         to={`/kepegawaian/JadwalPiket/TabRekapitulasiPiketPegawai/`}
                                     >
