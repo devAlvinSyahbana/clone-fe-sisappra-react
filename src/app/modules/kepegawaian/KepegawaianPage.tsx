@@ -34,6 +34,7 @@ import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataK
 import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 import { TabRekapitulasiDataPegawaiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
 import { TabRekapitulasiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
+import { TabRekapitulasiPejabatFungsional } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatFungsional'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -183,6 +184,17 @@ const KepegawaianPage: React.FC = () => {
               TabData Pegawai Yang Naik Pangkat
               </PageTitle>
               <TabDataPegawaiYangNaikPangkat />
+            </>
+          }
+        />
+         <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+              Rekapitulasi Data Pejabat Fungsional Pol PP (JFT)
+              </PageTitle>
+              <TabRekapitulasiPejabatFungsional />
             </>
           }
         />
