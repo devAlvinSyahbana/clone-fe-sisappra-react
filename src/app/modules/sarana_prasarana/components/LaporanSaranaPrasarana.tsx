@@ -169,7 +169,7 @@ export function LaporanSaranaPrasarana() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          '/sarana_prasarana/LaporanSaranaPrasarana/LihatLaporanSarana/' +
+                          '/sarana-prasarana/LaporanSaranaPrasarana/LihatLaporanSarana/' +
                             record.id,
                           {replace: true}
                         )
@@ -181,7 +181,7 @@ export function LaporanSaranaPrasarana() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          '/sarana_prasarana/LaporanSaranaPrasarana/UbahLaporanSarana/' + record.id,
+                          '/sarana-prasarana/LaporanSaranaPrasarana/UbahLaporanSarana/' + record.id,
                           {replace: true}
                         )
                       }
@@ -379,7 +379,7 @@ export function LaporanSaranaPrasarana() {
           </div>
 
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link to='/sarana_prasarana/LaporanSaranaPrasarana/TambahLaporanSarana'>
+            <Link to='/sarana-prasarana/LaporanSaranaPrasarana/TambahLaporanSarana'>
               <Button variant='primary'>
                 <span className='svg-icon svg-icon-2'>
                   <svg
