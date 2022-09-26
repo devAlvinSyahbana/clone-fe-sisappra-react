@@ -14,7 +14,7 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 
-export function InformasiDataPegawai() {
+export function DataPegawaiYangNaikPangkat() {
   const navigate = useNavigate()
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
@@ -46,60 +46,36 @@ export function InformasiDataPegawai() {
 
   const columns = [
     {
+      name: 'No',
+      selector: (row: any) => row.id,
+      sortable: true,
+      sortField: 'id',
+      wrap: true,
+    },
+    {
       name: 'Nama',
       selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'nama',
       width: '200px',
       wrap: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='d-flex align-items-center'>
-              {/* begin:: Avatar */}
-              <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
-                {record?.foto !== '' ? (
-                  <div className='symbol-label'>
-                    <img src={record?.foto} alt={record?.nama} className='w-100' />
-                  </div>
-                ) : (
-                  <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
-                    {record?.nama.charAt(0)}
-                  </div>
-                )}
-              </div>
-              <div className='d-flex flex-column'>
-                <span>{record?.nama}</span>
-              </div>
-            </div>
-          </Fragment>
-        )
-      },
     },
     {
-      name: 'Tempat Lahir',
-      selector: (row: any) => row.tempat_lahir,
+      name: 'Nip',
+      selector: (row: any) => row.kepegawaian_nip,
       sortable: true,
-      sortField: 'tempat_lahir',
+      sortField: 'kepegawaian_nip',
       wrap: true,
-    },
-    {
-      name: 'Tanggal Lahir',
-      selector: (row: any) => row.tgl_lahir,
-      sortable: true,
-      sortField: 'tgl_lahir',
-      wrap: true,
-      minWidth: '15',
     },
     {
       name:
         valStatPegawai.val !== ''
-          ? valStatPegawai.val === 'PTT'
+        ? valStatPegawai.val === 'PTT'
             ? 'NPTT'
             : valStatPegawai.val === 'PJLP'
             ? 'NPJLP'
             : 'NRK'
-          : 'NRK',
+        : 'NRK',
       selector: (row: any) => row.kepegawaian_nrk,
       sortable: true,
       sortField: 'kepegawaian_nrk',
@@ -107,87 +83,131 @@ export function InformasiDataPegawai() {
       center: true,
     },
     {
-      name: 'Tipe Pegawai',
-      selector: (row: any) => row.kepegawaian_status_pegawai,
+      name: 'Jabatan',
+      selector: (row: any) => row.jabatan,
       sortable: true,
-      sortField: 'kepegawaian_status_pegawai',
+      sortField: 'jabatan',
       wrap: true,
       center: true,
     },
     {
-      name: 'Jenis Kelamin',
-      selector: (row: any) => row.jenis_kelamin,
+      name: 'Tempat Tugas Wilayah / Bidang',
+      selector: (row: any) => row.tempat_tugas_wilayah_bidang,
       sortable: true,
-      sortField: 'jenis_kelamin',
+      sortField: 'tempat_tugas_wilayah_bidang',
       wrap: true,
+      width: '250px',
       center: true,
     },
     {
-      name: 'Agama',
-      selector: (row: any) => row.agama,
+      name: 'Tempat Tugas Kecamatan',
+      selector: (row: any) => row.tempat_tugas_kecamatan,
       sortable: true,
-      sortField: 'agama',
+      sortField: 'tempat_tugas_kecamatan',
       wrap: true,
+      width: '220px',
       center: true,
     },
     {
-      name: 'No. HP',
-      selector: (row: any) => row.no_hp,
+      name: 'Pangkat',
+      selector: (row: any) => row.pangkat,
       sortable: true,
-      sortField: 'no_hp',
+      sortField: 'pangkat',
       wrap: true,
     },
     {
-      name: 'Aksi',
-      sortable: false,
-      text: 'Aksi',
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='mb-2 mt-2'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        )
+      name: 'Golongan',
+      selector: (row: any) => row.golongan,
+      sortable: true,
+      sortField: 'golongan',
+      wrap: true,
+    },
+    {
+        name: 'Tmt Pangkat',
+        selector: (row: any) => row.tmt_pangkat,
+        sortable: true,
+        sortField: 'tmt_pangkat',
+        wrap: true,
       },
-    },
+      {
+        name: 'Eselon',
+        selector: (row: any) => row.eselon,
+        sortable: true,
+        sortField: 'eselon',
+        wrap: true,
+      },
+      {
+        name: 'Status Kenaikan',
+        selector: (row: any) => row.status_kenaikan,
+        sortable: true,
+        sortField: 'status_kenaikan',
+        wrap: true,
+      },
+      {
+        name: 'Jadwal Kenaikan',
+        selector: (row: any) => row.jadwal_kenaikan,
+        sortable: true,
+        sortField: 'jadwal_kenaikan',
+        wrap: true,
+      },
+      {
+        name: 'Ket',
+        selector: (row: any) => row.ket,
+        sortable: true,
+        sortField: 'ket',
+        wrap: true,
+      },
+      {
+        name: 'Aksi',
+        sortable: false,
+        text: 'Aksi',
+        className: 'action',
+        center: true,
+        allowOverflow: true,
+        cell: (record: any) => {
+          return (
+            <Fragment>
+              <div className='mb-2 mt-2'>
+                {[DropdownButton].map((DropdownType, idx) => (
+                  <>
+                    <DropdownType
+                      as={ButtonGroup}
+                      key={idx}
+                      id={`dropdown-button-drop-${idx}`}
+                      size='sm'
+                      variant='light'
+                      title='Aksi'
+                    >
+                      <Dropdown.Item
+                        href='#'
+                        onClick={() =>
+                          navigate(
+                            `/kepegawaian/DataPegawaiYangNaikPangkat/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                            {replace: true}
+                          )
+                        }
+                      >
+                        Detail
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        href='#'
+                        onClick={() =>
+                          navigate(
+                            `/kepegawaian/DataPegawaiYangNaikPangkat/UpdateNaikPangkat/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                            {replace: true}
+                          )
+                        }
+                      >
+                        Ubah
+                      </Dropdown.Item>
+                    </DropdownType>
+                  </>
+                ))}
+              </div>
+            </Fragment>
+          )
+        },
+      },
   ]
 
   const customStyles = {
@@ -322,25 +342,6 @@ export function InformasiDataPegawai() {
       <div id='kt_advanced_search_form'>
         <div className='row g-8 mt-2 ms-5 me-5'>
           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Status Kepegawaian
-              </label>
-              <select
-                className='form-select form-select-solid'
-                aria-label='Select example'
-                value={valStatPegawai.val}
-                onChange={handleChangeStatPegawai}
-                name='val'
-              >
-                <option value=''>Pilih</option>
-                {arrStatPegawai.map((val: string) => {
-                  return <option value={val}>{val}</option>
-                })}
-              </select>
-            </div>
-          </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
             <label htmlFor='' className='mb-3'>
               Nama
             </label>
@@ -394,21 +395,78 @@ export function InformasiDataPegawai() {
               }
             />
           </div>
+          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+            <div className='form-group'>
+              <label htmlFor='' className='mb-3'>
+                Wilayah / Bidang
+              </label>
+              <select
+                className='form-select form-select-solid'
+                aria-label='Select example'
+                value={valStatPegawai.val}
+                onChange={handleChangeStatPegawai}
+                name='val'
+              >
+                <option value=''>Pilih</option>
+                {arrStatPegawai.map((val: string) => {
+                  return <option value={val}>{val}</option>
+                })}
+              </select>
+            </div>
+          </div>
+          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+            <div className='form-group'>
+              <label htmlFor='' className='mb-3'>
+                Kecamatan / Seksi
+              </label>
+              <select
+                className='form-select form-select-solid'
+                aria-label='Select example'
+                value={valStatPegawai.val}
+                onChange={handleChangeStatPegawai}
+                name='val'
+              >
+                <option value=''>Pilih</option>
+                {arrStatPegawai.map((val: string) => {
+                  return <option value={val}>{val}</option>
+                })}
+              </select>
+            </div>
+          </div>
+          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+            <div className='form-group'>
+              <label htmlFor='' className='mb-3'>
+                Kelurahan
+              </label>
+              <select
+                className='form-select form-select-solid'
+                aria-label='Select example'
+                value={valStatPegawai.val}
+                onChange={handleChangeStatPegawai}
+                name='val'
+              >
+                <option value=''>Pilih</option>
+                {arrStatPegawai.map((val: string) => {
+                  return <option value={val}>{val}</option>
+                })}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#' onClick={handleFilterReset} className='me-2'>
+          <Link to='#'>
+            <button onClick={handleFilter} className='btn btn-primary me-2'>
+              <i className='fa-solid fa-search'></i>
+              Cari
+            </button>
+          </Link>
+          <Link to='#' onClick={handleFilterReset} className=''>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-arrows-rotate'></i>
               Reset
-            </button>
-          </Link>
-          <Link to='#'>
-            <button onClick={handleFilter} className='btn btn-primary'>
-              <i className='fa-solid fa-search'></i>
-              Cari
             </button>
           </Link>
         </div>
@@ -435,7 +493,17 @@ export function InformasiDataPegawai() {
         </div>
       </div>
 
-      <div className='table-responsive mt-5 ms-5 me-5'>
+      <div className='table-responsive mt-6 ms-5 me-5'>
+        <div className='card-body py-4 mt-4'>
+          <div className='row'>
+            <div className='col fs-4 mb-2 fw-bold text-center'>DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA KENAIKAN PANGKAT</div>
+          </div>
+          <div className='row'>
+            <div className='col fs-4 mb-2 fw-bold text-center'>
+            PADA SATUAN POLISI PAMONG PRAJA PRVINSI DKI JAKARTA
+            </div>
+          </div>
+        </div>
         <DataTable
           columns={columns}
           data={data}
@@ -449,6 +517,22 @@ export function InformasiDataPegawai() {
           customStyles={customStyles}
         />
       </div>
+      <div className="row">
+                    <div className="col-7 p-10"></div>
+                    <div className="col-4 fs-8 mb-4 fw-semibold text-center">
+                      .................................
+                      <div className="col fs-6 mb-15 fw-semibold text-center">
+                      Kepala Satpol PP 
+                        ...............................................................
+                      </div>
+                      <div className="col fs-6 mb-2 fw-semibold text-center">
+                             ......................
+                      </div>
+                      <div className="col fs-6 mb-2 fw-semibold text-center">
+                        NIP. ......................
+                      </div>
+                    </div>
+                  </div>
       {/* end::Body */}
     </div>
   )

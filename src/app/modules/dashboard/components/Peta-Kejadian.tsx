@@ -15,57 +15,7 @@ function PetaKejadian() {
       <div className='card-body'>
         <div className='tab-content' id='myTabContent'>
           <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
-            <div className='row'>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Kota
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Kecamatan
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
-            </div>
             <div className='row mt-4'>
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <div className='form-group'>
-                  <label htmlFor='' className='mb-3'>
-                    Kelurahan
-                  </label>
-                  <select
-                    className='form-select form-select-solid'
-                    aria-label='Select example'
-                    // value={}
-                    // onChange={}
-                    name='val'
-                  >
-                    <option value=''>Pilih</option>
-                  </select>
-                </div>
-              </div>
               <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                 <div className='form-group'>
                   <label htmlFor='' className='mb-3'>

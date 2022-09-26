@@ -10,8 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
-
+export const JENIS_PELANGGARAN_URL = `${API_URL}/master/Jenis-pelanggaran` //http://localhost:3000/Jenis-pelanggaran
 export function JenisPelanggaran() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -37,40 +36,23 @@ export function JenisPelanggaran() {
 
   const columns = [
     {
-      name: 'Jenis Sarana & Prasarana',
-      selector: (row: any) => row.jenis_sarana_prasarana,
+      name: 'No',
+      selector: (row: any) => row.id,
       sortable: true,
-      sortField: 'jenis_sarana_prasarana',
+      sortField: 'id',
     },
     {
-      name: 'Status Sarana & Prasarana',
-      selector: (row: any) => row.status_sarana_prasarana,
-      sortable: true,
-      sortField: 'status_sarana_prasarana',
     },
     {
-      name: 'Jumlah',
-      selector: (row: any) => row.jumlah,
+      name: 'Jenis Pelanggaran',
+      selector: (row: any) => row.jenis_pelanggaran,
       sortable: true,
-      sortField: 'jumlah',
+      sortField: 'jenis_pelanggaran',
     },
     {
-      name: 'Kondisi',
-      selector: (row: any) => row.kondisi,
-      sortable: true,
-      sortField: 'kondisi',
     },
     {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
-      sortable: true,
-      sortField: 'keterangan',
-    },
-    {
-      name: 'Dokumentasi',
-      selector: (row: any) => row.dokumentasi,
-      sortable: true,
-      sortField: 'dokumentasi',
+      
     },
     {
       name: 'Aksi',
@@ -119,7 +101,7 @@ export function JenisPelanggaran() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(SARANA_PRASARANA_URL + "/find");
+    const value = await axios.get(JENIS_PELANGGARAN_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);

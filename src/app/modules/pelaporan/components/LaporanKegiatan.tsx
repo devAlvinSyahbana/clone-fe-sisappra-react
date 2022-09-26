@@ -5,7 +5,19 @@ import DataTable from 'react-data-table-component';
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import Footer from "react-multi-date-picker/plugins/range_picker_footer";
 import { Button, Collapse } from 'react-bootstrap'
+import AsyncSelect from 'react-select/async';
+import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KOTA_URL = `${API_URL}/master/kota`
+
+export interface SelectOption {
+  readonly value: string
+  readonly label: string
+  readonly color: string
+  readonly isFixed?: boolean
+  readonly isDisabled?: boolean
+}
 
 export function LaporanKegiatan() {
 
@@ -140,6 +152,29 @@ export function LaporanKegiatan() {
     },
   ]
 
+  // GET DATA
+  interface SelectOptionAutoCom {
+    readonly value: string
+    readonly label: string
+  }
+
+  // GET KOTA
+  const [inputValKota, setDataKota] = useState({ label: '', value: null })
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(KOTA_URL + "/find");
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.kota, value: i.kota }))
+  }
+  const loadOptionsKota = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleInputKota = (newValue: any) => {
+    setDataKota((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+  // END :: GET KOTA
+
   function MyComponent() {
     return (
       <DataTable
@@ -236,15 +271,14 @@ export function LaporanKegiatan() {
                                 <label className="form-label align-middle">Kota</label>
                               </div>
                               <div className="col-8">
-                                <select className="form-select form-select-solid" data-control="select2"
-                                  data-placeholder="Pilih">
-                                  <option></option>
-                                  <option value="a">Kota Jakarta Utara</option>
-                                  <option value="b">Kota Jakarta Selatan</option>
-                                  <option value="a">Kota Jakarta Timur</option>
-                                  <option value="b">Kota Jakarta Barat</option>
-                                  <option value="a">Kabupaten Kepulauan Seribu</option>
-                                </select>
+                                {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
+                                <AsyncSelect
+                                  cacheOptions
+                                  loadOptions={loadOptionsKota}
+                                  defaultOptions
+                                  onChange={handleInputKota}
+                                  placeholder={'Pilih Kota'}
+                                />
                               </div>
                             </div>
                           </div>
@@ -395,34 +429,44 @@ export function LaporanKegiatan() {
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="col-md-12 col-sm-lg-12 col-sm-12">
-                            <div className="d-flex">
-                              <Button type="submit"
-                                className='btn btn-primary fw-semibold me-auto px-6'
-                                data-kt-menu-dismiss="true" data-kt-user-table-filter="filter"
-                                onClick={() => setOpen(!open)}
-                                aria-controls='example-collapse-text'
-                                aria-expanded={open}
-                              ><i className="fa fa-search"></i>
-                                Cari
-                              </Button>
-                            </div>
-                            <Link to="/pelaporan/TambahLaporanKegiatan">
-                              <button className="btn btn-sm btn-primary me-1" data-bs-toggle="modal"><i
-                                className="fa-solid fa-plus"></i>
-                                Tambah
-                              </button>
-                            </Link>
-                            <a href="#" className="btn btn-sm btn-danger me-1" data-bs-toggle="modal"><i
-                              className="fa-solid fa-trash"></i> Hapus</a>
-                            <div className="my-1 me-0">
-                              <select className="form-select form-select-sm form-select-solid w-180px"
-                                data-control="select2" data-placeholder="Select Hours" data-hide-search="true">
-                                <option value="1">Unduh</option>
-                                <option value="2">Excell</option>
-                                <option value="3">Pdf</option>
-                              </select>
+                            <div className='row g-8'>
+                              <div className='col-md-6 col-lg-6 col-sm-12'>
+                                <Button type="submit"
+                                  className='btn btn-sm btn-primary fw-semibold me-auto px-6'
+                                  data-kt-menu-dismiss="true" data-kt-user-table-filter="filter"
+                                  onClick={() => setOpen(!open)}
+                                  aria-controls='example-collapse-text'
+                                  aria-expanded={open}
+                                ><i className="fa fa-search"></i>
+                                  Cari
+                                </Button>
+                              </div>
+                              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                <Link to="/pelaporan/TambahLaporanKegiatan">
+                                  <Button className="btn btn-sm btn-primary me-1" data-bs-toggle="modal"><i
+                                    className="fa-solid fa-plus"></i>
+                                    Tambah
+                                  </Button>
+                                </Link>
+                                <Link to="/pelaporan/TambahLaporanKegiatan">
+                                  <Button className="btn btn-sm btn-danger me-1" data-bs-toggle="modal"><i
+                                    className="fa-solid fa-trash"></i>
+                                    Hapus
+                                  </Button>
+                                </Link>
+                                <div className='justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                      Unduh
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                      <Dropdown.Item>Excel</Dropdown.Item>
+                                      <Dropdown.Item>PDF</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -433,29 +477,30 @@ export function LaporanKegiatan() {
               </div>
             </div>
             <Collapse in={open}>
-              <div className="card-body py-4">
-                <div className="row">
-                  <div className="col fs-4 mb-2 fw-semibold text-center">
-                    LAPORAN HASIL KEGIATAN
+              <div className='card'>
+                <div className="card-body py-4">
+                  <div className="row">
+                    <div className="col fs-4 mb-2 fw-semibold text-center">
+                      LAPORAN HASIL KEGIATAN
+                    </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col fs-4 mb-2 fw-semibold text-center">
-                    PADA SATPOL PP......................................
+                  <div className="row">
+                    <div className="col fs-4 mb-2 fw-semibold text-center">
+                      PADA SATPOL PP......................................
+                    </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col fs-4 mb-6 fw-semibold text-center">
-                    PERIODE .................... s/d .......................
+                  <div className="row">
+                    <div className="col fs-4 mb-6 fw-semibold text-center">
+                      PERIODE .................... s/d .......................
+                    </div>
                   </div>
-                </div>
-                <DataTable
-                  columns={columns}
-                  data={data}
-                  pagination
-                />
-                <div className="row">
-                  <div className="col-8"></div>
+                  <DataTable
+                    columns={columns}
+                    data={data}
+                    pagination
+                  />
+                  <div className="row">
+                    <div className="col-8"></div>
                     <div className="col-4 fs-6 mb-2 fw-semibold text-center">
                       Jakarta, ..............................20...
                       <div className="col fs-6 mb-15 fw-semibold text-center">
@@ -469,6 +514,7 @@ export function LaporanKegiatan() {
                         NIP. ......................
                       </div>
                     </div>
+                  </div>
                 </div>
               </div>
             </Collapse>

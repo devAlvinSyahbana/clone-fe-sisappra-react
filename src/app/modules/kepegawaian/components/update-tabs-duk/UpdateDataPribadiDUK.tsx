@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import {Link, useParams} from 'react-router-dom'
 import AsyncSelect from 'react-select/async'
-import {UpdateHeaderDetail} from './UpdateHeaderDetail'
+import {UpdateHeaderDetailDUK} from './UpdateHeaderDetailDUK'
 import {DetailPegawaiInterface, SelectOptionAutoCom} from '../KepegawaianInterface'
 import {Formik, Field, FormikHelpers} from 'formik'
 import moment from 'moment'
@@ -15,7 +15,7 @@ export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 
-export function UpdateDataPribadi() {
+export function UpdateDataPribadiDUK() {
   const {id, status} = useParams()
   console.log('id, status', id, status)
   const [data, setData] = useState<DetailPegawaiInterface>({})
@@ -247,7 +247,7 @@ export function UpdateDataPribadi() {
   return (
     <>
       {/* begin::Body */}
-      <UpdateHeaderDetail />
+      <UpdateHeaderDetailDUK />
       {/* Second Card */}
 
       <Formik
@@ -624,7 +624,7 @@ export function UpdateDataPribadi() {
               <div className='text-center'>
                 <Link
                   className='text-reset text-decoration-none'
-                  to='/kepegawaian/InformasiDataPegawai'
+                  to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan/'
                 >
                   <button className='float-none btn btn-secondary align-self-center m-1'>
                     <i className='fa fa-close'></i>
@@ -633,7 +633,7 @@ export function UpdateDataPribadi() {
                 </Link>
                 <Link
                   className='text-reset text-decoration-none'
-                  to={`/kepegawaian/UpdateDataKeluarga/${id}/${status}`}
+                  to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
                 >
                   <button className='float-none btn btn-primary align-self-center m-1'>
                     <i className='fa-solid fa-arrow-right'></i>

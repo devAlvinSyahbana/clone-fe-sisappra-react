@@ -37,10 +37,20 @@ export function Pendidikan() {
 
   const columns = [
     {
+      name: 'No',
+      selector: (row: any) => row.id,
+      sortable: true,
+      sortField: 'id',
+    },
+    {
+    },
+    {
       name: 'Pendidikan',
       selector: (row: any) => row.pendidikan,
       sortable: true,
       sortField: 'pendidikan',
+    },
+    {
     },
     {
       name: 'Aksi',

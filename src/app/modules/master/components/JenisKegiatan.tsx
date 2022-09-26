@@ -10,7 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
+export const JENIS_KEGIATAN_URL = `${API_URL}/master/jenis-kegiatan` //http://localhost:3000/master/jenis-kegiatan
 
 export function JenisKegiatan() {
   const [show, setShow] = useState(false);
@@ -37,40 +37,28 @@ export function JenisKegiatan() {
 
   const columns = [
     {
-      name: 'Jenis Sarana & Prasarana',
-      selector: (row: any) => row.jenis_sarana_prasarana,
+      name: 'No',
+      selector: (row: any) => row.id,
       sortable: true,
-      sortField: 'jenis_sarana_prasarana',
+      sortField: 'id',
     },
     {
-      name: 'Status Sarana & Prasarana',
-      selector: (row: any) => row.status_sarana_prasarana,
-      sortable: true,
-      sortField: 'status_sarana_prasarana',
     },
     {
-      name: 'Jumlah',
-      selector: (row: any) => row.jumlah,
+      name: 'Jenis Kegiatan',
+      selector: (row: any) => row.jenis_kegiatan,
       sortable: true,
-      sortField: 'jumlah',
+      sortField: 'jenis_kegiatan',
     },
     {
-      name: 'Kondisi',
-      selector: (row: any) => row.kondisi,
-      sortable: true,
-      sortField: 'kondisi',
     },
     {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
+      name: 'Kode',
+      selector: (row: any) => row.kode,
       sortable: true,
-      sortField: 'keterangan',
+      sortField: 'kode',
     },
     {
-      name: 'Dokumentasi',
-      selector: (row: any) => row.dokumentasi,
-      sortable: true,
-      sortField: 'dokumentasi',
     },
     {
       name: 'Aksi',
@@ -119,7 +107,7 @@ export function JenisKegiatan() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(SARANA_PRASARANA_URL + "/find");
+    const value = await axios.get(JENIS_KEGIATAN_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);

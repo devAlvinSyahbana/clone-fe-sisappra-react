@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { KTSVG } from '../../../../../_metronic/helpers'
-import { Link } from 'react-router-dom'
-import { useLocation, useParams } from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import {KTSVG} from '../../../../../_metronic/helpers'
+import {Link} from 'react-router-dom'
+import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
 import clsx from 'clsx'
 import {
@@ -13,9 +13,9 @@ import {
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-const UpdateHeaderDetail = () => {
+const UpdateHeaderDetailDUK = () => {
   const location = useLocation()
-  const { id, status } = useParams()
+  const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>()
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
@@ -134,16 +134,15 @@ const UpdateHeaderDetail = () => {
               </div>
             </div>
 
-
             <div className='d-flex overflow-auto h-55px'>
               <ul className='nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder flex-nowrap'>
                 <li className='nav-item'>
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataPribadi') && 'active')
+                      (location.pathname.includes('UpdateDataPribadiDUK') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${id}/${status}`}
                   >
                     Data Pribadi
                   </Link>
@@ -152,9 +151,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataKeluarga') && 'active')
+                      (location.pathname.includes('UpdateDataKeluargaDUK') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataKeluarga/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
                   >
                     Data Keluarga
                   </Link>
@@ -163,9 +162,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdatePendidikan') && 'active')
+                      (location.pathname.includes('UpdatePendidikanDUK') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdatePendidikan/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePendidikanDUK/${id}/${status}`}
                   >
                     Pendidikan
                   </Link>
@@ -174,9 +173,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataKepegawaian') && 'active')
+                      (location.pathname.includes('UpdateDataKepegawaianDUK') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataKepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK/${id}/${status}`}
                   >
                     Data Kepegawaian
                   </Link>
@@ -191,4 +190,4 @@ const UpdateHeaderDetail = () => {
   )
 }
 
-export { UpdateHeaderDetail }
+export {UpdateHeaderDetailDUK}
