@@ -263,7 +263,7 @@ export function TabRekapitulasiPejabatStruktural() {
                                             </Link>
                                         </div>
                                         <div className='col-6 d-flex justify-content-end gap-2'>
-                                            <Link to="/pelaporan/TambahLaporanKejadian">
+                                            <Link to="/kepegawaian/LaporanRekapitulasiPegawai/TambahPejabatStruktural">
                                                 <a className="btn btn-success me-1" data-bs-toggle="modal"><i
                                                     className="fa-solid fa-plus"></i>Tambah</a>
                                             </Link>

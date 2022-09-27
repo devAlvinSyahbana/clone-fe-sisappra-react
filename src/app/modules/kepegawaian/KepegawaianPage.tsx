@@ -32,6 +32,7 @@ import { UpdateNaikPangkat } from './components/update-tabs/UpdateNaikPangkat'
 
 import { TabRekapitulasiDataPegawaiPensiun } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
 import { TambahPegawaiPensiun } from './components/Tambah-tabs/TambahPegawaiPensiun'
+import { TambahPejabatStruktural } from './components/Tambah-tabs/TambahPejabatStruktural'
 
 import { AddDataPribadiDUK } from './components/add-tabs-duk/AddDataPribadiDUK'
 import { AddDataKeluargaDUK } from './components/add-tabs-duk/AddDataKeluargaDUK'
@@ -194,6 +195,17 @@ const KepegawaianPage: React.FC = () => {
                 Rekapitulasi Pejabat Struktural
               </PageTitle>
               <TabRekapitulasiPejabatStruktural />
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/TambahPejabatStruktural'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Tambah Rekapitulasi Pejabat Struktural
+              </PageTitle>
+              <TambahPejabatStruktural />
             </>
           }
         />
