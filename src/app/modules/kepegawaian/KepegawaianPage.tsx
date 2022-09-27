@@ -45,7 +45,12 @@ import { UpdateDataKepegawaianDUK } from './components/update-tabs-duk/UpdateDat
 import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 import { TabRekapitulasiDataPegawaiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
 import { TabRekapitulasiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
+
 import { TabRekapitulasiPejabatFungsional } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatFungsional'
+import { PejabatFungsional_DataKeluarga } from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataKeluarga'
+import { PejabatFungsional_DataPribadi } from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataPribadi'
+import { PejabatFungsional_Pendidikan } from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_Pendidikan'
+import { PejabatFungsional_DataKepegawaian } from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataKepegawaian'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -220,6 +225,63 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
+        <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Rekapitulasi Data Pejabat Fungsional Pol PP (JFT)
+              </PageTitle>
+              <TabRekapitulasiPejabatFungsional />
+            </>
+          }
+        />
+        {/* Tab Detail Rekapitulasi Data Pejabat Fungsional */}
+        <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataPribadi/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Data Pribadi
+              </PageTitle>
+              <PejabatFungsional_DataPribadi/>
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataKeluarga/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Data Keluarga
+              </PageTitle>
+              <PejabatFungsional_DataKeluarga/>
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_Pendidikan/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Pendidikan
+              </PageTitle>
+              <PejabatFungsional_Pendidikan/>
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataKepegawaian/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Data Kepegawaian
+              </PageTitle>
+              <PejabatFungsional_DataKepegawaian/>
+            </>
+          }
+        />
+
         <Route
           path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional'
           element={

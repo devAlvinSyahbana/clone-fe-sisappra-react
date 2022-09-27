@@ -82,7 +82,7 @@ export function TabDataPPNS() {
       wrap: true,
     },
     {
-      name: 'NPM/NRK',
+      name: 'NIP/NRK',
       selector: (row: any) => row.nip,
       sortable: true,
       sortField: 'nip',
@@ -344,7 +344,7 @@ export function TabDataPPNS() {
           <div className='row g-8 mt-2 ms-5 me-5'>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                Nama
+                NAMA
               </label>
               <input
                 type='text'
@@ -357,7 +357,33 @@ export function TabDataPPNS() {
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                NRK
+                PANGKAT
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='nama'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Nama'
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                GOLONGAN
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='nama'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Nama'
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                NIP / NRK
               </label>
               <input
                 type='text'
