@@ -10,7 +10,7 @@ import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSi
 import { KehadiranPegawai } from './components/KehadiranPegawai'
 
 import { JadwalPiket } from './components/JadwalPiket'
-import { TabRekapitulasiPiketPegawai } from './components/piket-tabs/TabRekapitulasiPiketPegawai'
+import { TabRekapitulasiPiketPegawai } from './components/jadwalPiket-tabs/TabRekapitulasiPiketPegawai'
 
 import { DataPribadi } from './components/tabs/DataPribadi'
 import { DataKeluarga } from './components/tabs/DataKeluarga'
@@ -32,6 +32,7 @@ import { UpdateNaikPangkat } from './components/update-tabs/UpdateNaikPangkat'
 
 import { TabRekapitulasiDataPegawaiPensiun } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
 import { TambahPegawaiPensiun } from './components/Tambah-tabs/TambahPegawaiPensiun'
+import { TambahPejabatStruktural } from './components/Tambah-tabs/TambahPejabatStruktural'
 
 import { AddDataPribadiDUK } from './components/add-tabs-duk/AddDataPribadiDUK'
 import { AddDataKeluargaDUK } from './components/add-tabs-duk/AddDataKeluargaDUK'
@@ -203,6 +204,17 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
+          path='LaporanRekapitulasiPegawai/TambahPejabatStruktural'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Tambah Rekapitulasi Pejabat Struktural
+              </PageTitle>
+              <TambahPejabatStruktural />
+            </>
+          }
+        />
+        <Route
           path='LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat'
           element={
             <>
@@ -331,7 +343,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='TabRekapitulasiPiketPegawai'
+          path='JadwalPiket/TabRekapitulasiPiketPegawai'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Rekapitulasi Piket Pegawai</PageTitle>

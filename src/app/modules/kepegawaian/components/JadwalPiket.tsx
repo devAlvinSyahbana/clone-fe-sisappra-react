@@ -8,7 +8,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
-import { JadwalPiketHeader } from './piket-tabs/JadwalPiketHeader'
+import { JadwalPiketHeader } from './jadwalPiket-tabs/JadwalPiketHeader'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
