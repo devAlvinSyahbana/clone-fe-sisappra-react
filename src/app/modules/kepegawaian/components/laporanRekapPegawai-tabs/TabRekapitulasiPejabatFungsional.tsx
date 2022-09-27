@@ -152,7 +152,7 @@ export function TabRekapitulasiPejabatFungsional() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          `/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
                           { replace: true }
                         )
                       }
@@ -161,12 +161,12 @@ export function TabRekapitulasiPejabatFungsional() {
                     </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          { replace: true }
-                        )
-                      }
+                      // onClick={() =>
+                      //   navigate(
+                      //     `/kepegawaian/LaporanRekapitulasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                      //     { replace: true }
+                      //   )
+                      // }
                     >
                       Hapus
                     </Dropdown.Item>
