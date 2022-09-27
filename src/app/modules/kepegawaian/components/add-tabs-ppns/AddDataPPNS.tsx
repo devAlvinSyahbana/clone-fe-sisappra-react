@@ -2,7 +2,6 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import {Link, useParams} from 'react-router-dom'
 import AsyncSelect from 'react-select/async'
-import {AddHeaderDetailPPNS} from './AddHeaderDetailPPNS'
 import {DetailPegawaiInterface, SelectOptionAutoCom} from '../KepegawaianInterface'
 import {Formik, Field, FormikHelpers} from 'formik'
 import moment from 'moment'
@@ -247,7 +246,6 @@ export function AddDataPPNS() {
   return (
     <>
       {/* begin::Body */}
-      <AddHeaderDetailPPNS />
       {/* Second Card */}
 
       <Formik
@@ -378,26 +376,6 @@ export function AddDataPPNS() {
                       dateFormat="MM/dd/yyyy"
                       name="tgl_lahir"
                     /> */}
-                  </div>
-                </div>
-              </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                <div className='row'>
-                  <div className='col-xxl-12 col-md-12 col-lg-12 col-sm-12'>
-                    <label htmlFor='' className='mb-3'>
-                      Jenis Kelamin
-                    </label>
-                    <AsyncSelect
-                      cacheOptions
-                      loadOptions={loadOptionsJenis}
-                      defaultOptions
-                      value={{
-                        value: data?.jenis_kelamin,
-                        label: data?.jenis_kelamin ? data?.jenis_kelamin : '-',
-                      }}
-                      onChange={handleInputJenis}
-                      placeholder={'Pilih'}
-                    />
                   </div>
                 </div>
               </div>
