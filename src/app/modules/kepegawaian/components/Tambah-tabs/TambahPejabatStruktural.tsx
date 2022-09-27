@@ -6,12 +6,6 @@ export function TambahPejabatStruktural() {
 
     return (
         <div className='card mb-5 mb-xl-10'>
-            {/* Header */}
-            <div className="card-header cursor-pointer">
-                <div className="card-title m-0">
-                    <h3 className="fw-bold m-0">Data Pribadi</h3>
-                </div>
-            </div>
             {/* Body */}
             <div className="card-body p-9">
                 <div className="row mb-10">
