@@ -83,9 +83,9 @@ export function TabRekapitulasiPejabatFungsional() {
     },
     {
       name: 'NIP',
-      selector: (row: any) => row.kepegawaian_nip,
+      selector: (row: any) => row.nip,
       sortable: true,
-      sortField: 'kepegawaian_nip',
+      sortField: 'nip',
       wrap: true,
     },
     {
@@ -97,7 +97,7 @@ export function TabRekapitulasiPejabatFungsional() {
               ? 'NPJLP'
               : 'NRK'
           : 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
+      selector: (row: any) => row.nrk,
       sortable: true,
       sortField: 'kepegawaian_nrk',
       wrap: true,
@@ -105,17 +105,17 @@ export function TabRekapitulasiPejabatFungsional() {
     },
     {
       name: 'Jabatan',
-      // selector: (row: any) => row.kepegawaian_status_pegawai,
+      selector: (row: any) => row.jabatan,
       sortable: true,
-      // sortField: 'kepegawaian_status_pegawai',
+      sortField: 'jabatan',
       wrap: true,
       center: true,
     },
     {
       name: 'Tempat Tugas',
-      // selector: (row: any) => row.jenis_kelamin,
+      selector: (row: any) => row.tempat_tugas,
       sortable: true,
-      // sortField: 'jenis_kelamin',
+      sortField: 'tempat_tugas',
       wrap: true,
       center: true,
     },
@@ -161,12 +161,12 @@ export function TabRekapitulasiPejabatFungsional() {
                     </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
-                      // onClick={() =>
-                      //   navigate(
-                      //     `/kepegawaian/LaporanRekapitulasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                      //     { replace: true }
-                      //   )
-                      // }
+                    // onClick={() =>
+                    //   navigate(
+                    //     `/kepegawaian/LaporanRekapitulasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                    //     { replace: true }
+                    //   )
+                    // }
                     >
                       Hapus
                     </Dropdown.Item>
@@ -204,7 +204,7 @@ export function TabRekapitulasiPejabatFungsional() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-jft/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -216,7 +216,7 @@ export function TabRekapitulasiPejabatFungsional() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-jft/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -232,7 +232,7 @@ export function TabRekapitulasiPejabatFungsional() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-jft/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -344,39 +344,6 @@ export function TabRekapitulasiPejabatFungsional() {
                 </select>
               </div>
             </div>
-            <div className='col-xxl-6'>
-              <label htmlFor='' className='mb-3'>
-                Wilayah/Bidang
-              </label>
-              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
-                <option>Pilih</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
-            </div>
-            <div className='col-xxl-6'>
-              <label htmlFor='' className='mb-3'>
-                Kecamatan/Seksi
-              </label>
-              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
-                <option>Pilih</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
-            </div>
-            <div className='col-xxl-6'>
-              <label htmlFor='' className='mb-3'>
-                Kelurahan
-              </label>
-              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
-                <option>Pilih</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
-            </div>
             {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
               <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
@@ -418,11 +385,44 @@ export function TabRekapitulasiPejabatFungsional() {
                 }
               />
             </div>
+            <div className='col-xxl-6'>
+              <label htmlFor='' className='mb-3'>
+                Wilayah/Bidang
+              </label>
+              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
+                <option>Pilih</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </Form.Select>
+            </div>
+            <div className='col-xxl-6'>
+              <label htmlFor='' className='mb-3'>
+                Kecamatan/Seksi
+              </label>
+              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
+                <option>Pilih</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </Form.Select>
+            </div>
+            <div className='col-xxl-6'>
+              <label htmlFor='' className='mb-3'>
+                Kelurahan
+              </label>
+              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
+                <option>Pilih</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </Form.Select>
+            </div>
           </div>
         </div>
 
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6 col-lg-6 col-sm-12'>
+          <div className='col-md-6 col-lg-6 col-sm-6'>
             <Link to='#'>
               <button onClick={handleFilter} className='btn btn-primary me-2'>
                 <i className='fa-solid fa-search'></i>
@@ -436,7 +436,7 @@ export function TabRekapitulasiPejabatFungsional() {
               </button>
             </Link>
           </div>
-          <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+          <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
             <Link to='#' onClick={handleFilterReset} className='me-2'>
               <button className='btn btn-primary'>
                 <i className='fa-solid fa-plus'></i>
