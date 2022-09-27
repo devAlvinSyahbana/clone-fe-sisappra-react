@@ -94,7 +94,11 @@ export function AsideMenuMain() {
           hasBullet={true}
         />
         <AsideMenuItem
+<<<<<<< src/_metronic/layout/components/aside/AsideMenuMain.tsx
           to='/kepegawaian/PenyidikPegawaiNegeriSipil/TabRekapitulasiPPNS'
+=======
+          to='/kepegawaian/PenyidikPegawaiNegeriSipil/TabDataPPNS'
+>>>>>>> src/_metronic/layout/components/aside/AsideMenuMain.tsx
           title='Penyidik Pegawai Negeri Sipil (PPNS)'
           hasBullet={true}
         />
@@ -158,7 +162,6 @@ export function AsideMenuMain() {
         <AsideMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
         <AsideMenuItem to='/master/JenisPenerbitan' title='Jenis Penerbitan' hasBullet={true} />
       </AsideMenuItemWithSub>
-
     </>
   )
 }
