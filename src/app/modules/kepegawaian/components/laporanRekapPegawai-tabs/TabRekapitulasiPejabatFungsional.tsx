@@ -1,6 +1,6 @@
-import { useState, useEffect, Fragment } from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import { Link, useNavigate } from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -9,7 +9,6 @@ import Button from 'react-bootstrap/Button'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import { LaporanRekapHeader } from './LaporanRekapHeader'
-import { number } from 'yup/lib/locale'
 import { Form } from 'react-bootstrap'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -46,8 +45,6 @@ export function TabRekapitulasiPejabatFungsional() {
       </>
     )
   }
-
-  let no = 1
 
   const columns = [
     {
@@ -207,7 +204,7 @@ export function TabRekapitulasiPejabatFungsional() {
         `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-jft/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
-      setTotalRows(response.data.total_data)
+      setTotalRows(response.data.jumlah)
       setLoading(false)
     }
     fetchDT(1)
@@ -219,7 +216,7 @@ export function TabRekapitulasiPejabatFungsional() {
       `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-jft/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
-    setTotalRows(response.data.total_data)
+    setTotalRows(response.data.jumlah)
     setLoading(false)
 
     return [data, setData] as const
@@ -241,15 +238,18 @@ export function TabRekapitulasiPejabatFungsional() {
 
   const handleFilter = async () => {
     let uriParam = ''
-    if (valStatPegawai.val !== '') {
-      uriParam += `&status=${valStatPegawai.val}`
-    }
     if (valFilterNama.val !== '') {
-      uriParam += `&nama=${valFilterNama.val}`
+      uriParam += `&tempat_tugas=${valFilterNama.val}`
     }
-    if (valFilterNRK.val !== '') {
-      uriParam += `&nrk=${valFilterNRK.val}`
-    }
+    // if (valStatPegawai.val !== '') {
+    //   uriParam += `&status=${valStatPegawai.val}`
+    // }
+    // if (valFilterNRK.val !== '') {
+    //   uriParam += `&nrk=${valFilterNRK.val}`
+    // }
+    // if (valFilterNoPegawai.val !== '') {
+    //   uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+    // }
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nopegawai=${valFilterNoPegawai.val}`
     }
@@ -422,7 +422,7 @@ export function TabRekapitulasiPejabatFungsional() {
         </div>
 
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6 col-lg-6 col-sm-6'>
+          <div className='col-md-6 col-lg-6 col-sm-9'>
             <Link to='#'>
               <button onClick={handleFilter} className='btn btn-primary me-2'>
                 <i className='fa-solid fa-search'></i>
@@ -437,12 +437,6 @@ export function TabRekapitulasiPejabatFungsional() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
-            <Link to='#' onClick={handleFilterReset} className='me-2'>
-              <button className='btn btn-primary'>
-                <i className='fa-solid fa-plus'></i>
-                Tambah
-              </button>
-            </Link>
             <Dropdown as={ButtonGroup}>
               <Button variant='light'>
                 {btnLoadingUnduh ? (
