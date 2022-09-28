@@ -1,11 +1,12 @@
 import axios from 'axios'
-import {useEffect, useState} from 'react'
-import {useNavigate} from 'react-router-dom'
-import {useParams} from 'react-router-dom'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {LaporanRekapHeader} from './LaporanRekapHeader'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { toAbsoluteUrl } from '../../../../../_metronic/helpers'
+import { LaporanRekapHeader } from './LaporanRekapHeader'
 import Dropdown from 'react-bootstrap/Dropdown'
-import {JumlahSeluruhSatpol, JumlahSatpolDiklat} from '../LaporanRekapPegawaiInterface'
+import Table from 'react-bootstrap/Table';
+import { JumlahSeluruhSatpol, JumlahSatpolDiklat } from '../LaporanRekapPegawaiInterface'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -227,7 +228,7 @@ export function TabLaporanRekapitulasiPegawai() {
                       </h3>
                     </div>
                     <div className='card-body pt-2'>
-                      <table
+                      <Table responsive
                         className='table align-middle table-row-dashed fs-6 gy-3'
                         id='kt_table_widget_4_table'
                       >
@@ -410,7 +411,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                           </tr>
                         </tbody>
-                      </table>
+                      </Table>
                     </div>
                   </div>
                 </div>
@@ -425,7 +426,7 @@ export function TabLaporanRekapitulasiPegawai() {
                       </h3>
                     </div>
                     <div className='card-body pt-2'>
-                      <table
+                      <Table responsive
                         className='table align-middle table-row-dashed fs-6 gy-3'
                         id='kt_table_widget_4_table'
                       >
@@ -512,7 +513,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                           </tr>
                         </tbody>
-                      </table>
+                      </Table>
                     </div>
                   </div>
                 </div>
@@ -525,7 +526,7 @@ export function TabLaporanRekapitulasiPegawai() {
                       </h3>
                     </div>
                     <div className='card-body pt-2'>
-                      <table
+                      <Table responsive
                         className='table align-middle table-row-dashed fs-6 gy-3'
                         id='kt_table_widget_4_table'
                       >
@@ -656,7 +657,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                           </tr>
                         </tbody>
-                      </table>
+                      </Table>
                     </div>
                   </div>
                 </div>
