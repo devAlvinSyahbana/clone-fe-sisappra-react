@@ -113,7 +113,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                   }
 
                   .mr-print {
-                    margin-rightL 100px;
+                    margin-right: 100px;
                   }
 
                   .ml-print {
@@ -122,6 +122,14 @@ export function UnduhLaporanRekapitulasiPegawai() {
 
                   .ml-10 {
                     margin-left: 10%;
+                  }
+
+                  .ml-20 {
+                    margin-left: 15%;
+                  }
+
+                  .ml-40 {
+                    margin-left: 30%;
                   }
 
                   .grid-im {
@@ -134,7 +142,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                   .grid-im2{
                     width: 100%;
                     display: grid;
-                    grid-template-columns: 4fr 1fr 2fr;
+                    grid-template-columns: 6fr 1fr 2fr;
                     align-items: center;
                   }
 
@@ -187,12 +195,12 @@ export function UnduhLaporanRekapitulasiPegawai() {
               <tr>
                 <td>
                   <div className="mx-auto">
-                    <div className="grid-im mb-5 mt-5">
+                    <div className="grid-im2 mb-5 mt-5">
                       <label className="left-div col-lg-8 col-sm-8 col-md-8 fw-bold fs-6">I. Jumlah Pegawai Satuan Polisi Pamong Praja</label>
-                      <label className="center-div ml-print text-end">
+                      <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <label className="right-div fs-6 ml-print text-end end">{jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp : '- '} Orang</label>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp : '- '} Orang</label>
                     </div>
 
                     <div className="mb-5 mt-5">
@@ -200,58 +208,59 @@ export function UnduhLaporanRekapitulasiPegawai() {
                     </div>
 
                     <div className="grid-im2 mb-5 mt-5">
-                      <label className="left-div ml-10 col-lg-7 offset-md-1 fw-bold fs-6">-Pegawai Negeri Sipil (PNS)</label>
-                      <label className="center-div ml-print text-end">
+                      <label className="ml-20 left-div col-lg-7 offset-md-1 fw-bold fs-6">-Pegawai Negeri Sipil (PNS)</label>
+                      <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <label className="right-div fs-6 ml-print text-end end">{jpegawaisatpol?.jmlh_seluruh_pns ? jpegawaisatpol?.jmlh_seluruh_pns : '-'} Orang</label>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_pns ? jpegawaisatpol?.jmlh_seluruh_pns : '-'} Orang</label>
                     </div>
 
-                    <div className="mb-5 mt-5">
-                      <label className="ml-10 col-lg-7 offset-md-1 fw-bold fs-6">-Calon Pegawai Negeri Sipil (CPNS)</label>
-                      <label className="ml-print text-end">
+                    <div className="grid-im2 mb-5 mt-5">
+                      <label className="ml-20 left-div col-lg-7 offset-md-1 fw-bold fs-6">-Calon Pegawai Negeri Sipil (CPNS)</label>
+                      <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <span className="col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 fw-normal end">{jpegawaisatpol?.jmlh_seluruh_cpns ? jpegawaisatpol?.jmlh_seluruh_cpns : '-'} Orang</span>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_cpns ? jpegawaisatpol?.jmlh_seluruh_cpns : '-'} Orang</label>
                     </div>
 
-                    <div className="mb-5 mt-5">
-                      <label className="ml-10 col-lg-7 offset-md-1 fw-bold fs-6">-Non Pegawai Negeri Sipil</label>
-                      <label className="ml-print text-end">
+                    <div className="grid-im2 mb-5 mt-5">
+                      <label className="ml-20 left-div col-lg-7 offset-md-1 fw-bold fs-6">-Non Pegawai Negeri Sipil</label>
+                      <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <span className="col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 fw-normal end">{jpegawaisatpol?.jmlh_seluruh_non_pns ? jpegawaisatpol?.jmlh_seluruh_non_pns : '-'} Orang</span>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_non_pns ? jpegawaisatpol?.jmlh_seluruh_non_pns : '-'} Orang</label>
                     </div>
 
-                    <div className="mb-5 mt-5">
-                      <label className="ml-10 col-lg-6 offset-md-2 fw-bold fs-6">-Anggota PolPP Non PNS (PTT)</label>
-                      <label className="ml-print text-end">
+                    <div className="grid-im2 mb-5 mt-5">
+                      <label className="ml-20 left-div col-lg-6 offset-md-2 fw-bold fs-6">-Anggota PolPP Non PNS (PTT)</label>
+                      <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <span className="col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 fw-normal end">{jpegawaisatpol?.jmlh_seluruh_non_pns_ptt ? jpegawaisatpol?.jmlh_seluruh_non_pns_ptt : '-'} Orang</span>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_non_pns_ptt ? jpegawaisatpol?.jmlh_seluruh_non_pns_ptt : '-'} Orang</label>
                     </div>
 
-                    <div className="mb-5 mt-5">
-                      <label className="ml-10 col-lg-6 offset-md-2 fw-bold fs-6">-Anggota PolPP Non PNS (PLJP)</label>
-                      <label className="ml-print text-end">
+                    <div className="grid-im2 mb-5 mt-5">
+                      <label className="ml-40 left-div col-lg-6 offset-md-2 fw-bold fs-6">-Anggota PolPP Non PNS (PLJP)</label>
+                      <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <span className="col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 fw-normal end">{jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp ? jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp : '-'} Orang</span>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp ? jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp : '-'} Orang</label>
                     </div>
 
-                    <div className="mb-5 mt-5">
-                      <label className="ml-10 col-lg-7 offset-md-1 fw-bold fs-6">-PPNS Satuan Polisi Pamong Praja</label>
-                      <label className="ml-print text-end">
+                    <div className="grid-im2 mb-5 mt-5">
+                      <label className="ml-40 left-div col-lg-7 offset-md-1 fw-bold fs-6">-PPNS Satuan Polisi Pamong Praja</label>
+                      <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <span className="col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 fw-normal end">{jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp : '-'} Orang</span>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp : '-'} Orang</label>
                     </div>
-                    <div className="mb-5 mt-5">
-                      <label className="ml-10 col-lg-7 offset-md-1 fw-bold fs-6">-PPNS Unit Kerja Lainnya</label>
-                      <label className="ml-print text-end">
+
+                    <div className="grid-im2 mb-5 mt-5">
+                      <label className="ml-20 left-div col-lg-7 offset-md-1 fw-bold fs-6">-PPNS Unit Kerja Lainnya</label>
+                      <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <span className="col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 fw-normal end">{jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain : '-'} Orang</span>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain : '-'} Orang</label>
                     </div>
                   </div>
 

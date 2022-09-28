@@ -1,6 +1,6 @@
-import {useState, useEffect, Fragment} from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -239,14 +239,14 @@ export function TabRekapitulasiPejabatFungsional() {
   const handleFilter = async () => {
     let uriParam = ''
     if (valFilterNama.val !== '') {
-      uriParam += `&tempat_tugas=${valFilterNama.val}`
+      uriParam += `&nama=${valFilterNama.val}`
     }
     // if (valStatPegawai.val !== '') {
     //   uriParam += `&status=${valStatPegawai.val}`
     // }
-    // if (valFilterNRK.val !== '') {
-    //   uriParam += `&nrk=${valFilterNRK.val}`
-    // }
+    if (valFilterNRK.val !== '') {
+      uriParam += `&nrk=${valFilterNRK.val}`
+    }
     // if (valFilterNoPegawai.val !== '') {
     //   uriParam += `&nopegawai=${valFilterNoPegawai.val}`
     // }
@@ -325,7 +325,18 @@ export function TabRekapitulasiPejabatFungsional() {
                 placeholder='Nama'
               />
             </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+            <div className='col-xxl-6'>
+              <label htmlFor='' className='mb-3'>
+                Wilayah/Bidang
+              </label>
+              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
+                <option>Pilih</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </Form.Select>
+            </div>
+            {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <div className='form-group'>
                 <label htmlFor='' className='mb-3'>
                   Status Kepegawaian
@@ -343,23 +354,23 @@ export function TabRekapitulasiPejabatFungsional() {
                   })}
                 </select>
               </div>
+            </div> */}
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                NRK
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='nrk'
+                value={valFilterNRK.val}
+                onChange={handleChangeInputNRK}
+                placeholder='NRK'
+              />
             </div>
-            {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <label htmlFor='' className='mb-3'>
-                  NRK
-                </label>
-                <input
-                  type='text'
-                  className='form-control form-control form-control-solid'
-                  name='nrk'
-                  value={valFilterNRK.val}
-                  onChange={handleChangeInputNRK}
-                  placeholder='NRK'
-                />
-              </div>
-            ) : null}
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+            {/* {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
+            ): null} */}
+            {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
               <label htmlFor='' className='mb-3'>
                 {valStatPegawai.val === 'PNS'
                   ? 'NIP'
@@ -384,10 +395,11 @@ export function TabRekapitulasiPejabatFungsional() {
                         : 'NIP'
                 }
               />
-            </div>
+            </div> */}
+
             <div className='col-xxl-6'>
               <label htmlFor='' className='mb-3'>
-                Wilayah/Bidang
+                Kecamatan/Seksi
               </label>
               <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
                 <option>Pilih</option>
@@ -398,7 +410,7 @@ export function TabRekapitulasiPejabatFungsional() {
             </div>
             <div className='col-xxl-6'>
               <label htmlFor='' className='mb-3'>
-                Kecamatan/Seksi
+                Jabatan
               </label>
               <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
                 <option>Pilih</option>
