@@ -305,13 +305,34 @@ export function UpdateDataPPNS() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
-                  Pangkat / Golongan
+                  Pangkat
                 </label>
-                <Field
-                  className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  id='nama'
-                  placeholder='John'
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsJenis}
+                  defaultOptions
+                  value={{
+                    value: data?.jenis_kelamin,
+                    label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Pangkat',
+                  }}
+                  onChange={handleInputJenis}
+                  placeholder={'Pilih'}
+                />
+              </div>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
+                  Golongan
+                </label>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsJenis}
+                  defaultOptions
+                  value={{
+                    value: data?.jenis_kelamin,
+                    label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Golongan',
+                  }}
+                  onChange={handleInputJenis}
+                  placeholder={'Pilih'}
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>

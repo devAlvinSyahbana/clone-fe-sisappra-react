@@ -685,7 +685,15 @@ export function TabDaftarUrutKepangkatan() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
                       Detail
                     </Dropdown.Item>
                     <Dropdown.Item
