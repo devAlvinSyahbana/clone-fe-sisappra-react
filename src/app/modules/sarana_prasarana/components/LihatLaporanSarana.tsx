@@ -184,7 +184,7 @@ export function LihatLaporanSarana() {
                                       path='/media/icons/duotune/files/fil007.svg'
                                     />
                                   </div>
-                                  <div className='fs-5 fw-bold mb-2'>Tidak ada file dokumentasi...</div>
+                                  <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                                 </div>
                               </>
                             )}
