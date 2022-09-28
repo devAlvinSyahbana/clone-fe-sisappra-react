@@ -633,7 +633,7 @@ export function AddDataPribadiDUK() {
                 </Link>
                 <Link
                   className='text-reset text-decoration-none'
-                  to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
+                  to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataKeluargaDUK'
                 >
                   <button className='float-none btn btn-primary align-self-center m-1'>
                     <i className='fa-solid fa-arrow-right'></i>

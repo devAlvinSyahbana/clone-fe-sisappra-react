@@ -1,4 +1,4 @@
-import {useState, useEffect, Fragment} from 'react'
+import {useState, useEffect, Fragment, useMemo} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
@@ -55,7 +55,7 @@ export function TabDataPPNS() {
 
   let no = 1
 
-  const columns = [
+  const Grouped_Columns = [
     {
       name: 'No',
       sortable: true,
@@ -161,7 +161,15 @@ export function TabDataPPNS() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDataPPNS/DataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
                       Detail
                     </Dropdown.Item>
                     <Dropdown.Item
@@ -198,16 +206,7 @@ export function TabDataPPNS() {
     },
   ]
 
-  const columns2 = [
-    {
-      name: '1',
-      selector: (row: any) => row.kepegawaian_status_pegawai,
-      sortable: true,
-      sortField: 'kepegawaian_status_pegawai',
-      wrap: true,
-      center: true,
-    },
-  ]
+  const columns = useMemo(() => Grouped_Columns, [])
 
   const customStyles = {
     rows: {
@@ -467,7 +466,7 @@ export function TabDataPPNS() {
             <div
               className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
               style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
               }}
               data-theme='light'
             >
