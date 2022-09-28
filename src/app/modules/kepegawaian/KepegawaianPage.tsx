@@ -25,9 +25,10 @@ import {UpdateDataKepegawaian} from './components/update-tabs/UpdateDataKepegawa
 import {TabLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-tabs/TabLaporanRekapitulasiPegawai'
 import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 
-import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
-import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
 import {AddDataPPNS} from './components/add-tabs-ppns/AddDataPPNS'
+import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
+import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
+import {DataPPNS} from './components/tabs-ppns/DataPPNS'
 
 import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
 import {UpdateNaikPangkat} from './components/update-tabs/UpdateNaikPangkat'
@@ -577,6 +578,15 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Tambah Data PPNS</PageTitle>
               <AddDataPPNS />
+            </>
+          }
+        />
+        <Route
+          path='TabDataPPNS/DataPPNS/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data PPNS</PageTitle>
+              <DataPPNS />
             </>
           }
         />

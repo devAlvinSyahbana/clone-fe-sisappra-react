@@ -57,149 +57,152 @@ export function TabDataPPNS() {
 
   const Grouped_Columns = [
     {
+      name: 'No',
+      sortable: true,
+      sortField: 'kepegawaian_nrk',
+      wrap: true,
+      cell: (record: any) => {
+        return <div className='mt-5 mb-5'>{no++}</div>
+      },
+    },
+    {
+      name: 'SKPD',
+      selector: (row: any) => row.SKPD,
+      sortable: true,
+      sortField: 'skpd',
+      width: '200px',
+      wrap: true,
+    },
+    {
       name: 'Nama',
-      columns: [
-        {
-          name: 'No',
-          sortable: true,
-          sortField: 'kepegawaian_nrk',
-          wrap: true,
-          cell: (record: any) => {
-            return <div className='mt-5 mb-5'>{no++}</div>
-          },
-        },
-        {
-          name: 'SKPD',
-          selector: (row: any) => row.SKPD,
-          sortable: true,
-          sortField: 'skpd',
-          width: '200px',
-          wrap: true,
-        },
-        {
-          name: 'Nama',
-          selector: (row: any) => row.nama,
-          sortable: true,
-          sortField: 'nama',
-          width: '150px',
-          wrap: true,
-        },
-        {
-          name: 'NIP/NRK',
-          selector: (row: any) => row.nip,
-          sortable: true,
-          sortField: 'nip',
-          wrap: true,
-          width: '150px',
-        },
-        {
-          name: 'Pangkat / GOL',
-          selector: (row: any) => row.golongan,
-          sortable: true,
-          sortField: 'golongan',
-          wrap: true,
-          width: '150px',
-          center: true,
-        },
-        {
-          name: 'No. SK. PPNS',
-          selector: (row: any) => row.no_sk_ppns,
-          sortable: true,
-          sortField: 'no_sk_ppns',
-          width: '150px',
-          wrap: true,
-          center: true,
-        },
-        {
-          name: 'No. KTP PPNS',
-          selector: (row: any) => row.no_ktp,
-          sortable: true,
-          sortField: 'no_ktp',
-          wrap: true,
-          width: '150px',
-          center: true,
-        },
-        {
-          name: 'Masa Berlaku KTP PPNS',
-          selector: (row: any) => row.masa_berlaku_ktp_ppns,
-          sortable: true,
-          width: '200px',
-          sortField: 'masa_berlaku_ktp_ppns',
-          wrap: true,
-        },
-        {
-          name: 'Wilayah Kerja',
-          selector: (row: any) => row.ppns_wilayah_kerja,
-          sortable: true,
-          width: '200px',
-          sortField: 'ppns_wilayah_kerja',
-          wrap: true,
-        },
-        {
-          name: 'UU yang dikawal',
-          selector: (row: any) => row.uu_yang_dikawal,
-          sortable: true,
-          width: '250px',
-          sortField: 'uu_yang_dikawal',
-          wrap: true,
-        },
-        {
-          name: 'Aksi',
-          sortable: false,
-          text: 'Aksi',
-          className: 'action',
-          center: true,
-          allowOverflow: true,
-          cell: (record: any) => {
-            return (
-              <Fragment>
-                <div className='mb-2 mt-2'>
-                  {[DropdownButton].map((DropdownType, idx) => (
-                    <>
-                      <DropdownType
-                        as={ButtonGroup}
-                        key={idx}
-                        id={`dropdown-button-drop-${idx}`}
-                        size='sm'
-                        variant='light'
-                        title='Aksi'
-                      >
-                        <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
-                          Detail
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          href='#'
-                          onClick={() =>
-                            navigate(
-                              `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                              {
-                                replace: true,
-                              }
-                            )
+      selector: (row: any) => row.nama,
+      sortable: true,
+      sortField: 'nama',
+      width: '150px',
+      wrap: true,
+    },
+    {
+      name: 'NIP/NRK',
+      selector: (row: any) => row.nip,
+      sortable: true,
+      sortField: 'nip',
+      wrap: true,
+      width: '150px',
+    },
+    {
+      name: 'Pangkat / GOL',
+      selector: (row: any) => row.golongan,
+      sortable: true,
+      sortField: 'golongan',
+      wrap: true,
+      width: '150px',
+      center: true,
+    },
+    {
+      name: 'No. SK. PPNS',
+      selector: (row: any) => row.no_sk_ppns,
+      sortable: true,
+      sortField: 'no_sk_ppns',
+      width: '150px',
+      wrap: true,
+      center: true,
+    },
+    {
+      name: 'No. KTP PPNS',
+      selector: (row: any) => row.no_ktp,
+      sortable: true,
+      sortField: 'no_ktp',
+      wrap: true,
+      width: '150px',
+      center: true,
+    },
+    {
+      name: 'Masa Berlaku KTP PPNS',
+      selector: (row: any) => row.masa_berlaku_ktp_ppns,
+      sortable: true,
+      width: '200px',
+      sortField: 'masa_berlaku_ktp_ppns',
+      wrap: true,
+    },
+    {
+      name: 'Wilayah Kerja',
+      selector: (row: any) => row.ppns_wilayah_kerja,
+      sortable: true,
+      width: '200px',
+      sortField: 'ppns_wilayah_kerja',
+      wrap: true,
+    },
+    {
+      name: 'UU yang dikawal',
+      selector: (row: any) => row.uu_yang_dikawal,
+      sortable: true,
+      width: '250px',
+      sortField: 'uu_yang_dikawal',
+      wrap: true,
+    },
+    {
+      name: 'Aksi',
+      sortable: false,
+      text: 'Aksi',
+      className: 'action',
+      center: true,
+      allowOverflow: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='mb-2 mt-2'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDataPPNS/DataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Detail
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {
+                            replace: true,
                           }
-                        >
-                          Ubah
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          href='#'
-                          onClick={() =>
-                            navigate(
-                              `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                              {replace: true}
-                            )
-                          }
-                        >
-                          Hapus
-                        </Dropdown.Item>
-                      </DropdownType>
-                    </>
-                  ))}
-                </div>
-              </Fragment>
-            )
-          },
-        },
-      ],
+                        )
+                      }
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Hapus
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
+        )
+      },
     },
   ]
 
@@ -463,7 +466,7 @@ export function TabDataPPNS() {
             <div
               className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
               style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
               }}
               data-theme='light'
             >

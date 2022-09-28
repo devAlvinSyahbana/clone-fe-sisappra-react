@@ -348,14 +348,22 @@ export function UpdateDataPPNS() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
-                  Masa Berlaku KTP PPNS
+                  Masa berlaku KTP PPNS
                 </label>
-                <Field
-                  className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  id='nama'
-                  placeholder='John'
-                />
+                <div className='row'>
+                  <div className='col-xxl-12 col-md-12 col-lg-12 col-sm-12'>
+                    <Field
+                      type='date'
+                      name='tgl_lahir'
+                      className='form-control form-control-solid'
+                      placeholder='Tanggal Lahir'
+                    />
+                    {/* <DatePicker
+                      dateFormat="MM/dd/yyyy"
+                      name="tgl_lahir"
+                    /> */}
+                  </div>
+                </div>
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
@@ -379,25 +387,6 @@ export function UpdateDataPPNS() {
                   placeholder='John'
                 />
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                <label htmlFor='' className='mb-3'>
-                  Masa berlaku KTP PPNS
-                </label>
-                <div className='row'>
-                  <div className='col-xxl-12 col-md-12 col-lg-12 col-sm-12'>
-                    <Field
-                      type='date'
-                      name='tgl_lahir'
-                      className='form-control form-control-solid'
-                      placeholder='Tanggal Lahir'
-                    />
-                    {/* <DatePicker
-                      dateFormat="MM/dd/yyyy"
-                      name="tgl_lahir"
-                    /> */}
-                  </div>
-                </div>
-              </div>
 
               <div className='col-12 mb-4'>
                 <hr className='fg-gray' />
@@ -419,7 +408,7 @@ export function UpdateDataPPNS() {
                   to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
                 >
                   <button className='float-none btn btn-primary align-self-center m-1'>
-                    <i className='fa-solid fa-arrow-right'></i>
+                  <i className='fa-solid fa-paper-plane'></i>
                     Simpan
                   </button>
                 </Link>

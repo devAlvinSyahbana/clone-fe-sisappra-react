@@ -421,7 +421,7 @@ export function AddDataPPNS() {
                   to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
                 >
                   <button className='float-none btn btn-primary align-self-center m-1'>
-                    <i className='fa-solid fa-arrow-right'></i>
+                    <i className='fa-solid fa-paper-plane'></i>
                     Simpan
                   </button>
                 </Link>
