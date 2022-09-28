@@ -1,5 +1,5 @@
 export interface JumlahSeluruhSatpol {
-  jmlh_seluruh_pegawai_satpol?: number | undefined,
+  jmlh_seluruh_pegawai_satpol?: number,
   jmlh_seluruh_pns?: number,
   jmlh_seluruh_cpns?: number,
   jmlh_seluruh_non_pns?: number,
