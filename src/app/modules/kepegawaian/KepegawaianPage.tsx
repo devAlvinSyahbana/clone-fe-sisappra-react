@@ -10,6 +10,7 @@ import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipi
 import {KehadiranPegawai} from './components/KehadiranPegawai'
 
 import {JadwalPiket} from './components/JadwalPiket'
+import {TambahPiket} from './components/Tambah-tabs/TambahPiket'
 
 import {DataPribadi} from './components/tabs/DataPribadi'
 import {DataKeluarga} from './components/tabs/DataKeluarga'
@@ -31,8 +32,8 @@ import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPriba
 import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKeluargaDUK'
 import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikanDUK'
 import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
-import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
-import { TabRekapitulasiDataPegawaiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
+import {UnduhLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
+import {TabRekapitulasiDataPegawaiPejabatStruktural} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -163,12 +164,12 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
-         <Route
+        <Route
           path='LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
-              TabData Pegawai Yang Naik Pangkat
+                TabData Pegawai Yang Naik Pangkat
               </PageTitle>
               <TabDataPegawaiYangNaikPangkat />
             </>
@@ -209,6 +210,15 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Jadwal Piket</PageTitle>
               <JadwalPiket />
+            </>
+          }
+        />
+        <Route
+          path='JadwalPiket/TambahPiket'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Tambah Piket</PageTitle>
+              <TambahPiket />
             </>
           }
         />

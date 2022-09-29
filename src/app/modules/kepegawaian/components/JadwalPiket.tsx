@@ -52,23 +52,22 @@ export function JadwalPiket() {
       sortField: 'id',
       wrap: true,
     },
-    {
-      name: 'Penanggungjawab Piket',
-      colSpan :"4",
-    },
+    // {
+    //   name: 'Penanggungjawab Piket',
+    //   rowspan: '4',
+    // },
     {
       name: 'Tanggal',
       selector: (row: any) => row.tanggal,
       sortable: true,
       sortField: 'tanggal',
-      width: '200px',
       wrap: true,
     },
     {
-      name: 'Nik',
-      selector: (row: any) => row.nik,
+      name: 'NRK',
+      selector: (row: any) => row.nrk,
       sortable: true,
-      sortField: 'nik',
+      sortField: 'nrk',
       colspan: '3',
       wrap: true,
     },
@@ -98,7 +97,7 @@ export function JadwalPiket() {
       center: true,
     },
     {
-      name: 'Nrk/Nptt/Npjlp',
+      name: 'NRK/NPTT/NPJLP',
       selector: (row: any) => row.nrk_nptt_npjlp,
       sortable: true,
       sortField: 'nrk_nptt_npjlp',
@@ -120,7 +119,7 @@ export function JadwalPiket() {
       sortField: 'no_telepon',
       wrap: true,
     },
-    {
+    { 
       name: 'Keterangan',
       selector: (row: any) => row.ket,
       sortable: true,
@@ -367,19 +366,6 @@ export function JadwalPiket() {
             />
           </div>
           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <label htmlFor='' className='mb-3'>
-                NIK
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                name='nrk'
-                value={valFilterNRK.val}
-                onChange={handleChangeInputNRK}
-                placeholder='NIK'
-              />
-            </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
                 Wilayah / Bidang
@@ -436,6 +422,45 @@ export function JadwalPiket() {
               </select>
             </div>
           </div>
+          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+            <label htmlFor='' className='mb-3'>
+              NPTT
+            </label>
+            <input
+              type='text'
+              className='form-control form-control form-control-solid'
+              name='nama'
+              value={valFilterNama.val}
+              onChange={handleChangeInputNama}
+              placeholder='NPTT'
+            />
+          </div>
+          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+            <label htmlFor='' className='mb-3'>
+              NPJLP
+            </label>
+            <input
+              type='text'
+              className='form-control form-control form-control-solid'
+              name='nama'
+              value={valFilterNama.val}
+              onChange={handleChangeInputNama}
+              placeholder='NPJLP'
+            />
+          </div>
+          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+            <label htmlFor='' className='mb-3'>
+              Tanggal
+            </label>
+            <input
+              type='text'
+              className='form-control form-control form-control-solid'
+              name='nama'
+              value={valFilterNama.val}
+              onChange={handleChangeInputNama}
+              placeholder='Tanggal'
+            />
+          </div>
         </div>
       </div>
 
@@ -455,32 +480,32 @@ export function JadwalPiket() {
           </Link>
         </div>
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-        <Link to='/kepegawaian/JadwalPiket/TambahPiket'>
-              <Button variant='primary'>
-                <span className='svg-icon svg-icon-2'>
-                  <svg
-                    width={24}
-                    height={24}
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <rect
-                      opacity='0.5'
-                      x='11.364'
-                      y='20.364'
-                      width={16}
-                      height={2}
-                      rx={1}
-                      transform='rotate(-90 11.364 20.364)'
-                      fill='currentColor'
-                    />
-                    <rect x='4.36396' y='11.364' width={16} height={2} rx={1} fill='currentColor' />
-                  </svg>
-                </span>
-                Tambah 
-              </Button>
-            </Link>
+          <Link to='/kepegawaian/JadwalPiket/TambahPiket'>
+            <Button variant='primary'>
+              <span className='svg-icon svg-icon-2'>
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <rect
+                    opacity='0.5'
+                    x='11.364'
+                    y='20.364'
+                    width={16}
+                    height={2}
+                    rx={1}
+                    transform='rotate(-90 11.364 20.364)'
+                    fill='currentColor'
+                  />
+                  <rect x='4.36396' y='11.364' width={16} height={2} rx={1} fill='currentColor' />
+                </svg>
+              </span>
+              Tambah
+            </Button>
+          </Link>
           <Dropdown as={ButtonGroup}>
             <Button variant='light'>
               {btnLoadingUnduh ? (
@@ -510,11 +535,11 @@ export function JadwalPiket() {
           </div>
           <div className='row'>
             <div className='col fs-4 mb-2 fw-bold text-center'>
-            PADA SATUAN POLISIPAMONG PRAJA.................................
+              PADA SATUAN POLISIPAMONG PRAJA.................................
             </div>
           </div>
-          <div className="row">
-            <div className="col fs-4 mb-6 fw-semibold text-center">
+          <div className='row'>
+            <div className='col fs-4 mb-6 fw-semibold text-center'>
               BULAN.................................
             </div>
           </div>
@@ -532,22 +557,17 @@ export function JadwalPiket() {
           customStyles={customStyles}
         />
       </div>
-      <div className="row">
-                    <div className="col-7 p-10"></div>
-                    <div className="col-4 fs-8 mb-4 fw-semibold text-center">
-                      .................................
-                      <div className="col fs-6 mb-15 fw-semibold text-center">
-                      Kepala Satpol PP 
-                        ...............................................................
-                      </div>
-                      <div className="col fs-6 mb-2 fw-semibold text-center">
-                             ......................
-                      </div>
-                      <div className="col fs-6 mb-2 fw-semibold text-center">
-                        NIP. ......................
-                      </div>
-                    </div>
-                  </div>
+      <div className='row'>
+        <div className='col-7 p-10'></div>
+        <div className='col-4 fs-8 mb-4 fw-semibold text-center'>
+          .................................
+          <div className='col fs-6 mb-15 fw-semibold text-center'>
+            Kepala Satpol PP ...............................................................
+          </div>
+          <div className='col fs-6 mb-2 fw-semibold text-center'>......................</div>
+          <div className='col fs-6 mb-2 fw-semibold text-center'>NIP. ......................</div>
+        </div>
+      </div>
       {/* end::Body */}
     </div>
   )
