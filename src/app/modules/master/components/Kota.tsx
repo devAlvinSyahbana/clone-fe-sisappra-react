@@ -1,12 +1,13 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import Swal from 'sweetalert2'
 import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
@@ -19,8 +20,8 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const KOTA_URL = `${API_URL}/master/kota` //http://localhost:3000/master/kota
 
 export function Kota() {
+  const navigate = useNavigate()
 
-  
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
@@ -44,6 +45,38 @@ export function Kota() {
         </div>
       </>
     )
+  }
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      title: 'Anda yakin?',
+      text: 'Ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${KOTA_URL}/delete/${id}`)
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        }
+      }
+    })
   }
 
   const columns = [
@@ -88,20 +121,19 @@ export function Kota() {
                     title='Aksi'
                   >
                     <Dropdown.Item>
-                      <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>Detail</Link>
+                      <Link to='#'>Detail</Link>
                     </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPegawaiYangNaikPangkat/UpdateNaikPangkat/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
+                        navigate('/master/Kota/UpdateKota/' + record.id, {replace: true})
                       }
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item href='#'>Hapus</Dropdown.Item>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                      Hapus
+                    </Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -249,9 +281,6 @@ export function Kota() {
                     </label>
                     <input
                       className='form-control form-control form-control-solid'
-                      name='jumlah'
-                      type='number'
-                      min='0'
                       onChange={handleChangeFormik}
                       // onBlur={formik.handleBlur}
                       // value={valuesFormik?.Kota}
