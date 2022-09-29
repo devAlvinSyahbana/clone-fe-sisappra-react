@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { LaporanRekapHeader } from './LaporanRekapHeader'
 import { DropdownButton, ButtonGroup, Dropdown } from 'react-bootstrap'
@@ -6,127 +7,58 @@ import DataTable from 'react-data-table-component';
 import Footer from "react-multi-date-picker/plugins/range_picker_footer";
 import { Button, Collapse } from 'react-bootstrap'
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
+export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 
 export function TabRekapitulasiPejabatStruktural() {
 
     const [open, setOpen] = useState(false)
 
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [totalRows, setTotalRows] = useState(0)
+    const [perPage, setPerPage] = useState(10)
+    const [qParamFind, setUriFind] = useState({ strparam: '' })
+
+    useEffect(() => {
+        async function fetchDT(page: number) {
+            setLoading(true)
+            const response = await axios.get(
+                `${SARANA_PRASARANA_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+            )
+            setData(response.data.data)
+            setTotalRows(response.data.total_data)
+            setLoading(false)
+        }
+        fetchDT(1)
+    }, [qParamFind, perPage])
+
     const columns = [
         {
             name: 'No',
-            selector: (row: { no: any; }) => row.no,
+            selector: (row: any) => row.no,
         },
         {
             name: 'Nama',
-            selector: (row: { nama: any; }) => row.nama,
+            selector: (row: any) => row.nama,
         },
         {
             name: 'NIP',
-            selector: (row: { nip: any; }) => row.nip,
+            selector: (row: any) => row.nip,
         },
         {
             name: 'NRK',
-            selector: (row: { nrk: any; }) => row.nrk,
+            selector: (row: any) => row.nrk,
         },
         {
             name: 'Jabatan',
-            selector: (row: { jabatan: any; }) => row.jabatan,
+            selector: (row: any) => row.jabatan,
         },
         {
             name: 'Tempat Tugas',
-            selector: (row: { ttugas: any; }) => row.ttugas,
-        },
-        {
-            name: 'Keterangan',
-            selector: (row: { ket: any; }) => row.ket,
-        },
-        {
-            name: 'Aksi',
-            sortable: false,
-            text: "Action",
-            className: "action",
-            align: "left",
-            cell: (record: any) => {
-                return (
-                    <Fragment>
-
-                        <div className="mb-2">
-                            {[DropdownButton].map((DropdownType, idx) => (
-                                <>
-                                    <DropdownType
-                                        as={ButtonGroup}
-                                        key={idx}
-                                        id={`dropdown-button-drop-${idx}`}
-                                        size="sm"
-                                        variant="light"
-                                        title="Aksi">
-                                        <Dropdown.Item href="/#/action-2">Hapus</Dropdown.Item>
-                                        <Dropdown.Item href="/#/action-2">Detail</Dropdown.Item>
-                                    </DropdownType>
-                                </>
-                            ))}
-                        </div>
-                    </Fragment>
-                );
-            },
+            selector: (row: any) => row.ttugas,
         },
     ];
-
-
-    const data = [
-        {
-            id: 1,
-            no: '1',
-            nama: 'Arifin',
-            nip: '197206221992031003',
-            nrk: '118558',
-            jabatan: 'Kepala Satpol PP Provinsi DKI Jakarta',
-            ttugas: 'Satpol PP Provinsi DKI Jakarta',
-            ket: '',
-        },
-        {
-            id: 2,
-            no: '2',
-            nama: '',
-            nip: '',
-            nrk: '',
-            jabatan: '',
-            ttugas: '',
-            ket: '',
-        },
-        {
-            id: 3,
-            no: '3',
-            nama: '',
-            nip: '',
-            nrk: '',
-            jabatan: '',
-            ttugas: '',
-            ket: '',
-        },
-        {
-            id: 4,
-            no: '4',
-            nama: '',
-            nip: '',
-            nrk: '',
-            jabatan: '',
-            ttugas: '',
-            ket: '',
-        },
-        {
-            id: 5,
-            no: '5',
-            nama: '',
-            nip: '',
-            nrk: '',
-            jabatan: '',
-            ttugas: '',
-            ket: '',
-        },
-    ]
 
     function MyComponent() {
         return (
@@ -164,7 +96,7 @@ export function TabRekapitulasiPejabatStruktural() {
                                                     className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
                                             </div>
                                             <div className="col-md-2">
-                                                <label className="col-form-label fw-semibold fs-6">Jabatan</label>
+                                                <label className="col-form-label fw-semibold fs-6">Wilayah / Bidang</label>
                                             </div>
                                             <div className="col-md-4">
                                                 <select className="form-select form-select-solid"
@@ -188,7 +120,7 @@ export function TabRekapitulasiPejabatStruktural() {
                                                     className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
                                             </div>
                                             <div className="col-md-2">
-                                                <label className="col-form-label fw-semibold fs-6">Kelurahan</label>
+                                                <label className="col-form-label fw-semibold fs-6">Kecamatan / Seksi</label>
                                             </div>
                                             <div className="col-md-4">
                                                 <select className="form-select form-select-solid"
@@ -205,30 +137,30 @@ export function TabRekapitulasiPejabatStruktural() {
                                     <div className="form-group">
                                         <div className="row mb-10">
                                             <div className="col-2">
-                                                <label className="col-form-label fw-semibold fs-6">Wilayah / Bidang</label>
-                                            </div>
-                                            <div className="col-md-4">
-                                                <select className="form-select form-select-solid"
-                                                    data-control="select2" data-placeholder="Pilih">
-                                                    <option></option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                </select>
-                                            </div>
-                                            <div className="col-md-2">
                                                 <label className="col-form-label fw-semibold fs-6">NIP</label>
                                             </div>
                                             <div className="col-md-4">
-                                                <input type="text"
+                                            <input type="text"
                                                     className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+                                            </div>
+                                            <div className="col-md-2">
+                                                <label className="col-form-label fw-semibold fs-6">Kelurahan</label>
+                                            </div>
+                                            <div className="col-md-4">
+                                            <select className="form-select form-select-solid"
+                                                    data-control="select2" data-placeholder="Pilih">
+                                                    <option></option>
+                                                    <option value="a">-</option>
+                                                    <option value="b">-</option>
+                                                    <option value="a">-</option>
+                                                    <option value="b">-</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="form-group">
                                         <div className="row mb-10">
-                                            <div className="col-2">
+                                            <div className="col-2 offset-md-6">
                                                 <label className="col-form-label fw-semibold fs-6">Kecamatan / Seksi</label>
                                             </div>
                                             <div className="col-md-4">
@@ -263,10 +195,6 @@ export function TabRekapitulasiPejabatStruktural() {
                                             </Link>
                                         </div>
                                         <div className='col-6 d-flex justify-content-end gap-2'>
-                                            <Link to="/pelaporan/TambahLaporanKejadian">
-                                                <a className="btn btn-success me-1" data-bs-toggle="modal"><i
-                                                    className="fa-solid fa-plus"></i>Tambah</a>
-                                            </Link>
                                             <Dropdown>
                                                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                     Unduh
@@ -305,7 +233,7 @@ export function TabRekapitulasiPejabatStruktural() {
                                                         Kepala Satpol PP.........................................................
                                                     </div>
                                                     <div className="col fs-6 mb-2 fw-semibold text-center">
-                                                    ..........................................
+                                                        ..........................................
                                                     </div>
                                                     <div className="col fs-6 mb-2 fw-semibold text-center">
                                                         NIP. ......................

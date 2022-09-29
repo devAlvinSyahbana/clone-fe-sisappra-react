@@ -1,4 +1,4 @@
-import {useState, useEffect, Fragment} from 'react'
+import {useState, useEffect, Fragment, useMemo} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
@@ -55,7 +55,7 @@ export function TabDataPPNS() {
 
   let no = 1
 
-  const columns = [
+  const Grouped_Columns = [
     {
       name: 'No',
       sortable: true,
@@ -82,7 +82,7 @@ export function TabDataPPNS() {
       wrap: true,
     },
     {
-      name: 'NPM/NRK',
+      name: 'NIP/NRK',
       selector: (row: any) => row.nip,
       sortable: true,
       sortField: 'nip',
@@ -161,7 +161,15 @@ export function TabDataPPNS() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDataPPNS/DataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
                       Detail
                     </Dropdown.Item>
                     <Dropdown.Item
@@ -198,16 +206,7 @@ export function TabDataPPNS() {
     },
   ]
 
-  const columns2 = [
-    {
-      name: '1',
-      selector: (row: any) => row.kepegawaian_status_pegawai,
-      sortable: true,
-      sortField: 'kepegawaian_status_pegawai',
-      wrap: true,
-      center: true,
-    },
-  ]
+  const columns = useMemo(() => Grouped_Columns, [])
 
   const customStyles = {
     rows: {
@@ -344,7 +343,7 @@ export function TabDataPPNS() {
           <div className='row g-8 mt-2 ms-5 me-5'>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                Nama
+                NAMA
               </label>
               <input
                 type='text'
@@ -357,7 +356,33 @@ export function TabDataPPNS() {
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                NRK
+                PANGKAT
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='nama'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Nama'
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                GOLONGAN
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='nama'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Nama'
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                NIP / NRK
               </label>
               <input
                 type='text'
@@ -441,7 +466,7 @@ export function TabDataPPNS() {
             <div
               className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
               style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
               }}
               data-theme='light'
             >

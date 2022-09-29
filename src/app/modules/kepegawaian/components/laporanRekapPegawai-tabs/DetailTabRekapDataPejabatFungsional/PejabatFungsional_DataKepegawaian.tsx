@@ -1,17 +1,17 @@
 // import React from 'react'
-import {KTSVG} from '../../../../../_metronic/helpers'
+import {KTSVG} from '../../../../../../_metronic/helpers'
 import {Link, useParams} from 'react-router-dom'
-import {HeaderDetailWrapper} from './HeaderDetail'
+import {PejabatFungsional_HeaderDetailWrapper} from './PejabatFungsional_HeaderDetail'
 import axios from 'axios'
 import {Field, Formik, FormikHelpers} from 'formik'
 import {useState, useEffect} from 'react'
-import {DetailPegawaiInterface} from '../KepegawaianInterface'
+import {DetailPegawaiInterface} from '../../KepegawaianInterface'
 import moment from 'moment'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-export function DataKepegawaian() {
+export function PejabatFungsional_DataKepegawaian() {
   const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>({})
 
@@ -26,7 +26,7 @@ export function DataKepegawaian() {
   return (
     <div>
       {/* Header */}
-      <HeaderDetailWrapper />
+      <PejabatFungsional_HeaderDetailWrapper />
       {/* second card */}
       <Formik
         initialValues={{
@@ -322,7 +322,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -389,7 +389,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -456,7 +456,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -540,7 +540,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -624,7 +624,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -708,7 +708,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}

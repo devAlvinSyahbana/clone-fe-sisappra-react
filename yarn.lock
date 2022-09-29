@@ -5306,6 +5306,11 @@ es6-map@^0.1.5:
     es6-symbol "~3.1.1"
     event-emitter "~0.3.5"
 
+es6-promise@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-1.0.0.tgz#f90d3629faa7c26166ae4df77c89bacdeb8dca7f"
+  integrity sha512-8/2Juj7DeNMwxkbcruBmErKcgPSTPgaGIB08nQvlBzaqliW1vMliNOaBQaMzzQAxX9k0vGy+8wwWlgiLuKqZIw==
+
 es6-set@^0.1.5, es6-set@~0.1.5:
   version "0.1.6"
   resolved "https://registry.npmjs.org/es6-set/-/es6-set-0.1.6.tgz"
@@ -7802,7 +7807,7 @@ moment@^2.10.2:
   resolved "https://registry.npmjs.org/moment/-/moment-2.29.3.tgz"
   integrity sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==
 
-moment@^2.24.0, moment@^2.29.2, moment@^2.29.4:
+moment@^2.24.0, moment@^2.29.2, moment@^2.29.4, moment@^2.6.0:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -9792,13 +9797,6 @@ react-select@^5.4.0:
     prop-types "^15.6.0"
     react-transition-group "^4.3.0"
 
-react-sticky-box@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-sticky-box/-/react-sticky-box-1.0.2.tgz#7e72a0f237bdf8270cec9254337f49519a411174"
-  integrity sha512-Kyvtppdtv1KqJyNU4DtrSMI0unyQRgtraZvVQ0GAazVbYiTsIVpyhpr+5R0Aavzu4uJNSe1awj2rk/qI7i6Zfw==
-  dependencies:
-    resize-observer-polyfill "^1.5.1"
-
 react-table@^7.7.0:
   version "7.7.0"
   resolved "https://registry.npmjs.org/react-table/-/react-table-7.7.0.tgz"
@@ -10590,6 +10588,16 @@ static-module@^3.0.2:
   resolved "https://registry.npmjs.org/statuses/-/statuses-1.5.0.tgz"
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
 
+sticky@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/sticky/-/sticky-0.8.0.tgz#09d417fd1ef9c019ca8a3b02198ea6cbe31b238e"
+  integrity sha512-qTiQwkRRX+e8pYGi5hEdIoDIFwmlYHY9+OYAFa2w6bupGf8M7oJoZDe8h6w6e3DiTPnRdH5yAp0rvlPa2Sk5Tw==
+  dependencies:
+    es6-promise "^1.0.0"
+    moment "^2.6.0"
+    typemap "^1.1.0"
+    underscore "^1.6.0"
+
 string-convert@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/string-convert/-/string-convert-0.2.1.tgz#6982cc3049fbb4cd85f8b24568b9d9bf39eeff97"
@@ -11205,6 +11213,11 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
+typemap@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/typemap/-/typemap-1.1.0.tgz#e0ec8b27c0fd76d058bc3d2287199c99b503c285"
+  integrity sha512-QaUibRT3yEEAZiH39Zpz3acVJLy7IgPdyENVE+Rwbse+x3ID2ERuVPTXC2IsppLJEAiH6BcHWSi+V03kcAdNNg==
+
 typescript@4.6.3:
   version "4.6.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.6.3.tgz"
@@ -11229,6 +11242,11 @@ uncontrollable@^7.2.1:
     "@types/react" ">=16.9.11"
     invariant "^2.2.4"
     react-lifecycles-compat "^3.0.4"
+
+underscore@^1.6.0:
+  version "1.13.6"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.6.tgz#04786a1f589dc6c09f761fc5f45b89e935136441"
+  integrity sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"

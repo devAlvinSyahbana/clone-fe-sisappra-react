@@ -1,6 +1,6 @@
-import {KTSVG} from '../../../../../_metronic/helpers'
-import {Link} from 'react-router-dom'
-import {useLocation} from 'react-router-dom'
+import { KTSVG } from '../../../../../_metronic/helpers'
+import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -42,9 +42,9 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('Pendidikan') && 'active')
+                      (location.pathname.includes('TabRekapitulasiDataPegawaiPensiun') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/Pendidikan/`}
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPensiun/`}
                   >
                     Rekapitulasi Data Pegawai yang Pensiun
                   </Link>
@@ -102,4 +102,4 @@ const LaporanRekapHeader = () => {
   )
 }
 
-export {LaporanRekapHeader}
+export { LaporanRekapHeader }
