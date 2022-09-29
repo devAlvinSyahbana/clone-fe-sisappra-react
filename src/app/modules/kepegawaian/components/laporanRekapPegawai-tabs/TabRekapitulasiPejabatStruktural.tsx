@@ -7,9 +7,24 @@ import DataTable from 'react-data-table-component';
 import Footer from "react-multi-date-picker/plugins/range_picker_footer";
 import { Button, Collapse } from 'react-bootstrap'
 import clsx from 'clsx'
+import { SelectOptionAutoCom } from '../KepegawaianInterface'
+import AsyncSelect from 'react-select/async'
+
+export interface SelectOption {
+    readonly value: string
+    readonly label: string
+    readonly color: string
+    readonly isFixed?: boolean
+    readonly isDisabled?: boolean
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KOTA_URL = `${API_URL}/master/kota`
+export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
+export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
+export const JABATAN_URL = `${API_URL}/master/jabatan`
+
 
 
 export function TabRekapitulasiPejabatStruktural() {
@@ -19,8 +34,11 @@ export function TabRekapitulasiPejabatStruktural() {
     const [valFilternama, setFilternama] = useState({ val: '' })
     const [valFilterkepegawaian_nip, setFilterkepegawaian_nip] = useState({ val: '' })
     const [valFilterkepegawaian_nrk, setFilterkepegawaian_nrk] = useState({ val: '' })
-    const [valFilterkepegawaian_jabatan, setFilterkepegawaian_jabatan] = useState({ val: '' })
-    const [valFilterkepegawaian_tempat_tugas, setFilterkepegawaian_tempat_tugas] = useState({ val: '' })
+
+    const [inputValKota, setDataKota] = useState({ label: '', value: null })
+    const [inputValKec, setDataKec] = useState({ label: '', value: null })
+    const [inputValKel, setDataKel] = useState({ label: '', value: null })
+    const [inputValJabatan, setDataJabatan] = useState({ label: '', value: null })
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -78,11 +96,17 @@ export function TabRekapitulasiPejabatStruktural() {
         if (valFilterkepegawaian_nrk.val !== '') {
             uriParam += `&nrk=${valFilterkepegawaian_nrk.val}`
         }
-        if (valFilterkepegawaian_jabatan.val !== '') {
-            uriParam += `&kepegawaian_jabatan=${valFilterkepegawaian_jabatan.val}`
+        if (inputValKota.value) {
+            uriParam += `&kota=${inputValKota.value}`
         }
-        if (valFilterkepegawaian_tempat_tugas.val !== '') {
-            uriParam += `&kepegawaian_tempat_tugas=${valFilterkepegawaian_tempat_tugas.val}`
+        if (inputValKec.value) {
+            uriParam += `&kecamatan=${inputValKec.value}`
+        }
+        if (inputValKel.value) {
+            uriParam += `&kelurahan=${inputValKel.value}`
+        }
+        if (inputValJabatan.value) {
+            uriParam += `&jabatan=${inputValJabatan.value}`
         }
         setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
     }
@@ -91,10 +115,69 @@ export function TabRekapitulasiPejabatStruktural() {
         setFilternama({ val: '' })
         setFilterkepegawaian_nip({ val: '' })
         setFilterkepegawaian_nrk({ val: '' })
-        setFilterkepegawaian_jabatan({ val: '' })
-        setFilterkepegawaian_tempat_tugas({ val: '' })
+        setDataKota({ label: '', value: null })
+        setDataKec({ label: '', value: null })
+        setDataKel({ label: '', value: null })
+        setDataJabatan({ label: '', value: null })
         setUriFind((prevState) => ({ ...prevState, strparam: '' }))
     }
+
+    const filterKota = async (inputValue: string) => {
+        const response = await axios.get(`${KOTA_URL}/find${inputValue}`)
+        const json = await response.data.data
+        return json.map((i: any) => ({ label: i.kota, value: i.id }))
+    }
+    const loadOptionsKota = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterKota(inputValue))
+        }, 1000)
+    }
+    const handleInputKota = (newValue: any) => {
+        setDataKota((prevstate: any) => ({ ...prevstate, ...newValue }))
+    }
+
+    const filterKec = async (inputValue: string) => {
+        const response = await axios.get(`${KECAMATAN_URL}/find${inputValue}`)
+        const json = await response.data.data
+        return json.map((i: any) => ({ label: i.kecamatan, value: i.id }))
+    }
+    const loadOptionsKec = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterKec(inputValue))
+        }, 1000)
+    }
+    const handleInputKec = (newValue: any) => {
+        setDataKec((prevstate: any) => ({ ...prevstate, ...newValue }))
+    }
+
+    const filterKel = async (inputValue: string) => {
+        const response = await axios.get(`${KELURAHAN_URL}/find${inputValue}`)
+        const json = await response.data.data
+        return json.map((i: any) => ({ label: i.kelurahan, value: i.id }))
+    }
+    const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterKel(inputValue))
+        }, 1000)
+    }
+    const handleInputKel = (newValue: any) => {
+        setDataKel((prevstate: any) => ({ ...prevstate, ...newValue }))
+    }
+
+    const filterJabatan = async (inputValue: string) => {
+        const response = await axios.get(`${JABATAN_URL}/find${inputValue}`)
+        const json = await response.data.data
+        return json.map((i: any) => ({ label: i.jabatan, value: i.id }))
+    }
+    const loadOptionsJabatan = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterJabatan(inputValue))
+        }, 1000)
+    }
+    const handleInputJabatan = (newValue: any) => {
+        setDataJabatan((prevstate: any) => ({ ...prevstate, ...newValue }))
+    }
+
 
     const columns = [
         {
@@ -201,18 +284,6 @@ export function TabRekapitulasiPejabatStruktural() {
     }) => {
         setFilterkepegawaian_nrk({ val: event.target.value })
     }
-    const handleChangeInputkepegawaian_jabatan = (event: {
-        preventDefault: () => void
-        target: { value: any; name: any }
-    }) => {
-        setFilterkepegawaian_jabatan({ val: event.target.value })
-    }
-    const handleChangeInputkepegawaian_tempat_tugas = (event: {
-        preventDefault: () => void
-        target: { value: any; name: any }
-    }) => {
-        setFilterkepegawaian_tempat_tugas({ val: event.target.value })
-    }
 
     const handlePageChange = (page: number) => {
         fetchData(page)
@@ -223,194 +294,171 @@ export function TabRekapitulasiPejabatStruktural() {
             {/* Header */}
             <LaporanRekapHeader />
             {/* Second Card */}
-            <div className="app-main flex-column flex-row-fluid" id="kt_app_main">
-                <div className="d-flex flex-column flex-column-fluid">
-                    <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
-                        <div id="kt_app_toolbar_container" className="app-container container-xxl d-flex flex-stack">
-                            <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+            <div className="card">
+                <div className="card-body">
+                    <div className="form-group">
+                        <div className="row mb-10">
+                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                                <label htmlFor='' className='mb-3'>
+                                    Nama
+                                </label>
+                                <input
+                                    type='text'
+                                    className='form-control form-control form-control-solid'
+                                    name='nama'
+                                    value={valFilternama.val}
+                                    onChange={handleChangeInputnama}
+                                    placeholder='Nama'
+                                />
+                            </div>
+                            <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12">
+                                <label htmlFor='' className='mb-3'>Wilayah / Bidang</label>
+                                <AsyncSelect
+                                    cacheOptions
+                                    value={inputValKota.value ? inputValKota : { value: '', label: 'Pilih' }}
+                                    loadOptions={loadOptionsKota}
+                                    defaultOptions
+                                    onChange={handleInputKota}
+                                    placeholder={'Pilih'}
+                                />
                             </div>
                         </div>
                     </div>
-                    <div id="kt_app_content" className="app-content flex-column-fluid">
-                        <div id="kt_app_content_container" className="app-container container-xxl">
-                            <div className="card mb-5 mb-xl-10">
-                                <div className="card-body">
-                                    <div className="form-group">
-                                        <div className="row mb-10">
-                                            <div className='col-xxl-4 col-lg-4 col-md-4 col-sm-12'>
-                                                <label htmlFor='' className='mb-3'>
-                                                    Nama
-                                                </label>
-                                                <input
-                                                    type='text'
-                                                    className='form-control form-control form-control-solid'
-                                                    name='nama'
-                                                    value={valFilternama.val}
-                                                    onChange={handleChangeInputnama}
-                                                    placeholder='Nama'
-                                                />
-                                            </div>
-                                            <div className="col-md-2">
-                                                <label className="col-form-label fw-semibold fs-6">Wilayah / Bidang</label>
-                                            </div>
-                                            <div className="col-md-4">
-                                                <select className="form-select form-select-solid"
-                                                    data-control="select2" data-placeholder="Pilih">
-                                                    <option></option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row mb-10">
-                                            <div className='col-xxl-4 col-lg-4 col-md-4 col-sm-12'>
-                                                <label htmlFor='' className='mb-3'>NRK</label>
-                                                <input
-                                                    type='text'
-                                                    className='form-control form-control form-control-solid'
-                                                    name='kepegawaian_nrk'
-                                                    value={valFilterkepegawaian_nrk.val}
-                                                    onChange={handleChangeInputkepegawaian_nrk}
-                                                    placeholder='NRK'
-                                                />
-                                            </div>
-                                            <div className="col-md-2">
-                                                <label className="col-form-label fw-semibold fs-6">Kecamatan / Seksi</label>
-                                            </div>
-                                            <div className="col-md-4">
-                                                <select className="form-select form-select-solid"
-                                                    data-control="select2" data-placeholder="Pilih">
-                                                    <option></option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row mb-10">
-                                            <div className='col-xxl-4 col-lg-4 col-md-4 col-sm-12'>
-                                                <label htmlFor='' className='mb-3'>NIP</label>
-                                                <input
-                                                    type='text'
-                                                    className='form-control form-control form-control-solid'
-                                                    name='kepegawaian_nip'
-                                                    value={valFilterkepegawaian_nip.val}
-                                                    onChange={handleChangeInputkepegawaian_nip}
-                                                    placeholder='NIP'
-                                                />
-                                            </div>
-                                            <div className="col-md-2">
-                                                <label className="col-form-label fw-semibold fs-6">Kelurahan</label>
-                                            </div>
-                                            <div className="col-md-4">
-                                                <select className="form-select form-select-solid"
-                                                    data-control="select2" data-placeholder="Pilih">
-                                                    <option></option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row mb-10">
-                                            <div className="col-2 offset-md-6">
-                                                <label className="col-form-label fw-semibold fs-6">Kecamatan / Seksi</label>
-                                            </div>
-                                            <div className="col-md-4">
-                                                <select className="form-select form-select-solid"
-                                                    data-control="select2" data-placeholder="Pilih">
-                                                    <option></option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                    <option value="a">-</option>
-                                                    <option value="b">-</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className='col-sm-6 col-md-6 col-lg-6'>
-                                            <Link to='#'>
-                                                <Button onClick={handleFilter} className='btn btn-primary me-3'>
-                                                    <i className='fa-solid fa-search'></i>
-                                                    Cari
-                                                </Button>
-                                            </Link>
-                                            <Link to='#' onClick={handleFilterReset}>
-                                                <button className='btn btn-primary'>
-                                                    <i className='fa-solid fa-arrows-rotate'></i>
-                                                    Reset
-                                                </button>
-                                            </Link>
-                                        </div>
-                                        <div className='col-6 d-flex justify-content-end gap-2'>
-                                            <Dropdown>
-                                                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                                    Unduh
-                                                </Dropdown.Toggle>
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item href="#/">Excel</Dropdown.Item>
-                                                    <Dropdown.Item href="#/">PDF</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                        </div>
-                                    </div>
+                    <div className="form-group">
+                        <div className="row mb-10">
+                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                                <label htmlFor='' className='mb-3'>NRK</label>
+                                <input
+                                    type='text'
+                                    className='form-control form-control form-control-solid'
+                                    name='kepegawaian_nrk'
+                                    value={valFilterkepegawaian_nrk.val}
+                                    onChange={handleChangeInputkepegawaian_nrk}
+                                    placeholder='NRK'
+                                />
+                            </div>
+                            <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12">
+                                <label htmlFor='' className='mb-3'>Kecamatan / Seksi</label>
+                                <AsyncSelect
+                                    cacheOptions
+                                    value={inputValKec.value ? inputValKec : { value: '', label: 'Pilih' }}
+                                    loadOptions={loadOptionsKec}
+                                    defaultOptions
+                                    onChange={handleInputKec}
+                                    placeholder={'Pilih'}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <div className="row mb-10">
+                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                                <label htmlFor='' className='mb-3'>NIP</label>
+                                <input
+                                    type='text'
+                                    className='form-control form-control form-control-solid'
+                                    name='kepegawaian_nip'
+                                    value={valFilterkepegawaian_nip.val}
+                                    onChange={handleChangeInputkepegawaian_nip}
+                                    placeholder='NIP'
+                                />
+                            </div>
+                            <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12">
+                                <label htmlFor='' className='mb-3'>Kelurahan</label>
+                                <AsyncSelect
+                                    cacheOptions
+                                    value={inputValKel.value ? inputValKel : { value: '', label: 'Pilih' }}
+                                    loadOptions={loadOptionsKel}
+                                    defaultOptions
+                                    onChange={handleInputKel}
+                                    placeholder={'Pilih'}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <div className="row mb-10">
+                            <div className="col-xxl-6 col-lg-6 col-md-6 col-sm-12 offset-md-6">
+                                <label htmlFor='' className='mb-3'>Jabatan</label>
+                                <AsyncSelect
+                                    cacheOptions
+                                    value={inputValJabatan.value ? inputValJabatan : { value: '', label: 'Pilih' }}
+                                    loadOptions={loadOptionsJabatan}
+                                    defaultOptions
+                                    onChange={handleInputJabatan}
+                                    placeholder={'Pilih'}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className='col-sm-4 col-md-6 col-lg-6'>
+                            <Link to='#'>
+                                <Button onClick={handleFilter} className='btn btn-primary me-2'>
+                                    <i className='fa-solid fa-search'></i>
+                                    Cari
+                                </Button>
+                            </Link>
+                            <Link to='#' onClick={handleFilterReset}>
+                                <button className='btn btn-primary'>
+                                    <i className='fa-solid fa-arrows-rotate'></i>
+                                    Reset
+                                </button>
+                            </Link>
+                        </div>
+                        <div className='col-sm-3 col-md-6 col-lg-6 d-flex justify-content-end gap-2'>
+                            <Dropdown>
+                                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                    Unduh
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item href="#/">Excel</Dropdown.Item>
+                                    <Dropdown.Item href="#/">PDF</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div className='card'>
+                    <div className="card-body py-4">
+                        <div className="row">
+                            <div className="col fs-4 mb-2 fw-semibold text-center">
+                                DAFTAR PEJABAT STRUKTURAL
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col fs-4 mb-2 fw-semibold text-center">
+                                SATPOL PP PROVINSI DKI JAKARTA
+                            </div>
+                        </div>
+                        <DataTable
+                            columns={columns}
+                            data={data}
+                            progressPending={loading}
+                            progressComponent={<LoadingAnimation />}
+                            pagination
+                            paginationServer
+                            paginationTotalRows={totalRows}
+                            onChangeRowsPerPage={handlePerRowsChange}
+                            onChangePage={handlePageChange}
+                        />
+                        <div className="row">
+                            <div className="col-4 fs-6 mb-2 fw-semibold text-center">
+                                ..........................................
+                                <div className="col fs-6 mb-15 fw-semibold text-center">
+                                    Kepala Satpol PP.........................................................
                                 </div>
-                                <div className='card'>
-                                    <div className="card-body py-4">
-                                        <div className="row">
-                                            <div className="col fs-4 mb-2 fw-semibold text-center">
-                                                DAFTAR PEJABAT STRUKTURAL
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col fs-4 mb-2 fw-semibold text-center">
-                                                SATPOL PP PROVINSI DKI JAKARTA
-                                            </div>
-                                        </div>
-                                        <DataTable
-                                            columns={columns}
-                                            data={data}
-                                            progressPending={loading}
-                                            progressComponent={<LoadingAnimation />}
-                                            pagination
-                                            paginationServer
-                                            paginationTotalRows={totalRows}
-                                            onChangeRowsPerPage={handlePerRowsChange}
-                                            onChangePage={handlePageChange}
-                                        />
-                                        <div className="row">
-                                            <div className="col-8"></div>
-                                            <div className="col-4 fs-6 mb-2 fw-semibold text-center">
-                                                ..........................................
-                                                <div className="col fs-6 mb-15 fw-semibold text-center">
-                                                    Kepala Satpol PP.........................................................
-                                                </div>
-                                                <div className="col fs-6 mb-2 fw-semibold text-center">
-                                                    ..........................................
-                                                </div>
-                                                <div className="col fs-6 mb-2 fw-semibold text-center">
-                                                    NIP. ......................
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div className="col fs-6 mb-2 fw-semibold text-center">
+                                    ..........................................
+                                </div>
+                                <div className="col fs-6 mb-2 fw-semibold text-center">
+                                    NIP. ......................
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div >
+            </div>
         </>
     )
 }
