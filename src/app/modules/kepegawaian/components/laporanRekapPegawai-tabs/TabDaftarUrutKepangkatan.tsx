@@ -685,7 +685,15 @@ export function TabDaftarUrutKepangkatan() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
                       Detail
                     </Dropdown.Item>
                     <Dropdown.Item
@@ -1041,7 +1049,7 @@ export function TabDaftarUrutKepangkatan() {
             <div
               className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
               style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
               }}
               data-theme='light'
             >
