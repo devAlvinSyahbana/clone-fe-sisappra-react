@@ -6,7 +6,8 @@ import { toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { LaporanRekapHeader } from './LaporanRekapHeader'
 import Dropdown from 'react-bootstrap/Dropdown'
 import Table from 'react-bootstrap/Table';
-import { JumlahSeluruhSatpol, JumlahSatpolDiklat } from '../LaporanRekapPegawaiInterface'
+import { JumlahSeluruhSatpol, JumlahSatpolDiklat, JumlahSatpolPendidikan } from '../LaporanRekapPegawaiInterface'
+import DataTable from 'react-data-table-component'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -14,19 +15,78 @@ export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export function TabLaporanRekapitulasiPegawai() {
   const navigate = useNavigate()
 
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+
   const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
   const [jsatpoldik, setJsatpoldik] = useState<JumlahSatpolDiklat>()
+  const [jsatpolpen, setJsatpolpen] = useState<JumlahSatpolPendidikan>()
 
   useEffect(() => {
     const fetchData = async () => {
       const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp`)
       const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-diklat`)
+      const jsatpolpen = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-pendidikan`)
 
+      setJsatpolpen(jsatpolpen.data.data)
       setJpegawaisatpol(jsatpol.data.data)
       setJsatpoldik(jsatpoldik.data.data)
     }
     fetchData()
   }, [])
+
+  const LoadingAnimation = (props: any) => {
+    return (
+      <>
+        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+          <div className='d-flex flex-column'>
+            <h5 className='mb-1'>Sedang mengambil data...</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '72px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  }
+
+  const columns = [
+    {
+      name: 'Pendidikan',
+      selector: (row: any) => row.pendidikan,
+      sortable: true,
+      sortField: 'pendidikan',
+      wrap: true,
+    },
+    {
+      name: 'Jumlah',
+      selector: (row: any) => row.jumlah,
+      sortable: true,
+      sortField: 'jumlah',
+      wrap: true,
+      minWidth: '15',
+    },
+  ]
+
   // console.log(jpegawaisatpol?.jmlh_seluruh_pegawai_satpol)
 
   return (
@@ -86,7 +146,7 @@ export function TabLaporanRekapitulasiPegawai() {
                     <span className='opacity-75'>Total : </span>
                     <span className='position-relative d-inline-block'>
                       <div className='opacity-75-hover fw-bold fs-1 d-block mb-1'>
-                        {jpegawaisatpol?.jmlh_seluruh_pegawai_satpol !== 0 ? jpegawaisatpol?.jmlh_seluruh_pegawai_satpol: '-'} orang
+                        {jpegawaisatpol?.jmlh_seluruh_pegawai_satpol !== 0 ? jpegawaisatpol?.jmlh_seluruh_pegawai_satpol : '-'} orang
                       </div>
                     </span>
                   </div>
@@ -99,7 +159,7 @@ export function TabLaporanRekapitulasiPegawai() {
                       <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                         <div className='m-0'>
                           <span className='text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1'>
-                            {jpegawaisatpol?.jmlh_seluruh_pns !== 0 ? jpegawaisatpol?.jmlh_seluruh_pns: '- '} Orang
+                            {jpegawaisatpol?.jmlh_seluruh_pns !== 0 ? jpegawaisatpol?.jmlh_seluruh_pns : '- '} Orang
                           </span>
                           <span className='text-gray-500 fw-semibold fs-6'>
                             Pegawai Negeri Sipil (PNS)
@@ -175,7 +235,7 @@ export function TabLaporanRekapitulasiPegawai() {
                       <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                         <div className='m-0'>
                           <span className='text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1'>
-                            {jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain !== 0 ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain: '- '} Orang
+                            {jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain !== 0 ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain : '- '} Orang
                           </span>
                           <span className='text-gray-500 fw-semibold fs-6'>
                             PPNS Unit Kerja Lainnya
@@ -215,7 +275,14 @@ export function TabLaporanRekapitulasiPegawai() {
                       </h3>
                     </div>
                     <div className='card-body pt-2'>
-                      <Table responsive
+                      <DataTable
+                        columns={columns}
+                        data={data}
+                        progressPending={loading}
+                        progressComponent={<LoadingAnimation />}
+                        customStyles={customStyles}
+                      />
+                      {/* <Table responsive
                         className='table align-middle table-row-dashed fs-6 gy-3'
                         id='kt_table_widget_4_table'
                       >
@@ -239,7 +306,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             <td className='text-center'>DOKTOR (S3)</td>
                             <td className='text-end'>
                               <a href='#' className='text-gray-600 text-hover-primary'>
-                                1 Orang
+                              {jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain !== 0 ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain: '- '} Orang
                               </a>
                             </td>
                           </tr>
@@ -398,7 +465,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                           </tr>
                         </tbody>
-                      </Table>
+                      </Table> */}
                     </div>
                   </div>
                 </div>
@@ -594,7 +661,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             <td className='text-center'>DIKLAT TEKNIS</td>
                             <td className='text-end'>
                               <a href='#' className='text-gray-600 text-hover-primary'>
-                                0 Orang
+                                {jsatpoldik?.jmlh_keseluruhan ? jsatpoldik?.jmlh_keseluruhan : ' - '} Orang
                               </a>
                             </td>
                           </tr>
@@ -629,7 +696,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             <td className='text-center'>DIKLAT LAINNYA</td>
                             <td className='text-end'>
                               <a href='#' className='text-gray-600 text-hover-primary'>
-                                218 Orang
+                                {jsatpoldik?.jmlh_keseluruhan ? jsatpoldik?.jmlh_keseluruhan : ' - '} Orang
                               </a>
                             </td>
                           </tr>
@@ -639,7 +706,7 @@ export function TabLaporanRekapitulasiPegawai() {
                             </td>
                             <td className='text-end table-success'>
                               <a href='#' className='text-gray-600 text-hover-primary'>
-                                3477 Orang
+                                {jsatpoldik?.jmlh_keseluruhan ? jsatpoldik?.jmlh_keseluruhan : ' - '} Orang
                               </a>
                             </td>
                           </tr>

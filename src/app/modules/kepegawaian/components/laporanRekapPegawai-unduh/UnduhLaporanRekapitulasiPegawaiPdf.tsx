@@ -15,13 +15,11 @@ export function UnduhLaporanRekapitulasiPegawai() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp`)
-      const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp-by-diklat`)
-
+      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp`)
+      const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-diklat`)
 
       setJpegawaisatpol(jsatpol.data.data)
       setJsatpoldik(jsatpoldik.data.data)
-      console.log(jsatpol)
     }
     fetchData()
   }, [])
@@ -200,7 +198,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                       <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp : '- '} Orang</label>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_pegawai_satpol ? jpegawaisatpol?.jmlh_seluruh_pegawai_satpol : '- '} Orang</label>
                     </div>
 
                     <div className="mb-5 mt-5">
@@ -410,7 +408,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                         <tr>
                           <td className="text-center">4</td>
                           <td className="text-left">DIKLAT TEKNIS</td>
-                          <td>0 Orang</td>
+                          <td> {jsatpoldik?.diklat_pol_pp_ppns ? jsatpoldik?.diklat_pol_pp_ppns : ' - '} Orang</td>
                         </tr>
                         <tr>
                           <td className="text-center">5</td>
@@ -420,12 +418,12 @@ export function UnduhLaporanRekapitulasiPegawai() {
                         <tr>
                           <td className="text-center">6</td>
                           <td className="text-left">DIKLAT LAINNYA</td>
-                          <td>218 Orang</td>
+                          <td>{jsatpoldik?.diklat_pol_pp_ppns ? jsatpoldik?.diklat_pol_pp_ppns : ' - '} Orang</td>
                         </tr>
                         <tr>
                           <td></td>
                           <td>JUMLAH KESELURUHAN</td>
-                          <td>3477 Orang</td>
+                          <td>{jsatpoldik?.jmlh_keseluruhan ? jsatpoldik?.jmlh_keseluruhan : ' - '} Orang</td>
                         </tr>
                       </tbody>
                     </table>
