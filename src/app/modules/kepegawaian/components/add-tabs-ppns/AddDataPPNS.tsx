@@ -296,7 +296,7 @@ export function AddDataPPNS() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
-                  NPM / NRK
+                  NIP / NRK
                 </label>
                 <Field
                   className='form-control form-control form-control-solid mb-4'
@@ -307,13 +307,34 @@ export function AddDataPPNS() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
-                  Pangkat / Golongan
+                  Pangkat
                 </label>
-                <Field
-                  className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  id='nama'
-                  placeholder='John'
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsJenis}
+                  defaultOptions
+                  value={{
+                    value: data?.jenis_kelamin,
+                    label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Pangkat',
+                  }}
+                  onChange={handleInputJenis}
+                  placeholder={'Pilih'}
+                />
+              </div>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
+                  Golongan
+                </label>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsJenis}
+                  defaultOptions
+                  value={{
+                    value: data?.jenis_kelamin,
+                    label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Golongan',
+                  }}
+                  onChange={handleInputJenis}
+                  placeholder={'Pilih'}
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -400,7 +421,7 @@ export function AddDataPPNS() {
                   to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
                 >
                   <button className='float-none btn btn-primary align-self-center m-1'>
-                    <i className='fa-solid fa-arrow-right'></i>
+                    <i className='fa-solid fa-paper-plane'></i>
                     Simpan
                   </button>
                 </Link>
