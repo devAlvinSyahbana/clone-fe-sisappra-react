@@ -949,9 +949,12 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
                 </select>
               </div>
             </div>
@@ -968,9 +971,12 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
                 </select>
               </div>
             </div>
@@ -987,9 +993,34 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
+                </select>
+              </div>
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Status
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })} */}
                 </select>
               </div>
             </div>

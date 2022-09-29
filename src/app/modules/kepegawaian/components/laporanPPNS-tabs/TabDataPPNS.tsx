@@ -2,6 +2,7 @@ import {useState, useEffect, Fragment, useMemo} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
+import UseTable, {useTable} from 'react-table'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -14,10 +15,6 @@ import {LaporanPPNSHeader} from './LaporanPPNSHeader'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_DATA_KELUARGA_URL = `${API_URL}/kepegawaian/find-data-keluarga`
-export const KEPEGAWAIAN_DATA_PENDIDIKAN_URL = `${API_URL}/kepegawaian/find-data-pendidikan/`
-export const KEPEGAWAIAN_DATA_PENDIDKAN_TERAKHIR_URL = `${API_URL}/kepegawaian/get-pendidikan-terakhir`
-export const KEPEGAWAIAN_AUTO_SEARCH_PEGAWAI_URL = `${API_URL}/kepegawaian/auto-search-pegawai`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 
 export function TabDataPPNS() {
@@ -55,7 +52,7 @@ export function TabDataPPNS() {
 
   let no = 1
 
-  const Grouped_Columns = [
+  const columns = [
     {
       name: 'No',
       sortable: true,
@@ -115,14 +112,6 @@ export function TabDataPPNS() {
       wrap: true,
       width: '150px',
       center: true,
-    },
-    {
-      name: 'Masa Berlaku KTP PPNS',
-      selector: (row: any) => row.masa_berlaku_ktp_ppns,
-      sortable: true,
-      width: '200px',
-      sortField: 'masa_berlaku_ktp_ppns',
-      wrap: true,
     },
     {
       name: 'Wilayah Kerja',
@@ -205,8 +194,6 @@ export function TabDataPPNS() {
       },
     },
   ]
-
-  const columns = useMemo(() => Grouped_Columns, [])
 
   const customStyles = {
     rows: {
@@ -364,7 +351,20 @@ export function TabDataPPNS() {
                 name='nama'
                 value={valFilterNama.val}
                 onChange={handleChangeInputNama}
-                placeholder='Nama'
+                placeholder='Pangkat'
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                NRK
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='NRK'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='NRK'
               />
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -377,12 +377,13 @@ export function TabDataPPNS() {
                 name='nama'
                 value={valFilterNama.val}
                 onChange={handleChangeInputNama}
-                placeholder='Nama'
+                placeholder='Golongan'
               />
             </div>
+
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                NIP / NRK
+                NIP
               </label>
               <input
                 type='text'
@@ -390,7 +391,7 @@ export function TabDataPPNS() {
                 name='nama'
                 value={valFilterNama.val}
                 onChange={handleChangeInputNama}
-                placeholder='Nama'
+                placeholder='NIP'
               />
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -406,9 +407,12 @@ export function TabDataPPNS() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
                 </select>
               </div>
             </div>

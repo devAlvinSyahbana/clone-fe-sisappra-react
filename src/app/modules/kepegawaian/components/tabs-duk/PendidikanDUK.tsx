@@ -86,15 +86,16 @@ export function PendidikanDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/InformasiDataPegawai'
+                to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan/'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
-                  Keluar
+                  <i className='fa fa-close'></i>
+                  Batal
                 </button>
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/InformasiDataPegawai/DataKeluarga/${id}/${status}`}
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/DataKeluargaDUK/${id}/${status}`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -103,7 +104,7 @@ export function PendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/DataKepegawaianDUK/${id}/${status}`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

@@ -280,7 +280,7 @@ export function AddDataPPNS() {
                   className='form-control form-control form-control-solid mb-4'
                   name='nama'
                   id='nama'
-                  placeholder='John'
+                  placeholder='SKPD'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -291,7 +291,7 @@ export function AddDataPPNS() {
                   className='form-control form-control form-control-solid mb-4'
                   name='nama'
                   id='nama'
-                  placeholder='John'
+                  placeholder='Nama'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -302,7 +302,7 @@ export function AddDataPPNS() {
                   className='form-control form-control form-control-solid mb-4'
                   name='nama'
                   id='nama'
-                  placeholder='John'
+                  placeholder='NIP / NRK'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -310,14 +310,14 @@ export function AddDataPPNS() {
                   Pangkat
                 </label>
                 <AsyncSelect
-                  cacheOptions
-                  loadOptions={loadOptionsJenis}
-                  defaultOptions
-                  value={{
-                    value: data?.jenis_kelamin,
-                    label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Pangkat',
-                  }}
-                  onChange={handleInputJenis}
+                  // cacheOptions
+                  // // loadOptions={loadOptionsJenis}
+                  // defaultOptions
+                  // value={{
+                  //   value: data?.jenis_kelamin,
+                  //   label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Pangkat',
+                  // }}
+                  // onChange={handleInputJenis}
                   placeholder={'Pilih'}
                 />
               </div>
@@ -326,14 +326,14 @@ export function AddDataPPNS() {
                   Golongan
                 </label>
                 <AsyncSelect
-                  cacheOptions
-                  loadOptions={loadOptionsJenis}
-                  defaultOptions
-                  value={{
-                    value: data?.jenis_kelamin,
-                    label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Golongan',
-                  }}
-                  onChange={handleInputJenis}
+                  // cacheOptions
+                  // loadOptions={loadOptionsJenis}
+                  // defaultOptions
+                  // value={{
+                  //   value: data?.jenis_kelamin,
+                  //   label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Golongan',
+                  // }}
+                  // onChange={handleInputJenis}
                   placeholder={'Pilih'}
                 />
               </div>
@@ -345,18 +345,18 @@ export function AddDataPPNS() {
                   className='form-control form-control form-control-solid mb-4'
                   name='nama'
                   id='nama'
-                  placeholder='John'
+                  placeholder='No. SK. PPNS'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
-                  Masa Berlaku KTP PPNS
+                  NO. KTP. PPNS
                 </label>
                 <Field
                   className='form-control form-control form-control-solid mb-4'
                   name='nama'
                   id='nama'
-                  placeholder='John'
+                  placeholder='No. KTP. PPNS'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -367,7 +367,7 @@ export function AddDataPPNS() {
                   className='form-control form-control form-control-solid mb-4'
                   name='nama'
                   id='nama'
-                  placeholder='John'
+                  placeholder='Wilayah Kerja'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -378,27 +378,8 @@ export function AddDataPPNS() {
                   className='form-control form-control form-control-solid mb-4'
                   name='nama'
                   id='nama'
-                  placeholder='John'
+                  placeholder='UU yang dikawal'
                 />
-              </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                <label htmlFor='' className='mb-3'>
-                  Masa berlaku KTP PPNS
-                </label>
-                <div className='row'>
-                  <div className='col-xxl-12 col-md-12 col-lg-12 col-sm-12'>
-                    <Field
-                      type='date'
-                      name='tgl_lahir'
-                      className='form-control form-control-solid'
-                      placeholder='Tanggal Lahir'
-                    />
-                    {/* <DatePicker
-                      dateFormat="MM/dd/yyyy"
-                      name="tgl_lahir"
-                    /> */}
-                  </div>
-                </div>
               </div>
 
               <div className='col-12 mb-4'>

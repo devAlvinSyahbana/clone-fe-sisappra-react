@@ -61,8 +61,8 @@ export function DataPPNS() {
                 <Field
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  placeholder='Nama'
+                  name='skpd'
+                  placeholder='SKPD'
                   disabled
                 />
               </div>
@@ -80,13 +80,25 @@ export function DataPPNS() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
-                  NIP / NRK
+                  NIP
                 </label>
                 <Field
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  placeholder='Nama'
+                  name='nip'
+                  placeholder='nip'
+                  disabled
+                />
+              </div>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
+                  NRK
+                </label>
+                <Field
+                  type='text'
+                  className='form-control form-control form-control-solid mb-4'
+                  name='nrk'
+                  placeholder='nrk'
                   disabled
                 />
               </div>
@@ -97,8 +109,8 @@ export function DataPPNS() {
                 <Field
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  placeholder='Nama'
+                  name='pangkat'
+                  placeholder='pangkat'
                   disabled
                 />
               </div>
@@ -109,8 +121,8 @@ export function DataPPNS() {
                 <Field
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  placeholder='Nama'
+                  name='golongan'
+                  placeholder='golongan'
                   disabled
                 />
               </div>
@@ -121,20 +133,8 @@ export function DataPPNS() {
                 <Field
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  placeholder='Nama'
-                  disabled
-                />
-              </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                <label htmlFor='' className='mb-3'>
-                  Masa Berlaku KTP PPNS
-                </label>
-                <Field
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  placeholder='Nama'
+                  name='no.sk.ppns'
+                  placeholder='no.sk.ppns'
                   disabled
                 />
               </div>
@@ -145,8 +145,8 @@ export function DataPPNS() {
                 <Field
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  placeholder='Nama'
+                  name='wilayah kerja'
+                  placeholder='wilayah kerja'
                   disabled
                 />
               </div>
@@ -157,8 +157,8 @@ export function DataPPNS() {
                 <Field
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  placeholder='Nama'
+                  name='uu yang dikawal'
+                  placeholder='uu yang dikawal'
                   disabled
                 />
               </div>
