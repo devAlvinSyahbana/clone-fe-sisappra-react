@@ -19,14 +19,15 @@ export function TabLaporanRekapitulasiPegawai() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp`)
-      const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp-by-diklat`)
+      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp`)
+      const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-diklat`)
 
       setJpegawaisatpol(jsatpol.data.data)
       setJsatpoldik(jsatpoldik.data.data)
     }
     fetchData()
   }, [])
+  // console.log(jpegawaisatpol?.jmlh_seluruh_pegawai_satpol)
 
   return (
     <>
@@ -85,10 +86,7 @@ export function TabLaporanRekapitulasiPegawai() {
                     <span className='opacity-75'>Total : </span>
                     <span className='position-relative d-inline-block'>
                       <div className='opacity-75-hover fw-bold fs-1 d-block mb-1'>
-                        {jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp
-                          ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp
-                          : '-'}{' '}
-                        Orang
+                        {jpegawaisatpol?.jmlh_seluruh_pegawai_satpol !== 0 ? jpegawaisatpol?.jmlh_seluruh_pegawai_satpol: '-'} orang
                       </div>
                     </span>
                   </div>
@@ -101,10 +99,7 @@ export function TabLaporanRekapitulasiPegawai() {
                       <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                         <div className='m-0'>
                           <span className='text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1'>
-                            {jpegawaisatpol?.jmlh_seluruh_pns
-                              ? jpegawaisatpol?.jmlh_seluruh_pns
-                              : '- '}
-                            Orang
+                            {jpegawaisatpol?.jmlh_seluruh_pns !== 0 ? jpegawaisatpol?.jmlh_seluruh_pns: '- '} Orang
                           </span>
                           <span className='text-gray-500 fw-semibold fs-6'>
                             Pegawai Negeri Sipil (PNS)
@@ -116,10 +111,9 @@ export function TabLaporanRekapitulasiPegawai() {
                       <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                         <div className='m-0'>
                           <span className='text-gray-700 fw-bolder d-block fs-2x lh-1 ls-n1 mb-1'>
-                            {jpegawaisatpol?.jmlh_seluruh_cpns
+                            {jpegawaisatpol?.jmlh_seluruh_cpns !== 0
                               ? jpegawaisatpol?.jmlh_seluruh_cpns
-                              : '- '}
-                            Orang
+                              : '- '} Orang
                           </span>
                           <span className='text-gray-500 fw-semibold fs-6'>
                             Calon Pegawai Negeri Sipil (CPNS)
@@ -131,10 +125,9 @@ export function TabLaporanRekapitulasiPegawai() {
                       <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                         <div className='m-0 border-bottom border-secondary border-2 pb-1 mb-2'>
                           <span className='text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1'>
-                            {jpegawaisatpol?.jmlh_seluruh_non_pns
+                            {jpegawaisatpol?.jmlh_seluruh_non_pns !== 0
                               ? jpegawaisatpol?.jmlh_seluruh_non_pns
-                              : '- '}
-                            Orang
+                              : '- '} Orang
                           </span>
                           <span className='text-gray-500 fw-semibold fs-6'>
                             Non Pegawai Negeri Sipil
@@ -143,10 +136,9 @@ export function TabLaporanRekapitulasiPegawai() {
                         <div className='row'>
                           <div className='col-6 border-end border-secondary pt-2'>
                             <span className='text-gray-700 fw-bolder d-block fs-3 lh-1 ls-n1 mb-1'>
-                              {jpegawaisatpol?.jmlh_seluruh_non_pns_ptt
+                              {jpegawaisatpol?.jmlh_seluruh_non_pns_ptt !== 0
                                 ? jpegawaisatpol?.jmlh_seluruh_non_pns_ptt
-                                : '- '}
-                              Orang
+                                : '- '} Orang
                             </span>
                             <span className='text-gray-500 fw-semibold fs-6'>
                               Anggota PolPP Non PPNS (PTT)
@@ -154,10 +146,9 @@ export function TabLaporanRekapitulasiPegawai() {
                           </div>
                           <div className='col-6 border-start border-secondary pt-2'>
                             <span className='text-gray-700 fw-bolder d-block fs-3 lh-1 ls-n1 mb-1'>
-                              {jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp
+                              {jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp !== 0
                                 ? jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp
-                                : '- '}
-                              Orang
+                                : '- '} Orang
                             </span>
                             <span className='text-gray-500 fw-semibold fs-6'>
                               Anggota PolPP Non PPNS (PJLP)
@@ -170,10 +161,9 @@ export function TabLaporanRekapitulasiPegawai() {
                       <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                         <div className='m-0'>
                           <span className='text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1'>
-                            {jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp
+                            {jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp !== 0
                               ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp
-                              : '- '}
-                            Orang
+                              : '- '} Orang
                           </span>
                           <span className='text-gray-500 fw-semibold fs-6'>
                             PPNS Satuan Polisi Pamong Praja
@@ -185,10 +175,7 @@ export function TabLaporanRekapitulasiPegawai() {
                       <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                         <div className='m-0'>
                           <span className='text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1'>
-                            {jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain
-                              ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain
-                              : '- '}
-                            Orang
+                            {jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain !== 0 ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain: '- '} Orang
                           </span>
                           <span className='text-gray-500 fw-semibold fs-6'>
                             PPNS Unit Kerja Lainnya
