@@ -5,7 +5,7 @@ import {Link, useParams} from 'react-router-dom'
 import {useLocation} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import {Button, ButtonGroup, Dropdown, DropdownButton, Modal} from 'react-bootstrap'
-import {UpdateHeaderDetailDUK} from './UpdateHeaderDetailDUK'
+import {AddHeaderDetailDUK} from './AddHeaderDetailDUK'
 import {
   DetailPegawaiInterface,
   JumlahKeluargaInterface,
@@ -15,7 +15,7 @@ import {
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-export function UpdateDataKeluargaDUK() {
+export function AddDataKeluargaDUK() {
   // const location = useLocation()
   const {id, status} = useParams()
   const [dpi, setDpi] = useState<DetailPegawaiInterface>()
@@ -130,7 +130,7 @@ export function UpdateDataKeluargaDUK() {
   return (
     <div>
       {/* begin::Body */}
-      <UpdateHeaderDetailDUK />
+      <AddHeaderDetailDUK />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
@@ -257,7 +257,7 @@ export function UpdateDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${id}/${status}`}
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePribadiDUK/${id}/${status}`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -266,7 +266,7 @@ export function UpdateDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePendidikanDUK/${id}/${status}`}
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPendidikanDUK`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

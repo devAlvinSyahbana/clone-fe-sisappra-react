@@ -1,17 +1,14 @@
 import React, {Fragment, useState} from 'react'
 // import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
-import {Link, useParams} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
-import {UpdateHeaderDetailDUK} from './UpdateHeaderDetailDUK'
+import {AddHeaderDetailDUK} from './AddHeaderDetailDUK'
 import {useLocation} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import {Button, Modal} from 'react-bootstrap'
 
-export function UpdatePendidikanDUK() {
+export function AddPendidikanDUK() {
   const location = useLocation()
-
-  const {id, status} = useParams()
-  console.log('id, status', id, status)
 
   const [show, setShow] = useState(false)
   const [lgShow, setLgShow] = useState(false)
@@ -81,7 +78,7 @@ export function UpdatePendidikanDUK() {
   return (
     <div>
       {/* begin::Body */}
-      <UpdateHeaderDetailDUK />
+      <AddHeaderDetailDUK />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
@@ -232,7 +229,7 @@ export function UpdatePendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -241,7 +238,7 @@ export function UpdatePendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK/${id}/${status}`}
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

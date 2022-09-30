@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {Link, useParams} from 'react-router-dom'
 import {useLocation} from 'react-router-dom'
-import {UpdateHeaderDetailDUK} from './UpdateHeaderDetailDUK'
+import {AddHeaderDetailDUK} from './AddHeaderDetailDUK'
 import axios from 'axios'
 import {DetailPegawaiInterface} from '../KepegawaianInterface'
 import {Formik, Field, FormikHelpers} from 'formik'
@@ -11,7 +11,7 @@ import moment from 'moment'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-export function UpdateDataKepegawaianDUK() {
+export function AddDataKepegawaianDUK() {
   const {id, status} = useParams()
   console.log('id, status', id, status)
   const [data, setData] = useState<DetailPegawaiInterface>({})
@@ -28,7 +28,7 @@ export function UpdateDataKepegawaianDUK() {
   return (
     <>
       {/* begin::Body */}
-      <UpdateHeaderDetailDUK />
+      <AddHeaderDetailDUK />
       {/* second card */}
       <Formik
         initialValues={{
@@ -586,17 +586,13 @@ export function UpdateDataKepegawaianDUK() {
                 </Link>
                 <Link
                   className='text-reset text-decoration-none'
-                  to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePendidikanDUK/${id}/${status}`}
+                  to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPendidikanDUK/${id}/${status}`}
                 >
                   <button className='float-none btn btn-success align-self-center m-1'>
                     <i className='fa-solid fa-arrow-left'></i>
                     Kembali
                   </button>
                 </Link>
-                <button className='btn btn-primary' type='submit'>
-                  <i className='fa-solid fa-paper-plane'></i>
-                  Simpan
-                </button>
               </div>
             </div>
           </div>

@@ -1,39 +1,52 @@
-import React, {useEffect, useState} from 'react'
-import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
+// import React from 'react'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import {Link, useParams} from 'react-router-dom'
-import {useLocation} from 'react-router-dom'
-import {UpdateHeaderDetailDUK} from './UpdateHeaderDetailDUK'
+import {HeaderDetailWrapperDUK} from './HeaderDetailDUK'
 import axios from 'axios'
+import {Field, Formik, FormikHelpers} from 'formik'
+import {useState, useEffect} from 'react'
 import {DetailPegawaiInterface} from '../KepegawaianInterface'
-import {Formik, Field, FormikHelpers} from 'formik'
 import moment from 'moment'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-export function UpdateDataKepegawaianDUK() {
+export function DataKepegawaianDUK() {
   const {id, status} = useParams()
-  console.log('id, status', id, status)
   const [data, setData] = useState<DetailPegawaiInterface>({})
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
       setData((prevstate) => ({...prevstate, ...response.data.data}))
-      // console.log(response.data.data);
     }
     fetchData()
-  }, [setData])
+  }, [setData, id, status])
 
   return (
-    <>
-      {/* begin::Body */}
-      <UpdateHeaderDetailDUK />
+    <div>
+      {/* Header */}
+      <HeaderDetailWrapperDUK />
       {/* second card */}
       <Formik
         initialValues={{
           ...data,
-          kepegawaian_tmtpangkat: moment(data?.kepegawaian_tmtpangkat).format('YYYY-MM-D'),
+          kepegawaian_tmtpangkat: moment(data?.kepegawaian_tmtpangkat).format('D MMMM YYYY'),
+          kepegawaian_tmt_cpns: moment(data?.kepegawaian_tmt_cpns).format('D MMMM YYYY'),
+          kepegawaian_tmt_pns: moment(data?.kepegawaian_tmt_pns).format('D MMMM YYYY'),
+          kepegawaian_tgl_sk_pns: moment(data?.kepegawaian_tgl_sk_pns).format('D MMMM YYYY'),
+          kepegawaian_tgl_sk_pangkat_terakhir: moment(
+            data?.kepegawaian_tgl_sk_pangkat_terakhir
+          ).format('D MMMM YYYY'),
+          kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat: moment(
+            data?.kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat
+          ).format('D MMMM YYYY'),
+          kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat: moment(
+            data?.kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat
+          ).format('D MMMM YYYY'),
+          kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: moment(
+            data?.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat
+          ).format('D MMMM YYYY'),
         }}
         onSubmit={function (
           values: DetailPegawaiInterface,
@@ -59,6 +72,7 @@ export function UpdateDataKepegawaianDUK() {
                   NRK
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_nrk'
@@ -70,6 +84,7 @@ export function UpdateDataKepegawaianDUK() {
                   NIP
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_nip'
@@ -81,9 +96,10 @@ export function UpdateDataKepegawaianDUK() {
                   Pangkat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_pangkat'
+                  name='kepegawaian_pangkat_name'
                 />
               </div>
 
@@ -92,9 +108,10 @@ export function UpdateDataKepegawaianDUK() {
                   Golongan
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_golongan'
+                  name='kepegawaian_golongan_name'
                 />
               </div>
 
@@ -103,6 +120,7 @@ export function UpdateDataKepegawaianDUK() {
                   TMT Pangkat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tmtpangkat'
@@ -114,9 +132,10 @@ export function UpdateDataKepegawaianDUK() {
                   Pendidikan Pada SK
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_pendidikan_pada_sk'
+                  name='kepegawaian_pendidikan_pada_sk_name'
                 />
               </div>
 
@@ -125,9 +144,10 @@ export function UpdateDataKepegawaianDUK() {
                   Jabatan
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_jabatan'
+                  name='kepegawaian_jabatan_name'
                 />
               </div>
 
@@ -136,9 +156,10 @@ export function UpdateDataKepegawaianDUK() {
                   Eselon
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_eselon'
+                  name='kepegawaian_eselon_name'
                 />
               </div>
 
@@ -147,6 +168,7 @@ export function UpdateDataKepegawaianDUK() {
                   Tempat Tugas
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tempat_tugas'
@@ -158,6 +180,7 @@ export function UpdateDataKepegawaianDUK() {
                   Subag/Seksi/Kecamatan
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-3'
                   name='kepegawaian_subbag_seksi_kecamatan'
@@ -169,6 +192,7 @@ export function UpdateDataKepegawaianDUK() {
                   Status Pegawai
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_status_pegawai'
@@ -180,6 +204,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor Rekening
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_rekening'
@@ -191,6 +216,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor KARPEG
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_karpeg'
@@ -202,6 +228,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor Karis/Karsu
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_kasirkasur'
@@ -213,6 +240,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor TASPEN
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_taspen'
@@ -224,6 +252,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor NPWP
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_npwp'
@@ -235,6 +264,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor BPJS/ASKES
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_bpjs_askes'
@@ -242,7 +272,7 @@ export function UpdateDataKepegawaianDUK() {
               </div>
 
               <div className='col-12'>
-                <hr className='fg-gray' />
+                <div className='separator border-3 my-10'></div>
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
@@ -250,6 +280,7 @@ export function UpdateDataKepegawaianDUK() {
                   TMT CPNS
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tmt_cpns'
@@ -259,26 +290,42 @@ export function UpdateDataKepegawaianDUK() {
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                    <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
-                      <div className='symbol symbol-75px mb-5'>
-                        <KTSVG
-                          className='theme-light-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf.svg'
-                        />
-                        <KTSVG
-                          className='theme-dark-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf-dark.svg'
-                        />
-                      </div>
-                      <div className='fs-5 fw-bold mb-2'>SK CPNS</div>
-                    </a>
-                    <label className='fw-semibold fs-6 mb-2 mt-2'>Upload SK CPNS</label>
-                    <Field
-                      type='FIle'
-                      className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder=''
-                      value=''
-                    />
+                    {data.kepegawaian_sk_cpns && data.kepegawaian_sk_cpns !== '' ? (
+                      <>
+                        <a
+                          href='/#'
+                          className='text-gray-800 text-hover-primary d-flex flex-column'
+                        >
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf-dark.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>SK CPNS</div>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <div className='text-gray-800 text-hover-primary d-flex flex-column'>
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -288,6 +335,7 @@ export function UpdateDataKepegawaianDUK() {
                   TMT PNS
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tmt_pns'
@@ -299,6 +347,7 @@ export function UpdateDataKepegawaianDUK() {
                   Tanggal SK PNS
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tgl_sk_pns'
@@ -308,26 +357,42 @@ export function UpdateDataKepegawaianDUK() {
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                    <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
-                      <div className='symbol symbol-75px mb-5'>
-                        <KTSVG
-                          className='theme-light-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf.svg'
-                        />
-                        <KTSVG
-                          className='theme-dark-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf-dark.svg'
-                        />
-                      </div>
-                      <div className='fs-5 fw-bold mb-2'>SK PNS</div>
-                    </a>
-                    <label className='fw-semibold fs-6 mb-2 mt-2'>Upload SK PNS</label>
-                    <Field
-                      type='FIle'
-                      className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder=''
-                      value=''
-                    />
+                    {data.kepegawaian_sk_cpns && data.kepegawaian_sk_cpns !== '' ? (
+                      <>
+                        <a
+                          href='/#'
+                          className='text-gray-800 text-hover-primary d-flex flex-column'
+                        >
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf-dark.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>SK PNS</div>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <div className='text-gray-800 text-hover-primary d-flex flex-column'>
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -337,6 +402,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor SK Pangkat Terakhir
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_sk_pangkat_terakhir'
@@ -348,6 +414,7 @@ export function UpdateDataKepegawaianDUK() {
                   Tanggal SK Pangkat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tgl_sk_pangkat_terakhir'
@@ -357,32 +424,48 @@ export function UpdateDataKepegawaianDUK() {
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                    <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
-                      <div className='symbol symbol-75px mb-5'>
-                        <KTSVG
-                          className='theme-light-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf.svg'
-                        />
-                        <KTSVG
-                          className='theme-dark-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf-dark.svg'
-                        />
-                      </div>
-                      <div className='fs-5 fw-bold mb-2'>SK TERAKHIR</div>
-                    </a>
-                    <label className='fw-semibold fs-6 mb-2 mt-2'>Upload SK Terakhir</label>
-                    <Field
-                      type='FIle'
-                      className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder=''
-                      value=''
-                    />
+                    {data.kepegawaian_sk_cpns && data.kepegawaian_sk_cpns !== '' ? (
+                      <>
+                        <a
+                          href='/#'
+                          className='text-gray-800 text-hover-primary d-flex flex-column'
+                        >
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf-dark.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>SK TERAKHIR</div>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <div className='text-gray-800 text-hover-primary d-flex flex-column'>
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
 
               <div className='col-12'>
-                <hr className='fg-gray' />
+                <div className='separator border-3 my-10'></div>
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
@@ -390,6 +473,7 @@ export function UpdateDataKepegawaianDUK() {
                   Diklat Pol PP Dasar
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_diklat_pol_pp_dasar'
@@ -401,6 +485,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor Sertifikat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_diklat_pol_pp_dasar_no_sertifikat'
@@ -412,6 +497,7 @@ export function UpdateDataKepegawaianDUK() {
                   Tanggal Sertifikat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat'
@@ -421,32 +507,49 @@ export function UpdateDataKepegawaianDUK() {
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                    <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
-                      <div className='symbol symbol-75px mb-5'>
-                        <KTSVG
-                          className='theme-light-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf.svg'
-                        />
-                        <KTSVG
-                          className='theme-dark-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf-dark.svg'
-                        />
-                      </div>
-                      <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
-                    </a>
-                    <label className='fw-semibold fs-6 mb-2 mt-2'>Upload Sertifikat</label>
-                    <Field
-                      type='FIle'
-                      className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder=''
-                      value=''
-                    />
+                    {data.kepegawaian_diklat_pol_pp_dasar_file_sertifikat &&
+                    data.kepegawaian_diklat_pol_pp_dasar_file_sertifikat !== '' ? (
+                      <>
+                        <a
+                          href='/#'
+                          className='text-gray-800 text-hover-primary d-flex flex-column'
+                        >
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf-dark.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <div className='text-gray-800 text-hover-primary d-flex flex-column'>
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
 
               <div className='col-12'>
-                <hr className='fg-gray' />
+                <div className='separator border-3 my-10'></div>
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
@@ -454,9 +557,10 @@ export function UpdateDataKepegawaianDUK() {
                   Diklat Struktural
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_strutular'
+                  name='kepegawaian_diklat_pol_pp_strutural'
                 />
               </div>
 
@@ -465,9 +569,10 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor Sertifikat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_strutular_no_sertifikat'
+                  name='kepegawaian_diklat_pol_pp_strutural_no_sertifikat'
                 />
               </div>
 
@@ -476,41 +581,59 @@ export function UpdateDataKepegawaianDUK() {
                   Tanggal Sertifikat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_strutular_tgl_sertifikat'
+                  name='kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat'
                 />
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                    <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
-                      <div className='symbol symbol-75px mb-5'>
-                        <KTSVG
-                          className='theme-light-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf.svg'
-                        />
-                        <KTSVG
-                          className='theme-dark-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf-dark.svg'
-                        />
-                      </div>
-                      <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
-                    </a>
-                    <label className='fw-semibold fs-6 mb-2 mt-2'>Upload Sertifikat</label>
-                    <Field
-                      type='FIle'
-                      className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder=''
-                      value=''
-                    />
+                    {data.kepegawaian_diklat_pol_pp_strutural_file_sertifikat &&
+                    data.kepegawaian_diklat_pol_pp_strutural_file_sertifikat !== '' ? (
+                      <>
+                        <a
+                          href='/#'
+                          className='text-gray-800 text-hover-primary d-flex flex-column'
+                        >
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf-dark.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <div className='text-gray-800 text-hover-primary d-flex flex-column'>
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
 
               <div className='col-12'>
-                <hr className='fg-gray' />
+                <div className='separator border-3 my-10'></div>
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
@@ -518,6 +641,7 @@ export function UpdateDataKepegawaianDUK() {
                   Diklat PPNS
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_diklat_pol_pp_ppns'
@@ -529,6 +653,7 @@ export function UpdateDataKepegawaianDUK() {
                   Nomor Sertifikat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_diklat_pol_pp_ppns_no_sertifikat'
@@ -540,6 +665,7 @@ export function UpdateDataKepegawaianDUK() {
                   Tanggal Sertifikat
                 </label>
                 <Field
+                  disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat'
@@ -549,60 +675,83 @@ export function UpdateDataKepegawaianDUK() {
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                    <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
-                      <div className='symbol symbol-75px mb-5'>
-                        <KTSVG
-                          className='theme-light-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf.svg'
-                        />
-                        <KTSVG
-                          className='theme-dark-show svg-icon svg-icon-5x me-1'
-                          path='/media/svg/files/pdf-dark.svg'
-                        />
-                      </div>
-                      <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
-                    </a>
-                    <label className='fw-semibold fs-6 mb-2 mt-2'>Upload Sertifikat</label>
-                    <Field
-                      type='FIle'
-                      className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder=''
-                      value=''
-                    />
+                    {data.kepegawaian_diklat_pol_pp_ppns_file_sertifikat &&
+                    data.kepegawaian_diklat_pol_pp_ppns_file_sertifikat !== '' ? (
+                      <>
+                        <a
+                          href='/#'
+                          className='text-gray-800 text-hover-primary d-flex flex-column'
+                        >
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf-dark.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <div className='text-gray-800 text-hover-primary d-flex flex-column'>
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
-            </div>
-            <div className='p-0 mt-6'>
-              <div className='text-center'>
-                <Link
-                  className='text-reset text-decoration-none'
-                  to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan/'
-                >
-                  <button className='float-none btn btn-secondary align-self-center m-1'>
-                    <i className='fa fa-close'></i>
-                    Batal
-                  </button>
-                </Link>
-                <Link
-                  className='text-reset text-decoration-none'
-                  to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePendidikanDUK/${id}/${status}`}
-                >
-                  <button className='float-none btn btn-success align-self-center m-1'>
-                    <i className='fa-solid fa-arrow-left'></i>
-                    Kembali
-                  </button>
-                </Link>
-                <button className='btn btn-primary' type='submit'>
-                  <i className='fa-solid fa-paper-plane'></i>
-                  Simpan
-                </button>
+
+              <div className='p-0 mt-6'>
+                <div className='text-center'>
+                  <Link
+                    className='text-reset text-decoration-none'
+                    to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan'
+                  >
+                    <button className='float-none btn btn-secondary align-self-center m-1'>
+                      <i className='fa fa-close'></i>
+                      Batal
+                    </button>
+                  </Link>
+                  <Link
+                    className='text-reset text-decoration-none'
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/PendidikanDUK/${id}/${status}`}
+                  >
+                    <button className='float-none btn btn-success align-self-center m-1'>
+                      <i className='fa-solid fa-arrow-left'></i>
+                      Kembali
+                    </button>
+                  </Link>
+                  <Link
+                    className='text-reset text-decoration-none'
+                    to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/${id}/${status}`}
+                  >
+                    <button className='float-none btn btn-primary align-self-center m-1'>
+                      <i className='fa-solid fa-paper-plane'></i>
+                      Simpan
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </Formik>
       {/* end::Body */}
-    </>
+    </div>
   )
 }
