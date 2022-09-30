@@ -25,36 +25,41 @@ import { UpdateDataKepegawaian } from './components/update-tabs/UpdateDataKepega
 import { TabLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-tabs/TabLaporanRekapitulasiPegawai'
 import { TabDaftarUrutKepangkatan } from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 
-import { TabRekapitulasiPPNS } from './components/laporanPPNS-tabs/TabRekapitulasiPPNS'
-import { UnduhLaporanRekapitulasiPPNSPdf } from './components/laporanPPNS-unduh/UnduhLaporanRekapitulasiPPNSPdf'
-import { TabDataPPNS } from './components/laporanPPNS-tabs/TabDataPPNS'
-import { UpdateDataPPNS } from './components/update-tabs-ppns/UpdateDataPPNS'
-import { AddDataPPNS } from './components/add-tabs-ppns/AddDataPPNS'
-import { TabDataPegawaiYangNaikPangkat } from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
-import { UpdateNaikPangkat } from './components/update-tabs/UpdateNaikPangkat'
+import {TabRekapitulasiPPNS} from './components/laporanPPNS-tabs/TabRekapitulasiPPNS'
+import {UnduhLaporanRekapitulasiPPNSPdf} from './components/laporanPPNS-unduh/UnduhLaporanRekapitulasiPPNSPdf'
+import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
+import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
+import {AddDataPPNS} from './components/add-tabs-ppns/AddDataPPNS'
+import {DataPPNS} from './components/tabs-ppns/DataPPNS'
+import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
+import {UpdateNaikPangkat} from './components/update-tabs/UpdateNaikPangkat'
 
-import { TabRekapitulasiDataPegawaiPensiun } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
-import { UnduhLaporanPegawaiPensiunPdf } from './components/laporanRekapPegawai-unduh/UnduhLaporanPegawaiPensiunPdf'
-import { TambahPegawaiPensiun } from './components/Tambah-tabs/TambahPegawaiPensiun'
-import { TambahPejabatStruktural } from './components/Tambah-tabs/TambahPejabatStruktural'
+import {TabRekapitulasiDataPegawaiPensiun} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
+import {TambahPegawaiPensiun} from './components/Tambah-tabs/TambahPegawaiPensiun'
+import {TambahPejabatStruktural} from './components/Tambah-tabs/TambahPejabatStruktural'
 
-import { AddDataPribadiDUK } from './components/add-tabs-duk/AddDataPribadiDUK'
-import { AddDataKeluargaDUK } from './components/add-tabs-duk/AddDataKeluargaDUK'
-import { AddPendidikanDUK } from './components/add-tabs-duk/AddPendidikanDUK'
-import { AddDataKepegawaianDUK } from './components/add-tabs-duk/AddDataKepegawaianDUK'
-import { UpdateDataPribadiDUK } from './components/update-tabs-duk/UpdateDataPribadiDUK'
-import { UpdateDataKeluargaDUK } from './components/update-tabs-duk/UpdateDataKeluargaDUK'
-import { UpdatePendidikanDUK } from './components/update-tabs-duk/UpdatePendidikanDUK'
-import { UpdateDataKepegawaianDUK } from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
-import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
-import { TabRekapitulasiDataPegawaiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
-import { TabRekapitulasiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
+import {AddDataPribadiDUK} from './components/add-tabs-duk/AddDataPribadiDUK'
+import {AddDataKeluargaDUK} from './components/add-tabs-duk/AddDataKeluargaDUK'
+import {AddPendidikanDUK} from './components/add-tabs-duk/AddPendidikanDUK'
+import {AddDataKepegawaianDUK} from './components/add-tabs-duk/AddDataKepegawaianDUK'
+import {UpdateDataPribadiDUK} from './components/update-tabs-duk/UpdateDataPribadiDUK'
+import {UpdateDataKeluargaDUK} from './components/update-tabs-duk/UpdateDataKeluargaDUK'
+import {UpdatePendidikanDUK} from './components/update-tabs-duk/UpdatePendidikanDUK'
+import {UpdateDataKepegawaianDUK} from './components/update-tabs-duk/UpdateDataKepegawaianDUK'
+import {DataPribadiDUK} from './components/tabs-duk/DataPribadiDUK'
+import {DataKeluargaDUK} from './components/tabs-duk/DataKeluargaDUK'
+import {DataKepegawaianDUK} from './components/tabs-duk/DataKepegawaianDUK'
+import {PendidikanDUK} from './components/tabs-duk/PendidikanDUK'
 
-import { TabRekapitulasiPejabatFungsional } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatFungsional'
-import { PejabatFungsional_DataKeluarga } from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataKeluarga'
-import { PejabatFungsional_DataPribadi } from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataPribadi'
-import { PejabatFungsional_Pendidikan } from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_Pendidikan'
-import { PejabatFungsional_DataKepegawaian } from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataKepegawaian'
+import {UnduhLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
+import {TabRekapitulasiDataPegawaiPejabatStruktural} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPejabatStruktural'
+import {TabRekapitulasiPejabatStruktural} from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
+
+import {TabRekapitulasiPejabatFungsional} from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatFungsional'
+import {PejabatFungsional_DataKeluarga} from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataKeluarga'
+import {PejabatFungsional_DataPribadi} from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataPribadi'
+import {PejabatFungsional_Pendidikan} from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_Pendidikan'
+import {PejabatFungsional_DataKepegawaian} from './components/laporanRekapPegawai-tabs/DetailTabRekapDataPejabatFungsional/PejabatFungsional_DataKepegawaian'
 
 const kepegawaianBreadCrumbs: Array<PageLink> = [
   {
@@ -489,7 +494,7 @@ const KepegawaianPage: React.FC = () => {
           path='TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Pribadi DUK</PageTitle>
               <UpdateDataPribadiDUK />
             </>
           }
@@ -498,7 +503,7 @@ const KepegawaianPage: React.FC = () => {
           path='TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Keluarga DUK</PageTitle>
               <UpdateDataKeluargaDUK />
             </>
           }
@@ -507,7 +512,7 @@ const KepegawaianPage: React.FC = () => {
           path='TabDaftarUrutKepangkatan/UpdatePendidikanDUK/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Pendidikan DUK</PageTitle>
               <UpdatePendidikanDUK />
             </>
           }
