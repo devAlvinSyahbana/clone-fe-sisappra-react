@@ -83,10 +83,10 @@ export interface SelectOptionAutoCom {
 }
 
 export interface ListPendidikanInterface {
-    id?: number
-    hubungan?: string
-    nama?: string
-    tempat_lahir?: string
-    tgl_lahir?: string
-    jenis_kelamin?: string
+  id?: number
+  hubungan?: string
+  nama?: string
+  tempat_lahir?: string
+  tgl_lahir?: string
+  jenis_kelamin?: string
 }

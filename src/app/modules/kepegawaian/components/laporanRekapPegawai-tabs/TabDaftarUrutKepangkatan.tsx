@@ -54,6 +54,70 @@ export function TabDaftarUrutKepangkatan() {
 
   const columns = [
     {
+      name: 'Aksi',
+      sortable: false,
+      className: 'action',
+      center: true,
+      allowOverflow: true,
+      fixed: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='d-flex mb-2 mt-2 flex-end'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Detail
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {
+                            replace: true,
+                          }
+                        )
+                      }
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Hapus
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
+        )
+      },
+    },
+    {
       name: 'No',
       sortable: true,
       sortField: 'No',
@@ -663,71 +727,6 @@ export function TabDaftarUrutKepangkatan() {
       sortField: 'foto',
       wrap: true,
     },
-    {
-      name: 'Aksi',
-      sortable: false,
-      text: 'Aksi',
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      sticky: 'left',
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='d-flex mb-2 mt-2 flex-end'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
-    },
   ]
 
   const customStyles = {
@@ -1109,6 +1108,8 @@ export function TabDaftarUrutKepangkatan() {
                       progressComponent={<LoadingAnimation />}
                       pagination
                       paginationServer
+                      fixedHeader
+                      fixedHeaderScrollHeight='500px'
                       paginationTotalRows={totalRows}
                       onChangeRowsPerPage={handlePerRowsChange}
                       onChangePage={handlePageChange}
