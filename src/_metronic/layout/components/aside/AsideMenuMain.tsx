@@ -94,7 +94,7 @@ export function AsideMenuMain() {
           hasBullet={true}
         />
         <AsideMenuItem
-          to='/kepegawaian/PenyidikPegawaiNegeriSipil'
+          to='/kepegawaian/PenyidikPegawaiNegeriSipil/TabRekapitulasiPPNS'
           title='Penyidik Pegawai Negeri Sipil (PPNS)'
           hasBullet={true}
         />        
@@ -106,13 +106,13 @@ export function AsideMenuMain() {
         <AsideMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
-        to='/sarana_prasarana'
+        to='/sarana-prasarana'
         title='Sarana & Prasarana'
         fontIcon='bi-archive'
         icon='/media/icons/duotune/general/gen022.svg'
       >
         <AsideMenuItem
-          to='/sarana_prasarana/LaporanSaranaPrasarana'
+          to='/sarana-prasarana/LaporanSaranaPrasarana'
           title='Laporan Sarana & Prasarana'
           hasBullet={true}
         />

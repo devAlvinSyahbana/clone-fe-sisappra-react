@@ -40,14 +40,13 @@ export function Login() {
       setLoading(true)
       try {
         const {data: auth} = await login(values.no_pegawai, values.kata_sandi)
-        console.log(auth)
         saveAuth(auth)
         const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
+        setCurrentUser(user.data)
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
-        setStatus('The login detail is incorrect')
+        setStatus('Detail login salah')
         setSubmitting(false)
         setLoading(false)
       }
@@ -63,19 +62,24 @@ export function Login() {
     >
       {/* begin::Heading */}
       <div className='text-center mb-10'>
-        <h1 className='text-secondary mb-3'>Masuk ke Sisappra</h1>
-        <div className='text-gray-400 fw-bold fs-4'>Silahkan masuk menggunakan akun anda</div>
+        <h1 className='text-dark mb-3'>Login Aplikasi</h1>
       </div>
       {/* begin::Heading */}
 
+      {formik.status ? (
+        <div className='mb-lg-15 alert alert-danger'>
+          <div className='alert-text font-weight-bold'>{formik.status}</div>
+        </div>
+      ) : null}
+
       {/* begin::Form group */}
       <div className='fv-row mb-10'>
-        <label className='form-label fs-6 fw-bolder text-secondary'>NRK/NPTT/NPJLP</label>
+        <label className='form-label fs-6 fw-bolder text-dark'>NRK/NPTT/NPJLP</label>
         <input
           placeholder='NRK/NPTT/NPJLP'
           {...formik.getFieldProps('no_pegawai')}
           className={clsx(
-            'form-control form-control-lg form-control-solid bg-transparent',
+            'form-control form-control-lg form-control-solid',
             {'is-invalid': formik.touched.no_pegawai && formik.errors.no_pegawai},
             {
               'is-valid': formik.touched.no_pegawai && !formik.errors.no_pegawai,
@@ -94,12 +98,21 @@ export function Login() {
       {/* end::Form group */}
 
       {/* begin::Form group */}
-      <div className='fv-row mb-2'>
+      <div className='fv-row mb-10'>
         <div className='d-flex justify-content-between mt-n5'>
           <div className='d-flex flex-stack mb-2'>
             {/* begin::Label */}
-            <label className='form-label fw-bolder text-secondary fs-6 mb-0'>Kata Sandi</label>
+            <label className='form-label fw-bolder text-dark fs-6 mb-0'>Kata Sandi</label>
             {/* end::Label */}
+            {/* begin::Link */}
+            <Link
+              to='/auth/forgot-password'
+              className='link-primary fs-6 fw-bolder'
+              style={{marginLeft: '5px'}}
+            >
+              Lupa Kata Sandi ?
+            </Link>
+            {/* end::Link */}
           </div>
         </div>
         <input
@@ -107,7 +120,7 @@ export function Login() {
           autoComplete='off'
           {...formik.getFieldProps('kata_sandi')}
           className={clsx(
-            'form-control form-control-lg form-control-solid bg-transparent',
+            'form-control form-control-lg form-control-solid',
             {
               'is-invalid': formik.touched.kata_sandi && formik.errors.kata_sandi,
             },
@@ -124,21 +137,6 @@ export function Login() {
           </div>
         )}
       </div>
-
-      <div className='mb-12'>
-        {/* begin::Link */}
-        <Link
-          to='/auth/forgot-password'
-          className='link-primary fs-6 fw-bolder'
-          style={{marginLeft: '5px'}}
-        >
-          Lupa Kata Sandi ?
-        </Link>
-      {/* end::Link */}
-
-      </div>
-
-     
       {/* end::Form group */}
 
       {/* begin::Action */}
@@ -149,7 +147,7 @@ export function Login() {
           className='btn btn-lg btn-primary w-100 mb-5'
           disabled={formik.isSubmitting || !formik.isValid}
         >
-          {!loading && <span className='indicator-label'>Lanjut</span>}
+          {!loading && <span className='indicator-label'>Masuk</span>}
           {loading && (
             <span className='indicator-progress' style={{display: 'block'}}>
               Mohon Tunggu...
@@ -157,7 +155,6 @@ export function Login() {
             </span>
           )}
         </button>
-
       </div>
       {/* end::Action */}
     </form>
