@@ -30,10 +30,9 @@ import {UnduhLaporanRekapitulasiPPNSPdf} from './components/laporanPPNS-unduh/Un
 import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
 import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
 import {AddDataPPNS} from './components/add-tabs-ppns/AddDataPPNS'
+import {DataPPNS} from './components/tabs-ppns/DataPPNS'
 import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
 import {UpdateNaikPangkat} from './components/update-tabs/UpdateNaikPangkat'
-
-import {DataPPNS} from './components/tabs-ppns/DataPPNS'
 
 import {TabRekapitulasiDataPegawaiPensiun} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
 import {TambahPegawaiPensiun} from './components/Tambah-tabs/TambahPegawaiPensiun'
@@ -476,7 +475,7 @@ const KepegawaianPage: React.FC = () => {
           path='TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Pribadi DUK</PageTitle>
               <UpdateDataPribadiDUK />
             </>
           }
@@ -485,7 +484,7 @@ const KepegawaianPage: React.FC = () => {
           path='TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Keluarga DUK</PageTitle>
               <UpdateDataKeluargaDUK />
             </>
           }
@@ -494,7 +493,7 @@ const KepegawaianPage: React.FC = () => {
           path='TabDaftarUrutKepangkatan/UpdatePendidikanDUK/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Kepegawaian DUK</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data Pendidikan DUK</PageTitle>
               <UpdatePendidikanDUK />
             </>
           }

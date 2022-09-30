@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from 'react'
 // import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
-import {Link} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 // import { Dropdown1 } from '../../../../../_metronic/partials'
 import {UpdateHeaderDetailDUK} from './UpdateHeaderDetailDUK'
 import {useLocation} from 'react-router-dom'
@@ -9,6 +9,9 @@ import {Button, Modal} from 'react-bootstrap'
 
 export function UpdatePendidikanDUK() {
   const location = useLocation()
+
+  const {id, status} = useParams()
+  console.log('id, status', id, status)
 
   const [show, setShow] = useState(false)
   const [lgShow, setLgShow] = useState(false)
@@ -229,7 +232,7 @@ export function UpdatePendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK`}
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -238,7 +241,7 @@ export function UpdatePendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK`}
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK/${id}/${status}`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

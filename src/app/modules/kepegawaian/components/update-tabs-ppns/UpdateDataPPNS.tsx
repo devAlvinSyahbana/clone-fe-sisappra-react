@@ -276,9 +276,9 @@ export function UpdateDataPPNS() {
                 </label>
                 <Field
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  id='nama'
-                  placeholder='John'
+                  name='skpd'
+                  id='skpd'
+                  placeholder='skpd'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -294,13 +294,24 @@ export function UpdateDataPPNS() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
-                  NIP / NRK
+                  NIP
                 </label>
                 <Field
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  id='nama'
-                  placeholder='John'
+                  name='nip'
+                  id='nip'
+                  placeholder='nip'
+                />
+              </div>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
+                  NRK
+                </label>
+                <Field
+                  className='form-control form-control form-control-solid mb-4'
+                  name='nrk'
+                  id='nrk'
+                  placeholder='nrk'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -308,14 +319,14 @@ export function UpdateDataPPNS() {
                   Pangkat
                 </label>
                 <AsyncSelect
-                  cacheOptions
-                  loadOptions={loadOptionsJenis}
-                  defaultOptions
-                  value={{
-                    value: data?.jenis_kelamin,
-                    label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Pangkat',
-                  }}
-                  onChange={handleInputJenis}
+                  // cacheOptions
+                  // loadOptions={loadOptionsJenis}
+                  // defaultOptions
+                  // value={{
+                  //   value: data?.jenis_kelamin,
+                  //   label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Pangkat',
+                  // }}
+                  // onChange={handleInputJenis}
                   placeholder={'Pilih'}
                 />
               </div>
@@ -324,14 +335,14 @@ export function UpdateDataPPNS() {
                   Golongan
                 </label>
                 <AsyncSelect
-                  cacheOptions
-                  loadOptions={loadOptionsJenis}
-                  defaultOptions
-                  value={{
-                    value: data?.jenis_kelamin,
-                    label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Golongan',
-                  }}
-                  onChange={handleInputJenis}
+                  // cacheOptions
+                  // loadOptions={loadOptionsJenis}
+                  // defaultOptions
+                  // value={{
+                  //   value: data?.jenis_kelamin,
+                  //   label: data?.jenis_kelamin ? data?.jenis_kelamin : 'Pilih Golongan',
+                  // }}
+                  // onChange={handleInputJenis}
                   placeholder={'Pilih'}
                 />
               </div>
@@ -341,29 +352,10 @@ export function UpdateDataPPNS() {
                 </label>
                 <Field
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  id='nama'
-                  placeholder='John'
+                  name='no sk ppns'
+                  id='no sk ppns'
+                  placeholder='no sk ppns'
                 />
-              </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                <label htmlFor='' className='mb-3'>
-                  Masa berlaku KTP PPNS
-                </label>
-                <div className='row'>
-                  <div className='col-xxl-12 col-md-12 col-lg-12 col-sm-12'>
-                    <Field
-                      type='date'
-                      name='tgl_lahir'
-                      className='form-control form-control-solid'
-                      placeholder='Tanggal Lahir'
-                    />
-                    {/* <DatePicker
-                      dateFormat="MM/dd/yyyy"
-                      name="tgl_lahir"
-                    /> */}
-                  </div>
-                </div>
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
@@ -371,9 +363,9 @@ export function UpdateDataPPNS() {
                 </label>
                 <Field
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  id='nama'
-                  placeholder='John'
+                  name='wilayah kerja'
+                  id='wilayah kerja'
+                  placeholder='Wiayah Kerja'
                 />
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
@@ -382,9 +374,9 @@ export function UpdateDataPPNS() {
                 </label>
                 <Field
                   className='form-control form-control form-control-solid mb-4'
-                  name='nama'
-                  id='nama'
-                  placeholder='John'
+                  name='uu yang dikawal'
+                  id='uu yang dikawal'
+                  placeholder='uu yang dikawal'
                 />
               </div>
 
@@ -408,7 +400,7 @@ export function UpdateDataPPNS() {
                   to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK/${id}/${status}`}
                 >
                   <button className='float-none btn btn-primary align-self-center m-1'>
-                  <i className='fa-solid fa-paper-plane'></i>
+                    <i className='fa-solid fa-paper-plane'></i>
                     Simpan
                   </button>
                 </Link>
