@@ -20,9 +20,9 @@ const LaporanPPNSHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('#') && 'active')
+                      (location.pathname.includes('TabRekapitulasiPPNS') && 'active')
                     }
-                    to={`/kepegawaian/PenyidikPegawaiNegeriSipil/TabDataPPNS/`}
+                    to={`/kepegawaian/PenyidikPegawaiNegeriSipil/TabRekapitulasiPPNS/`}
                   >
                     Rekapitulasi PPNS
                   </Link>
