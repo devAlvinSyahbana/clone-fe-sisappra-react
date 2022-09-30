@@ -399,16 +399,16 @@ export function InformasiDataPegawai() {
 
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-6'>
-          <Link to='#' onClick={handleFilterReset} className='me-2'>
-            <button className='btn btn-primary'>
-              <i className='fa-solid fa-arrows-rotate'></i>
-              Reset
-            </button>
-          </Link>
           <Link to='#'>
             <button onClick={handleFilter} className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
+            </button>
+          </Link>
+          <Link to='#' onClick={handleFilterReset} className='me-2'>
+            <button className='btn btn-primary'>
+              <i className='fa-solid fa-arrows-rotate'></i>
+              Reset
             </button>
           </Link>
         </div>
