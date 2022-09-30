@@ -42,9 +42,9 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('Pendidikan') && 'active')
+                      (location.pathname.includes('TabRekapitulasiDataPegawaiPensiun') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/Pendidikan/`}
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPensiun`}
                   >
                     Rekapitulasi Data Pegawai yang Pensiun
                   </Link>
@@ -64,9 +64,9 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('TabRekapitulasiDataPegawaiPejabatStruktural') && 'active')
+                      (location.pathname.includes('TabRekapitulasiPejabatStruktural') && 'active')
                     }
-                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPejabatStruktural/`}
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatStruktural/`}
                   >
                     Rekapitulasi Data Pegawai Pejabat Struktural
                   </Link>
@@ -75,9 +75,9 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('HirarkiKepegawaian') && 'active')
+                      (location.pathname.includes('TabRekapitulasiPejabatFungsional') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/`}
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/`}
                   >
                     Rekapitulasi Data Pejabat Fungsional Pol PP (JFT)
                   </Link>
