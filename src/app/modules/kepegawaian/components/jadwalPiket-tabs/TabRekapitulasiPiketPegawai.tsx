@@ -135,23 +135,23 @@ export function TabRekapitulasiPiketPegawai() {
                                     >
                                         <Dropdown.Item
                                             href='#'
-                                            onClick={() =>
-                                                navigate(
-                                                    `/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                                                    { replace: true }
-                                                )
-                                            }
+                                        // onClick={() =>
+                                        //     navigate(
+                                        //         `/kepegawaian/InformasiDataPegawai/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                                        //         { replace: true }
+                                        //     )
+                                        // }
                                         >
                                             Detail
                                         </Dropdown.Item>
                                         <Dropdown.Item
                                             href='#'
-                                            onClick={() =>
-                                                navigate(
-                                                    `/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                                                    { replace: true }
-                                                )
-                                            }
+                                        // onClick={() =>
+                                        //     navigate(
+                                        //         `/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                                        //         { replace: true }
+                                        //     )
+                                        // }
                                         >
                                             Ubah
                                         </Dropdown.Item>

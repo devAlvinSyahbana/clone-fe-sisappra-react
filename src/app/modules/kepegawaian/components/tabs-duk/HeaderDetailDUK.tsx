@@ -13,7 +13,7 @@ import {
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-const UpdateHeaderDetailPPNS = () => {
+const HeaderDetailWrapperDUK = () => {
   const location = useLocation()
   const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>()
@@ -140,11 +140,44 @@ const UpdateHeaderDetailPPNS = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataPribadiDUK') && 'active')
+                      (location.pathname.includes('DataPribadiDUK') && 'active')
                     }
-                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${id}/${status}`}
                   >
-                    Data PPNS
+                    Data Pribadi
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('DataKeluargaDUK') && 'active')
+                    }
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/DataKeluargaDUK/${id}/${status}`}
+                  >
+                    Data Keluarga
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('PendidikanDUK') && 'active')
+                    }
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/PendidikanDUK/${id}/${status}`}
+                  >
+                    Pendidikan
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('DataKepegawaianDUK') && 'active')
+                    }
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/DataKepegawaianDUK/${id}/${status}`}
+                  >
+                    Data Kepegawaian
                   </Link>
                 </li>
               </ul>
@@ -152,9 +185,8 @@ const UpdateHeaderDetailPPNS = () => {
           </div>
         </div>
       </div>
-      {/* end::Body */}
     </>
   )
 }
 
-export {UpdateHeaderDetailPPNS}
+export {HeaderDetailWrapperDUK}

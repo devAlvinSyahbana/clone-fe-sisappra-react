@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {KTSVG} from '../../../../../_metronic/helpers'
+import {KTSVG} from '../../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
@@ -8,12 +8,12 @@ import {
   DetailPegawaiInterface,
   JumlahKeluargaInterface,
   PendidikanInterface,
-} from '../KepegawaianInterface'
+} from '../../KepegawaianInterface'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-const AddHeaderDetailPPNS = () => {
+const PejabatFungsional_HeaderDetailWrapper = () => {
   const location = useLocation()
   const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>()
@@ -140,21 +140,64 @@ const AddHeaderDetailPPNS = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataPribadiDUK') && 'active')
+                      (location.pathname.includes('PejabatFungsional_DataPribadi') && 'active')
                     }
-                    to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${id}/${status}`}
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataPribadi/${id}/${status}`}
                   >
-                    Data PPNS
+                    Data Pribadi
                   </Link>
                 </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('PejabatFungsional_DataKeluarga') && 'active')
+                    }
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataKeluarga/${id}/${status}`}
+                  >
+                    Data Keluarga
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('PejabatFungsional_Pendidikan') && 'active')
+                    }
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_Pendidikan/${id}/${status}`}
+                  >
+                    Pendidikan
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('PejabatFungsional_DataKepegawaian') && 'active')
+                    }
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataKepegawaian/${id}/${status}`}
+                  >
+                    Data Kepegawaian
+                  </Link>
+                </li>
+                {/* <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('HirarkiKepegawaian') && 'active')
+                    }
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/PejabatFungsional_HirarkiKepegawaian/${id}/${status}`}
+                  >
+                    Hirarki Kepegawaian
+                  </Link>
+                </li> */}
               </ul>
             </div>
           </div>
         </div>
       </div>
-      {/* end::Body */}
     </>
   )
 }
 
-export {AddHeaderDetailPPNS}
+export {PejabatFungsional_HeaderDetailWrapper}

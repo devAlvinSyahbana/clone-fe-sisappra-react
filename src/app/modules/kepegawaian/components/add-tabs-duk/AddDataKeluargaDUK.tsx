@@ -257,7 +257,7 @@ export function AddDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePribadiDUK/${id}/${status}`}
+                to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK'
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -266,7 +266,7 @@ export function AddDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPendidikanDUK`}
+                to='/kepegawaian/TabDaftarUrutKepangkatan/AddPendidikanDUK'
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

@@ -1,5 +1,4 @@
 import {useState, useEffect, Fragment} from 'react'
-import StickyBox from 'react-sticky-box'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
@@ -671,54 +670,61 @@ export function TabDaftarUrutKepangkatan() {
       className: 'action',
       center: true,
       allowOverflow: true,
+      sticky: 'left',
       cell: (record: any) => {
         return (
-          <StickyBox>
-            <Fragment>
-              <div className='d-flex mb-2 mt-2 flex-end'>
-                {[DropdownButton].map((DropdownType, idx) => (
-                  <>
-                    <DropdownType
-                      as={ButtonGroup}
-                      key={idx}
-                      id={`dropdown-button-drop-${idx}`}
-                      size='sm'
-                      variant='light'
-                      title='Aksi'
+          <Fragment>
+            <div className='d-flex mb-2 mt-2 flex-end'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
                     >
-                      <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
-                        Detail
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        href='#'
-                        onClick={() =>
-                          navigate(
-                            `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                            {
-                              replace: true,
-                            }
-                          )
-                        }
-                      >
-                        Ubah
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        href='#'
-                        onClick={() =>
-                          navigate(
-                            `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                            {replace: true}
-                          )
-                        }
-                      >
-                        Hapus
-                      </Dropdown.Item>
-                    </DropdownType>
-                  </>
-                ))}
-              </div>
-            </Fragment>
-          </StickyBox>
+                      Detail
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {
+                            replace: true,
+                          }
+                        )
+                      }
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Hapus
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
         )
       },
     },
@@ -1043,7 +1049,7 @@ export function TabDaftarUrutKepangkatan() {
             <div
               className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
               style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
               }}
               data-theme='light'
             >
