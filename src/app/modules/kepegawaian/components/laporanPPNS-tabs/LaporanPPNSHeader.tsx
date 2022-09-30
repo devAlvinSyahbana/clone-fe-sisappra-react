@@ -1,6 +1,6 @@
-import { KTSVG } from '../../../../../_metronic/helpers'
-import { Link } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
+import {KTSVG} from '../../../../../_metronic/helpers'
+import {Link} from 'react-router-dom'
+import {useLocation} from 'react-router-dom'
 import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -20,9 +20,9 @@ const LaporanPPNSHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('TabRekapitulasiPPNS') && 'active')
+                      (location.pathname.includes('#') && 'active')
                     }
-                    to={`/kepegawaian/PenyidikPegawaiNegeriSipil/TabRekapitulasiPPNS/`}
+                    to={`/kepegawaian/PenyidikPegawaiNegeriSipil/TabDataPPNS/`}
                   >
                     Rekapitulasi PPNS
                   </Link>
@@ -47,4 +47,4 @@ const LaporanPPNSHeader = () => {
   )
 }
 
-export { LaporanPPNSHeader }
+export {LaporanPPNSHeader}
