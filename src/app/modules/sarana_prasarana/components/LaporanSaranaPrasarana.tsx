@@ -108,30 +108,35 @@ export function LaporanSaranaPrasarana() {
       selector: (row: any) => row.jenis_sarana_prasarana,
       sortable: true,
       sortField: 'jenis_sarana_prasarana',
+      wrap: true,
     },
     {
       name: 'Status Sarana & Prasarana',
       selector: (row: any) => row.status_sarana_prasarana,
       sortable: true,
       sortField: 'status_sarana_prasarana',
+      wrap: true,
     },
     {
       name: 'Jumlah',
       selector: (row: any) => row.jumlah,
       sortable: true,
       sortField: 'jumlah',
+      wrap: true,
     },
     {
       name: 'Kondisi',
       selector: (row: any) => row.kondisi,
       sortable: true,
       sortField: 'kondisi',
+      wrap: true,
     },
     {
       name: 'Keterangan',
       selector: (row: any) => row.keterangan,
       sortable: true,
       sortField: 'keterangan',
+      wrap: true,
     },
     {
       name: 'Dokumentasi',
@@ -148,9 +153,10 @@ export function LaporanSaranaPrasarana() {
     {
       name: 'Aksi',
       sortable: false,
-      text: 'Action',
+      text: 'Aksi',
       className: 'action',
       center: true,
+      allowOverflow: true,
       cell: (record: any) => {
         return (
           <Fragment>
@@ -169,7 +175,7 @@ export function LaporanSaranaPrasarana() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          '/sarana_prasarana/LaporanSaranaPrasarana/LihatLaporanSarana/' +
+                          '/sarana-prasarana/LaporanSaranaPrasarana/LihatLaporanSarana/' +
                             record.id,
                           {replace: true}
                         )
@@ -181,7 +187,7 @@ export function LaporanSaranaPrasarana() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          '/sarana_prasarana/LaporanSaranaPrasarana/UbahLaporanSarana/' + record.id,
+                          '/sarana-prasarana/LaporanSaranaPrasarana/UbahLaporanSarana/' + record.id,
                           {replace: true}
                         )
                       }
@@ -200,6 +206,26 @@ export function LaporanSaranaPrasarana() {
       },
     },
   ]
+
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '121px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  }
 
   const fetchUsers = async (page: any) => {
     setLoading(true)
@@ -379,7 +405,7 @@ export function LaporanSaranaPrasarana() {
           </div>
 
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link to='/sarana_prasarana/LaporanSaranaPrasarana/TambahLaporanSarana'>
+            <Link to='/sarana-prasarana/LaporanSaranaPrasarana/TambahLaporanSarana'>
               <Button variant='primary'>
                 <span className='svg-icon svg-icon-2'>
                   <svg
@@ -438,6 +464,7 @@ export function LaporanSaranaPrasarana() {
             paginationTotalRows={totalRows}
             onChangeRowsPerPage={handlePerRowsChange}
             onChangePage={handlePageChange}
+            customStyles={customStyles}
           />
         </div>
         {/* end::Body */}
