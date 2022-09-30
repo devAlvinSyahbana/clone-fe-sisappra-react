@@ -586,17 +586,13 @@ export function AddDataKepegawaianDUK() {
                 </Link>
                 <Link
                   className='text-reset text-decoration-none'
-                  to='/kepegawaian/TabDaftarUrutKepangkatan/AddPendidikanDUK'
+                  to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPendidikanDUK/${id}/${status}`}
                 >
                   <button className='float-none btn btn-success align-self-center m-1'>
                     <i className='fa-solid fa-arrow-left'></i>
                     Kembali
                   </button>
                 </Link>
-                <button className='btn btn-primary' type='submit'>
-                  <i className='fa-solid fa-paper-plane'></i>
-                  Simpan
-                </button>
               </div>
             </div>
           </div>

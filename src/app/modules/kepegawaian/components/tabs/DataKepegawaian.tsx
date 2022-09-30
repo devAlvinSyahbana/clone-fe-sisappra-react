@@ -322,7 +322,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -389,7 +389,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -456,7 +456,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -540,7 +540,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -624,7 +624,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}
@@ -708,7 +708,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
                         </div>
                       </>
                     )}

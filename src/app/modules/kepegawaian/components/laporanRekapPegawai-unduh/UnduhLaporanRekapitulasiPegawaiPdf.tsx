@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReactToPrint from "react-to-print";
-import { JumlahSatpolDiklat, JumlahSeluruhSatpol } from "../LaporanRekapPegawaiInterface";
+import { JumlahSatpolDiklat, JumlahSatpolGolongan, JumlahSatpolPendidikan, JumlahSeluruhSatpol } from "../LaporanRekapPegawaiInterface";
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -12,22 +12,26 @@ export function UnduhLaporanRekapitulasiPegawai() {
 
   const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
   const [jsatpoldik, setJsatpoldik] = useState<JumlahSatpolDiklat>()
+  const [jsatpolpen, setJsatpolpen] = useState<JumlahSatpolPendidikan>()
+  const [jsatpolgol, setJsatpolgol] = useState<JumlahSatpolGolongan>()
 
   useEffect(() => {
     const fetchData = async () => {
-      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp`)
-      const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp-by-diklat`)
+      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp`)
+      const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-diklat`)
+      const jsatpolpen = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-pendidikan`)
+      const jsatpolgol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-golongan`)
 
-
+      setJsatpolgol(jsatpolgol.data.data)
+      setJsatpolpen(jsatpolpen.data.data)
       setJpegawaisatpol(jsatpol.data.data)
       setJsatpoldik(jsatpoldik.data.data)
-      console.log(jsatpol)
     }
     fetchData()
   }, [])
 
   return (
-    <div className='row g-5 g-xxl-8 ms-15 me-15'>
+    <div className='row g-5 g-xxl-8'>
       <div className="card">
         <div className="card-body">
           <div className="row">
@@ -200,7 +204,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                       <label className="col-2 center-div ml-print text-end">
                         :
                       </label>
-                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp : '- '} Orang</label>
+                      <label className="right-div col-lg-2 col-sm-2 col-md-2 fs-6 fs-6 text-end end">{jpegawaisatpol?.jmlh_seluruh_pegawai_satpol ? jpegawaisatpol?.jmlh_seluruh_pegawai_satpol : '- '} Orang</label>
                     </div>
 
                     <div className="mb-5 mt-5">
@@ -333,7 +337,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                         <tr>
                           <td></td>
                           <td>JUMLAH KESELURUHAN</td>
-                          <td>396 Orang</td>
+                          <td>{jsatpolpen?.jmlh_keseluruhan !== 0 ? jsatpolpen?.jmlh_keseluruhan : '- '} Orang</td>
                         </tr>
                       </tbody>
                     </table>
@@ -410,7 +414,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                         <tr>
                           <td className="text-center">4</td>
                           <td className="text-left">DIKLAT TEKNIS</td>
-                          <td>0 Orang</td>
+                          <td> {jsatpoldik?.diklat_pol_pp_ppns ? jsatpoldik?.diklat_pol_pp_ppns : ' - '} Orang</td>
                         </tr>
                         <tr>
                           <td className="text-center">5</td>
@@ -420,12 +424,12 @@ export function UnduhLaporanRekapitulasiPegawai() {
                         <tr>
                           <td className="text-center">6</td>
                           <td className="text-left">DIKLAT LAINNYA</td>
-                          <td>218 Orang</td>
+                          <td>{jsatpoldik?.diklat_pol_pp_ppns ? jsatpoldik?.diklat_pol_pp_ppns : ' - '} Orang</td>
                         </tr>
                         <tr>
                           <td></td>
                           <td>JUMLAH KESELURUHAN</td>
-                          <td>3477 Orang</td>
+                          <td>{jsatpoldik?.jmlh_keseluruhan ? jsatpoldik?.jmlh_keseluruhan : ' - '} Orang</td>
                         </tr>
                       </tbody>
                     </table>

@@ -398,21 +398,21 @@ export function InformasiDataPegawai() {
       </div>
 
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-6'>
-          <Link to='#' onClick={handleFilterReset} className='me-2'>
+        <div className='col-md-6 col-lg-6 col-sm-12'>
+          <Link to='#'>
+            <button onClick={handleFilter} className='btn btn-primary me-2'>
+              <i className='fa-solid fa-search'></i>
+              Cari
+            </button>
+          </Link>
+          <Link to='#' onClick={handleFilterReset}>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-arrows-rotate'></i>
               Reset
             </button>
           </Link>
-          <Link to='#'>
-            <button onClick={handleFilter} className='btn btn-primary'>
-              <i className='fa-solid fa-search'></i>
-              Cari
-            </button>
-          </Link>
         </div>
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
+        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
           <Dropdown as={ButtonGroup}>
             <Button variant='light'>
               {btnLoadingUnduh ? (

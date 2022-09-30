@@ -720,15 +720,16 @@ export function DataKepegawaianDUK() {
                 <div className='text-center'>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/InformasiDataPegawai/${id}/${status}`}
+                    to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan'
                   >
                     <button className='float-none btn btn-secondary align-self-center m-1'>
-                      Keluar
+                      <i className='fa fa-close'></i>
+                      Batal
                     </button>
                   </Link>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/InformasiDataPegawai/Pendidikan/${id}/${status}`}
+                    to={`/kepegawaian/TabDaftarUrutKepangkatan/PendidikanDUK/${id}/${status}`}
                   >
                     <button className='float-none btn btn-success align-self-center m-1'>
                       <i className='fa-solid fa-arrow-left'></i>
@@ -740,8 +741,8 @@ export function DataKepegawaianDUK() {
                     to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/${id}/${status}`}
                   >
                     <button className='float-none btn btn-primary align-self-center m-1'>
-                      <i className='fa-solid fa-arrow-right'></i>
-                      Lanjut
+                      <i className='fa-solid fa-paper-plane'></i>
+                      Simpan
                     </button>
                   </Link>
                 </div>

@@ -1,6 +1,6 @@
-import { KTSVG } from '../../../../../_metronic/helpers'
-import { Link } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
+import {KTSVG} from '../../../../../_metronic/helpers'
+import {Link} from 'react-router-dom'
+import {useLocation} from 'react-router-dom'
 import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -47,4 +47,4 @@ const LaporanPPNSHeader = () => {
   )
 }
 
-export { LaporanPPNSHeader }
+export {LaporanPPNSHeader}

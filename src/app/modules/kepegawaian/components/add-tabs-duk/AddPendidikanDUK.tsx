@@ -229,7 +229,7 @@ export function AddPendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/TabDaftarUrutKepangkatan/AddDatakeluargaDUK'
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -238,7 +238,7 @@ export function AddPendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataKepegawaianDUK'
+                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

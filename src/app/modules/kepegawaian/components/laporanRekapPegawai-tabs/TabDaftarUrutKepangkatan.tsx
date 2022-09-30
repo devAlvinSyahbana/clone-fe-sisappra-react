@@ -6,11 +6,11 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import {number} from 'yup/lib/locale'
+import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
@@ -53,6 +53,70 @@ export function TabDaftarUrutKepangkatan() {
   let no = 1
 
   const columns = [
+    {
+      name: 'Aksi',
+      sortable: false,
+      className: 'action',
+      center: true,
+      allowOverflow: true,
+      fixed: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='d-flex mb-2 mt-2 flex-end'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Detail
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {
+                            replace: true,
+                          }
+                        )
+                      }
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Hapus
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
+        )
+      },
+    },
     {
       name: 'No',
       sortable: true,
@@ -663,71 +727,6 @@ export function TabDaftarUrutKepangkatan() {
       sortField: 'foto',
       wrap: true,
     },
-    {
-      name: 'Aksi',
-      sortable: false,
-      text: 'Aksi',
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      sticky: 'left',
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='d-flex mb-2 mt-2 flex-end'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
-    },
   ]
 
   const customStyles = {
@@ -949,9 +948,12 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
                 </select>
               </div>
             </div>
@@ -968,9 +970,12 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
                 </select>
               </div>
             </div>
@@ -987,9 +992,34 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
+                </select>
+              </div>
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Status
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })} */}
                 </select>
               </div>
             </div>
@@ -1013,7 +1043,7 @@ export function TabDaftarUrutKepangkatan() {
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
             <Link
-              to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK/'
+              to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK'
               onClick={handleFilterReset}
               className='me-2'
             >
@@ -1078,6 +1108,8 @@ export function TabDaftarUrutKepangkatan() {
                       progressComponent={<LoadingAnimation />}
                       pagination
                       paginationServer
+                      fixedHeader
+                      fixedHeaderScrollHeight='500px'
                       paginationTotalRows={totalRows}
                       onChangeRowsPerPage={handlePerRowsChange}
                       onChangePage={handlePageChange}

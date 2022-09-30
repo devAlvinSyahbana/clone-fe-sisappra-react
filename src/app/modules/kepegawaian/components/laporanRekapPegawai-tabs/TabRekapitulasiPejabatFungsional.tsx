@@ -10,11 +10,17 @@ import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import { LaporanRekapHeader } from './LaporanRekapHeader'
 import { Form } from 'react-bootstrap'
+import { SelectOptionAutoCom } from '../LaporanRekapPegawaiInterface'
+import AsyncSelect from 'react-select/async'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-pegawai-jft`
+export const KEPEGAWAIAN_WILAYAH = `${API_URL}/master/kota`
+export const KEPEGAWAIAN_KECAMATAN = `${API_URL}/master/kecamatan`
+export const KEPEGAWAIAN_KELURAHAN = `${API_URL}/master/kelurahan`
+export const KEPEGAWAIAN_JABATAN = `${API_URL}/master/jabatan`
 
 export function TabRekapitulasiPejabatFungsional() {
   const navigate = useNavigate()
@@ -25,12 +31,19 @@ export function TabRekapitulasiPejabatFungsional() {
   const [valFilterNRK, setFilterNRK] = useState({ val: '' })
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({ val: '' })
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
+  
+  const [inputValKota, setDataKota] = useState({ label: '', value: null })
+  const [inputValKecamatan, setDataKecamatan] = useState({ label: '', value: null })
+  const [inputValKelurahan, setDataKelurahan] = useState({ label: '', value: null })
+  const [inputValJabatan, setDataJabatan] = useState({ label: '', value: null })
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({ strparam: '' })
+
+  const [dataSelect, setDataSelect] = useState("")
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -44,6 +57,69 @@ export function TabRekapitulasiPejabatFungsional() {
         </div>
       </>
     )
+  }
+
+  // Filter Wilayah
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(`${KEPEGAWAIAN_WILAYAH}/find${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.kota, value: i.id }))
+  }
+  const loadOptionsKota = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleInputKota = (newValue: any) => {
+    setDataSelect(newValue.label)
+    setDataKota((prevstate: any) => ({ ...prevstate, ...newValue }))
+    console.log()
+  }
+
+  // Filter Kecamatan
+  const filterKecamatan = async (inputValue: string) => {
+    const response = await axios.get(`${KEPEGAWAIAN_KECAMATAN}/findone-by-kecamatan?kota=${dataSelect}`)
+    console.log(dataSelect)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.kecamatan, value: i.id }))
+  }
+  const loadOptionsKecamatan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKecamatan(inputValue))
+    }, 1000)
+  }
+  const handleInputKecamatan = (newValue: any) => {
+    setDataKecamatan((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+
+  // Filter Kelurahan
+  const filterKelurahan = async (inputValue: string) => {
+    const response = await axios.get(`${KEPEGAWAIAN_KELURAHAN}/find${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.kelurahan, value: i.id }))
+  }
+  const loadOptionsKelurahan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKelurahan(inputValue))
+    }, 1000)
+  }
+  const handleInputKelurahan = (newValue: any) => {
+    setDataKelurahan((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+
+  // Filter Jabatan
+  const filterJabatan = async (inputValue: string) => {
+    const response = await axios.get(`${KEPEGAWAIAN_JABATAN}/findone${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.jabatan, value: i.i }))
+  }
+  const loadOptionsJabatan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterJabatan(inputValue))
+    }, 1000)
+  }
+  const handleInputJabatan = (newValue: any) => {
+    setDataJabatan((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   const columns = [
@@ -238,6 +314,9 @@ export function TabRekapitulasiPejabatFungsional() {
 
   const handleFilter = async () => {
     let uriParam = ''
+    if (dataSelect !== '') {
+      uriParam += `&tempat_tugas=${dataSelect}`
+    }
     if (valFilterNama.val !== '') {
       uriParam += `&nama=${valFilterNama.val}`
     }
@@ -257,6 +336,10 @@ export function TabRekapitulasiPejabatFungsional() {
   }
 
   const handleFilterReset = () => {
+    setDataKota({ label: '', value: null })
+    setDataKecamatan({ label: '', value: null })
+    setDataKelurahan({ label: '', value: null })
+    setDataJabatan({ label: '', value: null })
     setValStatPegawai({ val: '' })
     setFilterNama({ val: '' })
     setFilterNRK({ val: '' })
@@ -264,12 +347,6 @@ export function TabRekapitulasiPejabatFungsional() {
     setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
-  const handleChangeStatPegawai = (event: {
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setValStatPegawai({ val: event.target.value })
-  }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
     target: { value: any; name: any }
@@ -282,24 +359,17 @@ export function TabRekapitulasiPejabatFungsional() {
   }) => {
     setFilterNRK({ val: event.target.value })
   }
-  const handleChangeInputNoPegawai = (event: {
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setFilterNoPegawai({ val: event.target.value })
-  }
 
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-        }`,
+      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh?tempat_tugas=${dataSelect}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
       FileDownload(
         response.data,
-        'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
+        'REKAPITULASI DATA PEJABAT FUNGSIONAL Pol PP (JFT).xlsx'
       )
       setbtnLoadingUnduh(false)
     })
@@ -329,32 +399,15 @@ export function TabRekapitulasiPejabatFungsional() {
               <label htmlFor='' className='mb-3'>
                 Wilayah/Bidang
               </label>
-              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
-                <option>Pilih</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
+              <AsyncSelect
+                cacheOptions
+                value={inputValKota.value ? inputValKota : { value: '', label: 'Pilih' }}
+                loadOptions={loadOptionsKota}
+                defaultOptions
+                onChange={handleInputKota}
+                placeholder={'Pilih'}
+              />
             </div>
-            {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
-                  Status Kepegawaian
-                </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })}
-                </select>
-              </div>
-            </div> */}
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
                 NRK
@@ -368,73 +421,50 @@ export function TabRekapitulasiPejabatFungsional() {
                 placeholder='NRK'
               />
             </div>
-            {/* {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-            ): null} */}
-            {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-              <label htmlFor='' className='mb-3'>
-                {valStatPegawai.val === 'PNS'
-                  ? 'NIP'
-                  : valStatPegawai.val === 'PTT'
-                    ? 'NPTT'
-                    : valStatPegawai.val === 'PJLP'
-                      ? 'NPJLP'
-                      : 'NIP'}
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                value={valFilterNoPegawai.val}
-                onChange={handleChangeInputNoPegawai}
-                placeholder={
-                  valStatPegawai.val === 'PNS'
-                    ? 'NIP'
-                    : valStatPegawai.val === 'PTT'
-                      ? 'NPTT'
-                      : valStatPegawai.val === 'PJLP'
-                        ? 'NPJLP'
-                        : 'NIP'
-                }
-              />
-            </div> */}
-
             <div className='col-xxl-6'>
               <label htmlFor='' className='mb-3'>
                 Kecamatan/Seksi
               </label>
-              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
-                <option>Pilih</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
+              <AsyncSelect
+                cacheOptions
+                value={inputValKecamatan.value ? inputValKecamatan : { value: '', label: 'Pilih' }}
+                loadOptions={loadOptionsKecamatan}
+                defaultOptions
+                onChange={handleInputKecamatan}
+                placeholder={'Pilih'}
+              />
             </div>
             <div className='col-xxl-6'>
               <label htmlFor='' className='mb-3'>
                 Jabatan
               </label>
-              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
-                <option>Pilih</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
+              <AsyncSelect
+                cacheOptions
+                value={inputValJabatan.value ? inputValJabatan : { value: '', label: 'Pilih' }}
+                loadOptions={loadOptionsJabatan}
+                defaultOptions
+                onChange={handleInputJabatan}
+                placeholder={'Pilih'}
+              />
             </div>
             <div className='col-xxl-6'>
               <label htmlFor='' className='mb-3'>
                 Kelurahan
               </label>
-              <Form.Select className='form-control form-control form-control-solid' aria-label="Default select example">
-                <option>Pilih</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
+              <AsyncSelect
+                cacheOptions
+                value={inputValKelurahan.value ? inputValKelurahan : { value: '', label: 'Pilih' }}
+                loadOptions={loadOptionsKelurahan}
+                defaultOptions
+                onChange={handleInputKelurahan}
+                placeholder={'Pilih'}
+              />
             </div>
           </div>
         </div>
 
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6 col-lg-6 col-sm-9'>
+          <div className='col-md-6 col-lg-6 col-sm-'>
             <Link to='#'>
               <button onClick={handleFilter} className='btn btn-primary me-2'>
                 <i className='fa-solid fa-search'></i>

@@ -1,6 +1,6 @@
-import { KTSVG } from '../../../../../_metronic/helpers'
-import { Link } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
+import {KTSVG} from '../../../../../_metronic/helpers'
+import {Link} from 'react-router-dom'
+import {useLocation} from 'react-router-dom'
 import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -44,7 +44,7 @@ const LaporanRekapHeader = () => {
                       `nav-link text-active-primary me-6 ` +
                       (location.pathname.includes('TabRekapitulasiDataPegawaiPensiun') && 'active')
                     }
-                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPensiun/`}
+                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPensiun`}
                   >
                     Rekapitulasi Data Pegawai yang Pensiun
                   </Link>
@@ -64,22 +64,11 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('TabRekapitulasiDataPegawaiPejabatStruktural') && 'active')
-                    }
-                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPejabatStruktural/`}
-                  >
-                    Rekapitulasi Data Pegawai Pejabat Struktural
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link
-                    className={
-                      `nav-link text-active-primary me-6 ` +
                       (location.pathname.includes('TabRekapitulasiPejabatStruktural') && 'active')
                     }
                     to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatStruktural/`}
                   >
-                    Rekapitulasi Data Pejabat Struktural
+                    Rekapitulasi Data Pegawai Pejabat Struktural
                   </Link>
                 </li>
                 <li className='nav-item'>
@@ -102,4 +91,4 @@ const LaporanRekapHeader = () => {
   )
 }
 
-export { LaporanRekapHeader }
+export {LaporanRekapHeader}
