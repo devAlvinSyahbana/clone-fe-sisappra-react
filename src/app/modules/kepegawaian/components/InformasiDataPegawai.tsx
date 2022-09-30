@@ -398,7 +398,7 @@ export function InformasiDataPegawai() {
       </div>
 
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-6'>
+        <div className='col-md-6 col-lg-6 col-sm-12'>
           <Link to='#'>
             <button onClick={handleFilter} className='btn btn-primary me-2'>
               <i className='fa-solid fa-search'></i>
@@ -412,7 +412,7 @@ export function InformasiDataPegawai() {
             </button>
           </Link>
         </div>
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
+        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
           <Dropdown as={ButtonGroup}>
             <Button variant='light'>
               {btnLoadingUnduh ? (
