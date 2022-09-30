@@ -1,4 +1,4 @@
-import {useState, useEffect, Fragment, useMemo} from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
@@ -6,7 +6,6 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanPPNSHeader} from './LaporanPPNSHeader'
@@ -55,7 +54,7 @@ export function TabDataPPNS() {
 
   let no = 1
 
-  const Grouped_Columns = [
+  const columns = [
     {
       name: 'No',
       sortable: true,
@@ -82,7 +81,7 @@ export function TabDataPPNS() {
       wrap: true,
     },
     {
-      name: 'NIP/NRK',
+      name: 'NPM/NRK',
       selector: (row: any) => row.nip,
       sortable: true,
       sortField: 'nip',
@@ -161,22 +160,14 @@ export function TabDataPPNS() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/DataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
+                    <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
                       Detail
                     </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
                           {
                             replace: true,
                           }
@@ -189,7 +180,7 @@ export function TabDataPPNS() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
                           {replace: true}
                         )
                       }
@@ -206,7 +197,16 @@ export function TabDataPPNS() {
     },
   ]
 
-  const columns = useMemo(() => Grouped_Columns, [])
+  const columns2 = [
+    {
+      name: '1',
+      selector: (row: any) => row.kepegawaian_status_pegawai,
+      sortable: true,
+      sortField: 'kepegawaian_status_pegawai',
+      wrap: true,
+      center: true,
+    },
+  ]
 
   const customStyles = {
     rows: {
@@ -343,7 +343,7 @@ export function TabDataPPNS() {
           <div className='row g-8 mt-2 ms-5 me-5'>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                NAMA
+                Nama
               </label>
               <input
                 type='text'
@@ -356,33 +356,7 @@ export function TabDataPPNS() {
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                PANGKAT
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                name='nama'
-                value={valFilterNama.val}
-                onChange={handleChangeInputNama}
-                placeholder='Nama'
-              />
-            </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <label htmlFor='' className='mb-3'>
-                GOLONGAN
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                name='nama'
-                value={valFilterNama.val}
-                onChange={handleChangeInputNama}
-                placeholder='Nama'
-              />
-            </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <label htmlFor='' className='mb-3'>
-                NIP / NRK
+                NRK
               </label>
               <input
                 type='text'
@@ -414,6 +388,7 @@ export function TabDataPPNS() {
             </div>
           </div>
         </div>
+
         <div className='row g-8 mt-2 ms-5 me-5'>
           <div className='col-md-6 col-lg-6 col-sm-12'>
             <Link to='#'>
@@ -430,11 +405,7 @@ export function TabDataPPNS() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link
-              to='/kepegawaian/TabDataPPNS/AddDataPPNS/'
-              onClick={handleFilterReset}
-              className='me-2'
-            >
+            <Link to='#' onClick={handleFilterReset} className='me-2'>
               <button className='btn btn-primary'>
                 <i className='fa-solid fa-plus'></i>
                 Tambah
@@ -461,50 +432,31 @@ export function TabDataPPNS() {
             </Dropdown>
           </div>
         </div>
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card card-flush h-xl-100'>
-            <div
-              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-              style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
-              }}
-              data-theme='light'
-            >
-              <div className='card-body py-8 mt-4 fw-bold text-white'>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>
-                    DATA PEJABAT PENYIDIK PEGAWAI NEGERI SIPIL (PPNS)
-                  </div>
-                </div>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>PROVINSI DKI JAKARTA</div>
-                </div>
+
+        <div className='table-responsive mt-5 ms-5 me-5 w'>
+          <div className='card-body py-8 mt-4'>
+            <div className='row'>
+              <div className='col fs-4 mb-2 fw-bold text-center'>
+                DATA PEJABAT PENYIDIK PEGAWAI NEGERI SIPIL (PPNS)
               </div>
             </div>
-
-            <div className='card-body mt-n20'>
-              <div className='mt-n20 position-relatve'>
-                <div className='card border card-flush h-xl-100'>
-                  <div className='table-responsive mt-5 ms-5 me-5 w'>
-                    <DataTable
-                      columns={columns}
-                      data={data}
-                      progressPending={loading}
-                      progressComponent={<LoadingAnimation />}
-                      pagination
-                      paginationServer
-                      paginationTotalRows={totalRows}
-                      onChangeRowsPerPage={handlePerRowsChange}
-                      onChangePage={handlePageChange}
-                      customStyles={customStyles}
-                    />
-                  </div>
-                </div>
-              </div>
+            <div className='row'>
+              <div className='col fs-4 mb-2 fw-bold text-center'>PROVINSI DKI JAKARTA</div>
             </div>
           </div>
+          <DataTable
+            columns={columns}
+            data={data}
+            progressPending={loading}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+            customStyles={customStyles}
+          />
         </div>
-
         {/* end::Body */}
         <div className='row me-2'>
           <div className='col-8'></div>
