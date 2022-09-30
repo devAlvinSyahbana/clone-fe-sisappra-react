@@ -16,7 +16,7 @@ import AsyncSelect from 'react-select/async'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-pegawai-jft`
 export const KEPEGAWAIAN_WILAYAH = `${API_URL}/master/kota`
 export const KEPEGAWAIAN_KECAMATAN = `${API_URL}/master/kecamatan`
 export const KEPEGAWAIAN_KELURAHAN = `${API_URL}/master/kelurahan`
@@ -363,14 +363,13 @@ export function TabRekapitulasiPejabatFungsional() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-        }`,
+      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh?tempat_tugas=${dataSelect}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
       FileDownload(
         response.data,
-        'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
+        'REKAPITULASI DATA PEJABAT FUNGSIONAL Pol PP (JFT).xlsx'
       )
       setbtnLoadingUnduh(false)
     })

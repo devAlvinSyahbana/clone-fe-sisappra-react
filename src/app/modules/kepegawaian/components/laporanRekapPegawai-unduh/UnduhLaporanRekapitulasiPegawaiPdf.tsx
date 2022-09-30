@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReactToPrint from "react-to-print";
-import { JumlahSatpolDiklat, JumlahSeluruhSatpol } from "../LaporanRekapPegawaiInterface";
+import { JumlahSatpolDiklat, JumlahSatpolGolongan, JumlahSatpolPendidikan, JumlahSeluruhSatpol } from "../LaporanRekapPegawaiInterface";
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -12,12 +12,18 @@ export function UnduhLaporanRekapitulasiPegawai() {
 
   const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
   const [jsatpoldik, setJsatpoldik] = useState<JumlahSatpolDiklat>()
+  const [jsatpolpen, setJsatpolpen] = useState<JumlahSatpolPendidikan>()
+  const [jsatpolgol, setJsatpolgol] = useState<JumlahSatpolGolongan>()
 
   useEffect(() => {
     const fetchData = async () => {
       const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp`)
       const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-diklat`)
+      const jsatpolpen = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-pendidikan`)
+      const jsatpolgol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp-by-golongan`)
 
+      setJsatpolgol(jsatpolgol.data.data)
+      setJsatpolpen(jsatpolpen.data.data)
       setJpegawaisatpol(jsatpol.data.data)
       setJsatpoldik(jsatpoldik.data.data)
     }
@@ -331,7 +337,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                         <tr>
                           <td></td>
                           <td>JUMLAH KESELURUHAN</td>
-                          <td>396 Orang</td>
+                          <td>{jsatpolpen?.jmlh_keseluruhan !== 0 ? jsatpolpen?.jmlh_keseluruhan : '- '} Orang</td>
                         </tr>
                       </tbody>
                     </table>
