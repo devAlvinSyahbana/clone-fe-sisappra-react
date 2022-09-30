@@ -193,7 +193,7 @@ export function TabRekapitulasiPejabatStruktural() {
                         <div className='d-flex align-items-center'>
                             {/* begin:: Avatar */}
                             <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
-                                {record?.foto !== '' ? (
+                                {record?.foto && record?.foto !== '' ? (
                                     <div className='symbol-label'>
                                         <img src={record?.foto} alt={record?.nama} className='w-100' />
                                     </div>
@@ -442,20 +442,6 @@ export function TabRekapitulasiPejabatStruktural() {
                             onChangeRowsPerPage={handlePerRowsChange}
                             onChangePage={handlePageChange}
                         />
-                        <div className="row">
-                            <div className="col-4 fs-6 mb-2 fw-semibold text-center">
-                                ..........................................
-                                <div className="col fs-6 mb-15 fw-semibold text-center">
-                                    Kepala Satpol PP.........................................................
-                                </div>
-                                <div className="col fs-6 mb-2 fw-semibold text-center">
-                                    ..........................................
-                                </div>
-                                <div className="col fs-6 mb-2 fw-semibold text-center">
-                                    NIP. ......................
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
