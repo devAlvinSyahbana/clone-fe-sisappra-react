@@ -10,6 +10,7 @@ import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import {number} from 'yup/lib/locale'
+import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
@@ -52,6 +53,70 @@ export function TabDaftarUrutKepangkatan() {
   let no = 1
 
   const columns = [
+    {
+      name: 'Aksi',
+      sortable: false,
+      className: 'action',
+      center: true,
+      allowOverflow: true,
+      fixed: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='d-flex mb-2 mt-2 flex-end'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Detail
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {
+                            replace: true,
+                          }
+                        )
+                      }
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Hapus
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
+        )
+      },
+    },
     {
       name: 'No',
       sortable: true,
@@ -662,62 +727,6 @@ export function TabDaftarUrutKepangkatan() {
       sortField: 'foto',
       wrap: true,
     },
-    {
-      name: 'Aksi',
-      sortable: false,
-      text: 'Aksi',
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='mb-2 mt-2'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item href='#' onClick={() => navigate(``, {replace: true})}>
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
-    },
   ]
 
   const customStyles = {
@@ -939,9 +948,12 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
                 </select>
               </div>
             </div>
@@ -958,9 +970,12 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
                 </select>
               </div>
             </div>
@@ -977,9 +992,34 @@ export function TabDaftarUrutKepangkatan() {
                   name='val'
                 >
                   <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
-                  })}
+                  })} */}
+                </select>
+              </div>
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Status
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                  <option value=''>3</option>
+                  {/* {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })} */}
                 </select>
               </div>
             </div>
@@ -1030,29 +1070,52 @@ export function TabDaftarUrutKepangkatan() {
           </div>
         </div>
 
-        <div className='table-responsive mt-5 ms-5 me-5 w'>
-          <div className='card-body py-8 mt-4'>
-            <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>DAFTAR URUT KEPANGKATAN (DUK)</div>
+        <div className='col-xl-12 mb-xl-12 mt-6'>
+          <div className='card card-flush h-xl-100'>
+            <div
+              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
+              style={{
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
+              }}
+              data-theme='light'
+            >
+              <div className='card-body py-8 mt-4 fw-bold text-white'>
+                <div className='row'>
+                  <div className='col fs-4 mb-2 fw-bold text-center'>
+                    DAFTAR URUT KEPANGKATAN (DUK)
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col fs-4 mb-2 fw-bold text-center'>
+                    SATUAN POLISI PAMONG PRAJA..................
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>
-                SATUAN POLISI PAMONG PRAJA..................
+
+            <div className='card-body mt-n20'>
+              <div className='mt-n20 position-relatve'>
+                <div className='card border card-flush h-xl-100'>
+                  <div className='table-responsive mt-5 ms-5 me-5 w'>
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      progressPending={loading}
+                      progressComponent={<LoadingAnimation />}
+                      pagination
+                      paginationServer
+                      fixedHeader
+                      fixedHeaderScrollHeight='500px'
+                      paginationTotalRows={totalRows}
+                      onChangeRowsPerPage={handlePerRowsChange}
+                      onChangePage={handlePageChange}
+                      customStyles={customStyles}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <DataTable
-            columns={columns}
-            data={data}
-            progressPending={loading}
-            progressComponent={<LoadingAnimation />}
-            pagination
-            paginationServer
-            paginationTotalRows={totalRows}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-            customStyles={customStyles}
-          />
         </div>
         {/* end::Body */}
         <div className='row me-2'>

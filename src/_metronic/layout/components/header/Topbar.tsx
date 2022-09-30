@@ -33,13 +33,13 @@ const Topbar: FC = () => {
           data-kt-menu-placement='bottom-end'
           data-kt-menu-flip='bottom'
         >
-          {currentUser?.foto && currentUser?.foto !== '' ? (
+          {currentUser?.data_pegawai?.foto && currentUser?.data_pegawai?.foto !== '' ? (
             <div className='symbol-label'>
-              <img src={currentUser?.foto} alt={currentUser?.email} className='w-100' />
+              <img src={currentUser?.data_pegawai?.foto} alt={currentUser?.data_user?.email} className='w-100' />
             </div>
           ) : (
             <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}>
-              {currentUser?.nama && currentUser?.nama !== '' ? currentUser?.nama.charAt(0) : '?'}
+              {currentUser?.data_pegawai?.nama && currentUser?.data_pegawai?.nama !== '' ? currentUser?.data_pegawai?.nama.charAt(0) : '?'}
             </div>
           )}
         </div>
