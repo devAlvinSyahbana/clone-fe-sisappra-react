@@ -6,7 +6,6 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
@@ -1042,11 +1041,7 @@ export function TabDaftarUrutKepangkatan() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link
-              to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK/'
-              onClick={handleFilterReset}
-              className='me-2'
-            >
+            <Link to='#' onClick={handleFilterReset} className='me-2'>
               <button className='btn btn-primary'>
                 <i className='fa-solid fa-plus'></i>
                 Tambah

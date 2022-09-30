@@ -1,4 +1,4 @@
-import {useState, useEffect, Fragment, useMemo} from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 // import DataTable from 'react-data-table-component'
@@ -9,7 +9,6 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanPPNSHeader} from './LaporanPPNSHeader'
@@ -81,7 +80,7 @@ export function TabDataPPNS() {
       wrap: true,
     },
     {
-      name: 'NIP/NRK',
+      name: 'NPM/NRK',
       selector: (row: any) => row.nip,
       sortable: true,
       sortField: 'nip',
@@ -514,7 +513,7 @@ export function TabDataPPNS() {
           <div className='row g-8 mt-2 ms-5 me-5'>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                NAMA
+                Nama
               </label>
               <input
                 type='text'
@@ -602,6 +601,7 @@ export function TabDataPPNS() {
             </div>
           </div>
         </div>
+
         <div className='row g-8 mt-2 ms-5 me-5'>
           <div className='col-md-6 col-lg-6 col-sm-12'>
             <Link to='#'>
@@ -618,11 +618,7 @@ export function TabDataPPNS() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link
-              to='/kepegawaian/TabDataPPNS/AddDataPPNS/'
-              onClick={handleFilterReset}
-              className='me-2'
-            >
+            <Link to='#' onClick={handleFilterReset} className='me-2'>
               <button className='btn btn-primary'>
                 <i className='fa-solid fa-plus'></i>
                 Tambah

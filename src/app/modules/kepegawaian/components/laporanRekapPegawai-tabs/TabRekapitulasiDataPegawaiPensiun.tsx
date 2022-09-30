@@ -18,6 +18,9 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const KECAMATAN_URL = `${API_URL}/master/kecamatan` //http://localhost:3000/master/kecamatan
+export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
+
 
 export function TabRekapitulasiDataPegawaiPensiun() {
     const navigate = useNavigate()
@@ -28,13 +31,14 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     const [valFilterNRK, setFilterNRK] = useState({ val: '' })
     const [valFilterNoPegawai, setFilterNoPegawai] = useState({ val: '' })
     const [valFilterWilayah, setFilterWilayah] = useState({ val: '' })
-    const [valFilterKecamatan, setFilterKecamatan] = useState({ val: '' })
-    const [valFilterKelurahan, setFilterKelurahan] = useState({ val: '' })
+    const [valFilterTahunPensiun, setFilterTahunPensiun] = useState({ val: '' })
     const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
+    const arrKelurahan = ['', '', '']
+    const arrWilayah = ['', '', '']
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
-    const [totalRows, setTotalRows] = useState(0)
+    var [totalRows, setTotalRows] = useState(0)
     const [perPage, setPerPage] = useState(10)
     const [lgShow, setLgShow] = useState(false)
     const [qParamFind, setUriFind] = useState({ strparam: '' })
@@ -63,7 +67,20 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         )
     }
 
+    var num = 1;
+
     const columns = [
+        {
+            name: 'No',
+            wrap: true,
+            cell: (row: number) => {
+                return (
+                    <div className='mb-2 mt-2'>
+                        {num++}
+                    </div>
+                )
+            },
+        },
         {
             name: 'Nama',
             selector: (row: any) => row.nama,
@@ -135,9 +152,9 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         },
         {
             name: 'Tempat Tugas Kecamatan/Seksi',
-            selector: (row: any) => row.wilayah,
+            selector: (row: any) => row.kecamatan,
             sortable: true,
-            sortField: 'wilayah',
+            sortField: 'kecamatan',
             wrap: true,
             width: "250px",
         },
@@ -147,6 +164,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
             sortable: true,
             sortField: 'tempat_lahir',
             wrap: true,
+            width: '200px',
         },
         {
             name: 'Tanggal Lahir',
@@ -164,14 +182,14 @@ export function TabRekapitulasiDataPegawaiPensiun() {
             wrap: true,
             minWidth: '15',
         },
-        {
-            name: 'Ket',
-            selector: (row: any) => row.thn_pensiun,
-            sortable: true,
-            sortField: 'thn_pensiun',
-            wrap: true,
-            minWidth: '15',
-        },
+        // {
+        //     name: 'Ket',
+        //     selector: (row: any) => row.thn_pensiun,
+        //     sortable: true,
+        //     sortField: 'thn_pensiun',
+        //     wrap: true,
+        //     minWidth: '15',
+        // },
         // {
         //     name: 'Aksi',
         //     sortable: false,
@@ -270,48 +288,6 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         return [data, setData] as const
     }
 
-    const handlePageChange = (page: number) => {
-        fetchData(page)
-    }
-
-    const handlePerRowsChange = async (newPerPage: number, page: number) => {
-        setLoading(true)
-        const response = await axios.get(
-            `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
-        )
-        setData(response.data.data)
-        setPerPage(newPerPage)
-        setLoading(false)
-    }
-
-    const handleFilter = async () => {
-        let uriParam = ''
-        if (valStatPegawai.val !== '') {
-            uriParam += `&status=${valStatPegawai.val}`
-        }
-        if (valFilterNama.val !== '') {
-            uriParam += `&nama=${valFilterNama.val}`
-        }
-        if (valFilterNRK.val !== '') {
-            uriParam += `&nrk=${valFilterNRK.val}`
-        }
-        if (valFilterNoPegawai.val !== '') {
-            uriParam += `&nopegawai=${valFilterNoPegawai.val}`
-        }
-        setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
-    }
-
-    const handleFilterReset = () => {
-        setValStatPegawai({ val: '' })
-        setFilterNama({ val: '' })
-        setFilterNRK({ val: '' })
-        setFilterNoPegawai({ val: '' })
-        setFilterWilayah({ val: '' })
-        setFilterKecamatan({ val: '' })
-        setFilterKelurahan({ val: '' })
-        setUriFind((prevState) => ({ ...prevState, strparam: '' }))
-    }
-
     const handleChangeStatPegawai = (event: {
         preventDefault: () => void
         target: { value: any; name: any }
@@ -342,17 +318,51 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     }) => {
         setFilterWilayah({ val: event.target.value })
     }
-    const handleChangeInputKecamatan = (event: {
-        preventDefault: () => void
-        target: { value: any; name: any }
-    }) => {
-        setFilterKecamatan({ val: event.target.value })
+    // GET DATA
+    interface SelectOptionAutoCom {
+        readonly value: string
+        readonly label: string
     }
-    const handleChangeInputKelurahan = (event: {
+
+    // GET Kecamatan
+    const [inputValKecamatan, setFilterKecamatan] = useState({ label: '', value: null })
+    const filterKecamatan = async (inputValue: string) => {
+        const response = await axios.get(KECAMATAN_URL + "/find");
+        const json = await response.data.data
+        return json.map((i: any) => ({ label: i.kecamatan, value: i.id }))
+    }
+    const loadOptionsKecamatan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterKecamatan(inputValue))
+        }, 1000)
+    }
+    const handleChangeInputKecamatan = (newValue: any) => {
+        setFilterKecamatan((prevstate: any) => ({ ...prevstate, ...newValue }))
+    }
+    // END :: GET Kecamatan
+
+    // GET Kelurahan
+    const [inputValKelurahan, setFilterKelurahan] = useState({ label: '', value: null })
+    const filterKelurahan = async (inputValue: string) => {
+        const response = await axios.get(KELURAHAN_URL + "/findone-by-kelurahan?kecamatan=" + inputValKecamatan.label + "&kelurahan=" + inputValue);
+        const json = await response.data.data
+        return json.map((i: any) => ({ label: i.kelurahan, value: i.id }))
+    }
+    const loadOptionsKelurahan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterKelurahan(inputValue))
+        }, 1000)
+    }
+    const handleChangeInputKelurahan = (newValue: any) => {
+        setFilterKelurahan((prevstate: any) => ({ ...prevstate, ...newValue }))
+    }
+    // END :: GET Kelurahan
+
+    const handleChangeInputTahunPensiun = (event: {
         preventDefault: () => void
         target: { value: any; name: any }
     }) => {
-        setFilterKelurahan({ val: event.target.value })
+        setFilterTahunPensiun({ val: event.target.value })
     }
     const filterPegawai = async (inputValue: string) => {
         const response = await axios.get(`${KEPEGAWAIAN_URL}/auto-search-pegawai?status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}&nomor=${inputValue}`)
@@ -368,6 +378,60 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         setDataPegawai((prevstate: any) => ({ ...prevstate, ...newValue }))
     }
 
+    const handlePageChange = (page: number) => {
+        fetchData(page)
+    }
+
+    const handlePerRowsChange = async (newPerPage: number, page: number) => {
+        setLoading(true)
+        const response = await axios.get(
+            `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+        )
+        setData(response.data.data)
+        setPerPage(newPerPage)
+        setLoading(false)
+    }
+
+    const handleFilter = async () => {
+        let uriParam = ''
+        if (valStatPegawai.val !== '') {
+            uriParam += `&status=${valStatPegawai.val}`
+        }
+        if (valFilterNama.val !== '') {
+            uriParam += `&nama=${valFilterNama.val}`
+        }
+        if (valFilterNRK.val !== '') {
+            uriParam += `&nrk=${valFilterNRK.val}`
+        }
+        if (valFilterNoPegawai.val !== '') {
+            uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+        }
+        if (valFilterWilayah.val !== '') {
+            uriParam += `&wilayah=${valFilterWilayah.val}`
+        }
+        if (inputValKecamatan.value !== '') {
+            uriParam += `&kecamatan=${inputValKecamatan.value}`
+        }
+        if (inputValKelurahan.value !== '') {
+            uriParam += `&kelurahan=${inputValKelurahan.value}`
+        }
+        if (valFilterTahunPensiun.val !== '') {
+            uriParam += `&tahun_pensiun=${valFilterTahunPensiun.val}`
+        }
+        setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    }
+
+    const handleFilterReset = () => {
+        setValStatPegawai({ val: '' })
+        setFilterNama({ val: '' })
+        setFilterNRK({ val: '' })
+        setFilterNoPegawai({ val: '' })
+        setFilterWilayah({ val: '' })
+        setFilterKecamatan({ label: '', value: null })
+        setFilterKelurahan({ label: '', value: null })
+        setFilterTahunPensiun({ val: '' })
+        setUriFind((prevState) => ({ ...prevState, strparam: '' }))
+    }
     const handleUnduh = async () => {
         setbtnLoadingUnduh(true)
         await axios({
@@ -378,7 +442,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         }).then((response) => {
             FileDownload(
                 response.data,
-                'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
+                'DATA PEGAWAI ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PENSIUN PROVINSI DKI JAKARTA') + '.xlsx'
             )
             setbtnLoadingUnduh(false)
         })
@@ -397,11 +461,35 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                             </label>
                             <input
                                 type='text'
-                                className='form-control form-control form-control-solid'
+                                className='form-control form-control '
                                 name='nama'
                                 value={valFilterNama.val}
                                 onChange={handleChangeInputNama}
                                 placeholder='Nama'
+                            />
+                        </div>
+                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
+                            <label htmlFor='' className='mb-3'>
+                                Kecamatan
+                            </label>
+                            {/* <select
+                                className='form-select'
+                                name='kecamatan'
+                                value={valFilterKecamatan.val}
+                                onChange={handleChangeInputKecamatan}
+                                placeholder='Pilih Kecamatan/Seksi'
+                            >
+                                <option value='' selected disabled>Pilih Kecamatan/Seksi</option>
+                                {arrKecamatan.map((val: string) => {
+                                    return <option value={val}>{val}</option>
+                                })}
+                            </select> */}
+                            <AsyncSelect
+                                cacheOptions
+                                loadOptions={loadOptionsKecamatan}
+                                defaultOptions
+                                value={inputValKecamatan.value ? inputValKecamatan : { value: '', label: 'Pilih Kecamatan' }}
+                                onChange={handleChangeInputKecamatan}
                             />
                         </div>
                         <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
@@ -410,18 +498,41 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                     Status Kepegawaian
                                 </label>
                                 <select
-                                    className='form-select form-select-solid'
+                                    className='form-select'
                                     aria-label='Select example'
                                     value={valStatPegawai.val}
                                     onChange={handleChangeStatPegawai}
                                     name='val'
                                 >
-                                    <option value='' disabled selected>Pilih</option>
+                                    <option value='' disabled selected>Pilih Status</option>
                                     {arrStatPegawai.map((val: string) => {
                                         return <option value={val}>{val}</option>
                                     })}
                                 </select>
                             </div>
+                        </div>
+                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
+                            <label htmlFor='' className='mb-3'>
+                                Kelurahan
+                            </label>
+                            {/* <select
+                                className='form-select'
+                                name='kelurahan'
+                                value={valFilterKelurahan.val}
+                                onChange={handleChangeInputKelurahan}
+                            >
+                                <option value='' className='text-muted' selected disabled>Pilih Kelurahan</option>
+                                {arrKelurahan.map((val: string) => {
+                                    return <option value={val}>{val}</option>
+                                })}
+                            </select> */}
+                            <AsyncSelect
+                                cacheOptions
+                                loadOptions={loadOptionsKelurahan}
+                                defaultOptions
+                                value={inputValKelurahan.value ? inputValKelurahan : { value: '', label: 'Pilih Kelurahan' }}
+                                onChange={handleChangeInputKelurahan}
+                            />
                         </div>
                         {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
                             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -430,7 +541,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                 </label>
                                 <input
                                     type='text'
-                                    className='form-control form-control form-control-solid'
+                                    className='form-control form-control '
                                     name='nrk'
                                     value={valFilterNRK.val}
                                     onChange={handleChangeInputNRK}
@@ -450,7 +561,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                             </label>
                             <input
                                 type='text'
-                                className='form-control form-control form-control-solid'
+                                className='form-control form-control '
                                 value={valFilterNoPegawai.val}
                                 onChange={handleChangeInputNoPegawai}
                                 placeholder={
@@ -466,42 +577,33 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                         </div>
                         <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
                             <label htmlFor='' className='mb-3'>
-                                Wilayah/Bidang
+                                Tahun Pensiun
                             </label>
                             <input
-                                type='text'
-                                className='form-control form-control form-control-solid'
+                                type='number'
+                                className='form-control form-control '
+                                name='tahun_pensiun'
+                                value={valFilterTahunPensiun.val}
+                                onChange={handleChangeInputTahunPensiun}
+                                placeholder='Masukkan Tahun Pensiun'
+                            />
+                        </div>
+                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
+                            <label htmlFor='' className='mb-3'>
+                                Wilayah/Bidang
+                            </label>
+                            <select
+                                className='form-select '
                                 name='wilayah'
                                 value={valFilterWilayah.val}
                                 onChange={handleChangeInputWilayah}
                                 placeholder='Pilih Tempat Tugas'
-                            />
-                        </div>
-                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
-                            <label htmlFor='' className='mb-3'>
-                                Kecamatan
-                            </label>
-                            <input
-                                type='text'
-                                className='form-control form-control form-control-solid'
-                                name='kecamatan'
-                                value={valFilterKecamatan.val}
-                                onChange={handleChangeInputKecamatan}
-                                placeholder='Pilih Kecamatan/Seksi'
-                            />
-                        </div>
-                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
-                            <label htmlFor='' className='mb-3'>
-                                Kelurahan
-                            </label>
-                            <input
-                                type='text'
-                                className='form-control form-control form-control-solid'
-                                name='kelurahan'
-                                value={valFilterKelurahan.val}
-                                onChange={handleChangeInputKelurahan}
-                                placeholder='Pilih Kelurahan'
-                            />
+                            >
+                                <option value='' selected disabled>Pilih Tempat Tugas</option>
+                                {arrWilayah.map((val: string) => {
+                                    return <option value={val}>{val}</option>
+                                })}
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -522,12 +624,12 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                         </Link>
                     </div>
                     <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12 '>
-                        <Link to='/kepegawaian/LaporanRekapitulasiPegawai/TambahPegawaiPensiun' className='me-2'>
+                        {/* <Link to='/kepegawaian/LaporanRekapitulasiPegawai/TambahPegawaiPensiun' className='me-2'>
                             <button className='btn btn-primary'>
                                 <i className='fas fa-plus fa-fw'></i>
                                 Tambah
                             </button>
-                        </Link>
+                        </Link> */}
                         <div className='d-flex justify-content-end me-2 '>
                             <Dropdown as={ButtonGroup}>
                                 <Button variant='light'>
@@ -545,7 +647,11 @@ export function TabRekapitulasiDataPegawaiPensiun() {
 
                                 <Dropdown.Menu>
                                     <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-                                    <Dropdown.Item>PDF</Dropdown.Item>
+                                    <Dropdown.Item href='#' onClick={() =>
+                                        navigate(
+                                            `/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPensiun/DownloadPdf`
+                                        )
+                                    }>PDF</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
@@ -565,9 +671,11 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                     </div>
                     <DataTable
                         columns={columns}
+                        subHeader={true}
                         data={data}
                         progressPending={loading}
                         progressComponent={<LoadingAnimation />}
+                        highlightOnHover
                         pagination
                         paginationServer
                         paginationTotalRows={totalRows}
@@ -576,22 +684,23 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                         customStyles={customStyles}
                     />
                 </div>
-                <div className="row">
+                {/* <div className="row">
                     <div className="col-8"></div>
                     <div className="col-4 fs-6 mb-2 pt-10 fw-semibold text-center">
-                        <div className="col fs-6 mb-15 fw-semibold text-center">
-                        </div>
-                        <div className="col fs-6 mb-2 pt-10 fw-semibold text-center">
-
-                        </div>
                         <div className="col fs-6 mb-0 fw-semibold text-center">
                             ..................................................................
                         </div>
-                        <div className="col fs-6 mb-2 fw-semibold text-center">
+                        <div className="col fs-6 mb-20 fw-semibold text-center">
                             KEPALA SATPOL PP ..........................................................
                         </div>
+                        <div className="col fs-6 mt-20 fw-semibold text-center">
+                            ......................................................
+                        </div>
+                        <div className="col fs-6 mb-2 fw-semibold text-center">
+                            NIP. ...................................................
+                        </div>
                     </div>
-                </div>
+                </div> */}
                 {/* end::Body */}
             </div>
         </>

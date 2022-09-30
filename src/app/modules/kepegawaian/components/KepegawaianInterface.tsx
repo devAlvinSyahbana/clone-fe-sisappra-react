@@ -3,38 +3,32 @@ export interface DetailPegawaiInterface {
   nama?: string
   tempat_lahir?: string
   tgl_lahir?: string | undefined
-  jenis_kelamin?: any
-  jenis_kelamin_value?: any
+  jenis_kelamin?: string
   agama_id?: string
   agama_name?: string
-  agama?: any
   nik?: string
   no_kk?: string
-  status_perkawinan?: any
+  status_perkawinan?: string
   no_hp?: string
   sesuai_ktp_alamat?: string
   sesuai_ktp_rtrw?: string
-  sesuai_ktp_provinsi?: any
-  sesuai_ktp_kabkota?: any
-  sesuai_ktp_kecamatan?: any
-  sesuai_ktp_kelurahan?: any
+  sesuai_ktp_provinsi?: string
+  sesuai_ktp_kabkota?: string
+  sesuai_ktp_kecamatan?: string
+  sesuai_ktp_kelurahan?: string
   domisili_alamat?: string
   domisili_rtrw?: string
-  domisili_provinsi?: any
-  domisili_kabkota?: any
-  domisili_kecamatan?: any
-  domisili_kelurahan?: any
+  domisili_provinsi?: string
+  domisili_kabkota?: string
+  domisili_kecamatan?: string
+  domisili_kelurahan?: string
   kepegawaian_nrk?: string
   kepegawaian_nip?: string
-  kepegawaian_golongan?: any
-  kepegawaian_golongan_id?: any
+  kepegawaian_golongan?: string
   kepegawaian_tmtpangkat?: string
-  kepegawaian_pendidikan_pada_sk?: any
-  kepegawaian_pendidikan_pada_sk_id?: any
-  kepegawaian_jabatan?: any
-  kepegawaian_jabatan_id?: any
-  kepegawaian_eselon?: any
-  kepegawaian_eselon_id?: any
+  kepegawaian_pendidikan_pada_sk?: string
+  kepegawaian_jabatan?: string
+  kepegawaian_eselon?: string
   kepegawaian_tempat_tugas?: string
   kepegawaian_subbag_seksi_kecamatan?: string
   kepegawaian_status_pegawai?: string
@@ -69,7 +63,7 @@ export interface DetailPegawaiInterface {
   kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat?: string
   kepegawaian_diklat_fungsional_pol_pp_file_sertifikat?: string
   foto?: string
-  kepegawaian_pangkat?: any
+  kepegawaian_pangkat?: string
   kepegawaian_pangkat_id?: string
   kepegawaian_pangkat_name?: string
   kepegawaian_kelurahan?: string
@@ -89,10 +83,10 @@ export interface SelectOptionAutoCom {
 }
 
 export interface ListPendidikanInterface {
-  id?: number
-  hubungan?: string
-  nama?: string
-  tempat_lahir?: string
-  tgl_lahir?: string
-  jenis_kelamin?: string
+    id?: number
+    hubungan?: string
+    nama?: string
+    tempat_lahir?: string
+    tgl_lahir?: string
+    jenis_kelamin?: string
 }

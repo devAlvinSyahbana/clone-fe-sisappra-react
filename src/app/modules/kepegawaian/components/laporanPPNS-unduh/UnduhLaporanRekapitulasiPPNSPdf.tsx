@@ -70,6 +70,14 @@ export function UnduhLaporanRekapitulasiPPNSPdf() {
                     />
 
                     <div ref={(el) => (componentRef = el)}>
+                        <div className='col-12'>
+                            <h1 className='text-dark fw-bold fs-3 text-center'>
+                                LAPORAN REKAPITULASI DATA PPNS
+                            </h1>
+                            <h1 className='text-dark fw-bold fs-3 text-center'>
+                                PROVINSI DAERAH KHUSUS IBUKOTA JAKARTA
+                            </h1>
+                        </div>
                         <div className="p-4"></div>
                         <div className="table-responsive">
                             <table className="table-bordered align-middle table-row-dashed fs-7 gy-5 w-100">
@@ -369,7 +377,7 @@ export function UnduhLaporanRekapitulasiPPNSPdf() {
                             <div className="col-8"></div>
                             <div className="col-4 fs-6 mb-2 mt-20 fw-semibold text-center">
                                 <div className="col fs-6 mb-2 fw-semibold text-center">
-                                    ..........................................
+                                    ................................................
                                 </div>
                                 <div className="col fs-6 fw-semibold text-center">
                                     Kepala Satpol PP................................

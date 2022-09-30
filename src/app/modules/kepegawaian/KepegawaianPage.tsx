@@ -10,7 +10,7 @@ import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipi
 import {KehadiranPegawai} from './components/KehadiranPegawai'
 
 import {JadwalPiket} from './components/JadwalPiket'
-import {TabRekapitulasiPiketPegawai} from './components/jadwalPiket-tabs/TabRekapitulasiPiketPegawai'
+import {TambahPiket} from './components/Tambah-tabs/TambahPiket'
 
 import {DataPribadi} from './components/tabs/DataPribadi'
 import {DataKeluarga} from './components/tabs/DataKeluarga'
@@ -18,12 +18,12 @@ import {Pendidikan} from './components/tabs/Pendidikan'
 import {DataKepegawaian} from './components/tabs/DataKepegawaian'
 import {HirarkiKepegawaian} from './components/tabs/HirarkiKepegawaian'
 
-import {UpdateDataPribadi} from './components/update-tabs/UpdateDataPribadi'
-import {UpdateDataKeluarga} from './components/update-tabs/UpdateDataKeluarga'
-import {UpdatePendidikan} from './components/update-tabs/UpdatePendidikan'
-import {UpdateDataKepegawaian} from './components/update-tabs/UpdateDataKepegawaian'
-import {TabLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-tabs/TabLaporanRekapitulasiPegawai'
-import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
+import { UpdateDataPribadi } from './components/update-tabs/UpdateDataPribadi'
+import { UpdateDataKeluarga } from './components/update-tabs/UpdateDataKeluarga'
+import { UpdatePendidikan } from './components/update-tabs/UpdatePendidikan'
+import { UpdateDataKepegawaian } from './components/update-tabs/UpdateDataKepegawaian'
+import { TabLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-tabs/TabLaporanRekapitulasiPegawai'
+import { TabDaftarUrutKepangkatan } from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 
 import {TabRekapitulasiPPNS} from './components/laporanPPNS-tabs/TabRekapitulasiPPNS'
 import {UnduhLaporanRekapitulasiPPNSPdf} from './components/laporanPPNS-unduh/UnduhLaporanRekapitulasiPPNSPdf'
@@ -164,9 +164,20 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
-                Laporan Rekapitulasi Pegawai
+                Rekapitulasi Data Pegawai Pensiun
               </PageTitle>
               <TabRekapitulasiDataPegawaiPensiun />
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPensiun/DownloadPdf'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Unduh Laporan Data Pegawai Pensiun
+              </PageTitle>
+              <UnduhLaporanPegawaiPensiunPdf />
             </>
           }
         />
@@ -272,7 +283,9 @@ const KepegawaianPage: React.FC = () => {
           path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataPribadi/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Pribadi</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Data Pribadi
+              </PageTitle>
               <PejabatFungsional_DataPribadi />
             </>
           }
@@ -281,7 +294,9 @@ const KepegawaianPage: React.FC = () => {
           path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataKeluarga/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Keluarga</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Data Keluarga
+              </PageTitle>
               <PejabatFungsional_DataKeluarga />
             </>
           }
@@ -290,7 +305,9 @@ const KepegawaianPage: React.FC = () => {
           path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_Pendidikan/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Pendidikan</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Pendidikan
+              </PageTitle>
               <PejabatFungsional_Pendidikan />
             </>
           }
@@ -299,7 +316,9 @@ const KepegawaianPage: React.FC = () => {
           path='LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataKepegawaian/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Kepegawaian</PageTitle>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Data Kepegawaian
+              </PageTitle>
               <PejabatFungsional_DataKepegawaian />
             </>
           }
@@ -519,7 +538,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='TabDaftarUrutKepangkatan/AddPendidikanDUK/'
+          path='TabDaftarUrutKepangkatan/AddDataPendidikanDUK/'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Tambah Data Pendidikan DUK</PageTitle>
@@ -545,44 +564,6 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
-        <Route
-          path='TabDaftarUrutKepangkatan/DataPribadiDUK/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data Pribadi DUK</PageTitle>
-              <DataPribadiDUK />
-            </>
-          }
-        />
-        <Route
-          path='TabDaftarUrutKepangkatan/DataKeluargaDUK/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data Keluarga DUK</PageTitle>
-              <DataKeluargaDUK />
-            </>
-          }
-        />
-        <Route
-          path='TabDaftarUrutKepangkatan/DataKepegawaianDUK/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
-                Detail Data Kepegawaian DUK
-              </PageTitle>
-              <DataKepegawaianDUK />
-            </>
-          }
-        />
-        <Route
-          path='TabDaftarUrutKepangkatan/PendidikanDUK/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data Pendidikan DUK</PageTitle>
-              <PendidikanDUK />
-            </>
-          }
-        />
         {/* End DUK */}
 
         {/* PPNS */}
@@ -601,15 +582,6 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Tambah Data PPNS</PageTitle>
               <AddDataPPNS />
-            </>
-          }
-        />
-        <Route
-          path='TabDataPPNS/DataPPNS/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data PPNS</PageTitle>
-              <DataPPNS />
             </>
           }
         />

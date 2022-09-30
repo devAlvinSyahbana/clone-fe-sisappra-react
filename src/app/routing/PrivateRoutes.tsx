@@ -51,7 +51,7 @@ const PrivateRoutes = () => {
         />
         
          <Route
-          path='sarana-prasarana/*'
+          path='/*'
           element={
             <SuspensedView>
               <SaranaPrasaranaPage />

@@ -1,32 +1,35 @@
 import React from 'react'
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import { Kota } from './components/Kota'
-import { Kecamatan } from './components/Kecamatan'
-import { Kelurahan } from './components/Kelurahan'
-import { JenisKegiatan } from './components/JenisKegiatan'
-import { JenisKejadian } from './components/JenisKejadian'
-import { JenisPelanggaran } from './components/JenisPelanggaran'
-import { JenisPertolongan } from './components/JenisPertolongan'
-import { JenisPerdaPerkada } from './components/JenisPerdaPerkada'
-import { JenisPenindakan } from './components/JenisPenindakan'
-import { KorbanJiwa } from './components/KorbanJiwa'
-import { KorbanMaterial } from './components/KorbanMaterial'
-import { JenisBantuan } from './components/JenisBantuan'
-import { InstansiTerkait } from './components/InstansiTerkait'
-import { Agama } from './components/Agama'
-import { Pangkat } from './components/Pangkat'
-import { TempatPelaksana } from './components/TempatPelaksana'
-import { SKPD } from './components/SKPD'
-import { Pendidikan } from './components/Pendidikan'
-import { JenisSaranaPrasarana } from './components/JenisSaranaPrasarana'
-import { Golongan } from './components/Golongan'
-import { Eselon } from './components/Eselon'
-import { Jabatan } from './components/Jabatan'
-import { SumberInformasi } from './components/SumberInformasi'
-import { JenisKekerasan } from './components/JenisKekerasan'
-import { JenisPenerbitan } from './components/JenisPenerbitan'
-import { JenisPenyelesaian } from './components/JenisPenyelesaian'
+import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
+import {PageLink, PageTitle} from '../../../_metronic/layout/core'
+
+import {Kota} from './components/Kota'
+import {UpdateKota} from './components/Update-master/UpdateKota'
+
+import {Kecamatan} from './components/Kecamatan'
+import {Kelurahan} from './components/Kelurahan'
+import {JenisKegiatan} from './components/JenisKegiatan'
+import {JenisKejadian} from './components/JenisKejadian'
+import {JenisPelanggaran} from './components/JenisPelanggaran'
+import {JenisPertolongan} from './components/JenisPertolongan'
+import {JenisPerdaPerkada} from './components/JenisPerdaPerkada'
+import {JenisPenindakan} from './components/JenisPenindakan'
+import {KorbanJiwa} from './components/KorbanJiwa'
+import {KorbanMaterial} from './components/KorbanMaterial'
+import {JenisBantuan} from './components/JenisBantuan'
+import {InstansiTerkait} from './components/InstansiTerkait'
+import {Agama} from './components/Agama'
+import {Pangkat} from './components/Pangkat'
+import {TempatPelaksana} from './components/TempatPelaksana'
+import {SKPD} from './components/SKPD'
+import {Pendidikan} from './components/Pendidikan'
+import {JenisSaranaPrasarana} from './components/JenisSaranaPrasarana'
+import {Golongan} from './components/Golongan'
+import {Eselon} from './components/Eselon'
+import {Jabatan} from './components/Jabatan'
+import {SumberInformasi} from './components/SumberInformasi'
+import {JenisKekerasan} from './components/JenisKekerasan'
+import {JenisPenerbitan} from './components/JenisPenerbitan'
+import {JenisPenyelesaian} from './components/JenisPenyelesaian'
 
 const masterBreadCrumbs: Array<PageLink> = [
   {
@@ -62,7 +65,16 @@ const MasterPage: React.FC = () => {
             </>
           }
         />
-         <Route
+        <Route
+          path='Kota/UpdateKota/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Update Kota</PageTitle>
+              <UpdateKota />
+            </>
+          }
+        />
+        <Route
           path='SKPD'
           element={
             <>
@@ -112,7 +124,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Kecamatan</PageTitle>
-              <Kecamatan/>
+              <Kecamatan />
             </>
           }
         />
@@ -130,7 +142,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Kegiatan </PageTitle>
-              <JenisKegiatan  />
+              <JenisKegiatan />
             </>
           }
         />
@@ -139,7 +151,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Kejadian </PageTitle>
-              <JenisKejadian  />
+              <JenisKejadian />
             </>
           }
         />
@@ -148,7 +160,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Agama</PageTitle>
-              <Agama  />
+              <Agama />
             </>
           }
         />
@@ -157,7 +169,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Jabatan </PageTitle>
-              <Jabatan/>
+              <Jabatan />
             </>
           }
         />
@@ -166,16 +178,16 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Eselon </PageTitle>
-              <Eselon/>
+              <Eselon />
             </>
           }
         />
-         <Route
+        <Route
           path='Pendidikan'
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Pendidikan </PageTitle>
-              <Pendidikan/>
+              <Pendidikan />
             </>
           }
         />
@@ -193,7 +205,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Pelanggaran</PageTitle>
-              <JenisPelanggaran/>
+              <JenisPelanggaran />
             </>
           }
         />
@@ -220,7 +232,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Perda / Perkada</PageTitle>
-              <JenisPerdaPerkada/>
+              <JenisPerdaPerkada />
             </>
           }
         />
@@ -242,7 +254,7 @@ const MasterPage: React.FC = () => {
             </>
           }
         />
-         <Route
+        <Route
           path='JenisPenyelesaian'
           element={
             <>
@@ -256,7 +268,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Korban Jiwa </PageTitle>
-              <KorbanJiwa  />
+              <KorbanJiwa />
             </>
           }
         />
@@ -265,7 +277,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Korban Material</PageTitle>
-              <KorbanMaterial/>
+              <KorbanMaterial />
             </>
           }
         />
@@ -274,7 +286,7 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Bantuan</PageTitle>
-              <JenisBantuan/>
+              <JenisBantuan />
             </>
           }
         />
@@ -283,11 +295,10 @@ const MasterPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Instansi Terkait</PageTitle>
-              <InstansiTerkait/>
+              <InstansiTerkait />
             </>
           }
         />
-        
 
         <Route index element={<Navigate to='/master' />} />
       </Route>

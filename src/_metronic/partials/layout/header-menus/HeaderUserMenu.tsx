@@ -14,23 +14,23 @@ const HeaderUserMenu: FC = () => {
       <div className='menu-item px-3'>
         <div className='menu-content d-flex align-items-center px-3'>
           <div className='symbol symbol-50px me-5'>
-            {currentUser?.foto && currentUser?.foto !== '' ? (
+            {currentUser?.data_pegawai?.foto && currentUser?.data_pegawai?.foto !== '' ? (
               <div className='symbol-label'>
-                <img src={currentUser?.foto} alt={currentUser?.email} className='w-100' />
+                <img src={currentUser?.data_pegawai?.foto} alt={currentUser?.data_user?.email} className='w-100' />
               </div>
             ) : (
               <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}>
-                {currentUser?.nama && currentUser?.nama !== '' ? currentUser?.nama.charAt(0) : '?'}
+                {currentUser?.data_pegawai?.nama && currentUser?.data_pegawai?.nama !== '' ? currentUser?.data_pegawai?.nama.charAt(0) : '?'}
               </div>
             )}
           </div>
 
           <div className='d-flex flex-column'>
             <div className='fw-bolder d-flex align-items-center fs-5'>
-              {currentUser?.email} {currentUser?.email}
+              {currentUser?.data_pegawai?.nama}
             </div>
             <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
-              {currentUser?.email}
+              {currentUser?.data_user?.email}
             </a>
           </div>
         </div>
