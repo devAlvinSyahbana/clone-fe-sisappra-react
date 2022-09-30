@@ -1,6 +1,6 @@
-import { KTSVG } from '../../../../../_metronic/helpers'
-import { Link } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
+import {KTSVG} from '../../../../../_metronic/helpers'
+import {Link} from 'react-router-dom'
+import {useLocation} from 'react-router-dom'
 import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -42,9 +42,9 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('TabRekapitulasiDataPegawaiPensiun') && 'active')
+                      (location.pathname.includes('Pendidikan') && 'active')
                     }
-                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiDataPegawaiPensiun/`}
+                    to={`/kepegawaian/InformasiDataPegawai/Pendidikan/`}
                   >
                     Rekapitulasi Data Pegawai yang Pensiun
                   </Link>
@@ -75,20 +75,9 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('TabRekapitulasiPejabatStruktural') && 'active')
+                      (location.pathname.includes('HirarkiKepegawaian') && 'active')
                     }
-                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatStruktural/`}
-                  >
-                    Rekapitulasi Data Pejabat Struktural
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link
-                    className={
-                      `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('TabRekapitulasiPejabatFungsional') && 'active')
-                    }
-                    to={`/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/`}
+                    to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/`}
                   >
                     Rekapitulasi Data Pejabat Fungsional Pol PP (JFT)
                   </Link>
@@ -102,4 +91,4 @@ const LaporanRekapHeader = () => {
   )
 }
 
-export { LaporanRekapHeader }
+export {LaporanRekapHeader}

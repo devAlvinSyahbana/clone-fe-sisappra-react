@@ -180,7 +180,7 @@ export function UbahLaporanSarana() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/sarana-prasarana/LaporanSaranaPrasarana', {replace: true})
+              navigate('/sarana_prasarana/LaporanSaranaPrasarana', {replace: true})
             }
             return
           }
@@ -190,7 +190,7 @@ export function UbahLaporanSarana() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/sarana-prasarana/LaporanSaranaPrasarana', {replace: true})
+          navigate('/sarana_prasarana/LaporanSaranaPrasarana', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -362,7 +362,7 @@ export function UbahLaporanSarana() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>
+                    <Link to='/sarana_prasarana/LaporanSaranaPrasarana'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

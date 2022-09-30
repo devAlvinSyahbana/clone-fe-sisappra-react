@@ -6,7 +6,6 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
@@ -670,11 +669,10 @@ export function TabDaftarUrutKepangkatan() {
       className: 'action',
       center: true,
       allowOverflow: true,
-      sticky: 'left',
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='d-flex mb-2 mt-2 flex-end'>
+            <div className='mb-2 mt-2'>
               {[DropdownButton].map((DropdownType, idx) => (
                 <>
                   <DropdownType
@@ -1004,11 +1002,7 @@ export function TabDaftarUrutKepangkatan() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link
-              to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK/'
-              onClick={handleFilterReset}
-              className='me-2'
-            >
+            <Link to='#' onClick={handleFilterReset} className='me-2'>
               <button className='btn btn-primary'>
                 <i className='fa-solid fa-plus'></i>
                 Tambah
@@ -1036,50 +1030,29 @@ export function TabDaftarUrutKepangkatan() {
           </div>
         </div>
 
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card card-flush h-xl-100'>
-            <div
-              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-              style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
-              }}
-              data-theme='light'
-            >
-              <div className='card-body py-8 mt-4 fw-bold text-white'>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>
-                    DAFTAR URUT KEPANGKATAN (DUK)
-                  </div>
-                </div>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>
-                    SATUAN POLISI PAMONG PRAJA..................
-                  </div>
-                </div>
-              </div>
+        <div className='table-responsive mt-5 ms-5 me-5 w'>
+          <div className='card-body py-8 mt-4'>
+            <div className='row'>
+              <div className='col fs-4 mb-2 fw-bold text-center'>DAFTAR URUT KEPANGKATAN (DUK)</div>
             </div>
-
-            <div className='card-body mt-n20'>
-              <div className='mt-n20 position-relatve'>
-                <div className='card border card-flush h-xl-100'>
-                  <div className='table-responsive mt-5 ms-5 me-5 w'>
-                    <DataTable
-                      columns={columns}
-                      data={data}
-                      progressPending={loading}
-                      progressComponent={<LoadingAnimation />}
-                      pagination
-                      paginationServer
-                      paginationTotalRows={totalRows}
-                      onChangeRowsPerPage={handlePerRowsChange}
-                      onChangePage={handlePageChange}
-                      customStyles={customStyles}
-                    />
-                  </div>
-                </div>
+            <div className='row'>
+              <div className='col fs-4 mb-2 fw-bold text-center'>
+                SATUAN POLISI PAMONG PRAJA..................
               </div>
             </div>
           </div>
+          <DataTable
+            columns={columns}
+            data={data}
+            progressPending={loading}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+            customStyles={customStyles}
+          />
         </div>
         {/* end::Body */}
         <div className='row me-2'>

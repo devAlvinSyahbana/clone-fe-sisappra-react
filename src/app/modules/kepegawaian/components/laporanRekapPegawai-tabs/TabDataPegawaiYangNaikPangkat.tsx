@@ -10,7 +10,6 @@ import {LaporanRekapHeader} from './LaporanRekapHeader'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 
-
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -63,7 +62,7 @@ export function TabDataPegawaiYangNaikPangkat() {
       wrap: true,
     },
     {
-      name: 'Nip',
+      name: 'NIP',
       selector: (row: any) => row.kepegawaian_nip,
       sortable: true,
       sortField: 'kepegawaian_nip',
@@ -72,12 +71,12 @@ export function TabDataPegawaiYangNaikPangkat() {
     {
       name:
         valStatPegawai.val !== ''
-        ? valStatPegawai.val === 'PTT'
+          ? valStatPegawai.val === 'PTT'
             ? 'NPTT'
             : valStatPegawai.val === 'PJLP'
             ? 'NPJLP'
             : 'NRK'
-        : 'NRK',
+          : 'NRK',
       selector: (row: any) => row.kepegawaian_nrk,
       sortable: true,
       sortField: 'kepegawaian_nrk',
@@ -125,91 +124,76 @@ export function TabDataPegawaiYangNaikPangkat() {
       wrap: true,
     },
     {
-        name: 'Tmt Pangkat',
-        selector: (row: any) => row.tmt_pangkat,
-        sortable: true,
-        sortField: 'tmt_pangkat',
-        wrap: true,
-      },
-      {
-        name: 'Eselon',
-        selector: (row: any) => row.eselon,
-        sortable: true,
-        sortField: 'eselon',
-        wrap: true,
-      },
-      {
-        name: 'Status Kenaikan',
-        selector: (row: any) => row.status_kenaikan,
-        sortable: true,
-        sortField: 'status_kenaikan',
-        wrap: true,
-      },
-      {
-        name: 'Jadwal Kenaikan',
-        selector: (row: any) => row.jadwal_kenaikan,
-        sortable: true,
-        sortField: 'jadwal_kenaikan',
-        wrap: true,
-      },
-      {
-        name: 'Ket',
-        selector: (row: any) => row.ket,
-        sortable: true,
-        sortField: 'ket',
-        wrap: true,
-      },
-      {
-        name: 'Aksi',
-        sortable: false,
-        text: 'Aksi',
-        className: 'action',
-        center: true,
-        allowOverflow: true,
-        cell: (record: any) => {
-          return (
-            <Fragment>
-              <div className='mb-2 mt-2'>
-                {[DropdownButton].map((DropdownType, idx) => (
-                  <>
-                    <DropdownType
-                      as={ButtonGroup}
-                      key={idx}
-                      id={`dropdown-button-drop-${idx}`}
-                      size='sm'
-                      variant='light'
-                      title='Aksi'
+      name: 'TMT Pangkat',
+      selector: (row: any) => row.tmt_pangkat,
+      sortable: true,
+      sortField: 'tmt_pangkat',
+      width: '100px',
+      wrap: true,
+    },
+    {
+      name: 'Eselon',
+      selector: (row: any) => row.eselon,
+      sortable: true,
+      sortField: 'eselon',
+      wrap: true,
+    },
+    {
+      name: 'Status Kenaikan',
+      selector: (row: any) => row.status_kenaikan,
+      sortable: true,
+      sortField: 'status_kenaikan',
+      width: '220px',
+      wrap: true,
+    },
+    {
+      name: 'Jadwal Kenaikan',
+      selector: (row: any) => row.jadwal_kenaikan,
+      sortable: true,
+      sortField: 'jadwal_kenaikan',
+      width: '220px',
+      wrap: true,
+    },
+    {
+      name: 'Aksi',
+      sortable: false,
+      text: 'Aksi',
+      className: 'action',
+      center: true,
+      allowOverflow: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='mb-2 mt-2'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/TabDataPegawaiYangNaikPangkat/UpdateNaikPangkat/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
                     >
-                      <Dropdown.Item
-                        href='#'
-                        onClick={() =>
-                          navigate(
-                            `/kepegawaian/DataPegawaiYangNaikPangkat/DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                            {replace: true}
-                          )
-                        }
-                      >
-                        Detail
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        href='#'
-                        onClick={() =>
-                          navigate(
-                            `/kepegawaian/TabDataPegawaiYangNaikPangkat/UpdateNaikPangkat/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                            {replace: true}
-                          )
-                        }
-                      >
-                        Ubah
-                      </Dropdown.Item>
-                    </DropdownType>
-                  </>
-                ))}
-              </div>
-            </Fragment>
-          )
-        },
+                      Ubah
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
+        )
       },
+    },
   ]
 
   const customStyles = {
@@ -340,205 +324,260 @@ export function TabDataPegawaiYangNaikPangkat() {
 
   return (
     <>
-    <LaporanRekapHeader />
-    <div className={`card`}>
-      {/* begin::Body */}
-      <div id='kt_advanced_search_form'>
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <label htmlFor='' className='mb-3'>
-              Nama
-            </label>
-            <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              name='nama'
-              value={valFilterNama.val}
-              onChange={handleChangeInputNama}
-              placeholder='Nama'
-            />
-          </div>
-          {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
+      <LaporanRekapHeader />
+      <div className={`card`}>
+        {/* begin::Body */}
+        <div id='kt_advanced_search_form'>
+          <div className='row g-8 mt-2 ms-5 me-5'>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                NRK
+                Nama
               </label>
               <input
                 type='text'
                 className='form-control form-control form-control-solid'
-                name='nrk'
-                value={valFilterNRK.val}
-                onChange={handleChangeInputNRK}
-                placeholder='NRK'
+                name='nama'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Nama'
               />
             </div>
-          ) : null}
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-            <label htmlFor='' className='mb-3'>
-              {valStatPegawai.val === 'PNS'
-                ? 'NIP'
-                : valStatPegawai.val === 'PTT'
-                ? 'NPTT'
-                : valStatPegawai.val === 'PJLP'
-                ? 'NPJLP'
-                : 'NIP'}
-            </label>
-            <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              value={valFilterNoPegawai.val}
-              onChange={handleChangeInputNoPegawai}
-              placeholder={
-                valStatPegawai.val === 'PNS'
+            {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
+              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
+                  NRK
+                </label>
+                <input
+                  type='text'
+                  className='form-control form-control form-control-solid'
+                  name='nrk'
+                  value={valFilterNRK.val}
+                  onChange={handleChangeInputNRK}
+                  placeholder='NRK'
+                />
+              </div>
+            ) : null}
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+              <label htmlFor='' className='mb-3'>
+                {valStatPegawai.val === 'PNS'
                   ? 'NIP'
                   : valStatPegawai.val === 'PTT'
                   ? 'NPTT'
                   : valStatPegawai.val === 'PJLP'
                   ? 'NPJLP'
-                  : 'NIP'
-              }
-            />
-          </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Wilayah / Bidang
+                  : 'NIP'}
               </label>
-              <select
-                className='form-select form-select-solid'
-                aria-label='Select example'
-                value={valStatPegawai.val}
-                onChange={handleChangeStatPegawai}
-                name='val'
-              >
-                <option value=''>Pilih</option>
-                {arrStatPegawai.map((val: string) => {
-                  return <option value={val}>{val}</option>
-                })}
-              </select>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                value={valFilterNoPegawai.val}
+                onChange={handleChangeInputNoPegawai}
+                placeholder={
+                  valStatPegawai.val === 'PNS'
+                    ? 'NIP'
+                    : valStatPegawai.val === 'PTT'
+                    ? 'NPTT'
+                    : valStatPegawai.val === 'PJLP'
+                    ? 'NPJLP'
+                    : 'NIP'
+                }
+              />
             </div>
-          </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <div className='form-group'>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Wilayah / Bidang
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Kecamatan / Seksi
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Kelurahan
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Status Kenaikan
+                </label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='val'
+                >
+                  <option value=''>Pilih</option>
+                  {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                Kecamatan / Seksi
+                Pangkat
               </label>
-              <select
-                className='form-select form-select-solid'
-                aria-label='Select example'
-                value={valStatPegawai.val}
-                onChange={handleChangeStatPegawai}
-                name='val'
-              >
-                <option value=''>Pilih</option>
-                {arrStatPegawai.map((val: string) => {
-                  return <option value={val}>{val}</option>
-                })}
-              </select>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='Pangkat'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Pangkat'
+              />
             </div>
-          </div>
-          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-            <div className='form-group'>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                Kelurahan
+                Jabatan
               </label>
-              <select
-                className='form-select form-select-solid'
-                aria-label='Select example'
-                value={valStatPegawai.val}
-                onChange={handleChangeStatPegawai}
-                name='val'
-              >
-                <option value=''>Pilih</option>
-                {arrStatPegawai.map((val: string) => {
-                  return <option value={val}>{val}</option>
-                })}
-              </select>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='Jabatan'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Jabatan'
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                Jadwal Kenaikan
+              </label>
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='Jadwal Kenaikan'
+                value={valFilterNama.val}
+                onChange={handleChangeInputNama}
+                placeholder='Jadwal Kenaikan'
+              />
             </div>
           </div>
         </div>
-      </div>
 
-      <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
-            <button onClick={handleFilter} className='btn btn-primary me-2'>
-              <i className='fa-solid fa-search'></i>
-              Cari
-            </button>
-          </Link>
-          <Link to='#' onClick={handleFilterReset} className=''>
-            <button className='btn btn-primary'>
-              <i className='fa-solid fa-arrows-rotate'></i>
-              Reset
-            </button>
-          </Link>
-        </div>
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <Dropdown as={ButtonGroup}>
-            <Button variant='light'>
-              {btnLoadingUnduh ? (
-                <>
-                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                  Memproses...
-                </>
-              ) : (
-                'Unduh'
-              )}
-            </Button>
-
-            <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
-
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-              <Dropdown.Item>PDF</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </div>
-
-      <div className='table-responsive mt-6 ms-5 me-5'>
-        <div className='card-body py-4 mt-4'>
-          <div className='row'>
-            <div className='col fs-4 mb-2 fw-bold text-center'>DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA KENAIKAN PANGKAT</div>
+        <div className='row g-8 mt-2 ms-5 me-5'>
+          <div className='col-md-6 col-lg-6 col-sm-12'>
+            <Link to='#'>
+              <button onClick={handleFilter} className='btn btn-primary me-2'>
+                <i className='fa-solid fa-search'></i>
+                Cari
+              </button>
+            </Link>
+            <Link to='#' onClick={handleFilterReset} className=''>
+              <button className='btn btn-primary'>
+                <i className='fa-solid fa-arrows-rotate'></i>
+                Reset
+              </button>
+            </Link>
           </div>
-          <div className='row'>
-            <div className='col fs-4 mb-2 fw-bold text-center'>
-            PADA SATUAN POLISI PAMONG PRAJA PRVINSI DKI JAKARTA
+          <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+            <Dropdown as={ButtonGroup}>
+              <Button variant='light'>
+                {btnLoadingUnduh ? (
+                  <>
+                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                    Memproses...
+                  </>
+                ) : (
+                  'Unduh'
+                )}
+              </Button>
+
+              <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
+                <Dropdown.Item>PDF</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        </div>
+
+        <div className='table-responsive mt-6 ms-5 me-5'>
+          <div className='card-body py-4 mt-4'>
+            <div className='row'>
+              <div className='col fs-4 mb-2 fw-bold text-center'>
+                DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA KENAIKAN PANGKAT
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col fs-4 mb-2 fw-bold text-center'>
+                PADA SATUAN POLISI PAMONG PRAJA PRVINSI DKI JAKARTA
+              </div>
             </div>
           </div>
+          <DataTable
+            columns={columns}
+            data={data}
+            progressPending={loading}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+            customStyles={customStyles}
+          />
         </div>
-        <DataTable
-          columns={columns}
-          data={data}
-          progressPending={loading}
-          progressComponent={<LoadingAnimation />}
-          pagination
-          paginationServer
-          paginationTotalRows={totalRows}
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-          customStyles={customStyles}
-        />
+        <div className='row'>
+          <div className='col-7 p-10'></div>
+          <div className='col-4 fs-8 mb-4 fw-semibold text-center'>
+            .................................
+            <div className='col fs-6 mb-15 fw-semibold text-center'>
+              Kepala Satpol PP ...............................................................
+            </div>
+            <div className='col fs-6 mb-2 fw-semibold text-center'>......................</div>
+            <div className='col fs-6 mb-2 fw-semibold text-center'>NIP. ......................</div>
+          </div>
+        </div>
+        {/* end::Body */}
       </div>
-      <div className="row">
-                    <div className="col-7 p-10"></div>
-                    <div className="col-4 fs-8 mb-4 fw-semibold text-center">
-                      .................................
-                      <div className="col fs-6 mb-15 fw-semibold text-center">
-                      Kepala Satpol PP 
-                        ...............................................................
-                      </div>
-                      <div className="col fs-6 mb-2 fw-semibold text-center">
-                             ......................
-                      </div>
-                      <div className="col fs-6 mb-2 fw-semibold text-center">
-                        NIP. ......................
-                      </div>
-                    </div>
-                  </div>
-      {/* end::Body */}
-    </div>
-   </>
+    </>
   )
 }

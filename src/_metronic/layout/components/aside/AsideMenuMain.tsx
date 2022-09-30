@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
-import { useIntl } from 'react-intl'
-import { AsideMenuItemWithSub } from './AsideMenuItemWithSub'
-import { AsideMenuItem } from './AsideMenuItem'
+import {useIntl} from 'react-intl'
+import {AsideMenuItemWithSub} from './AsideMenuItemWithSub'
+import {AsideMenuItem} from './AsideMenuItem'
 
 export function AsideMenuMain() {
   const intl = useIntl()
@@ -16,7 +16,7 @@ export function AsideMenuMain() {
       <AsideMenuItemWithSub
         to='/dashboard'
         icon='/media/icons/duotune/art/art002.svg'
-        title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
+        title={intl.formatMessage({id: 'MENU.DASHBOARD'})}
         fontIcon='bi-app-indicator'
       >
         <AsideMenuItem
@@ -97,7 +97,7 @@ export function AsideMenuMain() {
           to='/kepegawaian/PenyidikPegawaiNegeriSipil/TabRekapitulasiPPNS'
           title='Penyidik Pegawai Negeri Sipil (PPNS)'
           hasBullet={true}
-        />
+        />        
         <AsideMenuItem
           to='/kepegawaian/KehadiranPegawai'
           title='Kehadiran Pegawai'
@@ -106,13 +106,13 @@ export function AsideMenuMain() {
         <AsideMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
-        to='/sarana-prasarana'
+        to='/sarana_prasarana'
         title='Sarana & Prasarana'
         fontIcon='bi-archive'
         icon='/media/icons/duotune/general/gen022.svg'
       >
         <AsideMenuItem
-          to='/sarana-prasarana/LaporanSaranaPrasarana'
+          to='/sarana_prasarana/LaporanSaranaPrasarana'
           title='Laporan Sarana & Prasarana'
           hasBullet={true}
         />
@@ -158,6 +158,7 @@ export function AsideMenuMain() {
         <AsideMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
         <AsideMenuItem to='/master/JenisPenerbitan' title='Jenis Penerbitan' hasBullet={true} />
       </AsideMenuItemWithSub>
+
     </>
   )
 }
