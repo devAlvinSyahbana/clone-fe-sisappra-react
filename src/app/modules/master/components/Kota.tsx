@@ -120,8 +120,13 @@ export function Kota() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item>
-                      <Link to='#'>Detail</Link>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate('/master/Kota/LihatKota/' + record.id, {replace: true})
+                      }
+                    >
+                      Detail
                     </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
@@ -242,8 +247,8 @@ export function Kota() {
         </div>
 
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
-            <button className='btn btn-primary me-5' onClick={handleShow}>
+          <Link to='/master/Kota/TambahKota'>
+            <button className='btn btn-primary me-5'>
               <i className='fa-solid fa-plus'></i>
               Tambah
             </button>
@@ -266,40 +271,6 @@ export function Kota() {
         console.error(error)
       }
     }, */}
-
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Tambah Kota</Modal.Title>
-          </Modal.Header>
-          <form>
-            <Modal.Body>
-              <div className='row g-6 mt-2 ms-5 me-5'>
-                <div className='col-md-15'>
-                  <div className='form-group'>
-                    <label htmlFor='' className='mb-3'>
-                      Kota
-                    </label>
-                    <input
-                      className='form-control form-control form-control-solid'
-                      onChange={handleChangeFormik}
-                      // onBlur={formik.handleBlur}
-                      // value={valuesFormik?.Kota}
-                    />
-                  </div>
-                </div>
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant='secondary' onClick={handleClose}>
-                Close
-              </Button>
-              <Button type='submit'>
-                <i className='fa-solid fa-paper-plane'></i>
-                Simpan
-              </Button>
-            </Modal.Footer>
-          </form>
-        </Modal>
       </>
 
       <div className='table-responsive mt-30 ms-30 me-1'>
