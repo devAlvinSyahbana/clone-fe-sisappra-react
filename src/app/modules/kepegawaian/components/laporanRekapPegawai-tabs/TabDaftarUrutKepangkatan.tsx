@@ -1042,7 +1042,11 @@ export function TabDaftarUrutKepangkatan() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link to='#' onClick={handleFilterReset} className='me-2'>
+            <Link
+              to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK'
+              onClick={handleFilterReset}
+              className='me-2'
+            >
               <button className='btn btn-primary'>
                 <i className='fa-solid fa-plus'></i>
                 Tambah
