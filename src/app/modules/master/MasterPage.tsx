@@ -3,7 +3,9 @@ import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 
 import {Kota} from './components/Kota'
+import {LihatKota} from './components/Lihat-master/LihatKota'
 import {UpdateKota} from './components/Update-master/UpdateKota'
+import {TambahKota} from './components/Tambah-master/TambahKota'
 
 import {Kecamatan} from './components/Kecamatan'
 import {Kelurahan} from './components/Kelurahan'
@@ -71,6 +73,24 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Update Kota</PageTitle>
               <UpdateKota />
+            </>
+          }
+        />
+        <Route
+          path='Kota/LihatKota/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Kota</PageTitle>
+              <LihatKota />
+            </>
+          }
+        />
+        <Route
+          path='Kota/TambahKota'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Tambah Kota</PageTitle>
+              <TambahKota />
             </>
           }
         />
