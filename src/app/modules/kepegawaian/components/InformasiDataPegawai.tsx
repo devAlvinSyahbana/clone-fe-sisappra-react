@@ -173,7 +173,7 @@ export function InformasiDataPegawai() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/informasi-data-pegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          `/kepegawaian/informasi-data-pegawai/ubah-data-pribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
                           {replace: true}
                         )
                       }

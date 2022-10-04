@@ -141,9 +141,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataPribadi') && 'active')
+                      (location.pathname.includes('ubah-data-pribadi') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/ubah-data-pribadi/${id}/${status}`}
                   >
                     Data Pribadi
                   </Link>
@@ -152,9 +152,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataKeluarga') && 'active')
+                      (location.pathname.includes('ubah-data-keluarga') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataKeluarga/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/ubah-data-keluarga/${id}/${status}`}
                   >
                     Data Keluarga
                   </Link>
@@ -163,9 +163,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdatePendidikan') && 'active')
+                      (location.pathname.includes('ubah-data-pendidikan') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdatePendidikan/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/ubah-data-pendidikan/${id}/${status}`}
                   >
                     Pendidikan
                   </Link>
@@ -174,9 +174,9 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('UpdateDataKepegawaian') && 'active')
+                      (location.pathname.includes('ubah-data-kepegawian') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/UpdateDataKepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/ubah-data-kepegawaian/${id}/${status}`}
                   >
                     Data Kepegawaian
                   </Link>

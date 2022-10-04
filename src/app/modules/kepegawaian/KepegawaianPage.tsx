@@ -110,6 +110,7 @@ const KepegawaianPage: React.FC = () => {
           </>
         }
       >
+        {/* Start Routes informasi data pegawai */}
         <Route
           path='informasi-data-pegawai'
           element={
@@ -131,16 +132,88 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='UpdateInformasiDataPegawai'
+          path='informasi-data-pegawai/detail-data-pribadi/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>
-                Update Informasi Data Pegawai
-              </PageTitle>
-              {/* <UpdateInformasiDataPegawai /> */}
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Pribadi</PageTitle>
+              <DataPribadi />
             </>
           }
         />
+        <Route
+          path='informasi-data-pegawai/detail-data-keluarga/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Keluarga</PageTitle>
+              <DataKeluarga />
+            </>
+          }
+        />
+        <Route
+          path='informasi-data-pegawai/detail-data-pendidikan/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Pendidikan</PageTitle>
+              <Pendidikan />
+            </>
+          }
+        />
+        <Route
+          path='informasi-data-pegawai/detail-data-kepegawaian/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Kepegawaian</PageTitle>
+              <DataKepegawaian />
+            </>
+          }
+        />
+        <Route
+          path='informasi-data-pegawai/detail-hirarki-kepegawaian/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Hirarki Kepegawaian</PageTitle>
+              <HirarkiKepegawaian />
+            </>
+          }
+        />
+        <Route
+          path='informasi-data-pegawai/ubah-data-pribadi/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Ubah Data Pribadi</PageTitle>
+              <UpdateDataPribadi />
+            </>
+          }
+        />
+        <Route
+          path='informasi-data-pegawai/ubah-data-keluarga/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Ubah Data Keluarga</PageTitle>
+              <UpdateDataKeluarga />
+            </>
+          }
+        />
+        <Route
+          path='informasi-data-pegawai/ubah-data-pendidikan/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Ubah Pendidikan</PageTitle>
+              <UpdatePendidikan />
+            </>
+          }
+        />
+        <Route
+          path='informasi-data-pegawai/ubah-data-kepegawaian/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Ubah Data Kepegawaian</PageTitle>
+              <UpdateDataKepegawaian />
+            </>
+          }
+        />
+        {/* End Routes informasi data pegawai */}
+
         <Route
           path='HirarkiPegawai'
           element={
@@ -350,88 +423,6 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Rekapitulasi Piket Pegawai</PageTitle>
               <TabRekapitulasiPiketPegawai />
-            </>
-          }
-        />
-        <Route
-          path='informasi-data-pegawai/detail-data-pribadi/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Pribadi</PageTitle>
-              <DataPribadi />
-            </>
-          }
-        />
-        <Route
-          path='informasi-data-pegawai/detail-data-keluarga/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Keluarga</PageTitle>
-              <DataKeluarga />
-            </>
-          }
-        />
-        <Route
-          path='informasi-data-pegawai/detail-data-pendidikan/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Pendidikan</PageTitle>
-              <Pendidikan />
-            </>
-          }
-        />
-        <Route
-          path='informasi-data-pegawai/detail-data-kepegawaian/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Kepegawaian</PageTitle>
-              <DataKepegawaian />
-            </>
-          }
-        />
-        <Route
-          path='informasi-data-pegawai/detail-hirarki-kepegawaian/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Hirarki Kepegawaian</PageTitle>
-              <HirarkiKepegawaian />
-            </>
-          }
-        />
-
-        <Route
-          path='informasi-data-pegawai/UpdateDataPribadi/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Ubah Data Pribadi</PageTitle>
-              <UpdateDataPribadi />
-            </>
-          }
-        />
-        <Route
-          path='informasi-data-pegawai/UpdateDataKeluarga/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Ubah Data Keluarga</PageTitle>
-              <UpdateDataKeluarga />
-            </>
-          }
-        />
-        <Route
-          path='informasi-data-pegawai/UpdatePendidikan/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Ubah Pendidikan</PageTitle>
-              <UpdatePendidikan />
-            </>
-          }
-        />
-        <Route
-          path='informasi-data-pegawai/UpdateDataKepegawaian/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Ubah Data Kepegawaian</PageTitle>
-              <UpdateDataKepegawaian />
             </>
           }
         />

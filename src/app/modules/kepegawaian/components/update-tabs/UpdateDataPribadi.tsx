@@ -388,7 +388,7 @@ export function UpdateDataPribadi() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate(`/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${id}/${status}`, {
+              navigate(`/kepegawaian/informasi-data-pegawai/ubah-data-pribadi/${id}/${status}`, {
                 replace: true,
               })
             }
@@ -829,7 +829,7 @@ export function UpdateDataPribadi() {
                   <div className='text-center'>
                     <Link
                       className='text-reset text-decoration-none'
-                      to='/kepegawaian/InformasiDataPegawai'
+                      to='/kepegawaian/informasi-data-pegawai'
                     >
                       <button className='float-none btn btn-secondary align-self-center m-1'>
                         <i className='fa fa-close'></i>
