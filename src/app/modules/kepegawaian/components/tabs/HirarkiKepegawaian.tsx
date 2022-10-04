@@ -521,13 +521,13 @@ export function HirarkiKepegawaian() {
           <div className='text-center'>
             <Link
               className='text-reset text-decoration-none'
-              to='/kepegawaian/InformasiDataPegawai'
+              to='/kepegawaian/informasi-data-pegawai'
             >
               <button className='float-none btn btn-secondary align-self-center m-1'>Keluar</button>
             </Link>
             <Link
               className='text-reset text-decoration-none'
-              to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}
+              to={`/kepegawaian/informasi-data-pegawai/detail-data-kepegawaian/${id}/${status}`}
             >
               <button className='float-none btn btn-success align-self-center m-1'>
                 <i className='fa-solid fa-arrow-left'></i>
