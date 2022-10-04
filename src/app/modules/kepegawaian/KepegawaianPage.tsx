@@ -135,7 +135,7 @@ const KepegawaianPage: React.FC = () => {
           path='informasi-data-pegawai/detail-data-pribadi/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Pribadi</PageTitle>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Detail Data Pribadi</PageTitle>
               <DataPribadi />
             </>
           }
@@ -144,7 +144,7 @@ const KepegawaianPage: React.FC = () => {
           path='informasi-data-pegawai/detail-data-keluarga/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Keluarga</PageTitle>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Detail Data Keluarga</PageTitle>
               <DataKeluarga />
             </>
           }
@@ -153,7 +153,7 @@ const KepegawaianPage: React.FC = () => {
           path='informasi-data-pegawai/detail-data-pendidikan/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Pendidikan</PageTitle>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Detail Pendidikan</PageTitle>
               <Pendidikan />
             </>
           }
@@ -162,7 +162,7 @@ const KepegawaianPage: React.FC = () => {
           path='informasi-data-pegawai/detail-data-kepegawaian/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Data Kepegawaian</PageTitle>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Detail Data Kepegawaian</PageTitle>
               <DataKepegawaian />
             </>
           }
@@ -171,7 +171,7 @@ const KepegawaianPage: React.FC = () => {
           path='informasi-data-pegawai/detail-hirarki-kepegawaian/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Hirarki Kepegawaian</PageTitle>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>Detail Hirarki Kepegawaian</PageTitle>
               <HirarkiKepegawaian />
             </>
           }
