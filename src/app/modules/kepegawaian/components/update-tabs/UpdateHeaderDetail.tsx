@@ -174,7 +174,7 @@ const UpdateHeaderDetail = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('ubah-data-kepegawian') && 'active')
+                      (location.pathname.includes('ubah-data-kepegawaian') && 'active')
                     }
                     to={`/kepegawaian/informasi-data-pegawai/ubah-data-kepegawaian/${id}/${status}`}
                   >
