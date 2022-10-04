@@ -2,7 +2,7 @@
 // SVG Bg Icons
 //
 
-@mixin svg-bg-icon($type, $color: null, $update: false) {
+@mixin svg-bg-icon($type, $color: none, $update: false) {
     $bg-image: '';
 
     // Icon type;
@@ -42,6 +42,14 @@
         $bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='#{$color}'><path fill-rule='evenodd' clip-rule='evenodd' d='M2.06463 4.42111C1.96161 4.22088 1.9809 3.9637 2.12863 3.78597L5.12847 0.177181C5.31402 -0.046034 5.63049 -0.060261 5.83532 0.145404C6.04015 0.351069 6.05578 0.698744 5.87023 0.921959L3.19406 4.14137L5.84414 7.06417C6.03896 7.27904 6.03835 7.62686 5.84278 7.84105C5.64721 8.05524 5.33073 8.05469 5.13591 7.83982L2.14806 4.54449C2.1141 4.50704 2.08629 4.46541 2.06463 4.42111Z'/></svg>");
     }
 
+    @if ($type == expand) {
+        $bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'><rect opacity='0.3' x='2' y='2' width='20' height='20' rx='5' fill='#{$color}'/><rect x='10.8891' y='17.8033' width='12' height='2' rx='1' transform='rotate(-90 10.8891 17.8033)' fill='#{$color}'/><rect x='6.01041' y='10.9247' width='12' height='2' rx='1' fill='#{$color}'/></svg>");
+    }
+
+    @if ($type == collapse) {
+        $bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'><rect opacity='0.3' x='2' y='2' width='20' height='20' rx='5' fill='#{$color}'/><rect x='6.0104' y='10.9247' width='12' height='2' rx='1' fill='#{$color}'/></svg>");
+    } 
+
     // Icon style
     @if $update == false {
         mask-repeat: no-repeat;
@@ -50,7 +58,10 @@
         -webkit-mask-position: center;
     }   
         
-    background-color: $color;
+    @if $color != none {
+        background-color: $color;
+    }
+
     -webkit-mask-image: escape-svg($bg-image);
     mask-image: escape-svg($bg-image);
 }

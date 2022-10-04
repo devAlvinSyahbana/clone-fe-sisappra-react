@@ -9,13 +9,11 @@ import {useAuth} from '../core/Auth'
 
 const loginSchema = Yup.object().shape({
   no_pegawai: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Email is required'),
+    .required('Wajib diisi'),
   kata_sandi: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('kata_sandi is required'),
+    .required('Wajib diisi'),
 })
 
 const initialValues = {
@@ -46,7 +44,7 @@ export function Login() {
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
-        setStatus('Detail login salah')
+        setStatus('Akun tidak terdaftar!')
         setSubmitting(false)
         setLoading(false)
       }
@@ -61,8 +59,9 @@ export function Login() {
       id='kt_login_signin_form'
     >
       {/* begin::Heading */}
-      <div className='text-center mb-10'>
-        <h1 className='text-dark mb-3'>Login Aplikasi</h1>
+      <div className='text-center mb-11'>
+        <h1 className='text-dark fw-bolder mb-3'>Login Aplikasi</h1>
+        <div className='text-gray-500 fw-semibold fs-6'>Login untuk menggunakan aplikasi</div>
       </div>
       {/* begin::Heading */}
 
@@ -73,13 +72,13 @@ export function Login() {
       ) : null}
 
       {/* begin::Form group */}
-      <div className='fv-row mb-10'>
+      <div className='fv-row mb-8'>
         <label className='form-label fs-6 fw-bolder text-dark'>NRK/NPTT/NPJLP</label>
         <input
           placeholder='NRK/NPTT/NPJLP'
           {...formik.getFieldProps('no_pegawai')}
           className={clsx(
-            'form-control form-control-lg form-control-solid',
+            'form-control bg-transparent',
             {'is-invalid': formik.touched.no_pegawai && formik.errors.no_pegawai},
             {
               'is-valid': formik.touched.no_pegawai && !formik.errors.no_pegawai,
@@ -98,29 +97,14 @@ export function Login() {
       {/* end::Form group */}
 
       {/* begin::Form group */}
-      <div className='fv-row mb-10'>
-        <div className='d-flex justify-content-between mt-n5'>
-          <div className='d-flex flex-stack mb-2'>
-            {/* begin::Label */}
-            <label className='form-label fw-bolder text-dark fs-6 mb-0'>Kata Sandi</label>
-            {/* end::Label */}
-            {/* begin::Link */}
-            <Link
-              to='/auth/forgot-password'
-              className='link-primary fs-6 fw-bolder'
-              style={{marginLeft: '5px'}}
-            >
-              Lupa Kata Sandi ?
-            </Link>
-            {/* end::Link */}
-          </div>
-        </div>
+      <div className='fv-row mb-3'>
+        <label className='form-label fw-bolder text-dark fs-6 mb-0'>Password</label>
         <input
           type='password'
           autoComplete='off'
           {...formik.getFieldProps('kata_sandi')}
           className={clsx(
-            'form-control form-control-lg form-control-solid',
+            'form-control bg-transparent',
             {
               'is-invalid': formik.touched.kata_sandi && formik.errors.kata_sandi,
             },
@@ -139,18 +123,30 @@ export function Login() {
       </div>
       {/* end::Form group */}
 
+      {/* begin::Wrapper */}
+      <div className='d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8'>
+        <div />
+
+        {/* begin::Link */}
+        <Link to='/auth/forgot-password' className='link-primary'>
+          Lupa Password ?
+        </Link>
+        {/* end::Link */}
+      </div>
+      {/* end::Wrapper */}
+
       {/* begin::Action */}
-      <div className='text-center'>
+      <div className='d-grid mb-10'>
         <button
           type='submit'
           id='kt_sign_in_submit'
-          className='btn btn-lg btn-primary w-100 mb-5'
+          className='btn btn-primary'
           disabled={formik.isSubmitting || !formik.isValid}
         >
           {!loading && <span className='indicator-label'>Masuk</span>}
           {loading && (
             <span className='indicator-progress' style={{display: 'block'}}>
-              Mohon Tunggu...
+              Harap tunggu...
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>
           )}

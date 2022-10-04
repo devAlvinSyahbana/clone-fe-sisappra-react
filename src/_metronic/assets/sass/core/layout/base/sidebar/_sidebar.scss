@@ -84,11 +84,11 @@
         }
 
         [data-kt-app-sidebar-fixed="true"] & {
-            @include property( z-index, $app-sidebar-fixed-z-index);
             position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
+            @include property( z-index, $app-sidebar-fixed-z-index);
+            @include property( top, $app-sidebar-fixed-top);
+            @include property( bottom, $app-sidebar-fixed-bottom);
+            @include property( left, $app-sidebar-fixed-left);
         }  
 
         [data-kt-app-sidebar-stacked="true"] & {

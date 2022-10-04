@@ -4,7 +4,10 @@
 
 // Base
 .toastr {
-    background-position: 1.5rem center #{'/*rtl:calc(100% - 1.5rem) center*/'} !important;
+    // this is for RTL
+    background-position: calc(100% - 1.5rem) center !important;
+    /*rtl:ignore*/
+    background-position: 1.5rem center !important;
     box-shadow: var(--kt-dropdown-box-shadow) !important;
 	border-radius: $dropdown-border-radius !important;
 	border: 0 !important;

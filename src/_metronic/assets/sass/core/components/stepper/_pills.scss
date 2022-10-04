@@ -129,7 +129,7 @@
         }
 
         // Completed
-        &.current:last-child,
+        &.current.mark-completed:last-child,
         &.completed {
             .stepper-icon {
                 transition: $transition-link;

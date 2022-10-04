@@ -1,3 +1,4 @@
+import {themeMenuModeLSKey, themeModelSKey} from '../../../partials'
 import {EventHandlerUtil} from '../_utils'
 
 type Mode = 'light' | 'dark' | 'system'
@@ -6,21 +7,14 @@ class ThemeMode {
   menu: HTMLElement | null = null
   element: HTMLElement | null = null
 
-  private getParamName = (postfix: string): string => {
-    const ktName = document.body.hasAttribute('data-kt-name')
-    const name = ktName ? ktName + '_' : ''
-    return 'kt_' + name + 'theme_mode_' + postfix
-  }
-
   public getMode = (): Mode => {
-    const modeParam: string = this.getParamName('value')
     const menuMode: Mode | '' = this.getMenuMode()
     const defaultMode = 'light'
     if (!localStorage) {
       return defaultMode
     }
 
-    const ls = localStorage.getItem(modeParam)
+    const ls = localStorage.getItem(themeModelSKey)
     if (ls) {
       return ls as Mode
     }
@@ -47,10 +41,6 @@ class ThemeMode {
       return
     }
 
-    // Get param names
-    const modeParam: string = this.getParamName('value')
-    const menuModeParam: string = this.getParamName('menu')
-
     // Reset mode if system mode was changed
     if (menuMode === 'system') {
       if (this.getSystemMode() !== mode) {
@@ -68,25 +58,25 @@ class ThemeMode {
       this.menu?.querySelector('[data-kt-element="mode"][data-kt-value="' + menuMode + '"]') || null
 
     // Enable switching state
-		this.element?.setAttribute("data-kt-theme-mode-switching", "true");
+    this.element?.setAttribute('data-kt-theme-mode-switching', 'true')
 
     // Set mode to the target element
-    this.element?.setAttribute('data-theme', mode);
+    this.element?.setAttribute('data-theme', mode)
 
     // Disable switching state
-    const self = this;
-		setTimeout(function() {
-			self.element?.removeAttribute("data-kt-theme-mode-switching");
-		}, 300);
+    const self = this
+    setTimeout(function () {
+      self.element?.removeAttribute('data-kt-theme-mode-switching')
+    }, 300)
 
     // Store mode value in storage
     if (localStorage) {
-      localStorage.setItem(modeParam, mode)
+      localStorage.setItem(themeModelSKey, mode)
     }
 
     // Set active menu item
     if (activeMenuItem && localStorage) {
-      localStorage.setItem(menuModeParam, menuMode)
+      localStorage.setItem(themeMenuModeLSKey, menuMode)
       this.setActiveMenuItem(activeMenuItem)
     }
 
@@ -95,18 +85,13 @@ class ThemeMode {
   }
 
   public getMenuMode = (): Mode | '' => {
-    const menuModeParam = this.getParamName('menu')
     const menuItem = this.menu?.querySelector('.active[data-kt-element="mode"]')
     const dataKTValue = menuItem?.getAttribute('data-kt-value')
     if (dataKTValue) {
       return dataKTValue as Mode
     }
 
-    if (!menuModeParam) {
-      return ''
-    }
-
-    const ls = localStorage ? localStorage.getItem(menuModeParam) : null
+    const ls = localStorage ? localStorage.getItem(themeMenuModeLSKey) : null
     return (ls as Mode) || ''
   }
 
@@ -130,7 +115,6 @@ class ThemeMode {
   }
 
   private setActiveMenuItem = (item: HTMLElement): void => {
-    const menuModeParam = this.getParamName('menu')
     const menuMode = item.getAttribute('data-kt-value')
     const activeItem = this.menu?.querySelector('.active[data-kt-element="mode"]')
     if (activeItem) {
@@ -138,8 +122,8 @@ class ThemeMode {
     }
 
     item.classList.add('active')
-    if (localStorage && menuMode && menuModeParam) {
-      localStorage.setItem(menuModeParam, menuMode)
+    if (localStorage && menuMode) {
+      localStorage.setItem(themeMenuModeLSKey, menuMode)
     }
   }
 

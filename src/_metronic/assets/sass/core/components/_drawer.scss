@@ -11,7 +11,7 @@
 	top: 0;
 	bottom: 0;
 	background-color: var(--kt-drawer-bg-color);
-	transition: transform $drawer-transition-speed ease-in-out;
+	transition: transform $drawer-transition-speed ease-in-out !important;
 
 	&.drawer-start {
 		left: 0;
@@ -26,7 +26,7 @@
 	&.drawer-on {
 		transform: none;
 		box-shadow: var(--kt-drawer-box-shadow);
-		transition: transform $drawer-transition-speed ease-in-out;
+		transition: transform $drawer-transition-speed ease-in-out !important;
 	}
 }
 

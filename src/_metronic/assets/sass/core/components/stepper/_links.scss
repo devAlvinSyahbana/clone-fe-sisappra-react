@@ -46,6 +46,7 @@
 				}				                              
 			} 
 			
+			&.current.mark-completed:last-child,
 			&.completed {
 				.stepper-title {
 					color: var(--kt-gray-400);

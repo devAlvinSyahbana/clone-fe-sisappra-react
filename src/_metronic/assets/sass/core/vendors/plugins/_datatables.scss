@@ -121,6 +121,10 @@ div.dataTables_wrapper {
         width: auto;
         padding: 1rem 2rem !important;
         transform: translateX(-50%) translateY(-50%);
+
+        > div {
+            display: none;    
+        }
     }
 }
 
@@ -135,6 +139,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control {
         height: $icon-size;
         width: $icon-size;
         line-height: 1.5;
+        text-indent: -999px !important;
         margin-top: -(divide($icon-size, 2));
         margin-right: divide($icon-size, 2);
         display: inline-block;
@@ -142,21 +147,24 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control {
         font-size: 1.05rem;
         border: 0;
         box-shadow: none;
-        text-align: center;
-        text-indent: 0 !important;    
-        content: "+";        
-        color:var(--kt-gray-700);
-        font-family: $font-family-sans-serif;
-        background-color: var(--kt-gray-300);
-        @include border-radius($border-radius);
+        mask-size: 85%;
+        -webkit-mask-size: 85%;
+        content: ".";
+
+        :root &,
+        [data-theme="light"] & {
+            @include svg-bg-icon(expand, $gray-600);  
+        }
+
+        [data-theme="dark"] & {
+            @include svg-bg-icon(expand, $gray-600-dark);  
+        }
     }
 }
 
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control:before, 
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before {
-    content: "-";
-    background-color:var(--kt-primary);
-    color: var(--kt-primary-inverse);
+    @include svg-bg-icon(collapse, $primary);
 }
 
 table.dataTable > tbody > tr.child span.dtr-title {
@@ -177,6 +185,17 @@ table.dataTable.table-striped > tbody > tr.odd > * {
 table.dataTable > tbody > tr.selected > * {
     box-shadow: inset 0 0 0 9999px var(--kt-primary);
     color: var(--kt-primary-inverse);
+
+    a:not([class="btn"]) {
+        color: var(--kt-primary-light);
+        font-weight: $font-weight-semibold;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+
+        &:hover {
+            color: var(--kt-primary-inverse);
+        }
+    }
 }
 
 // Scroll

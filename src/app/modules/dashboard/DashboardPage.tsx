@@ -12,7 +12,7 @@ import {PetaPlotingAnggota} from './components/Peta-Ploting-Anggota'
 
 const dashboardBreadCrumbs: Array<PageLink> = [
   {
-    title: 'Dashboard',
+    title: 'Dashboards',
     path: '/dashboard/dashboard-kepegawaian',
     isSeparator: false,
     isActive: false,
