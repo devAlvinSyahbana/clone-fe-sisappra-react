@@ -35,7 +35,7 @@ $app-main-margin-x: null !default;
 $app-main-margin-x-mobile: null !default;
 
 // Wrapper
-$app-wrapper-transition: margin $app-general-transition-duration $app-general-transition-timing;
+$app-wrapper-transition: margin-left $app-general-transition-duration $app-general-transition-timing, margin-right $app-general-transition-duration $app-general-transition-timing;
 $app-wrapper-bg-color: null !default;
 $app-wrapper-bg-color-dark: null !default;
 
@@ -291,6 +291,9 @@ $app-sidebar-base-gap-bottom-mobile: 0px !default;
 
 // Sidebar fixed
 $app-sidebar-fixed-z-index: 105 !default;
+$app-sidebar-fixed-left: 0 !default;
+$app-sidebar-fixed-top: 0 !default;
+$app-sidebar-fixed-bottom: 0 !default;
 
 // Sidebar sticky
 $app-sidebar-sticky-top: auto !default;
@@ -347,8 +350,8 @@ $app-sidebar-minimize-gap-bottom-mobile: 0px !default;
 $app-sidebar-primary-base-transition: none !default;
 $app-sidebar-primary-base-width: 100px !default;
 $app-sidebar-primary-base-width-mobile: 100px !default;
-$app-sidebar-primary-base-z-index: 107 !default;
-$app-sidebar-primary-base-z-index-mobile: 108 !default;
+$app-sidebar-primary-base-z-index: 1 !default;
+$app-sidebar-primary-base-z-index-mobile: 1 !default;
 $app-sidebar-primary-base-bg-color: null !default;
 $app-sidebar-primary-base-bg-color-dark: null !default;
 $app-sidebar-primary-base-bg-color-mobile: null !default;
@@ -408,8 +411,8 @@ $app-sidebar-primary-minimize-gap-bottom-mobile: 0px !default;
 
 // Sidebar secondary
 $app-sidebar-secondary-base-transition: none !default;
-$app-sidebar-secondary-base-z-index: 106 !default;
-$app-sidebar-secondary-base-z-index-mobile: 107 !default;
+$app-sidebar-secondary-base-z-index: null !default;
+$app-sidebar-secondary-base-z-index-mobile: null !default;
 $app-sidebar-secondary-base-bg-color: null !default;
 $app-sidebar-secondary-base-bg-color-dark: null !default;
 $app-sidebar-secondary-base-bg-color-mobile: null !default;
@@ -589,6 +592,9 @@ $app-aside-base-gap-bottom-mobile: 0px !default;
 
 // Aside fixed
 $app-aside-fixed-z-index: 105 !default;
+$app-aside-fixed-right: 0 !default;
+$app-aside-fixed-top: 0 !default;
+$app-aside-fixed-bottom: 0 !default;
 
 // Aside sticky
 $app-aside-sticky-top: auto !default;
