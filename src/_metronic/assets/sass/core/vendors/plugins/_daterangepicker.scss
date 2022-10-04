@@ -41,10 +41,14 @@
     .ranges {
         @include border-radius($dropdown-border-radius);
         background-color: var(--kt-body-bg);
+        position: relative;
+        overflow: hidden;
 
         ul {
             padding: 1rem 0;
-            width: 175px;
+            width: $daterangepicker-ranges-list-width;
+            overflow: auto;
+            max-height: $daterangepicker-ranges-list-height;
         }
 
         li {

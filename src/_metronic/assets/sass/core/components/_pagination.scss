@@ -61,7 +61,7 @@
 		align-items: center;
 		border-radius: $btn-border-radius;
 		height: $pagination-item-height;
-		width: $pagination-item-height;
+		min-width: $pagination-item-height;
 		font-weight: $pagination-font-weight;
 		font-size: $pagination-font-size;
 

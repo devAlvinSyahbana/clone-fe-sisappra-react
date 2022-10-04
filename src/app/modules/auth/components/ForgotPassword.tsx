@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import {Link} from 'react-router-dom'
 import axios from 'axios'
 import {KontakPICModel} from '../core/_models'
 
@@ -27,33 +28,39 @@ export function ForgotPassword() {
   }, [])
 
   return (
-    <>
-      <form
-        className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework'
-        noValidate
-        id='kt_login_password_reset_form'
-      >
-        <div className='text-center mb-10'>
-          {/* begin::Title */}
-          <h1 className='text-dark mb-3'>Lupa Kata Sandi ?</h1>
-          {/* end::Title */}
+    <form
+      className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework'
+      noValidate
+      id='kt_login_password_reset_form'
+    >
+      <div className='text-center mb-10'>
+        {/* begin::Title */}
+        <h1 className='text-dark fw-bolder mb-3'>Lupa Password ?</h1>
+        {/* end::Title */}
 
-          {/* begin::Link */}
-          <div className='text-gray-400 fw-bold fs-4'>
-            Untuk melakukan pengaturan ulang kata sandi dapat menghubungi Admin melalui email
-            berikut:
-          </div>
-          {/* end::Link */}
+        {/* begin::Link */}
+        <div className='text-gray-500 fw-semibold fs-6'>
+          Untuk melakukan pengaturan ulang kata sandi dapat menghubungi Admin melalui email berikut:
         </div>
-
-        {/* begin::Form group */}
-        <div className='fv-row mb-10 text-center'>
-          {/* begin::Title */}
-          <a href={`mailto:${value.email}`}><h1 className='text-dark mb-3'>{value.email}</h1></a>
-          {/* end::Title */}
+        {/* end::Link */}
+      </div>
+      <div className='mb-10 p-8 rounded alert alert-primary text-center'>
+        <div className='alert-text font-weight-bold'>
+          {value.email && <a href={`mailto:${value.email}`}>{value.email}</a>}
         </div>
-        {/* end::Form group */}
-      </form>
-    </>
+      </div>
+      <div className='text-center'>
+        <Link to='/auth/login'>
+          <button
+            type='button'
+            id='kt_login_signup_form_cancel_button'
+            className='btn btn-lg btn-light-primary w-100 mb-5'
+          >
+            Kembali
+          </button>
+        </Link>
+      </div>
+      {/* end::Form group */}
+    </form>
   )
 }
