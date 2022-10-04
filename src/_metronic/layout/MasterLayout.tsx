@@ -1,48 +1,41 @@
 import {useEffect} from 'react'
-import {Outlet} from 'react-router-dom'
-import {AsideDefault} from './components/aside/AsideDefault'
-import {Footer} from './components/Footer'
-import {HeaderWrapper} from './components/header/HeaderWrapper'
-import {Toolbar} from './components/toolbar/Toolbar'
-import {ScrollTop} from './components/ScrollTop'
-import {Content} from './components/Content'
-import {PageDataProvider} from './core'
-import {useLocation} from 'react-router-dom'
+import {Outlet, useLocation} from 'react-router-dom'
+import {HeaderWrapper} from './components/header'
+import {ScrollTop} from './components/scroll-top'
+import {Content} from './components/content'
+import {FooterWrapper} from './components/footer'
+import {Sidebar} from './components/sidebar'
 import {
   ThemeModeProvider,
 } from '../partials'
-import {MenuComponent} from '../assets/ts/components'
+import {PageDataProvider} from './core'
+import {reInitMenu} from '../helpers'
+import {ToolbarWrapper} from './components/toolbar'
 
 const MasterLayout = () => {
   const location = useLocation()
   useEffect(() => {
-    setTimeout(() => {
-      MenuComponent.reinitialization()
-    }, 500)
-  }, [])
-
-  useEffect(() => {
-    setTimeout(() => {
-      MenuComponent.reinitialization()
-    }, 500)
+    reInitMenu()
   }, [location.key])
 
   return (
     <PageDataProvider>
       <ThemeModeProvider>
-        <div className='page d-flex flex-row flex-column-fluid'>
-          <AsideDefault />
-          <div className='wrapper d-flex flex-column flex-row-fluid' id='kt_wrapper'>
+        <div className='d-flex flex-column flex-root app-root' id='kt_app_root'>
+          <div className='app-page flex-column flex-column-fluid' id='kt_app_page'>
             <HeaderWrapper />
-            <div id='kt_content' className='content d-flex flex-column flex-column-fluid'>
-              <Toolbar />
-              <div className='post d-flex flex-column-fluid' id='kt_post'>
-                <Content>
-                  <Outlet />
-                </Content>
+            <div className='app-wrapper flex-column flex-row-fluid' id='kt_app_wrapper'>
+              <Sidebar />
+              <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
+                <div className='d-flex flex-column flex-column-fluid'>
+                  <ToolbarWrapper />
+                  <Content>
+                    <Outlet />
+                  </Content>
+                </div>
+                <FooterWrapper />
               </div>
             </div>
-            <Footer />
           </div>
         </div>
         <ScrollTop />

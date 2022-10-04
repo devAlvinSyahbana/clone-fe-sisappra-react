@@ -1,8 +1,9 @@
 //
-// Page loader
+// Page loader(used by the previous layout system)
 //
 
 // CSS3 Transitions only after page load(.page-loading class added to body tag and remove with JS on page load)
+[data-kt-app-page-loading="on"] *,
 .page-loading * {
     transition: none !important;
 }
@@ -18,6 +19,7 @@
 	z-index: 1000;
    	display: none;
 
+	[data-kt-app-page-loading="on"] &,
    	.page-loading & {
 		display: flex;
 		justify-content: center;
