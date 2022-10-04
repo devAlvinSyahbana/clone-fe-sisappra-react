@@ -9,11 +9,18 @@ import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 
 const PrivateRoutes = () => {
-  const PelaporanPage = lazy(() => import('../modules/pelaporan/PelaporanPage'))
-  const KepegawaianPage = lazy(() => import('../modules/kepegawaian/KepegawaianPage'))
-  const SaranaPrasaranaPage = lazy(() => import('../modules/sarana_prasarana/SaranaPrasaranaPage'))
-  const MasterPage = lazy(() => import('../modules/master/MasterPage'))
   const DashboardPage = lazy(() => import('../modules/dashboard/DashboardPage'))
+  const SaranaPrasaranaPage = lazy(() => import('../modules/sarana_prasarana/SaranaPrasaranaPage'))
+  const KepegawaianPage = lazy(() => import('../modules/kepegawaian/KepegawaianPage'))
+  const MasterPage = lazy(() => import('../modules/master/MasterPage'))
+  const PelaporanPage = lazy(() => import('../modules/pelaporan/PelaporanPage'))
+
+  const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
+  const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
+  const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
+  const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
+  const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
+  const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
 
   return (
     <Routes>
@@ -26,10 +33,18 @@ const PrivateRoutes = () => {
         <Route path='menu-test' element={<MenuTestPage />} />
         {/* Lazy Modules */}
         <Route
-          path='pelaporan/*'
+          path='dashboard/*'
           element={
             <SuspensedView>
-              <PelaporanPage />
+              <DashboardPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='sarana-prasarana/*'
+          element={
+            <SuspensedView>
+              <SaranaPrasaranaPage />
             </SuspensedView>
           }
         />
@@ -42,6 +57,14 @@ const PrivateRoutes = () => {
           }
         />
         <Route
+          path='pelaporan/*'
+          element={
+            <SuspensedView>
+              <PelaporanPage />
+            </SuspensedView>
+          }
+        />
+        <Route
           path='master/*'
           element={
             <SuspensedView>
@@ -49,20 +72,51 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />
-        
-         <Route
-          path='sarana-prasarana/*'
+        <Route
+          path='crafted/pages/profile/*'
           element={
             <SuspensedView>
-              <SaranaPrasaranaPage />
+              <ProfilePage />
             </SuspensedView>
           }
         />
         <Route
-          path='dashboard/*'
+          path='crafted/pages/wizards/*'
           element={
             <SuspensedView>
-              <DashboardPage />
+              <WizardsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='crafted/widgets/*'
+          element={
+            <SuspensedView>
+              <WidgetsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='crafted/account/*'
+          element={
+            <SuspensedView>
+              <AccountPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='apps/chat/*'
+          element={
+            <SuspensedView>
+              <ChatPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='apps/user-management/*'
+          element={
+            <SuspensedView>
+              <UsersPage />
             </SuspensedView>
           }
         />

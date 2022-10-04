@@ -11,7 +11,9 @@
 
     // Bootstrap color system
     --kt-white: #{$white};
+    --kt-white-bg-rgb: #{to-rgb($white)};
     --kt-black: #{$black};
+    --kt-black-bg-rgb: #{to-rgb($black)};
 
     // Bootstrap muted color
     --kt-text-muted: #{$text-muted};
@@ -73,9 +75,8 @@
     --kt-component-active-bg: #{$component-active-bg};
     --kt-component-hover-color: #{$component-hover-color};
     --kt-component-hover-bg: #{$component-hover-bg};
-
-    --kt-hover-bg: #{$hover-bg};
-    --kt-active-bg: #{$active-bg};
+    --kt-component-checked-color: #{$component-checked-color};
+    --kt-component-checked-bg: #{$component-checked-bg};
 
     // Box shadow
     --kt-box-shadow-xs: #{$box-shadow-xs};
@@ -394,11 +395,15 @@
     // Keenthemes menu component
     --kt-menu-dropdown-box-shadow: #{$menu-dropdown-box-shadow};
     --kt-menu-dropdown-bg-color: #{$menu-dropdown-bg-color};
+    --kt-menu-heading-color: #{$menu-heading-color};
+    --kt-menu-link-color-hover: #{$menu-link-color-hover};
+    --kt-menu-link-color-show: #{$menu-link-color-show};
+    --kt-menu-link-color-here: #{$menu-link-color-here};
+    --kt-menu-link-color-active: #{$menu-link-color-active};
     --kt-menu-link-bg-color-hover: #{$menu-link-bg-color-hover};
     --kt-menu-link-bg-color-show: #{$menu-link-bg-color-show};
     --kt-menu-link-bg-color-here: #{$menu-link-bg-color-here};
-    --kt-menu-link-bg-color-active: #{$menu-link-bg-color-active};
-    --kt-menu-heading-color: #{$menu-heading-color};
+    --kt-menu-link-bg-color-active: #{$menu-link-bg-color-active};    
 
     // Keenthemes feedback component
     --kt-feedback-popup-box-shadow: #{$feedback-popup-box-shadow};
@@ -426,6 +431,11 @@
     --kt-ribbon-label-bg: #{$ribbon-label-bg};
     --kt-ribbon-label-border-color: #{$ribbon-label-border-color};
     --kt-ribbon-clip-bg: #{$ribbon-clip-bg}; 
+
+    // Engage panel
+    --kt-engage-btn-bg: #{$engage-btn-bg};
+    --kt-engage-btn-color: #{$engage-btn-color};
+    --kt-engage-btn-color-active: #{$engage-btn-color-active};
 }
 
 [data-theme="dark"] {
@@ -489,9 +499,8 @@
     --kt-component-active-bg: #{$component-active-bg-dark};
     --kt-component-hover-color: #{$component-hover-color-dark};
     --kt-component-hover-bg: #{$component-hover-bg-dark};
-
-    --kt-hover-bg: #{$hover-bg-dark};
-    --kt-active-bg: #{$active-bg-dark};
+    --kt-component-checked-color: #{$component-checked-color-dark};
+    --kt-component-checked-bg: #{$component-checked-bg-dark};
 
     // Box shadow
     --kt-box-shadow-xs: #{$box-shadow-xs-dark};
@@ -814,11 +823,17 @@
     // Keenthemes menu component
     --kt-menu-dropdown-box-shadow: #{$menu-dropdown-box-shadow-dark};
     --kt-menu-dropdown-bg-color: #{$menu-dropdown-bg-color-dark};
+    --kt-menu-heading-color: #{$menu-heading-color-dark};
+    
+    --kt-menu-link-color-hover: #{$menu-link-color-hover-dark};
+    --kt-menu-link-color-show: #{$menu-link-color-show-dark};
+    --kt-menu-link-color-here: #{$menu-link-color-here-dark};
+    --kt-menu-link-color-active: #{$menu-link-color-active-dark};
     --kt-menu-link-bg-color-hover: #{$menu-link-bg-color-hover-dark};
     --kt-menu-link-bg-color-show: #{$menu-link-bg-color-show-dark};
     --kt-menu-link-bg-color-here: #{$menu-link-bg-color-here-dark};
     --kt-menu-link-bg-color-active: #{$menu-link-bg-color-active-dark};
-    --kt-menu-heading-color: #{$menu-heading-color-dark};
+    
 
     // Keenthemes feedback component
     --kt-feedback-popup-box-shadow: #{$feedback-popup-box-shadow-dark};
@@ -843,4 +858,9 @@
     --kt-ribbon-label-bg: #{$ribbon-label-bg-dark};
     --kt-ribbon-label-border-color: #{$ribbon-label-border-color-dark};
     --kt-ribbon-clip-bg: #{$ribbon-clip-bg-dark};  
+
+    // Engage panel
+    --kt-engage-btn-bg: #{$engage-btn-bg-dark};
+    --kt-engage-btn-color: #{$engage-btn-color-dark};
+    --kt-engage-btn-color-active: #{$engage-btn-color-active-dark};
 }

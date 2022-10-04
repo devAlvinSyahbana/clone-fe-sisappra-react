@@ -2,6 +2,47 @@
 // Custom background helpers
 //
 
+// Background white color
+.bg-white {
+	--kt-bg-rgb-color: var(--kt-white-bg-rgb);
+	background-color: $black !important;
+}
+
+// Background black color
+.bg-black {
+	--kt-bg-rgb-color: var(--kt-black-bg-rgb);
+	background-color: $black !important;
+}
+
+// Background body color
+.bg-body {
+	--kt-bg-rgb-color: var(--kt-body-bg-rgb);
+	background-color: var(--kt-body-bg) !important;
+}
+
+.bg-hover-body {
+	cursor: pointer;
+
+	&:hover {
+			background-color: var(--kt-body-bg) !important;
+	}
+}
+
+.bg-active-body {
+	&.active {
+		background-color: var(--kt-body-bg) !important;
+	}
+}
+
+.bg-state-body {
+	cursor: pointer;
+
+	&.active,
+	&:hover {				
+		background-color: var(--kt-body-bg) !important;
+	}
+}
+
 // Background theme light colors
 @each $name, $value in $theme-colors {
 	@if (theme-light-color($name)) {
@@ -89,17 +130,6 @@
 			background-color: rgba(var(--kt-bg-rgb-color), #{$value}) !important;
 		}		
 	}
-}
-
-// Background black color
-.bg-black {
-	background-color: $black;
-}
-
-// Background body color
-.bg-body {
-	--bg-color: var(--kt-body-bg-rgb);
-	background-color: var(--kt-body-bg) !important;
 }
 
 // Background image helpers
