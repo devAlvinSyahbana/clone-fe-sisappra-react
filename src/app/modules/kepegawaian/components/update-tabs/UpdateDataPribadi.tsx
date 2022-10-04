@@ -7,6 +7,7 @@ import {DetailPegawaiInterface, SelectOptionAutoCom} from '../KepegawaianInterfa
 import {Formik, Field, FormikHelpers} from 'formik'
 import moment from 'moment'
 import Swal from 'sweetalert2'
+import {any} from '@amcharts/amcharts5/.internal/core/util/Array'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -25,6 +26,14 @@ export function UpdateDataPribadi() {
     const fetchData = async () => {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
       setData((prevstate) => ({...prevstate, ...response.data.data}))
+      getProvVal(response.data.data.domisili_provinsi, 'domisili_provinsi')
+      getProvVal(response.data.data.sesuai_ktp_provinsi, 'sesuai_ktp_provinsi')
+      getKabKotaVal(response.data.data.domisili_kabkota, 'domisili_kabkota')
+      getKabKotaVal(response.data.data.sesuai_ktp_kabkota, 'sesuai_ktp_kabkota')
+      getKecVal(response.data.data.domisili_kecamatan, 'domisili_kecamatan')
+      getKecVal(response.data.data.sesuai_ktp_kecamatan, 'sesuai_ktp_kecamatan')
+      getKelVal(response.data.data.domisili_kelurahan, 'domisili_kelurahan')
+      getKelVal(response.data.data.sesuai_ktp_kelurahan, 'sesuai_ktp_kelurahan')
     }
     fetchData()
   }, [setData, id, status])
@@ -274,6 +283,116 @@ export function UpdateDataPribadi() {
       ...prevValues,
       [name]: value,
     }))
+  }
+
+  const [valProvKTP, setValProvKTP] = useState({value: '', label: ''})
+  const [valProvDomisili, setValProvDomisili] = useState({value: '', label: ''})
+  const getProvVal = async (params: any, field: string) => {
+    return await axios
+      .get(`${GLOBAL_URL}/global-provinsi/findone/${params}`)
+      .then((response) => {
+        if (field === 'sesuai_ktp_provinsi') {
+          setidOptProvKTP(response?.data?.data?.id)
+          setValProvKTP((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.name,
+          }))
+        }
+        if (field === 'domisili_provinsi') {
+          setidOptProvDom(response?.data?.data?.id)
+          setValProvDomisili((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.name,
+          }))
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  const [valKabKotaKTP, setValKabKotaKTP] = useState({value: '', label: ''})
+  const [valKabKotaDomisili, setValKabKotaDomisili] = useState({value: '', label: ''})
+  const getKabKotaVal = async (params: any, field: string) => {
+    return await axios
+      .get(`${GLOBAL_URL}/global-kab-kota/findone/${params}`)
+      .then((response) => {
+        if (field === 'sesuai_ktp_kabkota') {
+          setidOptKotKTP(response?.data?.data?.id)
+          setValKabKotaKTP((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.name,
+          }))
+        }
+        if (field === 'domisili_kabkota') {
+          setidOptKotDom(response?.data?.data?.id)
+          setValKabKotaDomisili((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.name,
+          }))
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  const [valKecKTP, setValKecKTP] = useState({value: '', label: ''})
+  const [valKecDomisili, setValKecDomisili] = useState({value: '', label: ''})
+  const getKecVal = async (params: any, field: string) => {
+    return await axios
+      .get(`${GLOBAL_URL}/global-kecamatan/findone/${params}`)
+      .then((response) => {
+        if (field === 'sesuai_ktp_kecamatan') {
+          setidOptKecKTP(response?.data?.data?.id)
+          setValKecKTP((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.name,
+          }))
+        }
+        if (field === 'domisili_kecamatan') {
+          setidOptKecDom(response?.data?.data?.id)
+          setValKecDomisili((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.name,
+          }))
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  const [valKelKTP, setValKelKTP] = useState({value: '', label: ''})
+  const [valKelDomisili, setValKelDomisili] = useState({value: '', label: ''})
+  const getKelVal = async (params: any, field: string) => {
+    return await axios
+      .get(`${GLOBAL_URL}/global-kelurahan/findone/${params}`)
+      .then((response) => {
+        if (field === 'sesuai_ktp_kelurahan') {
+          setValKelKTP((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.name,
+          }))
+        }
+        if (field === 'domisili_kelurahan') {
+          setValKelDomisili((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.name,
+          }))
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   return (
@@ -608,13 +727,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.sesuai_ktp_provinsi
                               ? valuesFormik?.sesuai_ktp_provinsi
-                              : data?.sesuai_ktp_provinsi
-                              ? {
-                                  value: data?.sesuai_ktp_provinsi,
-                                  label: data?.sesuai_ktp_provinsi
-                                    ? data?.sesuai_ktp_provinsi
-                                    : '-',
-                                }
+                              : valProvKTP && valProvKTP.label !== ''
+                              ? valProvKTP
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_provinsi')}
@@ -632,11 +746,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.sesuai_ktp_kabkota
                               ? valuesFormik?.sesuai_ktp_kabkota
-                              : data?.sesuai_ktp_kabkota
-                              ? {
-                                  value: data?.sesuai_ktp_kabkota,
-                                  label: data?.sesuai_ktp_kabkota ? data?.sesuai_ktp_kabkota : '-',
-                                }
+                              : valKabKotaKTP && valKabKotaKTP.label !== ''
+                              ? valKabKotaKTP
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kabkota')}
@@ -658,13 +769,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.sesuai_ktp_kecamatan
                               ? valuesFormik?.sesuai_ktp_kecamatan
-                              : data?.sesuai_ktp_kecamatan
-                              ? {
-                                  value: data?.sesuai_ktp_kecamatan,
-                                  label: data?.sesuai_ktp_kecamatan
-                                    ? data?.sesuai_ktp_kecamatan
-                                    : '-',
-                                }
+                              : valKecKTP && valKecKTP.label !== ''
+                              ? valKecKTP
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kecamatan')}
@@ -682,13 +788,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.sesuai_ktp_kelurahan
                               ? valuesFormik?.sesuai_ktp_kelurahan
-                              : data?.sesuai_ktp_kelurahan
-                              ? {
-                                  value: data?.sesuai_ktp_kelurahan,
-                                  label: data?.sesuai_ktp_kelurahan
-                                    ? data?.sesuai_ktp_kelurahan
-                                    : '-',
-                                }
+                              : valKelKTP && valKelKTP.label !== '' 
+                              ? valKelKTP
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kelurahan')}
@@ -741,11 +842,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.domisili_provinsi
                               ? valuesFormik?.domisili_provinsi
-                              : data?.domisili_provinsi
-                              ? {
-                                  value: data?.domisili_provinsi,
-                                  label: data?.domisili_provinsi ? data?.domisili_provinsi : '-',
-                                }
+                              : valProvDomisili && valProvDomisili.label !== ''
+                              ? valProvDomisili
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'domisili_provinsi')}
@@ -763,11 +861,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.domisili_kabkota
                               ? valuesFormik?.domisili_kabkota
-                              : data?.domisili_kabkota
-                              ? {
-                                  value: data?.domisili_kabkota,
-                                  label: data?.domisili_kabkota ? data?.domisili_kabkota : '-',
-                                }
+                              : valKabKotaDomisili && valKabKotaDomisili.label !== ''
+                              ? valKabKotaDomisili
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'domisili_kabkota')}
@@ -789,11 +884,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.domisili_kecamatan
                               ? valuesFormik?.domisili_kecamatan
-                              : data?.domisili_kecamatan
-                              ? {
-                                  value: data?.domisili_kecamatan,
-                                  label: data?.domisili_kecamatan ? data?.domisili_kecamatan : '-',
-                                }
+                              : valKecDomisili && valKecDomisili.label !== ''
+                              ? valKecDomisili
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'domisili_kecamatan')}
@@ -811,11 +903,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.domisili_kelurahan
                               ? valuesFormik?.domisili_kelurahan
-                              : data?.domisili_kelurahan
-                              ? {
-                                  value: data?.domisili_kelurahan,
-                                  label: data?.domisili_kelurahan ? data?.domisili_kelurahan : '-',
-                                }
+                              : valKelDomisili && valKelDomisili.label !== ''
+                              ? valKelDomisili
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'domisili_kelurahan')}
