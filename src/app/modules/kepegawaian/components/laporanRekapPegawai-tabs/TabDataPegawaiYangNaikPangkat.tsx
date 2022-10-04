@@ -382,7 +382,7 @@ export function TabDataPegawaiYangNaikPangkat() {
   // GET KECAMTAN
   const [inputValKecamatan, setDataKecamatan] = useState({label: '', value: null})
   const filterKecamatan = async (inputValue: string) => {
-    const response = await axios.get(KECAMATAN_URL + '/find-by-kode-kota')
+    const response = await axios.get(KECAMATAN_URL + '/find')
     const json = await response.data.data
     return json.map((i: any) => ({label: i.kecamatan, value: i.kecamatan}))
   }
