@@ -31,7 +31,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
   }, [])
 
   return (
-    <div className='row g-5 g-xxl-8'>
+    <div className='row g-5 g-xxl-8 ms-15 me-15'>
       <div className="card">
         <div className="card-body">
           <div className="row">

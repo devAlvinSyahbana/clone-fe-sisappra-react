@@ -148,29 +148,38 @@
 }
 
 // Hover overflow overlay
-.hover-scroll-overlay-y {
-    overflow-y: hidden;
+.hover-scroll-overlay-y {    
     position: relative;
 
-    // Webkit
-    &::-webkit-scrollbar {
-        width: calc( var(--kt-scrollbar-width) + var(--kt-scrollbar-space) );
+    // Desktop mode
+    @include media-breakpoint-up(lg) {
+        overflow-y: hidden;
+
+        // Webkit
+        &::-webkit-scrollbar {
+            width: calc( var(--kt-scrollbar-width) + var(--kt-scrollbar-space) );
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-clip: content-box;
+            border-right: var(--kt-scrollbar-space) solid transparent;
+        }
+
+        &:hover {
+            overflow-y: overlay;
+        }
+
+        // Firefox hack
+        @-moz-document url-prefix() {
+            overflow-y: scroll;
+            position: relative;
+        }
     }
 
-    &::-webkit-scrollbar-thumb {
-        background-clip: content-box;
-        border-right: var(--kt-scrollbar-space) solid transparent;
-    }
-
-    &:hover {
-        overflow-y: overlay;
-    }
-
-    // Firefox hack
-    @-moz-document url-prefix() {
-        overflow-y: scroll;
-        position: relative;
-    }
+    // Tablet & mobile modes
+    @include media-breakpoint-down(lg) {
+        overflow-y: auto;
+    }   
 }
 
 // Utility classes  

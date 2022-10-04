@@ -81,3 +81,12 @@ export * from './tiles/TilesWidget2'
 export * from './tiles/TilesWidget3'
 export * from './tiles/TilesWidget4'
 export * from './tiles/TilesWidget5'
+
+// new
+export * from './_new/cards/CardsWidget7'
+export * from './_new/cards/CardsWidget17'
+export * from './_new/cards/CardsWidget20'
+
+export * from './_new/lists/ListsWidget26'
+
+export * from './_new/engage/EngageWidget10'
