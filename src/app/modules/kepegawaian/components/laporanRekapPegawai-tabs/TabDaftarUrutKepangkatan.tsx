@@ -6,6 +6,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
+import Swal from 'sweetalert2'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
@@ -54,6 +55,106 @@ export function TabDaftarUrutKepangkatan() {
 
   const columns = [
     {
+      name: 'No',
+      sortable: true,
+      sortField: 'No',
+      wrap: true,
+      cell: (record: any) => {
+        return <div className='mt-5 mb-5'>{no++}</div>
+      },
+    },
+    {
+      name: 'Nama',
+      selector: (row: any) => row.nama,
+      sortable: true,
+      sortField: 'nama',
+      wrap: true,
+    },
+    {
+      name: 'NIP',
+      selector: (row: any) => row.nip,
+      sortable: true,
+      sortField: 'nip',
+      wrap: true,
+    },
+    {
+      name: 'NRK',
+      selector: (row: any) => row.tgl_lahir,
+      sortable: true,
+      sortField: 'nrk',
+      wrap: true,
+    },
+    {
+      name: 'Jabatan',
+      selector: (row: any) => row.jabatan,
+      sortable: true,
+      sortField: 'jabatan',
+      wrap: true,
+      center: true,
+    },
+    {
+      name: 'Status Kepegawaian',
+      selector: (row: any) => row.status_kepegawaian,
+      sortable: true,
+      sortField: 'status_kepegawaian',
+      width: '180px',
+      wrap: true,
+      center: true,
+    },
+    {
+      name:
+        valStatPegawai.val !== ''
+          ? valStatPegawai.val === 'PTT'
+            ? 'NPTT'
+            : valStatPegawai.val === 'PJLP'
+            ? 'NPJLP'
+            : 'NRK'
+          : 'NRK',
+      selector: (row: any) => row.kepegawaian_nrk,
+      sortable: true,
+      sortField: 'kepegawaian_nrk',
+      wrap: true,
+      center: true,
+    },
+    {
+      name: 'Nomor KK',
+      selector: (row: any) => row.no_kk,
+      sortable: true,
+      sortField: 'no_kk',
+      wrap: true,
+      center: true,
+    },
+    {
+      name: 'Tempat Tugas',
+      selector: (row: any) => row.tempat_tugas,
+      sortable: true,
+      sortField: 'tempat_tugas',
+      width: '120px',
+      wrap: true,
+    },
+    {
+      name: 'Tanggal Lahir',
+      selector: (row: any) => row.tanggal_lahir,
+      sortable: true,
+      sortField: 'tanggal_lahir',
+      width: '120px',
+      wrap: true,
+    },
+    {
+      name: 'Agama',
+      selector: (row: any) => row.agama,
+      sortable: true,
+      sortField: 'agama',
+      wrap: true,
+    },
+    {
+      name: 'Alamat',
+      selector: (row: any) => row.alamat,
+      sortable: true,
+      sortField: 'alamat',
+      wrap: true,
+    },
+    {
       name: 'Aksi',
       sortable: false,
       className: 'action',
@@ -98,15 +199,7 @@ export function TabDaftarUrutKepangkatan() {
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/DaftarUrutKepangkatan/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record?.id)}>
                       Hapus
                     </Dropdown.Item>
                   </DropdownType>
@@ -117,617 +210,40 @@ export function TabDaftarUrutKepangkatan() {
         )
       },
     },
-    {
-      name: 'No',
-      sortable: true,
-      sortField: 'No',
-      wrap: true,
-      cell: (record: any) => {
-        return <div className='mt-5 mb-5'>{no++}</div>
-      },
-    },
-    {
-      name: 'Nama',
-      selector: (row: any) => row.nama,
-      sortable: true,
-      sortField: 'nama',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Tempat Lahir',
-      selector: (row: any) => row.tempat_lahir,
-      sortable: true,
-      sortField: 'tempat_lahir',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Lahir',
-      selector: (row: any) => row.tgl_lahir,
-      sortable: true,
-      sortField: 'tgl_lahir',
-      wrap: true,
-      width: '150px',
-    },
-    {
-      name: 'Jenis Kelamin',
-      selector: (row: any) => row.jenis_kelamin,
-      sortable: true,
-      sortField: 'jenis_kelamin',
-      wrap: true,
-      width: '150px',
-      center: true,
-    },
-    {
-      name: 'Agama',
-      selector: (row: any) => row.agama,
-      sortable: true,
-      sortField: 'agama',
-      wrap: true,
-      center: true,
-    },
-    {
-      name:
-        valStatPegawai.val !== ''
-          ? valStatPegawai.val === 'PTT'
-            ? 'NPTT'
-            : valStatPegawai.val === 'PJLP'
-            ? 'NPJLP'
-            : 'NRK'
-          : 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
-      sortable: true,
-      sortField: 'kepegawaian_nrk',
-      wrap: true,
-      center: true,
-    },
-    {
-      name: 'Nomor KK',
-      selector: (row: any) => row.no_kk,
-      sortable: true,
-      sortField: 'no_kk',
-      wrap: true,
-      center: true,
-    },
-    {
-      name: 'Status Perkawinan',
-      selector: (row: any) => row.status_perkawinan,
-      sortable: true,
-      width: '150px',
-      sortField: 'status_perkawinan',
-      wrap: true,
-    },
-    {
-      name: 'Umur',
-      selector: (row: any) => row.umur,
-      sortable: true,
-      sortField: 'umur',
-      wrap: true,
-    },
-    {
-      name: 'Nomor HP',
-      selector: (row: any) => row.no_hp,
-      sortable: true,
-      sortField: 'no_hp',
-      wrap: true,
-    },
-    {
-      name: 'Alamat Sesuai KTP',
-      selector: (row: any) => row.sesuai_ktp_alamat,
-      sortable: true,
-      sortField: 'sesua_ktp_alamat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'RT/RW',
-      selector: (row: any) => row.sesuai_ktp_rtrw,
-      sortable: true,
-      sortField: 'sesuai_ktp_rtrw',
-      wrap: true,
-    },
-    {
-      name: 'Provinsi',
-      selector: (row: any) => row.sesuai_ktp_provinsi,
-      sortable: true,
-      sortField: 'sesuai_ktp_provinsi',
-      wrap: true,
-    },
-    {
-      name: 'Kab/Kota',
-      selector: (row: any) => row.sesuai_ktp_kabkota,
-      sortable: true,
-      sortField: 'sesuai_ktp_kabkota',
-      wrap: true,
-    },
-    {
-      name: 'Kecamatan',
-      selector: (row: any) => row.sesuai_ktp_kecamatan,
-      sortable: true,
-      width: '150px',
-      sortField: 'sesuai_ktp_kecamatan',
-      wrap: true,
-    },
-    {
-      name: 'Kelurahan',
-      selector: (row: any) => row.sesuai_ktp_kelurahan,
-      sortable: true,
-      sortField: 'sesuai_ktp_kelurahan',
-      wrap: true,
-    },
-    {
-      name: 'Alamat Domisili',
-      selector: (row: any) => row.domisili_alamat,
-      sortable: true,
-      sortField: 'domisili_alamat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'RT/RW',
-      selector: (row: any) => row.domisili_rtrw,
-      sortable: true,
-      sortField: 'domisili_rtrw',
-      wrap: true,
-    },
-    {
-      name: 'Provinsi',
-      selector: (row: any) => row.domisili_provinsi,
-      sortable: true,
-      sortField: 'domisili_provinsi',
-      wrap: true,
-    },
-    {
-      name: 'Kab/Kota',
-      selector: (row: any) => row.domisili_kabkota,
-      sortable: true,
-      sortField: 'domisili_kabkota',
-      wrap: true,
-    },
-    {
-      name: 'Kecamatan',
-      selector: (row: any) => row.domisili_kecamatan,
-      sortable: true,
-      width: '150px',
-      sortField: 'domisili_kecamatan',
-      wrap: true,
-    },
-    {
-      name: 'Kelurahan',
-      selector: (row: any) => row.domisili_kelurahan,
-      sortable: true,
-      sortField: 'domisili_kelurahan',
-      wrap: true,
-    },
-    {
-      name: 'Nama',
-      selector: (row: any) => row.keluarga_nama,
-      sortable: true,
-      sortField: 'keluarga_nama',
-      wrap: true,
-    },
-    {
-      name: 'Hubungan Keluarga',
-      selector: (row: any) => row.keluarga_hubungan,
-      sortable: true,
-      sortField: 'keluarga_hubungan',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Nama',
-      selector: (row: any) => row.keluarga_nama1,
-      sortable: true,
-      sortField: 'keluarga_nama1',
-      wrap: true,
-    },
-    {
-      name: 'Tempat Lahir',
-      selector: (row: any) => row.keluarga_tempat_lahir,
-      sortable: true,
-      sortField: 'keluarga_tempat_lahir',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Lahir',
-      selector: (row: any) => row.keluarga_tgl_lahir,
-      sortable: true,
-      width: '150px',
-      sortField: 'keluarga_tgl_lahir',
-      wrap: true,
-    },
-    {
-      name: 'Jenis Kelamin',
-      selector: (row: any) => row.keluarga_jenis_kelamin,
-      sortable: true,
-      width: '150px',
-      sortField: 'keluarga_jenis_kelamin',
-      wrap: true,
-    },
-    {
-      name: 'Jenis Pendidikan',
-      selector: (row: any) => row.pendidikan_jenis_pendidikan,
-      sortable: true,
-      sortField: 'pendidikan_jenis_pendidikan',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nama Sekolah / Universitas',
-      selector: (row: any) => row.pendidikan_nama_sekolah,
-      sortable: true,
-      sortField: 'pendidikan_nama_sekolah',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Ijazah',
-      selector: (row: any) => row.pendidikan_no_ijazah,
-      sortable: true,
-      width: '150px',
-      sortField: 'pendidikan_no_ijazah',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Ijazah',
-      selector: (row: any) => row.pendidikan_tgl_ijazah,
-      sortable: true,
-      sortField: 'pendidikan_tgl_ijazah',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Jurusan',
-      selector: (row: any) => row.pendidikan_jurusan,
-      sortable: true,
-      sortField: 'pendidikan_jurusan',
-      wrap: true,
-    },
-    {
-      name: 'Fakultas',
-      selector: (row: any) => row.pendidikan_fakultas,
-      sortable: true,
-      sortField: 'pendidikan_fakultas',
-      wrap: true,
-    },
-    {
-      name: 'Upload Ijazah',
-      selector: (row: any) => row.pendidikan_file_ijazah,
-      sortable: true,
-      width: '150px',
-      sortField: 'pendidikan_file_ijazah',
-      wrap: true,
-    },
-    {
-      name: 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
-      sortable: true,
-      sortField: 'kepegawaian_nrk',
-      wrap: true,
-    },
-    {
-      name: 'NIP',
-      selector: (row: any) => row.kepegawaian_nip,
-      sortable: true,
-      sortField: 'kepegawaian_nip',
-      wrap: true,
-    },
-    {
-      name: 'Pangkat',
-      selector: (row: any) => row.kepegawaian_pangkat,
-      sortable: true,
-      sortField: 'kepegawaian_pangkatno_hp',
-      wrap: true,
-    },
-    {
-      name: 'Golongan',
-      selector: (row: any) => row.kepegawaian_golongan,
-      sortable: true,
-      sortField: 'kepegawaian_golongan',
-      wrap: true,
-    },
-    {
-      name: 'TMT Pangkat',
-      selector: (row: any) => row.kepegawaian_tmtpangkat,
-      sortable: true,
-      width: '150px',
-      sortField: 'kepegawaian_tmtpangkat',
-      wrap: true,
-    },
-    {
-      name: 'Pendidikan pada SK',
-      selector: (row: any) => row.kepegawaian_pendidikan_pada_sk,
-      sortable: true,
-      sortField: 'kepegawaian_pendidikan_pada_sk',
-      width: '180px',
-      wrap: true,
-    },
-    {
-      name: 'Jabatan',
-      selector: (row: any) => row.kepegawaian_jabatan,
-      sortable: true,
-      sortField: 'kepegawaian_jabatan',
-      wrap: true,
-    },
-    {
-      name: 'Eselon',
-      selector: (row: any) => row.kepegawaian_eselon,
-      sortable: true,
-      sortField: 'kepegawaian_eselon',
-      wrap: true,
-    },
-    {
-      name: 'Tempat Tugas',
-      selector: (row: any) => row.kepegawaian_tempat_tugas,
-      sortable: true,
-      width: '150px',
-      sortField: 'kepegawaian_tempat_tugas',
-      wrap: true,
-    },
-    {
-      name: 'Subbag/Seksi/Kecamatan',
-      selector: (row: any) => row.kepegawaian_subbag_seksi_kecamatan,
-      sortable: true,
-      sortField: 'kepegawaian_subbag_seksi_kecamatan',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Status Pegawai',
-      selector: (row: any) => row.kepegawaian_status_pegawai,
-      sortable: true,
-      sortField: 'kepegawaian_status_pegawai',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Rekening',
-      selector: (row: any) => row.kepegawaian_no_rek,
-      sortable: true,
-      sortField: 'kepegawaian_no_rek',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor KARPEG',
-      selector: (row: any) => row.kepegawaian_no_karpeg,
-      sortable: true,
-      sortField: 'kepegawaian_no_karpeg',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor KARIS/KARSU',
-      selector: (row: any) => row.kepegawaian_no_kasirkarsu,
-      sortable: true,
-      sortField: 'kepegawaian_no_kasirkarsu',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor TASPEN',
-      selector: (row: any) => row.kepegawaian_no_taspen,
-      sortable: true,
-      sortField: 'kepegawaian_no_taspen',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'NPWP',
-      selector: (row: any) => row.kepegawaian_npwp,
-      sortable: true,
-      sortField: 'kepegawaian_npwp',
-      wrap: true,
-    },
-    {
-      name: 'Nomor BPJS/ASKES',
-      selector: (row: any) => row.kepegawaian_no_bpjs_askes,
-      sortable: true,
-      sortField: 'kepegawaian_no_bpjs_askes',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'TMT CPNS',
-      selector: (row: any) => row.kepegawaian_tmt_cpns,
-      sortable: true,
-      sortField: 'kepegawaian_tmt_cpns',
-      wrap: true,
-    },
-    {
-      name: 'Upload SK CPNS',
-      selector: (row: any) => row.kepegawaian_sk_cpns,
-      sortable: true,
-      sortField: 'kepegawaian_sk_cpns',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'TMT PNS',
-      selector: (row: any) => row.kepegawaian_tmt_pns,
-      sortable: true,
-      sortField: 'kepegawaian_tmt_pns',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal SK PNS',
-      selector: (row: any) => row.kepegawaian_tgl_sk_pns,
-      sortable: true,
-      sortField: 'kepegawaian_tgl_sk_pns',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Upload SK PNS',
-      selector: (row: any) => row.kepegawaian_sk_pns,
-      sortable: true,
-      sortField: 'kepegawaian_sk_pns',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor SK Pangkat',
-      selector: (row: any) => row.kepegawaian_no_sk_pangkat_terakhir,
-      sortable: true,
-      sortField: 'kepegawaian_no_sk_pangkat_terakhir',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal SK',
-      selector: (row: any) => row.kepegawaian_tgl_sk_pangkat_terakhir,
-      sortable: true,
-      width: '100px',
-      sortField: 'kepegawaian_tgl_sk_pangkat_terakhir',
-      wrap: true,
-    },
-    {
-      name: 'Upload SK Terakhir',
-      selector: (row: any) => row.kepegawaian_sk_pangkat_terakhir,
-      sortable: true,
-      sortField: 'kepegawaian_sk_pangkat_terakhir',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Diklat Pol PP Dasar',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_dasar,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_dasar',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_dasar_no_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_dasar_no_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Upload Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_dasar_file_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_dasar_file_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Diklat Struktural',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_struktural,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_struktural',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_struktural_no_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_struktural_no_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_struktural_tgl_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_struktural_tgl_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Upload Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_struktural_file_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_struktural_file_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Diklat PPNS',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_ppns,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_ppns',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_ppns_no_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_ppns_no_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Upload Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_pol_pp_ppns_file_sertifikat,
-      sortable: true,
-      sortField: 'kepegawaian_diklat_pol_pp_ppns_file_sertifikat',
-      width: '150px',
-      wrap: true,
-    },
-    {
-      name: 'Diklat Fungsional',
-      selector: (row: any) => row.kepegawaian_diklat_fungsional_pol_pp,
-      sortable: true,
-      width: '150px',
-      sortField: 'kepegawaian_diklat_fungsional_pol_pp',
-      wrap: true,
-    },
-    {
-      name: 'Nomor Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_fungsional_pol_pp_no_sertifikat,
-      sortable: true,
-      width: '150px',
-      sortField: 'kepegawaian_diklat_fungsional_pol_pp_no_sertifikat',
-      wrap: true,
-    },
-    {
-      name: 'Tanggal Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat,
-      sortable: true,
-      width: '150px',
-      sortField: 'kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat',
-      wrap: true,
-    },
-    {
-      name: 'Upload Sertifikat',
-      selector: (row: any) => row.kepegawaian_diklat_fungsional_pol_pp_file_sertifikat,
-      sortable: true,
-      width: '150px',
-      sortField: 'kepegawaian_diklat_fungsional_pol_pp_file_sertifikat',
-      wrap: true,
-    },
-    {
-      name: 'Upload Foto',
-      selector: (row: any) => row.foto,
-      sortable: true,
-      width: '150px',
-      sortField: 'foto',
-      wrap: true,
-    },
   ]
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      title: 'Anda yakin?',
+      text: 'Ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${KEPEGAWAIAN_URL}/delete/${id}`)
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        }
+      }
+    })
+  }
 
   const customStyles = {
     rows: {
@@ -762,7 +278,7 @@ export function TabDaftarUrutKepangkatan() {
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchData = async (page: number) => {
+  const fetchUsers = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
       `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
@@ -775,7 +291,7 @@ export function TabDaftarUrutKepangkatan() {
   }
 
   const handlePageChange = (page: number) => {
-    fetchData(page)
+    fetchUsers(page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -1001,28 +517,6 @@ export function TabDaftarUrutKepangkatan() {
                 </select>
               </div>
             </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
-                  Status
-                </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  <option value=''>1</option>
-                  <option value=''>2</option>
-                  <option value=''>3</option>
-                  {/* {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })} */}
-                </select>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -1108,8 +602,6 @@ export function TabDaftarUrutKepangkatan() {
                       progressComponent={<LoadingAnimation />}
                       pagination
                       paginationServer
-                      fixedHeader
-                      fixedHeaderScrollHeight='500px'
                       paginationTotalRows={totalRows}
                       onChangeRowsPerPage={handlePerRowsChange}
                       onChangePage={handlePageChange}
