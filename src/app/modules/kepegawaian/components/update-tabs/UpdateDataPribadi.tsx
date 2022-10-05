@@ -7,7 +7,8 @@ import {DetailPegawaiInterface, SelectOptionAutoCom} from '../KepegawaianInterfa
 import {Formik, Field, FormikHelpers} from 'formik'
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import {any} from '@amcharts/amcharts5/.internal/core/util/Array'
+import * as Yup from 'yup'
+import clsx from 'clsx'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -16,6 +17,25 @@ export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 export const GLOBAL_URL = `${API_URL}/master`
+
+const validatorForm = Yup.object().shape({
+  nama: Yup.string().required('Wajib diisi'),
+  tempat_lahir: Yup.string().required('Wajib diisi'),
+  tgl_lahir: Yup.string().required('Wajib diisi'),
+  nik: Yup.string()
+    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+    .required('Wajib diisi'),
+  no_kk: Yup.string()
+    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+    .required('Wajib diisi'),
+  no_hp: Yup.string()
+    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+    .required('Wajib diisi'),
+  sesuai_ktp_alamat: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_rtrw: Yup.string().required('Wajib diisi'),
+  domisili_alamat: Yup.string().required('Wajib diisi'),
+  domisili_rtrw: Yup.string().required('Wajib diisi'),
+})
 
 export function UpdateDataPribadi() {
   const {id, status} = useParams()
@@ -406,120 +426,142 @@ export function UpdateDataPribadi() {
           ...data,
           tgl_lahir: moment(data?.tgl_lahir).format('YYYY-MM-D'),
         }}
+        validationSchema={validatorForm}
         onSubmit={async function (
           values: DetailPegawaiInterface,
           {setSubmitting}: FormikHelpers<DetailPegawaiInterface>
         ) {
-          setSubmitting(false)
-          const bodyParam: DetailPegawaiInterface = {
-            nama: values.nama,
-            tempat_lahir: values.tempat_lahir,
-            tgl_lahir: values.tgl_lahir,
-            jenis_kelamin: valuesFormik?.jenis_kelamin?.value
-              ? valuesFormik.jenis_kelamin.value
-              : values.jenis_kelamin_value,
-            agama: valuesFormik?.agama?.value ? valuesFormik.agama.value : values.agama_id,
-            nik: values.nik,
-            no_kk: values.no_kk,
-            status_perkawinan: valuesFormik?.status_perkawinan?.value
-              ? valuesFormik.status_perkawinan.value
-              : values.status_perkawinan,
-            no_hp: values.no_hp,
-            sesuai_ktp_alamat: values.sesuai_ktp_alamat,
-            sesuai_ktp_rtrw: values.sesuai_ktp_rtrw,
-            sesuai_ktp_provinsi: valuesFormik?.sesuai_ktp_provinsi?.value
-              ? valuesFormik.sesuai_ktp_provinsi.value
-              : values.sesuai_ktp_provinsi,
-            sesuai_ktp_kabkota: valuesFormik?.sesuai_ktp_kabkota?.value
-              ? valuesFormik.sesuai_ktp_kabkota.value
-              : values.sesuai_ktp_kabkota,
-            sesuai_ktp_kecamatan: valuesFormik?.sesuai_ktp_kecamatan?.value
-              ? valuesFormik.sesuai_ktp_kecamatan.value
-              : values.sesuai_ktp_kecamatan,
-            sesuai_ktp_kelurahan: valuesFormik?.sesuai_ktp_kelurahan?.value
-              ? valuesFormik.sesuai_ktp_kelurahan.value
-              : values.sesuai_ktp_kelurahan,
-            domisili_alamat: values.domisili_alamat,
-            domisili_rtrw: values.domisili_rtrw,
-            domisili_provinsi: valuesFormik?.domisili_provinsi?.value
-              ? valuesFormik.domisili_provinsi.value
-              : values.domisili_provinsi,
-            domisili_kabkota: valuesFormik?.domisili_kabkota?.value
-              ? valuesFormik.domisili_kabkota.value
-              : values.domisili_kabkota,
-            domisili_kecamatan: valuesFormik?.domisili_kecamatan?.value
-              ? valuesFormik.domisili_kecamatan.value
-              : values.domisili_kecamatan,
-            domisili_kelurahan: valuesFormik?.domisili_kelurahan?.value
-              ? valuesFormik.domisili_kelurahan.value
-              : values.domisili_kelurahan,
-            kepegawaian_nrk: values.kepegawaian_nrk,
-            kepegawaian_nip: values.kepegawaian_nip,
-            kepegawaian_pangkat: values.kepegawaian_pangkat_id,
-            kepegawaian_golongan: values.kepegawaian_golongan_id,
-            kepegawaian_tmtpangkat: values.kepegawaian_tmtpangkat,
-            kepegawaian_pendidikan_pada_sk: values.kepegawaian_pendidikan_pada_sk_id,
-            kepegawaian_jabatan: values.kepegawaian_jabatan_id,
-            kepegawaian_eselon: values.kepegawaian_eselon_id,
-            kepegawaian_tempat_tugas: values.kepegawaian_tempat_tugas,
-            kepegawaian_subbag_seksi_kecamatan: values.kepegawaian_subbag_seksi_kecamatan,
-            kepegawaian_kelurahan: values.kepegawaian_kelurahan,
-            kepegawaian_status_pegawai: values.kepegawaian_status_pegawai,
-            kepegawaian_no_rekening: values.kepegawaian_no_rekening,
-            kepegawaian_no_karpeg: values.kepegawaian_no_karpeg,
-            kepegawaian_no_kasirkasur: values.kepegawaian_no_kasirkasur,
-            kepegawaian_no_taspen: values.kepegawaian_no_taspen,
-            kepegawaian_npwp: values.kepegawaian_npwp,
-            kepegawaian_no_bpjs_askes: values.kepegawaian_no_bpjs_askes,
-            kepegawaian_tmt_cpns: values.kepegawaian_tmt_cpns,
-            kepegawaian_sk_cpns: values.kepegawaian_sk_cpns,
-            kepegawaian_tmt_pns: values.kepegawaian_tmt_pns,
-            kepegawaian_tgl_sk_pns: values.kepegawaian_tgl_sk_pns,
-            kepegawaian_no_sk_pangkat_terakhir: values.kepegawaian_no_sk_pangkat_terakhir,
-            kepegawaian_tgl_sk_pangkat_terakhir: values.kepegawaian_tgl_sk_pangkat_terakhir,
-            kepegawaian_diklat_pol_pp_dasar: values.kepegawaian_diklat_pol_pp_dasar,
-            kepegawaian_diklat_pol_pp_dasar_no_sertifikat:
-              values.kepegawaian_diklat_pol_pp_dasar_no_sertifikat,
-            kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat:
-              values.kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat,
-            kepegawaian_diklat_pol_pp_strutural: values.kepegawaian_diklat_pol_pp_strutural,
-            kepegawaian_diklat_pol_pp_strutural_no_sertifikat:
-              values.kepegawaian_diklat_pol_pp_strutural_no_sertifikat,
-            kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat:
-              values.kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat,
-            kepegawaian_diklat_pol_pp_ppns: values.kepegawaian_diklat_pol_pp_ppns,
-            kepegawaian_diklat_pol_pp_ppns_no_sertifikat:
-              values.kepegawaian_diklat_pol_pp_ppns_no_sertifikat,
-            kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat:
-              values.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat,
-            kepegawaian_diklat_fungsional_pol_pp: values.kepegawaian_diklat_fungsional_pol_pp,
-            kepegawaian_diklat_fungsional_pol_pp_no_sertifikat:
-              values.kepegawaian_diklat_fungsional_pol_pp_no_sertifikat,
-            kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat:
-              values.kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat,
-          }
-          try {
-            const response = await axios.put(`${KEPEGAWAIAN_URL}/update/${id}/${status}`, bodyParam)
-            if (response) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Data berhasil disimpan',
-                showConfirmButton: false,
-                timer: 1500,
-              })
-              navigate(`/kepegawaian/informasi-data-pegawai/ubah-data-pribadi/${id}/${status}`, {
-                replace: true,
-              })
+          Swal.fire({
+            title: 'Anda yakin?',
+            text: 'Ingin menyimpan perubahan data ini',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya!',
+            cancelButtonText: 'Tidak!',
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              setSubmitting(true)
+              const bodyParam: DetailPegawaiInterface = {
+                nama: values.nama,
+                tempat_lahir: values.tempat_lahir,
+                tgl_lahir: values.tgl_lahir,
+                jenis_kelamin: valuesFormik?.jenis_kelamin?.value
+                  ? valuesFormik.jenis_kelamin.value
+                  : values.jenis_kelamin_value,
+                agama: valuesFormik?.agama?.value ? valuesFormik.agama.value : values.agama_id,
+                nik: values.nik,
+                no_kk: values.no_kk,
+                status_perkawinan: valuesFormik?.status_perkawinan?.value
+                  ? valuesFormik.status_perkawinan.value
+                  : values.status_perkawinan,
+                no_hp: values.no_hp,
+                sesuai_ktp_alamat: values.sesuai_ktp_alamat,
+                sesuai_ktp_rtrw: values.sesuai_ktp_rtrw,
+                sesuai_ktp_provinsi: valuesFormik?.sesuai_ktp_provinsi?.value
+                  ? valuesFormik.sesuai_ktp_provinsi.value
+                  : values.sesuai_ktp_provinsi,
+                sesuai_ktp_kabkota: valuesFormik?.sesuai_ktp_kabkota?.value
+                  ? valuesFormik.sesuai_ktp_kabkota.value
+                  : values.sesuai_ktp_kabkota,
+                sesuai_ktp_kecamatan: valuesFormik?.sesuai_ktp_kecamatan?.value
+                  ? valuesFormik.sesuai_ktp_kecamatan.value
+                  : values.sesuai_ktp_kecamatan,
+                sesuai_ktp_kelurahan: valuesFormik?.sesuai_ktp_kelurahan?.value
+                  ? valuesFormik.sesuai_ktp_kelurahan.value
+                  : values.sesuai_ktp_kelurahan,
+                domisili_alamat: values.domisili_alamat,
+                domisili_rtrw: values.domisili_rtrw,
+                domisili_provinsi: valuesFormik?.domisili_provinsi?.value
+                  ? valuesFormik.domisili_provinsi.value
+                  : values.domisili_provinsi,
+                domisili_kabkota: valuesFormik?.domisili_kabkota?.value
+                  ? valuesFormik.domisili_kabkota.value
+                  : values.domisili_kabkota,
+                domisili_kecamatan: valuesFormik?.domisili_kecamatan?.value
+                  ? valuesFormik.domisili_kecamatan.value
+                  : values.domisili_kecamatan,
+                domisili_kelurahan: valuesFormik?.domisili_kelurahan?.value
+                  ? valuesFormik.domisili_kelurahan.value
+                  : values.domisili_kelurahan,
+                kepegawaian_nrk: values.kepegawaian_nrk,
+                kepegawaian_nip: values.kepegawaian_nip,
+                kepegawaian_pangkat: values.kepegawaian_pangkat_id,
+                kepegawaian_golongan: values.kepegawaian_golongan_id,
+                kepegawaian_tmtpangkat: values.kepegawaian_tmtpangkat,
+                kepegawaian_pendidikan_pada_sk: values.kepegawaian_pendidikan_pada_sk_id,
+                kepegawaian_jabatan: values.kepegawaian_jabatan_id,
+                kepegawaian_eselon: values.kepegawaian_eselon_id,
+                kepegawaian_tempat_tugas: values.kepegawaian_tempat_tugas,
+                kepegawaian_subbag_seksi_kecamatan: values.kepegawaian_subbag_seksi_kecamatan,
+                kepegawaian_kelurahan: values.kepegawaian_kelurahan,
+                kepegawaian_status_pegawai: values.kepegawaian_status_pegawai,
+                kepegawaian_no_rekening: values.kepegawaian_no_rekening,
+                kepegawaian_no_karpeg: values.kepegawaian_no_karpeg,
+                kepegawaian_no_kasirkasur: values.kepegawaian_no_kasirkasur,
+                kepegawaian_no_taspen: values.kepegawaian_no_taspen,
+                kepegawaian_npwp: values.kepegawaian_npwp,
+                kepegawaian_no_bpjs_askes: values.kepegawaian_no_bpjs_askes,
+                kepegawaian_tmt_cpns: values.kepegawaian_tmt_cpns,
+                kepegawaian_sk_cpns: values.kepegawaian_sk_cpns,
+                kepegawaian_tmt_pns: values.kepegawaian_tmt_pns,
+                kepegawaian_tgl_sk_pns: values.kepegawaian_tgl_sk_pns,
+                kepegawaian_no_sk_pangkat_terakhir: values.kepegawaian_no_sk_pangkat_terakhir,
+                kepegawaian_tgl_sk_pangkat_terakhir: values.kepegawaian_tgl_sk_pangkat_terakhir,
+                kepegawaian_diklat_pol_pp_dasar: values.kepegawaian_diklat_pol_pp_dasar,
+                kepegawaian_diklat_pol_pp_dasar_no_sertifikat:
+                  values.kepegawaian_diklat_pol_pp_dasar_no_sertifikat,
+                kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat:
+                  values.kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat,
+                kepegawaian_diklat_pol_pp_strutural: values.kepegawaian_diklat_pol_pp_strutural,
+                kepegawaian_diklat_pol_pp_strutural_no_sertifikat:
+                  values.kepegawaian_diklat_pol_pp_strutural_no_sertifikat,
+                kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat:
+                  values.kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat,
+                kepegawaian_diklat_pol_pp_ppns: values.kepegawaian_diklat_pol_pp_ppns,
+                kepegawaian_diklat_pol_pp_ppns_no_sertifikat:
+                  values.kepegawaian_diklat_pol_pp_ppns_no_sertifikat,
+                kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat:
+                  values.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat,
+                kepegawaian_diklat_fungsional_pol_pp: values.kepegawaian_diklat_fungsional_pol_pp,
+                kepegawaian_diklat_fungsional_pol_pp_no_sertifikat:
+                  values.kepegawaian_diklat_fungsional_pol_pp_no_sertifikat,
+                kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat:
+                  values.kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat,
+              }
+              try {
+                const response = await axios.put(
+                  `${KEPEGAWAIAN_URL}/update/${id}/${status}`,
+                  bodyParam
+                )
+                if (response) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Data berhasil disimpan',
+                    showConfirmButton: false,
+                    timer: 1500,
+                  })
+                  navigate(
+                    `/kepegawaian/informasi-data-pegawai/ubah-data-pribadi/${id}/${status}`,
+                    {
+                      replace: true,
+                    }
+                  )
+                }
+                setSubmitting(false)
+              } catch (error) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Data gagal disimpan, harap mencoba lagi',
+                  showConfirmButton: false,
+                  timer: 1500,
+                })
+                setSubmitting(false)
+                console.error(error)
+              }
             }
-          } catch (error) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Data gagal disimpan, harap mencoba lagi',
-              showConfirmButton: false,
-              timer: 1500,
-            })
-            console.error(error)
-          }
+          })
         }}
         enableReinitialize
       >
@@ -531,6 +573,7 @@ export function UpdateDataPribadi() {
           handleBlur,
           handleSubmit,
           isSubmitting,
+          isValid
           /* and other goodies */
         }) => (
           <form onSubmit={handleSubmit}>
@@ -542,44 +585,89 @@ export function UpdateDataPribadi() {
               </div>
               <div className='card-body p-9'>
                 <div className='row'>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                    <label htmlFor='' className='mb-3'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                    <label htmlFor='' className='mb-3 required'>
                       Nama
                     </label>
                     <Field
-                      className='form-control form-control form-control-solid mb-4'
+                      className={clsx(
+                        'form-control form-control-solid mb-1',
+                        {
+                          'is-invalid': touched.nama && errors.nama,
+                        },
+                        {
+                          'is-valid': touched.nama && !errors.nama,
+                        }
+                      )}
                       name='nama'
                       id='nama'
-                      placeholder='John'
+                      placeholder='Nama'
                     />
+                    {touched.nama && errors.nama && (
+                      <div className='fv-plugins-message-container'>
+                        <div className='fv-help-block'>
+                          <span role='alert'>{errors.nama}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                    <label htmlFor='' className='mb-3'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                    <label htmlFor='' className='mb-3 required'>
                       Tempat, Tanggal Lahir
                     </label>
                     <div className='row'>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <Field
                           type='text'
                           name='tempat_lahir'
-                          className='form-control form-control form-control-solid mb-4'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid': touched.tempat_lahir && errors.tempat_lahir,
+                            },
+                            {
+                              'is-valid': touched.tempat_lahir && !errors.tempat_lahir,
+                            }
+                          )}
                           placeholder='Tempat'
                         />
+                        {touched.tempat_lahir && errors.tempat_lahir && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{errors.tempat_lahir}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <Field
                           type='date'
                           name='tgl_lahir'
-                          className='form-control form-control-solid'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid': touched.tgl_lahir && errors.tgl_lahir,
+                            },
+                            {
+                              'is-valid': touched.tgl_lahir && !errors.tgl_lahir,
+                            }
+                          )}
                           placeholder='Tanggal Lahir'
                         />
+                        {touched.tgl_lahir && errors.tgl_lahir && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{errors.tgl_lahir}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                     <div className='row'>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Jenis Kelamin
                         </label>
                         <AsyncSelect
@@ -600,8 +688,8 @@ export function UpdateDataPribadi() {
                           placeholder={'Pilih'}
                         />
                       </div>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Agama
                         </label>
                         <AsyncSelect
@@ -624,34 +712,64 @@ export function UpdateDataPribadi() {
                       </div>
                     </div>
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                     <div className='row'>
                       <div className='col-6'>
-                        <label htmlFor='' className='mb-3'>
+                        <label htmlFor='' className='mb-3 required'>
                           NIK
                         </label>
                         <Field
                           type='text'
                           name='nik'
-                          className='form-control form-control form-control-solid mb-4'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid': touched.nik && errors.nik,
+                            },
+                            {
+                              'is-valid': touched.nik && !errors.nik,
+                            }
+                          )}
                           placeholder='NIK'
                         />
+                        {touched.nik && errors.nik && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{errors.nik}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-6'>
-                        <label htmlFor='' className='mb-3'>
+                        <label htmlFor='' className='mb-3 required'>
                           Nomor KK
                         </label>
                         <Field
                           type='text'
                           name='no_kk'
-                          className='form-control form-control form-control-solid mb-4'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid': touched.no_kk && errors.no_kk,
+                            },
+                            {
+                              'is-valid': touched.no_kk && !errors.no_kk,
+                            }
+                          )}
                           placeholder='Nomor KK'
                         />
+                        {touched.no_kk && errors.no_kk && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{errors.no_kk}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                    <label htmlFor='' className='mb-3'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                    <label htmlFor='' className='mb-3 required'>
                       Status Perkawinan
                     </label>
                     <AsyncSelect
@@ -672,52 +790,97 @@ export function UpdateDataPribadi() {
                       placeholder={'Pilih'}
                     />
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                    <label htmlFor='' className='mb-3'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                    <label htmlFor='' className='mb-3 required'>
                       Nomor HP
                     </label>
                     <Field
                       type='text'
-                      className='form-control form-control form-control-solid mb-4'
+                      className={clsx(
+                        'form-control form-control-solid mb-1',
+                        {
+                          'is-invalid': touched.no_hp && errors.no_hp,
+                        },
+                        {
+                          'is-valid': touched.no_hp && !errors.no_hp,
+                        }
+                      )}
                       name='no_hp'
                       placeholder='Nomor HP'
                     />
+                    {touched.no_hp && errors.no_hp && (
+                      <div className='fv-plugins-message-container'>
+                        <div className='fv-help-block'>
+                          <span role='alert'>{errors.no_hp}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  <div className='col-12'>
+                  <div className='col-12 mb-4'>
                     <div className='separator border-3 my-10'></div>
                   </div>
 
-                  <div className='col-12'>
+                  <div className='col-12 mb-4'>
                     <div className='row'>
-                      <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Alamat Sesuai KTP
                         </label>
                         <Field
                           type='text'
-                          className='form-control form-control form-control-solid mb-3'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid': touched.sesuai_ktp_alamat && errors.sesuai_ktp_alamat,
+                            },
+                            {
+                              'is-valid': touched.sesuai_ktp_alamat && !errors.sesuai_ktp_alamat,
+                            }
+                          )}
                           name='sesuai_ktp_alamat'
                           placeholder='Alamat Sesuai KTP'
                         />
+                        {touched.sesuai_ktp_alamat && errors.sesuai_ktp_alamat && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{errors.sesuai_ktp_alamat}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className='col-xxl-2 col-md-2 col-lg-2 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-2 col-md-2 col-lg-2 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           RT/RW
                         </label>
                         <Field
                           type='text'
-                          className='form-control form-control form-control-solid mb-4'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid': touched.sesuai_ktp_rtrw && errors.sesuai_ktp_rtrw,
+                            },
+                            {
+                              'is-valid': touched.sesuai_ktp_rtrw && !errors.sesuai_ktp_rtrw,
+                            }
+                          )}
                           name='sesuai_ktp_rtrw'
                           placeholder='RT/RW'
                         />
+                        {touched.sesuai_ktp_rtrw && errors.sesuai_ktp_rtrw && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{errors.sesuai_ktp_rtrw}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                     <div className='row'>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Provinsi
                         </label>
                         <AsyncSelect
@@ -735,8 +898,8 @@ export function UpdateDataPribadi() {
                           placeholder={'Pilih'}
                         />
                       </div>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Kab/Kota
                         </label>
                         <AsyncSelect
@@ -756,10 +919,10 @@ export function UpdateDataPribadi() {
                       </div>
                     </div>
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                     <div className='row'>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Kecamatan
                         </label>
                         <AsyncSelect
@@ -777,8 +940,8 @@ export function UpdateDataPribadi() {
                           placeholder={'Pilih'}
                         />
                       </div>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Kelurahan
                         </label>
                         <AsyncSelect
@@ -788,7 +951,7 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.sesuai_ktp_kelurahan
                               ? valuesFormik?.sesuai_ktp_kelurahan
-                              : valKelKTP && valKelKTP.label !== '' 
+                              : valKelKTP && valKelKTP.label !== ''
                               ? valKelKTP
                               : {value: '', label: 'Pilih'}
                           }
@@ -799,40 +962,70 @@ export function UpdateDataPribadi() {
                     </div>
                   </div>
 
-                  <div className='col-12'>
+                  <div className='col-12 mb-4'>
                     <div className='separator border-3 my-10'></div>
                   </div>
 
-                  <div className='col-12 mt-4'>
+                  <div className='col-12 mb-4'>
                     <div className='row'>
-                      <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Alamat Domisili
                         </label>
                         <Field
                           type='text'
-                          className='form-control form-control form-control-solid mb-4'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid': touched.domisili_alamat && errors.domisili_alamat,
+                            },
+                            {
+                              'is-valid': touched.domisili_alamat && !errors.domisili_alamat,
+                            }
+                          )}
                           name='domisili_alamat'
                           placeholder='Alamat Domisili'
                         />
+                        {touched.domisili_alamat && errors.domisili_alamat && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{errors.domisili_alamat}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className='col-xxl-2 col-md-2 col-lg-2 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-2 col-md-2 col-lg-2 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           RT/RW
                         </label>
                         <Field
                           type='text'
-                          className='form-control form-control form-control-solid mb-4'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid': touched.domisili_rtrw && errors.domisili_rtrw,
+                            },
+                            {
+                              'is-valid': touched.domisili_rtrw && !errors.domisili_rtrw,
+                            }
+                          )}
                           name='domisili_rtrw'
                           placeholder='RT/RW'
                         />
+                        {touched.domisili_rtrw && errors.domisili_rtrw && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{errors.domisili_rtrw}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                     <div className='row'>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Provinsi
                         </label>
                         <AsyncSelect
@@ -850,8 +1043,8 @@ export function UpdateDataPribadi() {
                           placeholder={'Pilih'}
                         />
                       </div>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Kab/Kota
                         </label>
                         <AsyncSelect
@@ -871,10 +1064,10 @@ export function UpdateDataPribadi() {
                       </div>
                     </div>
                   </div>
-                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                     <div className='row'>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Kecamatan
                         </label>
                         <AsyncSelect
@@ -892,8 +1085,8 @@ export function UpdateDataPribadi() {
                           placeholder={'Pilih'}
                         />
                       </div>
-                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
-                        <label htmlFor='' className='mb-3'>
+                      <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
+                        <label htmlFor='' className='mb-3 required'>
                           Kelurahan
                         </label>
                         <AsyncSelect
@@ -928,6 +1121,7 @@ export function UpdateDataPribadi() {
                     <button
                       type='submit'
                       className='float-none btn btn-primary align-self-center m-1'
+                      disabled={isSubmitting || !isValid}
                     >
                       <i className='fa-solid fa-save'></i>
                       Simpan
