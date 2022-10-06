@@ -111,20 +111,6 @@ export function AddDataKeluargaDUK() {
       ttl: 'JAKARTA, 27-05-1988',
       jk: 'PEREMPUAN',
     },
-    {
-      id: 2,
-      name: 'RAHMI FITRIA ASRIL',
-      hubungan: 'Istri',
-      ttl: 'JAKARTA, 27-05-1988',
-      jk: 'PEREMPUAN',
-    },
-    {
-      id: 3,
-      name: 'RAHMI FITRIA ASRIL',
-      hubungan: 'Istri',
-      ttl: 'JAKARTA, 27-05-1988',
-      jk: 'PEREMPUAN',
-    },
   ]
 
   return (
@@ -171,13 +157,13 @@ export function AddDataKeluargaDUK() {
                   data-kt-scroll-offset='300px'
                 >
                   <div className='fv-row mb-7'>
-                    <label className='required fw-semibold fs-6 mb-2'>Nama</label>
+                    <label className='required fw-semibold fs-6 mb-2'>Nama Suami / Istri</label>
                     <input
                       type='text'
                       name='kode_e'
                       id='kode_id_e'
                       className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder='Nama'
+                      placeholder='Nama Suami / Istri'
                       value=''
                     />
                   </div>
@@ -188,6 +174,17 @@ export function AddDataKeluargaDUK() {
                       name='jenis_pelanggaran_e'
                       className=' form-control form-control-solid mb-3 mb-lg-0'
                       placeholder='Hubungan Keluarga'
+                      value=''
+                    />
+                  </div>
+                  <div className='fv-row mb-7'>
+                    <label className='required fw-semibold fs-6 mb-2'>Nama Anak</label>
+                    <input
+                      type='text'
+                      name='kode_e'
+                      id='kode_id_e'
+                      className='form-control form-control-solid mb-3 mb-lg-0'
+                      placeholder='Nama Anak'
                       value=''
                     />
                   </div>
@@ -257,7 +254,7 @@ export function AddDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdatePribadiDUK/${id}/${status}`}
+                to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK'
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -266,7 +263,7 @@ export function AddDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPendidikanDUK`}
+                to='/kepegawaian/TabDaftarUrutKepangkatan/AddPendidikanDUK'
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

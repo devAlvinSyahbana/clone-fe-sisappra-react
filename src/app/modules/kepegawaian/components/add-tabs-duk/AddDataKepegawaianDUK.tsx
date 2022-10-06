@@ -199,7 +199,7 @@ export function AddDataKepegawaianDUK() {
 
               <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4'>
                 <label htmlFor='' className='mb-3'>
-                  Nomor Karis/Karsu
+                  Nomor KARIS/KARSU
                 </label>
                 <Field
                   type='text'
@@ -572,7 +572,98 @@ export function AddDataKepegawaianDUK() {
                   </div>
                 </div>
               </div>
+
+              <div className='col-12'>
+                <hr className='fg-gray' />
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+                <label htmlFor='' className='mb-3'>
+                  Diklat Fungsional POL PP
+                </label>
+                <Field
+                  type='text'
+                  className='form-control form-control form-control-solid mb-4'
+                  name='kepegawaian_diklat_pol_pp_ppns'
+                />
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+                <label htmlFor='' className='mb-3'>
+                  Nomor Sertifikat
+                </label>
+                <Field
+                  type='text'
+                  className='form-control form-control form-control-solid mb-4'
+                  name='kepegawaian_diklat_pol_pp_ppns_no_sertifikat'
+                />
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+                <label htmlFor='' className='mb-3'>
+                  Tanggal Sertifikat
+                </label>
+                <Field
+                  type='text'
+                  className='form-control form-control form-control-solid mb-4'
+                  name='kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat'
+                />
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
+                <div className='card h-100 mt-3'>
+                  <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
+                    <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
+                      <div className='symbol symbol-75px mb-5'>
+                        <KTSVG
+                          className='theme-light-show svg-icon svg-icon-5x me-1'
+                          path='/media/svg/files/pdf.svg'
+                        />
+                        <KTSVG
+                          className='theme-dark-show svg-icon svg-icon-5x me-1'
+                          path='/media/svg/files/pdf-dark.svg'
+                        />
+                      </div>
+                      <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
+                    </a>
+                    <label className='fw-semibold fs-6 mb-2 mt-2'>Upload Sertifikat</label>
+                    <Field
+                      type='FIle'
+                      className='form-control form-control-solid mb-3 mb-lg-0'
+                      placeholder=''
+                      value=''
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
+                <div className='card h-100 mt-3'>
+                  <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
+                    <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
+                      <div className='symbol symbol-75px mb-5'>
+                        <KTSVG
+                          className='theme-light-show svg-icon svg-icon-5x me-1'
+                          path='/media/svg/files/pdf.svg'
+                        />
+                        <KTSVG
+                          className='theme-dark-show svg-icon svg-icon-5x me-1'
+                          path='/media/svg/files/pdf-dark.svg'
+                        />
+                      </div>
+                      <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
+                    </a>
+                    <label className='fw-semibold fs-6 mb-2 mt-2'>Upload Foto Terbaru</label>
+                    <Field
+                      type='FIle'
+                      className='form-control form-control-solid mb-3 mb-lg-0'
+                      placeholder=''
+                      value=''
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
+
             <div className='p-0 mt-6'>
               <div className='text-center'>
                 <Link
@@ -586,7 +677,7 @@ export function AddDataKepegawaianDUK() {
                 </Link>
                 <Link
                   className='text-reset text-decoration-none'
-                  to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPendidikanDUK/${id}/${status}`}
+                  to='/kepegawaian/TabDaftarUrutKepangkatan/AddPendidikanDUK'
                 >
                   <button className='float-none btn btn-success align-self-center m-1'>
                     <i className='fa-solid fa-arrow-left'></i>

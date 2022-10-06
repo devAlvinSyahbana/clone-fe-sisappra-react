@@ -7,7 +7,9 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import Swal from 'sweetalert2'
+import AsyncSelect from 'react-select/async'
 import clsx from 'clsx'
+import moment from 'moment'
 import FileDownload from 'js-file-download'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import {number} from 'yup/lib/locale'
@@ -15,8 +17,11 @@ import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/duk-pegawai`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const KOTA_URL = `${API_URL}/master/kota`
+export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
+export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 
 export function TabDaftarUrutKepangkatan() {
   const navigate = useNavigate()
@@ -26,9 +31,6 @@ export function TabDaftarUrutKepangkatan() {
   const [valFilterNama, setFilterNama] = useState({val: ''})
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const [valFilterWilayah, setFilterWilayah] = useState({val: ''})
-  const [valFilterKecamatanSeksi, setFilterKecamatanSeksi] = useState({val: ''})
-  const [valFilterKelurahan, setFilterKelurahan] = useState({val: ''})
   const arrStatPegawai = ['CPNS', 'PNS', 'PTT', 'PJLP']
 
   const [data, setData] = useState([])
@@ -68,6 +70,7 @@ export function TabDaftarUrutKepangkatan() {
       selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'nama',
+      width: '150px',
       wrap: true,
     },
     {
@@ -75,29 +78,7 @@ export function TabDaftarUrutKepangkatan() {
       selector: (row: any) => row.nip,
       sortable: true,
       sortField: 'nip',
-      wrap: true,
-    },
-    {
-      name: 'NRK',
-      selector: (row: any) => row.tgl_lahir,
-      sortable: true,
-      sortField: 'nrk',
-      wrap: true,
-    },
-    {
-      name: 'Jabatan',
-      selector: (row: any) => row.jabatan,
-      sortable: true,
-      sortField: 'jabatan',
-      wrap: true,
-      center: true,
-    },
-    {
-      name: 'Status Kepegawaian',
-      selector: (row: any) => row.status_kepegawaian,
-      sortable: true,
-      sortField: 'status_kepegawaian',
-      width: '180px',
+      width: '200px',
       wrap: true,
       center: true,
     },
@@ -110,35 +91,46 @@ export function TabDaftarUrutKepangkatan() {
             ? 'NPJLP'
             : 'NRK'
           : 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
+      selector: (row: any) => row.nrk_nptt_npjlp,
       sortable: true,
-      sortField: 'kepegawaian_nrk',
+      sortField: 'nrk_nptt_npjlp',
       wrap: true,
       center: true,
     },
     {
-      name: 'Nomor KK',
-      selector: (row: any) => row.no_kk,
+      name: 'Jabatan',
+      selector: (row: any) => row.jabatan,
       sortable: true,
-      sortField: 'no_kk',
+      sortField: 'jabatan',
+      width: '250px',
       wrap: true,
       center: true,
     },
+    {
+      name: 'Status Kepegawaian',
+      selector: (row: any) => row.status_pegawai,
+      sortable: true,
+      sortField: 'status_pegawai',
+      width: '180px',
+      wrap: true,
+      center: true,
+    },
+
     {
       name: 'Tempat Tugas',
       selector: (row: any) => row.tempat_tugas,
       sortable: true,
       sortField: 'tempat_tugas',
-      width: '120px',
+      width: '180px',
       wrap: true,
+      center: true,
     },
     {
       name: 'Tanggal Lahir',
       selector: (row: any) => row.tanggal_lahir,
       sortable: true,
-      sortField: 'tanggal_lahir',
-      width: '120px',
-      wrap: true,
+      width: '150px',
+      center: true,
     },
     {
       name: 'Agama',
@@ -269,7 +261,7 @@ export function TabDaftarUrutKepangkatan() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -281,7 +273,7 @@ export function TabDaftarUrutKepangkatan() {
   const fetchUsers = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -297,12 +289,89 @@ export function TabDaftarUrutKepangkatan() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/filter?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
     setLoading(false)
   }
+
+  // GET DATA
+  interface SelectOptionAutoCom {
+    readonly value: string
+    readonly label: string
+  }
+
+  // GET KOTA (Wilayah / Bidang)
+  const [inputValKota, setFilterKota] = useState({label: '', value: null})
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(KOTA_URL + '/find')
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kota, value: i.id}))
+  }
+  const loadOptionsKota = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputKota = (newValue: any) => {
+    setFilterKota((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // GET Kecamatan
+  const [inputValKecamatan, setFilterKecamatan] = useState({label: '', value: null})
+  const filterKecamatan = async (inputValue: string) => {
+    const response = await axios.get(
+      KECAMATAN_URL +
+        '/findone-by-kecamatan?kota=' +
+        inputValKota.label +
+        '&kecamatan=' +
+        inputValue
+    )
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
+  }
+  const loadOptionsKecamatan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterKecamatan(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputKecamatan = (newValue: any) => {
+    setFilterKecamatan((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+  // END :: GET Kecamatan
+
+  // GET Kelurahan
+  const [inputValKelurahan, setFilterKelurahan] = useState({label: '', value: null})
+  const filterKelurahan = async (inputValue: string) => {
+    const response = await axios.get(
+      KELURAHAN_URL +
+        '/findone-by-kelurahan?kecamatan=' +
+        inputValKecamatan.label +
+        '&kelurahan=' +
+        inputValue
+    )
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
+  }
+  const loadOptionsKelurahan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterKelurahan(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputKelurahan = (newValue: any) => {
+    setFilterKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+  // END :: GET Kelurahan
 
   const handleFilter = async () => {
     let uriParam = ''
@@ -313,10 +382,19 @@ export function TabDaftarUrutKepangkatan() {
       uriParam += `&nama=${valFilterNama.val}`
     }
     if (valFilterNRK.val !== '') {
-      uriParam += `&nrk=${valFilterNRK.val}`
+      uriParam += `&nrk_nptt_npjlp=${valFilterNRK.val}`
     }
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+    }
+    if (inputValKota.value !== '') {
+      uriParam += `&kota=${inputValKota.value}`
+    }
+    if (inputValKecamatan.value !== '') {
+      uriParam += `&kecamatan=${inputValKecamatan.value}`
+    }
+    if (inputValKelurahan.value !== '') {
+      uriParam += `&Kelurahan=${inputValKelurahan.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
@@ -326,6 +404,9 @@ export function TabDaftarUrutKepangkatan() {
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
+    // setFilterKota({value: ''})
+    // setFilterKecamatan({value: ''})
+    // setFilterKelurahan({value: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -418,7 +499,7 @@ export function TabDaftarUrutKepangkatan() {
                 <input
                   type='text'
                   className='form-control form-control form-control-solid'
-                  name='nrk'
+                  name='nrk_nptt_npjlp'
                   value={valFilterNRK.val}
                   onChange={handleChangeInputNRK}
                   placeholder='NRK'
@@ -456,21 +537,15 @@ export function TabDaftarUrutKepangkatan() {
                 <label htmlFor='' className='mb-3'>
                   Wilayah / Bidang
                 </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  <option value=''>1</option>
-                  <option value=''>2</option>
-                  <option value=''>3</option>
-                  {/* {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })} */}
-                </select>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsKota}
+                  defaultOptions
+                  value={
+                    inputValKota.value ? inputValKota : {value: '', label: 'Pilih Wilayah / Bidang'}
+                  }
+                  onChange={handleChangeInputKota}
+                />
               </div>
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -478,21 +553,17 @@ export function TabDaftarUrutKepangkatan() {
                 <label htmlFor='' className='mb-3'>
                   Kecamatan / Seksi
                 </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  <option value=''>1</option>
-                  <option value=''>2</option>
-                  <option value=''>3</option>
-                  {/* {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })} */}
-                </select>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsKecamatan}
+                  defaultOptions
+                  value={
+                    inputValKecamatan.value
+                      ? inputValKecamatan
+                      : {value: '', label: 'Pilih Kecamatan'}
+                  }
+                  onChange={handleChangeInputKecamatan}
+                />
               </div>
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -500,21 +571,17 @@ export function TabDaftarUrutKepangkatan() {
                 <label htmlFor='' className='mb-3'>
                   Kelurahan
                 </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  <option value=''>1</option>
-                  <option value=''>2</option>
-                  <option value=''>3</option>
-                  {/* {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })} */}
-                </select>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsKelurahan}
+                  defaultOptions
+                  value={
+                    inputValKelurahan.value
+                      ? inputValKelurahan
+                      : {value: '', label: 'Pilih Kelurahan'}
+                  }
+                  onChange={handleChangeInputKelurahan}
+                />
               </div>
             </div>
           </div>
