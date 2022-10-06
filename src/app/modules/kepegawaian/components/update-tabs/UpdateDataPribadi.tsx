@@ -35,6 +35,16 @@ const validatorForm = Yup.object().shape({
   sesuai_ktp_rtrw: Yup.string().required('Wajib diisi'),
   domisili_alamat: Yup.string().required('Wajib diisi'),
   domisili_rtrw: Yup.string().required('Wajib diisi'),
+  status_perkawinan: Yup.string().required('Wajib diisi'),
+  jenis_kelamin: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_provinsi: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_kabkota: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_kecamatan: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_kelurahan: Yup.string().required('Wajib diisi'),
+  domisili_provinsi: Yup.string().required('Wajib diisi'),
+  domisili_kabkota: Yup.string().required('Wajib diisi'),
+  domisili_kecamatan: Yup.string().required('Wajib diisi'),
+  domisili_kelurahan: Yup.string().required('Wajib diisi'),
 })
 
 export function UpdateDataPribadi() {
@@ -688,11 +698,22 @@ export function UpdateDataPribadi() {
                                 }
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'jenis_kelamin')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'jenis_kelamin')
+                            handleChange('jenis_kelamin')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='jenis_kelamin'
                         />
+                        {touched.jenis_kelamin && errors.jenis_kelamin && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -712,11 +733,22 @@ export function UpdateDataPribadi() {
                                 }
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'agama')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'agama')
+                            handleChange('agama')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='agama'
                         />
+                        {touched.jenis_kelamin && errors.jenis_kelamin && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -794,11 +826,22 @@ export function UpdateDataPribadi() {
                             }
                           : {value: '', label: 'Pilih'}
                       }
-                      onChange={(e) => handleChangeFormikSelect(e, 'status_perkawinan')}
+                      onChange={(e) => {
+                        handleChangeFormikSelect(e, 'status_perkawinan')
+                        handleChange('status_perkawinan')(e.value)
+                      }}
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
                       noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                      name='status_perkawinan'
                     />
+                    {touched.status_perkawinan && errors.status_perkawinan && (
+                      <div className='fv-plugins-message-container'>
+                        <div className='fv-help-block'>
+                          <span role='alert'>Wajib Diisi</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                     <label htmlFor='' className='mb-3 required'>
@@ -904,11 +947,22 @@ export function UpdateDataPribadi() {
                               ? valProvKTP
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_provinsi')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'sesuai_ktp_provinsi')
+                            handleChange('sesuai_ktp_provinsi')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='sesuai_ktp_provinsi'
                         />
+                        {touched.sesuai_ktp_provinsi && errors.sesuai_ktp_provinsi && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -925,11 +979,22 @@ export function UpdateDataPribadi() {
                               ? valKabKotaKTP
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kabkota')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'sesuai_ktp_kabkota')
+                            handleChange('sesuai_ktp_kabkota')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='sesuai_ktp_kabkota'
                         />
+                        {touched.sesuai_ktp_kabkota && errors.sesuai_ktp_kabkota && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -955,6 +1020,13 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
+                        {touched.sesuai_ktp_kabkota && errors.sesuai_ktp_kabkota && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -971,11 +1043,22 @@ export function UpdateDataPribadi() {
                               ? valKelKTP
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kelurahan')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'sesuai_ktp_kelurahan')
+                            handleChange('sesuai_ktp_kelurahan')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='sesuai_ktp_kelurahan'
                         />
+                        {touched.sesuai_ktp_kelurahan && errors.sesuai_ktp_kelurahan && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1057,11 +1140,22 @@ export function UpdateDataPribadi() {
                               ? valProvDomisili
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'domisili_provinsi')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'domisili_provinsi')
+                            handleChange('domisili_provinsi')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='domisili_provinsi'
                         />
+                        {touched.domisili_provinsi && errors.domisili_provinsi && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -1078,11 +1172,22 @@ export function UpdateDataPribadi() {
                               ? valKabKotaDomisili
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'domisili_kabkota')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'domisili_kabkota')
+                            handleChange('domisili_kabkota')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='domisili_kabkota'
                         />
+                        {touched.domisili_kabkota && errors.domisili_kabkota && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1103,11 +1208,22 @@ export function UpdateDataPribadi() {
                               ? valKecDomisili
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'domisili_kecamatan')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'domisili_kecamatan')
+                            handleChange('domisili_kecamatan')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='domisili_kecamatan'
                         />
+                        {touched.domisili_kecamatan && errors.domisili_kecamatan && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -1124,11 +1240,22 @@ export function UpdateDataPribadi() {
                               ? valKelDomisili
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'domisili_kelurahan')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'domisili_kelurahan')
+                            handleChange('domisili_kelurahan')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='domisili_kelurahan'
                         />
+                        {touched.domisili_kelurahan && errors.domisili_kelurahan && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
