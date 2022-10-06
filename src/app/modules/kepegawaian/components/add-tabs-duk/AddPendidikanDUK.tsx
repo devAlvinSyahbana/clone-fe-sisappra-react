@@ -208,10 +208,11 @@ export function AddPendidikanDUK() {
             </Modal.Body>
             <Modal.Footer>
               <Button variant='secondary' onClick={handleClose}>
-                Discard
+                Kembali
               </Button>
               <Button variant='primary' onClick={handleClose}>
-                Submit
+                <i className='fa-solid fa-save'></i>
+                Simpan
               </Button>
             </Modal.Footer>
           </Modal>

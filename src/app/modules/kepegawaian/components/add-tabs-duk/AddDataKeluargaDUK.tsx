@@ -157,13 +157,13 @@ export function AddDataKeluargaDUK() {
                   data-kt-scroll-offset='300px'
                 >
                   <div className='fv-row mb-7'>
-                    <label className='required fw-semibold fs-6 mb-2'>Nama Suami / Istri</label>
+                    <label className='required fw-semibold fs-6 mb-2'>Nama</label>
                     <input
                       type='text'
                       name='kode_e'
                       id='kode_id_e'
                       className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder='Nama Suami / Istri'
+                      placeholder='Nama'
                       value=''
                     />
                   </div>
@@ -174,17 +174,6 @@ export function AddDataKeluargaDUK() {
                       name='jenis_pelanggaran_e'
                       className=' form-control form-control-solid mb-3 mb-lg-0'
                       placeholder='Hubungan Keluarga'
-                      value=''
-                    />
-                  </div>
-                  <div className='fv-row mb-7'>
-                    <label className='required fw-semibold fs-6 mb-2'>Nama Anak</label>
-                    <input
-                      type='text'
-                      name='kode_e'
-                      id='kode_id_e'
-                      className='form-control form-control-solid mb-3 mb-lg-0'
-                      placeholder='Nama Anak'
                       value=''
                     />
                   </div>
@@ -233,10 +222,11 @@ export function AddDataKeluargaDUK() {
             </Modal.Body>
             <Modal.Footer>
               <Button variant='secondary' onClick={handleClose}>
-                Discard
+                Kembali
               </Button>
               <Button variant='primary' onClick={handleClose}>
-                Submit
+                <i className='fa-solid fa-save'></i>
+                Simpan
               </Button>
             </Modal.Footer>
           </Modal>

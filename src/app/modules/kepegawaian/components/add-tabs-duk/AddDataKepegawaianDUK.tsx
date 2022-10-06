@@ -636,7 +636,7 @@ export function AddDataKepegawaianDUK() {
                   </div>
                 </div>
               </div>
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
+              <div className='col-sm-12 col-md-12 col-lg-12 col-xxl-12 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
                     <a href='/#' className='text-gray-800 text-hover-primary d-flex flex-column'>
@@ -650,7 +650,6 @@ export function AddDataKepegawaianDUK() {
                           path='/media/svg/files/pdf-dark.svg'
                         />
                       </div>
-                      <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
                     </a>
                     <label className='fw-semibold fs-6 mb-2 mt-2'>Upload Foto Terbaru</label>
                     <Field
