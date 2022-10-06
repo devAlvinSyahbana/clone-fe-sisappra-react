@@ -308,111 +308,115 @@ export function UpdateDataPribadi() {
   const [valProvKTP, setValProvKTP] = useState({value: '', label: ''})
   const [valProvDomisili, setValProvDomisili] = useState({value: '', label: ''})
   const getProvVal = async (params: any, field: string) => {
-    return await axios
-      .get(`${GLOBAL_URL}/global-provinsi/findone/${params}`)
-      .then((response) => {
-        if (field === 'sesuai_ktp_provinsi') {
-          setidOptProvKTP(response?.data?.data?.id)
-          setValProvKTP((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.name,
-          }))
-        }
-        if (field === 'domisili_provinsi') {
-          setidOptProvDom(response?.data?.data?.id)
-          setValProvDomisili((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.name,
-          }))
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-provinsi/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_provinsi') {
+            setidOptProvKTP(response?.data?.data?.id)
+            setValProvKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_provinsi') {
+            setidOptProvDom(response?.data?.data?.id)
+            setValProvDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
   }
 
   const [valKabKotaKTP, setValKabKotaKTP] = useState({value: '', label: ''})
   const [valKabKotaDomisili, setValKabKotaDomisili] = useState({value: '', label: ''})
   const getKabKotaVal = async (params: any, field: string) => {
-    return await axios
-      .get(`${GLOBAL_URL}/global-kab-kota/findone/${params}`)
-      .then((response) => {
-        if (field === 'sesuai_ktp_kabkota') {
-          setidOptKotKTP(response?.data?.data?.id)
-          setValKabKotaKTP((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.name,
-          }))
-        }
-        if (field === 'domisili_kabkota') {
-          setidOptKotDom(response?.data?.data?.id)
-          setValKabKotaDomisili((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.name,
-          }))
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kab-kota/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kabkota') {
+            setidOptKotKTP(response?.data?.data?.id)
+            setValKabKotaKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kabkota') {
+            setidOptKotDom(response?.data?.data?.id)
+            setValKabKotaDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
   }
 
   const [valKecKTP, setValKecKTP] = useState({value: '', label: ''})
   const [valKecDomisili, setValKecDomisili] = useState({value: '', label: ''})
   const getKecVal = async (params: any, field: string) => {
-    return await axios
-      .get(`${GLOBAL_URL}/global-kecamatan/findone/${params}`)
-      .then((response) => {
-        if (field === 'sesuai_ktp_kecamatan') {
-          setidOptKecKTP(response?.data?.data?.id)
-          setValKecKTP((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.name,
-          }))
-        }
-        if (field === 'domisili_kecamatan') {
-          setidOptKecDom(response?.data?.data?.id)
-          setValKecDomisili((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.name,
-          }))
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kecamatan/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kecamatan') {
+            setidOptKecKTP(response?.data?.data?.id)
+            setValKecKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kecamatan') {
+            setidOptKecDom(response?.data?.data?.id)
+            setValKecDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
   }
 
   const [valKelKTP, setValKelKTP] = useState({value: '', label: ''})
   const [valKelDomisili, setValKelDomisili] = useState({value: '', label: ''})
   const getKelVal = async (params: any, field: string) => {
-    return await axios
-      .get(`${GLOBAL_URL}/global-kelurahan/findone/${params}`)
-      .then((response) => {
-        if (field === 'sesuai_ktp_kelurahan') {
-          setValKelKTP((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.name,
-          }))
-        }
-        if (field === 'domisili_kelurahan') {
-          setValKelDomisili((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.name,
-          }))
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kelurahan/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kelurahan') {
+            setValKelKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kelurahan') {
+            setValKelDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
   }
 
   return (
@@ -573,7 +577,7 @@ export function UpdateDataPribadi() {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          isValid
+          isValid,
           /* and other goodies */
         }) => (
           <form onSubmit={handleSubmit}>
