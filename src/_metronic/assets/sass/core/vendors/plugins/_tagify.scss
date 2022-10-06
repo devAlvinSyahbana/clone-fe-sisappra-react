@@ -2,6 +2,19 @@
 // Tagify
 //
 
+// Bootstrap .form-control sizing integration
+$tagify-tag-padding-y-sm: 0.3rem;
+$tagify-tag-padding-x-sm: 0.3rem;
+$tagify-input-padding-y-sm: #{$input-padding-y-sm - $tagify-tag-padding-y-sm}; 
+
+$tagify-tag-padding-y: 0.4rem;
+$tagify-tag-padding-x: 0.4rem;
+$tagify-input-padding-y: $input-padding-y - $tagify-tag-padding-y; 
+
+$tagify-tag-padding-y-lg: 0.5rem;
+$tagify-tag-padding-x-lg: 0.5rem;
+$tagify-input-padding-y-lg: $input-padding-y-lg - $tagify-tag-padding-y-lg; 
+
 // Base
 .tagify {
     --tagify-dd-bg-color        : var(--kt-body-bg);
@@ -27,12 +40,21 @@
     
     .tagify__tag {
         background-color: var(--tag-bg);
+        margin: 0;
+        line-height: 1;
         
         div {
             border-radius: inherit;
         }
 
+        .tagify__tag-text {
+            overflow: visible;    
+        }
+
         .tagify__tag__removeBtn {
+            width: 0.6rem;
+            height: 0.6rem;
+            margin: 0  0.5rem 0 0;
             border-radius: 0;
             content: " ";
             @include svg-bg-icon(close, var(--kt-gray-500));
@@ -46,7 +68,7 @@
             }
         }
 
-        // Not allowed
+        // Not allowed state
         &.tagify--notAllowed {
             div {
                 .tagify__tag-text {
@@ -68,6 +90,8 @@
     }
 
     .tagify__input {
+        margin: 0;
+
         &:before {
             font-size: inherit;
             line-height: inherit;
@@ -75,19 +99,60 @@
         }
     }
 
-    // Sizes
-    &:not(.form-control-sm):not(.form-control-lg) {
-        // $input-padding-y, $input-height-border, $tag-font-size, $tag-border-radius, $tag-padding-y, $tag-padding-x, $tag-margin-y, $tag-margin-x, $remove-size, $remove-margin
-        @include tagify-size($input-padding-y, $input-height-border, 0.9rem, $input-border-radius, 0.2rem, 0.4rem, 0.2rem, 0.4rem, 0.6rem, 0.5rem);
-    }
-
-    &.form-control-lg {
-        @include tagify-size($input-padding-y-lg, $input-height-border, 1rem, $input-border-radius-lg, 0.2rem, 0.4rem, 0.2rem, 0.4rem, 0.6rem, 0.5rem);
+    // Sizing
+    &.form-control {
+        display: flex;
+        align-items: center;    
+        gap: 0.25rem;
     }
 
     &.form-control-sm {
-        @include tagify-size($input-padding-y-sm, $input-height-border, 0.8rem, $input-border-radius-sm, 0.15rem, 0.4rem, 0.15rem, 0.4rem, 0.5rem, 0.5rem);
+        border-radius: $btn-border-radius-sm;
+        min-height: $input-height-sm;
+        padding-top: $tagify-input-padding-y-sm;
+        padding-bottom: $tagify-input-padding-y-sm;
+
+        .tagify__tag {
+            padding: $tagify-tag-padding-y-sm $tagify-tag-padding-x-sm;
+            border-radius: $btn-border-radius-sm;
+
+            .tagify__tag-text {
+                font-size: $input-btn-font-size-sm;
+            }
+        }
     }
+
+    &:not(.form-control-sm):not(.form-control-lg) {
+        border-radius: $btn-border-radius;
+        min-height: $input-height;
+        padding-top: $tagify-input-padding-y;
+        padding-bottom: $tagify-input-padding-y;
+
+        .tagify__tag {
+            padding: $tagify-tag-padding-y $tagify-tag-padding-x;
+            border-radius: $btn-border-radius;
+
+            .tagify__tag-text {
+                font-size: $input-btn-font-size;
+            }
+        }
+    }
+
+    &.form-control-lg {
+        border-radius: $btn-border-radius-lg;
+        min-height: $input-height-lg;
+        padding-top: $tagify-input-padding-y-lg;
+        padding-bottom: $tagify-input-padding-y-lg;
+
+        .tagify__tag {
+            padding: $tagify-tag-padding-y-lg $tagify-tag-padding-x-lg;
+            border-radius: $btn-border-radius-lg;
+
+            .tagify__tag-text {
+                font-size: $input-btn-font-size-lg;
+            }
+        }
+    }   
 }
 
 // Dropdown

@@ -13,13 +13,11 @@
 @include media-breakpoint-up(lg) {
     // Base
     .app-footer {
+        @include property( z-index, $app-footer-z-index);
+
         background-color: var(--kt-app-footer-bg-color); 
         box-shadow: var(--kt-app-footer-box-shadow); 
         border-top: var(--kt-app-footer-border-top); 
-
-        @include property( z-index, $app-footer-z-index);
-        @include property( box-shadow, $app-footer-box-shadow);
-        @include property( border-top, $app-footer-border-top);
     }    
 
     // Vars
@@ -78,11 +76,11 @@
 @include media-breakpoint-down(lg) {
     // Base
     .app-footer {
+        @include property( z-index, $app-footer-z-index-mobile);
+
         background-color: var(--kt-app-footer-bg-color-mobile); 
         box-shadow: var(--kt-app-footer-box-shadow-mobile); 
         border-top: var(--kt-app-footer-border-top-mobile); 
-
-        @include property( z-index, $app-footer-z-index-mobile);
     }
 
     // Vars

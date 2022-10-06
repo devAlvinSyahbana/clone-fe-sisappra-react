@@ -153,7 +153,7 @@
         background-size: contain;
         background-size: 50%;   
         background-image: var(--kt-form-check-input-checked-bg-image);
-        background-color: var(--kt-primary);  
+        background-color: var(--kt-component-checked-bg);  
         @include border-bottom-start-radius($border-radius-lg);
         @include border-top-end-radius($border-radius-lg);
 
@@ -173,7 +173,7 @@
     }
 
     .btn-check:checked + div {
-        border: 2px solid var(--kt-primary);
+        border: 2px solid var(--kt-component-checked-bg);
         transition: $transition-base;
 
         .form-check-indicator {
@@ -212,7 +212,7 @@
 
     .form-check-label {
         font-weight: $font-weight-bold;    
-        margin-left: 0.25rem;
+        margin-left: 0.5rem;
     }
 
     &.active {
