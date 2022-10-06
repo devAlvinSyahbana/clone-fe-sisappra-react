@@ -178,19 +178,6 @@ export function TabDaftarUrutKepangkatan() {
                     >
                       Detail
                     </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
                     <Dropdown.Item href='#' onClick={() => konfirDel(record?.id)}>
                       Hapus
                     </Dropdown.Item>
