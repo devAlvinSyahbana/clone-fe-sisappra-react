@@ -8,9 +8,10 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
+import {KTSVG} from '../../../../_metronic/helpers'
+import { useTable, usePagination } from 'react-table'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 
@@ -398,40 +399,65 @@ export function InformasiDataPegawai() {
       </div>
 
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
-            <button onClick={handleFilter} className='btn btn-primary me-2'>
-              <i className='fa-solid fa-search'></i>
+        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+          <Link to='#' onClick={handleFilter}>
+            <button className='btn btn-light-primary me-2'>
+              <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
             </button>
           </Link>
           <Link to='#' onClick={handleFilterReset}>
-            <button className='btn btn-primary'>
-              <i className='fa-solid fa-arrows-rotate'></i>
+            <button className='btn btn-light-primary'>
+              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
               Reset
             </button>
           </Link>
         </div>
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <Dropdown as={ButtonGroup}>
-            <Button variant='light'>
-              {btnLoadingUnduh ? (
-                <>
-                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                  Memproses...
-                </>
-              ) : (
-                'Unduh'
-              )}
-            </Button>
+        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
+          {/* begin::Filter Button */}
+          <button
+            type='button'
+            className='btn btn-light-primary'
+            data-kt-menu-trigger='click'
+            data-kt-menu-placement='bottom-end'
+          >
+            {btnLoadingUnduh ? (
+              <>
+                <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                Memproses Unduh...
+              </>
+            ) : (
+              <>
+                <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                Unduh
+              </>
+            )}
+          </button>
+          {/* end::Filter Button */}
+          {/* begin::SubMenu */}
+          <div className='menu menu-sub menu-sub-dropdown w-100px w-md-150px' data-kt-menu='true'>
+            {/* begin::Header */}
+            <div className='px-7 py-5'>
+              <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+            </div>
+            {/* end::Header */}
 
-            <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+            {/* begin::Separator */}
+            <div className='separator border-gray-200'></div>
+            {/* end::Separator */}
 
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-              <Dropdown.Item>PDF</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+            {/* begin::Content */}
+            <div className='px-7 py-5' data-kt-user-table-filter='form'>
+              <button
+                onClick={handleUnduh}
+                className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+              >
+                Excel
+              </button>
+            </div>
+            {/* end::Content */}
+          </div>
+          {/* end::SubMenu */}
         </div>
       </div>
 
