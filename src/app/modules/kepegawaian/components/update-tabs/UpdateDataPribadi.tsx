@@ -690,6 +690,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'jenis_kelamin')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
@@ -712,6 +714,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'agama')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -792,6 +796,8 @@ export function UpdateDataPribadi() {
                       }
                       onChange={(e) => handleChangeFormikSelect(e, 'status_perkawinan')}
                       placeholder={'Pilih'}
+                      loadingMessage={() => 'Sedang mencari pilihan...'}
+                      noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                     />
                   </div>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
@@ -900,6 +906,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_provinsi')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
@@ -919,6 +927,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kabkota')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -942,6 +952,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kecamatan')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
@@ -961,6 +973,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kelurahan')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -1045,6 +1059,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'domisili_provinsi')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
@@ -1064,6 +1080,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'domisili_kabkota')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -1087,6 +1105,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'domisili_kecamatan')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
@@ -1106,6 +1126,8 @@ export function UpdateDataPribadi() {
                           }
                           onChange={(e) => handleChangeFormikSelect(e, 'domisili_kelurahan')}
                           placeholder={'Pilih'}
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
