@@ -1266,8 +1266,7 @@ export function UpdateDataPribadi() {
                       className='text-reset text-decoration-none'
                       to='/kepegawaian/informasi-data-pegawai'
                     >
-                      <button className='float-none btn btn-secondary align-self-center m-1'>
-                        <i className='fa fa-close'></i>
+                      <button className='float-none btn btn-light align-self-center m-1'>
                         Batal
                       </button>
                     </Link>
@@ -1276,7 +1275,6 @@ export function UpdateDataPribadi() {
                       className='float-none btn btn-primary align-self-center m-1'
                       disabled={isSubmitting || !isValid}
                     >
-                      <i className='fa-solid fa-save'></i>
                       Simpan
                     </button>
                   </div>
