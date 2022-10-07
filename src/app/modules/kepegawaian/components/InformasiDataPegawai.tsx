@@ -1,22 +1,52 @@
 import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import Button from 'react-bootstrap/Button'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {KTSVG} from '../../../../_metronic/helpers'
-import { useTable, usePagination } from 'react-table'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL = `${API_URL}/informasi-data-pegawai`
+export const MASTER_URL = `${API_URL}/master`
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
 export function InformasiDataPegawai() {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
   const [valStatPegawai, setValStatPegawai] = useState({val: ''})
@@ -51,7 +81,7 @@ export function InformasiDataPegawai() {
       selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'nama',
-      width: '200px',
+      minWidth: '200px',
       wrap: true,
       cell: (record: any) => {
         return (
@@ -83,6 +113,7 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'tempat_lahir',
       wrap: true,
+      minWidth: '125px',
     },
     {
       name: 'Tanggal Lahir',
@@ -90,7 +121,7 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'tgl_lahir',
       wrap: true,
-      minWidth: '15',
+      minWidth: '125px',
     },
     {
       name:
@@ -101,11 +132,12 @@ export function InformasiDataPegawai() {
             ? 'NPJLP'
             : 'NRK'
           : 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
+      selector: (row: any) => row.no_pegawai,
       sortable: true,
-      sortField: 'kepegawaian_nrk',
+      sortField: 'no_pegawai',
       wrap: true,
       center: true,
+      minWidth: '100px',
     },
     {
       name: 'Tipe Pegawai',
@@ -114,6 +146,7 @@ export function InformasiDataPegawai() {
       sortField: 'kepegawaian_status_pegawai',
       wrap: true,
       center: true,
+      minWidth: '125px',
     },
     {
       name: 'Jenis Kelamin',
@@ -122,6 +155,7 @@ export function InformasiDataPegawai() {
       sortField: 'jenis_kelamin',
       wrap: true,
       center: true,
+      minWidth: '125px',
     },
     {
       name: 'Agama',
@@ -130,6 +164,7 @@ export function InformasiDataPegawai() {
       sortField: 'agama',
       wrap: true,
       center: true,
+      minWidth: '100px',
     },
     {
       name: 'No. HP',
@@ -137,6 +172,7 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'no_hp',
       wrap: true,
+      minWidth: '100px',
     },
     {
       name: 'Aksi',
@@ -215,7 +251,7 @@ export function InformasiDataPegawai() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -227,7 +263,7 @@ export function InformasiDataPegawai() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -243,7 +279,7 @@ export function InformasiDataPegawai() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -303,7 +339,7 @@ export function InformasiDataPegawai() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
+      url: `${KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL}/unduh-pegawai?status=${
         valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
       }`,
       method: 'GET',
@@ -473,6 +509,7 @@ export function InformasiDataPegawai() {
           onChangeRowsPerPage={handlePerRowsChange}
           onChangePage={handlePageChange}
           customStyles={customStyles}
+          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
         />
       </div>
       {/* end::Body */}
