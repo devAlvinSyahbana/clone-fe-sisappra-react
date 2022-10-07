@@ -9,6 +9,8 @@ import moment from 'moment'
 import Swal from 'sweetalert2'
 import * as Yup from 'yup'
 import clsx from 'clsx'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -17,6 +19,100 @@ export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 export const GLOBAL_URL = `${API_URL}/master`
+
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 const validatorForm = Yup.object().shape({
   nama: Yup.string().required('Wajib diisi'),
@@ -51,6 +147,8 @@ export function UpdateDataPribadi() {
   const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>({})
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
 
   useEffect(() => {
     const fetchData = async () => {
@@ -706,6 +804,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='jenis_kelamin'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.jenis_kelamin && errors.jenis_kelamin && (
                           <div className='fv-plugins-message-container'>
@@ -741,6 +842,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='agama'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.jenis_kelamin && errors.jenis_kelamin && (
                           <div className='fv-plugins-message-container'>
@@ -834,6 +938,9 @@ export function UpdateDataPribadi() {
                       loadingMessage={() => 'Sedang mencari pilihan...'}
                       noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                       name='status_perkawinan'
+                      styles={
+                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                      }
                     />
                     {touched.status_perkawinan && errors.status_perkawinan && (
                       <div className='fv-plugins-message-container'>
@@ -955,6 +1062,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='sesuai_ktp_provinsi'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.sesuai_ktp_provinsi && errors.sesuai_ktp_provinsi && (
                           <div className='fv-plugins-message-container'>
@@ -987,6 +1097,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='sesuai_ktp_kabkota'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.sesuai_ktp_kabkota && errors.sesuai_ktp_kabkota && (
                           <div className='fv-plugins-message-container'>
@@ -1019,6 +1132,9 @@ export function UpdateDataPribadi() {
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.sesuai_ktp_kabkota && errors.sesuai_ktp_kabkota && (
                           <div className='fv-plugins-message-container'>
@@ -1051,6 +1167,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='sesuai_ktp_kelurahan'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.sesuai_ktp_kelurahan && errors.sesuai_ktp_kelurahan && (
                           <div className='fv-plugins-message-container'>
@@ -1148,6 +1267,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='domisili_provinsi'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.domisili_provinsi && errors.domisili_provinsi && (
                           <div className='fv-plugins-message-container'>
@@ -1180,6 +1302,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='domisili_kabkota'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.domisili_kabkota && errors.domisili_kabkota && (
                           <div className='fv-plugins-message-container'>
@@ -1216,6 +1341,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='domisili_kecamatan'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.domisili_kecamatan && errors.domisili_kecamatan && (
                           <div className='fv-plugins-message-container'>
@@ -1248,6 +1376,9 @@ export function UpdateDataPribadi() {
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                           name='domisili_kelurahan'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                         {touched.domisili_kelurahan && errors.domisili_kelurahan && (
                           <div className='fv-plugins-message-container'>
