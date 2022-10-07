@@ -75,6 +75,20 @@ export function InformasiDataPegawai() {
     )
   }
 
+  const GetAgama = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${MASTER_URL}/agama/findone/${id}`)
+        const result: string = data.data.agama
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
   const columns = [
     {
       name: 'Nama',
@@ -163,8 +177,8 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'agama',
       wrap: true,
-      center: true,
       minWidth: '100px',
+      cell: (record: any) => <GetAgama row={parseInt(record.agama)} />,
     },
     {
       name: 'No. HP',
