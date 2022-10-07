@@ -202,7 +202,7 @@ export function LaporanSaranaPrasarana() {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Ya!',
       cancelButtonText: 'Tidak!',
-      color: '#000000'
+      color: '#000000',
     }).then(async (result) => {
       if (result.isConfirmed) {
         const response = await axios.delete(`${SARANA_PRASARANA_URL}/delete/${id}`)
@@ -213,7 +213,7 @@ export function LaporanSaranaPrasarana() {
             text: 'Data berhasil dihapus',
             showConfirmButton: false,
             timer: 1500,
-            color: '#000000'
+            color: '#000000',
           })
         } else {
           Swal.fire({
@@ -221,7 +221,7 @@ export function LaporanSaranaPrasarana() {
             text: 'Data gagal dihapus, harap mencoba lagi',
             showConfirmButton: false,
             timer: 1500,
-            color: '#000000'
+            color: '#000000',
           })
         }
       }
@@ -235,6 +235,7 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'jenis_sarana_prasarana',
       wrap: true,
+      minWidth: '200px',
     },
     {
       name: 'Status Sarana & Prasarana',
@@ -242,6 +243,7 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'status_sarana_prasarana',
       wrap: true,
+      minWidth: '200px',
     },
     {
       name: 'Jumlah',
@@ -249,6 +251,8 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'jumlah',
       wrap: true,
+      minWidth: '100px',
+      center: true,
     },
     {
       name: 'Kondisi',
@@ -256,6 +260,7 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'kondisi',
       wrap: true,
+      minWidth: '100px',
     },
     {
       name: 'Keterangan',
@@ -263,11 +268,14 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'keterangan',
       wrap: true,
+      minWidth: '100px',
     },
     {
       name: 'Dokumentasi',
       selector: (row: any) => row.dokumentasi,
       sortable: false,
+      minWidth: '100px',
+      center: true,
       cell: (record: any) => {
         return (
           <a
