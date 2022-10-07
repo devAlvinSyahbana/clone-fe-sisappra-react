@@ -30,7 +30,7 @@ import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
 import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
 import {AddDataPPNS} from './components/add-tabs-ppns/AddDataPPNS'
 import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
-import {UpdateNaikPangkat} from './components/update-tabs/UpdateNaikPangkat'
+import {UpdateNaikPangkat} from './components/update-naik-pangkat/UpdateNaikPangkat'
 
 import {DataPPNS} from './components/tabs-ppns/DataPPNS'
 
