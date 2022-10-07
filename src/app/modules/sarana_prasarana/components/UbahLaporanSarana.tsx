@@ -6,6 +6,102 @@ import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 import {KTSVG} from '../../../../_metronic/helpers'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 export interface FormInput {
   jenis_sarana_prasarana?: any
@@ -43,6 +139,8 @@ export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://local
 
 export function UbahLaporanSarana() {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   const {id} = useParams()
   const [selectedFile, setSelectedFile] = useState(null)
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
@@ -176,7 +274,7 @@ export function UbahLaporanSarana() {
               console.log('File success uploaded!')
               Swal.fire({
                 icon: 'success',
-                title: 'Data berhasil disimpan',
+                text: 'Data berhasil disimpan',
                 showConfirmButton: false,
                 timer: 1500,
               })
@@ -186,7 +284,7 @@ export function UbahLaporanSarana() {
           }
           Swal.fire({
             icon: 'success',
-            title: 'Data berhasil disimpan',
+            text: 'Data berhasil disimpan',
             showConfirmButton: false,
             timer: 1500,
           })
@@ -195,7 +293,7 @@ export function UbahLaporanSarana() {
       } catch (error) {
         Swal.fire({
           icon: 'error',
-          title: 'Data gagal disimpan, harap mencoba lagi',
+          text: 'Data gagal disimpan, harap mencoba lagi',
           showConfirmButton: false,
           timer: 1500,
         })
@@ -231,6 +329,11 @@ export function UbahLaporanSarana() {
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -252,6 +355,11 @@ export function UbahLaporanSarana() {
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -273,6 +381,11 @@ export function UbahLaporanSarana() {
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -321,7 +434,7 @@ export function UbahLaporanSarana() {
                                 <a
                                   className='text-gray-800 text-hover-primary d-flex flex-column'
                                   target='_blank'
-                                  rel="noreferrer"
+                                  rel='noreferrer'
                                   href={`${API_URL}/${valuesFormikExist?.file_dokumentasi}`}
                                 >
                                   <div className='symbol symbol-75px mb-5'>
@@ -363,13 +476,14 @@ export function UbahLaporanSarana() {
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
                     <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>
-                      <button className='btn btn-secondary'>
-                        <i className='fa-solid fa-arrow-left'></i>
-                        Kembali
+                      <button className='float-none btn btn-light align-self-center m-1'>
+                        Batal
                       </button>
                     </Link>
-                    <button className='btn btn-primary' type='submit'>
-                      <i className='fa-solid fa-paper-plane'></i>
+                    <button
+                      className='float-none btn btn-primary align-self-center m-1'
+                      type='submit'
+                    >
                       Simpan
                     </button>
                   </div>

@@ -5,6 +5,102 @@ import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 export interface FormInput {
   jenis_sarana_prasarana?: any
@@ -29,6 +125,8 @@ export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://local
 
 export function TambahLaporanSarana() {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
 
   // AUTOCOMPLITE JENIS SARANA & PRASANAN
   const filterSapra = async (inputValue: string) => {
@@ -121,7 +219,7 @@ export function TambahLaporanSarana() {
               console.log('File success uploaded!')
               Swal.fire({
                 icon: 'success',
-                title: 'Data berhasil disimpan',
+                text: 'Data berhasil disimpan',
                 showConfirmButton: false,
                 timer: 1500,
               })
@@ -131,7 +229,7 @@ export function TambahLaporanSarana() {
           }
           Swal.fire({
             icon: 'success',
-            title: 'Data berhasil disimpan',
+            text: 'Data berhasil disimpan',
             showConfirmButton: false,
             timer: 1500,
           })
@@ -140,7 +238,7 @@ export function TambahLaporanSarana() {
       } catch (error) {
         Swal.fire({
           icon: 'error',
-          title: 'Data gagal disimpan, harap mencoba lagi',
+          text: 'Data gagal disimpan, harap mencoba lagi',
           showConfirmButton: false,
           timer: 1500,
         })
@@ -176,6 +274,11 @@ export function TambahLaporanSarana() {
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -195,6 +298,11 @@ export function TambahLaporanSarana() {
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -214,6 +322,11 @@ export function TambahLaporanSarana() {
                               : {value: '', label: 'Pilih'}
                           }
                           placeholder={'Pilih'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
@@ -243,9 +356,11 @@ export function TambahLaporanSarana() {
                           onChange={(event: {target: any}) =>
                             setSelectedFile(event.target.files[0])
                           }
-                          accept="image/jpeg,image/png,application/pdf"
+                          accept='image/jpeg,image/png,application/pdf'
                         />
-                        <small className='mt-4'>*File yang dapat di upload berformat (.pdf, .jpeg, .png)</small>
+                        <small className='mt-4'>
+                          *File yang dapat di upload berformat (.pdf, .jpeg, .png)
+                        </small>
                       </div>
                     </div>
                     <div className='col-12 mb-6'>
@@ -263,13 +378,14 @@ export function TambahLaporanSarana() {
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
                     <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>
-                      <button className='btn btn-secondary'>
-                        <i className='fa-solid fa-arrow-left'></i>
-                        Kembali
+                      <button className='float-none btn btn-light align-self-center m-1'>
+                        Batal
                       </button>
                     </Link>
-                    <button className='btn btn-primary' type='submit'>
-                      <i className='fa-solid fa-paper-plane'></i>
+                    <button
+                      className='float-none btn btn-primary align-self-center m-1'
+                      type='submit'
+                    >
                       Simpan
                     </button>
                   </div>
