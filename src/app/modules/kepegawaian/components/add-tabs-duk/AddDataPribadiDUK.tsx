@@ -380,7 +380,7 @@ export function AddDataPribadiDUK() {
               values.kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat,
           }
           try {
-            const response = await axios.put(`${KEPEGAWAIAN_URL}/update/${id}/${status}`, bodyParam)
+            const response = await axios.put(`${KEPEGAWAIAN_URL}/create/${id}/${status}`, bodyParam)
             if (response) {
               Swal.fire({
                 icon: 'success',
@@ -388,9 +388,12 @@ export function AddDataPribadiDUK() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate(`/kepegawaian/InformasiDataPegawai/UpdateDataPribadi/${id}/${status}`, {
-                replace: true,
-              })
+              navigate(
+                `/kepegawaian/tab-daftar-urut-kepangkatan/tambah-data-pribadi-duk/${id}/${status}`,
+                {
+                  replace: true,
+                }
+              )
             }
           } catch (error) {
             Swal.fire({
@@ -841,7 +844,7 @@ export function AddDataPribadiDUK() {
                   <div className='text-center'>
                     <Link
                       className='text-reset text-decoration-none'
-                      to='/kepegawaian/InformasiDataPegawai'
+                      to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
                     >
                       <button className='float-none btn btn-secondary align-self-center m-1'>
                         <i className='fa fa-close'></i>

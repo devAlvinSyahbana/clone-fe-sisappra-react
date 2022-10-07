@@ -292,7 +292,7 @@ export function TabDaftarUrutKepangkatan() {
   // GET KOTA (Wilayah / Bidang)
   const [inputValKota, setFilterKota] = useState({label: '', value: null})
   const filterKota = async (inputValue: string) => {
-    const response = await axios.get(KOTA_URL + '/find')
+    const response = await axios.get(KOTA_URL + '/filter-kota/' + inputValue)
     const json = await response.data.data
     return json.map((i: any) => ({label: i.kota, value: i.id}))
   }
@@ -591,7 +591,7 @@ export function TabDaftarUrutKepangkatan() {
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
             <Link
-              to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK'
+              to='/kepegawaian/tab-daftar-urut-kepangkatan/tambah-data-pribadi-duk'
               onClick={handleFilterReset}
               className='me-2'
             >

@@ -45,9 +45,9 @@ const AddHeaderDetailDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('AddDataPribadiDUK') && 'active')
+                      (location.pathname.includes('tambah-data-pribadi-duk') && 'active')
                     }
-                    to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK'
+                    to='/kepegawaian/tab-daftar-urut-kepangkatan/tambah-data-pribadi-duk'
                   >
                     Data Pribadi
                   </Link>
@@ -56,9 +56,9 @@ const AddHeaderDetailDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('AddDataKeluargaDUK') && 'active')
+                      (location.pathname.includes('tambah-data-keluarga-duk') && 'active')
                     }
-                    to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataKeluargaDUK'
+                    to='/kepegawaian/tab-daftar-urut-kepangkatan/tambah-data-keluarga-duk'
                   >
                     Data Keluarga
                   </Link>
@@ -67,9 +67,9 @@ const AddHeaderDetailDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('AddPendidikanDUK') && 'active')
+                      (location.pathname.includes('tambah-pendidikan-duk') && 'active')
                     }
-                    to='/kepegawaian/TabDaftarUrutKepangkatan/AddPendidikanDUK'
+                    to='/kepegawaian/tab-daftar-urut-kepangkatan/tambah-pendidikan-duk'
                   >
                     Pendidikan
                   </Link>
@@ -78,9 +78,9 @@ const AddHeaderDetailDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('AddDataKepegawaianDUK') && 'active')
+                      (location.pathname.includes('tambah-data-kepegawaian-duk') && 'active')
                     }
-                    to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataKepegawaianDUK'
+                    to='/kepegawaian/tab-daftar-urut-kepangkatan/tambah-data-kepegawaian-duk'
                   >
                     Data Kepegawaian
                   </Link>

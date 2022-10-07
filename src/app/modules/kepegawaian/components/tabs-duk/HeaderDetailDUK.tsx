@@ -140,9 +140,9 @@ const HeaderDetailWrapperDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('DataPribadiDUK') && 'active')
+                      (location.pathname.includes('data-pribadi-duk') && 'active')
                     }
-                    to={`/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${id}/${status}`}
+                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-pribadi-duk/${id}/${status}`}
                   >
                     Data Pribadi
                   </Link>
@@ -151,9 +151,9 @@ const HeaderDetailWrapperDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('DataKeluargaDUK') && 'active')
+                      (location.pathname.includes('data-keluarga-duk') && 'active')
                     }
-                    to={`/kepegawaian/TabDaftarUrutKepangkatan/DataKeluargaDUK/${id}/${status}`}
+                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-keluarga-duk/${id}/${status}`}
                   >
                     Data Keluarga
                   </Link>
@@ -162,9 +162,9 @@ const HeaderDetailWrapperDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('PendidikanDUK') && 'active')
+                      (location.pathname.includes('pendidikan-duk') && 'active')
                     }
-                    to={`/kepegawaian/TabDaftarUrutKepangkatan/PendidikanDUK/${id}/${status}`}
+                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/pendidikan-duk/${id}/${status}`}
                   >
                     Pendidikan
                   </Link>
@@ -175,7 +175,7 @@ const HeaderDetailWrapperDUK = () => {
                       `nav-link text-active-primary me-6 ` +
                       (location.pathname.includes('DataKepegawaianDUK') && 'active')
                     }
-                    to={`/kepegawaian/TabDaftarUrutKepangkatan/DataKepegawaianDUK/${id}/${status}`}
+                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-kepegawaian-duk/${id}/${status}`}
                   >
                     Data Kepegawaian
                   </Link>

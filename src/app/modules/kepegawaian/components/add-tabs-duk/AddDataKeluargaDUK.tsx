@@ -235,7 +235,7 @@ export function AddDataKeluargaDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan/'
+                to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
                   <i className='fa fa-close'></i>
@@ -244,7 +244,7 @@ export function AddDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataPribadiDUK'
+                to='/kepegawaian/tab-daftar-urut-kepangkatan/tambah-data-pribadi-duk'
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -253,7 +253,7 @@ export function AddDataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/TabDaftarUrutKepangkatan/AddPendidikanDUK'
+                to='/kepegawaian/tab-daftar-urut-kepangkatan/tambah-pendidikan-duk'
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
