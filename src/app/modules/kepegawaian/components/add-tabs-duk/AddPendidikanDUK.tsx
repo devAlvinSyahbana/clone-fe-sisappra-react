@@ -195,7 +195,7 @@ export function AddPendidikanDUK() {
                     />
                   </div>
                   <div className='fv-row mb-7'>
-                    <label className='required fw-semibold fs-6 mb-2'>File Ijazah</label>
+                    <label className='required fw-semibold fs-6 mb-2'>Upload Ijazah</label>
                     <input
                       type='FIle'
                       className=' form-control form-control-solid mb-3 mb-lg-0'
@@ -208,10 +208,11 @@ export function AddPendidikanDUK() {
             </Modal.Body>
             <Modal.Footer>
               <Button variant='secondary' onClick={handleClose}>
-                Discard
+                Kembali
               </Button>
               <Button variant='primary' onClick={handleClose}>
-                Submit
+                <i className='fa-solid fa-save'></i>
+                Simpan
               </Button>
             </Modal.Footer>
           </Modal>
@@ -229,7 +230,7 @@ export function AddPendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKeluargaDUK`}
+                to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataKeluargaDUK'
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -238,7 +239,7 @@ export function AddPendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/UpdateDataKepegawaianDUK`}
+                to='/kepegawaian/TabDaftarUrutKepangkatan/AddDataKepegawaianDUK'
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
