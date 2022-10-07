@@ -510,6 +510,13 @@ export function InformasiDataPegawai() {
           onChangePage={handlePageChange}
           customStyles={customStyles}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+          noDataComponent={
+            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+              <div className='d-flex flex-column'>
+                <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+              </div>
+            </div>
+          }
         />
       </div>
       {/* end::Body */}
