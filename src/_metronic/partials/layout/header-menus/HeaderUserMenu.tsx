@@ -23,7 +23,7 @@ const HeaderUserMenu: FC = () => {
                 />
               </div>
             ) : (
-              <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}>
+              <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-dark-secondary`)}>
                 {currentUser?.data_pegawai?.nama && currentUser?.data_pegawai?.nama !== ''
                   ? currentUser?.data_pegawai?.nama.charAt(0)
                   : '?'}
