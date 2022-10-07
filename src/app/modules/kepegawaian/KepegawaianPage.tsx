@@ -44,6 +44,7 @@ import {DataPribadiDUK} from './components/tabs-duk/DataPribadiDUK'
 import {DataKeluargaDUK} from './components/tabs-duk/DataKeluargaDUK'
 import {DataKepegawaianDUK} from './components/tabs-duk/DataKepegawaianDUK'
 import {PendidikanDUK} from './components/tabs-duk/PendidikanDUK'
+import {HirarkiKepegawaianDUK} from './components/tabs-duk/HirarkiKepegawaianDUK'
 
 import {UnduhLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 import {TabRekapitulasiPejabatStruktural} from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
@@ -540,6 +541,17 @@ const KepegawaianPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data Pendidikan DUK</PageTitle>
+              <PendidikanDUK />
+            </>
+          }
+        />
+        <Route
+          path='tab-daftar-urut-kepangkatan/hirarki-kepegawaian-duk/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Detail Hirarki Kepegawaian DUK
+              </PageTitle>
               <PendidikanDUK />
             </>
           }

@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
-import {HeaderDetailWrapperDUK} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetailDUK'
 import axios from 'axios'
 import moment from 'moment'
 
@@ -47,7 +47,7 @@ export function DataKeluargaDUK() {
   return (
     <div>
       {/* Header */}
-      <HeaderDetailWrapperDUK />
+      <HeaderDetailWrapper />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
@@ -61,11 +61,10 @@ export function DataKeluargaDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
+                to='/kepegawaian/tab-daftar-urut-kepangkatan'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
-                  <i className='fa fa-close'></i>
-                  Batal
+                  Keluar
                 </button>
               </Link>
               <Link
@@ -79,7 +78,7 @@ export function DataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/tab-daftar-urut-kepangkatan/pendidikan-duk/${id}/${status}`}
+                to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-pendidikan-duk/${id}/${status}`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

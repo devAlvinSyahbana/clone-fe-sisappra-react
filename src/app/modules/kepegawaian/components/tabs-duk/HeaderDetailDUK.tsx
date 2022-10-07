@@ -13,7 +13,7 @@ import {
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
-const HeaderDetailWrapperDUK = () => {
+const HeaderDetailWrapper = () => {
   const location = useLocation()
   const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>()
@@ -151,7 +151,7 @@ const HeaderDetailWrapperDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('data-keluarga-duk') && 'active')
+                      (location.pathname.includes('data-keluarga') && 'active')
                     }
                     to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-keluarga-duk/${id}/${status}`}
                   >
@@ -173,11 +173,22 @@ const HeaderDetailWrapperDUK = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('DataKepegawaianDUK') && 'active')
+                      (location.pathname.includes('data-kepegawaian-duk') && 'active')
                     }
                     to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-kepegawaian-duk/${id}/${status}`}
                   >
                     Data Kepegawaian
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('hirarki-kepegawaian') && 'active')
+                    }
+                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/hirarki-kepegawaian-duk/${id}/${status}`}
+                  >
+                    Hirarki Kepegawaian
                   </Link>
                 </li>
               </ul>
@@ -189,4 +200,4 @@ const HeaderDetailWrapperDUK = () => {
   )
 }
 
-export {HeaderDetailWrapperDUK}
+export {HeaderDetailWrapper}

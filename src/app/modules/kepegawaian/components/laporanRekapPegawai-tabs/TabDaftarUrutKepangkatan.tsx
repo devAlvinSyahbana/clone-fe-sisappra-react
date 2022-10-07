@@ -171,7 +171,7 @@ export function TabDaftarUrutKepangkatan() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          `/kepegawaian/tab-daftar-urut-kepangkatan/data-pribadi-duk/${record?.id}/${record?.kepegawaian_status_pegawai}`,
                           {replace: true}
                         )
                       }

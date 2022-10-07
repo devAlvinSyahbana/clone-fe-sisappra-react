@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react'
 import {Link} from 'react-router-dom'
 import {useParams} from 'react-router-dom'
 import {DetailPegawaiInterface} from '../KepegawaianInterface'
-import {HeaderDetailWrapperDUK} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetailDUK'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -30,7 +30,7 @@ export function DataPribadiDUK() {
   return (
     <>
       {/* Header */}
-      <HeaderDetailWrapperDUK />
+      <HeaderDetailWrapper />
       {/* Second Card */}
       <Formik
         initialValues={{
@@ -370,11 +370,10 @@ export function DataPribadiDUK() {
               <div className='text-center'>
                 <Link
                   className='text-reset text-decoration-none'
-                  to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
+                  to='/kepegawaian/tab-daftar-urut-kepangkatan'
                 >
                   <button className='float-none btn btn-secondary align-self-center m-1'>
-                    <i className='fa fa-close'></i>
-                    Batal
+                    Keluar
                   </button>
                 </Link>
                 <Link

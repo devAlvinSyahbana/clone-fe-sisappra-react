@@ -1,7 +1,7 @@
 import {useEffect, useState, Fragment} from 'react'
 import {Link, useParams} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
-import {HeaderDetailWrapperDUK} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetailDUK'
 import axios from 'axios'
 import moment from 'moment'
 
@@ -72,7 +72,7 @@ export function PendidikanDUK() {
   return (
     <div>
       {/* Header */}
-      <HeaderDetailWrapperDUK />
+      <HeaderDetailWrapper />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
@@ -86,11 +86,10 @@ export function PendidikanDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/'
+                to='/kepegawaian/tab-daftar-urut-kepangkatan'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
-                  <i className='fa fa-close'></i>
-                  Batal
+                  Keluar
                 </button>
               </Link>
               <Link
