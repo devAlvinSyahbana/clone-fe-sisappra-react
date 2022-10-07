@@ -18,8 +18,17 @@ interface GetDataInterface {
   nama?: string
 }
 
+export interface SelectOption {
+  readonly value: string
+  readonly label: string
+  readonly color: string
+  readonly isFixed?: boolean
+  readonly isDisabled?: boolean
+}
+
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian` //http://localhost:3000/kepegawaian
+export const PANGKAT_URL = `${API_URL}/master/pangkat`
 
 export function UpdateNaikPangkat() {
   const navigate = useNavigate()
@@ -27,6 +36,8 @@ export function UpdateNaikPangkat() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
+
+  const [inputValPangkat, setDataPangkat] = useState({label: '', value: null})
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,6 +120,20 @@ export function UpdateNaikPangkat() {
       }
     },
   })
+
+  const filterPangkat = async (inputValue: string) => {
+    const response = await axios.get(`${PANGKAT_URL}/find${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.pangkat, value: i.id}))
+  }
+  const loadOptionsPangkat = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterPangkat(inputValue))
+    }, 1000)
+  }
+  const handleInputPangkat = (newValue: any) => {
+    setDataPangkat((prevstate: any) => ({...prevstate, ...newValue}))
+  }
 
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
@@ -320,17 +345,15 @@ export function UpdateNaikPangkat() {
                     <div className='col-4 mb-3'>
                       <div className='form-group'>
                         <Form.Label>Status Kenaikan</Form.Label>
-                        <Form.Control
-                          name='kepegawaian_nip'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
+                        <AsyncSelect
+                          cacheOptions
                           value={
-                            valuesFormik?.kepegawaian_nip || valuesFormik?.kepegawaian_nip === ''
-                              ? valuesFormik?.kepegawaian_nip
-                              : valuesFormikExist?.kepegawaian_nip
-                              ? valuesFormikExist?.kepegawaian_nip
-                              : ''
+                            inputValPangkat.value ? inputValPangkat : {value: '', label: 'Pilih'}
                           }
+                          loadOptions={loadOptionsPangkat}
+                          defaultOptions
+                          onChange={handleInputPangkat}
+                          placeholder={'Pilih'}
                         />
                       </div>
                     </div>
@@ -355,8 +378,8 @@ export function UpdateNaikPangkat() {
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
                     <Link to='/kepegawaian/LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat/'>
                       <button className='btn btn-secondary'>
-                        <i className='fa-solid fa-arrow-left'></i>
-                        Kembali
+                        <i className='fa fa-close'></i>
+                        Batal
                       </button>
                     </Link>
                     <button className='btn btn-primary' type='submit'>
