@@ -1,21 +1,23 @@
-import { useEffect, useState } from 'react'
-import { KTSVG } from '../../../../../_metronic/helpers'
-import { Link } from 'react-router-dom'
-import { useLocation, useParams } from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import {KTSVG} from '../../../../../_metronic/helpers'
+import {Link} from 'react-router-dom'
+import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
 import clsx from 'clsx'
 import {
   DetailPegawaiInterface,
   JumlahKeluargaInterface,
   PendidikanInterface,
+  DetailMasterJabatan,
 } from '../KepegawaianInterface'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
+export const MASTER_URL = `${API_URL}/master`
 
 const UpdateHeaderDetail = () => {
   const location = useLocation()
-  const { id, status } = useParams()
+  const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>()
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
@@ -28,11 +30,25 @@ const UpdateHeaderDetail = () => {
         `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
       )
       setJkeluarga(keluarga.data.data)
-      setPendidikan(pendidikan.data.data)
+      if (pendidikan.data.data) {
+        const {data} = await axios.get(
+          `${MASTER_URL}/pendidikan/findone/${pendidikan.data.data.jenis_pendidikan}`
+        )
+        setPendidikan((prevstate) => ({...prevstate, jenis_pendidikan: data.data.pendidikan}))
+      }
       setData(response.data.data)
+      getDetailJabatan(response.data.data.kepegawaian_jabatan)
     }
     fetchData()
   }, [id, status])
+
+  const [detailJabatan, setDetailJabatan] = useState<DetailMasterJabatan>()
+  const getDetailJabatan = async (id: number) => {
+    if (id) {
+      const response = await axios.get(`${MASTER_URL}/jabatan/findone/${id}`)
+      setDetailJabatan((prevstate) => ({...prevstate, ...response.data.data}))
+    }
+  }
 
   return (
     <>
@@ -48,7 +64,11 @@ const UpdateHeaderDetail = () => {
                     </div>
                   ) : (
                     <div
-                      className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-dark-secondary`)}
+                      className={clsx(
+                        'symbol-label fs-1',
+                        `bg-light-secondary`,
+                        `text-dark-secondary`
+                      )}
                     >
                       {data?.nama?.charAt(0)}
                     </div>
@@ -134,7 +154,6 @@ const UpdateHeaderDetail = () => {
               </div>
             </div>
 
-
             <div className='d-flex overflow-auto h-55px'>
               <ul className='nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder flex-nowrap'>
                 <li className='nav-item'>
@@ -191,4 +210,4 @@ const UpdateHeaderDetail = () => {
   )
 }
 
-export { UpdateHeaderDetail }
+export {UpdateHeaderDetail}
