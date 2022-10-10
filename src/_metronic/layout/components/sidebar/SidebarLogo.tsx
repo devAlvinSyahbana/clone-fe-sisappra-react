@@ -43,7 +43,7 @@ const SidebarLogo = () => {
         <img
           alt='Logo'
           src={toAbsoluteUrl('/myasset/logosatpol.png')}
-          className='h-20px app-sidebar-logo-minimize'
+          className='h-25px app-sidebar-logo-minimize'
         />
       </Link>
 

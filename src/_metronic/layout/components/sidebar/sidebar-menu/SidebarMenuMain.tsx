@@ -82,7 +82,7 @@ const SidebarMenuMain = () => {
         icon='/media/icons/duotune/communication/com005.svg'
       >
         <SidebarMenuItem
-          to='/kepegawaian/InformasiDataPegawai'
+          to='/kepegawaian/informasi-data-pegawai'
           title='Informasi Data Pegawai'
           hasBullet={true}
         />

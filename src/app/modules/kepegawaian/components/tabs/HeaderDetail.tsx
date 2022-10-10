@@ -140,9 +140,9 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('DataPribadi') && 'active')
+                      (location.pathname.includes('detail-data-pribadi') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/DataPribadi/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/detail-data-pribadi/${id}/${status}`}
                   >
                     Data Pribadi
                   </Link>
@@ -151,9 +151,9 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('DataKeluarga') && 'active')
+                      (location.pathname.includes('detail-data-keluarga') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/DataKeluarga/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/detail-data-keluarga/${id}/${status}`}
                   >
                     Data Keluarga
                   </Link>
@@ -162,9 +162,9 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('Pendidikan') && 'active')
+                      (location.pathname.includes('detail-data-pendidikan') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/Pendidikan/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/detail-data-pendidikan/${id}/${status}`}
                   >
                     Pendidikan
                   </Link>
@@ -173,9 +173,9 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('DataKepegawaian') && 'active')
+                      (location.pathname.includes('detail-data-kepegawaian') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/detail-data-kepegawaian/${id}/${status}`}
                   >
                     Data Kepegawaian
                   </Link>
@@ -184,9 +184,9 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('HirarkiKepegawaian') && 'active')
+                      (location.pathname.includes('detail-hirarki-kepegawaian') && 'active')
                     }
-                    to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/detail-hirarki-kepegawaian/${id}/${status}`}
                   >
                     Hirarki Kepegawaian
                   </Link>
