@@ -5,18 +5,20 @@ import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
 import clsx from 'clsx'
 import {
-  DetailPegawaiInterface,
+  DataPegawaiInterface,
   JumlahKeluargaInterface,
   PendidikanInterface,
+  DetailMasterJabatan,
 } from '../KepegawaianInterface'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
+export const MASTER_URL = `${API_URL}/master`
 
 const HeaderDetailWrapper = () => {
   const location = useLocation()
   const {id, status} = useParams()
-  const [data, setData] = useState<DetailPegawaiInterface>()
+  const [data, setData] = useState<DataPegawaiInterface>()
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
 
@@ -30,9 +32,18 @@ const HeaderDetailWrapper = () => {
       setJkeluarga(keluarga.data.data)
       setPendidikan(pendidikan.data.data)
       setData(response.data.data)
+      getDetailJabatan(response.data.data.kepegawaian_jabatan)
     }
     fetchData()
   }, [id, status])
+
+  const [detailJabatan, setDetailJabatan] = useState<DetailMasterJabatan>()
+  const getDetailJabatan = async (id: number) => {
+    if (id) {
+      const response = await axios.get(`${MASTER_URL}/jabatan/findone/${id}`)
+      setDetailJabatan((prevstate) => ({...prevstate, ...response.data.data}))
+    }
+  }
 
   return (
     <>
@@ -48,7 +59,11 @@ const HeaderDetailWrapper = () => {
                     </div>
                   ) : (
                     <div
-                      className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-dark-secondary`)}
+                      className={clsx(
+                        'symbol-label fs-1',
+                        `bg-light-secondary`,
+                        `text-dark-secondary`
+                      )}
                     >
                       {data?.nama?.charAt(0)}
                     </div>
@@ -98,9 +113,7 @@ const HeaderDetailWrapper = () => {
                     <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
                       <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <i className='fa-solid fa-address-card me-1'></i>
-                        {data?.kepegawaian_pangkat_name !== ''
-                          ? data?.kepegawaian_pangkat_name
-                          : '-'}
+                        {detailJabatan?.jabatan ? detailJabatan?.jabatan : '-'}
                       </div>
                     </div>
                   </div>
