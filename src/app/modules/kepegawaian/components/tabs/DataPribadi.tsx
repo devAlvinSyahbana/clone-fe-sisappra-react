@@ -182,7 +182,7 @@ export function DataPribadi() {
           </div>
           <div className='card-body p-9'>
             <div className='row'>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nama
                 </label>
@@ -194,7 +194,7 @@ export function DataPribadi() {
                   disabled
                 />
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Tempat, Tanggal Lahir
                 </label>
@@ -218,7 +218,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -244,7 +244,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-6'>
                     <label htmlFor='' className='mb-3'>
@@ -272,7 +272,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -300,7 +300,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor HP
                 </label>
@@ -317,7 +317,7 @@ export function DataPribadi() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-12'>
+              <div className='col-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -345,7 +345,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -373,7 +373,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -406,7 +406,7 @@ export function DataPribadi() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-12 mt-4'>
+              <div className='col-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -434,7 +434,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -462,7 +462,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
