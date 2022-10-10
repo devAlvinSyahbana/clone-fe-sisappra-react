@@ -3,7 +3,6 @@ import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 
 import { InformasiDataPegawai } from './components/InformasiDataPegawai'
-import { DetailInformasiDataPegawai } from './components/DetailInformasiDataPegawai'
 import { HirarkiPegawai } from './components/HirarkiPegawai'
 import { PenyidikPegawaiNegeriSipil } from './components/PenyidikPegawaiNegeriSipil'
 import { KehadiranPegawai } from './components/KehadiranPegawai'
@@ -117,17 +116,6 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Informasi Data Pegawai</PageTitle>
               <InformasiDataPegawai />
-            </>
-          }
-        />
-        <Route
-          path='detail-informasi-data-pegawai'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>
-                Detail Informasi Data Pegawai
-              </PageTitle>
-              <DetailInformasiDataPegawai />
             </>
           }
         />
