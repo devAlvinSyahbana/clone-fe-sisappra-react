@@ -124,6 +124,33 @@ const daftarurutkepangkatanBreadCrumbs: Array<PageLink> = [
   },
 ]
 
+const penyidikpegawainegerisipilBreadCrumbs: Array<PageLink> = [
+  {
+    title: 'Kepegawaian',
+    path: '/kepegawaian/informasi-data-pegawai',
+    isSeparator: false,
+    isActive: false,
+  },
+  {
+    title: '',
+    path: '',
+    isSeparator: true,
+    isActive: false,
+  },
+  {
+    title: 'Penyidik Pegawai Negeri Sipil',
+    path: '/kepegawaian/penyidik-pegawai-negeri-sipil/tab-data-ppns',
+    isSeparator: false,
+    isActive: false,
+  },
+  {
+    title: '',
+    path: '',
+    isSeparator: true,
+    isActive: false,
+  },
+]
+
 const KepegawaianPage: React.FC = () => {
   return (
     <Routes>
@@ -335,7 +362,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='PenyidikPegawaiNegeriSipil/TabDataPPNS'
+          path='penyidik-pegawai-negeri-sipil/tab-data-ppns'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
@@ -425,7 +452,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='PenyidikPegawaiNegeriSipil'
+          path='penyidik-pegawai-negeri-sipil'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
@@ -560,28 +587,34 @@ const KepegawaianPage: React.FC = () => {
 
         {/* PPNS */}
         <Route
-          path='TabDataPPNS/UpdateDataPPNS/:id/:status'
+          path='tab-data-ppns/tambah-data-ppns/'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Ubah Data PPNS</PageTitle>
-              <UpdateDataPPNS />
-            </>
-          }
-        />
-        <Route
-          path='TabDataPPNS/AddDataPPNS/'
-          element={
-            <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Tambah Data PPNS</PageTitle>
+              <PageTitle breadcrumbs={penyidikpegawainegerisipilBreadCrumbs}>
+                Tambah Data PPNS
+              </PageTitle>
               <AddDataPPNS />
             </>
           }
         />
         <Route
-          path='TabDataPPNS/DataPPNS/:id/:status'
+          path='tab-data-ppns/ubah-data-ppns/:id/:status'
           element={
             <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data PPNS</PageTitle>
+              <PageTitle breadcrumbs={penyidikpegawainegerisipilBreadCrumbs}>
+                Ubah Data PPNS
+              </PageTitle>
+              <UpdateDataPPNS />
+            </>
+          }
+        />
+        <Route
+          path='tab-data-ppns/data-ppns/:id/:status'
+          element={
+            <>
+              <PageTitle breadcrumbs={penyidikpegawainegerisipilBreadCrumbs}>
+                Detail Data PPNS
+              </PageTitle>
               <DataPPNS />
             </>
           }
