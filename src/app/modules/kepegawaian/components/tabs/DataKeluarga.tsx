@@ -107,7 +107,7 @@ export function DataKeluarga() {
                 className='text-reset text-decoration-none'
                 to='/kepegawaian/informasi-data-pegawai'
               >
-                <button className='float-none btn btn-secondary align-self-center m-1'>
+                <button className='float-none btn btn-light align-self-center m-1'>
                   Keluar
                 </button>
               </Link>
@@ -115,7 +115,7 @@ export function DataKeluarga() {
                 className='text-reset text-decoration-none'
                 to={`/kepegawaian/informasi-data-pegawai/detail-data-pribadi/${id}/${status}`}
               >
-                <button className='float-none btn btn-success align-self-center m-1'>
+                <button className='float-none btn btn-light-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
                   Kembali
                 </button>
@@ -125,8 +125,7 @@ export function DataKeluarga() {
                 to={`/kepegawaian/informasi-data-pegawai/detail-data-pendidikan/${id}/${status}`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
-                  <i className='fa-solid fa-arrow-right'></i>
-                  Lanjut
+                  Lanjut <i className='fa-solid fa-arrow-right'></i>
                 </button>
               </Link>
             </div>

@@ -497,7 +497,7 @@ export function DataPribadi() {
                   className='text-reset text-decoration-none'
                   to='/kepegawaian/informasi-data-pegawai'
                 >
-                  <button className='float-none btn btn-secondary align-self-center m-1'>
+                  <button className='float-none btn btn-light align-self-center m-1'>
                     Keluar
                   </button>
                 </Link>
