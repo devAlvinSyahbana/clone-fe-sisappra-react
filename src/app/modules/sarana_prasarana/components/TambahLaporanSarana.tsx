@@ -250,150 +250,127 @@ export function TambahLaporanSarana() {
   const [selectedFile, setSelectedFile] = useState(null)
 
   return (
-    <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
-      <div className='d-flex flex-column flex-column-fluid'>
-        <div id='kt_app_content' className='app-content flex-column-fluid'>
-          <div id='kt_app_content_container' className='app-container container-xxl'>
-            <div className='card mb-3 mb-xl-2'>
-              <div className='card-body'>
-                <form onSubmit={formik.handleSubmit}>
-                  <div className='row mt-2'>
-                    <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-6'>
-                      <div className='form-group'>
-                        <label htmlFor='' className='mb-3'>
-                          Jenis Sarana & Prasarana
-                        </label>
-                        <AsyncSelect
-                          cacheOptions
-                          loadOptions={loadOptionsSapra}
-                          defaultOptions
-                          onChange={(e) => handleChangeFormikSelect(e, 'jenis_sarana_prasarana')}
-                          value={
-                            valuesFormik?.jenis_sarana_prasarana
-                              ? valuesFormik?.jenis_sarana_prasarana
-                              : {value: '', label: 'Pilih'}
-                          }
-                          placeholder={'Pilih'}
-                          styles={
-                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                          }
-                          loadingMessage={() => 'Sedang mencari pilihan...'}
-                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-6'>
-                      <div className='form-group'>
-                        <label htmlFor='' className='mb-3'>
-                          Status Sarana & Prasarana
-                        </label>
-                        <AsyncSelect
-                          cacheOptions
-                          loadOptions={loadOptionsStapra}
-                          defaultOptions
-                          onChange={(e) => handleChangeFormikSelect(e, 'status_sarana_prasarana')}
-                          value={
-                            valuesFormik?.status_sarana_prasarana
-                              ? valuesFormik?.status_sarana_prasarana
-                              : {value: '', label: 'Pilih'}
-                          }
-                          placeholder={'Pilih'}
-                          styles={
-                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                          }
-                          loadingMessage={() => 'Sedang mencari pilihan...'}
-                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-6'>
-                      <div className='form-group'>
-                        <label htmlFor='' className='mb-3'>
-                          Kondisi
-                        </label>
-                        <AsyncSelect
-                          cacheOptions
-                          loadOptions={loadOptionsKonpra}
-                          defaultOptions
-                          onChange={(e) => handleChangeFormikSelect(e, 'kondisi')}
-                          value={
-                            valuesFormik?.kondisi
-                              ? valuesFormik?.kondisi
-                              : {value: '', label: 'Pilih'}
-                          }
-                          placeholder={'Pilih'}
-                          styles={
-                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                          }
-                          loadingMessage={() => 'Sedang mencari pilihan...'}
-                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-6'>
-                      <div className='form-group'>
-                        <label htmlFor='' className='mb-3'>
-                          Jumlah
-                        </label>
-                        <input
-                          className='form-control form-control form-control-solid'
-                          name='jumlah'
-                          type='number'
-                          min='0'
-                          onChange={handleChangeFormik}
-                          onBlur={formik.handleBlur}
-                          value={valuesFormik?.jumlah}
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-6'>
-                      <div className='form-group'>
-                        <Form.Label>File Dokumentasi</Form.Label>
-                        <Form.Control
-                          type='file'
-                          className='form-control form-control-solid'
-                          id='firstimg'
-                          onChange={(event: {target: any}) =>
-                            setSelectedFile(event.target.files[0])
-                          }
-                          accept='image/jpeg,image/png,application/pdf'
-                        />
-                        <small className='mt-4'>
-                          *File yang dapat di upload berformat (.pdf, .jpeg, .png)
-                        </small>
-                      </div>
-                    </div>
-                    <div className='col-12 mb-6'>
-                      <div className='form-group'>
-                        <Form.Label>Keterangan</Form.Label>
-                        <Form.Control
-                          as='textarea'
-                          name='keterangan'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
-                          value={valuesFormik?.keterangan}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>
-                      <button className='float-none btn btn-light align-self-center m-1'>
-                        Batal
-                      </button>
-                    </Link>
-                    <button
-                      className='float-none btn btn-primary align-self-center m-1'
-                      type='submit'
-                    >
-                      Simpan
-                    </button>
-                  </div>
-                </form>
+    <div className='card mb-3 mb-xl-2'>
+      <div className='card-body'>
+        <form onSubmit={formik.handleSubmit}>
+          <div className='row mt-2'>
+            <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-6'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Jenis Sarana & Prasarana
+                </label>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsSapra}
+                  defaultOptions
+                  onChange={(e) => handleChangeFormikSelect(e, 'jenis_sarana_prasarana')}
+                  value={
+                    valuesFormik?.jenis_sarana_prasarana
+                      ? valuesFormik?.jenis_sarana_prasarana
+                      : {value: '', label: 'Pilih'}
+                  }
+                  placeholder={'Pilih'}
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                  loadingMessage={() => 'Sedang mencari pilihan...'}
+                  noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                />
+              </div>
+            </div>
+            <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-6'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Status Sarana & Prasarana
+                </label>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsStapra}
+                  defaultOptions
+                  onChange={(e) => handleChangeFormikSelect(e, 'status_sarana_prasarana')}
+                  value={
+                    valuesFormik?.status_sarana_prasarana
+                      ? valuesFormik?.status_sarana_prasarana
+                      : {value: '', label: 'Pilih'}
+                  }
+                  placeholder={'Pilih'}
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                  loadingMessage={() => 'Sedang mencari pilihan...'}
+                  noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                />
+              </div>
+            </div>
+            <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-6'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Kondisi
+                </label>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsKonpra}
+                  defaultOptions
+                  onChange={(e) => handleChangeFormikSelect(e, 'kondisi')}
+                  value={
+                    valuesFormik?.kondisi ? valuesFormik?.kondisi : {value: '', label: 'Pilih'}
+                  }
+                  placeholder={'Pilih'}
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                  loadingMessage={() => 'Sedang mencari pilihan...'}
+                  noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                />
+              </div>
+            </div>
+            <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-6'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Jumlah
+                </label>
+                <input
+                  className='form-control form-control form-control-solid'
+                  name='jumlah'
+                  type='number'
+                  min='0'
+                  onChange={handleChangeFormik}
+                  onBlur={formik.handleBlur}
+                  value={valuesFormik?.jumlah}
+                />
+              </div>
+            </div>
+            <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>File Dokumentasi</Form.Label>
+                <Form.Control
+                  type='file'
+                  className='form-control form-control-solid'
+                  id='firstimg'
+                  onChange={(event: {target: any}) => setSelectedFile(event.target.files[0])}
+                  accept='image/jpeg,image/png,application/pdf'
+                />
+                <small className='mt-4'>
+                  *File yang dapat di upload berformat (.pdf, .jpeg, .png)
+                </small>
+              </div>
+            </div>
+            <div className='col-12 mb-6'>
+              <div className='form-group'>
+                <Form.Label>Keterangan</Form.Label>
+                <Form.Control
+                  as='textarea'
+                  name='keterangan'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.keterangan}
+                />
               </div>
             </div>
           </div>
-        </div>
+          <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
+            <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>
+              <button className='float-none btn btn-light align-self-center m-1'>Batal</button>
+            </Link>
+            <button className='float-none btn btn-primary align-self-center m-1' type='submit'>
+              Simpan
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   )

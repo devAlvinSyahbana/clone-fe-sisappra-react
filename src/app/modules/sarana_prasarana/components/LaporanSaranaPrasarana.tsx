@@ -555,13 +555,12 @@ export function LaporanSaranaPrasarana() {
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
             <Link to='/sarana-prasarana/LaporanSaranaPrasarana/TambahLaporanSarana'>
               {/* begin::Add user */}
-              <button type='button' className='btn btn-primary'>
+              <button type='button' className='btn btn-primary me-2'>
                 <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
-                Tambah Sarana
+                Tambah
               </button>
               {/* end::Add user */}
             </Link>
-            &nbsp;
             {/* begin::Filter Button */}
             <button
               type='button'
