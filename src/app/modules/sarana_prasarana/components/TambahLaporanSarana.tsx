@@ -115,7 +115,6 @@ export interface FormInput {
 export interface SelectOption {
   readonly value: string
   readonly label: string
-  readonly color: string
   readonly isFixed?: boolean
   readonly isDisabled?: boolean
 }
@@ -192,7 +191,6 @@ export function TambahLaporanSarana() {
       keterangan: '',
     },
     onSubmit: async (values) => {
-      console.log(selectedFile)
       let formData = new FormData()
       const bodyparam: FormInput = {
         jenis_sarana_prasarana: valuesFormik?.jenis_sarana_prasarana?.value
