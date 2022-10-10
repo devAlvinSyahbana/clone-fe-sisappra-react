@@ -36,10 +36,6 @@ import {DataPPNS} from './components/tabs-ppns/DataPPNS'
 
 import {TabRekapitulasiDataPegawaiPensiun} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
 
-import {AddDataPribadiDUK} from './components/add-tabs-duk/AddDataPribadiDUK'
-import {AddDataKeluargaDUK} from './components/add-tabs-duk/AddDataKeluargaDUK'
-import {AddPendidikanDUK} from './components/add-tabs-duk/AddPendidikanDUK'
-import {AddDataKepegawaianDUK} from './components/add-tabs-duk/AddDataKepegawaianDUK'
 import {DataPribadiDUK} from './components/tabs-duk/DataPribadiDUK'
 import {DataKeluargaDUK} from './components/tabs-duk/DataKeluargaDUK'
 import {DataKepegawaianDUK} from './components/tabs-duk/DataKepegawaianDUK'
@@ -486,51 +482,6 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Rekapitulasi Piket Pegawai</PageTitle>
               <TabRekapitulasiPiketPegawai />
-            </>
-          }
-        />
-
-        <Route
-          path='tab-daftar-urut-kepangkatan/tambah-data-kepegawaian-duk/'
-          element={
-            <>
-              <PageTitle breadcrumbs={daftarurutkepangkatanBreadCrumbs}>
-                Tambah Data Kepegawaian DUK
-              </PageTitle>
-              <AddDataKepegawaianDUK />
-            </>
-          }
-        />
-        <Route
-          path='tab-daftar-urut-kepangkatan/tambah-pendidikan-duk/'
-          element={
-            <>
-              <PageTitle breadcrumbs={daftarurutkepangkatanBreadCrumbs}>
-                Tambah Data Pendidikan DUK
-              </PageTitle>
-              <AddPendidikanDUK />
-            </>
-          }
-        />
-        <Route
-          path='tab-daftar-urut-kepangkatan/tambah-data-keluarga-duk/'
-          element={
-            <>
-              <PageTitle breadcrumbs={daftarurutkepangkatanBreadCrumbs}>
-                Tambah Data Keluarga DUK
-              </PageTitle>
-              <AddDataKeluargaDUK />
-            </>
-          }
-        />
-        <Route
-          path='tab-daftar-urut-kepangkatan/tambah-data-pribadi-duk/'
-          element={
-            <>
-              <PageTitle breadcrumbs={daftarurutkepangkatanBreadCrumbs}>
-                Tambah Data Pribadi DUK
-              </PageTitle>
-              <AddDataPribadiDUK />
             </>
           }
         />
