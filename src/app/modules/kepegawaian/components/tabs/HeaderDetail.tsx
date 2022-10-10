@@ -5,7 +5,7 @@ import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
 import clsx from 'clsx'
 import {
-  DataPegawaiInterface,
+  DetailPegawaiInterface,
   JumlahKeluargaInterface,
   PendidikanInterface,
   DetailMasterJabatan,
@@ -18,7 +18,7 @@ export const MASTER_URL = `${API_URL}/master`
 const HeaderDetailWrapper = () => {
   const location = useLocation()
   const {id, status} = useParams()
-  const [data, setData] = useState<DataPegawaiInterface>()
+  const [data, setData] = useState<DetailPegawaiInterface>()
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
 
