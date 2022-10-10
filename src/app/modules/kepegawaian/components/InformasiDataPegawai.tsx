@@ -168,7 +168,6 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'jenis_kelamin',
       wrap: true,
-      center: true,
       minWidth: '125px',
     },
     {
