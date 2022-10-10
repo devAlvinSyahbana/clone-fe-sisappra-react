@@ -13,7 +13,7 @@ import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
 export const AGAMA_URL = `${API_URL}/master/agama`
 export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
@@ -150,10 +150,18 @@ export function UpdateDataPribadi() {
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
 
+  const [valOptJenkel, setValOptJenkel] = useState({value: '', label: ''})
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
       setData((prevstate) => ({...prevstate, ...response.data.data}))
+      setValOptJenkel((prevstate) => ({
+        ...prevstate,
+        value: response.data.data.jenis_kelamin,
+        label: response.data.data.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan',
+      }))
+      getAgamaVal(response.data.data.agama)
       getProvVal(response.data.data.domisili_provinsi, 'domisili_provinsi')
       getProvVal(response.data.data.sesuai_ktp_provinsi, 'sesuai_ktp_provinsi')
       getKabKotaVal(response.data.data.domisili_kabkota, 'domisili_kabkota')
@@ -413,6 +421,23 @@ export function UpdateDataPribadi() {
     }))
   }
 
+  const [valAgama, setValAgama] = useState({value: '', label: ''})
+  const getAgamaVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${AGAMA_URL}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValAgama((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.agama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
   const [valProvKTP, setValProvKTP] = useState({value: '', label: ''})
   const [valProvDomisili, setValProvDomisili] = useState({value: '', label: ''})
   const getProvVal = async (params: any, field: string) => {
@@ -561,8 +586,8 @@ export function UpdateDataPribadi() {
                 tgl_lahir: values.tgl_lahir,
                 jenis_kelamin: valuesFormik?.jenis_kelamin?.value
                   ? valuesFormik.jenis_kelamin.value
-                  : values.jenis_kelamin_value,
-                agama: valuesFormik?.agama?.value ? valuesFormik.agama.value : values.agama_id,
+                  : data.jenis_kelamin,
+                agama: valuesFormik?.agama?.value ? valuesFormik.agama.value : values.agama,
                 nik: values.nik,
                 no_kk: values.no_kk,
                 status_perkawinan: valuesFormik?.status_perkawinan?.value
@@ -789,11 +814,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.jenis_kelamin
                               ? valuesFormik?.jenis_kelamin
-                              : data?.jenis_kelamin
-                              ? {
-                                  value: data?.jenis_kelamin,
-                                  label: data?.jenis_kelamin ? data?.jenis_kelamin : '-',
-                                }
+                              : valOptJenkel && valOptJenkel.label !== ''
+                              ? valOptJenkel
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => {
@@ -827,11 +849,8 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.agama
                               ? valuesFormik?.agama
-                              : data?.agama_id
-                              ? {
-                                  value: data?.agama_id,
-                                  label: data?.agama_name ? data?.agama_name : '-',
-                                }
+                              : valAgama && valAgama.label !== ''
+                              ? valAgama
                               : {value: '', label: 'Pilih'}
                           }
                           onChange={(e) => {
@@ -846,7 +865,7 @@ export function UpdateDataPribadi() {
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
                         />
-                        {touched.jenis_kelamin && errors.jenis_kelamin && (
+                        {touched.agama && errors.agama && (
                           <div className='fv-plugins-message-container'>
                             <div className='fv-help-block'>
                               <span role='alert'>Wajib Diisi</span>
