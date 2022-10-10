@@ -30,7 +30,12 @@ const HeaderDetailWrapper = () => {
         `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
       )
       setJkeluarga(keluarga.data.data)
-      setPendidikan(pendidikan.data.data)
+      if (pendidikan.data.data) {
+        const {data} = await axios.get(
+          `${MASTER_URL}/pendidikan/findone/${pendidikan.data.data.jenis_pendidikan}`
+        )
+        setPendidikan((prevstate) => ({...prevstate, jenis_pendidikan: data.data.pendidikan}))
+      }
       setData(response.data.data)
       getDetailJabatan(response.data.data.kepegawaian_jabatan)
     }
