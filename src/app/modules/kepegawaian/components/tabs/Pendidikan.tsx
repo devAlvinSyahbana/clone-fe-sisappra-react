@@ -8,7 +8,8 @@ import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
+export const MASTER_URL = `${API_URL}/master`
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
@@ -48,22 +49,26 @@ export function Pendidikan() {
       name: 'Jenis Pendidikan',
       selector: (row: any) => row.jenis_pendidikan,
       sortable: true,
-      minWidth: '150px'
+      minWidth: '150px',
+      cell: (record: any) => <GetDetailPendidikan row={parseInt(record.jenis_pendidikan)} />,
     },
     {
       name: 'Nama Sekolah',
       selector: (row: any) => row.nama_sekolah,
       sortable: true,
+      minWidth: '150px',
     },
     {
       name: 'Nomor Ijazah',
       selector: (row: any) => row.nomor_ijazah,
       sortable: true,
+      minWidth: '150px',
     },
     {
       name: 'Tanggal Ijazah',
       selector: (row: any) => row.tgl_ijazah,
       sortable: true,
+      minWidth: '150px',
       cell: (record: any) => {
         return `${moment(record.tgl_ijazah).format('D MMMM YYYY')}`
       },
@@ -72,11 +77,13 @@ export function Pendidikan() {
       name: 'Jurusan',
       selector: (row: any) => row.jurusan,
       sortable: true,
+      minWidth: '125px',
     },
     {
       name: 'Fakultas',
       selector: (row: any) => row.fakultas,
       sortable: true,
+      minWidth: '100px',
     },
     {
       name: 'File Ijazah',
@@ -101,6 +108,20 @@ export function Pendidikan() {
     }
     fetchDT()
   }, [id, status])
+
+  const GetDetailPendidikan = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${MASTER_URL}/pendidikan/findone/${id}`)
+        const result: string = data.data.pendidikan
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
 
   return (
     <div>
@@ -133,15 +154,13 @@ export function Pendidikan() {
                 className='text-reset text-decoration-none'
                 to='/kepegawaian/informasi-data-pegawai'
               >
-                <button className='float-none btn btn-secondary align-self-center m-1'>
-                  Keluar
-                </button>
+                <button className='float-none btn btn-light align-self-center m-1'>Keluar</button>
               </Link>
               <Link
                 className='text-reset text-decoration-none'
                 to={`/kepegawaian/informasi-data-pegawai/detail-data-keluarga/${id}/${status}`}
               >
-                <button className='float-none btn btn-success align-self-center m-1'>
+                <button className='float-none btn btn-light-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
                   Kembali
                 </button>
@@ -151,8 +170,7 @@ export function Pendidikan() {
                 to={`/kepegawaian/informasi-data-pegawai/detail-data-kepegawaian/${id}/${status}`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
-                  <i className='fa-solid fa-arrow-right'></i>
-                  Lanjut
+                  Lanjut <i className='fa-solid fa-arrow-right'></i>
                 </button>
               </Link>
             </div>
