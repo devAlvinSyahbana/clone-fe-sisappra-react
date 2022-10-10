@@ -96,3 +96,10 @@ export interface ListPendidikanInterface {
   tgl_lahir?: string
   jenis_kelamin?: string
 }
+
+export interface DetailMasterJabatan {
+  id?: number
+  jabatan?: string
+  kode?: string
+  status?: string
+}
