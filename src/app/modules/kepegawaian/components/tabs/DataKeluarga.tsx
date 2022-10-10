@@ -8,7 +8,7 @@ import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(

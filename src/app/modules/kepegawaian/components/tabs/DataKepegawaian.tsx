@@ -9,7 +9,7 @@ import {DetailPegawaiInterface} from '../KepegawaianInterface'
 import moment from 'moment'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
 
 export function DataKepegawaian() {
   const {id, status} = useParams()

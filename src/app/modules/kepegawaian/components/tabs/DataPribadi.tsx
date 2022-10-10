@@ -8,7 +8,7 @@ import {DetailPegawaiInterface} from '../KepegawaianInterface'
 import {HeaderDetailWrapper} from './HeaderDetail'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
 export const GLOBAL_URL = `${API_URL}/master`
 
 export function DataPribadi() {
