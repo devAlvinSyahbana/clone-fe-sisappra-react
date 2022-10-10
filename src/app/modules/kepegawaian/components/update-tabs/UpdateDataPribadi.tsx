@@ -9,14 +9,110 @@ import moment from 'moment'
 import Swal from 'sweetalert2'
 import * as Yup from 'yup'
 import clsx from 'clsx'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
 export const AGAMA_URL = `${API_URL}/master/agama`
 export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 export const GLOBAL_URL = `${API_URL}/master`
+
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 const validatorForm = Yup.object().shape({
   nama: Yup.string().required('Wajib diisi'),
@@ -35,17 +131,37 @@ const validatorForm = Yup.object().shape({
   sesuai_ktp_rtrw: Yup.string().required('Wajib diisi'),
   domisili_alamat: Yup.string().required('Wajib diisi'),
   domisili_rtrw: Yup.string().required('Wajib diisi'),
+  status_perkawinan: Yup.string().required('Wajib diisi'),
+  jenis_kelamin: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_provinsi: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_kabkota: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_kecamatan: Yup.string().required('Wajib diisi'),
+  sesuai_ktp_kelurahan: Yup.string().required('Wajib diisi'),
+  domisili_provinsi: Yup.string().required('Wajib diisi'),
+  domisili_kabkota: Yup.string().required('Wajib diisi'),
+  domisili_kecamatan: Yup.string().required('Wajib diisi'),
+  domisili_kelurahan: Yup.string().required('Wajib diisi'),
 })
 
 export function UpdateDataPribadi() {
   const {id, status} = useParams()
   const [data, setData] = useState<DetailPegawaiInterface>({})
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
+
+  const [valOptJenkel, setValOptJenkel] = useState({value: '', label: ''})
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
       setData((prevstate) => ({...prevstate, ...response.data.data}))
+      setValOptJenkel((prevstate) => ({
+        ...prevstate,
+        value: response.data.data.jenis_kelamin,
+        label: response.data.data.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan',
+      }))
+      getAgamaVal(response.data.data.agama)
       getProvVal(response.data.data.domisili_provinsi, 'domisili_provinsi')
       getProvVal(response.data.data.sesuai_ktp_provinsi, 'sesuai_ktp_provinsi')
       getKabKotaVal(response.data.data.domisili_kabkota, 'domisili_kabkota')
@@ -305,6 +421,23 @@ export function UpdateDataPribadi() {
     }))
   }
 
+  const [valAgama, setValAgama] = useState({value: '', label: ''})
+  const getAgamaVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${AGAMA_URL}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValAgama((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.agama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
   const [valProvKTP, setValProvKTP] = useState({value: '', label: ''})
   const [valProvDomisili, setValProvDomisili] = useState({value: '', label: ''})
   const getProvVal = async (params: any, field: string) => {
@@ -453,8 +586,8 @@ export function UpdateDataPribadi() {
                 tgl_lahir: values.tgl_lahir,
                 jenis_kelamin: valuesFormik?.jenis_kelamin?.value
                   ? valuesFormik.jenis_kelamin.value
-                  : values.jenis_kelamin_value,
-                agama: valuesFormik?.agama?.value ? valuesFormik.agama.value : values.agama_id,
+                  : data.jenis_kelamin,
+                agama: valuesFormik?.agama?.value ? valuesFormik.agama.value : values.agama,
                 nik: values.nik,
                 no_kk: values.no_kk,
                 status_perkawinan: valuesFormik?.status_perkawinan?.value
@@ -681,18 +814,29 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.jenis_kelamin
                               ? valuesFormik?.jenis_kelamin
-                              : data?.jenis_kelamin
-                              ? {
-                                  value: data?.jenis_kelamin,
-                                  label: data?.jenis_kelamin ? data?.jenis_kelamin : '-',
-                                }
+                              : valOptJenkel && valOptJenkel.label !== ''
+                              ? valOptJenkel
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'jenis_kelamin')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'jenis_kelamin')
+                            handleChange('jenis_kelamin')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='jenis_kelamin'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.jenis_kelamin && errors.jenis_kelamin && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -705,18 +849,29 @@ export function UpdateDataPribadi() {
                           value={
                             valuesFormik?.agama
                               ? valuesFormik?.agama
-                              : data?.agama_id
-                              ? {
-                                  value: data?.agama_id,
-                                  label: data?.agama_name ? data?.agama_name : '-',
-                                }
+                              : valAgama && valAgama.label !== ''
+                              ? valAgama
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'agama')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'agama')
+                            handleChange('agama')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='agama'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.agama && errors.agama && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -794,11 +949,25 @@ export function UpdateDataPribadi() {
                             }
                           : {value: '', label: 'Pilih'}
                       }
-                      onChange={(e) => handleChangeFormikSelect(e, 'status_perkawinan')}
+                      onChange={(e) => {
+                        handleChangeFormikSelect(e, 'status_perkawinan')
+                        handleChange('status_perkawinan')(e.value)
+                      }}
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
                       noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                      name='status_perkawinan'
+                      styles={
+                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                      }
                     />
+                    {touched.status_perkawinan && errors.status_perkawinan && (
+                      <div className='fv-plugins-message-container'>
+                        <div className='fv-help-block'>
+                          <span role='alert'>Wajib Diisi</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                     <label htmlFor='' className='mb-3 required'>
@@ -904,11 +1073,25 @@ export function UpdateDataPribadi() {
                               ? valProvKTP
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_provinsi')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'sesuai_ktp_provinsi')
+                            handleChange('sesuai_ktp_provinsi')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='sesuai_ktp_provinsi'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.sesuai_ktp_provinsi && errors.sesuai_ktp_provinsi && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -925,11 +1108,25 @@ export function UpdateDataPribadi() {
                               ? valKabKotaKTP
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kabkota')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'sesuai_ktp_kabkota')
+                            handleChange('sesuai_ktp_kabkota')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='sesuai_ktp_kabkota'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.sesuai_ktp_kabkota && errors.sesuai_ktp_kabkota && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -954,7 +1151,17 @@ export function UpdateDataPribadi() {
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.sesuai_ktp_kabkota && errors.sesuai_ktp_kabkota && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -971,11 +1178,25 @@ export function UpdateDataPribadi() {
                               ? valKelKTP
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kelurahan')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'sesuai_ktp_kelurahan')
+                            handleChange('sesuai_ktp_kelurahan')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='sesuai_ktp_kelurahan'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.sesuai_ktp_kelurahan && errors.sesuai_ktp_kelurahan && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1057,11 +1278,25 @@ export function UpdateDataPribadi() {
                               ? valProvDomisili
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'domisili_provinsi')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'domisili_provinsi')
+                            handleChange('domisili_provinsi')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='domisili_provinsi'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.domisili_provinsi && errors.domisili_provinsi && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -1078,11 +1313,25 @@ export function UpdateDataPribadi() {
                               ? valKabKotaDomisili
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'domisili_kabkota')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'domisili_kabkota')
+                            handleChange('domisili_kabkota')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='domisili_kabkota'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.domisili_kabkota && errors.domisili_kabkota && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1103,11 +1352,25 @@ export function UpdateDataPribadi() {
                               ? valKecDomisili
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'domisili_kecamatan')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'domisili_kecamatan')
+                            handleChange('domisili_kecamatan')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='domisili_kecamatan'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.domisili_kecamatan && errors.domisili_kecamatan && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                         <label htmlFor='' className='mb-3 required'>
@@ -1124,11 +1387,25 @@ export function UpdateDataPribadi() {
                               ? valKelDomisili
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'domisili_kelurahan')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'domisili_kelurahan')
+                            handleChange('domisili_kelurahan')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                          name='domisili_kelurahan'
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
+                        {touched.domisili_kelurahan && errors.domisili_kelurahan && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>Wajib Diisi</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1139,8 +1416,7 @@ export function UpdateDataPribadi() {
                       className='text-reset text-decoration-none'
                       to='/kepegawaian/informasi-data-pegawai'
                     >
-                      <button className='float-none btn btn-secondary align-self-center m-1'>
-                        <i className='fa fa-close'></i>
+                      <button className='float-none btn btn-light align-self-center m-1'>
                         Batal
                       </button>
                     </Link>
@@ -1149,7 +1425,6 @@ export function UpdateDataPribadi() {
                       className='float-none btn btn-primary align-self-center m-1'
                       disabled={isSubmitting || !isValid}
                     >
-                      <i className='fa-solid fa-save'></i>
                       Simpan
                     </button>
                   </div>
