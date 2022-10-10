@@ -9,17 +9,18 @@ import Button from 'react-bootstrap/Button'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import AsyncSelect from 'react-select/async'
 import clsx from 'clsx'
+import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const JABATAN_URL = `${API_URL}/master/jabatan`
 export const PANGKAT_URL = `${API_URL}/master/pangkat`
+export const STATUS_KENAIKAN_PANGKAT_URL = `${API_URL}/master/status_kenaikan_pangkat`
 
 export interface SelectOption {
   readonly value: string
@@ -39,6 +40,7 @@ export function TabDataPegawaiYangNaikPangkat() {
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
+  const [inputValStPa, setDataStPa] = useState({label: '', value: null})
   const [inputValKota, setDataKota] = useState({label: '', value: null})
   const [inputValKec, setDataKec] = useState({label: '', value: null})
   const [inputValKel, setDataKel] = useState({label: '', value: null})
@@ -85,25 +87,17 @@ export function TabDataPegawaiYangNaikPangkat() {
     },
     {
       name: 'NIP',
-      selector: (row: any) => row.kepegawaian_nip,
+      selector: (row: any) => row.nip,
       sortable: true,
-      sortField: 'kepegawaian_nip',
+      sortField: 'nip',
       wrap: true,
     },
     {
-      name:
-        valStatPegawai.val !== ''
-          ? valStatPegawai.val === 'PTT'
-            ? 'NPTT'
-            : valStatPegawai.val === 'PJLP'
-            ? 'NPJLP'
-            : 'NRK'
-          : 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
+      name: 'NRK',
+      selector: (row: any) => row.nrk,
       sortable: true,
-      sortField: 'kepegawaian_nrk',
+      sortField: 'nrk',
       wrap: true,
-      center: true,
     },
     {
       name: 'Jabatan',
@@ -115,18 +109,18 @@ export function TabDataPegawaiYangNaikPangkat() {
     },
     {
       name: 'Tempat Tugas Wilayah / Bidang',
-      selector: (row: any) => row.tempat_tugas_wilayah_bidang,
+      selector: (row: any) => row.tempat_tugas,
       sortable: true,
-      sortField: 'tempat_tugas_wilayah_bidang',
+      sortField: 'tempat_tugas',
       wrap: true,
       width: '250px',
       center: true,
     },
     {
       name: 'Tempat Tugas Kecamatan',
-      selector: (row: any) => row.tempat_tugas_kecamatan,
+      selector: (row: any) => row.subbag_seksi_kecamatan,
       sortable: true,
-      sortField: 'tempat_tugas_kecamatan',
+      sortField: 'subbag_seksi_kecamatan',
       wrap: true,
       width: '220px',
       center: true,
@@ -162,17 +156,17 @@ export function TabDataPegawaiYangNaikPangkat() {
     },
     {
       name: 'Status Kenaikan',
-      selector: (row: any) => row.status_kenaikan,
+      selector: (row: any) => row.status_kenaikan_pangkat,
       sortable: true,
-      sortField: 'status_kenaikan',
+      sortField: 'status_kenaikan_pangkat',
       width: '220px',
       wrap: true,
     },
     {
       name: 'Jadwal Kenaikan',
-      selector: (row: any) => row.jadwal_kenaikan,
+      selector: (row: any) => row.jadwal_kenaikan_pangkat,
       sortable: true,
-      sortField: 'jadwal_kenaikan',
+      sortField: 'jadwal_kenaikan_pangkat',
       width: '220px',
       wrap: true,
     },
@@ -242,7 +236,7 @@ export function TabDataPegawaiYangNaikPangkat() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -254,7 +248,7 @@ export function TabDataPegawaiYangNaikPangkat() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -270,7 +264,7 @@ export function TabDataPegawaiYangNaikPangkat() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -306,6 +300,9 @@ export function TabDataPegawaiYangNaikPangkat() {
     if (inputValJabatan.value) {
       uriParam += `&pangkat=${inputValPangkat.value}`
     }
+    if (inputValStPa.value) {
+      uriParam += `&StPa=${inputValStPa.value}`
+    }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
@@ -314,11 +311,13 @@ export function TabDataPegawaiYangNaikPangkat() {
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
+
     setDataKota({label: '', value: null})
     setDataKec({label: '', value: null})
     setDataKel({label: '', value: null})
     setDataPangkat({label: '', value: null})
     setDataJabatan({label: '', value: null})
+    setDataStPa({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -351,7 +350,7 @@ export function TabDataPegawaiYangNaikPangkat() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
+      url: `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/unduh?status=${
         valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
       }`,
       method: 'GET',
@@ -359,7 +358,9 @@ export function TabDataPegawaiYangNaikPangkat() {
     }).then((response) => {
       FileDownload(
         response.data,
-        'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
+        'DATA STATUS KENAIKAN PANGKAT ' +
+          (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') +
+          '.xlsx'
       )
       setbtnLoadingUnduh(false)
     })
@@ -367,37 +368,34 @@ export function TabDataPegawaiYangNaikPangkat() {
 
   //kota
   const filterKota = async (inputValue: string) => {
-    const response = await axios.get(`${KOTA_URL}/filter-kota/${inputValue}`)
+    const response = await axios.get(KOTA_URL + '/filter-kota/' + inputValue)
     const json = await response.data.data
     return json.map((i: any) => ({label: i.kota, value: i.id}))
   }
-
   const loadOptionsKota = (inputValue: string, callback: (options: SelectOption[]) => void) => {
     setTimeout(async () => {
       callback(await filterKota(inputValue))
     }, 1000)
   }
-  const handleInputKota = async (newValue: any) => {
+  const handleInputKota = (newValue: any) => {
     setDataKota((prevstate: any) => ({...prevstate, ...newValue}))
-    await filterKec()
   }
 
   //kecamatan
-  const filterKec = async () => {
-    if (inputValKota.label != '') {
-      const response = await axios.get(
-        `${KECAMATAN_URL}/findone-by-kecamatan?kota=${inputValKota.label}`
-      )
-      const json = await response.data.data
-      console.log(response.data.data)
-      return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
-    } else {
-      return false
-    }
+  const filterKec = async (inputValue: string) => {
+    const response = await axios.get(
+      KECAMATAN_URL +
+        '/findone-by-kecamatan?kota=' +
+        inputValKota.label +
+        '&kecamatan=' +
+        inputValue
+    )
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
   }
   const loadOptionsKec = (inputValue: string, callback: (options: SelectOption[]) => void) => {
     setTimeout(async () => {
-      callback(await filterKec())
+      callback(await filterKec(inputValue))
     }, 1000)
   }
   const handleInputKec = (newValue: any) => {
@@ -405,21 +403,20 @@ export function TabDataPegawaiYangNaikPangkat() {
   }
 
   //kelurahan
-  const filterKel = async () => {
-    if (inputValKec.label != '') {
-      const response = await axios.get(
-        `${KELURAHAN_URL}/findone-by-kelurahan?kecamatan=${inputValKec.label}`
-      )
-      const json = await response.data.data
-      console.log(response.data.data)
-      return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
-    } else {
-      return false
-    }
+  const filterKel = async (inputValue: string) => {
+    const response = await axios.get(
+      KELURAHAN_URL +
+        '/findone-by-kelurahan?kecamatan=' +
+        inputValKec.label +
+        '&kelurahan=' +
+        inputValue
+    )
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
   }
   const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
     setTimeout(async () => {
-      callback(await filterKel())
+      callback(await filterKel(inputValue))
     }, 1000)
   }
   const handleInputKel = (newValue: any) => {
@@ -454,6 +451,21 @@ export function TabDataPegawaiYangNaikPangkat() {
   }
   const handleInputPangkat = (newValue: any) => {
     setDataPangkat((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  //Status kenaikan pangkat
+  const filterStPa = async (inputValue: string) => {
+    const response = await axios.get(`${STATUS_KENAIKAN_PANGKAT_URL}/find${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.status_kenaikan_pangkat, value: i.id}))
+  }
+  const loadOptionsStPa = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterStPa(inputValue))
+    }, 1000)
+  }
+  const handleInputStPa = (newValue: any) => {
+    setDataStPa((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   return (
@@ -516,7 +528,6 @@ export function TabDataPegawaiYangNaikPangkat() {
                   loadOptions={loadOptionsKec}
                   defaultOptions
                   onChange={handleInputKec}
-                 
                 />
               </div>
             </div>
@@ -570,8 +581,8 @@ export function TabDataPegawaiYangNaikPangkat() {
                 type='text'
                 className='form-control form-control form-control-solid'
                 name='Jadwal Kenaikan'
-                value={valFilterNama.val}
-                onChange={handleChangeInputNama}
+                // value={valFilterNama.val}
+                // onChange={handleChangeInputNama}
                 placeholder='Jadwal Kenaikan'
               />
             </div>
@@ -582,11 +593,10 @@ export function TabDataPegawaiYangNaikPangkat() {
                 </label>
                 <AsyncSelect
                   cacheOptions
-                  value={inputValPangkat.value ? inputValPangkat : {value: '', label: 'Pilih'}}
-                  loadOptions={loadOptionsPangkat}
+                  value={inputValStPa.value ? inputValStPa : {value: '', label: 'Pilih'}}
+                  loadOptions={loadOptionsStPa}
                   defaultOptions
-                  onChange={handleInputPangkat}
-                  placeholder={'Pilih'}
+                  onChange={handleInputStPa}
                 />
               </div>
             </div>
@@ -657,32 +667,52 @@ export function TabDataPegawaiYangNaikPangkat() {
           </div>
         </div>
 
-        <div className='table-responsive mt-6 ms-5 me-5'>
-          <div className='card-body py-4 mt-4'>
-            <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>
-                DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA KENAIKAN PANGKAT
+        <div className='col-xl-12 mb-xl-12 mt-6'>
+          <div className='card card-flush h-xl-100'>
+            <div
+              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
+              style={{
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
+              }}
+              data-theme='light'
+            >
+              <div className='card-body py-8 mt-4 fw-bold text-white'>
+                <div className='row'>
+                  <div className='col fs-4 mb-2 fw-bold text-center'>
+                    DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA KENAIKAN PANGKAT
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col fs-4 mb-2 fw-bold text-center'>
+                    PADA SATUAN POLISI PAMONG PRAJA PRVINSI DKI JAKARTA
+                  </div>
+                </div>
               </div>
             </div>
-            <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>
-                PADA SATUAN POLISI PAMONG PRAJA PRVINSI DKI JAKARTA
+
+            <div className='card-body mt-n20'>
+              <div className='mt-n20 position-relatve'>
+                <div className='card border card-flush h-xl-100'>
+                  <div className='table-responsive mt-5 ms-5 me-5 w'>
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      progressPending={loading}
+                      progressComponent={<LoadingAnimation />}
+                      pagination
+                      paginationServer
+                      paginationTotalRows={totalRows}
+                      onChangeRowsPerPage={handlePerRowsChange}
+                      onChangePage={handlePageChange}
+                      customStyles={customStyles}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <DataTable
-            columns={columns}
-            data={data}
-            progressPending={loading}
-            progressComponent={<LoadingAnimation />}
-            pagination
-            paginationServer
-            paginationTotalRows={totalRows}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-            customStyles={customStyles}
-          />
         </div>
+        {/* end::Body */}
         <div className='row'>
           <div className='col-7 p-10'></div>
           <div className='col-4 fs-8 mb-4 fw-semibold text-center'>
@@ -694,7 +724,6 @@ export function TabDataPegawaiYangNaikPangkat() {
             <div className='col fs-6 mb-2 fw-semibold text-center'>NIP. ......................</div>
           </div>
         </div>
-        {/* end::Body */}
       </div>
     </>
   )
