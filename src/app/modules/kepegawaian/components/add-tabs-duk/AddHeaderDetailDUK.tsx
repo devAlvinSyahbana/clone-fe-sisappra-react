@@ -71,7 +71,7 @@ const AddHeaderDetailDUK = () => {
                     }
                     to='/kepegawaian/tab-daftar-urut-kepangkatan/tambah-pendidikan-duk'
                   >
-                    Pendidikan
+                    Data Pendidikan
                   </Link>
                 </li>
                 <li className='nav-item'>

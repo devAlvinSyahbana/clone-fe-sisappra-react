@@ -579,7 +579,7 @@ const KepegawaianPage: React.FC = () => {
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
                 Detail Hirarki Kepegawaian DUK
               </PageTitle>
-              <PendidikanDUK />
+              <HirarkiKepegawaianDUK />
             </>
           }
         />

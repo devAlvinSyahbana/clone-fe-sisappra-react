@@ -83,7 +83,7 @@ export function AddPendidikanDUK() {
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
           <div className='card-title m-0'>
-            <h3 className='fw-bold m-0'>Pendidikan</h3>
+            <h3 className='fw-bold m-0'> Data Pendidikan</h3>
           </div>
         </div>
         <div className='card-body p-9'>

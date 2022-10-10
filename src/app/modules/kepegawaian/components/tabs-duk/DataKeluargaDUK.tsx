@@ -61,9 +61,10 @@ export function DataKeluargaDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/tab-daftar-urut-kepangkatan'
+                to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
+                  <i className='fa-sharp fa-solid fa-xmark'></i>
                   Keluar
                 </button>
               </Link>
@@ -78,7 +79,7 @@ export function DataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-pendidikan-duk/${id}/${status}`}
+                to={`/kepegawaian/tab-daftar-urut-kepangkatan/pendidikan-duk/${id}/${status}`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>

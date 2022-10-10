@@ -370,9 +370,10 @@ export function DataPribadiDUK() {
               <div className='text-center'>
                 <Link
                   className='text-reset text-decoration-none'
-                  to='/kepegawaian/tab-daftar-urut-kepangkatan'
+                  to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
                 >
                   <button className='float-none btn btn-secondary align-self-center m-1'>
+                    <i className='fa-sharp fa-solid fa-xmark'></i>
                     Keluar
                   </button>
                 </Link>

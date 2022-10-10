@@ -77,7 +77,7 @@ export function PendidikanDUK() {
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
           <div className='card-title m-0'>
-            <h3 className='fw-bold m-0'>Pendidikan</h3>
+            <h3 className='fw-bold m-0'>Data Pendidikan</h3>
           </div>
         </div>
         <div className='card-body p-9'>
@@ -86,9 +86,10 @@ export function PendidikanDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/tab-daftar-urut-kepangkatan'
+                to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
+                  <i className='fa-sharp fa-solid fa-xmark'></i>
                   Keluar
                 </button>
               </Link>
