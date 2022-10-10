@@ -118,9 +118,7 @@ const UpdateHeaderDetail = () => {
                     <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
                       <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <i className='fa-solid fa-address-card me-1'></i>
-                        {data?.kepegawaian_pangkat_name !== ''
-                          ? data?.kepegawaian_pangkat_name
-                          : '-'}
+                        {detailJabatan?.jabatan ? detailJabatan?.jabatan : '-'}
                       </div>
                     </div>
                   </div>
