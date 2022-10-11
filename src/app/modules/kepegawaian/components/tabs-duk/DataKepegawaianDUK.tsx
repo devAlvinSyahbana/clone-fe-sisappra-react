@@ -1,7 +1,7 @@
 // import React from 'react'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import {Link, useParams} from 'react-router-dom'
-import {HeaderDetailWrapperDUK} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetailDUK'
 import axios from 'axios'
 import {Field, Formik, FormikHelpers} from 'formik'
 import {useState, useEffect} from 'react'
@@ -26,7 +26,7 @@ export function DataKepegawaianDUK() {
   return (
     <div>
       {/* Header */}
-      <HeaderDetailWrapperDUK />
+      <HeaderDetailWrapper />
       {/* second card */}
       <Formik
         initialValues={{
@@ -720,16 +720,16 @@ export function DataKepegawaianDUK() {
                 <div className='text-center'>
                   <Link
                     className='text-reset text-decoration-none'
-                    to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan'
+                    to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
                   >
                     <button className='float-none btn btn-secondary align-self-center m-1'>
-                      <i className='fa fa-close'></i>
-                      Batal
+                      <i className='fa-sharp fa-solid fa-xmark'></i>
+                      Keluar
                     </button>
                   </Link>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/TabDaftarUrutKepangkatan/PendidikanDUK/${id}/${status}`}
+                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/pendidikan-duk/${id}/${status}`}
                   >
                     <button className='float-none btn btn-success align-self-center m-1'>
                       <i className='fa-solid fa-arrow-left'></i>
@@ -738,11 +738,11 @@ export function DataKepegawaianDUK() {
                   </Link>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/hirarki-kepegawaian-duk/${id}/${status}`}
                   >
                     <button className='float-none btn btn-primary align-self-center m-1'>
-                      <i className='fa-solid fa-paper-plane'></i>
-                      Simpan
+                      <i className='fa-solid fa-arrow-right'></i>
+                      Lanjut
                     </button>
                   </Link>
                 </div>
