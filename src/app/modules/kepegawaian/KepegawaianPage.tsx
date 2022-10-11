@@ -3,7 +3,6 @@ import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 
 import {InformasiDataPegawai} from './components/InformasiDataPegawai'
-import {DetailInformasiDataPegawai} from './components/DetailInformasiDataPegawai'
 import {HirarkiPegawai} from './components/HirarkiPegawai'
 import {PenyidikPegawaiNegeriSipil} from './components/PenyidikPegawaiNegeriSipil'
 import {KehadiranPegawai} from './components/KehadiranPegawai'
@@ -30,7 +29,6 @@ import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
 import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
 import {AddDataPPNS} from './components/add-tabs-ppns/AddDataPPNS'
 import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
-import {UpdateNaikPangkat} from './components/update-tabs/UpdateNaikPangkat'
 
 import {DataPPNS} from './components/tabs-ppns/DataPPNS'
 
@@ -164,17 +162,6 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Informasi Data Pegawai</PageTitle>
               <InformasiDataPegawai />
-            </>
-          }
-        />
-        <Route
-          path='detail-informasi-data-pegawai'
-          element={
-            <>
-              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>
-                Detail Informasi Data Pegawai
-              </PageTitle>
-              <DetailInformasiDataPegawai />
             </>
           }
         />
@@ -435,15 +422,6 @@ const KepegawaianPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Data Kepegawaian</PageTitle>
               <PejabatFungsional_DataKepegawaian />
-            </>
-          }
-        />
-        <Route
-          path='TabDataPegawaiYangNaikPangkat/UpdateNaikPangkat/:id/:status'
-          element={
-            <>
-              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Update Naik Pangkat</PageTitle>
-              <UpdateNaikPangkat />
             </>
           }
         />
