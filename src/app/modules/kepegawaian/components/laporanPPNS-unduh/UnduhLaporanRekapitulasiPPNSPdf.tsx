@@ -203,13 +203,15 @@ export function UnduhLaporanRekapitulasiPPNSPdf() {
                     {/* START :: Isi Konten Download */}
                     <div ref={(el) => (componentRef = el)}>
                         <table>
-                            <thead><tr><td>
+                            <thead><tr><td style={{
+                                border: '0px'
+                            }}>
                                 <div className="header-space"></div>
                             </td></tr></thead>
-                            <tbody><tr><td>
-                                <div className="content" style={{
-                                    border: '0px'
-                                }}>
+                            <tbody><tr><td style={{
+                                border: '0px'
+                            }}>
+                                <div className="content">
                                     <div className='col-12'>
                                         <h1 className='text-dark fw-bold fs-3 text-center'>
                                             LAPORAN REKAPITULASI DATA PPNS
@@ -296,7 +298,9 @@ export function UnduhLaporanRekapitulasiPPNSPdf() {
                                     {/* END :: Buat Tanda Tangan */}
                                 </div>
                             </td></tr></tbody>
-                            <tfoot><tr><td>
+                            <tfoot><tr><td style={{
+                                border: '0px'
+                            }}>
                                 <div className="footer-space"></div>
                             </td></tr></tfoot>
                         </table>
