@@ -1,14 +1,13 @@
-import {useState, useEffect, Fragment, useMemo} from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-// import DataTable from 'react-data-table-component'
-import {useTable, usePagination} from 'react-table'
-import {useSticky} from 'react-table-sticky'
-import './table.css'
+import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
+import Swal from 'sweetalert2'
+import AsyncSelect from 'react-select/async'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanPPNSHeader} from './LaporanPPNSHeader'
@@ -54,7 +53,7 @@ export function TabDataPPNS() {
 
   let no = 1
 
-  const columnss = [
+  const columns = [
     {
       name: 'No',
       sortable: true,
@@ -66,33 +65,54 @@ export function TabDataPPNS() {
     },
     {
       name: 'SKPD',
-      selector: (row: any) => row.SKPD,
+      selector: (row: any) => row.skpd,
       sortable: true,
       sortField: 'skpd',
       width: '200px',
+      center: true,
       wrap: true,
     },
     {
       name: 'Nama',
-      selector: (row: any) => row.nama,
+      selector: (row: any) => row.pejabat_ppns_nama,
       sortable: true,
       sortField: 'nama',
-      width: '150px',
+      width: '240px',
+      center: true,
       wrap: true,
     },
     {
-      name: 'NPM/NRK',
-      selector: (row: any) => row.nip,
+      name: 'NIP',
+      selector: (row: any) => row.pejabat_ppns_nip,
       sortable: true,
       sortField: 'nip',
       wrap: true,
+      center: true,
+      width: '170px',
+    },
+    {
+      name: 'NRK',
+      selector: (row: any) => row.pejabat_ppns_nrk,
+      sortable: true,
+      sortField: 'nrk',
+      wrap: true,
+      center: true,
       width: '150px',
     },
     {
-      name: 'Pangkat / GOL',
-      selector: (row: any) => row.golongan,
+      name: 'Pangkat',
+      selector: (row: any) => row.pejabat_ppns_pangkat,
       sortable: true,
-      sortField: 'golongan',
+      sortField: 'pejabat_ppns_pangkat',
+      wrap: true,
+      width: '150px',
+      center: true,
+    },
+    {
+      name: 'Golongan',
+      selector: (row: any) => row.pejabat_ppns_golongan,
+      sortable: true,
+      sortField: 'pejabat_ppns_golongan',
       wrap: true,
       width: '150px',
       center: true,
@@ -102,33 +122,35 @@ export function TabDataPPNS() {
       selector: (row: any) => row.no_sk_ppns,
       sortable: true,
       sortField: 'no_sk_ppns',
-      width: '150px',
+      width: '220px',
       wrap: true,
       center: true,
     },
     {
       name: 'No. KTP PPNS',
-      selector: (row: any) => row.no_ktp,
+      selector: (row: any) => row.no_ktp_ppns,
       sortable: true,
-      sortField: 'no_ktp',
+      sortField: 'no_ktp_ppns',
       wrap: true,
       width: '150px',
       center: true,
     },
     {
       name: 'Wilayah Kerja',
-      selector: (row: any) => row.ppns_wilayah_kerja,
+      selector: (row: any) => row.wilayah_kerja,
       sortable: true,
-      width: '150px',
-      sortField: 'ppns_wilayah_kerja',
+      width: '190px',
+      center: true,
+      sortField: 'wilayah_kerja',
       wrap: true,
     },
     {
       name: 'UU yang dikawal',
-      selector: (row: any) => row.uu_yang_dikawal,
+      selector: (row: any) => row.uu_yg_dikawal,
       sortable: true,
-      width: '150px',
-      sortField: 'uu_yang_dikawal',
+      width: '190px',
+      center: true,
+      sortField: 'uu_yg_dikawal',
       wrap: true,
     },
     {
@@ -197,187 +219,38 @@ export function TabDataPPNS() {
     },
   ]
 
-  const Grouped_Columns = [
-    {
-      Header: 'No',
-    },
-    {
-      Header: 'SKPD',
-    },
-    {
-      Header: 'PEJABAT PPNS',
-      columns: [
-        {
-          Header: 'SKPD',
-          accessor: 'skpd',
-          sortable: true,
-          sortField: 'skpd',
-          width: '200px',
-          wrap: true,
-        },
-        {
-          Header: 'Nama',
-          selector: (row: any) => row.nama,
-          sortable: true,
-          sortField: 'nama',
-          width: '150px',
-          wrap: true,
-        },
-        {
-          Header: 'NIP',
-          selector: (row: any) => row.nip,
-          sortable: true,
-          sortField: 'nip',
-          wrap: true,
-          width: '150px',
-        },
-        {
-          Header: 'NRK',
-          selector: (row: any) => row.nrk,
-          sortable: true,
-          sortField: 'nrk',
-          wrap: true,
-          width: '150px',
-        },
-        {
-          Header: 'Pangkat',
-          selector: (row: any) => row.golongan,
-          sortable: true,
-          sortField: 'golongan',
-          wrap: true,
-          width: '150px',
-          center: true,
-        },
-        {
-          Header: 'Golongan',
-          selector: (row: any) => row.golongan,
-          sortable: true,
-          sortField: 'golongan',
-          wrap: true,
-          width: '150px',
-          center: true,
-        },
-      ],
-    },
-    {
-      Header: 'No. SK. PPNS',
-      selector: (row: any) => row.no_sk_ppns,
-      sortable: true,
-      sortField: 'no_sk_ppns',
-      width: '150px',
-      wrap: true,
-      center: true,
-    },
-    {
-      Header: 'No. KTP PPNS',
-      selector: (row: any) => row.no_ktp,
-      sortable: true,
-      sortField: 'no_ktp',
-      wrap: true,
-      width: '150px',
-      center: true,
-    },
-    {
-      Header: 'Wilayah Kerja',
-      selector: (row: any) => row.ppns_wilayah_kerja,
-      sortable: true,
-      width: '150px',
-      sortField: 'ppns_wilayah_kerja',
-      wrap: true,
-    },
-    {
-      Header: 'UU yang dikawal',
-      selector: (row: any) => row.uu_yang_dikawal,
-      sortable: true,
-      width: '150px',
-      sortField: 'uu_yang_dikawal',
-      wrap: true,
-    },
-    {
-      Header: 'Aksi',
-      sortable: false,
-      text: 'Aksi',
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='mb-2 mt-2'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/DataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
-    },
-  ]
-
-  const columns = useMemo(() => Grouped_Columns, [])
-  const tableInstance = useTable({columns, data}, usePagination)
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    nextPage,
-    previousPage,
-    canNextPage,
-    canPreviousPage,
-    pageOptions,
-    gotoPage,
-    pageCount,
-    state,
-    prepareRow,
-  } = tableInstance
-
-  const {pageIndex} = state
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      title: 'Anda yakin?',
+      text: 'Ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${KEPEGAWAIAN_URL}/delete/${id}`)
+        if (response) {
+          fetchUser(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        }
+      }
+    })
+  }
 
   const customStyles = {
     rows: {
@@ -403,7 +276,7 @@ export function TabDataPPNS() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_URL}/PPNS?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -412,10 +285,10 @@ export function TabDataPPNS() {
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchData = async (page: number) => {
+  const fetchUser = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/PPNS?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -425,7 +298,7 @@ export function TabDataPPNS() {
   }
 
   const handlePageChange = (page: number) => {
-    fetchData(page)
+    fetchUser(page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -636,9 +509,6 @@ export function TabDataPPNS() {
                                 <option value=''>1</option>
                                 <option value=''>2</option>
                                 <option value=''>3</option>
-                                {/* {arrStatPegawai.map((val: string) => {
-                                    return <option value={val}>{val}</option>
-                                  })} */}
                               </select>
                             </div>
                           </div>
@@ -719,49 +589,19 @@ export function TabDataPPNS() {
             <div className='card-body mt-n20'>
               <div className='mt-n20 position-relative'>
                 <div className='card border card-flush h-xl-100'>
-                  <table {...getTableProps()}>
-                    <thead>
-                      {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                          {headerGroup.headers.map((column) => (
-                            <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                          ))}
-                        </tr>
-                      ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                      {page.map((row) => {
-                        prepareRow(row)
-                        return (
-                          <tr {...row.getRowProps()}>
-                            {row.cells.map((cell) => {
-                              return <td {...cell.getCellProps}>{cell.render('Cell')}</td>
-                            })}
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                  <div>
-                    <span>
-                      Page{''}
-                      <strong>
-                        {pageIndex + 1} of {pageOptions.length}
-                      </strong>
-                      {''}
-                    </span>
-                    <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                      {'<<'}
-                    </button>
-                    <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                      Previous
-                    </button>
-                    <button onClick={() => nextPage} disabled={!canNextPage}>
-                      Next
-                    </button>
-                    <button onClick={() => gotoPage(-1)} disabled={!canNextPage}>
-                      {'>>'}
-                    </button>
+                  <div className='table-responsive mt-5 ms-5 me-5'>
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      progressPending={loading}
+                      progressComponent={<LoadingAnimation />}
+                      pagination
+                      paginationServer
+                      paginationTotalRows={totalRows}
+                      onChangeRowsPerPage={handlePerRowsChange}
+                      onChangePage={handlePageChange}
+                      customStyles={customStyles}
+                    />
                   </div>
                 </div>
               </div>
