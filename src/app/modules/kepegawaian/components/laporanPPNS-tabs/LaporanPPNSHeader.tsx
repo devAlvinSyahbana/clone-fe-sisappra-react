@@ -31,9 +31,9 @@ const LaporanPPNSHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('TabDataPPNS') && 'active')
+                      (location.pathname.includes('tab-data-ppns') && 'active')
                     }
-                    to={`/kepegawaian/PenyidikPegawaiNegeriSipil/TabDataPPNS/`}
+                    to={`/kepegawaian/penyidik-pegawai-negeri-sipil/tab-data-ppns/`}
                   >
                     Data PPNS Pemprov DKI Jakarta
                   </Link>

@@ -620,7 +620,7 @@ export function TabDataPPNS() {
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
             <Link
-              to='/kepegawaian/TabDataPPNS/AddDataPPNS'
+              to='/kepegawaian/tab-data-ppns/tambah-data-ppns'
               onClick={handleFilterReset}
               className='me-2'
             >
