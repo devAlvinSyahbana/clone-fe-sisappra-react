@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import ReactToPrint from "react-to-print";
-import { JumlahSatpolDiklat, JumlahSeluruhSatpol } from "../LaporanRekapPegawaiInterface";
+import { JumlahPPNS, JumlahUnitSKPD } from '../LaporanRekapPegawaiInterface'
+import DataTable from 'react-data-table-component'
+import { Link } from "react-router-dom";
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -9,33 +11,128 @@ export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export function UnduhLaporanRekapitulasiPPNSPdf() {
     let componentRef: any;
 
-    const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
-    const [jsatpoldik, setJsatpoldik] = useState<JumlahSatpolDiklat>()
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [jumlah_unit_skpd, setJUnitSKPD] = useState<JumlahUnitSKPD>()
+    const [jumlah_PPNS, setJumlahPPNS] = useState<JumlahPPNS>()
+
+    const LoadingAnimation = (props: any) => {
+        return (
+            <>
+                <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+                    {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+                    <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+                    <div className='d-flex flex-column'>
+                        <h5 className='mb-1'>Sedang mengambil data...</h5>
+                    </div>
+                </div>
+            </>
+        )
+    }
 
     useEffect(() => {
         const fetchData = async () => {
-            const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp`)
-            const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp-by-diklat`)
+            const jumlah_PPNS = await axios.get(`${KEPEGAWAIAN_URL}/PPNS-rekapitulasi-jumlah`)
 
-
-            setJpegawaisatpol(jsatpol.data.data)
-            setJsatpoldik(jsatpoldik.data.data)
-            console.log(jsatpol)
+            setJumlahPPNS(jumlah_PPNS.data.data)
         }
         fetchData()
+        fetchDT(1)
     }, [])
+
+    async function fetchDT(datarekap: any) {
+        setLoading(true)
+        const jumlah_unit_skpd = await axios.get(`${KEPEGAWAIAN_URL}/PPNS-rekapitulasi`)
+        setData(jumlah_unit_skpd.data.data)
+        setLoading(false)
+    }
+
+    var num = 1;
+
+    const columns = [
+        {
+            name: 'No',
+            width: "8%",
+            wrap: true,
+            cell: (row: any) => {
+                return (
+                    <div className='mb-2 mt-2'>
+                        {row.skpd !== 'Jumlah Keseluruhan' ? (num++) : ('')}
+                    </div>
+                )
+            },
+        },
+        {
+            name: 'Unit SKPD',
+            cell: (row: any) => {
+                return (
+                    <div className='mb-2 mt-2'>
+                        {row.skpd !== 'Jumlah Keseluruhan' ? (row.skpd) : (
+                            <b>Jumlah Keseluruhan</b>
+                        )}
+                    </div>
+                )
+            },
+            width: "75%",
+            wrap: true,
+        },
+        {
+            name: 'Jumlah',
+            cell: (row: any) => {
+                return (
+                    <div className='mb-2 mt-2'>
+                        {row.skpd === 'Jumlah Keseluruhan' ? (<b>{row.jumlah}</b>) : (
+                            row.jumlah
+                        )}
+                    </div>
+                )
+            },
+            wrap: true,
+            width: "17%",
+        },
+    ]
+
+    const conditionalRowStyles = [
+        {
+            when: (row: any) => row.skpd === ('Jumlah Keseluruhan'),
+            style: {
+                backgroundColor: 'green',
+                color: 'white',
+            },
+        },
+        // {
+        //     when: (row: any) => row.head,
+        //     style: {
+        //         backgroundColor: 'blue',
+        //     },
+        // },
+    ]
 
     return (
         <div className='row g-5 g-xxl-8'>
             <div className="card">
                 <div className="card-body">
-                    <ReactToPrint
-                        trigger={() => (
-                            <a className="btn btn-success" href="#">
-                                Unduh Pdf
-                            </a>
-                        )}
-                        pageStyle="
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-6">
+                                <Link
+                                    className='text-reset text-decoration-none'
+                                    to={`/kepegawaian/PenyidikPegawaiNegeriSipil/TabRekapitulasiPPNS`}
+                                >
+                                    <button className='float-none btn btn-secondary align-self-center m-1'>
+                                        <i className='fa-solid fa-arrow-left'></i>
+                                        Kembali
+                                    </button>
+                                </Link>
+                            </div>
+                            <div className="col-6 d-flex justify-content-end">
+                                <ReactToPrint
+                                    trigger={() => (
+                                        <a className="float-none btn btn-success align-self-center m-1" href="#">
+                                            Unduh Pdf
+                                        </a>
+                                    )}
+                                    pageStyle="
             @page { 
               size: auto; 
               margin: 0mm; 
@@ -47,28 +144,28 @@ export function UnduhLaporanRekapitulasiPPNSPdf() {
               }
               body { 
                 -webkit-print-color-adjust: exact; 
-                padding: 40px !important; 
+                padding-top: 50px !important; 
               } 
+              .page2 {
+                padding-top: 40px;
+              }
             }
-            .kurang-kiri {
-              margin-left: -100px;
-            }
-            .col-lg-4 {
-              width: 40%;
-            }
-            .col-lg-8 {
-              width: 80 %;
-            }
+
+            
             
             @media all {
               .pagebreak {
-                display: none;
+                display: inline;
               }
             }
           "
-                        content={() => componentRef}
-                    />
+                                    content={() => componentRef}
+                                />
+                            </div>
 
+                        </div>
+                    </div>
+                    {/* START :: Isi Konten Download */}
                     <div ref={(el) => (componentRef = el)}>
                         <div className='col-12'>
                             <h1 className='text-dark fw-bold fs-3 text-center'>
@@ -79,300 +176,57 @@ export function UnduhLaporanRekapitulasiPPNSPdf() {
                             </h1>
                         </div>
                         <div className="p-4"></div>
-                        <div className="table-responsive">
-                            <table className="table-bordered align-middle table-row-dashed fs-7 gy-5 w-100">
-                                <thead>
-                                    <tr className="text-start fw-bold fs-7 text-uppercase gs-0 bg-success">
-                                        <th style={{ width: "10px" }} className="text-center">No</th>
-                                        <th style={{ width: "200px" }} className="text-center">Unit SKPD</th>
-                                        <th style={{ width: "75px" }} className="text-center">Jumlah</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            1
-
-                                        </td>
-                                        <td className='text-center'>Satpol PP Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            243 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            2
-
-                                        </td>
-                                        <td className='text-center'>Dinas Perindustrian dan Energi Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            5 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            3
-
-                                        </td>
-                                        <td className='text-center'>Inspektorat Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            2 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            4
-
-                                        </td>
-                                        <td className='text-center'>Dinas Kehutanan Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            15 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            5
-
-                                        </td>
-                                        <td className='text-center'>Dinas Pendidikan Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            3 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            6
-
-                                        </td>
-                                        <td className='text-center'>Badan Pajak dan Restribusi Daerah Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            11 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            7
-
-                                        </td>
-                                        <td className='text-center'>Dinas Koperasi Usaha Kecil dan Menengah serta Perdagangan Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            39 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            8
-
-                                        </td>
-                                        <td className='text-center'>Dinas Sosial Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            5 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            9
-
-                                        </td>
-                                        <td className='text-center'>Dinas Sumber Daya Air Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            1 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            10
-
-                                        </td>
-                                        <td className='text-center'>Badan Kesatuan Bangsa dan Politik Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            2 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            11
-
-                                        </td>
-                                        <td className='text-center'>Dinas Cipta Karya, Tata Ruang dan Pertanahan Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            10 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            12
-
-                                        </td>
-                                        <td className='text-center'>Dinas Ketahanan Pangan, Kelautan dan Pertanian Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            14 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            13
-
-                                        </td>
-                                        <td className='text-center'>Dinas Lingkungan Hidup Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            17 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            14
-
-                                        </td>
-                                        <td className='text-center'>Dinas Perhubungan Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            54 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            15
-
-                                        </td>
-                                        <td className='text-center'>Dinas Kependudukan dan Catatan Sipil Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            29 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            16
-
-                                        </td>
-                                        <td className='text-center'>Dinas Pariwisata Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            9 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            17
-
-                                        </td>
-                                        <td className='text-center'>Dinas Penanggulangan Kebakaran dan Penyelamatan Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            62 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            18
-
-                                        </td>
-                                        <td className='text-center'>Dinas Kesehatan Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            8 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center'>
-
-                                            19
-
-                                        </td>
-                                        <td className='text-center'>Dinas Tenaga Kerja dan Transmigrasi Provinsi DKI Jakarta</td>
-                                        <td className='text-end'>
-
-                                            15 Orang
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className='text-center fw-bold table-primary' colSpan={2}>
-                                            JUMLAH
-                                        </td>
-                                        <td className='text-end fw-bold table-success'>
-
-                                            544 Orang
-
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        {/* START :: Table */}
+                        <div className="row g-5 g-xxl-8 ms-15 me-15">
+                            <DataTable
+                                columns={columns}
+                                data={data}
+                                progressPending={loading}
+                                progressComponent={<LoadingAnimation />}
+                                highlightOnHover
+                            // conditionalRowStyles={conditionalRowStyles}
+                            />
                         </div>
-                        <div className="row mt-5">
-                            <label className="col-lg-7 offset-md-1 fw-bold">SATPOL PP PROVINSI DKI JAKARTA</label>
-                            <label className="col-lg-2 text-end">
-                            </label>
-                            <div className="col-lg-2 d-flex justify-content-end">
-                                <span className="fs-6 fw-normal">{jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain : '-'} Orang</span>
+                        {/* END :: Table */}
+                        {/* START :: Jumlah */}
+                        <div className="row mt-5"></div>
+                        {/* <div className="row ms-20 me-10">
+                            <div className="col-sm-8 ml-5 d-flex bd-highlight">
+                                <label className="fw-bold">SATPOL PP PROVINSI DKI JAKARTA</label>
+                            </div>
+                            <div className="col-sm-4 flex-fill bd-highlight">
+                                <span className="fs-6 fw-normal ">
+                                    {jumlah_PPNS?.satpol_pp !== 0 ? jumlah_PPNS?.satpol_pp : '-'} Orang
+                                </span>
+                            </div>
+                        </div> */}
+                        <div className="page2"></div>
+                        <div className="row g-5 g-xxl-8 ms-15 me-15 d-flex justify-content-center">
+                            <label className="col-8 col-sm-8 col-lg-8 offset-md-1 fw-bold">SATPOL PP PROVINSI DKI JAKARTA</label>
+                            <div className="col-2 col-sm-2 col-lg-2 d-flex justify-content-center">
+                                <span className="fs-6 fw-normal">
+                                    {jumlah_PPNS?.satpol_pp !== 0 ? jumlah_PPNS?.satpol_pp : '-'} Orang
+                                </span>
                             </div>
                         </div>
-                        <div className="row">
-                            <label className="col-lg-7 offset-md-1 fw-bold">SKPD LAIN</label>
-                            <label className="col-lg-2 text-end">
-                            </label>
-                            <div className="col-lg-2 d-flex justify-content-end">
-                                <span className="fs-6 fw-normal">{jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain : '-'} Orang</span>
+                        <div className="row g-5 g-xxl-8 ms-15 me-15 d-flex justify-content-center">
+                            <label className="col-8 col-sm-8 col-lg-8 offset-md-1 fw-bold">SKPD LAIN</label>
+                            <div className="col-2 col-sm-2 col-lg-2 d-flex justify-content-center">
+                                <span className="fs-6 fw-normal">
+                                    {jumlah_PPNS?.skpd_lain !== 0 ? jumlah_PPNS?.skpd_lain : '-'} Orang
+                                </span>
                             </div>
                         </div>
-                        <div className="row mb-10">
-                            <label className="col-lg-7 offset-md-1 fw-bold">JUMLAH</label>
-                            <label className="col-lg-2 text-end">
-                            </label>
-                            <div className="col-lg-2 d-flex justify-content-end">
-                                <span className="fs-6 fw-normal">{jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain ? jpegawaisatpol?.jmlh_seluruh_ppns_unit_kerja_lain : '-'} Orang</span>
+                        <div className="row g-5 g-xxl-8 ms-15 me-15 d-flex justify-content-center">
+                            <label className="col-8 col-sm-8 col-lg-8 offset-md-1 fw-bold">JUMLAH</label>
+                            <div className="col-2 col-sm-2 col-lg-2 d-flex justify-content-center">
+                                <span className="fs-6 fw-normal">
+                                    {jumlah_PPNS?.jumlah_ppns !== 0 ? jumlah_PPNS?.jumlah_ppns : '-'} Orang
+                                </span>
                             </div>
                         </div>
+                        {/* END :: Jumlah */}
+                        {/* START :: Buat Tanda Tangan */}
                         <div className="row">
                             <div className="col-8"></div>
                             <div className="col-4 fs-6 mb-2 mt-20 fw-semibold text-center">
@@ -384,8 +238,21 @@ export function UnduhLaporanRekapitulasiPPNSPdf() {
                                 </div>
                             </div>
                         </div>
+                        <div className="row">
+                            <div className="col-8"></div>
+                            <div className="col-4 fs-6 mb-2 mt-20 fw-semibold text-center">
+                                <div className="col fs-6 mb-2 fw-semibold text-center">
+                                    ................................................
+                                </div>
+                                <div className="col fs-6 fw-semibold text-center">
+                                    NIP. .........................................
+                                </div>
+                            </div>
+                        </div>
+                        {/* END :: Buat Tanda Tangan */}
                     </div>
                 </div>
+                {/* END :: End Isi Konten Download */}
             </div>
         </div>
     )
