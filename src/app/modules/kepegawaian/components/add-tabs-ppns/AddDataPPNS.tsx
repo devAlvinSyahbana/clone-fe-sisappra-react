@@ -390,7 +390,7 @@ export function AddDataPPNS() {
               <div className='text-center'>
                 <Link
                   className='text-reset text-decoration-none'
-                  to='/kepegawaian/PenyidikPegawaiNegeriSipil/TabDataPPNS/'
+                  to='/kepegawaian/penyidik-pegawai-negeri-sipil/tab-data-ppns/'
                 >
                   <button className='float-none btn btn-secondary align-self-center m-1'>
                     <i className='fa fa-close'></i>
