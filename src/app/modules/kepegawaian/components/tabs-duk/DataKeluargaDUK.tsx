@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
-import {HeaderDetailWrapperDUK} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetailDUK'
 import axios from 'axios'
 import moment from 'moment'
 
@@ -47,7 +47,7 @@ export function DataKeluargaDUK() {
   return (
     <div>
       {/* Header */}
-      <HeaderDetailWrapperDUK />
+      <HeaderDetailWrapper />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
@@ -61,16 +61,16 @@ export function DataKeluargaDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan'
+                to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
-                <i className='fa fa-close'></i>
-                  Batal
+                  <i className='fa-sharp fa-solid fa-xmark'></i>
+                  Keluar
                 </button>
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/DataPribadiDUK/${id}/${status}`}
+                to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-pribadi-duk/${id}/${status}`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -79,7 +79,7 @@ export function DataKeluargaDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/PendidikanDUK/${id}/${status}`}
+                to={`/kepegawaian/tab-daftar-urut-kepangkatan/pendidikan-duk/${id}/${status}`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
