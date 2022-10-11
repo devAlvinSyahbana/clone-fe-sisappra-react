@@ -2,14 +2,46 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ReactToPrint from "react-to-print";
 import { JumlahPPNS, JumlahUnitSKPD } from '../LaporanRekapPegawaiInterface'
-import DataTable from 'react-data-table-component'
+import DataTable, { createTheme } from 'react-data-table-component'
 import { Link } from "react-router-dom";
+import { ThemeModeComponent } from '../../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+    'darkMetro',
+    {
+        text: {
+            primary: '#92929f',
+            secondary: '#92929f',
+        },
+        background: {
+            default: '#1e1e2e',
+        },
+        context: {
+            background: '#cb4b16',
+            text: '#FFFFFF',
+        },
+        divider: {
+            default: '#2b2c41',
+        },
+        action: {
+            button: 'rgba(0,0,0,.54)',
+            hover: 'rgba(0,0,0,.08)',
+            disabled: 'rgba(0,0,0,.12)',
+        },
+    },
+    'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
 export function UnduhLaporanRekapitulasiPPNSPdf() {
     let componentRef: any;
+    const { mode } = useThemeMode()
+    const calculatedMode = mode === 'system' ? systemMode : mode
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -184,6 +216,7 @@ export function UnduhLaporanRekapitulasiPPNSPdf() {
                                 progressPending={loading}
                                 progressComponent={<LoadingAnimation />}
                                 highlightOnHover
+                                theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                             // conditionalRowStyles={conditionalRowStyles}
                             />
                         </div>

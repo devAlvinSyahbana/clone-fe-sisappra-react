@@ -5,13 +5,137 @@ import { toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { LaporanPPNSHeader } from './LaporanPPNSHeader'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { JumlahPPNS, JumlahUnitSKPD } from '../LaporanRekapPegawaiInterface'
-import DataTable from 'react-data-table-component'
+import DataTable, { createTheme } from 'react-data-table-component'
+import { ThemeModeComponent } from '../../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+    'darkMetro',
+    {
+        text: {
+            primary: '#92929f',
+            secondary: '#92929f',
+        },
+        background: {
+            default: '#1e1e2e',
+        },
+        context: {
+            background: '#cb4b16',
+            text: '#FFFFFF',
+        },
+        divider: {
+            default: '#2b2c41',
+        },
+        action: {
+            button: 'rgba(0,0,0,.54)',
+            hover: 'rgba(0,0,0,.08)',
+            disabled: 'rgba(0,0,0,.12)',
+        },
+    },
+    'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+    input: (base: object) => ({
+        ...base,
+        color: '#5e6278',
+    }),
+    menu: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+    container: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+    indicatorsContainer: (base: object) => ({
+        ...base,
+        color: '#cccccc',
+    }),
+    indicatorSeparator: (base: object) => ({
+        ...base,
+        backgroundColor: '#cccccc',
+    }),
+    control: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+        boxShadow: '0 0 0 1px #f5f8fa',
+    }),
+    singleValue: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+    }),
+    option: (base: object) => ({
+        ...base,
+        height: '100%',
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+}
+
+const reactSelectDarkThem = {
+    input: (base: object) => ({
+        ...base,
+        color: '#92929f',
+    }),
+    menu: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+    container: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+    indicatorsContainer: (base: object) => ({
+        ...base,
+        color: '#92929f',
+    }),
+    indicatorSeparator: (base: object) => ({
+        ...base,
+        backgroundColor: '#92929f',
+    }),
+    control: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+        boxShadow: '0 0 0 1px #1b1b29',
+    }),
+    singleValue: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+    }),
+    option: (base: object) => ({
+        ...base,
+        height: '100%',
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/`
 
 export function TabRekapitulasiPPNS() {
     const navigate = useNavigate()
+    const { mode } = useThemeMode()
+    const calculatedMode = mode === 'system' ? systemMode : mode
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -164,6 +288,7 @@ export function TabRekapitulasiPPNS() {
                                                 progressPending={loading}
                                                 progressComponent={<LoadingAnimation />}
                                                 highlightOnHover
+                                                theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                                             />
                                         </div>
                                     </div>
