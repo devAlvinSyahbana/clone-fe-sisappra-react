@@ -5,7 +5,7 @@ import DataTable, { createTheme } from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import Button from 'react-bootstrap/Button'
-import clsx from 'clsx'
+import moment from 'moment'
 import FileDownload from 'js-file-download'
 import { LaporanRekapHeader } from './LaporanRekapHeader'
 import AsyncSelect from 'react-select/async'
@@ -159,7 +159,6 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     var [totalRows, setTotalRows] = useState(0)
     const [perPage, setPerPage] = useState(10)
     const [qParamFind, setUriFind] = useState({ strparam: '' })
-    const [inputValAtasan, setDataPegawai] = useState({ label: '', value: null })
 
     const LoadingAnimation = (props: any) => {
         return (
@@ -272,15 +271,15 @@ export function TabRekapitulasiDataPegawaiPensiun() {
             sortable: true,
             sortField: 'tempat_lahir',
             wrap: true,
-            width: '200px',
+            width: '150px',
         },
         {
             name: 'Tanggal Lahir',
-            selector: (row: any) => row.tgl_lahir,
+            selector: (row: any) => moment(row.tgl_lahir).format('D MMMM YYYY'),
             sortable: true,
             sortField: 'tgl_lahir',
             wrap: true,
-            minWidth: '15',
+            width: '150px',
         },
         {
             name: 'Tahun Pensiun',
