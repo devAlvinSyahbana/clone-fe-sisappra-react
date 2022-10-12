@@ -10,8 +10,8 @@ table th {
   border: 1px solid #ddd;
   padding: 8px;
   color: black;
-  /* border-top: none;
-  border-bottom: none; */
+  border-top: none;
+  /*border-bottom: none; */
   background-color: white;
 }
 
@@ -27,6 +27,6 @@ table th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
-  background-color: green;
-  color: white;
+  background-color: white;
+  color: black;
 }

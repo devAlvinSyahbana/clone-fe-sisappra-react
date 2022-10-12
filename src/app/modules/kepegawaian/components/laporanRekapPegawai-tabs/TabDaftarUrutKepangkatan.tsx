@@ -12,6 +12,7 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import FileDownload from 'js-file-download'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
+import {LaporanRekapHeader} from './LaporanRekapHeader'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
@@ -442,10 +443,11 @@ export function TabDaftarUrutKepangkatan() {
 
   return (
     <>
+      <LaporanRekapHeader />
       <div id='kt_app_content' className='app-content flex-column-fluid'>
         <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card card-flush h-xl-100'>
-            <div className='card'>
+          <div className='card'>
+            <div className='card card-flush h-xl-100'>
               <div className='card-header border-1 pt-6'>
                 <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
                   <div className='mb-5'>
