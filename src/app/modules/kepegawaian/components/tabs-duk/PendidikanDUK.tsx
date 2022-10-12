@@ -1,7 +1,7 @@
 import {useEffect, useState, Fragment} from 'react'
 import {Link, useParams} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
-import {HeaderDetailWrapperDUK} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetailDUK'
 import axios from 'axios'
 import moment from 'moment'
 
@@ -72,12 +72,12 @@ export function PendidikanDUK() {
   return (
     <div>
       {/* Header */}
-      <HeaderDetailWrapperDUK />
+      <HeaderDetailWrapper />
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
           <div className='card-title m-0'>
-            <h3 className='fw-bold m-0'>Pendidikan</h3>
+            <h3 className='fw-bold m-0'>Data Pendidikan</h3>
           </div>
         </div>
         <div className='card-body p-9'>
@@ -86,16 +86,16 @@ export function PendidikanDUK() {
             <div className='text-center'>
               <Link
                 className='text-reset text-decoration-none'
-                to='/kepegawaian/LaporanRekapitulasiPegawai/TabDaftarUrutKepangkatan/'
+                to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
               >
                 <button className='float-none btn btn-secondary align-self-center m-1'>
-                  <i className='fa fa-close'></i>
-                  Batal
+                  <i className='fa-sharp fa-solid fa-xmark'></i>
+                  Keluar
                 </button>
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/DataKeluargaDUK/${id}/${status}`}
+                to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-keluarga-duk/${id}/${status}`}
               >
                 <button className='float-none btn btn-success align-self-center m-1'>
                   <i className='fa-solid fa-arrow-left'></i>
@@ -104,7 +104,7 @@ export function PendidikanDUK() {
               </Link>
               <Link
                 className='text-reset text-decoration-none'
-                to={`/kepegawaian/TabDaftarUrutKepangkatan/DataKepegawaianDUK/${id}/${status}`}
+                to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-kepegawaian-duk/${id}/${status}`}
               >
                 <button className='float-none btn btn-primary align-self-center m-1'>
                   <i className='fa-solid fa-arrow-right'></i>
