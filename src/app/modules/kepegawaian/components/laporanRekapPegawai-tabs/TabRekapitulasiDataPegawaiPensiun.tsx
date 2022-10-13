@@ -156,7 +156,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
-    var [totalRows, setTotalRows] = useState(0)
+    const [totalRows, setTotalRows] = useState(0)
     const [perPage, setPerPage] = useState(10)
     const [qParamFind, setUriFind] = useState({ strparam: '' })
 
@@ -371,7 +371,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     }
 
     useEffect(() => {
-        async function fetchDT(page: any) {
+        async function fetchDT(page: number) {
             setLoading(true)
             const response = await axios.get(
                 `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
@@ -381,9 +381,9 @@ export function TabRekapitulasiDataPegawaiPensiun() {
             setLoading(false)
         }
         fetchDT(1)
-    }, [qParamFind, perPage])
+    }, [qParamFind, perPage, valStatPegawai.val])
 
-    const fetchData = async (page: any) => {
+    const fetchData = async (page: number) => {
         setLoading(true)
         const response = await axios.get(
             `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
@@ -395,14 +395,14 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         return [data, setData] as const
     }
 
-    const handlePageChange = (page: any) => {
+    const handlePageChange = (page: number) => {
         fetchData(page)
     }
 
-    const handlePerRowsChange = async (newPerPage: any, page: any) => {
+    const handlePerRowsChange = async (newPerPage: number, page: number) => {
         setLoading(true)
         const response = await axios.get(
-            `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
+            `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${newPerPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
         )
         setData(response.data.data)
         setPerPage(newPerPage)
@@ -685,6 +685,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                                 }
                                                 onChange={handleChangeInputKelurahan}
                                                 styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                                                isDisabled
                                             />
                                         </div>
                                         {/* {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? ( */}
