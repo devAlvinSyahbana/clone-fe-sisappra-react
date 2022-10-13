@@ -270,7 +270,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='LaporanRekapitulasiPegawai/TabLaporanRekapitulasiPegawai'
+          path='laporan-rekapitulasi-pegawai/tab-laporan-rekapitulasi-pegawai'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
