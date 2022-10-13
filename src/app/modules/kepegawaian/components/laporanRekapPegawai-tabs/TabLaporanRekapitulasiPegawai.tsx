@@ -3,17 +3,14 @@ import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
-import Table from 'react-bootstrap/Table'
 import {
   JumlahSeluruhSatpol,
-  JumlahSatpolDiklat,
   JumlahSatpolPendidikan,
   JumlahSatpolGolongan,
 } from '../LaporanRekapPegawaiInterface'
 import DataTable, {createTheme} from 'react-data-table-component'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import {totalmem} from 'os'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
@@ -490,8 +487,7 @@ export function TabLaporanRekapitulasiPegawai() {
                       <div className='row mt-5 fs-2'>
                         <div className='col-6 text-start'>Jumlah Keseluruhan</div>
                         <div className='col-6 text-start'>
-                          {jsatpoldik?.total !== 0 ? jsatpoldik?.total : '- '}{' '}
-                          Orang
+                          {jsatpoldik?.total !== 0 ? jsatpoldik?.total : '- '} Orang
                         </div>
                       </div>
                     </div>
