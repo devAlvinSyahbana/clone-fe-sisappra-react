@@ -124,6 +124,26 @@ export function UpdateDataKeluarga() {
     },
   ]
 
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '72px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  }
+
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -325,6 +345,7 @@ export function UpdateDataKeluarga() {
             columns={columns}
             data={data.dt}
             pagination
+            customStyles={customStyles}
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
             noDataComponent={
               <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
