@@ -3,10 +3,14 @@ import {KTSVG} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 import {useParams} from 'react-router-dom'
 import DataTable, {createTheme} from 'react-data-table-component'
-import {Button, ButtonGroup, Dropdown, DropdownButton, Modal} from 'react-bootstrap'
+import {ButtonGroup, Dropdown, DropdownButton, Modal} from 'react-bootstrap'
 import {UpdateHeaderDetail} from './UpdateHeaderDetail'
 import axios from 'axios'
 import moment from 'moment'
+import {useFormik, FormikHelpers} from 'formik'
+import * as Yup from 'yup'
+import Swal from 'sweetalert2'
+import clsx from 'clsx'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
@@ -41,6 +45,22 @@ createTheme(
 )
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
+const validatorForm = Yup.object().shape({
+  hubungan: Yup.string().required('Wajib diisi'),
+  nama: Yup.string().required('Wajib diisi'),
+  jenis_kelamin: Yup.string().required('Wajib diisi'),
+})
+
+export interface FormInput {
+  hubungan?: string
+  nama?: string
+  tempat_lahir?: string
+  tgl_lahir?: string
+  jenis_kelamin?: string
+  id_pegawai?: number
+  id?: number | undefined
+}
+
 export function UpdateDataKeluarga() {
   const {id, status} = useParams()
   const {mode} = useThemeMode()
@@ -48,7 +68,7 @@ export function UpdateDataKeluarga() {
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
-  const [data, setData] = useState([])
+  const [data, setData] = useState({dt: []})
   const columns = [
     {
       name: 'Nama',
@@ -92,16 +112,8 @@ export function UpdateDataKeluarga() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item>
-                      <Link className='text-reset' to='/#'>
-                        Ubah
-                      </Link>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <Link className='text-reset' to='/#'>
-                        Hapus
-                      </Link>
-                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => doEdit(record.id)}>Ubah</Dropdown.Item>
+                    <Dropdown.Item onClick={() => konfirDel(record.id)}>Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -130,11 +142,163 @@ export function UpdateDataKeluarga() {
     async function fetchDT() {
       setLoading(true)
       const response = await axios.get(`${KEPEGAWAIAN_URL}/find-data-keluarga/${id}/${status}`)
-      setData(response.data.data)
+      setData((prevstate) => ({...prevstate, dt: response.data.data}))
       setLoading(false)
     }
     fetchDT()
   }, [id, status])
+
+  const fetchData = async () => {
+    setLoading(true)
+    const response = await axios.get(`${KEPEGAWAIAN_URL}/find-data-keluarga/${id}/${status}`)
+    setData((prevstate) => ({...prevstate, dt: response.data.data}))
+    setLoading(false)
+  }
+
+  const [aksi, setAksi] = useState(0)
+  const [valuesFormik, setValuesFormik] = useState<FormInput>()
+
+  const handleChangeFormik = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      ...valuesFormik,
+    },
+    validationSchema: validatorForm,
+    enableReinitialize: true,
+    onSubmit: async (values, {setSubmitting}: FormikHelpers<FormInput>) => {
+      setSubmitting(true)
+      try {
+        if (aksi === 0) {
+          // aksi tambah
+          const response = await axios.post(
+            `${KEPEGAWAIAN_URL}/create-keluarga-${status !== 'PNS' ? 'non-PNS' : 'PNS'}`,
+            {...valuesFormik, id_pegawai: id}
+          )
+          if (response) {
+            Swal.fire({
+              icon: 'success',
+              text: 'Data berhasil disimpan',
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            handleClose()
+            fetchData()
+            setSubmitting(false)
+          }
+        } else {
+          // aksi ubah
+          const response = await axios.put(
+            `${KEPEGAWAIAN_URL}/update-keluarga-${status !== 'PNS' ? 'non-PNS' : 'PNS'}/${
+              idEditData.id
+            }`,
+            {...valuesFormik, id_pegawai: id}
+          )
+          if (response) {
+            Swal.fire({
+              icon: 'success',
+              text: 'Data berhasil disimpan',
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            handleClose()
+            fetchData()
+            setSubmitting(false)
+          }
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          text: 'Data gagal disimpan, harap mencoba lagi',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        console.error(error)
+        setSubmitting(false)
+      }
+    },
+  })
+
+  const doAdd = () => {
+    setShow(true)
+    setAksi(0)
+    setValuesFormik({
+      hubungan: '',
+      nama: '',
+      tempat_lahir: '',
+      tgl_lahir: '',
+      jenis_kelamin: '',
+    })
+  }
+
+  const konfirDel = (idparam: any) => {
+    Swal.fire({
+      text: 'Anda yakin ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+      color: '#000000',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(
+          `${KEPEGAWAIAN_URL}/delete-keluarga-${status !== 'PNS' ? 'non-PNS' : 'PNS'}/${parseInt(
+            idparam
+          )}`
+        )
+        if (response) {
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+          fetchData()
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        }
+      }
+    })
+  }
+
+  const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
+  const getDetail = async (idparam: any) => {
+    const {data} = await axios.get(
+      `${KEPEGAWAIAN_URL}/findone-data-keluarga/${parseInt(idparam)}/${status}`
+    )
+    setIdEditData((prevstate) => ({
+      ...prevstate,
+      id: parseInt(idparam),
+    }))
+    setValuesFormik((prevstate) => ({
+      ...prevstate,
+      ...data.data,
+      tgl_lahir: moment(data.data.tgl_lahir).format('YYYY-MM-D'),
+    }))
+  }
+
+  const doEdit = (id: any) => {
+    setShow(true)
+    setAksi(1)
+    getDetail(id)
+  }
 
   return (
     <div>
@@ -149,7 +313,7 @@ export function UpdateDataKeluarga() {
         </div>
         <div className='card-body p-9'>
           <div className='d-flex justify-content-end'>
-            <button type='button' className='btn btn-primary me-2' onClick={() => setShow(true)}>
+            <button type='button' className='btn btn-primary me-2' onClick={doAdd}>
               <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
               Tambah
             </button>
@@ -159,7 +323,7 @@ export function UpdateDataKeluarga() {
             progressPending={loading}
             progressComponent={<LoadingAnimation />}
             columns={columns}
-            data={data}
+            data={data.dt}
             pagination
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
             noDataComponent={
@@ -174,16 +338,19 @@ export function UpdateDataKeluarga() {
           <Modal
             size='lg'
             show={show}
-            onHide={() => setShow(false)}
+            onHide={handleClose}
             aria-labelledby='example-modal-sizes-title-lg'
             backdrop='static'
             keyboard={false}
+            centered
           >
             <Modal.Header closeButton>
-              <Modal.Title id='example-modal-sizes-title-lg'>Tambah Data Keluarga</Modal.Title>
+              <Modal.Title id='example-modal-sizes-title-lg'>
+                {aksi === 0 ? 'Tambah' : 'Ubah'} Data Keluarga
+              </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <form id='kt_modal_add_user_form' className='form' action='#'>
+              <form className='form' onSubmit={formik.handleSubmit}>
                 <div
                   className='d-flex flex-column scroll-y me-n7 pe-7'
                   id='kt_modal_add_user_scroll'
@@ -198,25 +365,88 @@ export function UpdateDataKeluarga() {
                     <label className='required fw-semibold fs-6 mb-2'>Nama</label>
                     <input
                       type='text'
-                      name='kode_e'
-                      id='kode_id_e'
-                      className='form-control form-control-solid mb-3 mb-lg-0'
+                      name='nama'
                       placeholder='Nama'
-                      value=''
+                      className={clsx(
+                        'form-control form-control-solid mb-1',
+                        {
+                          'is-invalid': formik.touched.nama && formik.errors.nama,
+                        },
+                        {
+                          'is-valid': formik.touched.nama && !formik.errors.nama,
+                        }
+                      )}
+                      onChange={handleChangeFormik}
+                      value={valuesFormik?.nama}
                     />
+                    {formik.touched.nama && formik.errors.nama && (
+                      <div className='fv-plugins-message-container'>
+                        <div className='fv-help-block'>
+                          <span role='alert'>{formik.errors.nama}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className='fv-row mb-7'>
                     <label className='required fw-semibold fs-6 mb-2'>Hubungan Keluarga</label>
                     <input
                       type='text'
-                      name='jenis_pelanggaran_e'
-                      className=' form-control form-control-solid mb-3 mb-lg-0'
+                      name='hubungan'
                       placeholder='Hubungan Keluarga'
-                      value=''
+                      className={clsx(
+                        'form-control form-control-solid mb-1',
+                        {
+                          'is-invalid': formik.touched.hubungan && formik.errors.hubungan,
+                        },
+                        {
+                          'is-valid': formik.touched.hubungan && !formik.errors.hubungan,
+                        }
+                      )}
+                      onChange={handleChangeFormik}
+                      value={valuesFormik?.hubungan}
                     />
+                    {formik.touched.hubungan && formik.errors.hubungan && (
+                      <div className='fv-plugins-message-container'>
+                        <div className='fv-help-block'>
+                          <span role='alert'>{formik.errors.hubungan}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className='fv-row mb-7'>
                     <div id='kt_docs_repeater_basic'>
+                      <div className='fv-row mb-7 mt-7'>
+                        <label className='required fw-semibold fs-6 mb-2'>Jenis Kelamin</label>
+                        <select
+                          data-control='select2'
+                          data-placeholder='Jenis Kelamin'
+                          name='jenis_kelamin'
+                          className={clsx(
+                            'form-control form-control-solid mb-1',
+                            {
+                              'is-invalid':
+                                formik.touched.jenis_kelamin && formik.errors.jenis_kelamin,
+                            },
+                            {
+                              'is-valid':
+                                formik.touched.jenis_kelamin && !formik.errors.jenis_kelamin,
+                            }
+                          )}
+                          onChange={handleChangeFormik}
+                          value={valuesFormik?.jenis_kelamin}
+                        >
+                          <option value=''>Pilih</option>
+                          <option value='L'>Laki-laki</option>
+                          <option value='P'>Perempuan</option>
+                        </select>
+                        {formik.touched.jenis_kelamin && formik.errors.jenis_kelamin && (
+                          <div className='fv-plugins-message-container'>
+                            <div className='fv-help-block'>
+                              <span role='alert'>{formik.errors.jenis_kelamin}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                       <div className='form-group'>
                         <div data-repeater-list='kt_docs_repeater_basic'>
                           <div data-repeater-item>
@@ -227,6 +457,9 @@ export function UpdateDataKeluarga() {
                                   type='text'
                                   className='form-control form-control-solid mb-3 mb-lg-0'
                                   placeholder='Tempat'
+                                  name='tempat_lahir'
+                                  onChange={handleChangeFormik}
+                                  value={valuesFormik?.tempat_lahir}
                                 />
                               </div>
                               <div className='col-8'>
@@ -234,38 +467,38 @@ export function UpdateDataKeluarga() {
                                   type='date'
                                   className='form-control form-control-solid'
                                   placeholder='Tanggal Lahir'
-                                  value=''
+                                  name='tgl_lahir'
+                                  onChange={handleChangeFormik}
+                                  value={valuesFormik?.tgl_lahir}
                                 />
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className='fv-row mb-7 mt-7'>
-                        <label className='required fw-semibold fs-6 mb-2'>Jenis Kelamin</label>
-                        <select
-                          className='form-select form-select-solid'
-                          data-control='select2'
-                          data-placeholder='Jenis Kelamin'
-                        >
-                          <option></option>
-                          <option value='1'>LAKI-LAKI</option>
-                          <option value='2'>PEREMPUAN</option>
-                        </select>
-                      </div>
                     </div>
+                  </div>
+                </div>
+                <div className='p-0 mt-6'>
+                  <div className='text-center'>
+                    <button
+                      type='button'
+                      onClick={handleClose}
+                      className='float-none btn btn-light align-self-center m-1'
+                    >
+                      Tutup
+                    </button>
+                    <button
+                      type='submit'
+                      className='float-none btn btn-primary align-self-center m-1'
+                      disabled={formik.isSubmitting || !formik.isValid}
+                    >
+                      Simpan
+                    </button>
                   </div>
                 </div>
               </form>
             </Modal.Body>
-            <Modal.Footer>
-              <Button variant='secondary' onClick={handleClose}>
-                Tutup
-              </Button>
-              <Button variant='primary' onClick={handleClose}>
-                Simpan
-              </Button>
-            </Modal.Footer>
           </Modal>
           <div className='p-0 mt-6'>
             <div className='text-center'>

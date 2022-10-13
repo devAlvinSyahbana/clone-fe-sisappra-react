@@ -10,6 +10,7 @@ import {HeaderDetailWrapper} from './HeaderDetail'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
 export const GLOBAL_URL = `${API_URL}/master`
+export const AGAMA_URL = `${API_URL}/master/agama`
 
 export function DataPribadi() {
   const {id, status} = useParams()
@@ -20,6 +21,7 @@ export function DataPribadi() {
     const fetchData = async () => {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
       setData((prevstate) => ({...prevstate, ...response.data.data}))
+      getAgamaVal(response.data.data.agama)
       getProvVal(response.data.data.domisili_provinsi, 'domisili_provinsi')
       getProvVal(response.data.data.sesuai_ktp_provinsi, 'sesuai_ktp_provinsi')
       getKabKotaVal(response.data.data.domisili_kabkota, 'domisili_kabkota')
@@ -144,6 +146,23 @@ export function DataPribadi() {
         })
   }
 
+  const [valAgama, setValAgama] = useState({value: '', label: ''})
+  const getAgamaVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${AGAMA_URL}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValAgama((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.agama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
   return (
     <>
       {/* Header */}
@@ -152,6 +171,8 @@ export function DataPribadi() {
       <Formik
         initialValues={{
           ...data,
+          jenis_kelamin: data.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan',
+          agama: valAgama.label && valAgama.label,
           tgl_lahir: moment(data?.tgl_lahir).format('D MMMM YYYY'),
           umur: ageFromDateOfBirthday(moment(data?.tgl_lahir).format('YYYY-MM-D')),
           sesuai_ktp_provinsi: valProvKTP.label && valProvKTP.label,
@@ -237,7 +258,7 @@ export function DataPribadi() {
                     </label>
                     <Field
                       className='form-control form-control-solid'
-                      name='agama_name'
+                      name='agama'
                       placeholder='Agama'
                       disabled
                     />
@@ -497,9 +518,7 @@ export function DataPribadi() {
                   className='text-reset text-decoration-none'
                   to='/kepegawaian/informasi-data-pegawai'
                 >
-                  <button className='float-none btn btn-light align-self-center m-1'>
-                    Keluar
-                  </button>
+                  <button className='float-none btn btn-light align-self-center m-1'>Keluar</button>
                 </Link>
                 <Link
                   className='text-reset text-decoration-none'
