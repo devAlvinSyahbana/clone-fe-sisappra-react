@@ -10,18 +10,58 @@ import {
   JumlahSatpolPendidikan,
   JumlahSatpolGolongan,
 } from '../LaporanRekapPegawaiInterface'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme} from 'react-data-table-component'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {totalmem} from 'os'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+interface SatpolDiklat {
+  list?: Array<{
+    diklat?: string
+    jumlah?: number
+  }>
+  total?: number
+}
+
 export function TabLaporanRekapitulasiPegawai() {
   const navigate = useNavigate()
-
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   const [loading, setLoading] = useState(false)
 
   const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
-  const [jsatpoldik, setJsatpoldik] = useState<JumlahSatpolDiklat>()
+  const [jsatpoldik, setJsatpoldik] = useState<SatpolDiklat>()
   const [jsatpolpen, setJsatpolpen] = useState<JumlahSatpolPendidikan>()
   const [jsatpolgol, setJsatpolgol] = useState<JumlahSatpolGolongan>()
 
@@ -42,7 +82,37 @@ export function TabLaporanRekapitulasiPegawai() {
       setJsatpolgol(jsatpolgol.data.data)
       setJsatpolpen(jsatpolpen.data.data)
       setJpegawaisatpol(jsatpol.data.data)
-      setJsatpoldik(jsatpoldik.data.data)
+      setJsatpoldik({
+        list: [
+          {
+            diklat: 'DIKLAT STRUKTURAL',
+            jumlah: jsatpoldik.data.data.diklat_pol_pp_strutural,
+          },
+          {
+            diklat: 'DIKLAT FUNGSIONAL POL PP',
+            jumlah: jsatpoldik?.data?.data?.diklat_fungsional_pol_pp
+              ? jsatpoldik.data.data.diklat_fungsional_pol_pp
+              : 0,
+          },
+          {
+            diklat: 'DIKLAT PPNS',
+            jumlah: jsatpoldik.data.data.diklat_pol_pp_ppns,
+          },
+          {
+            diklat: 'DIKLAT TEKNIS',
+            jumlah: 0,
+          },
+          {
+            diklat: 'DIKLAT DASAR POL PP',
+            jumlah: jsatpoldik.data.data.diklat_pol_pp_dasar,
+          },
+          {
+            diklat: 'DIKLAT LAINNYA',
+            jumlah: 0,
+          },
+        ],
+        total: jsatpoldik.data.data.jmlh_keseluruhan,
+      })
       setLoading(false)
     }
     fetchData()
@@ -85,6 +155,23 @@ export function TabLaporanRekapitulasiPegawai() {
       selector: (row: any) => row.golongan,
       sortable: true,
       sortField: 'golongan',
+      wrap: true,
+    },
+    {
+      name: 'Jumlah',
+      selector: (row: any) => row.jumlah,
+      sortable: true,
+      sortField: 'jumlah',
+      wrap: true,
+    },
+  ]
+
+  const columnsJenisDiklat = [
+    {
+      name: 'Jenis Diklat',
+      selector: (row: any) => row.diklat,
+      sortable: true,
+      sortField: 'diklat',
       wrap: true,
     },
     {
@@ -323,6 +410,14 @@ export function TabLaporanRekapitulasiPegawai() {
                         data={jsatpolpen?.list ? jsatpolpen?.list : []}
                         progressPending={loading}
                         progressComponent={<LoadingAnimation />}
+                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                        noDataComponent={
+                          <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                            <div className='d-flex flex-column'>
+                              <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                            </div>
+                          </div>
+                        }
                       />
                       <div className='row mt-5 fs-2'>
                         <div className='col-6 text-start'>Jumlah Keseluruhan</div>
@@ -350,6 +445,14 @@ export function TabLaporanRekapitulasiPegawai() {
                         data={jsatpolgol?.list ? jsatpolgol?.list : []}
                         progressPending={loading}
                         progressComponent={<LoadingAnimation />}
+                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                        noDataComponent={
+                          <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                            <div className='d-flex flex-column'>
+                              <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                            </div>
+                          </div>
+                        }
                       />
                       <div className='row mt-5 fs-2'>
                         <div className='col-6 text-start'>Jumlah Keseluruhan</div>
@@ -370,73 +473,27 @@ export function TabLaporanRekapitulasiPegawai() {
                       </h3>
                     </div>
                     <div className='card-body pt-2'>
-                      <Table responsive className='table align-middle table-row-dashed fs-6 gy-3'>
-                        <thead>
-                          <tr className='fw-bold text-uppercase gs-0'>
-                            <th className='min-w-150px text-start'>Golongan</th>
-                            <th className='min-w-25px text-end'>Jumlah</th>
-                          </tr>
-                        </thead>
-                        <tbody className='fw-bold text-gray-600'>
-                          <tr>
-                            <td className='text-start'>DIKLAT STRUKTURAL</td>
-                            <td className='text-end'>
-                              {jsatpoldik?.diklat_pol_pp_strutural
-                                ? jsatpoldik?.diklat_pol_pp_strutural
-                                : '- '}{' '}
-                              Orang
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className='text-start'>DIKLAT FUNGSIONAL POL PP</td>
-                            <td className='text-end'>
-                              {jsatpoldik?.diklat_fungsional_pol_pp
-                                ? jsatpoldik?.diklat_fungsional_pol_pp
-                                : '- '}{' '}
-                              Orang
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className='text-start'>DIKLAT PPNS</td>
-                            <td className='text-end'>
-                              {jsatpoldik?.diklat_pol_pp_ppns
-                                ? jsatpoldik?.diklat_pol_pp_ppns
-                                : '- '}{' '}
-                              Orang
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className='text-start'>DIKLAT TEKNIS</td>
-                            <td className='text-end'>
-                              {jsatpoldik?.jmlh_keseluruhan ? jsatpoldik?.jmlh_keseluruhan : ' - '}{' '}
-                              Orang
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className='text-start'>DIKLAT DASAR POL PP</td>
-                            <td className='text-end'>
-                              {jsatpoldik?.diklat_pol_pp_dasar
-                                ? jsatpoldik?.diklat_pol_pp_dasar
-                                : '- '}{' '}
-                              Orang
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className='text-start'>DIKLAT LAINNYA</td>
-                            <td className='text-end'>
-                              {jsatpoldik?.jmlh_keseluruhan ? jsatpoldik?.jmlh_keseluruhan : ' - '}{' '}
-                              Orang
-                            </td>
-                          </tr>
-                          <tr className='fs-4'>
-                            <td className='text-start text-dark'>Jumlah Keseluruhan</td>
-                            <td className='text-end'>
-                              {jsatpoldik?.jmlh_keseluruhan ? jsatpoldik?.jmlh_keseluruhan : ' - '}{' '}
-                              Orang
-                            </td>
-                          </tr>
-                        </tbody>
-                      </Table>
+                      <DataTable
+                        columns={columnsJenisDiklat}
+                        data={jsatpoldik?.list ? jsatpoldik?.list : []}
+                        progressPending={loading}
+                        progressComponent={<LoadingAnimation />}
+                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                        noDataComponent={
+                          <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                            <div className='d-flex flex-column'>
+                              <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                            </div>
+                          </div>
+                        }
+                      />
+                      <div className='row mt-5 fs-2'>
+                        <div className='col-6 text-start'>Jumlah Keseluruhan</div>
+                        <div className='col-6 text-start'>
+                          {jsatpoldik?.total !== 0 ? jsatpoldik?.total : '- '}{' '}
+                          Orang
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
