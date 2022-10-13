@@ -22,18 +22,12 @@ export function DataPPNS() {
     fetchData()
   }, [setData, id, status])
 
-  const ageFromDateOfBirthday = (dateOfBirth: any): number => {
-    return moment().diff(dateOfBirth, 'years')
-  }
-
   return (
     <>
       {/* Second Card */}
       <Formik
         initialValues={{
           ...data,
-          tgl_lahir: moment(data?.tgl_lahir).format('D MMMM YYYY'),
-          umur: ageFromDateOfBirthday(moment(data?.tgl_lahir).format('YYYY-MM-D')),
         }}
         onSubmit={function (
           values: DetailPegawaiInterface,

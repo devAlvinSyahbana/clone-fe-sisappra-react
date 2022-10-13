@@ -6,7 +6,6 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
-import Swal from 'sweetalert2'
 import AsyncSelect from 'react-select/async'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
@@ -17,6 +16,9 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const MASTER_SKPD = `${API_URL}/master/skpd`
+export const MASTER_PANGKAT = `${API_URL}/master/pangkat`
+export const MASTER_GOLONGAN = `${API_URL}/master/golongan`
 
 export function TabDataPPNS() {
   const navigate = useNavigate()
@@ -25,11 +27,7 @@ export function TabDataPPNS() {
   const [valStatPegawai, setValStatPegawai] = useState({val: ''})
   const [valFilterNama, setFilterNama] = useState({val: ''})
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const [valFilterWilayah, setFilterWilayah] = useState({val: ''})
-  const [valFilterKecamatanSeksi, setFilterKecamatanSeksi] = useState({val: ''})
-  const [valFilterKelurahan, setFilterKelurahan] = useState({val: ''})
-  const arrStatPegawai = ['CPNS', 'PNS', 'PTT', 'PJLP']
+  const [valFilterNIP, setFilterNIP] = useState({val: ''})
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -68,7 +66,7 @@ export function TabDataPPNS() {
       selector: (row: any) => row.skpd,
       sortable: true,
       sortField: 'skpd',
-      width: '200px',
+      width: '240px',
       center: true,
       wrap: true,
     },
@@ -103,7 +101,7 @@ export function TabDataPPNS() {
       name: 'Pangkat',
       selector: (row: any) => row.pejabat_ppns_pangkat,
       sortable: true,
-      sortField: 'pejabat_ppns_pangkat',
+      sortField: 'pangkat',
       wrap: true,
       width: '150px',
       center: true,
@@ -112,7 +110,7 @@ export function TabDataPPNS() {
       name: 'Golongan',
       selector: (row: any) => row.pejabat_ppns_golongan,
       sortable: true,
-      sortField: 'pejabat_ppns_golongan',
+      sortField: 'golongan',
       wrap: true,
       width: '150px',
       center: true,
@@ -178,36 +176,12 @@ export function TabDataPPNS() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/TabDataPPNS/DataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
+                          `/kepegawaian/tab-data-ppns/ubah-data-ppns/${record?.id}/${record?.status}`,
                           {replace: true}
-                        )
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
                         )
                       }
                     >
                       Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Hapus
                     </Dropdown.Item>
                   </DropdownType>
                 </>
@@ -218,39 +192,6 @@ export function TabDataPPNS() {
       },
     },
   ]
-
-  const konfirDel = (id: number) => {
-    Swal.fire({
-      title: 'Anda yakin?',
-      text: 'Ingin menghapus data ini',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya!',
-      cancelButtonText: 'Tidak!',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const response = await axios.delete(`${KEPEGAWAIAN_URL}/delete/${id}`)
-        if (response) {
-          fetchUser(1)
-          Swal.fire({
-            icon: 'success',
-            title: 'Data berhasil dihapus',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Data gagal dihapus, harap mencoba lagi',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        }
-      }
-    })
-  }
 
   const customStyles = {
     rows: {
@@ -304,11 +245,74 @@ export function TabDataPPNS() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/PPNS?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
     setLoading(false)
+  }
+
+  // GET DATA
+  interface SelectOptionAutoCom {
+    readonly value: string
+    readonly label: string
+  }
+
+  // GET SKPD
+  const [inputValSKPD, setFilterSKPD] = useState({label: '', value: ''})
+  const filterSKPD = async (inputValue: string) => {
+    const response = await axios.get(MASTER_SKPD + '/filter/' + inputValue)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.skpd, value: i.id}))
+  }
+  const loadOptionsSKPD = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterSKPD(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputSKPD = (newValue: any) => {
+    setFilterSKPD((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // GET PANGKAT
+  const [inputValPangkat, setFilterPangkat] = useState({label: '', val: ''})
+  const filterPangkat = async (inputValue: string) => {
+    const response = await axios.get(`${MASTER_PANGKAT}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.pangkat}))
+  }
+  const loadOptionsPangkat = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterPangkat(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputPangkat = (newValue: any) => {
+    setFilterPangkat((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // GET GOLONGAN
+  const [inputValGolongan, setFilterGolongan] = useState({label: '', val: ''})
+  const filterGolongan = async (inputValue: string) => {
+    const response = await axios.get(MASTER_GOLONGAN + '/filter/' + inputValue)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.golongan, value: i.id}))
+  }
+  const loadOptionsGolongan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterGolongan(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputGolongan = (newValue: any) => {
+    setFilterGolongan((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const handleFilter = async () => {
@@ -317,13 +321,22 @@ export function TabDataPPNS() {
       uriParam += `&status=${valStatPegawai.val}`
     }
     if (valFilterNama.val !== '') {
-      uriParam += `&nama=${valFilterNama.val}`
+      uriParam += `&pejabat_ppns_nama=${valFilterNama.val}`
     }
     if (valFilterNRK.val !== '') {
-      uriParam += `&nrk=${valFilterNRK.val}`
+      uriParam += `&pejabat_ppns_nrk=${valFilterNRK.val}`
     }
-    if (valFilterNoPegawai.val !== '') {
-      uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+    if (valFilterNIP.val !== '') {
+      uriParam += `&pejabat_ppns_nip=${valFilterNIP.val}`
+    }
+    if (inputValSKPD.value !== '') {
+      uriParam += `$skpd=${inputValSKPD.value}`
+    }
+    if (inputValPangkat.val !== '') {
+      uriParam += `$pangkat=${inputValPangkat.val}`
+    }
+    if (inputValGolongan.val !== '') {
+      uriParam += `$golongan=${inputValGolongan.val}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
@@ -332,16 +345,13 @@ export function TabDataPPNS() {
     setValStatPegawai({val: ''})
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
-    setFilterNoPegawai({val: ''})
+    setFilterNIP({val: ''})
+    // setFilterSKPD({label: '', val: ''})
+    setFilterPangkat({label: '', val: ''})
+    setFilterGolongan({label: '', val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const handleChangeStatPegawai = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setValStatPegawai({val: event.target.value})
-  }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -354,11 +364,11 @@ export function TabDataPPNS() {
   }) => {
     setFilterNRK({val: event.target.value})
   }
-  const handleChangeInputNoPegawai = (event: {
+  const handleChangeInputNIP = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterNoPegawai({val: event.target.value})
+    setFilterNIP({val: event.target.value})
   }
 
   const handleUnduh = async () => {
@@ -435,7 +445,7 @@ export function TabDataPPNS() {
                             <input
                               type='text'
                               className='form-control form-control form-control-solid'
-                              name='nama'
+                              name='pejabat_ppns_nama'
                               value={valFilterNama.val}
                               onChange={handleChangeInputNama}
                               placeholder='Nama'
@@ -443,15 +453,18 @@ export function TabDataPPNS() {
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <label htmlFor='' className='mb-3'>
-                              PANGKAT
+                              Pangkat
                             </label>
-                            <input
-                              type='text'
-                              className='form-control form-control form-control-solid'
-                              name='nama'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
-                              placeholder='Pangkat'
+                            <AsyncSelect
+                              cacheOptions
+                              loadOptions={loadOptionsPangkat}
+                              defaultOptions
+                              value={
+                                inputValPangkat.val
+                                  ? inputValPangkat
+                                  : {value: '', label: 'Pilih Pangkat'}
+                              }
+                              onChange={handleChangeInputPangkat}
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -461,23 +474,26 @@ export function TabDataPPNS() {
                             <input
                               type='text'
                               className='form-control form-control form-control-solid'
-                              name='NRK'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
+                              name='pejabat_ppns_nrk'
+                              value={valFilterNRK.val}
+                              onChange={handleChangeInputNRK}
                               placeholder='NRK'
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <label htmlFor='' className='mb-3'>
-                              GOLONGAN
+                              Golongan
                             </label>
-                            <input
-                              type='text'
-                              className='form-control form-control form-control-solid'
-                              name='nama'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
-                              placeholder='Golongan'
+                            <AsyncSelect
+                              cacheOptions
+                              loadOptions={loadOptionsGolongan}
+                              defaultOptions
+                              value={
+                                inputValGolongan.val
+                                  ? inputValGolongan
+                                  : {value: '', label: 'Pilih Golongan'}
+                              }
+                              onChange={handleChangeInputGolongan}
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -487,9 +503,9 @@ export function TabDataPPNS() {
                             <input
                               type='text'
                               className='form-control form-control form-control-solid'
-                              name='nama'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
+                              name='pejabat_ppns_nip'
+                              value={valFilterNIP.val}
+                              onChange={handleChangeInputNIP}
                               placeholder='NIP'
                             />
                           </div>
@@ -498,18 +514,17 @@ export function TabDataPPNS() {
                               <label htmlFor='' className='mb-3'>
                                 SKPD
                               </label>
-                              <select
-                                className='form-select form-select-solid'
-                                aria-label='Select example'
-                                value={valStatPegawai.val}
-                                onChange={handleChangeStatPegawai}
-                                name='val'
-                              >
-                                <option value=''>Pilih</option>
-                                <option value=''>1</option>
-                                <option value=''>2</option>
-                                <option value=''>3</option>
-                              </select>
+                              <AsyncSelect
+                                cacheOptions
+                                loadOptions={loadOptionsSKPD}
+                                defaultOptions
+                                value={
+                                  inputValSKPD.value
+                                    ? inputValSKPD
+                                    : {value: '', label: 'Pilih SKPD'}
+                                }
+                                onChange={handleChangeInputSKPD}
+                              />
                             </div>
                           </div>
                         </div>

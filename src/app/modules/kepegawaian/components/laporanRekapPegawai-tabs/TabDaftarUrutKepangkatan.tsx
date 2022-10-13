@@ -1,4 +1,4 @@
-import {useState, useEffect, Fragment} from 'react'
+import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
@@ -8,32 +8,44 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import Swal from 'sweetalert2'
 import AsyncSelect from 'react-select/async'
-import Modal from 'react-bootstrap/Modal'
-import Form from 'react-bootstrap/Form'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
+import {useFormik} from 'formik'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/duk-pegawai`
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 
+export interface FormInput {
+  nama?: any
+  nrk_nptt_npjlp?: any
+  nip?: any
+  status_pegawai?: any
+  created_by?: any
+}
+
+export interface SelectOption {
+  readonly value: string
+  readonly label: string
+  readonly isFixed?: boolean
+  readonly isDisabled?: boolean
+}
+
 export function TabDaftarUrutKepangkatan() {
   const navigate = useNavigate()
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
   const [valStatPegawai, setValStatPegawai] = useState({val: ''})
   const [valFilterNama, setFilterNama] = useState({val: ''})
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const arrStatPegawai = ['CPNS', 'PNS', 'PTT', 'PJLP']
+  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -53,6 +65,43 @@ export function TabDaftarUrutKepangkatan() {
         </div>
       </>
     )
+  }
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      text: 'Anda yakin ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+      color: '#000000',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(
+          `${KEPEGAWAIAN_URL}/rekapitulasi-duk-pegawai/delete/${id}`
+        )
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        }
+      }
+    })
   }
 
   let no = 1
@@ -180,7 +229,7 @@ export function TabDaftarUrutKepangkatan() {
                     >
                       Detail
                     </Dropdown.Item>
-                    <Dropdown.Item href='#' onClick={() => konfirDel(record?.id)}>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
                       Hapus
                     </Dropdown.Item>
                   </DropdownType>
@@ -192,39 +241,6 @@ export function TabDaftarUrutKepangkatan() {
       },
     },
   ]
-
-  const konfirDel = (id: number) => {
-    Swal.fire({
-      title: 'Anda yakin?',
-      text: 'Ingin menghapus data ini',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya!',
-      cancelButtonText: 'Tidak!',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const response = await axios.delete(`${KEPEGAWAIAN_URL}/delete/${id}`)
-        if (response) {
-          fetchUsers(1)
-          Swal.fire({
-            icon: 'success',
-            title: 'Data berhasil dihapus',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Data gagal dihapus, harap mencoba lagi',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        }
-      }
-    })
-  }
 
   const customStyles = {
     rows: {
@@ -250,7 +266,7 @@ export function TabDaftarUrutKepangkatan() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_URL}/duk-pegawai/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -262,7 +278,7 @@ export function TabDaftarUrutKepangkatan() {
   const fetchUsers = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/duk-pegawai/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -278,7 +294,7 @@ export function TabDaftarUrutKepangkatan() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/filter?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/duk-pegawai/filter?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -516,7 +532,6 @@ export function TabDaftarUrutKepangkatan() {
                                 onChange={handleChangeStatPegawai}
                                 name='val'
                               >
-                                <option value=''>Pilih Status Kepegawaian</option>
                                 {arrStatPegawai.map((val: string) => {
                                   return <option value={val}>{val}</option>
                                 })}
@@ -637,94 +652,17 @@ export function TabDaftarUrutKepangkatan() {
                           </Link>
                         </div>
                         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                          <Link to='#i'>
-                            <button className='btn btn-primary me-5' onClick={handleShow}>
-                              <i className='fa-solid fa-plus'></i>
+                          <Link to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/tambah-daftar-urut-kepangkatan'>
+                            {/* begin::Add data */}
+                            <button type='button' className='btn btn-primary me-2'>
+                              <KTSVG
+                                path='/media/icons/duotune/arrows/arr075.svg'
+                                className='svg-icon-2'
+                              />
                               Tambah
                             </button>
+                            {/* end::Add data */}
                           </Link>
-                          <>
-                            <Modal show={show} onHide={handleClose}>
-                              <Modal.Header closeButton>
-                                <Modal.Title>Tambah Daftar Urut Kepangkatan</Modal.Title>
-                              </Modal.Header>
-                              <Modal.Body>
-                                <form id='kt_modal_add_user_form' className='form' action='#'>
-                                  <div
-                                    className='d-flex flex-column scroll-y me-n7 pe-7'
-                                    id='kt_modal_add_user_scroll'
-                                    data-kt-scroll='true'
-                                    data-kt-scroll-activate='{default: false, lg: true}'
-                                    data-kt-scroll-max-height='auto'
-                                    data-kt-scroll-dependencies='#kt_modal_add_user_header'
-                                    data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
-                                    data-kt-scroll-offset='300px'
-                                  >
-                                    <div className='fv-row mb-7'>
-                                      <label className='required fw-semibold fs-6 mb-2'>Nama</label>
-                                      <input
-                                        type='text'
-                                        name='kode_e'
-                                        id='kode_id_e'
-                                        className='form-control form-control-solid mb-3 mb-lg-0'
-                                        placeholder='masukkan nama'
-                                        value=''
-                                      />
-                                    </div>
-                                    <div className='fv-row mb-7'>
-                                      <label className='required fw-semibold fs-6 mb-2'>NRK</label>
-                                      <input
-                                        type='text'
-                                        name='jenis_pelanggaran_e'
-                                        className=' form-control form-control-solid mb-3 mb-lg-0'
-                                        placeholder='masukkan NRK'
-                                        value=''
-                                      />
-                                    </div>
-
-                                    <div className='fv-row mb-7'>
-                                      <label className='required fw-semibold fs-6 mb-2'>NIP</label>
-                                      <input
-                                        type='text'
-                                        name='jenis_pelanggaran_e'
-                                        className=' form-control form-control-solid mb-3 mb-lg-0'
-                                        placeholder='masukkan NIP'
-                                        value=''
-                                      />
-                                    </div>
-                                    <div className='fv-row mb-7'>
-                                      <label className='required fw-semibold fs-6 mb-2'>
-                                        Status Kepegawaian
-                                      </label>
-                                      <select
-                                        className='form-select form-select-solid'
-                                        aria-label='Select example'
-                                        value={valStatPegawai.val}
-                                        onChange={handleChangeStatPegawai}
-                                        name='val'
-                                      >
-                                        <option value=''>Pilih Status Kepegawaian</option>
-                                        {arrStatPegawai.map((val: string) => {
-                                          return <option value={val}>{val}</option>
-                                        })}
-                                      </select>
-                                    </div>
-                                  </div>
-                                </form>
-                              </Modal.Body>
-                              <Modal.Footer>
-                                <Button variant='secondary' onClick={handleClose}>
-                                  <i className='fa-sharp fa-solid fa-xmark'></i>
-                                  Batal
-                                </Button>
-                                <Button variant='primary' onClick={handleClose}>
-                                  <i className='fa-solid fa-paper-plane'></i>
-                                  Simpan
-                                </Button>
-                              </Modal.Footer>
-                            </Modal>
-                          </>
-
                           <Dropdown as={ButtonGroup}>
                             <Button variant='light'>
                               {btnLoadingUnduh ? (
