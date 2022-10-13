@@ -9,15 +9,10 @@ export interface JumlahSeluruhSatpol {
   jmlh_seluruh_ppns_unit_kerja_lain?: number
 }
 
-// export interface JumlahSatpolPendidikan {
-//   list?: string
-//   jmlh_keseluruhan?: number,
-// }
-
 export interface JumlahSatpolPendidikan {
-  list: [{
-    pendidikan: string,
-    jumlah: number
+  list?: [{
+    pendidikan?: string,
+    jumlah?: number
   }]
   jmlh_keseluruhan?: number,
 }
