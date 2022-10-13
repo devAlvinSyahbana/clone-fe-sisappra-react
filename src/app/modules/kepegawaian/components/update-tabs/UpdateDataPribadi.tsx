@@ -1147,7 +1147,10 @@ export function UpdateDataPribadi() {
                               ? valKecKTP
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kecamatan')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'sesuai_ktp_kecamatan')
+                            handleChange('sesuai_ktp_kecamatan')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
