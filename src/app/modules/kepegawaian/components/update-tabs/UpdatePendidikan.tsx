@@ -49,7 +49,9 @@ createTheme(
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
 const validatorForm = Yup.object().shape({
-  jenis_pendidikan: Yup.string().required('Wajib diisi'),
+  jenis_pendidikan: Yup.object().shape({
+    value: Yup.string().required('Wajib diisi'),
+  }),
   nama_sekolah: Yup.string().required('Wajib diisi'),
   nomor_ijazah: Yup.string().required('Wajib diisi'),
   tgl_ijazah: Yup.string().required('Wajib diisi'),
@@ -58,7 +60,6 @@ const validatorForm = Yup.object().shape({
 })
 
 export interface FormInput {
-  select_jenis_pendidikan?: any
   jenis_pendidikan?: any
   nama_sekolah?: string
   nomor_ijazah?: string
@@ -274,6 +275,26 @@ export function UpdatePendidikan() {
     },
   ]
 
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '72px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  }
+
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -334,8 +355,8 @@ export function UpdatePendidikan() {
           // aksi tambah
           const payload = {
             ...valuesFormik,
-            jenis_pendidikan: valuesFormik?.select_jenis_pendidikan
-              ? valuesFormik?.select_jenis_pendidikan.value
+            jenis_pendidikan: valuesFormik?.jenis_pendidikan
+              ? valuesFormik?.jenis_pendidikan.value
               : null,
             id_pegawai: id,
           }
@@ -382,8 +403,8 @@ export function UpdatePendidikan() {
             }`,
             {
               ...valuesFormik,
-              jenis_pendidikan: valuesFormik?.select_jenis_pendidikan
-                ? valuesFormik?.select_jenis_pendidikan.value
+              jenis_pendidikan: valuesFormik?.jenis_pendidikan
+                ? valuesFormik?.jenis_pendidikan.value
                 : valuesFormik?.jenis_pendidikan,
               id_pegawai: id,
             }
@@ -441,7 +462,6 @@ export function UpdatePendidikan() {
       label: '',
     })
     setValuesFormik({
-      select_jenis_pendidikan: null,
       jenis_pendidikan: null,
       nama_sekolah: '',
       nomor_ijazah: '',
@@ -592,6 +612,7 @@ export function UpdatePendidikan() {
             columns={columns}
             data={data.dt}
             pagination
+            customStyles={customStyles}
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
             noDataComponent={
               <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
@@ -613,7 +634,7 @@ export function UpdatePendidikan() {
           >
             <Modal.Header closeButton>
               <Modal.Title id='example-modal-sizes-title-lg'>
-                {aksi === 0 ? 'Tambah' : 'Ubah'} Data Keluarga
+                {aksi === 0 ? 'Tambah' : 'Ubah'} Data Pendidikan
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -634,15 +655,14 @@ export function UpdatePendidikan() {
                       cacheOptions
                       loadOptions={loadOptionsPendidikan}
                       defaultOptions
-                      onChange={(e) => {
-                        handleChangeFormikSelect(e, 'select_jenis_pendidikan')
-                        setTimeout(() => {
-                          formik.handleChange('jenis_pendidikan')(e.value)
-                        }, 500)
+                      onChange={async (e) => {
+                        handleChangeFormikSelect(e, 'jenis_pendidikan')
+                        await formik.setFieldValue('jenis_pendidikan', e)
                       }}
                       value={
-                        valuesFormik?.select_jenis_pendidikan
-                          ? valuesFormik?.select_jenis_pendidikan
+                        valuesFormik?.jenis_pendidikan &&
+                        typeof valuesFormik?.jenis_pendidikan === 'object'
+                          ? valuesFormik?.jenis_pendidikan
                           : valPend && valPend.label !== ''
                           ? valPend
                           : {value: '', label: 'Pilih'}
