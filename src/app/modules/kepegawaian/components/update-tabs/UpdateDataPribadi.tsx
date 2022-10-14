@@ -580,10 +580,10 @@ export function UpdateDataPribadi() {
           }).then(async (result) => {
             if (result.isConfirmed) {
               setSubmitting(true)
-              const bodyParam: DetailPegawaiInterface = {
+              const bodyParam = {
                 nama: values.nama,
                 tempat_lahir: values.tempat_lahir,
-                tgl_lahir: values.tgl_lahir,
+                tgl_lahir: values.tgl_lahir !== '' ? values.tgl_lahir : null,
                 jenis_kelamin: valuesFormik?.jenis_kelamin?.value
                   ? valuesFormik.jenis_kelamin.value
                   : data.jenis_kelamin,
@@ -624,12 +624,12 @@ export function UpdateDataPribadi() {
                   : values.domisili_kelurahan,
                 kepegawaian_nrk: values.kepegawaian_nrk,
                 kepegawaian_nip: values.kepegawaian_nip,
-                kepegawaian_pangkat: values.kepegawaian_pangkat_id,
-                kepegawaian_golongan: values.kepegawaian_golongan_id,
+                kepegawaian_pangkat: values.kepegawaian_pangkat,
+                kepegawaian_golongan: values.kepegawaian_golongan,
                 kepegawaian_tmtpangkat: values.kepegawaian_tmtpangkat,
-                kepegawaian_pendidikan_pada_sk: values.kepegawaian_pendidikan_pada_sk_id,
-                kepegawaian_jabatan: values.kepegawaian_jabatan_id,
-                kepegawaian_eselon: values.kepegawaian_eselon_id,
+                kepegawaian_pendidikan_pada_sk: values.kepegawaian_pendidikan_pada_sk,
+                kepegawaian_jabatan: values.kepegawaian_jabatan,
+                kepegawaian_eselon: values.kepegawaian_eselon,
                 kepegawaian_tempat_tugas: values.kepegawaian_tempat_tugas,
                 kepegawaian_subbag_seksi_kecamatan: values.kepegawaian_subbag_seksi_kecamatan,
                 kepegawaian_kelurahan: values.kepegawaian_kelurahan,
