@@ -116,25 +116,6 @@ export interface FormInput {
   uu_yg_dikawal?: string
 }
 
-const validatorForm = Yup.object().shape({
-  skpd: Yup.string().required('Wajib diisi'),
-  pejabat_ppns_pangkat: Yup.string().required('Wajib diisi'),
-  pejabat_ppns_golongan: Yup.string().required('Wajib diisi'),
-  pejabat_ppns_nip: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  pejabat_ppns_nrk: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  no_ktp_ppns: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  pejabat_ppns_nama: Yup.string().required('Wajib diisi'),
-  no_sk_ppns: Yup.string().required('Wajib diisi'),
-  wilayah_kerja: Yup.string().required('Wajib diisi'),
-  uu_yg_dikawal: Yup.string().required('Wajib diisi'),
-})
-
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -331,7 +312,7 @@ export function AddDataPPNS() {
                   cacheOptions
                   loadOptions={loadOptionsPangkat}
                   defaultOptions
-                  onChange={(e) => handleChangeFormikSelect(e, 'pangkat')}
+                  onChange={(e) => handleChangeFormikSelect(e, 'pejabat_ppns_pangkat')}
                   value={
                     valuesFormik?.pejabat_ppns_pangkat
                       ? valuesFormik?.pejabat_ppns_pangkat
@@ -353,7 +334,7 @@ export function AddDataPPNS() {
                   cacheOptions
                   loadOptions={loadOptionsGolongan}
                   defaultOptions
-                  onChange={(e) => handleChangeFormikSelect(e, 'golongan')}
+                  onChange={(e) => handleChangeFormikSelect(e, 'pejabat_ppns_golongan')}
                   value={
                     valuesFormik?.pejabat_ppns_golongan
                       ? valuesFormik?.pejabat_ppns_golongan

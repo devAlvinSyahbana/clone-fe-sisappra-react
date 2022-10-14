@@ -1,16 +1,139 @@
 import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import AsyncSelect from 'react-select/async'
 import clsx from 'clsx'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import {LaporanPPNSHeader} from './LaporanPPNSHeader'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
@@ -22,9 +145,10 @@ export const MASTER_GOLONGAN = `${API_URL}/master/golongan`
 
 export function TabDataPPNS() {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
   const [valFilterNama, setFilterNama] = useState({val: ''})
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
   const [valFilterNIP, setFilterNIP] = useState({val: ''})
@@ -175,10 +299,9 @@ export function TabDataPPNS() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate(
-                          `/kepegawaian/tab-data-ppns/ubah-data-ppns/${record?.id}/${record?.status}`,
-                          {replace: true}
-                        )
+                        navigate(`/kepegawaian/tab-data-ppns/ubah-data-ppns/${record?.id}`, {
+                          replace: true,
+                        })
                       }
                     >
                       Ubah
@@ -256,10 +379,13 @@ export function TabDataPPNS() {
   interface SelectOptionAutoCom {
     readonly value: string
     readonly label: string
+    readonly color: string
+    readonly isFixed?: boolean
+    readonly isDisabled?: boolean
   }
 
   // GET SKPD
-  const [inputValSKPD, setFilterSKPD] = useState({label: '', value: ''})
+  const [inputValSKPD, setFilterSKPD] = useState({label: '', value: null})
   const filterSKPD = async (inputValue: string) => {
     const response = await axios.get(MASTER_SKPD + '/filter/' + inputValue)
     const json = await response.data.data
@@ -278,11 +404,11 @@ export function TabDataPPNS() {
   }
 
   // GET PANGKAT
-  const [inputValPangkat, setFilterPangkat] = useState({label: '', val: ''})
+  const [inputValPangkat, setFilterPangkat] = useState({label: '', value: null})
   const filterPangkat = async (inputValue: string) => {
-    const response = await axios.get(`${MASTER_PANGKAT}/filter/${inputValue}`)
+    const response = await axios.get(MASTER_PANGKAT + '/filter/' + inputValue)
     const json = await response.data.data
-    return json.map((i: any) => ({label: i.pangkat}))
+    return json.map((i: any) => ({label: i.pangkat, value: i.id}))
   }
   const loadOptionsPangkat = (
     inputValue: string,
@@ -297,7 +423,7 @@ export function TabDataPPNS() {
   }
 
   // GET GOLONGAN
-  const [inputValGolongan, setFilterGolongan] = useState({label: '', val: ''})
+  const [inputValGolongan, setFilterGolongan] = useState({label: '', value: null})
   const filterGolongan = async (inputValue: string) => {
     const response = await axios.get(MASTER_GOLONGAN + '/filter/' + inputValue)
     const json = await response.data.data
@@ -317,8 +443,8 @@ export function TabDataPPNS() {
 
   const handleFilter = async () => {
     let uriParam = ''
-    if (valStatPegawai.val !== '') {
-      uriParam += `&status=${valStatPegawai.val}`
+    if (inputValSKPD.value) {
+      uriParam += `&skpd=${inputValSKPD.value}`
     }
     if (valFilterNama.val !== '') {
       uriParam += `&pejabat_ppns_nama=${valFilterNama.val}`
@@ -329,26 +455,22 @@ export function TabDataPPNS() {
     if (valFilterNIP.val !== '') {
       uriParam += `&pejabat_ppns_nip=${valFilterNIP.val}`
     }
-    if (inputValSKPD.value !== '') {
-      uriParam += `$skpd=${inputValSKPD.value}`
+    if (inputValPangkat.value) {
+      uriParam += `&pejabat_ppns_pangkat=${inputValPangkat.value}`
     }
-    if (inputValPangkat.val !== '') {
-      uriParam += `$pangkat=${inputValPangkat.val}`
-    }
-    if (inputValGolongan.val !== '') {
-      uriParam += `$golongan=${inputValGolongan.val}`
+    if (inputValGolongan.value) {
+      uriParam += `&pejabat_ppns_golongan=${inputValGolongan.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
-    setValStatPegawai({val: ''})
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNIP({val: ''})
-    // setFilterSKPD({label: '', val: ''})
-    setFilterPangkat({label: '', val: ''})
-    setFilterGolongan({label: '', val: ''})
+    setFilterSKPD({label: '', value: null})
+    setFilterPangkat({label: '', value: null})
+    setFilterGolongan({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -374,16 +496,11 @@ export function TabDataPPNS() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
-        valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-      }`,
+      // url: `${PPNS_UNDUH_URL}/unduh?q=1${qParamFind.strparam}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
-      FileDownload(
-        response.data,
-        'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
-      )
+      FileDownload(response.data, 'DATA PENYIDIK PEGAWAI NEGERI SIPIL.xlsx')
       setbtnLoadingUnduh(false)
     })
   }
@@ -448,7 +565,7 @@ export function TabDataPPNS() {
                               name='pejabat_ppns_nama'
                               value={valFilterNama.val}
                               onChange={handleChangeInputNama}
-                              placeholder='Nama'
+                              placeholder='Masukkan Nama'
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -457,14 +574,22 @@ export function TabDataPPNS() {
                             </label>
                             <AsyncSelect
                               cacheOptions
-                              loadOptions={loadOptionsPangkat}
-                              defaultOptions
                               value={
-                                inputValPangkat.val
+                                inputValPangkat.value
                                   ? inputValPangkat
                                   : {value: '', label: 'Pilih Pangkat'}
                               }
+                              loadOptions={loadOptionsPangkat}
+                              defaultOptions
                               onChange={handleChangeInputPangkat}
+                              placeholder={'Pilih'}
+                              styles={
+                                calculatedMode === 'dark'
+                                  ? reactSelectDarkThem
+                                  : reactSelectLightThem
+                              }
+                              loadingMessage={() => 'Sedang mencari pilihan...'}
+                              noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -477,7 +602,7 @@ export function TabDataPPNS() {
                               name='pejabat_ppns_nrk'
                               value={valFilterNRK.val}
                               onChange={handleChangeInputNRK}
-                              placeholder='NRK'
+                              placeholder='Masukkan NRK'
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -486,14 +611,22 @@ export function TabDataPPNS() {
                             </label>
                             <AsyncSelect
                               cacheOptions
-                              loadOptions={loadOptionsGolongan}
-                              defaultOptions
                               value={
-                                inputValGolongan.val
+                                inputValGolongan.value
                                   ? inputValGolongan
                                   : {value: '', label: 'Pilih Golongan'}
                               }
+                              loadOptions={loadOptionsGolongan}
+                              defaultOptions
                               onChange={handleChangeInputGolongan}
+                              placeholder={'Pilih'}
+                              styles={
+                                calculatedMode === 'dark'
+                                  ? reactSelectDarkThem
+                                  : reactSelectLightThem
+                              }
+                              loadingMessage={() => 'Sedang mencari pilihan...'}
+                              noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -506,7 +639,7 @@ export function TabDataPPNS() {
                               name='pejabat_ppns_nip'
                               value={valFilterNIP.val}
                               onChange={handleChangeInputNIP}
-                              placeholder='NIP'
+                              placeholder='Masukkan NIP'
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -516,14 +649,22 @@ export function TabDataPPNS() {
                               </label>
                               <AsyncSelect
                                 cacheOptions
-                                loadOptions={loadOptionsSKPD}
-                                defaultOptions
                                 value={
                                   inputValSKPD.value
                                     ? inputValSKPD
                                     : {value: '', label: 'Pilih SKPD'}
                                 }
+                                loadOptions={loadOptionsSKPD}
+                                defaultOptions
                                 onChange={handleChangeInputSKPD}
+                                placeholder={'Pilih'}
+                                styles={
+                                  calculatedMode === 'dark'
+                                    ? reactSelectDarkThem
+                                    : reactSelectLightThem
+                                }
+                                loadingMessage={() => 'Sedang mencari pilihan...'}
+                                noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                               />
                             </div>
                           </div>
@@ -531,50 +672,85 @@ export function TabDataPPNS() {
                       </div>
 
                       <div className='row g-8 mt-2'>
-                        <div className='col-md-6 col-lg-6 col-sm-12'>
-                          <Link to='#'>
-                            <button onClick={handleFilter} className='btn btn-primary me-2'>
-                              <i className='fa-solid fa-search'></i>
+                        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                          <Link to='#' onClick={handleFilter}>
+                            <button className='btn btn-light-primary me-2'>
+                              <KTSVG
+                                path='/media/icons/duotune/general/gen021.svg'
+                                className='svg-icon-2'
+                              />
                               Cari
                             </button>
                           </Link>
-                          <Link to='#' onClick={handleFilterReset} className=''>
-                            <button className='btn btn-primary'>
-                              <i className='fa-solid fa-arrows-rotate'></i>
+                          <Link to='#' onClick={handleFilterReset}>
+                            <button className='btn btn-light-primary'>
+                              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                               Reset
                             </button>
                           </Link>
                         </div>
                         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                          <Link
-                            to='/kepegawaian/tab-data-ppns/tambah-data-ppns'
-                            onClick={handleFilterReset}
-                            className='me-2'
-                          >
-                            <button className='btn btn-primary'>
-                              <i className='fa-solid fa-plus'></i>
+                          <Link to='/kepegawaian/tab-data-ppns/tambah-data-ppns'>
+                            {/* begin::Add user */}
+                            <button type='button' className='btn btn-primary me-2'>
+                              <KTSVG
+                                path='/media/icons/duotune/arrows/arr075.svg'
+                                className='svg-icon-2'
+                              />
                               Tambah
                             </button>
+                            {/* end::Add user */}
                           </Link>
-                          <Dropdown as={ButtonGroup}>
-                            <Button variant='light'>
-                              {btnLoadingUnduh ? (
-                                <>
-                                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                  Memproses...
-                                </>
-                              ) : (
-                                'Unduh'
-                              )}
-                            </Button>
+                          {/* begin::Filter Button */}
+                          <button
+                            type='button'
+                            className='btn btn-light-primary'
+                            data-kt-menu-trigger='click'
+                            data-kt-menu-placement='bottom-end'
+                          >
+                            {btnLoadingUnduh ? (
+                              <>
+                                <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                Memproses Unduh...
+                              </>
+                            ) : (
+                              <>
+                                <KTSVG
+                                  path='/media/icons/duotune/arrows/arr078.svg'
+                                  className='svg-icon-2'
+                                />
+                                Unduh
+                              </>
+                            )}
+                          </button>
+                          {/* end::Filter Button */}
+                          {/* begin::SubMenu */}
+                          <div
+                            className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                            data-kt-menu='true'
+                          >
+                            {/* begin::Header */}
+                            <div className='px-7 py-5'>
+                              <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                            </div>
+                            {/* end::Header */}
 
-                            <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+                            {/* begin::Separator */}
+                            <div className='separator border-gray-200'></div>
+                            {/* end::Separator */}
 
-                            <Dropdown.Menu>
-                              <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-                              <Dropdown.Item>PDF</Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
+                            {/* begin::Content */}
+                            <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                              <button
+                                onClick={handleUnduh}
+                                className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                              >
+                                Excel
+                              </button>
+                            </div>
+                            {/* end::Content */}
+                          </div>
+                          {/* end::SubMenu */}
                         </div>
                       </div>
                     </div>
@@ -616,6 +792,14 @@ export function TabDataPPNS() {
                       onChangeRowsPerPage={handlePerRowsChange}
                       onChangePage={handlePageChange}
                       customStyles={customStyles}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                      noDataComponent={
+                        <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                          <div className='d-flex flex-column'>
+                            <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                          </div>
+                        </div>
+                      }
                     />
                   </div>
                 </div>

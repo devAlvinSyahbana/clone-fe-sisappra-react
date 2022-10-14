@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
-import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
@@ -103,11 +102,11 @@ const reactSelectDarkThem = {
 }
 
 export interface FormInput {
-  nama?: any
-  nrk_nptt_npjlp?: any
-  nip?: any
-  status_pegawai?: any
-  created_by?: string
+  nama?: string
+  nrk_nptt_npjlp?: number
+  nip?: string
+  status_pegawai?: string
+  created_by?: number
 }
 
 export interface SelectOption {
@@ -125,11 +124,6 @@ export function TambahDaftarUrutKepangkatan() {
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
 
-  const [valFilterNRK, setFilterNRK] = useState({val: ''})
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
-
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
 
   const handleChangeFormik = (event: {
@@ -145,19 +139,17 @@ export function TambahDaftarUrutKepangkatan() {
   const formik = useFormik({
     initialValues: {
       nama: '',
-      nrk_nptt_npjlp: '',
+      nrk_nptt_npjlp: 0,
       nip: '',
       status_pegawai: '',
     },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
-        nama: valuesFormik?.nama?.value ? valuesFormik.nama.value : '',
-        nrk_nptt_npjlp: valuesFormik?.nrk_nptt_npjlp?.value
-          ? valuesFormik.nrk_nptt_npjlp.value
-          : '',
-        nip: valuesFormik?.nip?.value ? valuesFormik.nip.value : '',
+        nama: valuesFormik?.nama ? valuesFormik.nama : '',
+        nrk_nptt_npjlp: valuesFormik?.nrk_nptt_npjlp ? valuesFormik.nrk_nptt_npjlp : 0,
+        nip: valuesFormik?.nip ? valuesFormik.nip : '',
         status_pegawai: valuesFormik?.status_pegawai ? valuesFormik.status_pegawai : '',
-        created_by: '',
+        created_by: 0,
       }
       try {
         const response = await axios.post(
@@ -187,13 +179,6 @@ export function TambahDaftarUrutKepangkatan() {
     },
   })
 
-  const handleChangeStatPegawai = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setValStatPegawai({val: event.target.value})
-  }
-
   const [selectedFile, setSelectedFile] = useState(null)
 
   return (
@@ -217,60 +202,39 @@ export function TambahDaftarUrutKepangkatan() {
             <div className='col-6 mb-6'>
               <div className='form-group'>
                 <Form.Label>Status Pegawai</Form.Label>
-
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })}
-                </select>
-              </div>
-            </div>
-            {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <label htmlFor='' className='mb-3'>
-                  NRK
-                </label>
-                <input
+                <Form.Control
                   type='text'
-                  className='form-control form-control form-control-solid'
-                  name='nrk_nptt_npjlp'
-                  value={valFilterNRK.val}
+                  name='status_pegawai'
+                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
-                  placeholder='NRK'
+                  value={valuesFormik?.status_pegawai}
                 />
               </div>
-            ) : null}
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-              <label htmlFor='' className='mb-3'>
-                {valStatPegawai.val === 'PNS'
-                  ? 'NIP'
-                  : valStatPegawai.val === 'PTT'
-                  ? 'NPTT'
-                  : valStatPegawai.val === 'PJLP'
-                  ? 'NPJLP'
-                  : 'NIP'}
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                value={valFilterNoPegawai.val}
-                onChange={handleChangeFormik}
-                placeholder={
-                  valStatPegawai.val === 'PNS'
-                    ? 'NIP'
-                    : valStatPegawai.val === 'PTT'
-                    ? 'NPTT'
-                    : valStatPegawai.val === 'PJLP'
-                    ? 'NPJLP'
-                    : 'NIP'
-                }
-              />
+            </div>
+            <div className='col-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>NIP</Form.Label>
+                <Form.Control
+                  type='text'
+                  name='nip'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.nip}
+                  placeholder='Masukkan NIP'
+                />
+              </div>
+            </div>
+            <div className='col-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>NRK / NPTT / NPJLP</Form.Label>
+                <Form.Control
+                  type='number'
+                  name='nrk_nptt_npjlp'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.nrk_nptt_npjlp}
+                />
+              </div>
             </div>
           </div>
           <div className='d-grid gap-2 d-md-flex justify-content-md-center mt-4'>

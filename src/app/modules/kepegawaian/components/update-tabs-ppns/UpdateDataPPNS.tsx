@@ -104,6 +104,8 @@ const reactSelectDarkThem = {
 
 export interface FormInput {
   skpd?: any
+  pejabat_ppns_pangkat?: any
+  pejabat_ppns_golongan?: any
   pejabat_ppns_nama?: string
   pejabat_ppns_nip?: string
   pejabat_ppns_nrk?: string
@@ -111,8 +113,7 @@ export interface FormInput {
   no_ktp_ppns?: string
   wilayah_kerja?: string
   uu_yg_dikawal?: string
-  pangkat?: any
-  golongan?: any
+  updated_by?: string
 }
 
 export interface SelectOption {
@@ -125,10 +126,10 @@ export interface SelectOption {
 
 interface GetDataInterface {
   id?: number
-  pangkat_id?: 0
-  pangkat_name?: string
-  golongan_id?: 0
-  golongan_name?: string
+  pejabat_ppns_pangkat_id?: 0
+  pejabat_ppns_pangkat_name?: string
+  pejabat_ppns_golongan_id?: 0
+  pejabat_ppns_golongan_name?: string
   skpd_id?: 0
   skpd_name?: string
   keterangan?: string
@@ -157,7 +158,7 @@ export function UpdateDataPPNS() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}`)
+      const response = await axios.get(`${KEPEGAWAIAN_URL}/PPNS/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
         skpd: {
@@ -165,14 +166,14 @@ export function UpdateDataPPNS() {
           label: jsonD.skpd_name,
         },
 
-        pangkat: {
-          value: jsonD.pangkat_id,
-          label: jsonD.pangkat_name,
+        pejabat_ppns_pangkat: {
+          value: jsonD.pejabat_ppns_pangkat_id,
+          label: jsonD.pejabat_ppns_pangkat_name,
         },
 
-        golongan: {
-          value: jsonD.golongan_id,
-          label: jsonD.golongan_name,
+        pejabat_ppns_golongan: {
+          value: jsonD.pejabat_ppns_golongan_id,
+          label: jsonD.pejabat_ppns_golongan_name,
         },
         pejabat_ppns_nama: jsonD.pejabat_ppns_nama,
         pejabat_ppns_nip: jsonD.pejabat_ppns_nip,
@@ -181,6 +182,7 @@ export function UpdateDataPPNS() {
         no_sk_ppns: jsonD.no_sk_ppns,
         wilayah_kerja: jsonD.wilayah_kerja,
         uu_yg_dikawal: jsonD.uu_yg_dikawal,
+        updated_by: '',
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
     }
@@ -260,15 +262,15 @@ export function UpdateDataPPNS() {
           : valuesFormikExist?.skpd?.value
           ? valuesFormikExist.skpd.value
           : 0,
-        pangkat: valuesFormik?.pangkat?.value
-          ? valuesFormik.pangkat.value
-          : valuesFormikExist?.pangkat?.value
-          ? valuesFormikExist.pangkat.value
+        pejabat_ppns_pangkat: valuesFormik?.pejabat_ppns_pangkat?.value
+          ? valuesFormik.pejabat_ppns_pangkat.value
+          : valuesFormikExist?.pejabat_ppns_pangkat?.value
+          ? valuesFormikExist.pejabat_ppns_pangkat.value
           : 0,
-        golongan: valuesFormik?.golongan?.value
-          ? valuesFormik.golongan.value
-          : valuesFormikExist?.golongan?.value
-          ? valuesFormikExist.golongan.value
+        pejabat_ppns_golongan: valuesFormik?.pejabat_ppns_golongan?.value
+          ? valuesFormik.pejabat_ppns_golongan.value
+          : valuesFormikExist?.pejabat_ppns_golongan?.value
+          ? valuesFormikExist.pejabat_ppns_golongan.value
           : 0,
         pejabat_ppns_nama: valuesFormik?.pejabat_ppns_nama
           ? valuesFormik.pejabat_ppns_nama
@@ -305,6 +307,7 @@ export function UpdateDataPPNS() {
           : valuesFormikExist?.uu_yg_dikawal
           ? valuesFormikExist.uu_yg_dikawal
           : '',
+        updated_by: '',
       }
       try {
         const response = await axios.put(`${KEPEGAWAIAN_URL}/update-ppns/${id}`, bodyparam)
@@ -373,7 +376,6 @@ export function UpdateDataPPNS() {
                       ? valuesFormikExist?.pejabat_ppns_nama
                       : ''
                   }
-                  placeholder='Masukkan Nama'
                 />
               </div>
             </div>
@@ -392,7 +394,6 @@ export function UpdateDataPPNS() {
                       ? valuesFormikExist?.pejabat_ppns_nip
                       : ''
                   }
-                  placeholder='Masukkan NIP'
                 />
               </div>
             </div>
@@ -411,7 +412,6 @@ export function UpdateDataPPNS() {
                       ? valuesFormikExist?.pejabat_ppns_nrk
                       : ''
                   }
-                  placeholder='Masukkan NRK'
                 />
               </div>
             </div>
@@ -426,10 +426,10 @@ export function UpdateDataPPNS() {
                   defaultOptions
                   onChange={(e) => handleChangeFormikSelect(e, 'pangkat')}
                   value={
-                    valuesFormik?.pangkat
-                      ? valuesFormik?.pangkat
-                      : valuesFormikExist?.pangkat?.value !== 0
-                      ? valuesFormikExist?.pangkat
+                    valuesFormik?.pejabat_ppns_pangkat
+                      ? valuesFormik?.pejabat_ppns_pangkat
+                      : valuesFormikExist?.pejabat_ppns_pangkat?.value !== 0
+                      ? valuesFormikExist?.pejabat_ppns_pangkat
                       : {value: '', label: 'Pilih'}
                   }
                   placeholder={'Pilih'}
@@ -450,10 +450,10 @@ export function UpdateDataPPNS() {
                   defaultOptions
                   onChange={(e) => handleChangeFormikSelect(e, 'golongan')}
                   value={
-                    valuesFormik?.golongan
-                      ? valuesFormik?.golongan
-                      : valuesFormikExist?.golongan?.value !== 0
-                      ? valuesFormikExist?.golongan
+                    valuesFormik?.pejabat_ppns_golongan
+                      ? valuesFormik?.pejabat_ppns_golongan
+                      : valuesFormikExist?.pejabat_ppns_golongan?.value !== 0
+                      ? valuesFormikExist?.pejabat_ppns_golongan
                       : {value: '', label: 'Pilih'}
                   }
                   placeholder={'Pilih'}
@@ -479,7 +479,6 @@ export function UpdateDataPPNS() {
                       ? valuesFormikExist?.no_sk_ppns
                       : ''
                   }
-                  placeholder='Masukkan No SK PPNS'
                 />
               </div>
             </div>
@@ -498,7 +497,6 @@ export function UpdateDataPPNS() {
                       ? valuesFormikExist?.no_ktp_ppns
                       : ''
                   }
-                  placeholder='Masukkan No KTP PPNS'
                 />
               </div>
             </div>
@@ -517,7 +515,6 @@ export function UpdateDataPPNS() {
                       ? valuesFormikExist?.wilayah_kerja
                       : ''
                   }
-                  placeholder='Masukkan Wilayah Kerja'
                 />
               </div>
             </div>
@@ -536,7 +533,6 @@ export function UpdateDataPPNS() {
                       ? valuesFormikExist?.uu_yg_dikawal
                       : ''
                   }
-                  placeholder='Masukkan UU yg dikawal'
                 />
               </div>
             </div>
