@@ -93,6 +93,7 @@ const CreateAppModal = ({show, handleClose}: Props) => {
       show={show}
       onHide={handleClose}
       onEntered={loadStepper}
+      backdrop={true}
     >
       <div className='modal-header'>
         <h2>Create App</h2>

@@ -16,11 +16,17 @@ const HeaderUserMenu: FC = () => {
           <div className='symbol symbol-50px me-5'>
             {currentUser?.data_pegawai?.foto && currentUser?.data_pegawai?.foto !== '' ? (
               <div className='symbol-label'>
-                <img src={currentUser?.data_pegawai?.foto} alt={currentUser?.data_user?.email} className='w-100' />
+                <img
+                  src={currentUser?.data_pegawai?.foto}
+                  alt={currentUser?.data_user?.email}
+                  className='w-100'
+                />
               </div>
             ) : (
-              <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}>
-                {currentUser?.data_pegawai?.nama && currentUser?.data_pegawai?.nama !== '' ? currentUser?.data_pegawai?.nama.charAt(0) : '?'}
+              <div className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-dark-secondary`)}>
+                {currentUser?.data_pegawai?.nama && currentUser?.data_pegawai?.nama !== ''
+                  ? currentUser?.data_pegawai?.nama.charAt(0)
+                  : '?'}
               </div>
             )}
           </div>
@@ -35,6 +41,7 @@ const HeaderUserMenu: FC = () => {
           </div>
         </div>
       </div>
+
       <div className='separator my-2'></div>
 
       <div className='menu-item px-5'>
@@ -43,9 +50,17 @@ const HeaderUserMenu: FC = () => {
         </Link>
       </div>
 
+      <div className='separator my-2'></div>
+
+      <div className='menu-item px-5 my-1'>
+        <Link to='/crafted/account/settings' className='menu-link px-5'>
+          Setting Akun
+        </Link>
+      </div>
+
       <div className='menu-item px-5'>
         <a onClick={logout} className='menu-link px-5'>
-          Sign Out
+          Keluar
         </a>
       </div>
     </div>

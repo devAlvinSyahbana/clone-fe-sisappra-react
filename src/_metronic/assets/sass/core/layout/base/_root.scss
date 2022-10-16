@@ -6,7 +6,7 @@
 [data-theme="light"] {
     // Layouts
     @include property(--kt-app-bg-color, $app-bg-color);
-    @include property(--kt-app-blank-bg-color, $app-blank-bg-color);
+    @include property(--kt-app-blank-bg-color, $app-blank-bg-color);    
 
     // Header base
     @include property(--kt-app-header-base-bg-color, $app-header-base-bg-color);

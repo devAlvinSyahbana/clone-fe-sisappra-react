@@ -309,8 +309,8 @@ $link-color:                $primary !default;
 $link-color-dark:           $primary !default;
 $link-decoration:           none !default;
 $link-shade-percentage:     20% !default;
-$link-hover-color:          shift-color($link-color, $link-shade-percentage) !default;
-$link-hover-color-dark:     shift-color($link-color, $link-shade-percentage) !default;
+$link-hover-color:          $primary-active !default;
+$link-hover-color-dark:     $primary-active !default;
 $link-hover-decoration:     none !default;
 
 
@@ -374,26 +374,27 @@ $border-radius-xl:              1rem !default;
 $border-radius-2xl:             2rem !default;
 $border-radius-pill:            50rem !default;
 
+// Keenthemes hover states
+$component-hover-color: 		$primary !default;
+$component-hover-color-dark: 	$primary !default;
+$component-hover-bg: 			#F4F6FA !default;
+$component-hover-bg-dark: 		$gray-200-dark !default;
+
+// Keenthemes active states
 $component-active-color:        $primary-inverse !default;
 $component-active-color-dark:   $primary-inverse !default;
 $component-active-bg:           $primary !default;
 $component-active-bg-dark:      $primary !default;
 
-// Keenthemes hover states
-$component-hover-bg: $primary-light !default;
-$component-hover-bg-dark: $primary-light-dark !default;
-$component-hover-color: $primary !default;
-$component-hover-color-dark: $primary !default;
+// Keenthemes checked states
+$component-checked-color:        $primary-inverse !default;
+$component-checked-color-dark:   $primary-inverse !default;
+$component-checked-bg:           $primary !default;
+$component-checked-bg-dark:      $primary !default;
 
 // Keenthemes custom transition settings
 $transition-link: color .2s ease !default; 
 $transition-input: color .2s ease !default; 
-
-// Keenthemes custom hover and active states
-$hover-bg: #F4F6FA !default;
-$hover-bg-dark: $gray-200-dark !default;
-$active-bg: $hover-bg !default;
-$active-bg-dark: $hover-bg-dark !default;
 
 // Box shadow
 $box-shadow-xs: 0 .1rem 0.75rem 0.25rem rgba($black, 0.05) !default;
@@ -427,7 +428,7 @@ $gutters: (
 //
 // Font, line-height, and color for body text, headings, and more.
 // Font family
-$font-family-sans-serif: Poppins, Helvetica, "sans-serif" !default;
+$font-family-sans-serif: Inter, Helvetica, "sans-serif" !default;
 
 $font-size-base: 1rem !default; // Assumes the browser default, typically `13px`
 $font-size-lg: $font-size-base * 1.075 !default;   // 14.04px
@@ -581,8 +582,8 @@ $input-btn-focus-color-dark:                rgba($component-active-bg-dark, $inp
 $input-btn-focus-box-shadow:                null !default;
 $input-btn-focus-box-shadow-dark:           null !default;
 
-$input-btn-padding-y-sm:                    .7rem !default;
-$input-btn-padding-x-sm:                    .775rem !default;
+$input-btn-padding-y-sm:                    .55rem !default;
+$input-btn-padding-x-sm:                    .75rem !default;
 $input-btn-font-size-sm:                    $font-size-sm !default;
 
 $input-btn-padding-y-lg:                    .825rem !default;
@@ -633,8 +634,6 @@ $btn-link-disabled-color-dark:              $gray-600-dark !default;
 $btn-border-radius:                         $border-radius !default;
 $btn-border-radius-sm:                      $border-radius-sm !default;
 $btn-border-radius-lg:                      $border-radius-lg !default;
-
-$btn-transition:                            color .15s ease-in-out !default;
 
 
 // Forms
@@ -737,25 +736,25 @@ $form-check-input-focus-border-dark:        $input-focus-border-color-dark !defa
 $form-check-input-focus-box-shadow:         none !default;
 $form-check-input-focus-box-shadow-dark:    none !default;
 
-$form-check-input-checked-color:                    $component-active-color !default;
-$form-check-input-checked-color-dark:               $component-active-color-dark !default;
-$form-check-input-checked-bg-color:                 $component-active-bg !default;
-$form-check-input-checked-bg-color-solid:           $component-active-bg !default;
-$form-check-input-checked-bg-color-dark:            $component-active-bg-dark !default;
-$form-check-input-checked-bg-color-solid-dark:      $component-active-bg-dark !default;
-$form-check-input-checked-border-color:             $component-active-bg !default;
-$form-check-input-checked-border-color-dark:        $component-active-bg-dark !default;
+$form-check-input-checked-color:                    $component-checked-color !default;
+$form-check-input-checked-color-dark:               $component-checked-color-dark !default;
+$form-check-input-checked-bg-color:                 $component-checked-bg !default;
+$form-check-input-checked-bg-color-solid:           $component-checked-bg !default;
+$form-check-input-checked-bg-color-dark:            $component-checked-bg-dark !default;
+$form-check-input-checked-bg-color-solid-dark:      $component-checked-bg-dark !default;
+$form-check-input-checked-border-color:             $component-checked-bg !default;
+$form-check-input-checked-border-color-dark:        $component-checked-bg-dark !default;
 $form-check-input-checked-bg-image:                 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 11' width='13' height='11' fill='none'><path d='M11.0426 1.02893C11.3258 0.695792 11.8254 0.655283 12.1585 0.938451C12.4917 1.22162 12.5322 1.72124 12.249 2.05437L5.51985 9.97104C5.23224 10.3094 4.72261 10.3451 4.3907 10.05L0.828197 6.88335C0.50141 6.59288 0.471975 6.09249 0.762452 5.7657C1.05293 5.43891 1.55332 5.40948 1.88011 5.69995L4.83765 8.32889L11.0426 1.02893Z' fill='#{$form-check-input-checked-color}'/></svg>") !default;
 $form-check-input-checked-bg-image-dark:            url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 11' width='13' height='11' fill='none'><path d='M11.0426 1.02893C11.3258 0.695792 11.8254 0.655283 12.1585 0.938451C12.4917 1.22162 12.5322 1.72124 12.249 2.05437L5.51985 9.97104C5.23224 10.3094 4.72261 10.3451 4.3907 10.05L0.828197 6.88335C0.50141 6.59288 0.471975 6.09249 0.762452 5.7657C1.05293 5.43891 1.55332 5.40948 1.88011 5.69995L4.83765 8.32889L11.0426 1.02893Z' fill='#{$form-check-input-checked-color-dark}'/></svg>") !default;
 $form-check-radio-checked-bg-image:                 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$form-check-input-checked-color}'/></svg>") !default;
 $form-check-radio-checked-bg-image-dark:            url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$form-check-input-checked-color-dark}'/></svg>") !default;
 
-$form-check-input-indeterminate-color:              $component-active-color !default;
-$form-check-input-indeterminate-color-dark:         $component-active-color-dark !default;
-$form-check-input-indeterminate-bg-color:           $component-active-bg !default;
-$form-check-input-indeterminate-bg-color-dark:      $component-active-bg-dark !default;
-$form-check-input-indeterminate-border-color:       $component-active-bg !default;
-$form-check-input-indeterminate-border-color-dark:  $component-active-bg-dark !default;
+$form-check-input-indeterminate-color:              $component-checked-color !default;
+$form-check-input-indeterminate-color-dark:         $component-checked-color-dark !default;
+$form-check-input-indeterminate-bg-color:           $component-checked-bg !default;
+$form-check-input-indeterminate-bg-color-dark:      $component-checked-bg-dark !default;
+$form-check-input-indeterminate-border-color:       $component-checked-bg !default;
+$form-check-input-indeterminate-border-color-dark:  $component-checked-bg-dark !default;
 $form-check-input-indeterminate-bg-image:           url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-indeterminate-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/></svg>") !default;
 $form-check-input-indeterminate-bg-image-dark:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-indeterminate-color-dark}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/></svg>") !default;
 
@@ -790,8 +789,8 @@ $form-switch-focus-color-dark:                      $input-focus-border-color-da
 $form-switch-focus-bg-image:                        url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-focus-color}'/></svg>") !default;
 $form-switch-focus-bg-image-dark:                   url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-focus-color-dark}'/></svg>") !default;
 
-$form-switch-checked-color:                         $component-active-color !default;
-$form-switch-checked-color-dark:                    $component-active-color-dark !default;
+$form-switch-checked-color:                         $component-checked-color !default;
+$form-switch-checked-color-dark:                    $component-checked-color-dark !default;
 $form-switch-checked-bg-image:                      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-checked-color}'/></svg>") !default;
 $form-switch-checked-bg-image-dark:                 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-checked-color-dark}'/></svg>") !default;
 $form-switch-checked-bg-position:                   right center !default;
@@ -850,7 +849,7 @@ $form-file-button-hover-bg-dark:                    shade-color($form-file-butto
 // Form floating
 $input-height-border:                   			$input-border-width * 2 !default;
 $form-floating-height:            					calc(3.75rem + #{$input-height-border}) !default;
-$form-floating-input-padding-t:                     2.15rem !default;
+$form-floating-input-padding-t:                     1.85rem !default;
 
 
 // Navs
@@ -1218,7 +1217,7 @@ $carousel-custom-bullet-indicator-active-bg-color-dark:         $gray-600-dark !
 
 
 // Spinners
-$spinner-border-width:   					.185em !default;
+$spinner-border-width:   					.185rem !default;
 $spinner-animation-speed:   				.65s !default;
 $spinner-border-width-sm:   				.145em !default;
 
@@ -1463,14 +1462,22 @@ $menu-item-padding-x: 0 !default;
 $menu-link-padding-y: 0.65rem !default;
 $menu-link-padding-x: 1rem !default;
 $menu-link-border-radius: $border-radius !default;
-$menu-link-bg-color-hover: $hover-bg !default;
-$menu-link-bg-color-hover-dark: $hover-bg-dark !default;
-$menu-link-bg-color-show: $hover-bg !default;
-$menu-link-bg-color-show-dark: $hover-bg-dark !default;
-$menu-link-bg-color-here: $hover-bg !default;
-$menu-link-bg-color-here-dark: $hover-bg-dark !default;
-$menu-link-bg-color-active: $active-bg !default;
-$menu-link-bg-color-active-dark: $active-bg-dark !default;
+$menu-link-color-hover: $component-hover-color !default;
+$menu-link-color-hover-dark: $component-hover-color-dark !default;
+$menu-link-color-show: $component-hover-color !default;
+$menu-link-color-show-dark: $component-hover-color-dark !default;
+$menu-link-color-here: $component-hover-color !default;
+$menu-link-color-here-dark: $component-hover-color-dark !default;
+$menu-link-color-active: $component-hover-color !default;
+$menu-link-color-active-dark: $component-hover-color-dark !default;
+$menu-link-bg-color-hover: $component-hover-bg !default;
+$menu-link-bg-color-hover-dark: $component-hover-bg-dark !default;
+$menu-link-bg-color-show: $component-hover-bg !default;
+$menu-link-bg-color-show-dark: $component-hover-bg-dark !default;
+$menu-link-bg-color-here: $component-hover-bg !default;
+$menu-link-bg-color-here-dark: $component-hover-bg-dark !default;
+$menu-link-bg-color-active: $component-hover-bg !default;
+$menu-link-bg-color-active-dark: $component-hover-bg-dark !default;
 $menu-icon-size: 2rem !default;
 $menu-icon-space: 0.5rem !default;
 $menu-bullet-size: 1.25rem !default;
@@ -1526,6 +1533,14 @@ $ribbon-clip-bg-dark: $light !default;
 
 // Keenthemes fixed component 
 $fixed-z-index: 101 !default;
+
+// Engage panel
+$engage-btn-bg: $body-bg;
+$engage-btn-bg-dark: $gray-200-dark;
+$engage-btn-color: $gray-600;
+$engage-btn-color-dark: $gray-600-dark;
+$engage-btn-color-active: $gray-800;
+$engage-btn-color-active-dark: $gray-800-dark;
 
 // Social Network Colors Used With Boostrap Buttons(see: https://brandcolors.net)
 $social-colors: (

@@ -7,6 +7,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
+import AsyncSelect from 'react-select/async'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 
@@ -14,6 +15,19 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
+export const KOTA_URL = `${API_URL}/master/kota`
+export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
+export const JABATAN_URL = `${API_URL}/master/jabatan`
+export const PANGKAT_URL = `${API_URL}/master/pangkat`
+
+export interface SelectOption {
+  readonly value: string
+  readonly label: string
+  readonly color: string
+  readonly isFixed?: boolean
+  readonly isDisabled?: boolean
+}
 
 export function TabDataPegawaiYangNaikPangkat() {
   const navigate = useNavigate()
@@ -24,6 +38,14 @@ export function TabDataPegawaiYangNaikPangkat() {
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
+
+  const [inputValKota, setDataKota] = useState({label: '', value: null})
+  const [inputValKec, setDataKec] = useState({label: '', value: null})
+  const [inputValKel, setDataKel] = useState({label: '', value: null})
+  const [inputValPangkat, setDataPangkat] = useState({label: '', value: null})
+  const [inputValJabatan, setDataJabatan] = useState({label: '', value: null})
+
+  const [tmp_kot, setTmp_kot] = useState({label: '', value: ''})
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -266,8 +288,23 @@ export function TabDataPegawaiYangNaikPangkat() {
     if (valFilterNRK.val !== '') {
       uriParam += `&nrk=${valFilterNRK.val}`
     }
+    if (inputValKota.value) {
+      uriParam += `&kota=${inputValKota.value}`
+    }
+    if (inputValKec.value) {
+      uriParam += `&kecamatan=${inputValKec.value}`
+    }
+    if (inputValKel.value) {
+      uriParam += `&kelurahan=${inputValKel.value}`
+    }
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+    }
+    if (inputValJabatan.value) {
+      uriParam += `&jabatan=${inputValJabatan.value}`
+    }
+    if (inputValJabatan.value) {
+      uriParam += `&pangkat=${inputValPangkat.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
@@ -277,6 +314,11 @@ export function TabDataPegawaiYangNaikPangkat() {
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
+    setDataKota({label: '', value: null})
+    setDataKec({label: '', value: null})
+    setDataKel({label: '', value: null})
+    setDataPangkat({label: '', value: null})
+    setDataJabatan({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -298,6 +340,7 @@ export function TabDataPegawaiYangNaikPangkat() {
   }) => {
     setFilterNRK({val: event.target.value})
   }
+
   const handleChangeInputNoPegawai = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -322,6 +365,97 @@ export function TabDataPegawaiYangNaikPangkat() {
     })
   }
 
+  //kota
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(`${KOTA_URL}/filter-kota/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kota, value: i.id}))
+  }
+
+  const loadOptionsKota = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleInputKota = async (newValue: any) => {
+    setDataKota((prevstate: any) => ({...prevstate, ...newValue}))
+    await filterKec()
+  }
+
+  //kecamatan
+  const filterKec = async () => {
+    if (inputValKota.label != '') {
+      const response = await axios.get(
+        `${KECAMATAN_URL}/findone-by-kecamatan?kota=${inputValKota.label}`
+      )
+      const json = await response.data.data
+      console.log(response.data.data)
+      return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
+    } else {
+      return false
+    }
+  }
+  const loadOptionsKec = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKec())
+    }, 1000)
+  }
+  const handleInputKec = (newValue: any) => {
+    setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  //kelurahan
+  const filterKel = async () => {
+    if (inputValKec.label != '') {
+      const response = await axios.get(
+        `${KELURAHAN_URL}/findone-by-kelurahan?kecamatan=${inputValKec.label}`
+      )
+      const json = await response.data.data
+      console.log(response.data.data)
+      return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
+    } else {
+      return false
+    }
+  }
+  const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKel())
+    }, 1000)
+  }
+  const handleInputKel = (newValue: any) => {
+    setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  //jabatan
+  const filterJabatan = async (inputValue: string) => {
+    const response = await axios.get(`${JABATAN_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.jabatan, value: i.id}))
+  }
+  const loadOptionsJabatan = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterJabatan(inputValue))
+    }, 1000)
+  }
+  const handleInputJabatan = (newValue: any) => {
+    setDataJabatan((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  //pangkat
+  const filterPangkat = async (inputValue: string) => {
+    const response = await axios.get(`${PANGKAT_URL}/find${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.pangkat, value: i.id}))
+  }
+  const loadOptionsPangkat = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterPangkat(inputValue))
+    }, 1000)
+  }
+  const handleInputPangkat = (newValue: any) => {
+    setDataPangkat((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
   return (
     <>
       <LaporanRekapHeader />
@@ -342,6 +476,20 @@ export function TabDataPegawaiYangNaikPangkat() {
                 placeholder='Nama'
               />
             </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Wilayah / Bidang
+                </label>
+                <AsyncSelect
+                  cacheOptions
+                  value={inputValKota.value ? inputValKota : {value: '', label: 'Pilih'}}
+                  loadOptions={loadOptionsKota}
+                  defaultOptions
+                  onChange={handleInputKota}
+                />
+              </div>
+            </div>
             {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
               <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                 <label htmlFor='' className='mb-3'>
@@ -357,6 +505,21 @@ export function TabDataPegawaiYangNaikPangkat() {
                 />
               </div>
             ) : null}
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Kecamatan / Seksi
+                </label>
+                <AsyncSelect
+                  cacheOptions
+                  value={inputValKec.value ? inputValKec : {value: '', label: 'Pilih'}}
+                  loadOptions={loadOptionsKec}
+                  defaultOptions
+                  onChange={handleInputKec}
+                 
+                />
+              </div>
+            </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
               <label htmlFor='' className='mb-3'>
                 {valStatPegawai.val === 'PNS'
@@ -383,107 +546,21 @@ export function TabDataPegawaiYangNaikPangkat() {
                 }
               />
             </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
-                  Wilayah / Bidang
-                </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })}
-                </select>
-              </div>
-            </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
-                  Kecamatan / Seksi
-                </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })}
-                </select>
-              </div>
-            </div>
+
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <div className='form-group'>
                 <label htmlFor='' className='mb-3'>
                   Kelurahan
                 </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })}
-                </select>
+                <AsyncSelect
+                  cacheOptions
+                  value={inputValKel.value ? inputValKel : {value: '', label: 'Pilih'}}
+                  loadOptions={loadOptionsKel}
+                  defaultOptions
+                  onChange={handleInputKel}
+                  placeholder={'Pilih'}
+                />
               </div>
-            </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
-                  Status Kenaikan
-                </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='val'
-                >
-                  <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })}
-                </select>
-              </div>
-            </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <label htmlFor='' className='mb-3'>
-                Pangkat
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                name='Pangkat'
-                value={valFilterNama.val}
-                onChange={handleChangeInputNama}
-                placeholder='Pangkat'
-              />
-            </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <label htmlFor='' className='mb-3'>
-                Jabatan
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                name='Jabatan'
-                value={valFilterNama.val}
-                onChange={handleChangeInputNama}
-                placeholder='Jabatan'
-              />
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
@@ -496,6 +573,47 @@ export function TabDataPegawaiYangNaikPangkat() {
                 value={valFilterNama.val}
                 onChange={handleChangeInputNama}
                 placeholder='Jadwal Kenaikan'
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <div className='form-group'>
+                <label htmlFor='' className='mb-3'>
+                  Status Kenaikan
+                </label>
+                <AsyncSelect
+                  cacheOptions
+                  value={inputValPangkat.value ? inputValPangkat : {value: '', label: 'Pilih'}}
+                  loadOptions={loadOptionsPangkat}
+                  defaultOptions
+                  onChange={handleInputPangkat}
+                  placeholder={'Pilih'}
+                />
+              </div>
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                Pangkat
+              </label>
+              <AsyncSelect
+                cacheOptions
+                value={inputValPangkat.value ? inputValPangkat : {value: '', label: 'Pilih'}}
+                loadOptions={loadOptionsPangkat}
+                defaultOptions
+                onChange={handleInputPangkat}
+                placeholder={'Pilih'}
+              />
+            </div>
+            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+              <label htmlFor='' className='mb-3'>
+                Jabatan
+              </label>
+              <AsyncSelect
+                cacheOptions
+                value={inputValJabatan.value ? inputValJabatan : {value: '', label: 'Pilih'}}
+                loadOptions={loadOptionsJabatan}
+                defaultOptions
+                onChange={handleInputJabatan}
+                placeholder={'Pilih'}
               />
             </div>
           </div>

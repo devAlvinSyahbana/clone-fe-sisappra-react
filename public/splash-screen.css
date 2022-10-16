@@ -16,7 +16,7 @@ body {
   background-color: #f2f3f8;
   color: #5E6278;
   line-height: 1;
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -30,7 +30,7 @@ body {
 .splash-screen img {
   margin-left: calc(100vw - 100%);
   margin-bottom: 30px;
-  height: 60px !important;
+  height: 30px !important;
 }
 
 [data-theme="dark"] .splash-screen {

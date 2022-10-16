@@ -46,12 +46,13 @@ const MixedWidget10: React.FC<Props> = ({className, chartColor, chartHeight}) =>
           <div className='d-flex flex-stack flex-wrap'>
             <div className='me-2'>
               <a href='#' className='text-dark text-hover-primary fw-bold fs-3'>
-                Jumlah Pelanggaran
+                Generate Reports
               </a>
-              <div className='text-muted fs-7 fw-semibold'>
-                Berdasarkan Wilayah Selama 6 Bulan Terakhir
-              </div>
+
+              <div className='text-muted fs-7 fw-semibold'>Finance and accounting reports</div>
             </div>
+
+            <div className={`fw-bold fs-3 text-${chartColor}`}>$24,500</div>
           </div>
         </div>
         {/* end::Stats */}
