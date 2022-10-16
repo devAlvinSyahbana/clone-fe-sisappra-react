@@ -135,7 +135,35 @@ export function TambahLaporanKegiatan() {
                     </div>
                     <div className="form-group">
                       <TabPanel>
-                        <h3>Administrasi</h3>
+                        <br />
+                        <h3>ADMINISTRASI</h3>
+                        <div className="row mb-10">
+                          <div className="col-md-2">
+                            <label className="col-form-label fw-semibold fs-6">Jenis Pasal</label>
+                          </div>
+                          <div className="col-md-4">
+                            <select className="form-select form-select-solid"
+                              data-control="select2" data-placeholder="Pilih">
+                              <option></option>
+                              <option value="a">Pasal 25 Ayat 1</option>
+                              <option value="b">Pasal 25 Ayat 2</option>
+                              <option value="a">Pasal 25 Ayat 3</option>
+                              <option value="c">Pasal 25 Ayat 4</option>
+                              <option value="d">Pasal 25 Ayat 5</option>
+                              <option value="e">Pasal 25 Ayat 6</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="row mb-10">
+                          <div className="col-md-2">
+                            <label className="col-form-label fw-semibold fs-6">Jenis
+                              Penertiban</label>
+                          </div>
+                          <div className="col-md-4">
+                            <input type="text"
+                              className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+                          </div>
+                        </div>
                         <div className="row mb-10">
                           <div className="col-md-2">
                             <label className="col-form-label fw-semibold fs-6">Jenis
@@ -166,16 +194,7 @@ export function TambahLaporanKegiatan() {
                             </select>
                           </div>
                         </div>
-                        <div className="row mb-10">
-                          <div className="col-md-2">
-                            <label className="col-form-label fw-semibold fs-6">Jenis
-                              Penertiban</label>
-                          </div>
-                          <div className="col-md-4">
-                            <input type="text"
-                              className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
-                          </div>
-                        </div>
+
                         <div className="row mb-10">
                           <div className="col-md-2">
                             <label className="col-form-label fw-semibold fs-6">Perda/Perkada
@@ -189,9 +208,11 @@ export function TambahLaporanKegiatan() {
                         <div className="form-group">
                           <div className="row mb-10">
                             <div className="col-md-2">
-                              <h3>Penyelesaian</h3>
+                            <label className="col-form-label fw-semibold fs-6">Perda/Perkada
+                            Penyelesaian</label>
+                            
                             </div>
-                            <div className="col-md-3">
+                            <div className="col-md-4">
                               <select className="form-select form-select-solid"
                                 data-control="select2" data-placeholder="Pilih">
                                 <option></option>
@@ -219,10 +240,10 @@ export function TambahLaporanKegiatan() {
                                 </option>
                               </select>
                             </div>
-                            <div className="col-md-2 offset-md-3">
-                              <label>Penindakan</label>
-                            </div>
                             <div className="col-md-2">
+                            <label className="col-form-label fw-semibold fs-6">Penindakan</label>
+                            </div>
+                            <div className="col-md-4">
                               <select className="form-select form-select-solid"
                                 data-control="select2" data-placeholder="Pilih">
                                 <option></option>
@@ -232,7 +253,7 @@ export function TambahLaporanKegiatan() {
                               </select>
                             </div>
                           </div>
-                          <div className="form-group">
+                          {/* <div className="form-group">
                             <div className="row mb-10">
                               <div className="col-md-3">
                                 <h3>Non Pengadilan</h3>
@@ -290,8 +311,44 @@ export function TambahLaporanKegiatan() {
                                   className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
                               </div>
                             </div>
+                          </div> 
+                          <div className="row mb-10">
+                          <div className="col-md-2">
+                            <label className="col-form-label fw-semibold fs-6">JUMLAH PELANGGAR</label>
                           </div>
-                          <h3>Pelanggar</h3>
+                          <div className="col-md-4">
+                            <input type="text"
+                              className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+  </div>
+  </div> */}
+
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                            </div>
+                            <div className="col-md-4">
+                            </div>
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">Jumlah Pelanggar</label>
+                            </div>
+                            <div className="col-md-4">
+                              <input type="text"
+                                className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+                            </div>
+                          </div>
+
+                          <div className="row mb-10">
+                            <div className="col-md-2">
+                              <h3>IDENTITAS NAMA/USAHA</h3>
+                            </div>
+                            <div className="col-md-4">
+                            </div>
+                            <div className="col-md-2">
+                              <h3>JUMLAH DENDA</h3>
+                            </div>
+                            <div className="col-md-4">
+                            </div>
+                          </div>
+
                           <div className="row mb-10">
                             <div className="col-md-2">
                               <label className="col-form-label fw-semibold fs-6">Nomor
@@ -301,8 +358,18 @@ export function TambahLaporanKegiatan() {
                               <input type="text"
                                 className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
                             </div>
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">Non Pengadilan</label>
+                            </div>
+                            <div className="col-md-4">
+                              <input type="text"
+                                className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+                            </div>
                           </div>
-                          <div className="row mb-10">
+
+
+                          <div className="row mb-12">
+
                             <div className="col-md-2">
                               <label className="col-form-label fw-semibold fs-6">Nama
                                 / Penganggung Jawab</label>
@@ -311,11 +378,28 @@ export function TambahLaporanKegiatan() {
                               <input type="text"
                                 className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
                             </div>
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">Tanggal Setor</label>
+                            </div>
+                            <div className="col-md-4">
+                              <input type="text"
+                                className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+                            </div>
+
                           </div>
                           <div className="row mb-10">
+
                             <div className="col-md-2">
                               <label className="col-form-label fw-semibold fs-6">Nama
                                 Usaha / Tempat</label>
+                            </div>
+                            <div className="col-md-4">
+                              <input type="text"
+                                className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+                            </div>
+                            <div className="col-md-2">
+
+                              <label className="col-form-label fw-semibold fs-6">Nama Bank</label>
                             </div>
                             <div className="col-md-4">
                               <input type="text"
@@ -326,6 +410,13 @@ export function TambahLaporanKegiatan() {
                             <div className="col-md-2">
                               <label className="col-form-label fw-semibold fs-6">Jenis
                                 Usaha / Tempat</label>
+                            </div>
+                            <div className="col-md-4">
+                              <input type="text"
+                                className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"></input>
+                            </div>
+                            <div className="col-md-2">
+                              <label className="col-form-label fw-semibold fs-6">No. Validasi Bank</label>
                             </div>
                             <div className="col-md-4">
                               <input type="text"
