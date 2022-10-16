@@ -82,13 +82,13 @@ const SidebarMenuMain = () => {
         icon='/media/icons/duotune/communication/com005.svg'
       >
         <SidebarMenuItem
-          to='/kepegawaian/InformasiDataPegawai'
+          to='/kepegawaian/informasi-data-pegawai'
           title='Informasi Data Pegawai'
           hasBullet={true}
         />
         <SidebarMenuItem to='/kepegawaian/HirarkiPegawai' title='Hirarki Pegawai' hasBullet={true} />
         <SidebarMenuItem
-          to='/kepegawaian/LaporanRekapitulasiPegawai/TabLaporanRekapitulasiPegawai'
+          to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-laporan-rekapitulasi-pegawai'
           title='Laporan Rekapitulasi Pegawai'
           hasBullet={true}
         />

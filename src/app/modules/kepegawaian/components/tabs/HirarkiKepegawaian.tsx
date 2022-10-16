@@ -508,12 +508,12 @@ export function HirarkiKepegawaian() {
         </Collapse>
         <div className='d-flex flex-center'>
           <Button
-            className='btn btn-primary'
+            className='btn btn-secondary'
             onClick={() => setOpen(!open)}
             aria-controls='example-collapse-text'
             aria-expanded={open}
           >
-            Show More
+            Menampilkan lebih banyak
           </Button>
         </div>
 
@@ -521,15 +521,15 @@ export function HirarkiKepegawaian() {
           <div className='text-center'>
             <Link
               className='text-reset text-decoration-none'
-              to='/kepegawaian/InformasiDataPegawai'
+              to='/kepegawaian/informasi-data-pegawai'
             >
               <button className='float-none btn btn-secondary align-self-center m-1'>Keluar</button>
             </Link>
             <Link
               className='text-reset text-decoration-none'
-              to={`/kepegawaian/InformasiDataPegawai/DataKepegawaian/${id}/${status}`}
+              to={`/kepegawaian/informasi-data-pegawai/detail-data-kepegawaian/${id}/${status}`}
             >
-              <button className='float-none btn btn-success align-self-center m-1'>
+              <button className='float-none btn btn-primary align-self-center m-1'>
                 <i className='fa-solid fa-arrow-left'></i>
                 Kembali
               </button>

@@ -25,9 +25,8 @@ export function Kota() {
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-
-  const [valFilterKota, setFilterKota] = useState({val: ''})
   const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [valFilterKota, setFilterKota] = useState({val: ''})
 
   useEffect(() => {
     fetchUsers(1)
@@ -58,7 +57,7 @@ export function Kota() {
       cancelButtonText: 'Tidak!',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await axios.delete(`${KOTA_URL}/delete/${id}`)
+        const response = await axios.delete(`${KOTA_URL}/delete/${id},{deletd_by}`)
         if (response) {
           fetchUsers(1)
           Swal.fire({
@@ -85,6 +84,7 @@ export function Kota() {
       selector: (row: any) => row.id,
       sortable: true,
       sortField: 'no',
+      wrap: true,
     },
     {
       name: 'Kota',
@@ -92,14 +92,15 @@ export function Kota() {
       sortable: true,
       sortField: 'kota',
       width: '400px',
+      wrap: true,
     },
     {
       name: 'Kode',
       selector: (row: any) => row.kode,
       sortable: true,
       sortField: 'kode',
+      wrap: true,
     },
-    {},
     {
       name: 'Aksi',
       sortable: false,
@@ -109,7 +110,7 @@ export function Kota() {
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='mb-2'>
+            <div className='mb-2  mt-2'>
               {[DropdownButton].map((DropdownType, idx) => (
                 <>
                   <DropdownType

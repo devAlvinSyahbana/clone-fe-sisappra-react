@@ -9,7 +9,7 @@ import {DetailPegawaiInterface} from '../KepegawaianInterface'
 import moment from 'moment'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
 
 export function DataKepegawaian() {
   const {id, status} = useParams()
@@ -322,7 +322,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -389,7 +389,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -456,7 +456,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -540,7 +540,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -624,7 +624,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -708,7 +708,7 @@ export function DataKepegawaian() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -720,28 +720,27 @@ export function DataKepegawaian() {
                 <div className='text-center'>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/InformasiDataPegawai/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/${id}/${status}`}
                   >
-                    <button className='float-none btn btn-secondary align-self-center m-1'>
+                    <button className='float-none btn btn-light align-self-center m-1'>
                       Keluar
                     </button>
                   </Link>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/InformasiDataPegawai/Pendidikan/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/detail-data-pendidikan/${id}/${status}`}
                   >
-                    <button className='float-none btn btn-success align-self-center m-1'>
+                    <button className='float-none btn btn-light-primary align-self-center m-1'>
                       <i className='fa-solid fa-arrow-left'></i>
                       Kembali
                     </button>
                   </Link>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/InformasiDataPegawai/HirarkiKepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/informasi-data-pegawai/detail-hirarki-kepegawaian/${id}/${status}`}
                   >
                     <button className='float-none btn btn-primary align-self-center m-1'>
-                      <i className='fa-solid fa-arrow-right'></i>
-                      Lanjut
+                      Lanjut <i className='fa-solid fa-arrow-right'></i>
                     </button>
                   </Link>
                 </div>
