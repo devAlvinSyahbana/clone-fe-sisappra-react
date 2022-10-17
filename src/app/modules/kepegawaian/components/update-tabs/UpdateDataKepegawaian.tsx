@@ -1819,7 +1819,11 @@ export function UpdateDataKepegawaian() {
                       </div>
                     </div>
                   </div>
-
+                  
+                  <div className='col-12 mb-4'>
+                    <div className='separator border-3 my-10'></div>
+                  </div>
+                  
                   <div className='col-12 mb-4'>
                     <label htmlFor='' className='mb-3 fs-2'>
                       Diklat Fungsional Pol PP
