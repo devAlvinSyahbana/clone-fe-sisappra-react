@@ -1,39 +1,161 @@
-import {useState, useEffect, Fragment} from 'react'
+import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import Swal from 'sweetalert2'
 import AsyncSelect from 'react-select/async'
-import Modal from 'react-bootstrap/Modal'
-import Form from 'react-bootstrap/Form'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
+import {useFormik} from 'formik'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/duk-pegawai`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const DELETE_DUK_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
+export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
 export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 
 export function TabDaftarUrutKepangkatan() {
   const navigate = useNavigate()
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
   const [valStatPegawai, setValStatPegawai] = useState({val: ''})
   const [valFilterNama, setFilterNama] = useState({val: ''})
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const arrStatPegawai = ['CPNS', 'PNS', 'PTT', 'PJLP']
+  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -53,6 +175,41 @@ export function TabDaftarUrutKepangkatan() {
         </div>
       </>
     )
+  }
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      text: 'Anda yakin ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+      color: '#000000',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${DELETE_DUK_URL}/delete/${id}${qParamFind.strparam}`)
+        if (response) {
+          fetchData(1)
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        }
+      }
+    })
   }
 
   let no = 1
@@ -180,7 +337,7 @@ export function TabDaftarUrutKepangkatan() {
                     >
                       Detail
                     </Dropdown.Item>
-                    <Dropdown.Item href='#' onClick={() => konfirDel(record?.id)}>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
                       Hapus
                     </Dropdown.Item>
                   </DropdownType>
@@ -192,39 +349,6 @@ export function TabDaftarUrutKepangkatan() {
       },
     },
   ]
-
-  const konfirDel = (id: number) => {
-    Swal.fire({
-      title: 'Anda yakin?',
-      text: 'Ingin menghapus data ini',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya!',
-      cancelButtonText: 'Tidak!',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const response = await axios.delete(`${KEPEGAWAIAN_URL}/delete/${id}`)
-        if (response) {
-          fetchUsers(1)
-          Swal.fire({
-            icon: 'success',
-            title: 'Data berhasil dihapus',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Data gagal dihapus, harap mencoba lagi',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        }
-      }
-    })
-  }
 
   const customStyles = {
     rows: {
@@ -259,7 +383,7 @@ export function TabDaftarUrutKepangkatan() {
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchUsers = async (page: number) => {
+  const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
       `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
@@ -272,7 +396,7 @@ export function TabDaftarUrutKepangkatan() {
   }
 
   const handlePageChange = (page: number) => {
-    fetchUsers(page)
+    fetchData(page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -289,6 +413,9 @@ export function TabDaftarUrutKepangkatan() {
   interface SelectOptionAutoCom {
     readonly value: string
     readonly label: string
+    readonly color: string
+    readonly isFixed?: boolean
+    readonly isDisabled?: boolean
   }
 
   // GET KOTA (Wilayah / Bidang)
@@ -365,7 +492,7 @@ export function TabDaftarUrutKepangkatan() {
   const handleFilter = async () => {
     let uriParam = ''
     if (valStatPegawai.val !== '') {
-      uriParam += `&status=${valStatPegawai.val}`
+      uriParam += `&status_pegawai=${valStatPegawai.val}`
     }
     if (valFilterNama.val !== '') {
       uriParam += `&nama=${valFilterNama.val}`
@@ -374,15 +501,15 @@ export function TabDaftarUrutKepangkatan() {
       uriParam += `&nrk_nptt_npjlp=${valFilterNRK.val}`
     }
     if (valFilterNoPegawai.val !== '') {
-      uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+      uriParam += `&nrk_nptt_npjlp=${valFilterNoPegawai.val}`
     }
-    if (inputValKota.value !== '') {
+    if (inputValKota.value) {
       uriParam += `&kota=${inputValKota.value}`
     }
-    if (inputValKecamatan.value !== '') {
+    if (inputValKecamatan.value) {
       uriParam += `&kecamatan=${inputValKecamatan.value}`
     }
-    if (inputValKelurahan.value !== '') {
+    if (inputValKelurahan.value) {
       uriParam += `&Kelurahan=${inputValKelurahan.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
@@ -393,9 +520,9 @@ export function TabDaftarUrutKepangkatan() {
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
-    // setFilterKota({value: ''})
-    // setFilterKecamatan({value: ''})
-    // setFilterKelurahan({value: ''})
+    setFilterKota({label: '', value: null})
+    setFilterKecamatan({label: '', value: null})
+    setFilterKelurahan({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -427,16 +554,11 @@ export function TabDaftarUrutKepangkatan() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
-        valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-      }`,
+      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh?q=1${qParamFind.strparam}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
-      FileDownload(
-        response.data,
-        'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
-      )
+      FileDownload(response.data, 'DATA DAFTAR URUT KEPANGKATAN.xlsx')
       setbtnLoadingUnduh(false)
     })
   }
@@ -445,10 +567,10 @@ export function TabDaftarUrutKepangkatan() {
     <>
       <LaporanRekapHeader />
       <div id='kt_app_content' className='app-content flex-column-fluid'>
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card'>
-            <div className='card card-flush h-xl-100'>
-              <div className='card-header border-1 pt-6'>
+        <div className='card'>
+          <div className='card card-flush h-xl-100'>
+            <div className='card-header border-1 pt-6'>
+              <div className='col-xl-12 mb-xl-12 mt-6'>
                 <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
                   <div className='mb-5'>
                     <div
@@ -516,7 +638,6 @@ export function TabDaftarUrutKepangkatan() {
                                 onChange={handleChangeStatPegawai}
                                 name='val'
                               >
-                                <option value=''>Pilih Status Kepegawaian</option>
                                 {arrStatPegawai.map((val: string) => {
                                   return <option value={val}>{val}</option>
                                 })}
@@ -578,6 +699,11 @@ export function TabDaftarUrutKepangkatan() {
                                     ? inputValKota
                                     : {value: '', label: 'Pilih Wilayah / Bidang'}
                                 }
+                                styles={
+                                  calculatedMode === 'dark'
+                                    ? reactSelectDarkThem
+                                    : reactSelectLightThem
+                                }
                                 onChange={handleChangeInputKota}
                               />
                             </div>
@@ -595,6 +721,11 @@ export function TabDaftarUrutKepangkatan() {
                                   inputValKecamatan.value
                                     ? inputValKecamatan
                                     : {value: '', label: 'Pilih Kecamatan'}
+                                }
+                                styles={
+                                  calculatedMode === 'dark'
+                                    ? reactSelectDarkThem
+                                    : reactSelectLightThem
                                 }
                                 onChange={handleChangeInputKecamatan}
                               />
@@ -614,6 +745,11 @@ export function TabDaftarUrutKepangkatan() {
                                     ? inputValKelurahan
                                     : {value: '', label: 'Pilih Kelurahan'}
                                 }
+                                styles={
+                                  calculatedMode === 'dark'
+                                    ? reactSelectDarkThem
+                                    : reactSelectLightThem
+                                }
                                 onChange={handleChangeInputKelurahan}
                               />
                             </div>
@@ -622,128 +758,85 @@ export function TabDaftarUrutKepangkatan() {
                       </div>
 
                       <div className='row g-8 mt-2'>
-                        <div className='col-md-6 col-lg-6 col-sm-12'>
-                          <Link to='#'>
-                            <button onClick={handleFilter} className='btn btn-primary me-2'>
-                              <i className='fa-solid fa-search'></i>
+                        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                          <Link to='#' onClick={handleFilter}>
+                            <button className='btn btn-light-primary me-2'>
+                              <KTSVG
+                                path='/media/icons/duotune/general/gen021.svg'
+                                className='svg-icon-2'
+                              />
                               Cari
                             </button>
                           </Link>
-                          <Link to='#' onClick={handleFilterReset} className=''>
-                            <button className='btn btn-primary'>
-                              <i className='fa-solid fa-arrows-rotate'></i>
+                          <Link to='#' onClick={handleFilterReset}>
+                            <button className='btn btn-light-primary'>
+                              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                               Reset
                             </button>
                           </Link>
                         </div>
                         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                          <Link to='#i'>
-                            <button className='btn btn-primary me-5' onClick={handleShow}>
-                              <i className='fa-solid fa-plus'></i>
+                          <Link to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/tambah-daftar-urut-kepangkatan'>
+                            {/* begin::Add user */}
+                            <button type='button' className='btn btn-primary me-2'>
+                              <KTSVG
+                                path='/media/icons/duotune/arrows/arr075.svg'
+                                className='svg-icon-2'
+                              />
                               Tambah
                             </button>
+                            {/* end::Add user */}
                           </Link>
-                          <>
-                            <Modal show={show} onHide={handleClose}>
-                              <Modal.Header closeButton>
-                                <Modal.Title>Tambah Daftar Urut Kepangkatan</Modal.Title>
-                              </Modal.Header>
-                              <Modal.Body>
-                                <form id='kt_modal_add_user_form' className='form' action='#'>
-                                  <div
-                                    className='d-flex flex-column scroll-y me-n7 pe-7'
-                                    id='kt_modal_add_user_scroll'
-                                    data-kt-scroll='true'
-                                    data-kt-scroll-activate='{default: false, lg: true}'
-                                    data-kt-scroll-max-height='auto'
-                                    data-kt-scroll-dependencies='#kt_modal_add_user_header'
-                                    data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
-                                    data-kt-scroll-offset='300px'
-                                  >
-                                    <div className='fv-row mb-7'>
-                                      <label className='required fw-semibold fs-6 mb-2'>Nama</label>
-                                      <input
-                                        type='text'
-                                        name='kode_e'
-                                        id='kode_id_e'
-                                        className='form-control form-control-solid mb-3 mb-lg-0'
-                                        placeholder='masukkan nama'
-                                        value=''
-                                      />
-                                    </div>
-                                    <div className='fv-row mb-7'>
-                                      <label className='required fw-semibold fs-6 mb-2'>NRK</label>
-                                      <input
-                                        type='text'
-                                        name='jenis_pelanggaran_e'
-                                        className=' form-control form-control-solid mb-3 mb-lg-0'
-                                        placeholder='masukkan NRK'
-                                        value=''
-                                      />
-                                    </div>
+                          {/* begin::Filter Button */}
+                          <button
+                            type='button'
+                            className='btn btn-light-primary'
+                            data-kt-menu-trigger='click'
+                            data-kt-menu-placement='bottom-end'
+                          >
+                            {btnLoadingUnduh ? (
+                              <>
+                                <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                Memproses Unduh...
+                              </>
+                            ) : (
+                              <>
+                                <KTSVG
+                                  path='/media/icons/duotune/arrows/arr078.svg'
+                                  className='svg-icon-2'
+                                />
+                                Unduh
+                              </>
+                            )}
+                          </button>
+                          {/* end::Filter Button */}
+                          {/* begin::SubMenu */}
+                          <div
+                            className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                            data-kt-menu='true'
+                          >
+                            {/* begin::Header */}
+                            <div className='px-7 py-5'>
+                              <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                            </div>
+                            {/* end::Header */}
 
-                                    <div className='fv-row mb-7'>
-                                      <label className='required fw-semibold fs-6 mb-2'>NIP</label>
-                                      <input
-                                        type='text'
-                                        name='jenis_pelanggaran_e'
-                                        className=' form-control form-control-solid mb-3 mb-lg-0'
-                                        placeholder='masukkan NIP'
-                                        value=''
-                                      />
-                                    </div>
-                                    <div className='fv-row mb-7'>
-                                      <label className='required fw-semibold fs-6 mb-2'>
-                                        Status Kepegawaian
-                                      </label>
-                                      <select
-                                        className='form-select form-select-solid'
-                                        aria-label='Select example'
-                                        value={valStatPegawai.val}
-                                        onChange={handleChangeStatPegawai}
-                                        name='val'
-                                      >
-                                        <option value=''>Pilih Status Kepegawaian</option>
-                                        {arrStatPegawai.map((val: string) => {
-                                          return <option value={val}>{val}</option>
-                                        })}
-                                      </select>
-                                    </div>
-                                  </div>
-                                </form>
-                              </Modal.Body>
-                              <Modal.Footer>
-                                <Button variant='secondary' onClick={handleClose}>
-                                  <i className='fa-sharp fa-solid fa-xmark'></i>
-                                  Batal
-                                </Button>
-                                <Button variant='primary' onClick={handleClose}>
-                                  <i className='fa-solid fa-paper-plane'></i>
-                                  Simpan
-                                </Button>
-                              </Modal.Footer>
-                            </Modal>
-                          </>
+                            {/* begin::Separator */}
+                            <div className='separator border-gray-200'></div>
+                            {/* end::Separator */}
 
-                          <Dropdown as={ButtonGroup}>
-                            <Button variant='light'>
-                              {btnLoadingUnduh ? (
-                                <>
-                                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                  Memproses...
-                                </>
-                              ) : (
-                                'Unduh'
-                              )}
-                            </Button>
-
-                            <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
-
-                            <Dropdown.Menu>
-                              <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-                              <Dropdown.Item>PDF</Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
+                            {/* begin::Content */}
+                            <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                              <button
+                                onClick={handleUnduh}
+                                className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                              >
+                                Excel
+                              </button>
+                            </div>
+                            {/* end::Content */}
+                          </div>
+                          {/* end::SubMenu */}
                         </div>
                       </div>
                     </div>
@@ -787,6 +880,14 @@ export function TabDaftarUrutKepangkatan() {
                       onChangeRowsPerPage={handlePerRowsChange}
                       onChangePage={handlePageChange}
                       customStyles={customStyles}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                      noDataComponent={
+                        <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                          <div className='d-flex flex-column'>
+                            <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                          </div>
+                        </div>
+                      }
                     />
                   </div>
                 </div>
