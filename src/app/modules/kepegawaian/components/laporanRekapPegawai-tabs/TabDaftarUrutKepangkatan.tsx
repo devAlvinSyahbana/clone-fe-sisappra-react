@@ -139,6 +139,7 @@ const reactSelectDarkThem = {
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/duk-pegawai`
+export const DELETE_DUK_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
 export const KOTA_URL = `${API_URL}/master/kota`
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
@@ -188,9 +189,7 @@ export function TabDaftarUrutKepangkatan() {
       color: '#000000',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await axios.delete(
-          `${KEPEGAWAIAN_URL}/rekapitulasi-duk-pegawai/delete/${id}`
-        )
+        const response = await axios.delete(`${DELETE_DUK_URL}/delete/${id}${qParamFind.strparam}`)
         if (response) {
           fetchData(1)
           Swal.fire({
@@ -414,6 +413,9 @@ export function TabDaftarUrutKepangkatan() {
   interface SelectOptionAutoCom {
     readonly value: string
     readonly label: string
+    readonly color: string
+    readonly isFixed?: boolean
+    readonly isDisabled?: boolean
   }
 
   // GET KOTA (Wilayah / Bidang)
@@ -501,13 +503,13 @@ export function TabDaftarUrutKepangkatan() {
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nrk_nptt_npjlp=${valFilterNoPegawai.val}`
     }
-    if (inputValKota.value !== '') {
+    if (inputValKota.value) {
       uriParam += `&kota=${inputValKota.value}`
     }
-    if (inputValKecamatan.value !== '') {
+    if (inputValKecamatan.value) {
       uriParam += `&kecamatan=${inputValKecamatan.value}`
     }
-    if (inputValKelurahan.value !== '') {
+    if (inputValKelurahan.value) {
       uriParam += `&Kelurahan=${inputValKelurahan.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
@@ -518,9 +520,9 @@ export function TabDaftarUrutKepangkatan() {
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
-    // setFilterKota({value: ''})
-    // setFilterKecamatan({value: ''})
-    // setFilterKelurahan({value: ''})
+    setFilterKota({label: '', value: null})
+    setFilterKecamatan({label: '', value: null})
+    setFilterKelurahan({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -565,10 +567,10 @@ export function TabDaftarUrutKepangkatan() {
     <>
       <LaporanRekapHeader />
       <div id='kt_app_content' className='app-content flex-column-fluid'>
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card'>
-            <div className='card card-flush h-xl-100'>
-              <div className='card-header border-1 pt-6'>
+        <div className='card'>
+          <div className='card card-flush h-xl-100'>
+            <div className='card-header border-1 pt-6'>
+              <div className='col-xl-12 mb-xl-12 mt-6'>
                 <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
                   <div className='mb-5'>
                     <div
