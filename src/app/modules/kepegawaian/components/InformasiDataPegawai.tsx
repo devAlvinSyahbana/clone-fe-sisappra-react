@@ -105,7 +105,7 @@ export function InformasiDataPegawai() {
               <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
                 {record?.foto !== '' ? (
                   <div className='symbol-label'>
-                    <img src={record?.foto} alt={record?.nama} className='w-100' />
+                    <img src={`${API_URL}/${record?.foto}`} alt={record?.nama} className='w-100' />
                   </div>
                 ) : (
                   <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
