@@ -1,39 +1,164 @@
 import { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, { createTheme } from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import Button from 'react-bootstrap/Button'
-import clsx from 'clsx'
+import moment from 'moment'
 import FileDownload from 'js-file-download'
 import { LaporanRekapHeader } from './LaporanRekapHeader'
 import AsyncSelect from 'react-select/async'
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers'
+import { ThemeModeComponent } from '../../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+    'darkMetro',
+    {
+        text: {
+            primary: '#92929f',
+            secondary: '#92929f',
+        },
+        background: {
+            default: '#1e1e2e',
+        },
+        context: {
+            background: '#cb4b16',
+            text: '#FFFFFF',
+        },
+        divider: {
+            default: '#2b2c41',
+        },
+        action: {
+            button: 'rgba(0,0,0,.54)',
+            hover: 'rgba(0,0,0,.08)',
+            disabled: 'rgba(0,0,0,.12)',
+        },
+    },
+    'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+    input: (base: object) => ({
+        ...base,
+        color: '#5e6278',
+    }),
+    menu: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+    container: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+    indicatorsContainer: (base: object) => ({
+        ...base,
+        color: '#cccccc',
+    }),
+    indicatorSeparator: (base: object) => ({
+        ...base,
+        backgroundColor: '#cccccc',
+    }),
+    control: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+        boxShadow: '0 0 0 1px #f5f8fa',
+    }),
+    singleValue: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+    }),
+    option: (base: object) => ({
+        ...base,
+        height: '100%',
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+}
+
+const reactSelectDarkThem = {
+    input: (base: object) => ({
+        ...base,
+        color: '#92929f',
+    }),
+    menu: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+    container: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+    indicatorsContainer: (base: object) => ({
+        ...base,
+        color: '#92929f',
+    }),
+    indicatorSeparator: (base: object) => ({
+        ...base,
+        backgroundColor: '#92929f',
+    }),
+    control: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+        boxShadow: '0 0 0 1px #1b1b29',
+    }),
+    singleValue: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+    }),
+    option: (base: object) => ({
+        ...base,
+        height: '100%',
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+// export const KOTA_URL = `${API_URL}/master/kota`
+// export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
+export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 
 export function TabRekapitulasiDataPegawaiPensiun() {
     const navigate = useNavigate()
+    const { mode } = useThemeMode()
+    const calculatedMode = mode === 'system' ? systemMode : mode
 
     const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
     const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
     const [valFilterNama, setFilterNama] = useState({ val: '' })
-    const [valFilterNRK, setFilterNRK] = useState({ val: '' })
-    const [valFilterNoPegawai, setFilterNoPegawai] = useState({ val: '' })
+    const [valFilterKecamatan, setFilterKecamatan] = useState({ val: '' })
     const [valFilterWilayah, setFilterWilayah] = useState({ val: '' })
+    const [valFilterNRK, setFilterNRK] = useState({ val: '' })
+    const [valFilterNIP, setFilterNIP] = useState({ val: '' })
     const [valFilterTahunPensiun, setFilterTahunPensiun] = useState({ val: '' })
     const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
-    const arrWilayah = ['', '', '']
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
-    var [totalRows, setTotalRows] = useState(0)
+    const [totalRows, setTotalRows] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const [lgShow, setLgShow] = useState(false)
     const [qParamFind, setUriFind] = useState({ strparam: '' })
-    const [inputValAtasan, setDataPegawai] = useState({ label: '', value: null })
 
     const LoadingAnimation = (props: any) => {
         return (
@@ -70,29 +195,29 @@ export function TabRekapitulasiDataPegawaiPensiun() {
             sortField: 'nama',
             width: '200px',
             wrap: true,
-            cell: (record: any) => {
-                return (
-                    <Fragment>
-                        <div className='d-flex align-items-center'>
-                            {/* begin:: Avatar */}
-                            <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
-                                {record?.foto !== '' ? (
-                                    <div className='symbol-label'>
-                                        <img src={record?.foto} alt={record?.nama} className='w-100' />
-                                    </div>
-                                ) : (
-                                    <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
-                                        {record?.nama.charAt(0)}
-                                    </div>
-                                )}
-                            </div>
-                            <div className='d-flex flex-column'>
-                                <span>{record?.nama}</span>
-                            </div>
-                        </div>
-                    </Fragment>
-                )
-            },
+            // cell: (record: any) => {
+            //     return (
+            //         <Fragment>
+            //             <div className='d-flex align-items-center'>
+            //                 {/* begin:: Avatar */}
+            //                 <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
+            //                     {record?.foto !== '' ? (
+            //                         <div className='symbol-label'>
+            //                             <img src={record?.foto} alt={record?.nama} className='w-100' />
+            //                         </div>
+            //                     ) : (
+            //                         <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
+            //                             {record?.nama.charAt(0)}
+            //                         </div>
+            //                     )}
+            //                 </div>
+            //                 <div className='d-flex flex-column'>
+            //                     <span>{record?.nama}</span>
+            //                 </div>
+            //             </div>
+            //         </Fragment>
+            //     )
+            // },
         },
         {
             name: 'NIP',
@@ -146,15 +271,15 @@ export function TabRekapitulasiDataPegawaiPensiun() {
             sortable: true,
             sortField: 'tempat_lahir',
             wrap: true,
-            width: '200px',
+            width: '150px',
         },
         {
             name: 'Tanggal Lahir',
-            selector: (row: any) => row.tgl_lahir,
+            selector: (row: any) => moment(row.tgl_lahir).format('D MMMM YYYY'),
             sortable: true,
             sortField: 'tgl_lahir',
             wrap: true,
-            minWidth: '15',
+            width: '150px',
         },
         {
             name: 'Tahun Pensiun',
@@ -249,19 +374,19 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         async function fetchDT(page: number) {
             setLoading(true)
             const response = await axios.get(
-                `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}${qParamFind.strparam}`
+                `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
             )
             setData(response.data.data)
             setTotalRows(response.data.total_data)
             setLoading(false)
         }
         fetchDT(1)
-    }, [qParamFind, perPage])
+    }, [qParamFind, perPage, valStatPegawai.val])
 
     const fetchData = async (page: number) => {
         setLoading(true)
         const response = await axios.get(
-            `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}${qParamFind.strparam}`
+            `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
         )
         setData(response.data.data)
         setTotalRows(response.data.total_data)
@@ -269,6 +394,21 @@ export function TabRekapitulasiDataPegawaiPensiun() {
 
         return [data, setData] as const
     }
+
+    const handlePageChange = (page: number) => {
+        fetchData(page)
+    }
+
+    const handlePerRowsChange = async (newPerPage: number, page: number) => {
+        setLoading(true)
+        const response = await axios.get(
+            `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${newPerPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
+        )
+        setData(response.data.data)
+        setPerPage(newPerPage)
+        setLoading(false)
+    }
+
 
     const handleChangeStatPegawai = (event: {
         preventDefault: () => void
@@ -288,11 +428,11 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     }) => {
         setFilterNRK({ val: event.target.value })
     }
-    const handleChangeInputNoPegawai = (event: {
+    const handleChangeInputNIP = (event: {
         preventDefault: () => void
         target: { value: any; name: any }
     }) => {
-        setFilterNoPegawai({ val: event.target.value })
+        setFilterNIP({ val: event.target.value })
     }
     const handleChangeInputWilayah = (event: {
         preventDefault: () => void
@@ -300,33 +440,56 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     }) => {
         setFilterWilayah({ val: event.target.value })
     }
+    const handleChangeInputKecamatan = (event: {
+        preventDefault: () => void
+        target: { value: any; name: any }
+    }) => {
+        setFilterKecamatan({ val: event.target.value })
+    }
 
     interface SelectOptionAutoCom {
         readonly value: string
         readonly label: string
     }
 
+    // GET Wilayah
+    // const [inputValWilayah, setFilterWilayah] = useState({ label: '', val: '' })
+    // const filterWilayah = async (page: any) => {
+    //     const response = await axios.get(`${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`);
+    //     const json = await response.data.data
+    //     return json.map((i: any) => ({ label: i.kepegawaian_tempat_tugas, value: i.id }))
+    // }
+    // const loadOptionsWilayah = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    //     setTimeout(async () => {
+    //         callback(await filterWilayah(inputValue))
+    //     }, 1000)
+    // }
+    // const handleChangeInputWilayah = (newValue: any) => {
+    //     setFilterWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
+    // }
+    // END :: GET Wilayah
+
     // GET Kecamatan
-    const [inputValKecamatan, setFilterKecamatan] = useState({ label: '', value: null })
-    const filterKecamatan = async (inputValue: string) => {
-        const response = await axios.get(KEPEGAWAIAN_URL + "/pegawai-pensiun?tempat_tugas_kecamatan");
-        const json = await response.data.data
-        return json.map((i: any) => ({ label: i.kecamatan, value: i.id }))
-    }
-    const loadOptionsKecamatan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
-        setTimeout(async () => {
-            callback(await filterKecamatan(inputValue))
-        }, 1000)
-    }
-    const handleChangeInputKecamatan = (newValue: any) => {
-        setFilterKecamatan((prevstate: any) => ({ ...prevstate, ...newValue }))
-    }
+    // const [inputValKecamatan, setFilterKecamatan] = useState({ label: '', value: '' })
+    // const filterKecamatan = async (page: any) => {
+    //     const response = await axios.get(`${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`);
+    //     const json = await response.data.data
+    //     return json.map((i: any) => ({ label: i.kepegawaian_subbag_seksi_kecamatan, value: i.id }))
+    // }
+    // const loadOptionsKecamatan = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+    //     setTimeout(async () => {
+    //         callback(await filterKecamatan(inputValue))
+    //     }, 1000)
+    // }
+    // const handleChangeInputKecamatan = (newValue: any) => {
+    //     setFilterKecamatan((prevstate: any) => ({ ...prevstate, ...newValue }))
+    // }
     // END :: GET Kecamatan
 
     // GET Kelurahan
-    const [inputValKelurahan, setFilterKelurahan] = useState({ label: '', value: null })
-    const filterKelurahan = async (inputValue: string) => {
-        const response = await axios.get(KEPEGAWAIAN_URL + "/findone-by-kelurahan?kecamatan=" + inputValKecamatan.label + "&kelurahan=" + inputValue);
+    const [inputValKelurahan, setFilterKelurahan] = useState({ label: '', value: '' })
+    const filterKelurahan = async (page: any) => {
+        const response = await axios.get(`${KELURAHAN_URL}/find`);
         const json = await response.data.data
         return json.map((i: any) => ({ label: i.kelurahan, value: i.id }))
     }
@@ -346,56 +509,29 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     }) => {
         setFilterTahunPensiun({ val: event.target.value })
     }
-    const filterPegawai = async (inputValue: string) => {
-        const response = await axios.get(`${KEPEGAWAIAN_URL}/auto-search-pegawai?status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}&nomor=${inputValue}`)
-        const json = await response.data.data
-        return json.map((i: any) => ({ label: i.no_pegawai + " - " + i.nama, value: i.id }))
-    }
-    const loadOptionsPegawai = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
-        setTimeout(async () => {
-            callback(await filterPegawai(inputValue))
-        }, 1000)
-    }
-    const handleInputPegawai = (newValue: any) => {
-        setDataPegawai((prevstate: any) => ({ ...prevstate, ...newValue }))
-    }
-
-    const handlePageChange = (page: number) => {
-        fetchData(page)
-    }
-
-    const handlePerRowsChange = async (newPerPage: number, page: number) => {
-        setLoading(true)
-        const response = await axios.get(
-            `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
-        )
-        setData(response.data.data)
-        setPerPage(newPerPage)
-        setLoading(false)
-    }
 
     const handleFilter = async () => {
         let uriParam = ''
-        if (valStatPegawai.val !== '') {
-            uriParam += `&status=${valStatPegawai.val}`
-        }
+        // if (valStatPegawai.val !== '') {
+        //     uriParam += `&status=${valStatPegawai.val}`
+        // }
         if (valFilterNama.val !== '') {
             uriParam += `&nama=${valFilterNama.val}`
         }
         if (valFilterNRK.val !== '') {
-            uriParam += `&nrk=${valFilterNRK.val}`
+            uriParam += `&nopegawai=${valFilterNRK.val}`
         }
-        if (valFilterNoPegawai.val !== '') {
-            uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+        if (valFilterNIP.val !== '') {
+            uriParam += `&nip=${valFilterNIP.val}`
         }
         if (valFilterWilayah.val !== '') {
-            uriParam += `&wilayah=${valFilterWilayah.val}`
+            uriParam += `&tempat_tugas_bidang=${valFilterWilayah.val}`
         }
-        if (inputValKecamatan.value !== '') {
-            uriParam += `&kecamatan=${inputValKecamatan.value}`
+        if (valFilterKecamatan.val !== '') {
+            uriParam += `&tempat_tugas_kecamatan=${valFilterKecamatan.val}`
         }
         if (inputValKelurahan.value !== '') {
-            uriParam += `&kelurahan=${inputValKelurahan.value}`
+            uriParam += `&kepegawaian_subbag_seksi_kelurahan=${inputValKelurahan.value}`
         }
         if (valFilterTahunPensiun.val !== '') {
             uriParam += `&tahun_pensiun=${valFilterTahunPensiun.val}`
@@ -407,10 +543,10 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         setValStatPegawai({ val: '' })
         setFilterNama({ val: '' })
         setFilterNRK({ val: '' })
-        setFilterNoPegawai({ val: '' })
+        setFilterNIP({ val: '' })
         setFilterWilayah({ val: '' })
-        setFilterKecamatan({ label: '', value: null })
-        setFilterKelurahan({ label: '', value: null })
+        setFilterKecamatan({ val: '' })
+        setFilterKelurahan({ label: '', value: '' })
         setFilterTahunPensiun({ val: '' })
         setUriFind((prevState) => ({ ...prevState, strparam: '' }))
     }
@@ -466,7 +602,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                             </label>
                                             <input
                                                 type='text'
-                                                className='form-control form-control '
+                                                className='form-control form-control-solid '
                                                 name='nama'
                                                 value={valFilterNama.val}
                                                 onChange={handleChangeInputNama}
@@ -475,7 +611,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                         </div>
                                         <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
                                             <label htmlFor='' className='mb-3'>
-                                                Kecamatan
+                                                Kecamatan/Seksi
                                             </label>
                                             {/* <select
                                 className='form-select'
@@ -489,13 +625,22 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                     return <option value={val}>{val}</option>
                                 })}
                             </select> */}
-                                            <AsyncSelect
+                                            <input
+                                                type='text'
+                                                className='form-control form-control-solid '
+                                                name='kecamatan/seksi'
+                                                value={valFilterKecamatan.val}
+                                                onChange={handleChangeInputKecamatan}
+                                                placeholder='Masukkan Kecamatan/Seksi'
+                                            />
+                                            {/* <AsyncSelect
                                                 cacheOptions
                                                 loadOptions={loadOptionsKecamatan}
                                                 defaultOptions
                                                 value={inputValKecamatan.value ? inputValKecamatan : { value: '', label: 'Pilih Kecamatan' }}
                                                 onChange={handleChangeInputKecamatan}
-                                            />
+                                                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                                            /> */}
                                         </div>
                                         <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
                                             <div className='form-group'>
@@ -503,7 +648,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                                     Status Kepegawaian
                                                 </label>
                                                 <select
-                                                    className='form-select'
+                                                    className='form-select form-select-solid'
                                                     aria-label='Select example'
                                                     value={valStatPegawai.val}
                                                     onChange={handleChangeStatPegawai}
@@ -521,63 +666,83 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                                 Kelurahan
                                             </label>
                                             {/* <select
-                                className='form-select'
-                                name='kelurahan'
-                                value={valFilterKelurahan.val}
-                                onChange={handleChangeInputKelurahan}
-                            >
-                                <option value='' className='text-muted' selected disabled>Pilih Kelurahan</option>
-                                {arrKelurahan.map((val: string) => {
-                                    return <option value={val}>{val}</option>
-                                })}
-                            </select> */}
+                                                className='form-select'
+                                                name='kelurahan'
+                                                value={valFilterKelurahan.val}
+                                                onChange={handleChangeInputKelurahan}
+                                            >
+                                                <option value='' className='text-muted' selected disabled>Pilih Kelurahan</option>
+                                                {arrKelurahan.map((val: string) => {
+                                                    return <option value={val}>{val}</option>
+                                                })}
+                                            </select> */}
                                             <AsyncSelect
                                                 cacheOptions
                                                 loadOptions={loadOptionsKelurahan}
                                                 defaultOptions
-                                                value={inputValKelurahan.value ? inputValKelurahan : { value: '', label: 'Pilih Kelurahan' }}
+                                                value={
+                                                    inputValKelurahan.value ? inputValKelurahan : { value: '', label: 'Pilih Kelurahan' }
+                                                }
                                                 onChange={handleChangeInputKelurahan}
+                                                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                                                isDisabled
                                             />
                                         </div>
-                                        {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-                                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                                                <label htmlFor='' className='mb-3'>
-                                                    NRK
-                                                </label>
-                                                <input
-                                                    type='text'
-                                                    className='form-control form-control '
-                                                    name='nrk'
-                                                    value={valFilterNRK.val}
-                                                    onChange={handleChangeInputNRK}
-                                                    placeholder='NRK'
-                                                />
-                                            </div>
-                                        ) : null}
-                                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+                                        {/* {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? ( */}
+                                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                                             <label htmlFor='' className='mb-3'>
                                                 {valStatPegawai.val === 'PNS'
+                                                    ? 'NRK'
+                                                    : valStatPegawai.val === 'PTT'
+                                                        ? 'NPTT'
+                                                        : valStatPegawai.val === 'PJLP'
+                                                            ? 'NPJLP'
+                                                            : 'NRK'}
+                                            </label>
+                                            <input
+                                                type='text'
+                                                className='form-control form-control-solid '
+                                                name='nrk'
+                                                value={valFilterNRK.val}
+                                                onChange={handleChangeInputNRK}
+                                                placeholder={
+                                                    valStatPegawai.val === 'PNS'
+                                                        ? 'NRK'
+                                                        : valStatPegawai.val === 'PTT'
+                                                            ? 'NPTT'
+                                                            : valStatPegawai.val === 'PJLP'
+                                                                ? 'NPJLP'
+                                                                : 'NRK'
+                                                }
+                                            />
+                                        </div>
+                                        {/* ) : null} */}
+                                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+                                            <label htmlFor='' className='mb-3'>
+                                                NIP
+                                                {/* {valStatPegawai.val === 'PNS'
                                                     ? 'NIP'
                                                     : valStatPegawai.val === 'PTT'
                                                         ? 'NPTT'
                                                         : valStatPegawai.val === 'PJLP'
                                                             ? 'NPJLP'
-                                                            : 'NIP'}
+                                                            : 'NIP'} */}
                                             </label>
                                             <input
                                                 type='text'
-                                                className='form-control form-control '
-                                                value={valFilterNoPegawai.val}
-                                                onChange={handleChangeInputNoPegawai}
-                                                placeholder={
-                                                    valStatPegawai.val === 'PNS'
-                                                        ? 'NIP'
-                                                        : valStatPegawai.val === 'PTT'
-                                                            ? 'NPTT'
-                                                            : valStatPegawai.val === 'PJLP'
-                                                                ? 'NPJLP'
-                                                                : 'NIP'
-                                                }
+                                                className='form-control form-control-solid '
+                                                value={valFilterNIP.val}
+                                                onChange={handleChangeInputNIP}
+                                                placeholder='NIP'
+                                            // {
+                                            //     valStatPegawai.val === 'PNS'
+                                            //         ? 'NIP'
+                                            //         : valStatPegawai.val === 'PTT'
+                                            //             ? 'NPTT'
+                                            //             : valStatPegawai.val === 'PJLP'
+                                            //                 ? 'NPJLP'
+                                            //                 : 'NIP'
+                                            // }
                                             />
                                         </div>
                                         <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
@@ -586,7 +751,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                             </label>
                                             <input
                                                 type='number'
-                                                className='form-control form-control '
+                                                className='form-control form-control-solid '
                                                 name='tahun_pensiun'
                                                 value={valFilterTahunPensiun.val}
                                                 onChange={handleChangeInputTahunPensiun}
@@ -597,19 +762,22 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                             <label htmlFor='' className='mb-3'>
                                                 Wilayah/Bidang
                                             </label>
-                                            <select
-                                                className='form-select '
-                                                title='tempat tugas'
-                                                name='wilayah'
+                                            {/* <AsyncSelect
+                                                cacheOptions
+                                                loadOptions={loadOptionsWilayah}
+                                                defaultOptions
+                                                value={inputValWilayah.val ? inputValWilayah : { value: '', label: 'Pilih Wilayah/Bidang' }}
+                                                onChange={handleChangeInputWilayah}
+                                                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                                            /> */}
+                                            <input
+                                                type='text'
+                                                className='form-control form-control-solid '
+                                                name='wilayah/bidang'
                                                 value={valFilterWilayah.val}
                                                 onChange={handleChangeInputWilayah}
-                                                placeholder='Pilih Tempat Tugas'
-                                            >
-                                                <option value='' selected disabled>Pilih Tempat Tugas</option>
-                                                {arrWilayah.map((val: string) => {
-                                                    return <option value={val}>{val}</option>
-                                                })}
-                                            </select>
+                                                placeholder='Masukkan Wilayah/Bidang'
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -706,6 +874,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                             onChangeRowsPerPage={handlePerRowsChange}
                                             onChangePage={handlePageChange}
                                             customStyles={customStyles}
+                                            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                                         />
                                     </div>
                                 </div>
