@@ -5,15 +5,14 @@ import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import Button from 'react-bootstrap/Button'
 import AsyncSelect from 'react-select/async'
-import clsx from 'clsx'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import {LaporanPPNSHeader} from './LaporanPPNSHeader'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {GOLONGAN_URL, PANGKAT_URL, SKPD_URL} from '../update-tabs-ppns/UpdateDataPPNS'
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
@@ -138,7 +137,7 @@ const reactSelectDarkThem = {
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const PPNS_UNDUH_URL = `${API_URL}/kepegawaian`
 export const MASTER_SKPD = `${API_URL}/master/skpd`
 export const MASTER_PANGKAT = `${API_URL}/master/pangkat`
 export const MASTER_GOLONGAN = `${API_URL}/master/golongan`
@@ -173,6 +172,48 @@ export function TabDataPPNS() {
     )
   }
 
+  const GetSKPD = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${SKPD_URL}/findone/${id}`)
+        const result: string = data.data.skpd
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const GetGolongan = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${GOLONGAN_URL}/findone/${id}`)
+        const result: string = data.data.golongan
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const GetPangkat = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${PANGKAT_URL}/findone/${id}`)
+        const result: string = data.data.pangkat
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
   let no = 1
 
   const columns = [
@@ -193,6 +234,7 @@ export function TabDataPPNS() {
       width: '240px',
       center: true,
       wrap: true,
+      cell: (record: any) => <GetSKPD row={parseInt(record.skpd)} />,
     },
     {
       name: 'Nama',
@@ -229,6 +271,7 @@ export function TabDataPPNS() {
       wrap: true,
       width: '150px',
       center: true,
+      cell: (record: any) => <GetPangkat row={parseInt(record.pejabat_ppns_pangkat)} />,
     },
     {
       name: 'Golongan',
@@ -238,6 +281,7 @@ export function TabDataPPNS() {
       wrap: true,
       width: '150px',
       center: true,
+      cell: (record: any) => <GetGolongan row={parseInt(record.pejabat_ppns_golongan)} />,
     },
     {
       name: 'No. SK. PPNS',
@@ -496,7 +540,7 @@ export function TabDataPPNS() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      // url: `${PPNS_UNDUH_URL}/unduh?q=1${qParamFind.strparam}`,
+      url: `${PPNS_UNDUH_URL}/unduh-PPNS?q=1${qParamFind.strparam}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
@@ -509,10 +553,10 @@ export function TabDataPPNS() {
     <>
       <LaporanPPNSHeader />
       <div id='kt_app_content' className='app-content flex-column-fluid'>
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card'>
-            <div className='card card-flush h-xl-100'>
-              <div className='card-header border-1 pt-6'>
+        <div className='card'>
+          <div className='card card-flush h-xl-100'>
+            <div className='card-header border-1 pt-6'>
+              <div className='col-xl-12 mb-xl-12 mt-6'>
                 <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
                   <div className='mb-5'>
                     <div

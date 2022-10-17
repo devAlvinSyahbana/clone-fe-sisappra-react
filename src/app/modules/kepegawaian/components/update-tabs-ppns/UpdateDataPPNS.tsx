@@ -126,12 +126,9 @@ export interface SelectOption {
 
 interface GetDataInterface {
   id?: number
-  pejabat_ppns_pangkat_id?: 0
-  pejabat_ppns_pangkat_name?: string
-  pejabat_ppns_golongan_id?: 0
-  pejabat_ppns_golongan_name?: string
-  skpd_id?: 0
-  skpd_name?: string
+  skpd?: any
+  pejabat_ppns_pangkat?: any
+  pejabat_ppns_golongan?: any
   keterangan?: string
   pejabat_ppns_nama?: string
   pejabat_ppns_nip?: string
@@ -161,20 +158,9 @@ export function UpdateDataPPNS() {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/PPNS/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        skpd: {
-          value: jsonD.skpd_id,
-          label: jsonD.skpd_name,
-        },
-
-        pejabat_ppns_pangkat: {
-          value: jsonD.pejabat_ppns_pangkat_id,
-          label: jsonD.pejabat_ppns_pangkat_name,
-        },
-
-        pejabat_ppns_golongan: {
-          value: jsonD.pejabat_ppns_golongan_id,
-          label: jsonD.pejabat_ppns_golongan_name,
-        },
+        pejabat_ppns_pangkat: jsonD.pejabat_ppns_pangkat,
+        pejabat_ppns_golongan: jsonD.pejabat_ppns_golongan,
+        skpd: jsonD.skpd,
         pejabat_ppns_nama: jsonD.pejabat_ppns_nama,
         pejabat_ppns_nip: jsonD.pejabat_ppns_nip,
         pejabat_ppns_nrk: jsonD.pejabat_ppns_nrk,
@@ -184,10 +170,67 @@ export function UpdateDataPPNS() {
         uu_yg_dikawal: jsonD.uu_yg_dikawal,
         updated_by: '',
       }
+      getPangkatVal(response.data.data.pejabat_ppns_pangkat)
+      getGolonganVal(response.data.data.pejabat_ppns_golongan)
+      getSKPDVal(response.data.data.skpd)
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
     }
     fetchData()
   }, [valuesFormik, id])
+
+  // GET VALUE SKPD
+  const [valSKPD, setValSKPD] = useState({value: '', label: ''})
+  const getSKPDVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${SKPD_URL}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValSKPD((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.skpd,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  // GET VALUE PANGKAT
+  const [valPangkat, setValPangkat] = useState({value: '', label: ''})
+  const getPangkatVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${PANGKAT_URL}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValPangkat((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.pangkat,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  // GET VALUE GOLONGAN
+  const [valGolongan, setValGolongan] = useState({value: '', label: ''})
+  const getGolonganVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${GOLONGAN_URL}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValGolongan((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.golongan,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
 
   // AUTOCOMPLETE SKPD
   const filterSKPD = async (inputValue: string) => {
@@ -259,18 +302,18 @@ export function UpdateDataPPNS() {
       const bodyparam: FormInput = {
         skpd: valuesFormik?.skpd?.value
           ? valuesFormik.skpd.value
-          : valuesFormikExist?.skpd?.value
-          ? valuesFormikExist.skpd.value
+          : valuesFormikExist?.skpd
+          ? valuesFormikExist.skpd
           : 0,
         pejabat_ppns_pangkat: valuesFormik?.pejabat_ppns_pangkat?.value
           ? valuesFormik.pejabat_ppns_pangkat.value
-          : valuesFormikExist?.pejabat_ppns_pangkat?.value
-          ? valuesFormikExist.pejabat_ppns_pangkat.value
+          : valuesFormikExist?.pejabat_ppns_pangkat
+          ? valuesFormikExist.pejabat_ppns_pangkat
           : 0,
         pejabat_ppns_golongan: valuesFormik?.pejabat_ppns_golongan?.value
           ? valuesFormik.pejabat_ppns_golongan.value
-          : valuesFormikExist?.pejabat_ppns_golongan?.value
-          ? valuesFormikExist.pejabat_ppns_golongan.value
+          : valuesFormikExist?.pejabat_ppns_golongan
+          ? valuesFormikExist.pejabat_ppns_golongan
           : 0,
         pejabat_ppns_nama: valuesFormik?.pejabat_ppns_nama
           ? valuesFormik.pejabat_ppns_nama
@@ -310,7 +353,7 @@ export function UpdateDataPPNS() {
         updated_by: '',
       }
       try {
-        const response = await axios.put(`${KEPEGAWAIAN_URL}/update-ppns/${id}`, bodyparam)
+        const response = await axios.put(`${KEPEGAWAIAN_URL}/update-PPNS/${id}`, bodyparam)
         if (response) {
           Swal.fire({
             icon: 'success',
@@ -348,10 +391,10 @@ export function UpdateDataPPNS() {
                   defaultOptions
                   onChange={(e) => handleChangeFormikSelect(e, 'skpd')}
                   value={
-                    valuesFormik?.skpd
+                    valuesFormik?.skpd && typeof valuesFormik?.skpd === 'object'
                       ? valuesFormik?.skpd
-                      : valuesFormikExist?.skpd?.value !== 0
-                      ? valuesFormikExist?.skpd
+                      : valSKPD && valSKPD.label !== ''
+                      ? valSKPD
                       : {value: '', label: 'Pilih'}
                   }
                   placeholder={'Pilih'}
@@ -424,14 +467,16 @@ export function UpdateDataPPNS() {
                   cacheOptions
                   loadOptions={loadOptionsPangkat}
                   defaultOptions
-                  onChange={(e) => handleChangeFormikSelect(e, 'pangkat')}
+                  onChange={(e) => handleChangeFormikSelect(e, 'pejabat_ppns_pangkat')}
                   value={
-                    valuesFormik?.pejabat_ppns_pangkat
+                    valuesFormik?.pejabat_ppns_pangkat &&
+                    typeof valuesFormik?.pejabat_ppns_pangkat === 'object'
                       ? valuesFormik?.pejabat_ppns_pangkat
-                      : valuesFormikExist?.pejabat_ppns_pangkat?.value !== 0
-                      ? valuesFormikExist?.pejabat_ppns_pangkat
+                      : valPangkat && valPangkat.label !== ''
+                      ? valPangkat
                       : {value: '', label: 'Pilih'}
                   }
+                  name='pejabat_ppns_pangkat'
                   placeholder={'Pilih'}
                   styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
                   loadingMessage={() => 'Sedang mencari pilihan...'}
@@ -448,12 +493,13 @@ export function UpdateDataPPNS() {
                   cacheOptions
                   loadOptions={loadOptionsGolongan}
                   defaultOptions
-                  onChange={(e) => handleChangeFormikSelect(e, 'golongan')}
+                  onChange={(e) => handleChangeFormikSelect(e, 'pejabat_ppns_golongan')}
                   value={
-                    valuesFormik?.pejabat_ppns_golongan
+                    valuesFormik?.pejabat_ppns_golongan &&
+                    typeof valuesFormik?.pejabat_ppns_golongan === 'object'
                       ? valuesFormik?.pejabat_ppns_golongan
-                      : valuesFormikExist?.pejabat_ppns_golongan?.value !== 0
-                      ? valuesFormikExist?.pejabat_ppns_golongan
+                      : valGolongan && valGolongan.label !== ''
+                      ? valGolongan
                       : {value: '', label: 'Pilih'}
                   }
                   placeholder={'Pilih'}
