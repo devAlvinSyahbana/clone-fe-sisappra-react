@@ -52,19 +52,15 @@ export interface DetailPegawaiInterface {
   kepegawaian_no_sk_pangkat_terakhir?: string
   kepegawaian_tgl_sk_pangkat_terakhir?: string | undefined
   kepegawaian_sk_pangkat_terakhir?: string
-  kepegawaian_diklat_pol_pp_dasar?: string
   kepegawaian_diklat_pol_pp_dasar_no_sertifikat?: string
   kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat?: string | undefined
   kepegawaian_diklat_pol_pp_dasar_file_sertifikat?: string
-  kepegawaian_diklat_pol_pp_strutural?: string
   kepegawaian_diklat_pol_pp_strutural_no_sertifikat?: string
   kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat?: string
   kepegawaian_diklat_pol_pp_strutural_file_sertifikat?: string
-  kepegawaian_diklat_pol_pp_ppns?: string
   kepegawaian_diklat_pol_pp_ppns_no_sertifikat?: string
   kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat?: string | undefined
   kepegawaian_diklat_pol_pp_ppns_file_sertifikat?: string
-  kepegawaian_diklat_fungsional_pol_pp?: string
   kepegawaian_diklat_fungsional_pol_pp_no_sertifikat?: string
   kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat?: string | undefined
   kepegawaian_diklat_fungsional_pol_pp_file_sertifikat?: string
@@ -102,4 +98,15 @@ export interface DetailMasterJabatan {
   jabatan?: string
   kode?: string
   status?: string
+}
+
+export interface FileUploadInformasiDataPegawai {
+  kepegawaian_sk_cpns?: any | null
+  kepegawaian_sk_pns?: any | null
+  kepegawaian_sk_pangkat_terakhir?: any | null
+  kepegawaian_diklat_pol_pp_dasar_file_sertifikat?: any | null
+  kepegawaian_diklat_pol_pp_strutural_file_sertifikat?: any | null
+  kepegawaian_diklat_pol_pp_ppns_file_sertifikat?: any | null
+  kepegawaian_diklat_fungsional_pol_pp_file_sertifikat?: any | null
+  foto?: any | null
 }
