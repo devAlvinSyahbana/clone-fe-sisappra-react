@@ -129,25 +129,41 @@ export function DataKepegawaian() {
             : '',
           kepegawaian_jabatan: valMasterJabatan.label ? valMasterJabatan.label : '',
           kepegawaian_eselon: valMasterEselon.label ? valMasterEselon.label : '',
-          kepegawaian_tmtpangkat: moment(data?.kepegawaian_tmtpangkat).format('D MMMM YYYY'),
-          kepegawaian_tmt_cpns: moment(data?.kepegawaian_tmt_cpns).format('D MMMM YYYY'),
-          kepegawaian_tmt_pns: moment(data?.kepegawaian_tmt_pns).format('D MMMM YYYY'),
-          kepegawaian_tgl_sk_pns: moment(data?.kepegawaian_tgl_sk_pns).format('D MMMM YYYY'),
-          kepegawaian_tgl_sk_pangkat_terakhir: moment(
-            data?.kepegawaian_tgl_sk_pangkat_terakhir
-          ).format('D MMMM YYYY'),
-          kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat: moment(
+          kepegawaian_tmtpangkat: data?.kepegawaian_tmtpangkat
+            ? moment(data?.kepegawaian_tmtpangkat).format('D MMMM YYYY')
+            : '',
+          kepegawaian_tmt_cpns: data?.kepegawaian_tmt_cpns
+            ? moment(data?.kepegawaian_tmt_cpns).format('D MMMM YYYY')
+            : '',
+          kepegawaian_tmt_pns: data?.kepegawaian_tmt_pns
+            ? moment(data?.kepegawaian_tmt_pns).format('D MMMM YYYY')
+            : '',
+          kepegawaian_tgl_sk_pns: data?.kepegawaian_tgl_sk_pns
+            ? moment(data?.kepegawaian_tgl_sk_pns).format('D MMMM YYYY')
+            : '',
+          kepegawaian_tgl_sk_pangkat_terakhir: data?.kepegawaian_tgl_sk_pangkat_terakhir
+            ? moment(data?.kepegawaian_tgl_sk_pangkat_terakhir).format('D MMMM YYYY')
+            : '',
+          kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat:
             data?.kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat
-          ).format('D MMMM YYYY'),
-          kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat: moment(
+              ? moment(data?.kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat).format('D MMMM YYYY')
+              : '',
+          kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat:
             data?.kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat
-          ).format('D MMMM YYYY'),
-          kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: moment(
+              ? moment(data?.kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat).format(
+                  'D MMMM YYYY'
+                )
+              : '',
+          kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat:
             data?.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat
-          ).format('D MMMM YYYY'),
-          kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat: moment(
+              ? moment(data?.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat).format('D MMMM YYYY')
+              : '',
+          kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat:
             data?.kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat
-          ).format('D MMMM YYYY'),
+              ? moment(data?.kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat).format(
+                  'D MMMM YYYY'
+                )
+              : '',
         }}
         onSubmit={function (
           values: DetailPegawaiInterface,
@@ -162,8 +178,22 @@ export function DataKepegawaian() {
       >
         <div className='card mb-5 mb-xl-10' id='kt_profile_details_view'>
           <div className='card-header cursor-pointer'>
-            <div className='card-title m-0'>
-              <h3 className='fw-bold m-0'>Data Kepegawaian</h3>
+            <div className='card-title m-0 w-100'>
+              <div className='row w-100'>
+                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                  <h3 className='fw-bold mt-5'>Data Kepegawaian</h3>
+                </div>
+                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
+                  <Link
+                    className='text-reset text-decoration-none m-0'
+                    to={`/kepegawaian/informasi-data-pegawai/ubah-data-kepegawaian/${id}/${status}`}
+                  >
+                    <button className='float-none btn btn-light-primary align-self-center'>
+                      Ubah
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
           <div className='card-body p-9'>
@@ -177,6 +207,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_nrk'
+                  placeholder='NRK'
                 />
               </div>
 
@@ -189,6 +220,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_nip'
+                  placeholder='NIP'
                 />
               </div>
 
@@ -201,6 +233,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_pangkat'
+                  placeholder='Pangkat'
                 />
               </div>
 
@@ -213,6 +246,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_golongan'
+                  placeholder='Golongan'
                 />
               </div>
 
@@ -225,6 +259,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tmtpangkat'
+                  placeholder='TMT Pangkat'
                 />
               </div>
 
@@ -237,6 +272,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_pendidikan_pada_sk'
+                  placeholder='Pendidikan Pada SK'
                 />
               </div>
 
@@ -249,6 +285,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_jabatan'
+                  placeholder='Jabatan'
                 />
               </div>
 
@@ -261,6 +298,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_eselon'
+                  placeholder='Eselon'
                 />
               </div>
 
@@ -273,6 +311,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tempat_tugas'
+                  placeholder='Tempat Tugas'
                 />
               </div>
 
@@ -285,6 +324,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-3'
                   name='kepegawaian_subbag_seksi_kecamatan'
+                  placeholder='Subag/Seksi/Kecamatan'
                 />
               </div>
 
@@ -297,6 +337,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_status_pegawai'
+                  placeholder='Status Pegawai'
                 />
               </div>
 
@@ -309,6 +350,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_rekening'
+                  placeholder='Nomor Rekening'
                 />
               </div>
 
@@ -321,6 +363,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_karpeg'
+                  placeholder='Nomor KARPEG'
                 />
               </div>
 
@@ -333,6 +376,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_kasirkasur'
+                  placeholder='Nomor Karis/Karsu'
                 />
               </div>
 
@@ -345,6 +389,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_taspen'
+                  placeholder='Nomor TASPEN'
                 />
               </div>
 
@@ -357,6 +402,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_npwp'
+                  placeholder='Nomor NPWP'
                 />
               </div>
 
@@ -369,6 +415,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_bpjs_askes'
+                  placeholder='Nomor BPJS/ASKES'
                 />
               </div>
 
@@ -385,6 +432,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tmt_cpns'
+                  placeholder='TMT CPNS'
                 />
               </div>
 
@@ -394,7 +442,9 @@ export function DataKepegawaian() {
                     {data.kepegawaian_sk_cpns && data.kepegawaian_sk_cpns !== '' ? (
                       <>
                         <a
-                          href='/#'
+                          href={`${API_URL}/${data.kepegawaian_sk_cpns}`}
+                          target='_blank'
+                          rel='noreferrer'
                           className='text-gray-800 text-hover-primary d-flex flex-column'
                         >
                           <div className='symbol symbol-75px mb-5'>
@@ -440,6 +490,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tmt_pns'
+                  placeholder='TMT PNS'
                 />
               </div>
 
@@ -452,16 +503,19 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tgl_sk_pns'
+                  placeholder='Tanggal SK PNS'
                 />
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                    {data.kepegawaian_sk_cpns && data.kepegawaian_sk_cpns !== '' ? (
+                    {data.kepegawaian_sk_pns && data.kepegawaian_sk_pns !== '' ? (
                       <>
                         <a
-                          href='/#'
+                          href={`${API_URL}/${data.kepegawaian_sk_cpns}`}
+                          target='_blank'
+                          rel='noreferrer'
                           className='text-gray-800 text-hover-primary d-flex flex-column'
                         >
                           <div className='symbol symbol-75px mb-5'>
@@ -507,6 +561,7 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_no_sk_pangkat_terakhir'
+                  placeholder='Nomor SK Pangkat Terakhir'
                 />
               </div>
 
@@ -519,16 +574,20 @@ export function DataKepegawaian() {
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_tgl_sk_pangkat_terakhir'
+                  placeholder='Tanggal SK Pangkat'
                 />
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
                 <div className='card h-100 mt-3'>
                   <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
-                    {data.kepegawaian_sk_cpns && data.kepegawaian_sk_cpns !== '' ? (
+                    {data.kepegawaian_sk_pangkat_terakhir &&
+                    data.kepegawaian_sk_pangkat_terakhir !== '' ? (
                       <>
                         <a
-                          href='/#'
+                          href={`${API_URL}/${data.kepegawaian_sk_pangkat_terakhir}`}
+                          target='_blank'
+                          rel='noreferrer'
                           className='text-gray-800 text-hover-primary d-flex flex-column'
                         >
                           <div className='symbol symbol-75px mb-5'>
@@ -586,6 +645,7 @@ export function DataKepegawaian() {
                       type='text'
                       className='form-control form-control form-control-solid mb-4'
                       name='kepegawaian_diklat_pol_pp_dasar_no_sertifikat'
+                      placeholder='Nomor Sertifikat'
                     />
                   </div>
                   <div className='col-12 mb-4'>
@@ -597,6 +657,7 @@ export function DataKepegawaian() {
                       type='text'
                       className='form-control form-control form-control-solid mb-4'
                       name='kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat'
+                      placeholder='Tanggal Sertifikat'
                     />
                   </div>
                 </div>
@@ -609,7 +670,9 @@ export function DataKepegawaian() {
                     data.kepegawaian_diklat_pol_pp_dasar_file_sertifikat !== '' ? (
                       <>
                         <a
-                          href='/#'
+                          href={`${API_URL}/${data.kepegawaian_diklat_pol_pp_dasar_file_sertifikat}`}
+                          target='_blank'
+                          rel='noreferrer'
                           className='text-gray-800 text-hover-primary d-flex flex-column'
                         >
                           <div className='symbol symbol-75px mb-5'>
@@ -667,6 +730,7 @@ export function DataKepegawaian() {
                       type='text'
                       className='form-control form-control form-control-solid mb-4'
                       name='kepegawaian_diklat_pol_pp_strutural_no_sertifikat'
+                      placeholder='Nomor Sertifikat'
                     />
                   </div>
                   <div className='col-12 mb-4'>
@@ -678,6 +742,7 @@ export function DataKepegawaian() {
                       type='text'
                       className='form-control form-control form-control-solid mb-4'
                       name='kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat'
+                      placeholder='Tanggal Sertifikat'
                     />
                   </div>
                 </div>
@@ -750,6 +815,7 @@ export function DataKepegawaian() {
                       type='text'
                       className='form-control form-control form-control-solid mb-4'
                       name='kepegawaian_diklat_pol_pp_ppns_no_sertifikat'
+                      placeholder='Nomor Sertifikat'
                     />
                   </div>
                   <div className='col-12 mb-4'>
@@ -761,6 +827,7 @@ export function DataKepegawaian() {
                       type='text'
                       className='form-control form-control form-control-solid mb-4'
                       name='kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat'
+                      placeholder='Tanggal Sertifikat'
                     />
                   </div>
                 </div>
@@ -833,6 +900,7 @@ export function DataKepegawaian() {
                       type='text'
                       className='form-control form-control form-control-solid mb-4'
                       name='kepegawaian_diklat_fungsional_pol_pp_no_sertifikat'
+                      placeholder='Nomor Sertifikat'
                     />
                   </div>
                   <div className='col-12 mb-4'>
@@ -844,6 +912,7 @@ export function DataKepegawaian() {
                       type='text'
                       className='form-control form-control form-control-solid mb-4'
                       name='kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat'
+                      placeholder='Tanggal Sertifikat'
                     />
                   </div>
                 </div>
