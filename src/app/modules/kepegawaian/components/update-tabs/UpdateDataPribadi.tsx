@@ -646,22 +646,18 @@ export function UpdateDataPribadi() {
                 kepegawaian_tgl_sk_pns: values.kepegawaian_tgl_sk_pns,
                 kepegawaian_no_sk_pangkat_terakhir: values.kepegawaian_no_sk_pangkat_terakhir,
                 kepegawaian_tgl_sk_pangkat_terakhir: values.kepegawaian_tgl_sk_pangkat_terakhir,
-                kepegawaian_diklat_pol_pp_dasar: values.kepegawaian_diklat_pol_pp_dasar,
                 kepegawaian_diklat_pol_pp_dasar_no_sertifikat:
                   values.kepegawaian_diklat_pol_pp_dasar_no_sertifikat,
                 kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat:
                   values.kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat,
-                kepegawaian_diklat_pol_pp_strutural: values.kepegawaian_diklat_pol_pp_strutural,
                 kepegawaian_diklat_pol_pp_strutural_no_sertifikat:
                   values.kepegawaian_diklat_pol_pp_strutural_no_sertifikat,
                 kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat:
                   values.kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat,
-                kepegawaian_diklat_pol_pp_ppns: values.kepegawaian_diklat_pol_pp_ppns,
                 kepegawaian_diklat_pol_pp_ppns_no_sertifikat:
                   values.kepegawaian_diklat_pol_pp_ppns_no_sertifikat,
                 kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat:
                   values.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat,
-                kepegawaian_diklat_fungsional_pol_pp: values.kepegawaian_diklat_fungsional_pol_pp,
                 kepegawaian_diklat_fungsional_pol_pp_no_sertifikat:
                   values.kepegawaian_diklat_fungsional_pol_pp_no_sertifikat,
                 kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat:
