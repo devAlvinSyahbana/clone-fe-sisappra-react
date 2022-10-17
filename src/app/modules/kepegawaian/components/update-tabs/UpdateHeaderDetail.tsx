@@ -60,7 +60,7 @@ const UpdateHeaderDetail = () => {
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
                   {data?.foto !== '' ? (
                     <div className='symbol-label'>
-                      <img src={data?.foto} alt={data?.nama} className='w-100' />
+                      <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
                     </div>
                   ) : (
                     <div
