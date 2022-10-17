@@ -693,6 +693,8 @@ export function UpdateDataPribadi() {
                 setSubmitting(false)
                 console.error(error)
               }
+            } else {
+              setSubmitting(false)
             }
           })
         }}
