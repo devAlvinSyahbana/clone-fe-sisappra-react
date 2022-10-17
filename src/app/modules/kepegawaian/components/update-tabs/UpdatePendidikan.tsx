@@ -457,6 +457,7 @@ export function UpdatePendidikan() {
   const doAdd = () => {
     setShow(true)
     setAksi(0)
+    setSelectedFile(null)
     setValPend({
       value: '',
       label: '',

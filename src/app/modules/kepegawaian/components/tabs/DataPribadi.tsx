@@ -197,8 +197,22 @@ export function DataPribadi() {
       >
         <div className='card mb-5 mb-xl-10'>
           <div className='card-header cursor-pointer'>
-            <div className='card-title m-0'>
-              <h3 className='fw-bold m-0'>Data Pribadi</h3>
+            <div className='card-title m-0 w-100'>
+              <div className='row w-100'>
+                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                  <h3 className='fw-bold mt-5'>Data Pribadi</h3>
+                </div>
+                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
+                  <Link
+                    className='text-reset text-decoration-none m-0'
+                    to={`/kepegawaian/informasi-data-pegawai/ubah-data-pribadi/${id}/${status}`}
+                  >
+                    <button className='float-none btn btn-light-primary align-self-center'>
+                      Ubah
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
           <div className='card-body p-9'>
