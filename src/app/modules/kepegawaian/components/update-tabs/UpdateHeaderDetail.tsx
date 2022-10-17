@@ -144,7 +144,7 @@ const UpdateHeaderDetail = () => {
                           </div>
                         </div>
 
-                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
+                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Terakhir</div>
                       </div>
                     </div>
                   </div>
