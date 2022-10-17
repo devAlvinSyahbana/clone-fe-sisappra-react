@@ -10,6 +10,7 @@ import moment from 'moment'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
+export const MASTER_URL = `${API_URL}/master`
 
 export function DataKepegawaian() {
   const {id, status} = useParams()
@@ -19,9 +20,99 @@ export function DataKepegawaian() {
     const fetchData = async () => {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
       setData((prevstate) => ({...prevstate, ...response.data.data}))
+      getPangkat(response.data.data.kepegawaian_pangkat)
+      getGolongan(response.data.data.kepegawaian_golongan)
+      getPendidikan(response.data.data.kepegawaian_pendidikan_pada_sk)
+      getJabatan(response.data.data.kepegawaian_jabatan)
+      getEselon(response.data.data.kepegawaian_eselon)
     }
     fetchData()
   }, [setData, id, status])
+
+  const [valMasterPangkat, setValMasterPangkat] = useState({value: '', label: ''})
+  const getPangkat = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/pangkat/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValMasterPangkat((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.pangkat,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valMasterGolongan, setValMasterGolongan] = useState({value: '', label: ''})
+  const getGolongan = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/golongan/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValMasterGolongan((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.golongan,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valMasterPendidikan, setValMasterPendidikan] = useState({value: '', label: ''})
+  const getPendidikan = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/pendidikan/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValMasterPendidikan((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.pendidikan,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valMasterJabatan, setValMasterJabatan] = useState({value: '', label: ''})
+  const getJabatan = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/jabatan/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValMasterJabatan((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.jabatan,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valMasterEselon, setValMasterEselon] = useState({value: '', label: ''})
+  const getEselon = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/eselon/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValMasterEselon((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.eselon,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
 
   return (
     <div>
@@ -31,6 +122,13 @@ export function DataKepegawaian() {
       <Formik
         initialValues={{
           ...data,
+          kepegawaian_pangkat: valMasterPangkat.label ? valMasterPangkat.label : '',
+          kepegawaian_golongan: valMasterGolongan.label ? valMasterGolongan.label : '',
+          kepegawaian_pendidikan_pada_sk: valMasterPendidikan.label
+            ? valMasterPendidikan.label
+            : '',
+          kepegawaian_jabatan: valMasterJabatan.label ? valMasterJabatan.label : '',
+          kepegawaian_eselon: valMasterEselon.label ? valMasterEselon.label : '',
           kepegawaian_tmtpangkat: moment(data?.kepegawaian_tmtpangkat).format('D MMMM YYYY'),
           kepegawaian_tmt_cpns: moment(data?.kepegawaian_tmt_cpns).format('D MMMM YYYY'),
           kepegawaian_tmt_pns: moment(data?.kepegawaian_tmt_pns).format('D MMMM YYYY'),
@@ -46,6 +144,9 @@ export function DataKepegawaian() {
           ).format('D MMMM YYYY'),
           kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: moment(
             data?.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat
+          ).format('D MMMM YYYY'),
+          kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat: moment(
+            data?.kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat
           ).format('D MMMM YYYY'),
         }}
         onSubmit={function (
@@ -66,8 +167,8 @@ export function DataKepegawaian() {
             </div>
           </div>
           <div className='card-body p-9'>
-            <div className='row g-8 mt-2 ms-5 me-5'>
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+            <div className='row'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   NRK
                 </label>
@@ -79,7 +180,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   NIP
                 </label>
@@ -91,7 +192,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Pangkat
                 </label>
@@ -99,11 +200,11 @@ export function DataKepegawaian() {
                   disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_pangkat_name'
+                  name='kepegawaian_pangkat'
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Golongan
                 </label>
@@ -111,11 +212,11 @@ export function DataKepegawaian() {
                   disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_golongan_name'
+                  name='kepegawaian_golongan'
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   TMT Pangkat
                 </label>
@@ -127,7 +228,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Pendidikan Pada SK
                 </label>
@@ -135,11 +236,11 @@ export function DataKepegawaian() {
                   disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_pendidikan_pada_sk_name'
+                  name='kepegawaian_pendidikan_pada_sk'
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Jabatan
                 </label>
@@ -147,11 +248,11 @@ export function DataKepegawaian() {
                   disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_jabatan_name'
+                  name='kepegawaian_jabatan'
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Eselon
                 </label>
@@ -159,11 +260,11 @@ export function DataKepegawaian() {
                   disabled
                   type='text'
                   className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_eselon_name'
+                  name='kepegawaian_eselon'
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Tempat Tugas
                 </label>
@@ -175,7 +276,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Subag/Seksi/Kecamatan
                 </label>
@@ -187,7 +288,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4'>
+              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Status Pegawai
                 </label>
@@ -199,7 +300,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4'>
+              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor Rekening
                 </label>
@@ -211,7 +312,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4'>
+              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor KARPEG
                 </label>
@@ -223,7 +324,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4'>
+              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor Karis/Karsu
                 </label>
@@ -235,7 +336,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4'>
+              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor TASPEN
                 </label>
@@ -247,7 +348,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4'>
+              <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor NPWP
                 </label>
@@ -259,7 +360,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-12 col-lg-12 col-xxl-12'>
+              <div className='col-sm-12 col-md-12 col-lg-12 col-xxl-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor BPJS/ASKES
                 </label>
@@ -275,7 +376,7 @@ export function DataKepegawaian() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   TMT CPNS
                 </label>
@@ -330,7 +431,7 @@ export function DataKepegawaian() {
                 </div>
               </div>
 
-              <div className='col-sm-12 col-md-3 col-lg-3 col-xxl-3'>
+              <div className='col-sm-12 col-md-3 col-lg-3 col-xxl-3 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   TMT PNS
                 </label>
@@ -342,7 +443,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-3 col-lg-3 col-xxl-3'>
+              <div className='col-sm-12 col-md-3 col-lg-3 col-xxl-3 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Tanggal SK PNS
                 </label>
@@ -397,7 +498,7 @@ export function DataKepegawaian() {
                 </div>
               </div>
 
-              <div className='col-sm-12 col-md-3 col-lg-3 col-xxl-3'>
+              <div className='col-sm-12 col-md-3 col-lg-3 col-xxl-3 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor SK Pangkat Terakhir
                 </label>
@@ -409,7 +510,7 @@ export function DataKepegawaian() {
                 />
               </div>
 
-              <div className='col-sm-12 col-md-3 col-lg-3 col-xxl-3'>
+              <div className='col-sm-12 col-md-3 col-lg-3 col-xxl-3 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Tanggal SK Pangkat
                 </label>
@@ -468,40 +569,37 @@ export function DataKepegawaian() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
+              <div className='col-12 mb-4'>
+                <label htmlFor='' className='mb-3 fs-2'>
                   Diklat Pol PP Dasar
                 </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_dasar'
-                />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
-                  Nomor Sertifikat
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_dasar_no_sertifikat'
-                />
-              </div>
-
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
-                  Tanggal Sertifikat
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat'
-                />
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                <div className='row'>
+                  <div className='col-12 mb-4'>
+                    <label htmlFor='' className='mb-3'>
+                      Nomor Sertifikat
+                    </label>
+                    <Field
+                      disabled
+                      type='text'
+                      className='form-control form-control form-control-solid mb-4'
+                      name='kepegawaian_diklat_pol_pp_dasar_no_sertifikat'
+                    />
+                  </div>
+                  <div className='col-12 mb-4'>
+                    <label htmlFor='' className='mb-3'>
+                      Tanggal Sertifikat
+                    </label>
+                    <Field
+                      disabled
+                      type='text'
+                      className='form-control form-control form-control-solid mb-4'
+                      name='kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat'
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
@@ -552,40 +650,37 @@ export function DataKepegawaian() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
+              <div className='col-12 mb-4'>
+                <label htmlFor='' className='mb-3 fs-2'>
                   Diklat Struktural
                 </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_strutural'
-                />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
-                  Nomor Sertifikat
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_strutural_no_sertifikat'
-                />
-              </div>
-
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
-                  Tanggal Sertifikat
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat'
-                />
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                <div className='row'>
+                  <div className='col-12 mb-4'>
+                    <label htmlFor='' className='mb-3'>
+                      Nomor Sertifikat
+                    </label>
+                    <Field
+                      disabled
+                      type='text'
+                      className='form-control form-control form-control-solid mb-4'
+                      name='kepegawaian_diklat_pol_pp_strutural_no_sertifikat'
+                    />
+                  </div>
+                  <div className='col-12 mb-4'>
+                    <label htmlFor='' className='mb-3'>
+                      Tanggal Sertifikat
+                    </label>
+                    <Field
+                      disabled
+                      type='text'
+                      className='form-control form-control form-control-solid mb-4'
+                      name='kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat'
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
@@ -595,7 +690,9 @@ export function DataKepegawaian() {
                     data.kepegawaian_diklat_pol_pp_strutural_file_sertifikat !== '' ? (
                       <>
                         <a
-                          href='/#'
+                          href={`${API_URL}/${data.kepegawaian_diklat_pol_pp_strutural_file_sertifikat}`}
+                          target='_blank'
+                          rel='noreferrer'
                           className='text-gray-800 text-hover-primary d-flex flex-column'
                         >
                           <div className='symbol symbol-75px mb-5'>
@@ -636,40 +733,37 @@ export function DataKepegawaian() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
+              <div className='col-12 mb-4'>
+                <label htmlFor='' className='mb-3 fs-2'>
                   Diklat PPNS
                 </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_ppns'
-                />
               </div>
 
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
-                  Nomor Sertifikat
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_ppns_no_sertifikat'
-                />
-              </div>
-
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6'>
-                <label htmlFor='' className='mb-3'>
-                  Tanggal Sertifikat
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat'
-                />
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                <div className='row'>
+                  <div className='col-12 mb-4'>
+                    <label htmlFor='' className='mb-3'>
+                      Nomor Sertifikat
+                    </label>
+                    <Field
+                      disabled
+                      type='text'
+                      className='form-control form-control form-control-solid mb-4'
+                      name='kepegawaian_diklat_pol_pp_ppns_no_sertifikat'
+                    />
+                  </div>
+                  <div className='col-12 mb-4'>
+                    <label htmlFor='' className='mb-3'>
+                      Tanggal Sertifikat
+                    </label>
+                    <Field
+                      disabled
+                      type='text'
+                      className='form-control form-control form-control-solid mb-4'
+                      name='kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat'
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
@@ -679,7 +773,92 @@ export function DataKepegawaian() {
                     data.kepegawaian_diklat_pol_pp_ppns_file_sertifikat !== '' ? (
                       <>
                         <a
-                          href='/#'
+                          href={`${API_URL}/${data.kepegawaian_diklat_pol_pp_ppns_file_sertifikat}`}
+                          target='_blank'
+                          rel='noreferrer'
+                          className='text-gray-800 text-hover-primary d-flex flex-column'
+                        >
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/svg/files/pdf-dark.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>Sertifikat</div>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <div className='text-gray-800 text-hover-primary d-flex flex-column'>
+                          <div className='symbol symbol-75px mb-5'>
+                            <KTSVG
+                              className='theme-light-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                            <KTSVG
+                              className='theme-dark-show svg-icon svg-icon-5x me-1'
+                              path='/media/icons/duotune/files/fil007.svg'
+                            />
+                          </div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className='col-12'>
+                <div className='separator border-3 my-10'></div>
+              </div>
+
+              <div className='col-12 mb-4'>
+                <label htmlFor='' className='mb-3 fs-2'>
+                  Diklat Fungsional Pol PP
+                </label>
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                <div className='row'>
+                  <div className='col-12 mb-4'>
+                    <label htmlFor='' className='mb-3'>
+                      Nomor Sertifikat
+                    </label>
+                    <Field
+                      disabled
+                      type='text'
+                      className='form-control form-control form-control-solid mb-4'
+                      name='kepegawaian_diklat_fungsional_pol_pp_no_sertifikat'
+                    />
+                  </div>
+                  <div className='col-12 mb-4'>
+                    <label htmlFor='' className='mb-3'>
+                      Tanggal Sertifikat
+                    </label>
+                    <Field
+                      disabled
+                      type='text'
+                      className='form-control form-control form-control-solid mb-4'
+                      name='kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat'
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-5'>
+                <div className='card h-100 mt-3'>
+                  <div className='card-body d-flex justify-content-center text-center flex-column p-4 border-gray-300 border-dotted'>
+                    {data.kepegawaian_diklat_fungsional_pol_pp_file_sertifikat &&
+                    data.kepegawaian_diklat_fungsional_pol_pp_file_sertifikat !== '' ? (
+                      <>
+                        <a
+                          href={`${API_URL}/${data.kepegawaian_diklat_fungsional_pol_pp_file_sertifikat}`}
+                          target='_blank'
+                          rel='noreferrer'
                           className='text-gray-800 text-hover-primary d-flex flex-column'
                         >
                           <div className='symbol symbol-75px mb-5'>
