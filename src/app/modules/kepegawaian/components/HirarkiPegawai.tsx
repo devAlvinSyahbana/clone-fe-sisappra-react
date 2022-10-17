@@ -16,9 +16,133 @@ import { SelectOptionAutoCom } from './KepegawaianInterface'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import AsyncSelect from 'react-select/async';
+import { Tree, TreeNode } from 'react-organizational-chart';
+import styled from 'styled-components';
+import OrganizationChart from "@dabeng/react-orgchart";
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const ATASAN_URL = `${API_URL}/kepegawaian`
+// Chart
+// import "./chart.css";
+// import ReactDOM from "react-dom";
+// import { Component } from "react";
+// import $ from "jquery";
+// const orgchart = require("orgchart");
+
+// class OrgChart extends React.Component {
+//   $el: JQuery<any>;
+//   componentDidMount() {
+//     this.$el = $(this.el);
+//     let datascource = {
+//       name: "Lao Lao",
+//       title: "general manager",
+//       tester: "test",
+//       children: [
+//         {
+//           name: "Bo Miao",
+//           title: "department manager",
+//           className: "middle-level",
+//           children: [
+//             {
+//               name: "Li Jing",
+//               title: "senior engineer",
+//               className: "product-dept"
+//             },
+//             {
+//               name: "Li Xin",
+//               title: "senior engineer",
+//               className: "product-dept",
+//               children: [
+//                 { name: "To To", title: "engineer", className: "pipeline1" },
+//                 { name: "Fei Fei", title: "engineer", className: "pipeline1" },
+//                 { name: "Xuan Xuan", title: "engineer", className: "pipeline1" }
+//               ]
+//             }
+//           ]
+//         },
+//         {
+//           name: "Su Miao",
+//           title: "department manager",
+//           className: "middle-level",
+//           children: [
+//             {
+//               name: "Pang Pang",
+//               title: "senior engineer",
+//               className: "rd-dept"
+//             },
+//             {
+//               name: "Hei Hei",
+//               title: "senior engineer",
+//               className: "rd-dept",
+//               children: [
+//                 {
+//                   name: "Xiang Xiang",
+//                   title: "UE engineer",
+//                   className: "frontend1"
+//                 },
+//                 {
+//                   name: "Dan Dan",
+//                   title: "engineer",
+//                   className: "frontend1",
+//                   children: [
+//                     {
+//                       name: "Xiang Xiang",
+//                       title: "UE engineer",
+//                       className: "frontend1"
+//                     },
+//                     {
+//                       name: "Dan Dan",
+//                       title: "engineer",
+//                       className: "frontend1"
+//                     },
+//                     {
+//                       name: "Zai Zai",
+//                       title: "engineer",
+//                       className: "frontend1"
+//                     }
+//                   ]
+//                 },
+//                 { name: "Zai Zai", title: "engineer", className: "frontend1" }
+//               ]
+//             }
+//           ]
+//         }
+//       ]
+//     };
+//     var nodeTemplate = function (data) {
+//       return `
+//         <div class="tester">${data.className}</div>
+//         <div class="title">${data.name}</div>
+//         <div class="content">${data.title}</div>
+//       `;
+//     };
+
+//     function checkMan(node, data) {
+//       console.log(node, data);
+//     }
+
+//     this.$el.orgchart({
+//       data: datascource,
+//       nodeContent: "title",
+//       //nodeTemplate: nodeTemplate,
+//       pan: true,
+//       zoom: true,
+//       toggleSiblingsResp: true,
+//       createNode: function (node, data) {
+//         checkMan(node, data);
+//       }
+//       //direction: "l2r"
+//     });
+//   }
+
+//   componentWillUnmount() {
+//     this.$el.empty();
+//   }
+
+//   render() {
+//     return <div id="chart-container" ref={el => (this.el = el)} />;
+//   }
+// }
 
 export function HirarkiPegawai() {
 
@@ -68,6 +192,132 @@ export function HirarkiPegawai() {
   }) => {
     setValStatPegawai({ val: event.target.value })
   }
+
+  // Struktural Organisasi
+  const StyledNode = styled.div`
+    padding: 5px;
+    border-radius: 2px;
+    display: inline-block;
+    border: 1px solid black;
+  `;
+
+  // Org Chart
+  const ds = {
+    id: "level1",
+    name: "Lao Lao",
+    title: "KEPALA SATPOL PP",
+    children: [
+      {
+        id: "sublevel1",
+        name: "Bo Miao",
+        title: "WAKIL KEPALA SATPOL PP",
+        children: [
+          {
+            id: "sublevel1.2.1",
+            name: "Su Miao",
+            title: "SEKRETARIAT",
+            children: [
+              { id: "sublevel1.2.1.1", name: "Tie Hua", title: "SUBBAGIAN UMUM" },
+              { id: "sublevel1.2.1.2", name: "Hei Hei", title: "SUBBAGIAN KEPEGAWAIAN" },
+              { id: "sublevel1.2.1.3", name: "Pang Pang", title: "SUBBAGIAN PROGRAM DAN KEUANGAN" },
+              { id: "sublevel1.2.1.4", name: "Pang Pang", title: "SUBBAGIAN PERALATAN DAN PERLENGKAPAN" }
+            ]
+          },
+          {
+            id: "sublevel1.2.2",
+            name: "Su Miao",
+            title: "BIDANG KETENTRAMAN DAN KETERTIBAN UMUM",
+            children: [
+              { id: "sublevel1.2.2.1", name: "Tie Hua", title: "SEKSI PENGADUAN DAN SENGKETA" },
+              { id: "sublevel1.2.2.2", name: "Hei Hei", title: "SEKSI KETERTIBAN SARANA DAN PRASARANA KOTA" },
+              { id: "sublevel1.2.2.3", name: "Pang Pang", title: "SEKSI DATA DAN INFORMASI" }
+            ]
+          },
+          {
+            id: "sublevel1.2.3",
+            name: "Su Miao",
+            title: "BIDANG PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA, HIBURAN DAN REKREASI",
+            children: [
+              { id: "sublevel1.2.3.1", name: "Tie Hua", title: "SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA INDUSTRI" },
+              { id: "sublevel1.2.3.2", name: "Hei Hei", title: "SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA NON INDUSTRI" },
+              { id: "sublevel1.2.3.3", name: "Pang Pang", title: "SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA HIBURAN DAN REKREASI" }
+            ]
+          },
+          {
+            id: "sublevel1.2.4",
+            name: "Su Miao",
+            title: "BIDANG PERLINDUNGAN MASYARAKAT",
+            children: [
+              { id: "sublevel1.2.4.1", name: "Tie Hua", title: "SEKSI PENGARAHAN DAN PENGENDALIAN" },
+              { id: "sublevel1.2.4.2", name: "Hei Hei", title: "SEKSI PROTOKOL DAN PENGENDALIAN" },
+              { id: "sublevel1.2.4.3", name: "Pang Pang", title: "SEKSI BIMBINGAN DAN PENYULUHAN" }
+            ]
+          },
+          {
+            id: "sublevel1.2.5",
+            name: "Su Miao",
+            title: "BIDANG PENEGAKAN DAN PENINDAKAN",
+            children: [
+              { id: "sublevel1.2.5.1", name: "Tie Hua", title: "SEKSI PEMANTAUAN" },
+              { id: "sublevel1.2.5.2", name: "Hei Hei", title: "SEKSI OPERASI" },
+              { id: "sublevel1.2.5.3", name: "Pang Pang", title: "SEKSI ANALISA DAN EVALUASI" }
+            ]
+          },
+          {
+            id: "sublevel1.2.6",
+            name: "Su Miao",
+            title: "BIDANG PPNS",
+            children: [
+              { id: "sublevel1.2.6.1", name: "Tie Hua", title: "SEKSI PEMBINAAN" },
+              { id: "sublevel1.2.6.2", name: "Hei Hei", title: "SEKSI PENYELIDIKAN" },
+              { id: "sublevel1.2.6.3", name: "Pang Pang", title: "SEKSI HUBUNGAN ANTAR LEMBAGA" }
+            ]
+          },
+          {
+            id: "sublevel1.2.7",
+            name: "Su Miao",
+            title: "SATPOL PP KOTA",
+            children: [
+              { id: "sublevel1.2.7.1", name: "Tie Hua", title: "SUBBAGIAN TATA USAHA" },
+              { id: "sublevel1.2.7.2", name: "Hei Hei", title: "SEKSI KETENTRAMAN" },
+              { id: "sublevel1.2.7.3", name: "Pang Pang", title: "SEKSI PERLINDUNGAN MASYARAKAT" },
+              { id: "sublevel1.2.7.4", name: "Pang Pang", title: "SEKSI PPNS DAN PENINDAKAN" },
+              {
+                id: "sublevel1.2.7.5", name: "Pang Pang", title: "SATPOL PP KECAMATAN",
+                children: [
+                  { id: "sublevel1.2.7.5.1", name: "Pang Pang", title: "SATPOL PP KELURAHAN" }
+                ]
+              },
+              { id: "sublevel1.2.7.6", name: "Pang Pang", title: "SUB KELOMPOK JABATAN FUNGSIONAL" }
+            ]
+          },
+          {
+            id: "sublevel1.2.8",
+            name: "Su Miao",
+            title: "SATPOL PP KABUPATEN",
+            children: [
+              { id: "sublevel1.2.8.1", name: "Tie Hua", title: "SUBBAGIAN TATA USAHA" },
+              { id: "sublevel1.2.8.2", name: "Hei Hei", title: "SEKSI KETENTRAMAN" },
+              { id: "sublevel1.2.8.3", name: "Pang Pang", title: "SEKSI PERLINDUNGAN MASYARAKAT" },
+              { id: "sublevel1.2.8.4", name: "Pang Pang", title: "SEKSI PPNS DAN PENINDAKAN" },
+              {
+                id: "sublevel1.2.8.5", name: "Pang Pang", title: "SATPOL PP KECAMATAN",
+                children: [
+                  { id: "sublevel1.2.8.5.1", name: "Pang Pang", title: "SATPOL PP KELURAHAN" }
+                ]
+              },
+              { id: "sublevel1.2.8.6", name: "Pang Pang", title: "SUB KELOMPOK JABATAN FUNGSIONAL" }
+            ]
+          },
+          {
+            id: "sublevel1.2.9",
+            name: "Su Miao",
+            title: "KELOMPOK JABATAN FUNGSIONAL",
+          },
+        ]
+      },
+    ]
+  };
 
   return (
     <>
@@ -290,7 +540,7 @@ export function HirarkiPegawai() {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <KTCardBody className='py-4'>
                 <div className='table-responsive'>
                   <table
@@ -326,7 +576,13 @@ export function HirarkiPegawai() {
                 <UsersListPagination />
                 {isLoading && <UsersListLoading />}
               </KTCardBody>
+            </div> */}
+
+            {/* START :: Coba org-chart */}
+            <div>
+              <OrganizationChart datasource={ds} pan={true} zoom={true} />
             </div>
+            {/* END :: Coba org-chart */}
           </div>
         </div>
         {/* end::Body */}
