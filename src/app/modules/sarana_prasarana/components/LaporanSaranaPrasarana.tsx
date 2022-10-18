@@ -193,6 +193,21 @@ export function LaporanSaranaPrasarana() {
     )
   }
 
+  const NoDataComponent = (props: any) => {
+    return (
+      <>
+        <div className='alert d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10'>
+          <span className='svg-icon svg-icon-5tx mb-5'>
+            <KTSVG path='/media/icons/duotune/files/fil024.svg' className='svg-icon-2' />
+          </span>
+          <div className='text-center'>
+            <h5 className='fw-bolder fs-3 mb-5'>Data tidak ditemukan . . .</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   const konfirDel = (id: number) => {
     Swal.fire({
       text: 'Anda yakin ingin menghapus data ini',
@@ -477,7 +492,7 @@ export function LaporanSaranaPrasarana() {
       <div className={`card`}>
         {/* begin::Body */}
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6'>
+          <div className='col-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
                 Jenis Sarana & Prasarana
@@ -495,9 +510,7 @@ export function LaporanSaranaPrasarana() {
               />
             </div>
           </div>
-        </div>
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6'>
+          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
                 Status Sarana & Prasarana
@@ -515,9 +528,7 @@ export function LaporanSaranaPrasarana() {
               />
             </div>
           </div>
-        </div>
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6'>
+          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
                 Kondisi
@@ -620,13 +631,7 @@ export function LaporanSaranaPrasarana() {
             onChangePage={handlePageChange}
             customStyles={customStyles}
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-            noDataComponent={
-              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-                <div className='d-flex flex-column'>
-                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
-                </div>
-              </div>
-            }
+            noDataComponent={<NoDataComponent />}
           />
         </div>
         {/* end::Body */}
