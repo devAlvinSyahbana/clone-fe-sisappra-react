@@ -148,6 +148,9 @@ const UpdateHeaderDetail = () => {
     setSelectedFile({croppedImage: null})
     setImgSrc('')
     setCrop(undefined)
+    setRotate(0)
+    setScale(1)
+    setAspect(undefined)
   }
 
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
