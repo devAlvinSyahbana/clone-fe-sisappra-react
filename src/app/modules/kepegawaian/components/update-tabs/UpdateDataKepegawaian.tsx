@@ -399,12 +399,9 @@ export function UpdateDataKepegawaian() {
                   'YYYY-MM-D'
                 )
               : '',
-          kepegawaian_tmt_pns:
-            data?.kepegawaian_tmt_pns
-              ? moment(data?.kepegawaian_tmt_pns).format(
-                  'YYYY-MM-D'
-                )
-              : '',
+          kepegawaian_tmt_pns: data?.kepegawaian_tmt_pns
+            ? moment(data?.kepegawaian_tmt_pns).format('YYYY-MM-D')
+            : '',
         }}
         validationSchema={validatorForm}
         onSubmit={function (
@@ -775,6 +772,65 @@ export function UpdateDataKepegawaian() {
 
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <label htmlFor='' className='mb-3 required'>
+                      Tempat Tugas Bidang/Wilayah
+                    </label>
+                    <Field
+                      type='text'
+                      name='kepegawaian_tempat_tugas'
+                      className={clsx(
+                        'form-control form-control-solid mb-1',
+                        {
+                          'is-invalid':
+                            touched.kepegawaian_tempat_tugas && errors.kepegawaian_tempat_tugas,
+                        },
+                        {
+                          'is-valid':
+                            touched.kepegawaian_tempat_tugas && !errors.kepegawaian_tempat_tugas,
+                        }
+                      )}
+                    />
+                    {touched.kepegawaian_tempat_tugas && errors.kepegawaian_tempat_tugas && (
+                      <div className='fv-plugins-message-container'>
+                        <div className='fv-help-block'>
+                          <span role='alert'>{errors.kepegawaian_tempat_tugas}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                    <label htmlFor='' className='mb-3 required'>
+                      Subag/Seksi/Kecamatan
+                    </label>
+                    <Field
+                      type='text'
+                      className={clsx(
+                        'form-control form-control-solid mb-1',
+                        {
+                          'is-invalid':
+                            touched.kepegawaian_subbag_seksi_kecamatan &&
+                            errors.kepegawaian_subbag_seksi_kecamatan,
+                        },
+                        {
+                          'is-valid':
+                            touched.kepegawaian_subbag_seksi_kecamatan &&
+                            !errors.kepegawaian_subbag_seksi_kecamatan,
+                        }
+                      )}
+                      name='kepegawaian_subbag_seksi_kecamatan'
+                    />
+                    {touched.kepegawaian_subbag_seksi_kecamatan &&
+                      errors.kepegawaian_subbag_seksi_kecamatan && (
+                        <div className='fv-plugins-message-container'>
+                          <div className='fv-help-block'>
+                            <span role='alert'>{errors.kepegawaian_subbag_seksi_kecamatan}</span>
+                          </div>
+                        </div>
+                      )}
+                  </div>
+
+                  <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                    <label htmlFor='' className='mb-3 required'>
                       Jabatan
                     </label>
                     <AsyncSelect
@@ -843,65 +899,6 @@ export function UpdateDataKepegawaian() {
                         </div>
                       </div>
                     )}
-                  </div>
-
-                  <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
-                    <label htmlFor='' className='mb-3 required'>
-                      Tempat Tugas
-                    </label>
-                    <Field
-                      type='text'
-                      name='kepegawaian_tempat_tugas'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid':
-                            touched.kepegawaian_tempat_tugas && errors.kepegawaian_tempat_tugas,
-                        },
-                        {
-                          'is-valid':
-                            touched.kepegawaian_tempat_tugas && !errors.kepegawaian_tempat_tugas,
-                        }
-                      )}
-                    />
-                    {touched.kepegawaian_tempat_tugas && errors.kepegawaian_tempat_tugas && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{errors.kepegawaian_tempat_tugas}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
-                    <label htmlFor='' className='mb-3 required'>
-                      Subag/Seksi/Kecamatan
-                    </label>
-                    <Field
-                      type='text'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            errors.kepegawaian_subbag_seksi_kecamatan,
-                        },
-                        {
-                          'is-valid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            !errors.kepegawaian_subbag_seksi_kecamatan,
-                        }
-                      )}
-                      name='kepegawaian_subbag_seksi_kecamatan'
-                    />
-                    {touched.kepegawaian_subbag_seksi_kecamatan &&
-                      errors.kepegawaian_subbag_seksi_kecamatan && (
-                        <div className='fv-plugins-message-container'>
-                          <div className='fv-help-block'>
-                            <span role='alert'>{errors.kepegawaian_subbag_seksi_kecamatan}</span>
-                          </div>
-                        </div>
-                      )}
                   </div>
 
                   <div className='col-sm-12 col-md-4 col-lg-4 col-xxl-4 mb-4'>
@@ -1819,11 +1816,11 @@ export function UpdateDataKepegawaian() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className='col-12 mb-4'>
                     <div className='separator border-3 my-10'></div>
                   </div>
-                  
+
                   <div className='col-12 mb-4'>
                     <label htmlFor='' className='mb-3 fs-2'>
                       Diklat Fungsional Pol PP
