@@ -58,7 +58,7 @@ const HeaderDetailWrapper = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  {data?.foto !== '' ? (
+                  {data && data?.foto !== '' ? (
                     <div className='symbol-label'>
                       <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
                     </div>
