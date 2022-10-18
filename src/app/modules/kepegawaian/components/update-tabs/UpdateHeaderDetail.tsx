@@ -250,7 +250,7 @@ const UpdateHeaderDetail = () => {
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
                   <div className='overlay-wrapper'>
-                    {data?.foto !== '' ? (
+                    {data && data?.foto !== '' ? (
                       <div className='symbol-label'>
                         <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
                       </div>
@@ -315,6 +315,7 @@ const UpdateHeaderDetail = () => {
                           </div>
                           {!!imgSrc && (
                             <>
+                              <div className='separator border-3 my-10'></div>
                               <h5 className='mt-6 fs-5'>Cropping Foto</h5>
                               <ReactCrop
                                 crop={crop}
