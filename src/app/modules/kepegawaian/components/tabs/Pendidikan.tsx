@@ -6,6 +6,7 @@ import axios from 'axios'
 import moment from 'moment'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {KTSVG} from '../../../../../_metronic/helpers'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
@@ -44,6 +45,7 @@ export function Pendidikan() {
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
   const columns = [
     {
       name: 'Jenis Pendidikan',
@@ -70,7 +72,7 @@ export function Pendidikan() {
       sortable: true,
       minWidth: '150px',
       cell: (record: any) => {
-        return `${moment(record.tgl_ijazah).format('D MMMM YYYY')}`
+        return `${record.tgl_ijazah ? moment(record.tgl_ijazah).format('D MMMM YYYY') : ''}`
       },
     },
     {
@@ -103,8 +105,10 @@ export function Pendidikan() {
 
   useEffect(() => {
     async function fetchDT() {
+      setLoading(true)
       const response = await axios.get(`${KEPEGAWAIAN_URL}/find-data-pendidikan/${id}/${status}`)
       setData(response.data.data)
+      setLoading(false)
     }
     fetchDT()
   }, [id, status])
@@ -123,6 +127,34 @@ export function Pendidikan() {
     return <>{valData}</>
   }
 
+  const LoadingAnimation = (props: any) => {
+    return (
+      <>
+        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+          <div className='d-flex flex-column'>
+            <h5 className='mb-1'>Sedang mengambil data...</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  const NoDataComponent = (props: any) => {
+    return (
+      <>
+        <div className='alert d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10'>
+          <span className='svg-icon svg-icon-5tx mb-5'>
+            <KTSVG path='/media/icons/duotune/files/fil024.svg' className='svg-icon-2' />
+          </span>
+          <div className='text-center'>
+            <h5 className='fw-bolder fs-3 mb-5'>Data tidak ditemukan . . .</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   return (
     <div>
       {/* Header */}
@@ -130,22 +162,16 @@ export function Pendidikan() {
       {/* Second Card */}
       <div className='card mb-5 mb-xl-10'>
         <div className='card-header cursor-pointer'>
-          <div className='card-title m-0 w-100'>
-            <div className='row w-100'>
-              <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                <h3 className='fw-bold mt-5'>Pendidikan</h3>
-              </div>
-              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
-                <Link
-                  className='text-reset text-decoration-none m-0'
-                  to={`/kepegawaian/informasi-data-pegawai/ubah-data-pendidikan/${id}/${status}`}
-                >
-                  <button className='float-none btn btn-light-primary align-self-center'>
-                    Ubah
-                  </button>
-                </Link>
-              </div>
-            </div>
+          <div className='card-title m-0'>
+            <h3 className='fw-bold'>Pendidikan</h3>
+          </div>
+          <div className='card-toolbar'>
+            <Link
+              className='text-reset text-decoration-none m-0'
+              to={`/kepegawaian/informasi-data-pegawai/ubah-data-pendidikan/${id}/${status}`}
+            >
+              <button className='float-none btn btn-light-primary align-self-center'>Ubah</button>
+            </Link>
           </div>
         </div>
         <div className='card-body p-9'>
@@ -154,13 +180,9 @@ export function Pendidikan() {
             data={data}
             pagination
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-            noDataComponent={
-              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-                <div className='d-flex flex-column'>
-                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
-                </div>
-              </div>
-            }
+            progressPending={loading}
+            progressComponent={<LoadingAnimation />}
+            noDataComponent={<NoDataComponent />}
           />
           <div className='p-0 mt-6'>
             <div className='text-center'>
