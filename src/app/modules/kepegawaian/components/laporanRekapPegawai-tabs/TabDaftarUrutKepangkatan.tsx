@@ -1,18 +1,16 @@
-import React, {useState, useEffect, Fragment} from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import Button from 'react-bootstrap/Button'
 import Swal from 'sweetalert2'
 import AsyncSelect from 'react-select/async'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
-import {useFormik} from 'formik'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
@@ -154,6 +152,7 @@ export function TabDaftarUrutKepangkatan() {
   const [valStatPegawai, setValStatPegawai] = useState({val: ''})
   const [valFilterNama, setFilterNama] = useState({val: ''})
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
+  const [valFilterNIP, setFilterNIP] = useState({val: ''})
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
@@ -177,7 +176,7 @@ export function TabDaftarUrutKepangkatan() {
     )
   }
 
-  const konfirDel = (id: number) => {
+  const konfirDel = (id: number, status_pegawai: string) => {
     Swal.fire({
       text: 'Anda yakin ingin menghapus data ini',
       icon: 'warning',
@@ -189,7 +188,13 @@ export function TabDaftarUrutKepangkatan() {
       color: '#000000',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await axios.delete(`${DELETE_DUK_URL}/delete/${id}${qParamFind.strparam}`)
+        const bodyParam = {
+          data: {
+            status_pegawai: status_pegawai,
+            deleted_by: 0,
+          },
+        }
+        const response = await axios.delete(`${DELETE_DUK_URL}/delete/${id}`, bodyParam)
         if (response) {
           fetchData(1)
           Swal.fire({
@@ -330,14 +335,17 @@ export function TabDaftarUrutKepangkatan() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/tab-daftar-urut-kepangkatan/data-pribadi-duk/${record?.id}/${record?.status_pegawai}`,
+                          `/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-pribadi-duk/${record?.id}/${record?.status_pegawai}`,
                           {replace: true}
                         )
                       }
                     >
                       Detail
                     </Dropdown.Item>
-                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() => konfirDel(record.id, record.status_pegawai)}
+                    >
                       Hapus
                     </Dropdown.Item>
                   </DropdownType>
@@ -497,20 +505,23 @@ export function TabDaftarUrutKepangkatan() {
     if (valFilterNama.val !== '') {
       uriParam += `&nama=${valFilterNama.val}`
     }
+    if (valFilterNIP.val !== '') {
+      uriParam += `&nip=${valFilterNIP.val}`
+    }
     if (valFilterNRK.val !== '') {
-      uriParam += `&nrk_nptt_npjlp=${valFilterNRK.val}`
+      uriParam += `&nrk_nptt_pjlp=${valFilterNRK.val}`
     }
     if (valFilterNoPegawai.val !== '') {
-      uriParam += `&nrk_nptt_npjlp=${valFilterNoPegawai.val}`
+      uriParam += `&nrk_nptt_pjlp=${valFilterNoPegawai.val}`
     }
     if (inputValKota.value) {
-      uriParam += `&kota=${inputValKota.value}`
+      uriParam += `&tempat_tugas=${inputValKota.value}`
     }
     if (inputValKecamatan.value) {
-      uriParam += `&kecamatan=${inputValKecamatan.value}`
+      uriParam += `&seksi_kecamatan=${inputValKecamatan.value}`
     }
     if (inputValKelurahan.value) {
-      uriParam += `&Kelurahan=${inputValKelurahan.value}`
+      uriParam += `&kelurahan=${inputValKelurahan.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
@@ -520,6 +531,7 @@ export function TabDaftarUrutKepangkatan() {
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
+    setFilterNIP({val: ''})
     setFilterKota({label: '', value: null})
     setFilterKecamatan({label: '', value: null})
     setFilterKelurahan({label: '', value: null})
@@ -530,7 +542,10 @@ export function TabDaftarUrutKepangkatan() {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setValStatPegawai({val: event.target.value})
+    setValStatPegawai((prevValues: any) => ({
+      ...prevValues,
+      val: event.target.value,
+    }))
   }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
@@ -549,6 +564,12 @@ export function TabDaftarUrutKepangkatan() {
     target: {value: any; name: any}
   }) => {
     setFilterNoPegawai({val: event.target.value})
+  }
+  const handleChangeInputNIP = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterNIP({val: event.target.value})
   }
 
   const handleUnduh = async () => {
@@ -623,7 +644,7 @@ export function TabDaftarUrutKepangkatan() {
                               name='nama'
                               value={valFilterNama.val}
                               onChange={handleChangeInputNama}
-                              placeholder='Nama'
+                              placeholder='Masukkan nama'
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -638,8 +659,9 @@ export function TabDaftarUrutKepangkatan() {
                                 onChange={handleChangeStatPegawai}
                                 name='val'
                               >
-                                {arrStatPegawai.map((val: string) => {
-                                  return <option value={val}>{val}</option>
+                                <option value=''>Pilih</option>
+                                {arrStatPegawai.map((valueInput: string) => {
+                                  return <option value={valueInput}>{valueInput}</option>
                                 })}
                               </select>
                             </div>
@@ -655,36 +677,49 @@ export function TabDaftarUrutKepangkatan() {
                                 name='nrk_nptt_npjlp'
                                 value={valFilterNRK.val}
                                 onChange={handleChangeInputNRK}
-                                placeholder='NRK'
+                                placeholder='Masukkan NRK'
                               />
                             </div>
                           ) : null}
-                          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-                            <label htmlFor='' className='mb-3'>
-                              {valStatPegawai.val === 'PNS'
-                                ? 'NIP'
-                                : valStatPegawai.val === 'PTT'
-                                ? 'NPTT'
-                                : valStatPegawai.val === 'PJLP'
-                                ? 'NPJLP'
-                                : 'NIP'}
-                            </label>
-                            <input
-                              type='text'
-                              className='form-control form-control form-control-solid'
-                              value={valFilterNoPegawai.val}
-                              onChange={handleChangeInputNoPegawai}
-                              placeholder={
-                                valStatPegawai.val === 'PNS'
-                                  ? 'NIP'
-                                  : valStatPegawai.val === 'PTT'
+                          {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
+                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                              <label htmlFor='' className='mb-3'>
+                                NIP
+                              </label>
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                name='nip'
+                                value={valFilterNIP.val}
+                                onChange={handleChangeInputNIP}
+                                placeholder='Masukkan NIP'
+                              />
+                            </div>
+                          ) : null}
+                          {valStatPegawai.val !== 'PNS' && valStatPegawai.val !== '' ? (
+                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+                              <label htmlFor='' className='mb-3'>
+                                {valStatPegawai.val === 'PTT'
                                   ? 'NPTT'
                                   : valStatPegawai.val === 'PJLP'
                                   ? 'NPJLP'
-                                  : 'NIP'
-                              }
-                            />
-                          </div>
+                                  : ''}
+                              </label>
+                              <input
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                value={valFilterNoPegawai.val}
+                                onChange={handleChangeInputNoPegawai}
+                                placeholder={
+                                  valStatPegawai.val === 'PTT'
+                                    ? 'Masukkan NPTT'
+                                    : valStatPegawai.val === 'PJLP'
+                                    ? 'Masukkan NPJLP'
+                                    : ''
+                                }
+                              />
+                            </div>
+                          ) : null}
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <div className='form-group'>
                               <label htmlFor='' className='mb-3'>
@@ -692,19 +727,22 @@ export function TabDaftarUrutKepangkatan() {
                               </label>
                               <AsyncSelect
                                 cacheOptions
-                                loadOptions={loadOptionsKota}
-                                defaultOptions
                                 value={
                                   inputValKota.value
                                     ? inputValKota
-                                    : {value: '', label: 'Pilih Wilayah / Bidang'}
+                                    : {value: '', label: 'Pilih Kota'}
                                 }
+                                loadOptions={loadOptionsKota}
+                                defaultOptions
+                                onChange={handleChangeInputKota}
+                                placeholder={'Pilih'}
                                 styles={
                                   calculatedMode === 'dark'
                                     ? reactSelectDarkThem
                                     : reactSelectLightThem
                                 }
-                                onChange={handleChangeInputKota}
+                                loadingMessage={() => 'Sedang mencari pilihan...'}
+                                noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                               />
                             </div>
                           </div>
@@ -716,7 +754,6 @@ export function TabDaftarUrutKepangkatan() {
                               <AsyncSelect
                                 cacheOptions
                                 loadOptions={loadOptionsKecamatan}
-                                defaultOptions
                                 value={
                                   inputValKecamatan.value
                                     ? inputValKecamatan
@@ -739,7 +776,6 @@ export function TabDaftarUrutKepangkatan() {
                               <AsyncSelect
                                 cacheOptions
                                 loadOptions={loadOptionsKelurahan}
-                                defaultOptions
                                 value={
                                   inputValKelurahan.value
                                     ? inputValKelurahan

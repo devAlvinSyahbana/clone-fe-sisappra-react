@@ -1,7 +1,7 @@
 // import React from 'react'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import {Link, useParams} from 'react-router-dom'
-import {HeaderDetailWrapper} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetail'
 import axios from 'axios'
 import {Field, Formik, FormikHelpers} from 'formik'
 import {useState, useEffect} from 'react'
@@ -9,7 +9,7 @@ import {DetailPegawaiInterface} from '../KepegawaianInterface'
 import moment from 'moment'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
 
 export function DataKepegawaianDUK() {
   const {id, status} = useParams()
@@ -322,7 +322,7 @@ export function DataKepegawaianDUK() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -389,7 +389,7 @@ export function DataKepegawaianDUK() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -456,7 +456,7 @@ export function DataKepegawaianDUK() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -540,7 +540,7 @@ export function DataKepegawaianDUK() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -624,7 +624,7 @@ export function DataKepegawaianDUK() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -708,7 +708,7 @@ export function DataKepegawaianDUK() {
                               path='/media/icons/duotune/files/fil007.svg'
                             />
                           </div>
-                          <div className='fs-5 fw-bold mb-2'>Tidak ada sertifikat...</div>
+                          <div className='fs-5 fw-bold mb-2'>File tidak ditemukan...</div>
                         </div>
                       </>
                     )}
@@ -722,27 +722,25 @@ export function DataKepegawaianDUK() {
                     className='text-reset text-decoration-none'
                     to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
                   >
-                    <button className='float-none btn btn-secondary align-self-center m-1'>
-                      <i className='fa-sharp fa-solid fa-xmark'></i>
+                    <button className='float-none btn btn-light align-self-center m-1'>
                       Keluar
                     </button>
                   </Link>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/pendidikan-duk/${id}/${status}`}
+                    to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-pendidikan-duk/${id}/${status}`}
                   >
-                    <button className='float-none btn btn-success align-self-center m-1'>
+                    <button className='float-none btn btn-light-primary align-self-center m-1'>
                       <i className='fa-solid fa-arrow-left'></i>
                       Kembali
                     </button>
                   </Link>
                   <Link
                     className='text-reset text-decoration-none'
-                    to={`/kepegawaian/tab-daftar-urut-kepangkatan/hirarki-kepegawaian-duk/${id}/${status}`}
+                    to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-hirarki-kepegawaian-duk/${id}/${status}`}
                   >
                     <button className='float-none btn btn-primary align-self-center m-1'>
-                      <i className='fa-solid fa-arrow-right'></i>
-                      Lanjut
+                      Lanjut <i className='fa-solid fa-arrow-right'></i>
                     </button>
                   </Link>
                 </div>
