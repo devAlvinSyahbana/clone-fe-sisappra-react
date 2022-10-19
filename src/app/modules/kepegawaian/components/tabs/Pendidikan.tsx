@@ -72,7 +72,7 @@ export function Pendidikan() {
       sortable: true,
       minWidth: '150px',
       cell: (record: any) => {
-        return `${moment(record.tgl_ijazah).format('D MMMM YYYY')}`
+        return `${record.tgl_ijazah ? moment(record.tgl_ijazah).format('D MMMM YYYY') : ''}`
       },
     },
     {

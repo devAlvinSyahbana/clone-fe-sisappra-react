@@ -60,7 +60,9 @@ export function DataKeluarga() {
       name: 'Tempat, Tanggal Lahir',
       sortable: false,
       cell: (record: any) => {
-        return `${record.tempat_lahir}, ${moment(record.tgl_lahir).format('D MMMM YYYY')}`
+        return `${record.tempat_lahir}, ${
+          record.tgl_lahir ? moment(record.tgl_lahir).format('D MMMM YYYY') : ''
+        }`
       },
     },
     {
