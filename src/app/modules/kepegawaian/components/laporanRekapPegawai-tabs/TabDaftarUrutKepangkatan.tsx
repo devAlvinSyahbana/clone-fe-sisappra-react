@@ -139,9 +139,7 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/duk-pegawai`
 export const DELETE_DUK_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
-export const KOTA_URL = `${API_URL}/master/kota`
-export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
-export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
+export const MASTER_URL = `${API_URL}/master`
 
 export function TabDaftarUrutKepangkatan() {
   const navigate = useNavigate()
@@ -429,9 +427,9 @@ export function TabDaftarUrutKepangkatan() {
   // GET KOTA (Wilayah / Bidang)
   const [inputValKota, setFilterKota] = useState({label: '', value: null})
   const filterKota = async (inputValue: string) => {
-    const response = await axios.get(KOTA_URL + '/filter-kota/' + inputValue)
+    const response = await axios.get(MASTER_URL + '/bidang-wilayah/filter/' + inputValue)
     const json = await response.data.data
-    return json.map((i: any) => ({label: i.kota, value: i.id}))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsKota = (
     inputValue: string,
@@ -449,11 +447,7 @@ export function TabDaftarUrutKepangkatan() {
   const [inputValKecamatan, setFilterKecamatan] = useState({label: '', value: null})
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      KECAMATAN_URL +
-        '/findone-by-kecamatan?kota=' +
-        inputValKota.label +
-        '&kecamatan=' +
-        inputValue
+      MASTER_URL + '/findone-by-kecamatan?kota=' + inputValKota.label + '&kecamatan=' + inputValue
     )
     const json = await response.data.data
     return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
@@ -475,7 +469,7 @@ export function TabDaftarUrutKepangkatan() {
   const [inputValKelurahan, setFilterKelurahan] = useState({label: '', value: null})
   const filterKelurahan = async (inputValue: string) => {
     const response = await axios.get(
-      KELURAHAN_URL +
+      MASTER_URL +
         '/findone-by-kelurahan?kecamatan=' +
         inputValKecamatan.label +
         '&kelurahan=' +
@@ -730,7 +724,7 @@ export function TabDaftarUrutKepangkatan() {
                                 value={
                                   inputValKota.value
                                     ? inputValKota
-                                    : {value: '', label: 'Pilih Kota'}
+                                    : {value: '', label: 'Pilih Pangkat'}
                                 }
                                 loadOptions={loadOptionsKota}
                                 defaultOptions
