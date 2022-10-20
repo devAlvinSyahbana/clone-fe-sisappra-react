@@ -966,31 +966,6 @@ export function UpdateDataKepegawaian() {
                           </div>
                         </div>
                       )}
-                    {/* <Field
-                      type='text'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            errors.kepegawaian_subbag_seksi_kecamatan,
-                        },
-                        {
-                          'is-valid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            !errors.kepegawaian_subbag_seksi_kecamatan,
-                        }
-                      )}
-                      name='kepegawaian_subbag_seksi_kecamatan'
-                    />
-                    {touched.kepegawaian_subbag_seksi_kecamatan &&
-                      errors.kepegawaian_subbag_seksi_kecamatan && (
-                        <div className='fv-plugins-message-container'>
-                          <div className='fv-help-block'>
-                            <span role='alert'>{errors.kepegawaian_subbag_seksi_kecamatan}</span>
-                          </div>
-                        </div>
-                      )} */}
                   </div>
 
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>

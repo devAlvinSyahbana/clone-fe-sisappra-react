@@ -88,7 +88,7 @@ const SidebarMenuMain = () => {
         />
         <SidebarMenuItem to='/kepegawaian/HirarkiPegawai' title='Hirarki Pegawai' hasBullet={true} />
         <SidebarMenuItem
-          to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-laporan-rekapitulasi-pegawai'
+          to='/kepegawaian/laporan-rekapitulasi-pegawai'
           title='Laporan Rekapitulasi Pegawai'
           hasBullet={true}
         />
