@@ -1,31 +1,227 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { LaporanPPNSHeader } from './LaporanPPNSHeader'
 import Dropdown from 'react-bootstrap/Dropdown'
-import { JumlahSeluruhSatpol, JumlahSatpolDiklat } from '../LaporanRekapPegawaiInterface'
+import { JumlahPPNS, JumlahUnitSKPD } from '../LaporanRekapPegawaiInterface'
+import DataTable, { createTheme } from 'react-data-table-component'
+import { ThemeModeComponent } from '../../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+    'darkMetro',
+    {
+        text: {
+            primary: '#92929f',
+            secondary: '#92929f',
+        },
+        background: {
+            default: '#1e1e2e',
+        },
+        context: {
+            background: '#cb4b16',
+            text: '#FFFFFF',
+        },
+        divider: {
+            default: '#2b2c41',
+        },
+        action: {
+            button: 'rgba(0,0,0,.54)',
+            hover: 'rgba(0,0,0,.08)',
+            disabled: 'rgba(0,0,0,.12)',
+        },
+    },
+    'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+    input: (base: object) => ({
+        ...base,
+        color: '#5e6278',
+    }),
+    menu: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+    container: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+    indicatorsContainer: (base: object) => ({
+        ...base,
+        color: '#cccccc',
+    }),
+    indicatorSeparator: (base: object) => ({
+        ...base,
+        backgroundColor: '#cccccc',
+    }),
+    control: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+        boxShadow: '0 0 0 1px #f5f8fa',
+    }),
+    singleValue: (base: object) => ({
+        ...base,
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+    }),
+    option: (base: object) => ({
+        ...base,
+        height: '100%',
+        backgroundColor: '#f5f8fa',
+        color: '#5e6278',
+        borderColor: 'hsl(204deg 33% 97%)',
+    }),
+}
+
+const reactSelectDarkThem = {
+    input: (base: object) => ({
+        ...base,
+        color: '#92929f',
+    }),
+    menu: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+    container: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+    indicatorsContainer: (base: object) => ({
+        ...base,
+        color: '#92929f',
+    }),
+    indicatorSeparator: (base: object) => ({
+        ...base,
+        backgroundColor: '#92929f',
+    }),
+    control: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+        boxShadow: '0 0 0 1px #1b1b29',
+    }),
+    singleValue: (base: object) => ({
+        ...base,
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+    }),
+    option: (base: object) => ({
+        ...base,
+        height: '100%',
+        backgroundColor: '#1b1b29',
+        color: '#92929f',
+        borderColor: 'hsl(240deg 13% 13%)',
+    }),
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/`
 
 export function TabRekapitulasiPPNS() {
     const navigate = useNavigate()
+    const { mode } = useThemeMode()
+    const calculatedMode = mode === 'system' ? systemMode : mode
 
-    const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
-    const [jsatpoldik, setJsatpoldik] = useState<JumlahSatpolDiklat>()
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [jumlah_unit_skpd, setJUnitSKPD] = useState<JumlahUnitSKPD>()
+    const [jumlah_PPNS, setJumlahPPNS] = useState<JumlahPPNS>()
+
+    const LoadingAnimation = (props: any) => {
+        return (
+            <>
+                <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+                    {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+                    <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+                    <div className='d-flex flex-column'>
+                        <h5 className='mb-1'>Sedang mengambil data...</h5>
+                    </div>
+                </div>
+            </>
+        )
+    }
 
     useEffect(() => {
         const fetchData = async () => {
-            const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp`)
-            const jsatpoldik = await axios.get(`${KEPEGAWAIAN_URL}/jumlah-pegawai-polpp-by-diklat`)
+            const jumlah_PPNS = await axios.get(`${KEPEGAWAIAN_URL}PPNS-rekapitulasi-jumlah`)
 
-            setJpegawaisatpol(jsatpol.data.data)
-            setJsatpoldik(jsatpoldik.data.data)
+            setJumlahPPNS(jumlah_PPNS.data.data)
         }
         fetchData()
+        fetchDT(1)
     }, [])
+
+    async function fetchDT(datarekap: any) {
+        setLoading(true)
+        const jumlah_unit_skpd = await axios.get(`${KEPEGAWAIAN_URL}PPNS-rekapitulasi`)
+        setData(jumlah_unit_skpd.data.data)
+        setLoading(false)
+    }
+
+
+    var num = 1;
+
+    const columns = [
+        {
+            name: 'No',
+            width: "8%",
+            wrap: true,
+            cell: (row: number) => {
+                return (
+                    <div className='mb-2 mt-2'>
+                        {num !== 20 ? (num++) : ('')}
+                    </div>
+                )
+            },
+        },
+        {
+            name: 'Unit SKPD',
+            cell: (row: any) => {
+                return (
+                    <Fragment>
+                        <div className='mb-2 mt-2'>
+                            {row.skpd !== 'Jumlah Keseluruhan' ? (row.skpd) : (
+                                <div className='h4'>Jumlah Keseluruhan</div>
+                            )}
+                        </div>
+                    </Fragment>
+                )
+            },
+            width: "82%",
+            wrap: true,
+        },
+        {
+            name: 'Jumlah',
+            cell: (row: any) => {
+                return (
+                    <Fragment>
+                        <div className='mb-2 mt-2'>
+                            {row.skpd === 'Jumlah Keseluruhan' ? (<div className='h4'>{row.jumlah}</div>) : (
+                                row.jumlah
+                            )}
+                        </div>
+                    </Fragment>
+                )
+            },
+            wrap: true,
+            width: "10%",
+        },
+    ]
 
     return (
         <>
@@ -46,7 +242,7 @@ export function TabRekapitulasiPPNS() {
                         <div className='col-12'>
                             <div className='d-flex justify-content-end'>
                                 <Dropdown>
-                                    <Dropdown.Toggle variant='success' id='dropdown-basic'>
+                                    <Dropdown.Toggle variant='primary' id='dropdown-basic'>
                                         Unduh
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
@@ -72,7 +268,7 @@ export function TabRekapitulasiPPNS() {
                             <div
                                 className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
                                 style={{
-                                    backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
+                                    backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
                                 }}
                                 data-theme='light'
                             >
@@ -86,334 +282,14 @@ export function TabRekapitulasiPPNS() {
                                 <div className='mt-n20 position-relative'>
                                     <div className='card border card-flush h-xl-100'>
                                         <div className='card-body pt-2'>
-                                            <table
-                                                className='table align-middle table-row-dashed fs-6 gy-3'
-                                                id='kt_table_widget_4_table'
-                                            >
-                                                <thead>
-                                                    <tr className='text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0'>
-                                                        <th className='min-w-25px text-center'>No</th>
-                                                        <th className='min-w-150px text-center'>Unit SKPD</th>
-                                                        <th className='min-w-25px text-end'>Jumlah</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className='fw-bold text-gray-600'>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                1
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Satpol PP Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                243 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                2
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Perindustrian dan Energi Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                5 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                3
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Inspektorat Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                2 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                4
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Kehutanan Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                15 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                5
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Pendidikan Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                3 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                6
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Badan Pajak dan Restribusi Daerah Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                11 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                7
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Koperasi Usaha Kecil dan Menengah serta Perdagangan Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                39 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                8
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Sosial Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                5 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                9
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Sumber Daya Air Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                1 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                10
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Badan Kesatuan Bangsa dan Politik Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                2 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                11
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Cipta Karya, Tata Ruang dan Pertanahan Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                10 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                12
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Ketahanan Pangan, Kelautan dan Pertanian Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                14 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                13
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Lingkungan Hidup Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                17 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                14
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Perhubungan Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                54 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                15
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Kependudukan dan Catatan Sipil Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                29 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                16
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Pariwisata Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                9 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                17
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Penanggulangan Kebakaran dan Penyelamatan Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                62 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                18
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Kesehatan Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                8 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center'>
-                                                            <a
-                                                                href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html'
-                                                                className='text-gray-800 text-hover-primary'
-                                                            >
-                                                                19
-                                                            </a>
-                                                        </td>
-                                                        <td className='text-center'>Dinas Tenaga Kerja dan Transmigrasi Provinsi DKI Jakarta</td>
-                                                        <td className='text-end'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                15 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='text-center table-primary' colSpan={2}>
-                                                            Jumlah Keseluruhan
-                                                        </td>
-                                                        <td className='text-end table-success'>
-                                                            <a href='#' className='text-gray-600 text-hover-primary'>
-                                                                544 Orang
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <DataTable
+                                                columns={columns}
+                                                data={data}
+                                                progressPending={loading}
+                                                progressComponent={<LoadingAnimation />}
+                                                highlightOnHover
+                                                theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -426,7 +302,7 @@ export function TabRekapitulasiPPNS() {
                             <div
                                 className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
                                 style={{
-                                    backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-green.png') + ')',
+                                    backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
                                 }}
                                 data-theme='light'
                             >
@@ -438,10 +314,7 @@ export function TabRekapitulasiPPNS() {
                                         <span className='opacity-75'>Total : </span>
                                         <span className='position-relative d-inline-block'>
                                             <div className='opacity-75-hover fw-bold fs-1 d-block mb-1'>
-                                                {jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp
-                                                    ? jpegawaisatpol?.jmlh_seluruh_ppns_satpolpp
-                                                    : '-'}{' '}
-                                                Orang
+                                                {jumlah_PPNS?.jumlah_ppns !== 0 ? jumlah_PPNS?.jumlah_ppns : '-'} Orang
                                             </div>
                                         </span>
                                     </div>
@@ -454,10 +327,7 @@ export function TabRekapitulasiPPNS() {
                                             <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                                                 <div className='m-0'>
                                                     <span className='text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1'>
-                                                        {jpegawaisatpol?.jmlh_seluruh_pns
-                                                            ? jpegawaisatpol?.jmlh_seluruh_pns
-                                                            : '- '}
-                                                        Orang
+                                                        {jumlah_PPNS?.satpol_pp !== 0 ? jumlah_PPNS?.satpol_pp : '-'} Orang
                                                     </span>
                                                     <span className='text-gray-500 fw-semibold fs-6'>
                                                         SATPOL PP PROVINSI DKI JAKARTA
@@ -469,10 +339,7 @@ export function TabRekapitulasiPPNS() {
                                             <div className='bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5 w-100'>
                                                 <div className='m-0'>
                                                     <span className='text-gray-700 fw-bolder d-block fs-2x lh-1 ls-n1 mb-1'>
-                                                        {jpegawaisatpol?.jmlh_seluruh_cpns
-                                                            ? jpegawaisatpol?.jmlh_seluruh_cpns
-                                                            : '- '}
-                                                        Orang
+                                                        {jumlah_PPNS?.skpd_lain !== 0 ? jumlah_PPNS?.skpd_lain : '-'} Orang
                                                     </span>
                                                     <span className='text-gray-500 fw-semibold fs-6'>
                                                         SKPD LAIN
@@ -490,7 +357,4 @@ export function TabRekapitulasiPPNS() {
             {/* end::Body */}
         </>
     )
-}
-function setData(data: any) {
-    throw new Error('Function not implemented.')
 }

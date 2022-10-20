@@ -8,10 +8,12 @@ import {
   DetailPegawaiInterface,
   JumlahKeluargaInterface,
   PendidikanInterface,
+  DetailMasterJabatan,
 } from '../KepegawaianInterface'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
+export const MASTER_URL = `${API_URL}/master`
 
 const HeaderDetailWrapper = () => {
   const location = useLocation()
@@ -28,11 +30,25 @@ const HeaderDetailWrapper = () => {
         `${KEPEGAWAIAN_URL}/get-pendidikan-terakhir/${id}/${status}`
       )
       setJkeluarga(keluarga.data.data)
-      setPendidikan(pendidikan.data.data)
+      if (pendidikan.data.data) {
+        const {data} = await axios.get(
+          `${MASTER_URL}/pendidikan/findone/${pendidikan.data.data.jenis_pendidikan}`
+        )
+        setPendidikan((prevstate) => ({...prevstate, jenis_pendidikan: data.data.pendidikan}))
+      }
       setData(response.data.data)
+      getDetailJabatan(response.data.data.kepegawaian_jabatan)
     }
     fetchData()
   }, [id, status])
+
+  const [detailJabatan, setDetailJabatan] = useState<DetailMasterJabatan>()
+  const getDetailJabatan = async (id: number) => {
+    if (id) {
+      const response = await axios.get(`${MASTER_URL}/jabatan/findone/${id}`)
+      setDetailJabatan((prevstate) => ({...prevstate, ...response.data.data}))
+    }
+  }
 
   return (
     <>
@@ -42,19 +58,21 @@ const HeaderDetailWrapper = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  {data?.foto !== '' ? (
+                  {data && data?.foto !== '' ? (
                     <div className='symbol-label'>
-                      <img src={data?.foto} alt={data?.nama} className='w-100' />
+                      <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
                     </div>
                   ) : (
                     <div
-                      className={clsx('symbol-label fs-1', `bg-light-secondary`, `text-secondary`)}
+                      className={clsx(
+                        'symbol-label fs-1',
+                        `bg-light-secondary`,
+                        `text-dark-secondary`
+                      )}
                     >
                       {data?.nama?.charAt(0)}
                     </div>
                   )}
-                  {/* <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metornic' /> */}
-                  <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
               </div>
 
@@ -98,9 +116,7 @@ const HeaderDetailWrapper = () => {
                     <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
                       <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
                         <i className='fa-solid fa-address-card me-1'></i>
-                        {data?.kepegawaian_pangkat_name !== ''
-                          ? data?.kepegawaian_pangkat_name
-                          : '-'}
+                        {detailJabatan?.jabatan ? detailJabatan?.jabatan : '-'}
                       </div>
                     </div>
                   </div>
@@ -126,7 +142,7 @@ const HeaderDetailWrapper = () => {
                           </div>
                         </div>
 
-                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
+                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Terakhir</div>
                       </div>
                     </div>
                   </div>

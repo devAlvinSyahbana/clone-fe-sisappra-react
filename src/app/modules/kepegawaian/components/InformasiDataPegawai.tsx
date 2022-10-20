@@ -1,21 +1,52 @@
 import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import Button from 'react-bootstrap/Button'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
+import {KTSVG} from '../../../../_metronic/helpers'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL = `${API_URL}/informasi-data-pegawai`
+export const MASTER_URL = `${API_URL}/master`
 
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
 export function InformasiDataPegawai() {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
   const [valStatPegawai, setValStatPegawai] = useState({val: ''})
@@ -44,13 +75,42 @@ export function InformasiDataPegawai() {
     )
   }
 
+  const NoDataComponent = (props: any) => {
+    return (
+      <>
+        <div className='alert d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10'>
+          <span className='svg-icon svg-icon-5tx mb-5'>
+            <KTSVG path='/media/icons/duotune/files/fil024.svg' className='svg-icon-2' />
+          </span>
+          <div className='text-center'>
+            <h5 className='fw-bolder fs-3 mb-5'>Data tidak ditemukan . . .</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  const GetAgama = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${MASTER_URL}/agama/findone/${id}`)
+        const result: string = data.data.agama
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
   const columns = [
     {
       name: 'Nama',
       selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'nama',
-      width: '200px',
+      minWidth: '200px',
       wrap: true,
       cell: (record: any) => {
         return (
@@ -60,7 +120,7 @@ export function InformasiDataPegawai() {
               <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
                 {record?.foto !== '' ? (
                   <div className='symbol-label'>
-                    <img src={record?.foto} alt={record?.nama} className='w-100' />
+                    <img src={`${API_URL}/${record?.foto}`} alt={record?.nama} className='w-100' />
                   </div>
                 ) : (
                   <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
@@ -82,6 +142,7 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'tempat_lahir',
       wrap: true,
+      minWidth: '125px',
     },
     {
       name: 'Tanggal Lahir',
@@ -89,7 +150,7 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'tgl_lahir',
       wrap: true,
-      minWidth: '15',
+      minWidth: '125px',
     },
     {
       name:
@@ -100,11 +161,12 @@ export function InformasiDataPegawai() {
             ? 'NPJLP'
             : 'NRK'
           : 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
+      selector: (row: any) => row.no_pegawai,
       sortable: true,
-      sortField: 'kepegawaian_nrk',
+      sortField: 'no_pegawai',
       wrap: true,
       center: true,
+      minWidth: '100px',
     },
     {
       name: 'Tipe Pegawai',
@@ -113,6 +175,7 @@ export function InformasiDataPegawai() {
       sortField: 'kepegawaian_status_pegawai',
       wrap: true,
       center: true,
+      minWidth: '125px',
     },
     {
       name: 'Jenis Kelamin',
@@ -120,7 +183,7 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'jenis_kelamin',
       wrap: true,
-      center: true,
+      minWidth: '125px',
     },
     {
       name: 'Agama',
@@ -128,7 +191,8 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'agama',
       wrap: true,
-      center: true,
+      minWidth: '100px',
+      cell: (record: any) => <GetAgama row={parseInt(record.agama)} />,
     },
     {
       name: 'No. HP',
@@ -136,6 +200,7 @@ export function InformasiDataPegawai() {
       sortable: true,
       sortField: 'no_hp',
       wrap: true,
+      minWidth: '100px',
     },
     {
       name: 'Aksi',
@@ -214,7 +279,7 @@ export function InformasiDataPegawai() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -226,7 +291,7 @@ export function InformasiDataPegawai() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -242,7 +307,7 @@ export function InformasiDataPegawai() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -302,7 +367,7 @@ export function InformasiDataPegawai() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
+      url: `${KEPEGAWAIAN_INFORMASI_DATA_PEGAWAI_URL}/unduh-pegawai?status=${
         valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
       }`,
       method: 'GET',
@@ -398,40 +463,65 @@ export function InformasiDataPegawai() {
       </div>
 
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
-            <button onClick={handleFilter} className='btn btn-primary me-2'>
-              <i className='fa-solid fa-search'></i>
+        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+          <Link to='#' onClick={handleFilter}>
+            <button className='btn btn-light-primary me-2'>
+              <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
             </button>
           </Link>
           <Link to='#' onClick={handleFilterReset}>
-            <button className='btn btn-primary'>
-              <i className='fa-solid fa-arrows-rotate'></i>
+            <button className='btn btn-light-primary'>
+              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
               Reset
             </button>
           </Link>
         </div>
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <Dropdown as={ButtonGroup}>
-            <Button variant='light'>
-              {btnLoadingUnduh ? (
-                <>
-                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                  Memproses...
-                </>
-              ) : (
-                'Unduh'
-              )}
-            </Button>
+        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
+          {/* begin::Filter Button */}
+          <button
+            type='button'
+            className='btn btn-light-primary'
+            data-kt-menu-trigger='click'
+            data-kt-menu-placement='bottom-end'
+          >
+            {btnLoadingUnduh ? (
+              <>
+                <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                Memproses Unduh...
+              </>
+            ) : (
+              <>
+                <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                Unduh
+              </>
+            )}
+          </button>
+          {/* end::Filter Button */}
+          {/* begin::SubMenu */}
+          <div className='menu menu-sub menu-sub-dropdown w-100px w-md-150px' data-kt-menu='true'>
+            {/* begin::Header */}
+            <div className='px-7 py-5'>
+              <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+            </div>
+            {/* end::Header */}
 
-            <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+            {/* begin::Separator */}
+            <div className='separator border-gray-200'></div>
+            {/* end::Separator */}
 
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-              <Dropdown.Item>PDF</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+            {/* begin::Content */}
+            <div className='px-7 py-5' data-kt-user-table-filter='form'>
+              <button
+                onClick={handleUnduh}
+                className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+              >
+                Excel
+              </button>
+            </div>
+            {/* end::Content */}
+          </div>
+          {/* end::SubMenu */}
         </div>
       </div>
 
@@ -447,6 +537,8 @@ export function InformasiDataPegawai() {
           onChangeRowsPerPage={handlePerRowsChange}
           onChangePage={handlePageChange}
           customStyles={customStyles}
+          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+          noDataComponent={<NoDataComponent />}
         />
       </div>
       {/* end::Body */}

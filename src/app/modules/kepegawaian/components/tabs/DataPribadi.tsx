@@ -8,7 +8,9 @@ import {DetailPegawaiInterface} from '../KepegawaianInterface'
 import {HeaderDetailWrapper} from './HeaderDetail'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
+export const GLOBAL_URL = `${API_URL}/master`
+export const AGAMA_URL = `${API_URL}/master/agama`
 
 export function DataPribadi() {
   const {id, status} = useParams()
@@ -19,12 +21,146 @@ export function DataPribadi() {
     const fetchData = async () => {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
       setData((prevstate) => ({...prevstate, ...response.data.data}))
+      getAgamaVal(response.data.data.agama)
+      getProvVal(response.data.data.domisili_provinsi, 'domisili_provinsi')
+      getProvVal(response.data.data.sesuai_ktp_provinsi, 'sesuai_ktp_provinsi')
+      getKabKotaVal(response.data.data.domisili_kabkota, 'domisili_kabkota')
+      getKabKotaVal(response.data.data.sesuai_ktp_kabkota, 'sesuai_ktp_kabkota')
+      getKecVal(response.data.data.domisili_kecamatan, 'domisili_kecamatan')
+      getKecVal(response.data.data.sesuai_ktp_kecamatan, 'sesuai_ktp_kecamatan')
+      getKelVal(response.data.data.domisili_kelurahan, 'domisili_kelurahan')
+      getKelVal(response.data.data.sesuai_ktp_kelurahan, 'sesuai_ktp_kelurahan')
     }
     fetchData()
   }, [setData, id, status])
 
   const ageFromDateOfBirthday = (dateOfBirth: any): number => {
     return moment().diff(dateOfBirth, 'years')
+  }
+
+  const [valProvKTP, setValProvKTP] = useState({value: '', label: ''})
+  const [valProvDomisili, setValProvDomisili] = useState({value: '', label: ''})
+  const getProvVal = async (params: any, field: string) => {
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-provinsi/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_provinsi') {
+            setValProvKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_provinsi') {
+            setValProvDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valKabKotaKTP, setValKabKotaKTP] = useState({value: '', label: ''})
+  const [valKabKotaDomisili, setValKabKotaDomisili] = useState({value: '', label: ''})
+  const getKabKotaVal = async (params: any, field: string) => {
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kab-kota/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kabkota') {
+            setValKabKotaKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kabkota') {
+            setValKabKotaDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valKecKTP, setValKecKTP] = useState({value: '', label: ''})
+  const [valKecDomisili, setValKecDomisili] = useState({value: '', label: ''})
+  const getKecVal = async (params: any, field: string) => {
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kecamatan/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kecamatan') {
+            setValKecKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kecamatan') {
+            setValKecDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valKelKTP, setValKelKTP] = useState({value: '', label: ''})
+  const [valKelDomisili, setValKelDomisili] = useState({value: '', label: ''})
+  const getKelVal = async (params: any, field: string) => {
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kelurahan/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kelurahan') {
+            setValKelKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kelurahan') {
+            setValKelDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valAgama, setValAgama] = useState({value: '', label: ''})
+  const getAgamaVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${AGAMA_URL}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValAgama((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.agama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
   }
 
   return (
@@ -35,8 +171,18 @@ export function DataPribadi() {
       <Formik
         initialValues={{
           ...data,
+          jenis_kelamin: data.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan',
+          agama: valAgama.label && valAgama.label,
           tgl_lahir: moment(data?.tgl_lahir).format('D MMMM YYYY'),
           umur: ageFromDateOfBirthday(moment(data?.tgl_lahir).format('YYYY-MM-D')),
+          sesuai_ktp_provinsi: valProvKTP.label && valProvKTP.label,
+          sesuai_ktp_kabkota: valKabKotaKTP.label && valKabKotaKTP.label,
+          sesuai_ktp_kecamatan: valKecKTP.label && valKecKTP.label,
+          sesuai_ktp_kelurahan: valKelKTP.label && valKelKTP.label,
+          domisili_provinsi: valProvDomisili.label && valProvDomisili.label,
+          domisili_kabkota: valKabKotaDomisili.label && valKabKotaDomisili.label,
+          domisili_kecamatan: valKecDomisili.label && valKecDomisili.label,
+          domisili_kelurahan: valKelDomisili.label && valKelDomisili.label,
         }}
         onSubmit={function (
           values: DetailPegawaiInterface,
@@ -52,12 +198,20 @@ export function DataPribadi() {
         <div className='card mb-5 mb-xl-10'>
           <div className='card-header cursor-pointer'>
             <div className='card-title m-0'>
-              <h3 className='fw-bold m-0'>Data Pribadi</h3>
+              <h3 className='fw-bold'>Data Pribadi</h3>
+            </div>
+            <div className='card-toolbar'>
+              <Link
+                className='text-reset text-decoration-none m-0'
+                to={`/kepegawaian/informasi-data-pegawai/ubah-data-pribadi/${id}/${status}`}
+              >
+                <button className='float-none btn btn-light-primary align-self-center'>Ubah</button>
+              </Link>
             </div>
           </div>
           <div className='card-body p-9'>
             <div className='row'>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nama
                 </label>
@@ -69,7 +223,7 @@ export function DataPribadi() {
                   disabled
                 />
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Tempat, Tanggal Lahir
                 </label>
@@ -93,7 +247,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -112,14 +266,14 @@ export function DataPribadi() {
                     </label>
                     <Field
                       className='form-control form-control-solid'
-                      name='agama_name'
+                      name='agama'
                       placeholder='Agama'
                       disabled
                     />
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-6'>
                     <label htmlFor='' className='mb-3'>
@@ -147,7 +301,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -175,7 +329,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor HP
                 </label>
@@ -192,7 +346,7 @@ export function DataPribadi() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-12'>
+              <div className='col-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -220,7 +374,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -248,9 +402,9 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
-                  <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
                       Kecamatan
                     </label>
@@ -281,7 +435,7 @@ export function DataPribadi() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-12 mt-4'>
+              <div className='col-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -309,7 +463,7 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -337,9 +491,9 @@ export function DataPribadi() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
-                  <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
                       Kecamatan
                     </label>
@@ -372,17 +526,14 @@ export function DataPribadi() {
                   className='text-reset text-decoration-none'
                   to='/kepegawaian/informasi-data-pegawai'
                 >
-                  <button className='float-none btn btn-secondary align-self-center m-1'>
-                    Keluar
-                  </button>
+                  <button className='float-none btn btn-light align-self-center m-1'>Keluar</button>
                 </Link>
                 <Link
                   className='text-reset text-decoration-none'
                   to={`/kepegawaian/informasi-data-pegawai/detail-data-keluarga/${id}/${status}`}
                 >
                   <button className='float-none btn btn-primary align-self-center m-1'>
-                    <i className='fa-solid fa-arrow-right'></i>
-                    Lanjut
+                    Lanjut <i className='fa-solid fa-arrow-right'></i>
                   </button>
                 </Link>
               </div>

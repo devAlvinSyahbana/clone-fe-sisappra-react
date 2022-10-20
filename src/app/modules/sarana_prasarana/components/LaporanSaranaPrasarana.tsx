@@ -1,14 +1,136 @@
 import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import Button from 'react-bootstrap/Button'
 import AsyncSelect from 'react-select/async'
 import Swal from 'sweetalert2'
 import FileDownload from 'js-file-download'
+import {KTSVG} from '../../../../_metronic/helpers'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 export interface FormInput {
   jenis_sarana_prasarana?: any
@@ -32,6 +154,8 @@ export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://local
 
 export function LaporanSaranaPrasarana() {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
 
   const [inputValJenis, setDataJenis] = useState({label: '', value: null})
   const [inputValStatus, setDataStatus] = useState({label: '', value: null})
@@ -69,16 +193,31 @@ export function LaporanSaranaPrasarana() {
     )
   }
 
+  const NoDataComponent = (props: any) => {
+    return (
+      <>
+        <div className='alert d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10'>
+          <span className='svg-icon svg-icon-5tx mb-5'>
+            <KTSVG path='/media/icons/duotune/files/fil024.svg' className='svg-icon-2' />
+          </span>
+          <div className='text-center'>
+            <h5 className='fw-bolder fs-3 mb-5'>Data tidak ditemukan . . .</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   const konfirDel = (id: number) => {
     Swal.fire({
-      title: 'Anda yakin?',
-      text: 'Ingin menghapus data ini',
+      text: 'Anda yakin ingin menghapus data ini',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Ya!',
       cancelButtonText: 'Tidak!',
+      color: '#000000',
     }).then(async (result) => {
       if (result.isConfirmed) {
         const response = await axios.delete(`${SARANA_PRASARANA_URL}/delete/${id}`)
@@ -86,16 +225,18 @@ export function LaporanSaranaPrasarana() {
           fetchUsers(1)
           Swal.fire({
             icon: 'success',
-            title: 'Data berhasil dihapus',
+            text: 'Data berhasil dihapus',
             showConfirmButton: false,
             timer: 1500,
+            color: '#000000',
           })
         } else {
           Swal.fire({
             icon: 'error',
-            title: 'Data gagal dihapus, harap mencoba lagi',
+            text: 'Data gagal dihapus, harap mencoba lagi',
             showConfirmButton: false,
             timer: 1500,
+            color: '#000000',
           })
         }
       }
@@ -109,6 +250,7 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'jenis_sarana_prasarana',
       wrap: true,
+      minWidth: '200px',
     },
     {
       name: 'Status Sarana & Prasarana',
@@ -116,6 +258,7 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'status_sarana_prasarana',
       wrap: true,
+      minWidth: '200px',
     },
     {
       name: 'Jumlah',
@@ -123,6 +266,8 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'jumlah',
       wrap: true,
+      minWidth: '100px',
+      center: true,
     },
     {
       name: 'Kondisi',
@@ -130,6 +275,7 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'kondisi',
       wrap: true,
+      minWidth: '100px',
     },
     {
       name: 'Keterangan',
@@ -137,14 +283,22 @@ export function LaporanSaranaPrasarana() {
       sortable: true,
       sortField: 'keterangan',
       wrap: true,
+      minWidth: '100px',
     },
     {
       name: 'Dokumentasi',
       selector: (row: any) => row.dokumentasi,
       sortable: false,
+      minWidth: '100px',
+      center: true,
       cell: (record: any) => {
         return (
-          <a target="_blank" rel="noreferrer" href={`${API_URL}/${record.dokumentasi}`} className='btn-link'>
+          <a
+            target='_blank'
+            rel='noreferrer'
+            href={`${API_URL}/${record.dokumentasi}`}
+            className='btn-link'
+          >
             Lihat
           </a>
         )
@@ -338,7 +492,7 @@ export function LaporanSaranaPrasarana() {
       <div className={`card`}>
         {/* begin::Body */}
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6'>
+          <div className='col-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
                 Jenis Sarana & Prasarana
@@ -350,12 +504,13 @@ export function LaporanSaranaPrasarana() {
                 defaultOptions
                 onChange={handleInputChange}
                 placeholder={'Pilih'}
+                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                loadingMessage={() => 'Sedang mencari pilihan...'}
+                noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
               />
             </div>
           </div>
-        </div>
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6'>
+          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
                 Status Sarana & Prasarana
@@ -367,12 +522,13 @@ export function LaporanSaranaPrasarana() {
                 defaultOptions
                 onChange={handleInputStapra}
                 placeholder={'Pilih'}
+                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                loadingMessage={() => 'Sedang mencari pilihan...'}
+                noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
               />
             </div>
           </div>
-        </div>
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6'>
+          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
                 Kondisi
@@ -384,21 +540,24 @@ export function LaporanSaranaPrasarana() {
                 defaultOptions
                 onChange={handleInputKonpra}
                 placeholder={'Pilih'}
+                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                loadingMessage={() => 'Sedang mencari pilihan...'}
+                noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
               />
             </div>
           </div>
         </div>
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6 col-lg-6 col-sm-12'>
-            <Link to='#' onClick={handleFilter} className='me-2'>
-              <button className='btn btn-primary me-2'>
-                <i className='fa-solid fa-search'></i>
+          <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+            <Link to='#' onClick={handleFilter}>
+              <button className='btn btn-light-primary me-2'>
+                <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
                 Cari
               </button>
             </Link>
             <Link to='#' onClick={handleFilterReset}>
-              <button className='btn btn-primary'>
-                <i className='fa-solid fa-arrows-rotate'></i>
+              <button className='btn btn-light-primary'>
+                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                 Reset
               </button>
             </Link>
@@ -406,51 +565,57 @@ export function LaporanSaranaPrasarana() {
 
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
             <Link to='/sarana-prasarana/LaporanSaranaPrasarana/TambahLaporanSarana'>
-              <Button variant='primary'>
-                <span className='svg-icon svg-icon-2'>
-                  <svg
-                    width={24}
-                    height={24}
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <rect
-                      opacity='0.5'
-                      x='11.364'
-                      y='20.364'
-                      width={16}
-                      height={2}
-                      rx={1}
-                      transform='rotate(-90 11.364 20.364)'
-                      fill='currentColor'
-                    />
-                    <rect x='4.36396' y='11.364' width={16} height={2} rx={1} fill='currentColor' />
-                  </svg>
-                </span>
-                Tambah Sarana
-              </Button>
+              {/* begin::Add user */}
+              <button type='button' className='btn btn-primary me-2'>
+                <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
+                Tambah
+              </button>
+              {/* end::Add user */}
             </Link>
-            &nbsp;
-            <Dropdown as={ButtonGroup}>
-              <Button variant='light'>
-                {btnLoadingUnduh ? (
-                  <>
-                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                    Memproses...
-                  </>
-                ) : (
-                  'Unduh'
-                )}
-              </Button>
+            {/* begin::Filter Button */}
+            <button
+              type='button'
+              className='btn btn-light-primary'
+              data-kt-menu-trigger='click'
+              data-kt-menu-placement='bottom-end'
+            >
+              {btnLoadingUnduh ? (
+                <>
+                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                  Memproses Unduh...
+                </>
+              ) : (
+                <>
+                  <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                  Unduh
+                </>
+              )}
+            </button>
+            {/* end::Filter Button */}
+            {/* begin::SubMenu */}
+            <div className='menu menu-sub menu-sub-dropdown w-100px w-md-150px' data-kt-menu='true'>
+              {/* begin::Header */}
+              <div className='px-7 py-5'>
+                <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+              </div>
+              {/* end::Header */}
 
-              <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+              {/* begin::Separator */}
+              <div className='separator border-gray-200'></div>
+              {/* end::Separator */}
 
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-                <Dropdown.Item>PDF</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+              {/* begin::Content */}
+              <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                <button
+                  onClick={handleUnduh}
+                  className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                >
+                  Excel
+                </button>
+              </div>
+              {/* end::Content */}
+            </div>
+            {/* end::SubMenu */}
           </div>
         </div>
         <div className='table-responsive mt-5 ms-5 me-5'>
@@ -465,6 +630,8 @@ export function LaporanSaranaPrasarana() {
             onChangeRowsPerPage={handlePerRowsChange}
             onChangePage={handlePageChange}
             customStyles={customStyles}
+            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={<NoDataComponent />}
           />
         </div>
         {/* end::Body */}
