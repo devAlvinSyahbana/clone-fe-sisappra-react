@@ -272,6 +272,32 @@ export function DataKepegawaian() {
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
+                  Tempat Tugas Bidang/Wilayah
+                </label>
+                <Field
+                  disabled
+                  type='text'
+                  className='form-control form-control form-control-solid mb-4'
+                  name='kepegawaian_tempat_tugas'
+                  placeholder='Tempat Tugas Bidang/Wilayah'
+                />
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                <label htmlFor='' className='mb-3'>
+                  Subag/Seksi/Kecamatan
+                </label>
+                <Field
+                  disabled
+                  type='text'
+                  className='form-control form-control form-control-solid mb-3'
+                  name='kepegawaian_subbag_seksi_kecamatan'
+                  placeholder='Subag/Seksi/Kecamatan'
+                />
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                <label htmlFor='' className='mb-3'>
                   Jabatan
                 </label>
                 <Field
@@ -293,32 +319,6 @@ export function DataKepegawaian() {
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_eselon'
                   placeholder='Eselon'
-                />
-              </div>
-
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
-                <label htmlFor='' className='mb-3'>
-                  Tempat Tugas
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_tempat_tugas'
-                  placeholder='Tempat Tugas'
-                />
-              </div>
-
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
-                <label htmlFor='' className='mb-3'>
-                  Subag/Seksi/Kecamatan
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-3'
-                  name='kepegawaian_subbag_seksi_kecamatan'
-                  placeholder='Subag/Seksi/Kecamatan'
                 />
               </div>
 
