@@ -19,7 +19,7 @@ const PrivateRoutes = () => {
   const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
   const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
   const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
-  const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
+  const ManajemenPenggunaPage = lazy(() => import('../modules/apps/ManajemenPenggunaPage'))
   const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
 
   return (
@@ -105,10 +105,10 @@ const PrivateRoutes = () => {
           }
         />
         <Route
-          path='apps/chat/*'
+          path='apps/*'
           element={
             <SuspensedView>
-              <ChatPage />
+              <ManajemenPenggunaPage />
             </SuspensedView>
           }
         />

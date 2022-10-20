@@ -103,11 +103,14 @@ const reactSelectDarkThem = {
 }
 
 export interface FormInput {
-  nama?: string
-  nrk_nptt_npjlp?: number
-  nip?: string
-  status_pegawai?: string
-  created_by?: number
+  nama_lengkap?: string
+  id_pegawai?: string
+  no_pegawai?: string
+  kata_sandi?: string
+  email?: string
+  terakhir_login?: string
+  hak_akses?: number
+  status_pengguna?: number
 }
 
 export interface SelectOption {
@@ -118,16 +121,15 @@ export interface SelectOption {
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian` //http://localhost:3000/kepegawaian
+export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna` //http://localhost:3000/manajemen_pengguna/create
 
-export function TambahDaftarUrutKepangkatan() {
+export function AddDataPengguna() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
-  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
-  const [valInputNoPegawai, setValNoPegawai] = useState({val: 0})
+  const [valInputHakAkses, setValHakAkses] = useState({val: 0})
+  const [valInputStatusPengguna, setValStatusPengguna] = useState({val: 0})
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
 
   const handleChangeFormik = (event: {
@@ -140,21 +142,21 @@ export function TambahDaftarUrutKepangkatan() {
     }))
   }
 
-  const handleChangeStatPegawai = (event: {
+  const handleChangeHakAkses = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setValStatPegawai((prevValues: any) => ({
+    setValHakAkses((prevValues: any) => ({
       ...prevValues,
       val: event.target.value,
     }))
   }
 
-  const handleChangeNoPegawai = (event: {
+  const handleChangeStatusPengguna = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setValNoPegawai((prevValues: any) => ({
+    setValStatusPengguna((prevValues: any) => ({
       ...prevValues,
       val: event.target.value,
     }))
@@ -162,24 +164,28 @@ export function TambahDaftarUrutKepangkatan() {
 
   const formik = useFormik({
     initialValues: {
-      nama: '',
-      nrk_nptt_npjlp: 0,
-      nip: '',
-      status_pegawai: '',
+      nama_lengkap: '',
+      id_pegawai: '',
+      no_pegawai: '',
+      kata_sandi: '',
+      email: '',
+      terakhir_login: '',
+      status_pengguna: 0,
+      hak_akses: 0,
     },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
-        nama: valuesFormik?.nama ? valuesFormik.nama : '',
-        nrk_nptt_npjlp: valInputNoPegawai?.val ? valInputNoPegawai.val : 0,
-        nip: valuesFormik?.nip ? valuesFormik.nip : '',
-        status_pegawai: valStatPegawai.val ? valStatPegawai.val : '',
-        created_by: 0,
+        nama_lengkap: valuesFormik?.nama_lengkap ? valuesFormik.nama_lengkap : '',
+        id_pegawai: valuesFormik?.id_pegawai ? valuesFormik.id_pegawai : '',
+        no_pegawai: valuesFormik?.no_pegawai ? valuesFormik.no_pegawai : '',
+        kata_sandi: valuesFormik?.kata_sandi ? valuesFormik.kata_sandi : '',
+        email: valuesFormik?.email ? valuesFormik.email : '',
+        terakhir_login: valuesFormik?.terakhir_login ? valuesFormik.terakhir_login : '',
+        hak_akses: valInputHakAkses?.val ? valInputHakAkses.val : 0,
+        status_pengguna: valInputStatusPengguna?.val ? valInputStatusPengguna.val : 0,
       }
       try {
-        const response = await axios.post(
-          `${KEPEGAWAIAN_URL}/rekapitulasi-duk-pegawai/create`,
-          bodyparam
-        )
+        const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/create`, bodyparam)
         if (response) {
           Swal.fire({
             icon: 'success',
@@ -187,7 +193,7 @@ export function TambahDaftarUrutKepangkatan() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/', {
+          navigate('apps/data-pengguna/tambah-data-pengguna', {
             replace: true,
           })
         }
@@ -213,90 +219,108 @@ export function TambahDaftarUrutKepangkatan() {
                 <Form.Label>Nama</Form.Label>
                 <Form.Control
                   type='text'
-                  name='nama'
+                  name='nama_lengkap'
                   className='form-control form-control-solid'
                   onChange={handleChangeFormik}
-                  value={valuesFormik?.nama}
-                  placeholder='Masukkan nama'
+                  value={valuesFormik?.nama_lengkap}
+                  placeholder='Masukkan nama lengkap'
                 />
               </div>
             </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+            <div className='col-6 mb-6'>
               <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
-                  Status Kepegawaian
-                </label>
-                <select
-                  className='form-select form-select-solid'
-                  aria-label='Select example'
-                  value={valStatPegawai.val}
-                  onChange={handleChangeStatPegawai}
-                  name='status_pegawai'
-                >
-                  <option value=''>Pilih</option>
-                  {arrStatPegawai.map((val: string) => {
-                    return <option value={val}>{val}</option>
-                  })}
-                </select>
+                <Form.Label>ID Pegawai</Form.Label>
+                <Form.Control
+                  type='text'
+                  name='id_pegawai'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.id_pegawai}
+                  placeholder='Masukkan id pegawai'
+                />
               </div>
             </div>
-            {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <label htmlFor='' className='mb-3'>
-                  NRK
-                </label>
-                <input
-                  type='number'
-                  className='form-control form-control form-control-solid'
-                  name='nrk_nptt_npjlp'
-                  value={valInputNoPegawai.val}
-                  onChange={handleChangeNoPegawai}
-                  placeholder='Masukkan NRK'
-                />
-              </div>
-            ) : null}
-            {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                <label htmlFor='' className='mb-3'>
-                  NIP
-                </label>
-                <input
+            <div className='col-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>No Pegawai</Form.Label>
+                <Form.Control
                   type='text'
-                  className='form-control form-control form-control-solid'
-                  name='nip'
-                  value={valuesFormik.nip}
+                  name='no_pegawai'
+                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
-                  placeholder='Masukkan NIP'
+                  value={valuesFormik?.no_pegawai}
+                  placeholder='Masukkan nomor pegawai'
                 />
               </div>
-            ) : null}
-            {valStatPegawai.val !== 'PNS' && valStatPegawai.val !== '' ? (
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-                <label htmlFor='' className='mb-3'>
-                  {valStatPegawai.val === 'PTT'
-                    ? 'NPTT'
-                    : valStatPegawai.val === 'PJLP'
-                    ? 'NPJLP'
-                    : ''}
-                </label>
-                <input
+            </div>
+            <div className='col-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>Kata Sandi</Form.Label>
+                <Form.Control
+                  type='text'
+                  name='kata_sandi'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.kata_sandi}
+                  placeholder='Masukkan kata sandi'
+                />
+              </div>
+            </div>
+            <div className='col-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type='text'
+                  name='email'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.email}
+                  placeholder='Masukkan alamat email'
+                />
+              </div>
+            </div>
+            <div className='col-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>Hak Akses</Form.Label>
+                <Form.Control
                   type='number'
-                  className='form-control form-control form-control-solid'
-                  value={valInputNoPegawai.val}
-                  onChange={handleChangeNoPegawai}
-                  placeholder={
-                    valStatPegawai.val === 'PTT'
-                      ? 'Masukkan NPTT'
-                      : valStatPegawai.val === 'PJLP'
-                      ? 'Masukkan NPJLP'
-                      : ''
-                  }
+                  name='hak_akses'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.hak_akses}
+                  placeholder='Masukkan hak akses'
                 />
               </div>
-            ) : null}
+            </div>
+            <div className='col-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>Status Pengguna</Form.Label>
+                <Form.Control
+                  type='number'
+                  name='status_pengguna'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.status_pengguna}
+                  placeholder='Masukkan status pengguna'
+                />
+              </div>
+            </div>
+            <div className='col-6 mb-6'>
+              <div className='form-group'>
+                <Form.Label>Terakhir Login</Form.Label>
+                <Form.Control
+                  type='string'
+                  name='terakhir_login'
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
+                  value={valuesFormik?.terakhir_login}
+                  placeholder='Masukkan terakhir login'
+                />
+              </div>
+            </div>
           </div>
           <div className='d-grid gap-2 d-md-flex justify-content-md-center mt-4'>
-            <Link to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'>
+            <Link to='/apps/data-pengguna'>
               <button className='float-none btn btn-light align-self-center m-1'>
                 {' '}
                 <i className='fa-solid fa-xmark'></i>Batal
