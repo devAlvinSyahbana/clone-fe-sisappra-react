@@ -58,9 +58,9 @@ const HeaderDetailWrapper = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  {data?.foto !== '' ? (
+                  {data && data?.foto !== '' ? (
                     <div className='symbol-label'>
-                      <img src={data?.foto} alt={data?.nama} className='w-100' />
+                      <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
                     </div>
                   ) : (
                     <div
@@ -73,8 +73,6 @@ const HeaderDetailWrapper = () => {
                       {data?.nama?.charAt(0)}
                     </div>
                   )}
-                  {/* <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metornic' /> */}
-                  <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
               </div>
 
@@ -144,7 +142,7 @@ const HeaderDetailWrapper = () => {
                           </div>
                         </div>
 
-                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
+                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Terakhir</div>
                       </div>
                     </div>
                   </div>
