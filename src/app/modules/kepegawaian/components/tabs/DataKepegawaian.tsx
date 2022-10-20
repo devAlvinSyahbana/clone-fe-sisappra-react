@@ -25,6 +25,8 @@ export function DataKepegawaian() {
       getPendidikan(response.data.data.kepegawaian_pendidikan_pada_sk)
       getJabatan(response.data.data.kepegawaian_jabatan)
       getEselon(response.data.data.kepegawaian_eselon)
+      getBidangWilayah(response.data.data.kepegawaian_tempat_tugas)
+      getPelaksana(response.data.data.kepegawaian_subbag_seksi_kecamatan)
     }
     fetchData()
   }, [setData, id, status])
@@ -114,6 +116,40 @@ export function DataKepegawaian() {
         })
   }
 
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: '', label: ''})
+  const getBidangWilayah = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/bidang-wilayah/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValMasterBidangWilayah((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.nama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
+  const getPelaksana = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/pelaksana/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValMasterPelaksana((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.nama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
   return (
     <div>
       {/* Header */}
@@ -129,6 +165,8 @@ export function DataKepegawaian() {
             : '',
           kepegawaian_jabatan: valMasterJabatan.label ? valMasterJabatan.label : '',
           kepegawaian_eselon: valMasterEselon.label ? valMasterEselon.label : '',
+          kepegawaian_tempat_tugas: valMasterBidangWilayah.label ? valMasterBidangWilayah.label : '',
+          kepegawaian_subbag_seksi_kecamatan: valMasterPelaksana.label ? valMasterPelaksana.label : '',
           kepegawaian_tmtpangkat: data?.kepegawaian_tmtpangkat
             ? moment(data?.kepegawaian_tmtpangkat).format('D MMMM YYYY')
             : '',
@@ -272,6 +310,32 @@ export function DataKepegawaian() {
 
               <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                 <label htmlFor='' className='mb-3'>
+                  Tempat Tugas Bidang/Wilayah
+                </label>
+                <Field
+                  disabled
+                  type='text'
+                  className='form-control form-control form-control-solid mb-4'
+                  name='kepegawaian_tempat_tugas'
+                  placeholder='Tempat Tugas Bidang/Wilayah'
+                />
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                <label htmlFor='' className='mb-3'>
+                  Subag/Seksi/Kecamatan
+                </label>
+                <Field
+                  disabled
+                  type='text'
+                  className='form-control form-control form-control-solid mb-3'
+                  name='kepegawaian_subbag_seksi_kecamatan'
+                  placeholder='Subag/Seksi/Kecamatan'
+                />
+              </div>
+
+              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
+                <label htmlFor='' className='mb-3'>
                   Jabatan
                 </label>
                 <Field
@@ -293,32 +357,6 @@ export function DataKepegawaian() {
                   className='form-control form-control form-control-solid mb-4'
                   name='kepegawaian_eselon'
                   placeholder='Eselon'
-                />
-              </div>
-
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
-                <label htmlFor='' className='mb-3'>
-                  Tempat Tugas
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-4'
-                  name='kepegawaian_tempat_tugas'
-                  placeholder='Tempat Tugas'
-                />
-              </div>
-
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
-                <label htmlFor='' className='mb-3'>
-                  Subag/Seksi/Kecamatan
-                </label>
-                <Field
-                  disabled
-                  type='text'
-                  className='form-control form-control form-control-solid mb-3'
-                  name='kepegawaian_subbag_seksi_kecamatan'
-                  placeholder='Subag/Seksi/Kecamatan'
                 />
               </div>
 

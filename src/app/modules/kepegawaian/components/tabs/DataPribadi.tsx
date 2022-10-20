@@ -404,7 +404,7 @@ export function DataPribadi() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
-                  <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
                       Kecamatan
                     </label>
@@ -493,7 +493,7 @@ export function DataPribadi() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
-                  <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
                       Kecamatan
                     </label>
