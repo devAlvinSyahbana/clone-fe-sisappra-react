@@ -490,7 +490,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='tab-daftar-urut-kepangkatan/data-pribadi-duk/:id/:status'
+          path='laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-pribadi-duk/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data Pribadi DUK</PageTitle>
@@ -499,7 +499,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='tab-daftar-urut-kepangkatan/data-keluarga-duk/:id/:status'
+          path='laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-keluarga-duk/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data Keluarga DUK</PageTitle>
@@ -508,7 +508,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='tab-daftar-urut-kepangkatan/data-kepegawaian-duk/:id/:status'
+          path='laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-kepegawaian-duk/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
@@ -519,7 +519,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='tab-daftar-urut-kepangkatan/pendidikan-duk/:id/:status'
+          path='laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-pendidikan-duk/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Detail Data Pendidikan DUK</PageTitle>
@@ -528,7 +528,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='tab-daftar-urut-kepangkatan/hirarki-kepegawaian-duk/:id/:status'
+          path='laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-hirarki-kepegawaian-duk/:id/:status'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>

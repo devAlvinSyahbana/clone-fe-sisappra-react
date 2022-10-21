@@ -193,7 +193,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
             selector: (row: any) => row.nama,
             sortable: true,
             sortField: 'nama',
-            width: '200px',
+            width: '150px',
             wrap: true,
             // cell: (record: any) => {
             //     return (
@@ -221,7 +221,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         },
         {
             name: 'NIP',
-            selector: (row: any) => row.kepegawaian_nip,
+            selector: (row: any) => row.nip,
             sortable: true,
             sortField: 'kepegawaian_nip',
             wrap: true,
@@ -236,22 +236,30 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                             ? 'NPJLP'
                             : 'NRK'
                     : 'NRK',
-            selector: (row: any) => row.kepegawaian_nrk,
+            selector: (row: any) => row.nrk_nptt_pjlp,
             sortable: true,
             sortField: 'kepegawaian_nrk',
             wrap: true,
             center: true,
         },
         {
-            name: 'Jabatan',
-            selector: (row: any) => row.kepegawaian_jabatan,
+            name: 'Status',
+            selector: (row: any) => row.kepegawaian_status_pegawai,
             sortable: true,
-            sortField: 'jabatan',
+            sortField: 'kepegawaian_status_pegawai',
             wrap: true,
         },
         {
+            name: 'Jabatan',
+            selector: (row: any) => row.jabatan,
+            sortable: true,
+            sortField: 'jabatan',
+            wrap: true,
+            width: "100px",
+        },
+        {
             name: 'Tempat Tugas Wilayah/Bidang',
-            selector: (row: any) => row.kepegawaian_tempat_tugas,
+            selector: (row: any) => row.tempat_tugas,
             sortable: true,
             sortField: 'wilayah',
             wrap: true,
@@ -259,7 +267,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         },
         {
             name: 'Tempat Tugas Kecamatan/Seksi',
-            selector: (row: any) => row.kepegawaian_subbag_seksi_kecamatan,
+            selector: (row: any) => row.subbag_seksi_kecamatan,
             sortable: true,
             sortField: 'kecamatan',
             wrap: true,
@@ -374,7 +382,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         async function fetchDT(page: number) {
             setLoading(true)
             const response = await axios.get(
-                `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
+                `${KEPEGAWAIAN_URL}/Pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}`
             )
             setData(response.data.data)
             setTotalRows(response.data.total_data)
@@ -386,7 +394,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     const fetchData = async (page: number) => {
         setLoading(true)
         const response = await axios.get(
-            `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
+            `${KEPEGAWAIAN_URL}/Pensiun?limit=${perPage}&offset=${page}${qParamFind.strparam}`
         )
         setData(response.data.data)
         setTotalRows(response.data.total_data)
@@ -402,7 +410,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     const handlePerRowsChange = async (newPerPage: number, page: number) => {
         setLoading(true)
         const response = await axios.get(
-            `${KEPEGAWAIAN_URL}/pegawai-pensiun?limit=${newPerPage}&offset=${page}${qParamFind.strparam}&status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}`
+            `${KEPEGAWAIAN_URL}/Pensiun?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
         )
         setData(response.data.data)
         setPerPage(newPerPage)
@@ -512,23 +520,23 @@ export function TabRekapitulasiDataPegawaiPensiun() {
 
     const handleFilter = async () => {
         let uriParam = ''
-        // if (valStatPegawai.val !== '') {
-        //     uriParam += `&status=${valStatPegawai.val}`
-        // }
+        if (valStatPegawai.val !== '') {
+            uriParam += `&status_pegawai=${valStatPegawai.val}`
+        }
         if (valFilterNama.val !== '') {
             uriParam += `&nama=${valFilterNama.val}`
         }
         if (valFilterNRK.val !== '') {
-            uriParam += `&nopegawai=${valFilterNRK.val}`
+            uriParam += `&nrk_nptt_pjlp=${valFilterNRK.val}`
         }
         if (valFilterNIP.val !== '') {
             uriParam += `&nip=${valFilterNIP.val}`
         }
         if (valFilterWilayah.val !== '') {
-            uriParam += `&tempat_tugas_bidang=${valFilterWilayah.val}`
+            uriParam += `&tempat_tugas=${valFilterWilayah.val}`
         }
         if (valFilterKecamatan.val !== '') {
-            uriParam += `&tempat_tugas_kecamatan=${valFilterKecamatan.val}`
+            uriParam += `&seksi_kecamatan=${valFilterKecamatan.val}`
         }
         if (inputValKelurahan.value !== '') {
             uriParam += `&kepegawaian_subbag_seksi_kelurahan=${inputValKelurahan.value}`
@@ -553,8 +561,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     const handleUnduh = async () => {
         setbtnLoadingUnduh(true)
         await axios({
-            url: `${KEPEGAWAIAN_URL}/unduh-pegawai?status=${valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-                }`,
+            url: `${KEPEGAWAIAN_URL}/Pensiun-unduh?${qParamFind.strparam}`,
             method: 'GET',
             responseType: 'blob', // Important
         }).then((response) => {
@@ -717,24 +724,24 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                             />
                                         </div>
                                         {/* ) : null} */}
-                                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+                                        {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
                                             <label htmlFor='' className='mb-3'>
-                                                NIP
-                                                {/* {valStatPegawai.val === 'PNS'
+                                                NIP */}
+                                        {/* {valStatPegawai.val === 'PNS'
                                                     ? 'NIP'
                                                     : valStatPegawai.val === 'PTT'
                                                         ? 'NPTT'
                                                         : valStatPegawai.val === 'PJLP'
                                                             ? 'NPJLP'
                                                             : 'NIP'} */}
-                                            </label>
+                                        {/* </label>
                                             <input
                                                 type='text'
                                                 className='form-control form-control-solid '
                                                 value={valFilterNIP.val}
                                                 onChange={handleChangeInputNIP}
-                                                placeholder='NIP'
-                                            // {
+                                                placeholder='NIP' */}
+                                        {/* {
                                             //     valStatPegawai.val === 'PNS'
                                             //         ? 'NIP'
                                             //         : valStatPegawai.val === 'PTT'
@@ -743,8 +750,8 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                             //                 ? 'NPJLP'
                                             //                 : 'NIP'
                                             // }
-                                            />
-                                        </div>
+                                            // /> */}
+                                        {/* </div> */}
                                         <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 '>
                                             <label htmlFor='' className='mb-3'>
                                                 Tahun Pensiun

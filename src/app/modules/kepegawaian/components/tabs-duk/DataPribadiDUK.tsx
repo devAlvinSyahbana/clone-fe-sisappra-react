@@ -5,10 +5,12 @@ import {useEffect, useState} from 'react'
 import {Link} from 'react-router-dom'
 import {useParams} from 'react-router-dom'
 import {DetailPegawaiInterface} from '../KepegawaianInterface'
-import {HeaderDetailWrapper} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetail'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
+export const GLOBAL_URL = `${API_URL}/master`
+export const AGAMA_URL = `${API_URL}/master/agama`
 
 export function DataPribadiDUK() {
   const {id, status} = useParams()
@@ -19,12 +21,146 @@ export function DataPribadiDUK() {
     const fetchData = async () => {
       const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}/${status}`)
       setData((prevstate) => ({...prevstate, ...response.data.data}))
+      getAgamaVal(response.data.data.agama)
+      getProvVal(response.data.data.domisili_provinsi, 'domisili_provinsi')
+      getProvVal(response.data.data.sesuai_ktp_provinsi, 'sesuai_ktp_provinsi')
+      getKabKotaVal(response.data.data.domisili_kabkota, 'domisili_kabkota')
+      getKabKotaVal(response.data.data.sesuai_ktp_kabkota, 'sesuai_ktp_kabkota')
+      getKecVal(response.data.data.domisili_kecamatan, 'domisili_kecamatan')
+      getKecVal(response.data.data.sesuai_ktp_kecamatan, 'sesuai_ktp_kecamatan')
+      getKelVal(response.data.data.domisili_kelurahan, 'domisili_kelurahan')
+      getKelVal(response.data.data.sesuai_ktp_kelurahan, 'sesuai_ktp_kelurahan')
     }
     fetchData()
   }, [setData, id, status])
 
   const ageFromDateOfBirthday = (dateOfBirth: any): number => {
     return moment().diff(dateOfBirth, 'years')
+  }
+
+  const [valProvKTP, setValProvKTP] = useState({value: '', label: ''})
+  const [valProvDomisili, setValProvDomisili] = useState({value: '', label: ''})
+  const getProvVal = async (params: any, field: string) => {
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-provinsi/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_provinsi') {
+            setValProvKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_provinsi') {
+            setValProvDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valKabKotaKTP, setValKabKotaKTP] = useState({value: '', label: ''})
+  const [valKabKotaDomisili, setValKabKotaDomisili] = useState({value: '', label: ''})
+  const getKabKotaVal = async (params: any, field: string) => {
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kab-kota/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kabkota') {
+            setValKabKotaKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kabkota') {
+            setValKabKotaDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valKecKTP, setValKecKTP] = useState({value: '', label: ''})
+  const [valKecDomisili, setValKecDomisili] = useState({value: '', label: ''})
+  const getKecVal = async (params: any, field: string) => {
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kecamatan/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kecamatan') {
+            setValKecKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kecamatan') {
+            setValKecDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valKelKTP, setValKelKTP] = useState({value: '', label: ''})
+  const [valKelDomisili, setValKelDomisili] = useState({value: '', label: ''})
+  const getKelVal = async (params: any, field: string) => {
+    if (params)
+      return await axios
+        .get(`${GLOBAL_URL}/global-kelurahan/findone/${params}`)
+        .then((response) => {
+          if (field === 'sesuai_ktp_kelurahan') {
+            setValKelKTP((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+          if (field === 'domisili_kelurahan') {
+            setValKelDomisili((prevstate) => ({
+              ...prevstate,
+              value: response?.data?.data?.id,
+              label: response?.data?.data?.name,
+            }))
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const [valAgama, setValAgama] = useState({value: '', label: ''})
+  const getAgamaVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${AGAMA_URL}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValAgama((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.agama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
   }
 
   return (
@@ -35,8 +171,18 @@ export function DataPribadiDUK() {
       <Formik
         initialValues={{
           ...data,
+          jenis_kelamin: data.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan',
+          agama: valAgama.label && valAgama.label,
           tgl_lahir: moment(data?.tgl_lahir).format('D MMMM YYYY'),
           umur: ageFromDateOfBirthday(moment(data?.tgl_lahir).format('YYYY-MM-D')),
+          sesuai_ktp_provinsi: valProvKTP.label && valProvKTP.label,
+          sesuai_ktp_kabkota: valKabKotaKTP.label && valKabKotaKTP.label,
+          sesuai_ktp_kecamatan: valKecKTP.label && valKecKTP.label,
+          sesuai_ktp_kelurahan: valKelKTP.label && valKelKTP.label,
+          domisili_provinsi: valProvDomisili.label && valProvDomisili.label,
+          domisili_kabkota: valKabKotaDomisili.label && valKabKotaDomisili.label,
+          domisili_kecamatan: valKecDomisili.label && valKecDomisili.label,
+          domisili_kelurahan: valKelDomisili.label && valKelDomisili.label,
         }}
         onSubmit={function (
           values: DetailPegawaiInterface,
@@ -57,7 +203,7 @@ export function DataPribadiDUK() {
           </div>
           <div className='card-body p-9'>
             <div className='row'>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nama
                 </label>
@@ -69,7 +215,7 @@ export function DataPribadiDUK() {
                   disabled
                 />
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Tempat, Tanggal Lahir
                 </label>
@@ -93,7 +239,7 @@ export function DataPribadiDUK() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -112,14 +258,14 @@ export function DataPribadiDUK() {
                     </label>
                     <Field
                       className='form-control form-control-solid'
-                      name='agama_name'
+                      name='agama'
                       placeholder='Agama'
                       disabled
                     />
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-6'>
                     <label htmlFor='' className='mb-3'>
@@ -147,7 +293,7 @@ export function DataPribadiDUK() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -175,7 +321,7 @@ export function DataPribadiDUK() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <label htmlFor='' className='mb-3'>
                   Nomor HP
                 </label>
@@ -192,7 +338,7 @@ export function DataPribadiDUK() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-12'>
+              <div className='col-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -220,7 +366,7 @@ export function DataPribadiDUK() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -248,7 +394,7 @@ export function DataPribadiDUK() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -281,7 +427,7 @@ export function DataPribadiDUK() {
                 <div className='separator border-3 my-10'></div>
               </div>
 
-              <div className='col-12 mt-4'>
+              <div className='col-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-10 col-md-10 col-lg-10 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -309,7 +455,7 @@ export function DataPribadiDUK() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -337,7 +483,7 @@ export function DataPribadiDUK() {
                   </div>
                 </div>
               </div>
-              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
+              <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
                   <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
@@ -372,18 +518,14 @@ export function DataPribadiDUK() {
                   className='text-reset text-decoration-none'
                   to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
                 >
-                  <button className='float-none btn btn-secondary align-self-center m-1'>
-                    <i className='fa-sharp fa-solid fa-xmark'></i>
-                    Keluar
-                  </button>
+                  <button className='float-none btn btn-light align-self-center m-1'>Keluar</button>
                 </Link>
                 <Link
                   className='text-reset text-decoration-none'
-                  to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-keluarga-duk/${id}/${status}`}
+                  to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-keluarga-duk/${id}/${status}`}
                 >
                   <button className='float-none btn btn-primary align-self-center m-1'>
-                    <i className='fa-solid fa-arrow-right'></i>
-                    Lanjut
+                    Lanjut <i className='fa-solid fa-arrow-right'></i>
                   </button>
                 </Link>
               </div>
