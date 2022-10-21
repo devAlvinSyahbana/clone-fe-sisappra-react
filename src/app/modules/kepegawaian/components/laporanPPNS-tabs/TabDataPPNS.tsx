@@ -1,36 +1,156 @@
-import {useState, useEffect, Fragment, useMemo} from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-// import DataTable from 'react-data-table-component'
-import {useTable, usePagination} from 'react-table'
-import {useSticky} from 'react-table-sticky'
-import './table.css'
+import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import Button from 'react-bootstrap/Button'
-import clsx from 'clsx'
+import AsyncSelect from 'react-select/async'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import {LaporanPPNSHeader} from './LaporanPPNSHeader'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {GOLONGAN_URL, PANGKAT_URL, SKPD_URL} from '../update-tabs-ppns/UpdateDataPPNS'
+
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
+export const PPNS_UNDUH_URL = `${API_URL}/kepegawaian`
+export const MASTER_SKPD = `${API_URL}/master/skpd`
+export const MASTER_PANGKAT = `${API_URL}/master/pangkat`
+export const MASTER_GOLONGAN = `${API_URL}/master/golongan`
 
 export function TabDataPPNS() {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
   const [valFilterNama, setFilterNama] = useState({val: ''})
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const [valFilterWilayah, setFilterWilayah] = useState({val: ''})
-  const [valFilterKecamatanSeksi, setFilterKecamatanSeksi] = useState({val: ''})
-  const [valFilterKelurahan, setFilterKelurahan] = useState({val: ''})
-  const arrStatPegawai = ['CPNS', 'PNS', 'PTT', 'PJLP']
+  const [valFilterNIP, setFilterNIP] = useState({val: ''})
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -52,9 +172,51 @@ export function TabDataPPNS() {
     )
   }
 
+  const GetSKPD = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${SKPD_URL}/findone/${id}`)
+        const result: string = data.data.skpd
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const GetGolongan = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${GOLONGAN_URL}/findone/${id}`)
+        const result: string = data.data.golongan
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const GetPangkat = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${PANGKAT_URL}/findone/${id}`)
+        const result: string = data.data.pangkat
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
   let no = 1
 
-  const columnss = [
+  const columns = [
     {
       name: 'No',
       sortable: true,
@@ -66,69 +228,95 @@ export function TabDataPPNS() {
     },
     {
       name: 'SKPD',
-      selector: (row: any) => row.SKPD,
+      selector: (row: any) => row.skpd,
       sortable: true,
       sortField: 'skpd',
-      width: '200px',
+      width: '240px',
+      center: true,
       wrap: true,
+      cell: (record: any) => <GetSKPD row={parseInt(record.skpd)} />,
     },
     {
       name: 'Nama',
-      selector: (row: any) => row.nama,
+      selector: (row: any) => row.pejabat_ppns_nama,
       sortable: true,
       sortField: 'nama',
-      width: '150px',
+      width: '240px',
+      center: true,
       wrap: true,
     },
     {
-      name: 'NPM/NRK',
-      selector: (row: any) => row.nip,
+      name: 'NIP',
+      selector: (row: any) => row.pejabat_ppns_nip,
       sortable: true,
       sortField: 'nip',
       wrap: true,
+      center: true,
+      width: '170px',
+    },
+    {
+      name: 'NRK',
+      selector: (row: any) => row.pejabat_ppns_nrk,
+      sortable: true,
+      sortField: 'nrk',
+      wrap: true,
+      center: true,
       width: '150px',
     },
     {
-      name: 'Pangkat / GOL',
-      selector: (row: any) => row.golongan,
+      name: 'Pangkat',
+      selector: (row: any) => row.pejabat_ppns_pangkat,
+      sortable: true,
+      sortField: 'pangkat',
+      wrap: true,
+      width: '150px',
+      center: true,
+      cell: (record: any) => <GetPangkat row={parseInt(record.pejabat_ppns_pangkat)} />,
+    },
+    {
+      name: 'Golongan',
+      selector: (row: any) => row.pejabat_ppns_golongan,
       sortable: true,
       sortField: 'golongan',
       wrap: true,
       width: '150px',
       center: true,
+      cell: (record: any) => <GetGolongan row={parseInt(record.pejabat_ppns_golongan)} />,
     },
     {
       name: 'No. SK. PPNS',
       selector: (row: any) => row.no_sk_ppns,
       sortable: true,
       sortField: 'no_sk_ppns',
-      width: '150px',
+      width: '220px',
       wrap: true,
       center: true,
     },
     {
       name: 'No. KTP PPNS',
-      selector: (row: any) => row.no_ktp,
+      selector: (row: any) => row.no_ktp_ppns,
       sortable: true,
-      sortField: 'no_ktp',
+      sortField: 'no_ktp_ppns',
       wrap: true,
       width: '150px',
       center: true,
     },
     {
       name: 'Wilayah Kerja',
-      selector: (row: any) => row.ppns_wilayah_kerja,
+      selector: (row: any) => row.wilayah_kerja,
       sortable: true,
-      width: '150px',
-      sortField: 'ppns_wilayah_kerja',
+      width: '190px',
+      center: true,
+      sortField: 'wilayah_kerja',
       wrap: true,
     },
     {
       name: 'UU yang dikawal',
-      selector: (row: any) => row.uu_yang_dikawal,
+      selector: (row: any) => row.uu_yg_dikawal,
       sortable: true,
-      width: '150px',
-      sortField: 'uu_yang_dikawal',
+      width: '190px',
+      center: true,
+      sortField: 'uu_yg_dikawal',
       wrap: true,
     },
     {
@@ -155,37 +343,12 @@ export function TabDataPPNS() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/DataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
-                        )
+                        navigate(`/kepegawaian/tab-data-ppns/ubah-data-ppns/${record?.id}`, {
+                          replace: true,
+                        })
                       }
                     >
                       Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Hapus
                     </Dropdown.Item>
                   </DropdownType>
                 </>
@@ -196,188 +359,6 @@ export function TabDataPPNS() {
       },
     },
   ]
-
-  const Grouped_Columns = [
-    {
-      Header: 'No',
-    },
-    {
-      Header: 'SKPD',
-    },
-    {
-      Header: 'PEJABAT PPNS',
-      columns: [
-        {
-          Header: 'SKPD',
-          accessor: 'skpd',
-          sortable: true,
-          sortField: 'skpd',
-          width: '200px',
-          wrap: true,
-        },
-        {
-          Header: 'Nama',
-          selector: (row: any) => row.nama,
-          sortable: true,
-          sortField: 'nama',
-          width: '150px',
-          wrap: true,
-        },
-        {
-          Header: 'NIP',
-          selector: (row: any) => row.nip,
-          sortable: true,
-          sortField: 'nip',
-          wrap: true,
-          width: '150px',
-        },
-        {
-          Header: 'NRK',
-          selector: (row: any) => row.nrk,
-          sortable: true,
-          sortField: 'nrk',
-          wrap: true,
-          width: '150px',
-        },
-        {
-          Header: 'Pangkat',
-          selector: (row: any) => row.golongan,
-          sortable: true,
-          sortField: 'golongan',
-          wrap: true,
-          width: '150px',
-          center: true,
-        },
-        {
-          Header: 'Golongan',
-          selector: (row: any) => row.golongan,
-          sortable: true,
-          sortField: 'golongan',
-          wrap: true,
-          width: '150px',
-          center: true,
-        },
-      ],
-    },
-    {
-      Header: 'No. SK. PPNS',
-      selector: (row: any) => row.no_sk_ppns,
-      sortable: true,
-      sortField: 'no_sk_ppns',
-      width: '150px',
-      wrap: true,
-      center: true,
-    },
-    {
-      Header: 'No. KTP PPNS',
-      selector: (row: any) => row.no_ktp,
-      sortable: true,
-      sortField: 'no_ktp',
-      wrap: true,
-      width: '150px',
-      center: true,
-    },
-    {
-      Header: 'Wilayah Kerja',
-      selector: (row: any) => row.ppns_wilayah_kerja,
-      sortable: true,
-      width: '150px',
-      sortField: 'ppns_wilayah_kerja',
-      wrap: true,
-    },
-    {
-      Header: 'UU yang dikawal',
-      selector: (row: any) => row.uu_yang_dikawal,
-      sortable: true,
-      width: '150px',
-      sortField: 'uu_yang_dikawal',
-      wrap: true,
-    },
-    {
-      Header: 'Aksi',
-      sortable: false,
-      text: 'Aksi',
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='mb-2 mt-2'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/DataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {
-                            replace: true,
-                          }
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/TabDataPPNS/UpdateDataPPNS/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
-    },
-  ]
-
-  const columns = useMemo(() => Grouped_Columns, [])
-  const tableInstance = useTable({columns, data}, usePagination)
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    nextPage,
-    previousPage,
-    canNextPage,
-    canPreviousPage,
-    pageOptions,
-    gotoPage,
-    pageCount,
-    state,
-    prepareRow,
-  } = tableInstance
-
-  const {pageIndex} = state
 
   const customStyles = {
     rows: {
@@ -403,7 +384,7 @@ export function TabDataPPNS() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_URL}/PPNS?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -412,10 +393,10 @@ export function TabDataPPNS() {
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchData = async (page: number) => {
+  const fetchUser = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/PPNS?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -425,50 +406,118 @@ export function TabDataPPNS() {
   }
 
   const handlePageChange = (page: number) => {
-    fetchData(page)
+    fetchUser(page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/PPNS?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
     setLoading(false)
   }
 
+  // GET DATA
+  interface SelectOptionAutoCom {
+    readonly value: string
+    readonly label: string
+    readonly color: string
+    readonly isFixed?: boolean
+    readonly isDisabled?: boolean
+  }
+
+  // GET SKPD
+  const [inputValSKPD, setFilterSKPD] = useState({label: '', value: null})
+  const filterSKPD = async (inputValue: string) => {
+    const response = await axios.get(MASTER_SKPD + '/filter/' + inputValue)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.skpd, value: i.id}))
+  }
+  const loadOptionsSKPD = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterSKPD(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputSKPD = (newValue: any) => {
+    setFilterSKPD((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // GET PANGKAT
+  const [inputValPangkat, setFilterPangkat] = useState({label: '', value: null})
+  const filterPangkat = async (inputValue: string) => {
+    const response = await axios.get(MASTER_PANGKAT + '/filter/' + inputValue)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.pangkat, value: i.id}))
+  }
+  const loadOptionsPangkat = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterPangkat(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputPangkat = (newValue: any) => {
+    setFilterPangkat((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // GET GOLONGAN
+  const [inputValGolongan, setFilterGolongan] = useState({label: '', value: null})
+  const filterGolongan = async (inputValue: string) => {
+    const response = await axios.get(MASTER_GOLONGAN + '/filter/' + inputValue)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.golongan, value: i.id}))
+  }
+  const loadOptionsGolongan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterGolongan(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputGolongan = (newValue: any) => {
+    setFilterGolongan((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
   const handleFilter = async () => {
     let uriParam = ''
-    if (valStatPegawai.val !== '') {
-      uriParam += `&status=${valStatPegawai.val}`
+    if (inputValSKPD.value) {
+      uriParam += `&skpd=${inputValSKPD.value}`
     }
     if (valFilterNama.val !== '') {
-      uriParam += `&nama=${valFilterNama.val}`
+      uriParam += `&pejabat_ppns_nama=${valFilterNama.val}`
     }
     if (valFilterNRK.val !== '') {
-      uriParam += `&nrk=${valFilterNRK.val}`
+      uriParam += `&pejabat_ppns_nrk=${valFilterNRK.val}`
     }
-    if (valFilterNoPegawai.val !== '') {
-      uriParam += `&nopegawai=${valFilterNoPegawai.val}`
+    if (valFilterNIP.val !== '') {
+      uriParam += `&pejabat_ppns_nip=${valFilterNIP.val}`
+    }
+    if (inputValPangkat.value) {
+      uriParam += `&pejabat_ppns_pangkat=${inputValPangkat.value}`
+    }
+    if (inputValGolongan.value) {
+      uriParam += `&pejabat_ppns_golongan=${inputValGolongan.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
-    setValStatPegawai({val: ''})
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
-    setFilterNoPegawai({val: ''})
+    setFilterNIP({val: ''})
+    setFilterSKPD({label: '', value: null})
+    setFilterPangkat({label: '', value: null})
+    setFilterGolongan({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const handleChangeStatPegawai = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setValStatPegawai({val: event.target.value})
-  }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -481,26 +530,21 @@ export function TabDataPPNS() {
   }) => {
     setFilterNRK({val: event.target.value})
   }
-  const handleChangeInputNoPegawai = (event: {
+  const handleChangeInputNIP = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterNoPegawai({val: event.target.value})
+    setFilterNIP({val: event.target.value})
   }
 
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
-        valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-      }`,
+      url: `${PPNS_UNDUH_URL}/unduh-PPNS?q=1${qParamFind.strparam}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
-      FileDownload(
-        response.data,
-        'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
-      )
+      FileDownload(response.data, 'DATA PENYIDIK PEGAWAI NEGERI SIPIL.xlsx')
       setbtnLoadingUnduh(false)
     })
   }
@@ -509,10 +553,10 @@ export function TabDataPPNS() {
     <>
       <LaporanPPNSHeader />
       <div id='kt_app_content' className='app-content flex-column-fluid'>
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card'>
-            <div className='card card-flush h-xl-100'>
-              <div className='card-header border-1 pt-6'>
+        <div className='card'>
+          <div className='card card-flush h-xl-100'>
+            <div className='card-header border-1 pt-6'>
+              <div className='col-xl-12 mb-xl-12 mt-6'>
                 <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
                   <div className='mb-5'>
                     <div
@@ -562,23 +606,34 @@ export function TabDataPPNS() {
                             <input
                               type='text'
                               className='form-control form-control form-control-solid'
-                              name='nama'
+                              name='pejabat_ppns_nama'
                               value={valFilterNama.val}
                               onChange={handleChangeInputNama}
-                              placeholder='Nama'
+                              placeholder='Masukkan Nama'
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <label htmlFor='' className='mb-3'>
-                              PANGKAT
+                              Pangkat
                             </label>
-                            <input
-                              type='text'
-                              className='form-control form-control form-control-solid'
-                              name='nama'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
-                              placeholder='Pangkat'
+                            <AsyncSelect
+                              cacheOptions
+                              value={
+                                inputValPangkat.value
+                                  ? inputValPangkat
+                                  : {value: '', label: 'Pilih Pangkat'}
+                              }
+                              loadOptions={loadOptionsPangkat}
+                              defaultOptions
+                              onChange={handleChangeInputPangkat}
+                              placeholder={'Pilih'}
+                              styles={
+                                calculatedMode === 'dark'
+                                  ? reactSelectDarkThem
+                                  : reactSelectLightThem
+                              }
+                              loadingMessage={() => 'Sedang mencari pilihan...'}
+                              noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -588,23 +643,34 @@ export function TabDataPPNS() {
                             <input
                               type='text'
                               className='form-control form-control form-control-solid'
-                              name='NRK'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
-                              placeholder='NRK'
+                              name='pejabat_ppns_nrk'
+                              value={valFilterNRK.val}
+                              onChange={handleChangeInputNRK}
+                              placeholder='Masukkan NRK'
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <label htmlFor='' className='mb-3'>
-                              GOLONGAN
+                              Golongan
                             </label>
-                            <input
-                              type='text'
-                              className='form-control form-control form-control-solid'
-                              name='nama'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
-                              placeholder='Golongan'
+                            <AsyncSelect
+                              cacheOptions
+                              value={
+                                inputValGolongan.value
+                                  ? inputValGolongan
+                                  : {value: '', label: 'Pilih Golongan'}
+                              }
+                              loadOptions={loadOptionsGolongan}
+                              defaultOptions
+                              onChange={handleChangeInputGolongan}
+                              placeholder={'Pilih'}
+                              styles={
+                                calculatedMode === 'dark'
+                                  ? reactSelectDarkThem
+                                  : reactSelectLightThem
+                              }
+                              loadingMessage={() => 'Sedang mencari pilihan...'}
+                              noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -614,10 +680,10 @@ export function TabDataPPNS() {
                             <input
                               type='text'
                               className='form-control form-control form-control-solid'
-                              name='nama'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
-                              placeholder='NIP'
+                              name='pejabat_ppns_nip'
+                              value={valFilterNIP.val}
+                              onChange={handleChangeInputNIP}
+                              placeholder='Masukkan NIP'
                             />
                           </div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -625,71 +691,110 @@ export function TabDataPPNS() {
                               <label htmlFor='' className='mb-3'>
                                 SKPD
                               </label>
-                              <select
-                                className='form-select form-select-solid'
-                                aria-label='Select example'
-                                value={valStatPegawai.val}
-                                onChange={handleChangeStatPegawai}
-                                name='val'
-                              >
-                                <option value=''>Pilih</option>
-                                <option value=''>1</option>
-                                <option value=''>2</option>
-                                <option value=''>3</option>
-                                {/* {arrStatPegawai.map((val: string) => {
-                                    return <option value={val}>{val}</option>
-                                  })} */}
-                              </select>
+                              <AsyncSelect
+                                cacheOptions
+                                value={
+                                  inputValSKPD.value
+                                    ? inputValSKPD
+                                    : {value: '', label: 'Pilih SKPD'}
+                                }
+                                loadOptions={loadOptionsSKPD}
+                                defaultOptions
+                                onChange={handleChangeInputSKPD}
+                                placeholder={'Pilih'}
+                                styles={
+                                  calculatedMode === 'dark'
+                                    ? reactSelectDarkThem
+                                    : reactSelectLightThem
+                                }
+                                loadingMessage={() => 'Sedang mencari pilihan...'}
+                                noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
+                              />
                             </div>
                           </div>
                         </div>
                       </div>
 
                       <div className='row g-8 mt-2'>
-                        <div className='col-md-6 col-lg-6 col-sm-12'>
-                          <Link to='#'>
-                            <button onClick={handleFilter} className='btn btn-primary me-2'>
-                              <i className='fa-solid fa-search'></i>
+                        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                          <Link to='#' onClick={handleFilter}>
+                            <button className='btn btn-light-primary me-2'>
+                              <KTSVG
+                                path='/media/icons/duotune/general/gen021.svg'
+                                className='svg-icon-2'
+                              />
                               Cari
                             </button>
                           </Link>
-                          <Link to='#' onClick={handleFilterReset} className=''>
-                            <button className='btn btn-primary'>
-                              <i className='fa-solid fa-arrows-rotate'></i>
+                          <Link to='#' onClick={handleFilterReset}>
+                            <button className='btn btn-light-primary'>
+                              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                               Reset
                             </button>
                           </Link>
                         </div>
                         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                          <Link
-                            to='/kepegawaian/tab-data-ppns/tambah-data-ppns'
-                            onClick={handleFilterReset}
-                            className='me-2'
-                          >
-                            <button className='btn btn-primary'>
-                              <i className='fa-solid fa-plus'></i>
+                          <Link to='/kepegawaian/tab-data-ppns/tambah-data-ppns'>
+                            {/* begin::Add user */}
+                            <button type='button' className='btn btn-primary me-2'>
+                              <KTSVG
+                                path='/media/icons/duotune/arrows/arr075.svg'
+                                className='svg-icon-2'
+                              />
                               Tambah
                             </button>
+                            {/* end::Add user */}
                           </Link>
-                          <Dropdown as={ButtonGroup}>
-                            <Button variant='light'>
-                              {btnLoadingUnduh ? (
-                                <>
-                                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                  Memproses...
-                                </>
-                              ) : (
-                                'Unduh'
-                              )}
-                            </Button>
+                          {/* begin::Filter Button */}
+                          <button
+                            type='button'
+                            className='btn btn-light-primary'
+                            data-kt-menu-trigger='click'
+                            data-kt-menu-placement='bottom-end'
+                          >
+                            {btnLoadingUnduh ? (
+                              <>
+                                <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                Memproses Unduh...
+                              </>
+                            ) : (
+                              <>
+                                <KTSVG
+                                  path='/media/icons/duotune/arrows/arr078.svg'
+                                  className='svg-icon-2'
+                                />
+                                Unduh
+                              </>
+                            )}
+                          </button>
+                          {/* end::Filter Button */}
+                          {/* begin::SubMenu */}
+                          <div
+                            className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                            data-kt-menu='true'
+                          >
+                            {/* begin::Header */}
+                            <div className='px-7 py-5'>
+                              <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                            </div>
+                            {/* end::Header */}
 
-                            <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+                            {/* begin::Separator */}
+                            <div className='separator border-gray-200'></div>
+                            {/* end::Separator */}
 
-                            <Dropdown.Menu>
-                              <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-                              <Dropdown.Item>PDF</Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
+                            {/* begin::Content */}
+                            <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                              <button
+                                onClick={handleUnduh}
+                                className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                              >
+                                Excel
+                              </button>
+                            </div>
+                            {/* end::Content */}
+                          </div>
+                          {/* end::SubMenu */}
                         </div>
                       </div>
                     </div>
@@ -719,49 +824,27 @@ export function TabDataPPNS() {
             <div className='card-body mt-n20'>
               <div className='mt-n20 position-relative'>
                 <div className='card border card-flush h-xl-100'>
-                  <table {...getTableProps()}>
-                    <thead>
-                      {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                          {headerGroup.headers.map((column) => (
-                            <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                          ))}
-                        </tr>
-                      ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                      {page.map((row) => {
-                        prepareRow(row)
-                        return (
-                          <tr {...row.getRowProps()}>
-                            {row.cells.map((cell) => {
-                              return <td {...cell.getCellProps}>{cell.render('Cell')}</td>
-                            })}
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                  <div>
-                    <span>
-                      Page{''}
-                      <strong>
-                        {pageIndex + 1} of {pageOptions.length}
-                      </strong>
-                      {''}
-                    </span>
-                    <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                      {'<<'}
-                    </button>
-                    <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                      Previous
-                    </button>
-                    <button onClick={() => nextPage} disabled={!canNextPage}>
-                      Next
-                    </button>
-                    <button onClick={() => gotoPage(-1)} disabled={!canNextPage}>
-                      {'>>'}
-                    </button>
+                  <div className='table-responsive mt-5 ms-5 me-5'>
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      progressPending={loading}
+                      progressComponent={<LoadingAnimation />}
+                      pagination
+                      paginationServer
+                      paginationTotalRows={totalRows}
+                      onChangeRowsPerPage={handlePerRowsChange}
+                      onChangePage={handlePageChange}
+                      customStyles={customStyles}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                      noDataComponent={
+                        <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                          <div className='d-flex flex-column'>
+                            <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                          </div>
+                        </div>
+                      }
+                    />
                   </div>
                 </div>
               </div>

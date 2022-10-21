@@ -124,6 +124,26 @@ export function UpdateDataKeluarga() {
     },
   ]
 
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '72px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  }
+
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -132,6 +152,21 @@ export function UpdateDataKeluarga() {
           <span className='spinner-border spinner-border-xl align-middle me-3'></span>
           <div className='d-flex flex-column'>
             <h5 className='mb-1'>Sedang mengambil data...</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  const NoDataComponent = (props: any) => {
+    return (
+      <>
+        <div className='alert d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10'>
+          <span className='svg-icon svg-icon-5tx mb-5'>
+            <KTSVG path='/media/icons/duotune/files/fil024.svg' className='svg-icon-2' />
+          </span>
+          <div className='text-center'>
+            <h5 className='fw-bolder fs-3 mb-5'>Data tidak ditemukan . . .</h5>
           </div>
         </div>
       </>
@@ -325,14 +360,9 @@ export function UpdateDataKeluarga() {
             columns={columns}
             data={data.dt}
             pagination
+            customStyles={customStyles}
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-            noDataComponent={
-              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-                <div className='d-flex flex-column'>
-                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
-                </div>
-              </div>
-            }
+            noDataComponent={<NoDataComponent />}
           />
 
           <Modal

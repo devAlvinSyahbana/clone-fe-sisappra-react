@@ -4164,7 +4164,7 @@ clsx@1.1.1:
   resolved "https://registry.npmjs.org/clsx/-/clsx-1.1.1.tgz"
   integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
 
-clsx@^1.1.0:
+clsx@^1.1.0, clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
@@ -9839,6 +9839,13 @@ react-from-dom@^0.6.2:
   version "0.6.2"
   resolved "https://registry.npmjs.org/react-from-dom/-/react-from-dom-0.6.2.tgz"
   integrity sha512-qvWWTL/4xw4k/Dywd41RBpLQUSq97csuv15qrxN+izNeLYlD9wn5W8LspbfYe5CWbaSdkZ72BsaYBPQf2x4VbQ==
+
+react-image-crop@^10.0.8:
+  version "10.0.8"
+  resolved "https://registry.yarnpkg.com/react-image-crop/-/react-image-crop-10.0.8.tgz#a57400606cdf73ee3436a78fddc82ba6b71801ca"
+  integrity sha512-JyFYRs+KbZhab7/8bDQjZsha1y+ruIIFRQo6BJH+aTd7ua4wSOh+POe305HQV3DH6SxiWrma5UXTYpCiVvx9aw==
+  dependencies:
+    clsx "^1.2.1"
 
 react-images-uploading@^3.1.2:
   version "3.1.7"
