@@ -580,7 +580,6 @@ export function TabRekapitulasiPejabatFungsional() {
                 Subag/Seksi/Kecamatan
               </label>
               <AsyncSelect
-                cacheOptions
                 value={
                   valMasterPelaksana && valMasterPelaksana.label !== ''
                     ? valMasterPelaksana
@@ -603,7 +602,6 @@ export function TabRekapitulasiPejabatFungsional() {
                     label: '',
                   }))
                 }}
-                defaultOptions
                 name='kepegawaian_subbag_seksi_kecamatan'
                 placeholder={'Pilih'}
                 loadingMessage={() => 'Sedang mencari pilihan...'}
@@ -615,7 +613,6 @@ export function TabRekapitulasiPejabatFungsional() {
                 Jabatan
               </label>
               <AsyncSelect
-                cacheOptions
                 value={
                   valMasterJabatan && valMasterJabatan.label !== ''
                     ? valMasterJabatan
@@ -629,7 +626,6 @@ export function TabRekapitulasiPejabatFungsional() {
                     ...e,
                   }))
                 }}
-                defaultOptions
                 name='kepegawaian_jabatan'
                 placeholder={'Pilih'}
                 loadingMessage={() => 'Sedang mencari pilihan...'}
