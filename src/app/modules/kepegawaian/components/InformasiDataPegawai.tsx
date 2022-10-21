@@ -75,6 +75,21 @@ export function InformasiDataPegawai() {
     )
   }
 
+  const NoDataComponent = (props: any) => {
+    return (
+      <>
+        <div className='alert d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10'>
+          <span className='svg-icon svg-icon-5tx mb-5'>
+            <KTSVG path='/media/icons/duotune/files/fil024.svg' className='svg-icon-2' />
+          </span>
+          <div className='text-center'>
+            <h5 className='fw-bolder fs-3 mb-5'>Data tidak ditemukan . . .</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   const GetAgama = ({row}: {row: number}) => {
     const [valData, setValData] = useState('')
     useEffect(() => {
@@ -105,7 +120,7 @@ export function InformasiDataPegawai() {
               <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
                 {record?.foto !== '' ? (
                   <div className='symbol-label'>
-                    <img src={record?.foto} alt={record?.nama} className='w-100' />
+                    <img src={`${API_URL}/${record?.foto}`} alt={record?.nama} className='w-100' />
                   </div>
                 ) : (
                   <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
@@ -523,13 +538,7 @@ export function InformasiDataPegawai() {
           onChangePage={handlePageChange}
           customStyles={customStyles}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-          noDataComponent={
-            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-              <div className='d-flex flex-column'>
-                <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
-              </div>
-            </div>
-          }
+          noDataComponent={<NoDataComponent />}
         />
       </div>
       {/* end::Body */}

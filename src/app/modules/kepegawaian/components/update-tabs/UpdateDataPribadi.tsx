@@ -580,10 +580,10 @@ export function UpdateDataPribadi() {
           }).then(async (result) => {
             if (result.isConfirmed) {
               setSubmitting(true)
-              const bodyParam: DetailPegawaiInterface = {
+              const bodyParam = {
                 nama: values.nama,
                 tempat_lahir: values.tempat_lahir,
-                tgl_lahir: values.tgl_lahir,
+                tgl_lahir: values.tgl_lahir !== '' ? values.tgl_lahir : null,
                 jenis_kelamin: valuesFormik?.jenis_kelamin?.value
                   ? valuesFormik.jenis_kelamin.value
                   : data.jenis_kelamin,
@@ -624,12 +624,12 @@ export function UpdateDataPribadi() {
                   : values.domisili_kelurahan,
                 kepegawaian_nrk: values.kepegawaian_nrk,
                 kepegawaian_nip: values.kepegawaian_nip,
-                kepegawaian_pangkat: values.kepegawaian_pangkat_id,
-                kepegawaian_golongan: values.kepegawaian_golongan_id,
+                kepegawaian_pangkat: values.kepegawaian_pangkat,
+                kepegawaian_golongan: values.kepegawaian_golongan,
                 kepegawaian_tmtpangkat: values.kepegawaian_tmtpangkat,
-                kepegawaian_pendidikan_pada_sk: values.kepegawaian_pendidikan_pada_sk_id,
-                kepegawaian_jabatan: values.kepegawaian_jabatan_id,
-                kepegawaian_eselon: values.kepegawaian_eselon_id,
+                kepegawaian_pendidikan_pada_sk: values.kepegawaian_pendidikan_pada_sk,
+                kepegawaian_jabatan: values.kepegawaian_jabatan,
+                kepegawaian_eselon: values.kepegawaian_eselon,
                 kepegawaian_tempat_tugas: values.kepegawaian_tempat_tugas,
                 kepegawaian_subbag_seksi_kecamatan: values.kepegawaian_subbag_seksi_kecamatan,
                 kepegawaian_kelurahan: values.kepegawaian_kelurahan,
@@ -646,22 +646,18 @@ export function UpdateDataPribadi() {
                 kepegawaian_tgl_sk_pns: values.kepegawaian_tgl_sk_pns,
                 kepegawaian_no_sk_pangkat_terakhir: values.kepegawaian_no_sk_pangkat_terakhir,
                 kepegawaian_tgl_sk_pangkat_terakhir: values.kepegawaian_tgl_sk_pangkat_terakhir,
-                kepegawaian_diklat_pol_pp_dasar: values.kepegawaian_diklat_pol_pp_dasar,
                 kepegawaian_diklat_pol_pp_dasar_no_sertifikat:
                   values.kepegawaian_diklat_pol_pp_dasar_no_sertifikat,
                 kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat:
                   values.kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat,
-                kepegawaian_diklat_pol_pp_strutural: values.kepegawaian_diklat_pol_pp_strutural,
                 kepegawaian_diklat_pol_pp_strutural_no_sertifikat:
                   values.kepegawaian_diklat_pol_pp_strutural_no_sertifikat,
                 kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat:
                   values.kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat,
-                kepegawaian_diklat_pol_pp_ppns: values.kepegawaian_diklat_pol_pp_ppns,
                 kepegawaian_diklat_pol_pp_ppns_no_sertifikat:
                   values.kepegawaian_diklat_pol_pp_ppns_no_sertifikat,
                 kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat:
                   values.kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat,
-                kepegawaian_diklat_fungsional_pol_pp: values.kepegawaian_diklat_fungsional_pol_pp,
                 kepegawaian_diklat_fungsional_pol_pp_no_sertifikat:
                   values.kepegawaian_diklat_fungsional_pol_pp_no_sertifikat,
                 kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat:
@@ -697,6 +693,8 @@ export function UpdateDataPribadi() {
                 setSubmitting(false)
                 console.error(error)
               }
+            } else {
+              setSubmitting(false)
             }
           })
         }}
@@ -1147,7 +1145,10 @@ export function UpdateDataPribadi() {
                               ? valKecKTP
                               : {value: '', label: 'Pilih'}
                           }
-                          onChange={(e) => handleChangeFormikSelect(e, 'sesuai_ktp_kecamatan')}
+                          onChange={(e) => {
+                            handleChangeFormikSelect(e, 'sesuai_ktp_kecamatan')
+                            handleChange('sesuai_ktp_kecamatan')(e.value)
+                          }}
                           placeholder={'Pilih'}
                           loadingMessage={() => 'Sedang mencari pilihan...'}
                           noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
