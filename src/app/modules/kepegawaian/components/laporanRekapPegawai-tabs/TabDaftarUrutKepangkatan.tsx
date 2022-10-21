@@ -385,6 +385,8 @@ export function TabDaftarUrutKepangkatan() {
       setData(response.data.data)
       setTotalRows(response.data.total_data)
       setLoading(false)
+
+      getBidangWilayah(response.data.data.kepegawaian_tempat_tugas)
     }
     fetchDT(1)
   }, [qParamFind, perPage])
@@ -425,7 +427,7 @@ export function TabDaftarUrutKepangkatan() {
   }
 
   // GET KOTA (Wilayah / Bidang)
-  const [inputValKota, setFilterKota] = useState({label: '', value: null})
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
   const filterKota = async (inputValue: string) => {
     const response = await axios.get(MASTER_URL + '/bidang-wilayah/filter/' + inputValue)
     const json = await response.data.data
@@ -440,17 +442,41 @@ export function TabDaftarUrutKepangkatan() {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-    setFilterKota((prevstate: any) => ({...prevstate, ...newValue}))
+    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
-  // GET Kecamatan
-  const [inputValKecamatan, setFilterKecamatan] = useState({label: '', value: null})
+  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
+  const getBidangWilayah = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/bidang-wilayah/findone/${parseInt(params)}`)
+        .then((response) => {
+          setIdMasterBidangWilayah((prevstate) => ({
+            ...prevstate,
+            id: response?.data?.data?.id,
+          }))
+          setValMasterBidangWilayah((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.nama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  // GET Kecamatan (PELAKSANA)
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      MASTER_URL + '/findone-by-kecamatan?kota=' + inputValKota.label + '&kecamatan=' + inputValue
+      MASTER_URL +
+        `${MASTER_URL}/pelaksana/filter?id_tempat_pelaksanaan=${parseInt(
+          idMasterBidangWilayah.id
+        )}${inputValue !== '' && `&nama=${inputValue}`}`
     )
     const json = await response.data.data
-    return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsKecamatan = (
     inputValue: string,
@@ -461,35 +487,51 @@ export function TabDaftarUrutKepangkatan() {
     }, 1000)
   }
   const handleChangeInputKecamatan = (newValue: any) => {
-    setFilterKecamatan((prevstate: any) => ({...prevstate, ...newValue}))
+    setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  const getPelaksana = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/pelaksana/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValMasterPelaksana((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.nama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
   }
   // END :: GET Kecamatan
 
   // GET Kelurahan
-  const [inputValKelurahan, setFilterKelurahan] = useState({label: '', value: null})
-  const filterKelurahan = async (inputValue: string) => {
-    const response = await axios.get(
-      MASTER_URL +
-        '/findone-by-kelurahan?kecamatan=' +
-        inputValKecamatan.label +
-        '&kelurahan=' +
-        inputValue
-    )
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
-  }
-  const loadOptionsKelurahan = (
-    inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKelurahan(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputKelurahan = (newValue: any) => {
-    setFilterKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-  // END :: GET Kelurahan
+  // const [inputValKelurahan, setFilterKelurahan] = useState({label: '', value: null})
+  // const filterKelurahan = async (inputValue: string) => {
+  //   const response = await axios.get(
+  //     MASTER_URL +
+  //       '/findone-by-kelurahan?kecamatan=' +
+  //       inputValKecamatan.label +
+  //       '&kelurahan=' +
+  //       inputValue
+  //   )
+  //   const json = await response.data.data
+  //   return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
+  // }
+  // const loadOptionsKelurahan = (
+  //   inputValue: string,
+  //   callback: (options: SelectOptionAutoCom[]) => void
+  // ) => {
+  //   setTimeout(async () => {
+  //     callback(await filterKelurahan(inputValue))
+  //   }, 1000)
+  // }
+  // const handleChangeInputKelurahan = (newValue: any) => {
+  //   setFilterKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
+  // }
+  // // END :: GET Kelurahan
 
   const handleFilter = async () => {
     let uriParam = ''
@@ -508,14 +550,11 @@ export function TabDaftarUrutKepangkatan() {
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nrk_nptt_pjlp=${valFilterNoPegawai.val}`
     }
-    if (inputValKota.value) {
-      uriParam += `&tempat_tugas=${inputValKota.value}`
+    if (valMasterBidangWilayah.value) {
+      uriParam += `&tempat_tugas=${valMasterBidangWilayah.value}`
     }
-    if (inputValKecamatan.value) {
-      uriParam += `&seksi_kecamatan=${inputValKecamatan.value}`
-    }
-    if (inputValKelurahan.value) {
-      uriParam += `&kelurahan=${inputValKelurahan.value}`
+    if (valMasterPelaksana.value) {
+      uriParam += `&seksi_kecamatan=${valMasterPelaksana.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
@@ -526,9 +565,7 @@ export function TabDaftarUrutKepangkatan() {
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
     setFilterNIP({val: ''})
-    setFilterKota({label: '', value: null})
-    setFilterKecamatan({label: '', value: null})
-    setFilterKelurahan({label: '', value: null})
+    setValMasterBidangWilayah({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -722,8 +759,8 @@ export function TabDaftarUrutKepangkatan() {
                               <AsyncSelect
                                 cacheOptions
                                 value={
-                                  inputValKota.value
-                                    ? inputValKota
+                                  valMasterBidangWilayah.value
+                                    ? valMasterBidangWilayah
                                     : {value: '', label: 'Pilih Pangkat'}
                                 }
                                 loadOptions={loadOptionsKota}
@@ -749,8 +786,8 @@ export function TabDaftarUrutKepangkatan() {
                                 cacheOptions
                                 loadOptions={loadOptionsKecamatan}
                                 value={
-                                  inputValKecamatan.value
-                                    ? inputValKecamatan
+                                  valMasterPelaksana.value
+                                    ? valMasterPelaksana
                                     : {value: '', label: 'Pilih Kecamatan'}
                                 }
                                 styles={
@@ -762,7 +799,7 @@ export function TabDaftarUrutKepangkatan() {
                               />
                             </div>
                           </div>
-                          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                          {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <div className='form-group'>
                               <label htmlFor='' className='mb-3'>
                                 Kelurahan
@@ -783,7 +820,7 @@ export function TabDaftarUrutKepangkatan() {
                                 onChange={handleChangeInputKelurahan}
                               />
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
 
