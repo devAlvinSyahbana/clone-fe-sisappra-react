@@ -7,15 +7,18 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 
 export interface FormInput {
-  kepegawaian_nip?: string
   nama?: string
+  nrk?: number
+  nip?: string
+  jabatan?: string
+  tempat_tugas?: string
+  subbag_seksi_kecamatan?: string
+  pangkat?: string
+  golongan?: string
+  tmt_pangkat?: number
+  eselon?: string
+  status_kenaikan_pangkat?: any
   updated_by?: number
-}
-
-interface GetDataInterface {
-  id?: number
-  kepegawaian_nip?: string
-  nama?: string
 }
 
 export interface SelectOption {
@@ -25,15 +28,29 @@ export interface SelectOption {
   readonly isFixed?: boolean
   readonly isDisabled?: boolean
 }
+interface GetDataInterface {
+  id?: number
+  nama?: string
+  nrk?: number
+  nip?: string
+  jabatan?: string
+  tempat_tugas?: string
+  subbag_seksi_kecamatan?: string
+  pangkat?: string
+  golongan?: string
+  tmt_pangkat?: number
+  eselon?: string
+  status_kenaikan_pangkat?: any
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
+
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian` //http://localhost:3000/kepegawaian
-export const PANGKAT_URL = `${API_URL}/master/pangkat`
+export const STATUS_KENAIKAN_PANGKAT_URL = `${API_URL}/master/status_kenaikan_pangkat`
 
 export function UpdateNaikPangkat() {
   const navigate = useNavigate()
   const {id} = useParams()
-  const [selectedFile, setSelectedFile] = useState(null)
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
 
@@ -41,11 +58,22 @@ export function UpdateNaikPangkat() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${KEPEGAWAIAN_URL}/findone/${id}`)
+      const response = await axios.get(
+        `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/findone/${id}`
+      )
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
         nama: jsonD.nama,
-        kepegawaian_nip: jsonD.kepegawaian_nip,
+        nrk: jsonD.nrk,
+        nip: jsonD.nip,
+        jabatan: jsonD.jabatan,
+        tempat_tugas: jsonD.tempat_tugas,
+        subbag_seksi_kecamatan: jsonD.subbag_seksi_kecamatan,
+        pangkat: jsonD.pangkat,
+        golongan: jsonD.golongan,
+        tmt_pangkat: jsonD.tmt_pangkat,
+        eselon: jsonD.eselon,
+        status_kenaikan_pangkat: {value: jsonD.status_kenaikan_pangkat, label: jsonD.status_kenaikan_pangkat},
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
@@ -66,48 +94,92 @@ export function UpdateNaikPangkat() {
   const formik = useFormik({
     initialValues: {
       nama: '',
-      kepegawaian_nip: '',
+      nrk: '',
+      nip: '',
+      jabatan: '',
+      tempat_tugas: '',
+      subbag_seksi_kecamatan: '',
+      pangkat: '',
+      golongan: '',
+      tmt_pangkat: 0,
+      eselon: 0,
+      status_kenaikan_pangkat: {value: '', label: 'Pilih'},
     },
     onSubmit: async (values) => {
-      let formData = new FormData()
+      console.log(inputValPangkat)
       const bodyparam: FormInput = {
-        nama: valuesFormik?.nama
-          ? valuesFormik.nama
-          : valuesFormikExist?.nama
-          ? valuesFormikExist.nama
-          : '',
-        kepegawaian_nip: valuesFormik?.kepegawaian_nip
-          ? valuesFormik.kepegawaian_nip
-          : valuesFormikExist?.kepegawaian_nip
-          ? valuesFormikExist.kepegawaian_nip
+        // nama: valuesFormik?.nama
+        //   ? valuesFormik.nama
+        //   : valuesFormikExist?.nama
+        //   ? valuesFormikExist.nama
+        //   : '',
+        // nrk: valuesFormik?.nrk
+        //   ? valuesFormik.nrk
+        //   : valuesFormikExist?.nrk
+        //   ? valuesFormikExist.nrk
+        //   : 0,
+        // nip: valuesFormik?.nip
+        //   ? valuesFormik.nip
+        //   : valuesFormikExist?.nip
+        //   ? valuesFormikExist.nip
+        //   : '',
+        // jabatan: valuesFormik?.jabatan
+        //   ? valuesFormik.jabatan
+        //   : valuesFormikExist?.jabatan
+        //   ? valuesFormikExist.jabatan
+        //   : '',
+        // tempat_tugas: valuesFormik?.tempat_tugas
+        //   ? valuesFormik.tempat_tugas
+        //   : valuesFormikExist?.tempat_tugas
+        //   ? valuesFormikExist.tempat_tugas
+        //   : '',
+        // subbag_seksi_kecamatan: valuesFormik?.subbag_seksi_kecamatan
+        //   ? valuesFormik.subbag_seksi_kecamatan
+        //   : valuesFormikExist?.subbag_seksi_kecamatan
+        //   ? valuesFormikExist.subbag_seksi_kecamatan
+        //   : '',
+        // pangkat: valuesFormik?.pangkat
+        //   ? valuesFormik.pangkat
+        //   : valuesFormikExist?.pangkat
+        //   ? valuesFormikExist.pangkat
+        //   : '',
+        // golongan: valuesFormik?.golongan
+        //   ? valuesFormik.golongan
+        //   : valuesFormikExist?.golongan
+        //   ? valuesFormikExist.golongan
+        //   : '',
+        // tmt_pangkat: valuesFormik?.tmt_pangkat
+        //   ? valuesFormik.tmt_pangkat
+        //   : valuesFormikExist?.tmt_pangkat
+        //   ? valuesFormikExist.tmt_pangkat
+        //   : 0,
+        // eselon: valuesFormik?.eselon
+        //   ? valuesFormik.eselon
+        //   : valuesFormikExist?.eselon
+        //   ? valuesFormikExist.eselon
+        //   : '',
+        status_kenaikan_pangkat: inputValPangkat?.value
+          ? inputValPangkat.value
+          : valuesFormikExist?.status_kenaikan_pangkat
+          ? valuesFormikExist.status_kenaikan_pangkat
           : '',
         updated_by: 0,
       }
       try {
-        const response = await axios.put(`${KEPEGAWAIAN_URL}/update/${id}`, bodyparam)
+        const response = await axios.put(
+          `${KEPEGAWAIAN_URL}/update-status-kenaikan-pangkat/${id}`,
+          bodyparam
+        )
         if (response) {
-          if (selectedFile) {
-            formData.append('file_dokumentasi', selectedFile)
-            const responseFile = await axios.post(`${KEPEGAWAIAN_URL}/upload/${id}`, formData)
-            if (responseFile) {
-              console.log('File success uploaded!')
-              Swal.fire({
-                icon: 'success',
-                title: 'Data berhasil disimpan',
-                showConfirmButton: false,
-                timer: 1500,
-              })
-              navigate('/kepegawaian/TabDataPegawaiYangNaikPangkat', {replace: true})
-            }
-            return
-          }
           Swal.fire({
             icon: 'success',
             title: 'Data berhasil disimpan',
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/kepegawaian/TabDataPegawaiYangNaikPangkat', {replace: true})
+          navigate('/kepegawaian/LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat', {
+            replace: true,
+          })
         }
       } catch (error) {
         Swal.fire({
@@ -121,10 +193,11 @@ export function UpdateNaikPangkat() {
     },
   })
 
+  //Status Naik Pangkat
   const filterPangkat = async (inputValue: string) => {
-    const response = await axios.get(`${PANGKAT_URL}/find${inputValue}`)
+    const response = await axios.get(`${STATUS_KENAIKAN_PANGKAT_URL}/find${inputValue}`)
     const json = await response.data.data
-    return json.map((i: any) => ({label: i.pangkat, value: i.id}))
+    return json.map((i: any) => ({label: i.status_kenaikan_pangkat, value: i.id}))
   }
   const loadOptionsPangkat = (inputValue: string, callback: (options: SelectOption[]) => void) => {
     setTimeout(async () => {
@@ -148,14 +221,14 @@ export function UpdateNaikPangkat() {
                       <div className='form-group'>
                         <Form.Label>NIP</Form.Label>
                         <Form.Control
-                          name='nama'
+                          name='nip'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.nama || valuesFormik?.nama === ''
-                              ? valuesFormik?.nama
-                              : valuesFormikExist?.nama
-                              ? valuesFormikExist?.nama
+                            valuesFormik?.nip || valuesFormik?.nip === ''
+                              ? valuesFormik?.nip
+                              : valuesFormikExist?.nip
+                              ? valuesFormikExist?.nip
                               : ''
                           }
                           readOnly
@@ -166,14 +239,14 @@ export function UpdateNaikPangkat() {
                       <div className='form-group'>
                         <Form.Label>NRK</Form.Label>
                         <Form.Control
-                          name='kepegawaian_nip'
+                          name='nrk'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.kepegawaian_nip || valuesFormik?.kepegawaian_nip === ''
-                              ? valuesFormik?.kepegawaian_nip
-                              : valuesFormikExist?.kepegawaian_nip
-                              ? valuesFormikExist?.kepegawaian_nip
+                            valuesFormik?.nrk || valuesFormik?.nrk === 0
+                              ? valuesFormik?.nrk
+                              : valuesFormikExist?.nrk
+                              ? valuesFormikExist?.nrk
                               : ''
                           }
                           readOnly
@@ -202,14 +275,14 @@ export function UpdateNaikPangkat() {
                       <div className='form-group'>
                         <Form.Label>Pangkat</Form.Label>
                         <Form.Control
-                          name='kepegawaian_nip'
+                          name='pangkat'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.kepegawaian_nip || valuesFormik?.kepegawaian_nip === ''
-                              ? valuesFormik?.kepegawaian_nip
-                              : valuesFormikExist?.kepegawaian_nip
-                              ? valuesFormikExist?.kepegawaian_nip
+                            valuesFormik?.pangkat || valuesFormik?.pangkat === ''
+                              ? valuesFormik?.pangkat
+                              : valuesFormikExist?.pangkat
+                              ? valuesFormikExist?.pangkat
                               : ''
                           }
                           readOnly
@@ -220,14 +293,14 @@ export function UpdateNaikPangkat() {
                       <div className='form-group'>
                         <Form.Label>TMT Pangkat</Form.Label>
                         <Form.Control
-                          name='nama'
+                          name='tmt_pangkat'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.nama || valuesFormik?.nama === ''
-                              ? valuesFormik?.nama
-                              : valuesFormikExist?.nama
-                              ? valuesFormikExist?.nama
+                            valuesFormik?.tmt_pangkat || valuesFormik?.tmt_pangkat === 0
+                              ? valuesFormik?.tmt_pangkat
+                              : valuesFormikExist?.tmt_pangkat
+                              ? valuesFormikExist?.tmt_pangkat
                               : ''
                           }
                           readOnly
@@ -238,32 +311,14 @@ export function UpdateNaikPangkat() {
                       <div className='form-group'>
                         <Form.Label>Jabatan</Form.Label>
                         <Form.Control
-                          name='kepegawaian_nip'
+                          name='jabatan'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.kepegawaian_nip || valuesFormik?.kepegawaian_nip === ''
-                              ? valuesFormik?.kepegawaian_nip
-                              : valuesFormikExist?.kepegawaian_nip
-                              ? valuesFormikExist?.kepegawaian_nip
-                              : ''
-                          }
-                          readOnly
-                        />
-                      </div>
-                    </div>
-                    <div className='col-4 mb-3'>
-                      <div className='form-group'>
-                        <Form.Label>No Telepon</Form.Label>
-                        <Form.Control
-                          name='nama'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
-                          value={
-                            valuesFormik?.nama || valuesFormik?.nama === ''
-                              ? valuesFormik?.nama
-                              : valuesFormikExist?.nama
-                              ? valuesFormikExist?.nama
+                            valuesFormik?.jabatan || valuesFormik?.jabatan === ''
+                              ? valuesFormik?.jabatan
+                              : valuesFormikExist?.jabatan
+                              ? valuesFormikExist?.jabatan
                               : ''
                           }
                           readOnly
@@ -274,14 +329,14 @@ export function UpdateNaikPangkat() {
                       <div className='form-group'>
                         <Form.Label>Eselon</Form.Label>
                         <Form.Control
-                          name='kepegawaian_nip'
+                          name='eselon'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.kepegawaian_nip || valuesFormik?.kepegawaian_nip === ''
-                              ? valuesFormik?.kepegawaian_nip
-                              : valuesFormikExist?.kepegawaian_nip
-                              ? valuesFormikExist?.kepegawaian_nip
+                            valuesFormik?.eselon || valuesFormik?.eselon === ''
+                              ? valuesFormik?.eselon
+                              : valuesFormikExist?.eselon
+                              ? valuesFormikExist?.eselon
                               : ''
                           }
                           readOnly
@@ -292,14 +347,14 @@ export function UpdateNaikPangkat() {
                       <div className='form-group'>
                         <Form.Label>Tempat Tugas Wilayah/Bidang</Form.Label>
                         <Form.Control
-                          name='nama'
+                          name='tempat_tugas'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.nama || valuesFormik?.nama === ''
-                              ? valuesFormik?.nama
-                              : valuesFormikExist?.nama
-                              ? valuesFormikExist?.nama
+                            valuesFormik?.tempat_tugas || valuesFormik?.tempat_tugas === ''
+                              ? valuesFormik?.tempat_tugas
+                              : valuesFormikExist?.tempat_tugas
+                              ? valuesFormikExist?.tempat_tugas
                               : ''
                           }
                           readOnly
@@ -308,16 +363,17 @@ export function UpdateNaikPangkat() {
                     </div>
                     <div className='col-4 mb-3'>
                       <div className='form-group'>
-                        <Form.Label>Tempat Tugas nama/Seksi</Form.Label>
+                        <Form.Label>Tempat Tugas Kecamatan/Seksi</Form.Label>
                         <Form.Control
-                          name='kepegawaian_nip'
+                          name='subbag_seksi_kecamatan'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.kepegawaian_nip || valuesFormik?.kepegawaian_nip === ''
-                              ? valuesFormik?.kepegawaian_nip
-                              : valuesFormikExist?.kepegawaian_nip
-                              ? valuesFormikExist?.kepegawaian_nip
+                            valuesFormik?.subbag_seksi_kecamatan ||
+                            valuesFormik?.subbag_seksi_kecamatan === ''
+                              ? valuesFormik?.subbag_seksi_kecamatan
+                              : valuesFormikExist?.subbag_seksi_kecamatan
+                              ? valuesFormikExist?.subbag_seksi_kecamatan
                               : ''
                           }
                           readOnly
@@ -328,14 +384,14 @@ export function UpdateNaikPangkat() {
                       <div className='form-group'>
                         <Form.Label>Golongan</Form.Label>
                         <Form.Control
-                          name='nama'
+                          name='golongan'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.nama || valuesFormik?.nama === ''
-                              ? valuesFormik?.nama
-                              : valuesFormikExist?.nama
-                              ? valuesFormikExist?.nama
+                            valuesFormik?.golongan || valuesFormik?.golongan === ''
+                              ? valuesFormik?.golongan
+                              : valuesFormikExist?.golongan
+                              ? valuesFormikExist?.golongan
                               : ''
                           }
                           readOnly
@@ -348,7 +404,7 @@ export function UpdateNaikPangkat() {
                         <AsyncSelect
                           cacheOptions
                           value={
-                            inputValPangkat.value ? inputValPangkat : {value: '', label: 'Pilih'}
+                            inputValPangkat.value ? inputValPangkat : valuesFormikExist.status_kenaikan_pangkat && valuesFormikExist.status_kenaikan_pangkat.value !==  "" ? valuesFormikExist.status_kenaikan_pangkat: {value: '', label: 'Pilih'}
                           }
                           loadOptions={loadOptionsPangkat}
                           defaultOptions
@@ -357,26 +413,9 @@ export function UpdateNaikPangkat() {
                         />
                       </div>
                     </div>
-                    <div className='col-4 mb-3'>
-                      <div className='form-group'>
-                        <Form.Label>Jadwal Kenaikan</Form.Label>
-                        <Form.Control
-                          name='kepegawaian_nip'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
-                          value={
-                            valuesFormik?.kepegawaian_nip || valuesFormik?.kepegawaian_nip === ''
-                              ? valuesFormik?.kepegawaian_nip
-                              : valuesFormikExist?.kepegawaian_nip
-                              ? valuesFormikExist?.kepegawaian_nip
-                              : ''
-                          }
-                        />
-                      </div>
-                    </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/kepegawaian/LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat/'>
+                    <Link to='/kepegawaian/LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat'>
                       <button className='btn btn-secondary'>
                         <i className='fa fa-close'></i>
                         Batal
