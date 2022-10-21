@@ -156,8 +156,6 @@ export function TabRekapitulasiPejabatFungsional() {
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({strparam: ''})
 
-  const [dataSelect, setDataSelect] = useState('')
-
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -246,25 +244,6 @@ export function TabRekapitulasiPejabatFungsional() {
 
   const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
   const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
-  const getPelaksana = async (params: any) => {
-    if (params)
-      return await axios
-        .get(`${MASTER_URL}/pelaksana/findone/${parseInt(params)}`)
-        .then((response) => {
-          setIdMasterPelaksana((prevstate) => ({
-            ...prevstate,
-            id: response?.data?.data?.id,
-          }))
-          setValMasterPelaksana((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.nama,
-          }))
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-  }
 
   const columns = [
     {
