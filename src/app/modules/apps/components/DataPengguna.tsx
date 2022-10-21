@@ -518,6 +518,7 @@ export function DataPengguna() {
                               placeholder='Masukkan nama'
                             />
                           </div>
+                          <div className='col-md-6 col-lg-6'></div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <label htmlFor='' className='mb-3'>
                               Email
@@ -531,6 +532,7 @@ export function DataPengguna() {
                               placeholder='Masukkan Alamat Email'
                             />
                           </div>
+                          <div className='col-md-6 col-lg-6'></div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <label htmlFor='' className='mb-3'>
                               Hak Akses
@@ -634,21 +636,10 @@ export function DataPengguna() {
               </div>
             </div>
             <div
-              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-              style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
-              }}
+              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-100px'
+              style={{}}
               data-theme='light'
-            >
-              <div className='card-body py-8 mt-4 fw-bold text-white'>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>Manajemen Pengguna</div>
-                </div>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>Tabel List Data Pengguna</div>
-                </div>
-              </div>
-            </div>
+            ></div>
 
             <div className='card-body mt-n20'>
               <div className='mt-n20 position-relatve'>
