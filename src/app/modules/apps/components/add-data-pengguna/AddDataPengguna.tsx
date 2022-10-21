@@ -193,7 +193,7 @@ export function AddDataPengguna() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('apps/data-pengguna/tambah-data-pengguna', {
+          navigate('/apps/data-pengguna/', {
             replace: true,
           })
         }
@@ -302,19 +302,6 @@ export function AddDataPengguna() {
                   onChange={handleChangeFormik}
                   value={valuesFormik?.status_pengguna}
                   placeholder='Masukkan status pengguna'
-                />
-              </div>
-            </div>
-            <div className='col-6 mb-6'>
-              <div className='form-group'>
-                <Form.Label>Terakhir Login</Form.Label>
-                <Form.Control
-                  type='string'
-                  name='terakhir_login'
-                  className='form-control form-control-solid'
-                  onChange={handleChangeFormik}
-                  value={valuesFormik?.terakhir_login}
-                  placeholder='Masukkan terakhir login'
                 />
               </div>
             </div>
