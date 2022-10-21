@@ -763,7 +763,6 @@ export function UpdateDataKepegawaian() {
                       Pangkat
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_pangkat
                           ? valuesFormik?.kepegawaian_pangkat
@@ -936,7 +935,6 @@ export function UpdateDataKepegawaian() {
                       Subag/Seksi/Kecamatan
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_subbag_seksi_kecamatan
                           ? valuesFormik?.kepegawaian_subbag_seksi_kecamatan
@@ -952,7 +950,6 @@ export function UpdateDataKepegawaian() {
                         handleChangeFormikSelect(e, 'kepegawaian_subbag_seksi_kecamatan')
                         await setFieldValue('kepegawaian_subbag_seksi_kecamatan', e.value)
                       }}
-                      defaultOptions
                       name='kepegawaian_subbag_seksi_kecamatan'
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
@@ -973,7 +970,6 @@ export function UpdateDataKepegawaian() {
                       Jabatan
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_jabatan
                           ? valuesFormik?.kepegawaian_jabatan
@@ -989,7 +985,6 @@ export function UpdateDataKepegawaian() {
                         handleChangeFormikSelect(e, 'kepegawaian_jabatan')
                         await setFieldValue('kepegawaian_jabatan', e.value)
                       }}
-                      defaultOptions
                       name='kepegawaian_jabatan'
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
