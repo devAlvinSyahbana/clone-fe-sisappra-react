@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Modal from 'react-bootstrap/Modal';
 
 import { useMemo } from 'react'
@@ -16,136 +16,22 @@ import { SelectOptionAutoCom } from './KepegawaianInterface'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import AsyncSelect from 'react-select/async';
+// Chart
 import { Tree, TreeNode } from 'react-organizational-chart';
 import styled from 'styled-components';
 import OrganizationChart from "@dabeng/react-orgchart";
-
+import StrukturalOrganisasi from "./hirarki-chart/StrukturalOrganisasi";
+import FileDownload from 'js-file-download'
+// import MyNode from "./hirarki-chart/my-node";
+import PropTypes from "prop-types";
+import "./hirarki-chart/my-node.css";
+// API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const ATASAN_URL = `${API_URL}/kepegawaian`
-// Chart
-// import "./chart.css";
-// import ReactDOM from "react-dom";
-// import { Component } from "react";
-// import $ from "jquery";
-// const orgchart = require("orgchart");
 
-// class OrgChart extends React.Component {
-//   $el: JQuery<any>;
-//   componentDidMount() {
-//     this.$el = $(this.el);
-//     let datascource = {
-//       name: "Lao Lao",
-//       title: "general manager",
-//       tester: "test",
-//       children: [
-//         {
-//           name: "Bo Miao",
-//           title: "department manager",
-//           className: "middle-level",
-//           children: [
-//             {
-//               name: "Li Jing",
-//               title: "senior engineer",
-//               className: "product-dept"
-//             },
-//             {
-//               name: "Li Xin",
-//               title: "senior engineer",
-//               className: "product-dept",
-//               children: [
-//                 { name: "To To", title: "engineer", className: "pipeline1" },
-//                 { name: "Fei Fei", title: "engineer", className: "pipeline1" },
-//                 { name: "Xuan Xuan", title: "engineer", className: "pipeline1" }
-//               ]
-//             }
-//           ]
-//         },
-//         {
-//           name: "Su Miao",
-//           title: "department manager",
-//           className: "middle-level",
-//           children: [
-//             {
-//               name: "Pang Pang",
-//               title: "senior engineer",
-//               className: "rd-dept"
-//             },
-//             {
-//               name: "Hei Hei",
-//               title: "senior engineer",
-//               className: "rd-dept",
-//               children: [
-//                 {
-//                   name: "Xiang Xiang",
-//                   title: "UE engineer",
-//                   className: "frontend1"
-//                 },
-//                 {
-//                   name: "Dan Dan",
-//                   title: "engineer",
-//                   className: "frontend1",
-//                   children: [
-//                     {
-//                       name: "Xiang Xiang",
-//                       title: "UE engineer",
-//                       className: "frontend1"
-//                     },
-//                     {
-//                       name: "Dan Dan",
-//                       title: "engineer",
-//                       className: "frontend1"
-//                     },
-//                     {
-//                       name: "Zai Zai",
-//                       title: "engineer",
-//                       className: "frontend1"
-//                     }
-//                   ]
-//                 },
-//                 { name: "Zai Zai", title: "engineer", className: "frontend1" }
-//               ]
-//             }
-//           ]
-//         }
-//       ]
-//     };
-//     var nodeTemplate = function (data) {
-//       return `
-//         <div class="tester">${data.className}</div>
-//         <div class="title">${data.name}</div>
-//         <div class="content">${data.title}</div>
-//       `;
-//     };
 
-//     function checkMan(node, data) {
-//       console.log(node, data);
-//     }
-
-//     this.$el.orgchart({
-//       data: datascource,
-//       nodeContent: "title",
-//       //nodeTemplate: nodeTemplate,
-//       pan: true,
-//       zoom: true,
-//       toggleSiblingsResp: true,
-//       createNode: function (node, data) {
-//         checkMan(node, data);
-//       }
-//       //direction: "l2r"
-//     });
-//   }
-
-//   componentWillUnmount() {
-//     this.$el.empty();
-//   }
-
-//   render() {
-//     return <div id="chart-container" ref={el => (this.el = el)} />;
-//   }
-// }
 
 export function HirarkiPegawai() {
-
   const users = useQueryResponseData()
   const isLoading = useQueryResponseLoading()
   const data = useMemo(() => users, [users])
@@ -202,6 +88,9 @@ export function HirarkiPegawai() {
   `;
 
   // Org Chart
+
+  const orgchart = useRef();
+
   const ds = {
     id: "level1",
     name: "Lao Lao",
@@ -317,6 +206,43 @@ export function HirarkiPegawai() {
         ]
       },
     ]
+  };
+
+  const exportTo = async () => {
+    // setbtnLoadingUnduh(true)
+    await axios({
+      url: orgchart.current,
+      method: 'GET',
+      responseType: 'blob', // Important
+    }).then((response) => {
+      FileDownload(
+        response.data,
+        filename + fileextension
+      )
+      // setbtnLoadingUnduh(false)
+    })
+  }
+
+  // const exportTo = () => {
+  // FileDownload(orgchart.current, filename + fileextension)
+  // orgchart.current.exportTo(filename, fileextension);
+  // };
+
+  const [filename, setFilename] = useState("organization_chart");
+  const [fileextension, setFileextension] = useState("png");
+
+  const onNameChange = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setFilename(event.target.value);
+  };
+
+  const onExtensionChange = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setFileextension(event.target.value);
   };
 
   return (
@@ -580,7 +506,45 @@ export function HirarkiPegawai() {
 
             {/* START :: Coba org-chart */}
             <div>
-              <OrganizationChart datasource={ds} pan={true} zoom={true} />
+              {/* <section className="toolbar">
+                <label htmlFor="txt-filename">Filename:</label>
+                <input
+                  id="txt-filename"
+                  type="text"
+                  value={filename}
+                  onChange={onNameChange}
+                  style={{ fontSize: "1rem", marginRight: "2rem" }}
+                />
+                <span>Fileextension: </span>
+                <input
+                  id="rd-png"
+                  type="radio"
+                  value="png"
+                  checked={fileextension === "png"}
+                  onChange={onExtensionChange}
+                />
+                <label htmlFor="rd-png">png</label>
+                <input
+                  style={{ marginLeft: "1rem" }}
+                  id="rd-pdf"
+                  type="radio"
+                  value="pdf"
+                  checked={fileextension === "pdf"}
+                  onChange={onExtensionChange}
+                />
+                <label htmlFor="rd-pdf">pdf</label>
+                <button onClick={exportTo} style={{ marginLeft: "2rem" }}>
+                  Export
+                </button>
+              </section>
+              <OrganizationChart
+                datasource={ds}
+                pan={true}
+                zoom={true}
+                chartClass="myChart" */}
+              {/* // NodeTemplate={this.MyNode}
+              /> */}
+              <StrukturalOrganisasi />
             </div>
             {/* END :: Coba org-chart */}
           </div>
