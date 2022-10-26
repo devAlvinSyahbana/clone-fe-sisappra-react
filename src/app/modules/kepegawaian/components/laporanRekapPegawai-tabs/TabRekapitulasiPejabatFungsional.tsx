@@ -435,7 +435,7 @@ export function TabRekapitulasiPejabatFungsional() {
     setbtnLoadingUnduh(true)
     await axios({
       url: `${KEPEGAWAIAN_UNDUH_URL}/unduh${
-        qParamFind.strparam !== '' && `?${qParamFind.strparam}`
+        qParamFind.strparam !== '' ? `?${qParamFind.strparam}` : ''
       }`,
       method: 'GET',
       responseType: 'blob', // Important
