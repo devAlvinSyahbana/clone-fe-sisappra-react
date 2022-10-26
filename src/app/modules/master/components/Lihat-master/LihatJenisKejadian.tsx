@@ -4,9 +4,8 @@ import {Link, useParams} from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 
 export interface FormInput {
-  jenis_kegiatan?: string
+  jenis_kejadian?: string
   updated_by?: string
-  kode?: string
 }
 
 export interface SelectOption {
@@ -19,24 +18,22 @@ export interface SelectOption {
 
 interface GetDataInterface {
   id?: number
-  jenis_kegiatan?: string
-  kode?: string
+  jenis_kejadian?: string
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEGIATAN_URL = `${API_URL}/master/jenis_kegiatan` //http://localhost:3000/jenis_kegiatan
+export const JENIS_KEJADIAN_URL = `${API_URL}/master/jenis-kejadian` //http://localhost:3000/jenis-kejadian
 
-export function LihatJenisKegiatan() {
+export function LihatJenisKejadian() {
   const {id} = useParams()
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${JENIS_KEGIATAN_URL}/findone/${id}`)
+      const response = await axios.get(`${JENIS_KEJADIAN_URL}/findone/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        jenis_kegiatan: jsonD.jenis_kegiatan,
-        kode: jsonD.kode,
+        jenis_kejadian: jsonD.jenis_kejadian,
         updated_by: '',
       }
       setValuesFormikExist((prevstate: any) => ({...prevstate, ...paramValue}))
@@ -55,33 +52,23 @@ export function LihatJenisKegiatan() {
                   <div className='row mt-2'>
                     <div className='col-5 mb-6'>
                       <div className='form-group'>
-                        <Form.Label>Jenis Kegiatan</Form.Label>
+                        <Form.Label>Jenis Kejadian</Form.Label>
                         <Form.Control
-                          name='jenis kegiatan'
+                          name='jenis_kejadian'
                           className='form-control form-control-solid'
                           value={
-                            valuesFormikExist?.jenis_kegiatan
-                              ? valuesFormikExist?.jenis_kegiatan
+                            valuesFormikExist?.jenis_kejadian
+                              ? valuesFormikExist?.jenis_kejadian
                               : ''
                           }
                           readOnly
                         />
                       </div>
                     </div>
-                    <div className='col-5 mb-6'>
-                      <div className='form-group'>
-                        <Form.Label>kode</Form.Label>
-                        <Form.Control
-                          name='kode'
-                          className='form-control form-control-solid'
-                          value={valuesFormikExist?.kode ? valuesFormikExist?.kode : ''}
-                          readOnly
-                        />
-                      </div>
-                    </div>
+                    
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/jenis_kegiatan'>
+                    <Link to='/master/JenisKejadian'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

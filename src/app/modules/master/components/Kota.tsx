@@ -57,7 +57,7 @@ export function Kota() {
       cancelButtonText: 'Tidak!',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await axios.delete(`${KOTA_URL}/delete/${id},{deletd_by}`)
+        const response = await axios.delete(`${KOTA_URL}/delete/${id},{deleted_by}`)
         if (response) {
           fetchUsers(1)
           Swal.fire({
