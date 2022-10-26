@@ -1098,9 +1098,7 @@ export function UpdateDataPribadi() {
                           Kab/Kota
                         </label>
                         <AsyncSelect
-                          cacheOptions
                           loadOptions={loadOptionsKotKTP}
-                          defaultOptions
                           value={
                             valuesFormik?.sesuai_ktp_kabkota
                               ? valuesFormik?.sesuai_ktp_kabkota
@@ -1137,9 +1135,7 @@ export function UpdateDataPribadi() {
                           Kecamatan
                         </label>
                         <AsyncSelect
-                          cacheOptions
                           loadOptions={loadOptionsKecKTP}
-                          defaultOptions
                           value={
                             valuesFormik?.sesuai_ktp_kecamatan
                               ? valuesFormik?.sesuai_ktp_kecamatan
@@ -1171,9 +1167,7 @@ export function UpdateDataPribadi() {
                           Kelurahan
                         </label>
                         <AsyncSelect
-                          cacheOptions
                           loadOptions={loadOptionsKelKTP}
-                          defaultOptions
                           value={
                             valuesFormik?.sesuai_ktp_kelurahan
                               ? valuesFormik?.sesuai_ktp_kelurahan
@@ -1306,9 +1300,7 @@ export function UpdateDataPribadi() {
                           Kab/Kota
                         </label>
                         <AsyncSelect
-                          cacheOptions
                           loadOptions={loadOptionsKotDom}
-                          defaultOptions
                           value={
                             valuesFormik?.domisili_kabkota
                               ? valuesFormik?.domisili_kabkota
@@ -1345,9 +1337,7 @@ export function UpdateDataPribadi() {
                           Kecamatan
                         </label>
                         <AsyncSelect
-                          cacheOptions
                           loadOptions={loadOptionsKecDom}
-                          defaultOptions
                           value={
                             valuesFormik?.domisili_kecamatan
                               ? valuesFormik?.domisili_kecamatan
@@ -1380,9 +1370,7 @@ export function UpdateDataPribadi() {
                           Kelurahan
                         </label>
                         <AsyncSelect
-                          cacheOptions
                           loadOptions={loadOptionsKelDom}
-                          defaultOptions
                           value={
                             valuesFormik?.domisili_kelurahan
                               ? valuesFormik?.domisili_kelurahan
