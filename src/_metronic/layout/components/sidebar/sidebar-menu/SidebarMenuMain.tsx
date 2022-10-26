@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from 'react'
-import {SidebarMenuItemWithSub} from './SidebarMenuItemWithSub'
-import {SidebarMenuItem} from './SidebarMenuItem'
+import { SidebarMenuItemWithSub } from './SidebarMenuItemWithSub'
+import { SidebarMenuItem } from './SidebarMenuItem'
 
 const SidebarMenuMain = () => {
   return (
@@ -103,7 +103,7 @@ const SidebarMenuMain = () => {
           hasBullet={true}
         />
         <SidebarMenuItem
-          to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-laporan-rekapitulasi-pegawai'
+          to='/kepegawaian/laporan-rekapitulasi-pegawai'
           title='Laporan Rekapitulasi Pegawai'
           hasBullet={true}
         />
@@ -189,10 +189,10 @@ const SidebarMenuMain = () => {
       >
         <SidebarMenuItem to='/apps/data-pengguna' title='Pengguna' hasBullet={true} />
         <SidebarMenuItem to='/apps/chat/group-chat' title='Hak Akses' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='Akses Kontrol' hasBullet={true} />
+        <SidebarMenuItem to='/apps/akses-kontrol' title='Akses Kontrol' hasBullet={true} />
       </SidebarMenuItemWithSub>
     </>
   )
 }
 
-export {SidebarMenuMain}
+export { SidebarMenuMain }

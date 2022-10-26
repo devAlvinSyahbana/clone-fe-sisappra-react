@@ -141,28 +141,28 @@ const validatorForm = Yup.object().shape({
   kepegawaian_no_sk_pangkat_terakhir: Yup.string()
     .matches(/^[0-9]+$/, 'Isian harus berupa angka')
     .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_dasar_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_strutural_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_ppns_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_fungsional_pol_pp_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_dasar_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_strutural_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_ppns_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_fungsional_pol_pp_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat: Yup.string().required('Wajib diisi'),
   kepegawaian_tmtpangkat: Yup.string().required('Wajib diisi'),
   kepegawaian_npwp: Yup.string().required('Wajib diisi'),
   kepegawaian_tmt_cpns: Yup.string().required('Wajib diisi'),
   kepegawaian_tmt_pns: Yup.string().required('Wajib diisi'),
   kepegawaian_tgl_sk_pns: Yup.string().required('Wajib diisi'),
   kepegawaian_tgl_sk_pangkat_terakhir: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: Yup.string().required('Wajib diisi'),
   kepegawaian_subbag_seksi_kecamatan: Yup.string().required('Wajib diisi'),
   kepegawaian_tempat_tugas: Yup.string().required('Wajib diisi'),
   kepegawaian_pangkat: Yup.string().required('Wajib diisi'),
@@ -763,7 +763,6 @@ export function UpdateDataKepegawaian() {
                       Pangkat
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_pangkat
                           ? valuesFormik?.kepegawaian_pangkat
@@ -936,7 +935,6 @@ export function UpdateDataKepegawaian() {
                       Subag/Seksi/Kecamatan
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_subbag_seksi_kecamatan
                           ? valuesFormik?.kepegawaian_subbag_seksi_kecamatan
@@ -952,7 +950,6 @@ export function UpdateDataKepegawaian() {
                         handleChangeFormikSelect(e, 'kepegawaian_subbag_seksi_kecamatan')
                         await setFieldValue('kepegawaian_subbag_seksi_kecamatan', e.value)
                       }}
-                      defaultOptions
                       name='kepegawaian_subbag_seksi_kecamatan'
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
@@ -966,31 +963,6 @@ export function UpdateDataKepegawaian() {
                           </div>
                         </div>
                       )}
-                    {/* <Field
-                      type='text'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            errors.kepegawaian_subbag_seksi_kecamatan,
-                        },
-                        {
-                          'is-valid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            !errors.kepegawaian_subbag_seksi_kecamatan,
-                        }
-                      )}
-                      name='kepegawaian_subbag_seksi_kecamatan'
-                    />
-                    {touched.kepegawaian_subbag_seksi_kecamatan &&
-                      errors.kepegawaian_subbag_seksi_kecamatan && (
-                        <div className='fv-plugins-message-container'>
-                          <div className='fv-help-block'>
-                            <span role='alert'>{errors.kepegawaian_subbag_seksi_kecamatan}</span>
-                          </div>
-                        </div>
-                      )} */}
                   </div>
 
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
@@ -998,7 +970,6 @@ export function UpdateDataKepegawaian() {
                       Jabatan
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_jabatan
                           ? valuesFormik?.kepegawaian_jabatan
@@ -1014,7 +985,6 @@ export function UpdateDataKepegawaian() {
                         handleChangeFormikSelect(e, 'kepegawaian_jabatan')
                         await setFieldValue('kepegawaian_jabatan', e.value)
                       }}
-                      defaultOptions
                       name='kepegawaian_jabatan'
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
@@ -1578,7 +1548,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1610,7 +1580,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1717,7 +1687,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1749,7 +1719,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1856,7 +1826,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1888,7 +1858,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1994,7 +1964,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -2026,7 +1996,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field

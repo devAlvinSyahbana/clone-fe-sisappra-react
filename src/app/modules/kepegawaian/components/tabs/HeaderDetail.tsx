@@ -196,7 +196,7 @@ const HeaderDetailWrapper = () => {
                     Data Kepegawaian
                   </Link>
                 </li>
-                <li className='nav-item'>
+                {/* <li className='nav-item'>
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
@@ -206,7 +206,7 @@ const HeaderDetailWrapper = () => {
                   >
                     Hirarki Kepegawaian
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>

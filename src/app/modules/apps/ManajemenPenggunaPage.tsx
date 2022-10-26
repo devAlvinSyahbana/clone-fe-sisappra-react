@@ -1,10 +1,10 @@
-import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
-import {PageLink, PageTitle} from '../../../_metronic/layout/core'
-import {DataPengguna} from './components/DataPengguna'
-import {Group} from './components/Group'
-import {Drawer} from './components/Drawer'
+import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
+import { PageLink, PageTitle } from '../../../_metronic/layout/core'
+import { DataPengguna } from './components/DataPengguna'
+import { Group } from './components/Group'
+import { AksesKontrol } from './components/AksesKontrol'
 
-import {AddDataPengguna} from './components/add-data-pengguna/AddDataPengguna'
+import { AddDataPengguna } from './components/add-data-pengguna/AddDataPengguna'
 
 const dataPenggunaBreadcrumbs: Array<PageLink> = [
   {
@@ -53,11 +53,11 @@ const ManajemenPenggunaPage = () => {
           }
         />
         <Route
-          path='drawer-chat'
+          path='akses-kontrol'
           element={
             <>
-              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Drawer chat</PageTitle>
-              <Drawer />
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Akses Kontrol</PageTitle>
+              <AksesKontrol />
             </>
           }
         />
