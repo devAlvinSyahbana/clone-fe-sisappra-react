@@ -227,7 +227,7 @@ export function TabLaporanRekapitulasiPegawai() {
                     <button
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/LaporanRekapitulasiPegawai/TabLaporanRekapitulasiPegawai/UnduhLaporanRekapitulasiPegawai`
+                          `/kepegawaian/laporan-rekapitulasi-pegawai/unduh-laporan-rekapitulasi-pegawai`
                         )
                       }
                       className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'
