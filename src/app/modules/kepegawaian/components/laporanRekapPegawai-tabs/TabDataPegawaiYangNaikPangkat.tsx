@@ -9,17 +9,19 @@ import Button from 'react-bootstrap/Button'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import AsyncSelect from 'react-select/async'
 import clsx from 'clsx'
+import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian-unduh`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
-export const KOTA_URL = `${API_URL}/master/kota`
-export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
+export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
+export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
 export const JABATAN_URL = `${API_URL}/master/jabatan`
 export const PANGKAT_URL = `${API_URL}/master/pangkat`
+
+export const STATUS_KENAIKAN_PANGKAT_URL = `${API_URL}/master/status_kenaikan_pangkat`
 
 export interface SelectOption {
   readonly value: string
@@ -39,9 +41,11 @@ export function TabDataPegawaiYangNaikPangkat() {
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
-  const [inputValKota, setDataKota] = useState({label: '', value: null})
+  const [valFilterNip, setFilterNip] = useState({val: ''})
+  const [valFilterJa, setFilterJa] = useState({val: ''})
+  const [inputValStPa, setDataStPa] = useState({label: '', value: null})
+  const [inputValTugas, setDataTugas] = useState({label: '', value: null})
   const [inputValKec, setDataKec] = useState({label: '', value: null})
-  const [inputValKel, setDataKel] = useState({label: '', value: null})
   const [inputValPangkat, setDataPangkat] = useState({label: '', value: null})
   const [inputValJabatan, setDataJabatan] = useState({label: '', value: null})
 
@@ -85,25 +89,17 @@ export function TabDataPegawaiYangNaikPangkat() {
     },
     {
       name: 'NIP',
-      selector: (row: any) => row.kepegawaian_nip,
+      selector: (row: any) => row.nip,
       sortable: true,
-      sortField: 'kepegawaian_nip',
+      sortField: 'nip',
       wrap: true,
     },
     {
-      name:
-        valStatPegawai.val !== ''
-          ? valStatPegawai.val === 'PTT'
-            ? 'NPTT'
-            : valStatPegawai.val === 'PJLP'
-            ? 'NPJLP'
-            : 'NRK'
-          : 'NRK',
-      selector: (row: any) => row.kepegawaian_nrk,
+      name: 'NRK',
+      selector: (row: any) => row.nrk,
       sortable: true,
-      sortField: 'kepegawaian_nrk',
+      sortField: 'nrk',
       wrap: true,
-      center: true,
     },
     {
       name: 'Jabatan',
@@ -115,18 +111,18 @@ export function TabDataPegawaiYangNaikPangkat() {
     },
     {
       name: 'Tempat Tugas Wilayah / Bidang',
-      selector: (row: any) => row.tempat_tugas_wilayah_bidang,
+      selector: (row: any) => row.tempat_tugas,
       sortable: true,
-      sortField: 'tempat_tugas_wilayah_bidang',
+      sortField: 'tempat_tugas',
       wrap: true,
       width: '250px',
       center: true,
     },
     {
       name: 'Tempat Tugas Kecamatan',
-      selector: (row: any) => row.tempat_tugas_kecamatan,
+      selector: (row: any) => row.subbag_seksi_kecamatan,
       sortable: true,
-      sortField: 'tempat_tugas_kecamatan',
+      sortField: 'subbag_seksi_kecamatan',
       wrap: true,
       width: '220px',
       center: true,
@@ -150,7 +146,7 @@ export function TabDataPegawaiYangNaikPangkat() {
       selector: (row: any) => row.tmt_pangkat,
       sortable: true,
       sortField: 'tmt_pangkat',
-      width: '100px',
+      width: '200px',
       wrap: true,
     },
     {
@@ -162,17 +158,17 @@ export function TabDataPegawaiYangNaikPangkat() {
     },
     {
       name: 'Status Kenaikan',
-      selector: (row: any) => row.status_kenaikan,
+      selector: (row: any) => row.status_kenaikan_pangkat,
       sortable: true,
-      sortField: 'status_kenaikan',
-      width: '220px',
+      sortField: 'status_kenaikan_pangkat',
+      width: '200px',
       wrap: true,
     },
     {
       name: 'Jadwal Kenaikan',
-      selector: (row: any) => row.jadwal_kenaikan,
+      selector: (row: any) => row.jadwal_kenaikan_pangkat,
       sortable: true,
-      sortField: 'jadwal_kenaikan',
+      sortField: 'jadwal_kenaikan_pangkat',
       width: '220px',
       wrap: true,
     },
@@ -242,7 +238,7 @@ export function TabDataPegawaiYangNaikPangkat() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -254,7 +250,7 @@ export function TabDataPegawaiYangNaikPangkat() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -270,7 +266,7 @@ export function TabDataPegawaiYangNaikPangkat() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -285,26 +281,32 @@ export function TabDataPegawaiYangNaikPangkat() {
     if (valFilterNama.val !== '') {
       uriParam += `&nama=${valFilterNama.val}`
     }
-    if (valFilterNRK.val !== '') {
-      uriParam += `&nrk=${valFilterNRK.val}`
-    }
-    if (inputValKota.value) {
-      uriParam += `&kota=${inputValKota.value}`
-    }
-    if (inputValKec.value) {
-      uriParam += `&kecamatan=${inputValKec.value}`
-    }
-    if (inputValKel.value) {
-      uriParam += `&kelurahan=${inputValKel.value}`
-    }
     if (valFilterNoPegawai.val !== '') {
       uriParam += `&nopegawai=${valFilterNoPegawai.val}`
     }
-    if (inputValJabatan.value) {
-      uriParam += `&jabatan=${inputValJabatan.value}`
+    if (valFilterNRK.val !== '') {
+      uriParam += `&nrk=${valFilterNRK.val}`
+    }
+    if (valFilterJa.val) {
+      uriParam += `&tahun_jnp=${valFilterJa.val}`
+    }
+    if (inputValTugas.value) {
+      uriParam += `&tempat_tugas=${inputValTugas.value}`
+    }
+    if (valFilterNip.val) {
+      uriParam += `&nip=${valFilterNip.val}`
+    }
+    if (inputValKec.value) {
+      uriParam += `&seksi_kecamatan=${inputValKec.value}`
     }
     if (inputValJabatan.value) {
-      uriParam += `&pangkat=${inputValPangkat.value}`
+      uriParam += `&id_jabatan=${inputValJabatan.value}`
+    }
+    if (inputValPangkat.value) {
+      uriParam += `&id_pangkat=${inputValPangkat.value}`
+    }
+    if (inputValStPa.value) {
+      uriParam += `&id_status_kenaikan_pangkat=${inputValStPa.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
@@ -314,25 +316,27 @@ export function TabDataPegawaiYangNaikPangkat() {
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
-    setDataKota({label: '', value: null})
+    setFilterNip({val: ''})
+    setFilterJa({val: ''})
+    setDataTugas({label: '', value: null})
     setDataKec({label: '', value: null})
-    setDataKel({label: '', value: null})
     setDataPangkat({label: '', value: null})
     setDataJabatan({label: '', value: null})
+    setDataStPa({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const handleChangeStatPegawai = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setValStatPegawai({val: event.target.value})
-  }
   const handleChangeInputNama = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
     setFilterNama({val: event.target.value})
+  }
+  const handleChangeInputJa = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterJa({val: event.target.value})
   }
   const handleChangeInputNRK = (event: {
     preventDefault: () => void
@@ -341,94 +345,103 @@ export function TabDataPegawaiYangNaikPangkat() {
     setFilterNRK({val: event.target.value})
   }
 
-  const handleChangeInputNoPegawai = (event: {
+  const handleChangeInputNip = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterNoPegawai({val: event.target.value})
+    setFilterNip({val: event.target.value})
   }
 
+  //unduh
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh-pegawai?status=${
-        valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS'
-      }`,
+      url: `${KEPEGAWAIAN_URL}/rekapitulasi-pegawai-naik-pangkat/unduh?status=${qParamFind.strparam}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
-      FileDownload(
-        response.data,
-        'DATA KEPEGAWAIAN ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PNS') + '.xlsx'
-      )
+      FileDownload(response.data, 'DATA STATUS KENAIKAN PANGKAT.xlsx')
       setbtnLoadingUnduh(false)
     })
   }
+  //end unduh
 
   //kota
-  const filterKota = async (inputValue: string) => {
-    const response = await axios.get(`${KOTA_URL}/filter-kota/${inputValue}`)
+  const filterTugas = async (inputValue: string) => {
+    const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
     const json = await response.data.data
-    return json.map((i: any) => ({label: i.kota, value: i.id}))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
-
-  const loadOptionsKota = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+  const loadOptionsTugas = (inputValue: string, callback: (options: SelectOption[]) => void) => {
     setTimeout(async () => {
-      callback(await filterKota(inputValue))
+      callback(await filterTugas(inputValue))
     }, 1000)
   }
-  const handleInputKota = async (newValue: any) => {
-    setDataKota((prevstate: any) => ({...prevstate, ...newValue}))
-    await filterKec()
+  const handleInputTugas = async (newValue: any) => {
+    setDataTugas((prevstate: any) => ({...prevstate, ...newValue}))
+    // // filterKec(newValue)
+    // // loadOptionsKec
+    // await loadOptionsKec2(newValue)
   }
+  //end kota
 
   //kecamatan
-  const filterKec = async () => {
-    if (inputValKota.label != '') {
-      const response = await axios.get(
-        `${KECAMATAN_URL}/findone-by-kecamatan?kota=${inputValKota.label}`
-      )
-      const json = await response.data.data
-      console.log(response.data.data)
-      return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
-    } else {
-      return false
-    }
+
+  // const filterKec = async (inputValue: any) => {
+  //   if (inputValue.label != '') {
+  //     const response = await axios.get(
+  //       KECAMATAN_URL + '/findone-by-kecamatan?kota=' + inputValue.label
+  //     )
+  //     const json = await response.data.data
+  //     console.log(response.data.data)
+  //     return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
+  //   } else {
+  //   }
+  // }
+
+  // const loadOptionsKec = (inputValue: any) => {
+  //   setTimeout(async () => {
+  //     await filterKec2(inputValue)
+  //   }, 1000)
+  // }
+  // const handleInputKec = (newValue: any) => {
+  //     setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
+  //   }
+  // const filterKec2 = async (inputValue: string) => {
+  //   const response = await axios.get(
+  //     PELAKSANA_URL + '/filter?nama=' + inputValTugas.label + inputValue
+  //   )
+  //   const json = await response.data.data
+  //   return json.map((i: any) => ({label: i.name, value: i.id}))
+  // }
+  // const loadOptionsKec2 = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+  //   setTimeout(async () => {
+  //     callback(await filterKec2(inputValue))
+  //   }, 1000)
+  // }
+  // const handleInputKec2 = (newValue: any) => {
+  //   setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
+  // }
+  const filterKec2 = async (inputValue: string) => {
+    const response = await axios.get(`${PELAKSANA_URL}/filter?nama=${inputValue}`)
+    console.log(response.data.data)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
-  const loadOptionsKec = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+  const loadOptionsKec2 = (inputValue: string, callback: (options: SelectOption[]) => void) => {
     setTimeout(async () => {
-      callback(await filterKec())
+      callback(await filterKec2(inputValue))
     }, 1000)
   }
-  const handleInputKec = (newValue: any) => {
+  const handleInputKec2 = (newValue: any) => {
     setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
   }
-
-  //kelurahan
-  const filterKel = async () => {
-    if (inputValKec.label != '') {
-      const response = await axios.get(
-        `${KELURAHAN_URL}/findone-by-kelurahan?kecamatan=${inputValKec.label}`
-      )
-      const json = await response.data.data
-      console.log(response.data.data)
-      return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
-    } else {
-      return false
-    }
-  }
-  const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
-    setTimeout(async () => {
-      callback(await filterKel())
-    }, 1000)
-  }
-  const handleInputKel = (newValue: any) => {
-    setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
-  }
+  //end kecamtan
 
   //jabatan
   const filterJabatan = async (inputValue: string) => {
-    const response = await axios.get(`${JABATAN_URL}/filter/${inputValue}`)
+    const response = await axios.get(`${JABATAN_URL}/filter?nama=${inputValue}`)
+    console.log(response.data.data)
     const json = await response.data.data
     return json.map((i: any) => ({label: i.jabatan, value: i.id}))
   }
@@ -440,10 +453,11 @@ export function TabDataPegawaiYangNaikPangkat() {
   const handleInputJabatan = (newValue: any) => {
     setDataJabatan((prevstate: any) => ({...prevstate, ...newValue}))
   }
+  //end jabatan
 
   //pangkat
   const filterPangkat = async (inputValue: string) => {
-    const response = await axios.get(`${PANGKAT_URL}/find${inputValue}`)
+    const response = await axios.get(`${PANGKAT_URL}/filter/${inputValue}`)
     const json = await response.data.data
     return json.map((i: any) => ({label: i.pangkat, value: i.id}))
   }
@@ -455,6 +469,23 @@ export function TabDataPegawaiYangNaikPangkat() {
   const handleInputPangkat = (newValue: any) => {
     setDataPangkat((prevstate: any) => ({...prevstate, ...newValue}))
   }
+  //end pangkat
+
+  //Status kenaikan pangkat
+  const filterStPa = async (inputValue: string) => {
+    const response = await axios.get(`${STATUS_KENAIKAN_PANGKAT_URL}/find${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.status_kenaikan_pangkat, value: i.id}))
+  }
+  const loadOptionsStPa = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterStPa(inputValue))
+    }, 1000)
+  }
+  const handleInputStPa = (newValue: any) => {
+    setDataStPa((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+  //end status kenaikan pangkat
 
   return (
     <>
@@ -483,10 +514,10 @@ export function TabDataPegawaiYangNaikPangkat() {
                 </label>
                 <AsyncSelect
                   cacheOptions
-                  value={inputValKota.value ? inputValKota : {value: '', label: 'Pilih'}}
-                  loadOptions={loadOptionsKota}
+                  value={inputValTugas.value ? inputValTugas : {value: '', label: 'Pilih'}}
+                  loadOptions={loadOptionsTugas}
                   defaultOptions
-                  onChange={handleInputKota}
+                  onChange={handleInputTugas}
                 />
               </div>
             </div>
@@ -513,10 +544,9 @@ export function TabDataPegawaiYangNaikPangkat() {
                 <AsyncSelect
                   cacheOptions
                   value={inputValKec.value ? inputValKec : {value: '', label: 'Pilih'}}
-                  loadOptions={loadOptionsKec}
-                  defaultOptions
-                  onChange={handleInputKec}
-                 
+                  loadOptions={loadOptionsKec2}
+                  // defaultOptions
+                  onChange={handleInputKec2}
                 />
               </div>
             </div>
@@ -533,8 +563,8 @@ export function TabDataPegawaiYangNaikPangkat() {
               <input
                 type='text'
                 className='form-control form-control form-control-solid'
-                value={valFilterNoPegawai.val}
-                onChange={handleChangeInputNoPegawai}
+                value={valFilterNip.val}
+                onChange={handleChangeInputNip}
                 placeholder={
                   valStatPegawai.val === 'PNS'
                     ? 'NIP'
@@ -546,33 +576,16 @@ export function TabDataPegawaiYangNaikPangkat() {
                 }
               />
             </div>
-
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
-                  Kelurahan
-                </label>
-                <AsyncSelect
-                  cacheOptions
-                  value={inputValKel.value ? inputValKel : {value: '', label: 'Pilih'}}
-                  loadOptions={loadOptionsKel}
-                  defaultOptions
-                  onChange={handleInputKel}
-                  placeholder={'Pilih'}
-                />
-              </div>
-            </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                Jadwal Kenaikan
+                Jabatan
               </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                name='Jadwal Kenaikan'
-                value={valFilterNama.val}
-                onChange={handleChangeInputNama}
-                placeholder='Jadwal Kenaikan'
+              <AsyncSelect
+                cacheOptions
+                value={inputValJabatan.value ? inputValJabatan : {value: '', label: 'Pilih'}}
+                loadOptions={loadOptionsJabatan}
+                defaultOptions
+                onChange={handleInputJabatan}
               />
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -582,11 +595,10 @@ export function TabDataPegawaiYangNaikPangkat() {
                 </label>
                 <AsyncSelect
                   cacheOptions
-                  value={inputValPangkat.value ? inputValPangkat : {value: '', label: 'Pilih'}}
-                  loadOptions={loadOptionsPangkat}
+                  value={inputValStPa.value ? inputValStPa : {value: '', label: 'Pilih'}}
+                  loadOptions={loadOptionsStPa}
                   defaultOptions
-                  onChange={handleInputPangkat}
-                  placeholder={'Pilih'}
+                  onChange={handleInputStPa}
                 />
               </div>
             </div>
@@ -600,20 +612,19 @@ export function TabDataPegawaiYangNaikPangkat() {
                 loadOptions={loadOptionsPangkat}
                 defaultOptions
                 onChange={handleInputPangkat}
-                placeholder={'Pilih'}
               />
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                Jabatan
+                Jadwal Kenaikan
               </label>
-              <AsyncSelect
-                cacheOptions
-                value={inputValJabatan.value ? inputValJabatan : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsJabatan}
-                defaultOptions
-                onChange={handleInputJabatan}
-                placeholder={'Pilih'}
+              <input
+                type='text'
+                className='form-control form-control form-control-solid'
+                name='jadwal_kenaikan_pangkat'
+                value={valFilterJa.val}
+                onChange={handleChangeInputJa}
+                placeholder='Jadwal Kenaikan'
               />
             </div>
           </div>
@@ -657,32 +668,52 @@ export function TabDataPegawaiYangNaikPangkat() {
           </div>
         </div>
 
-        <div className='table-responsive mt-6 ms-5 me-5'>
-          <div className='card-body py-4 mt-4'>
-            <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>
-                DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA KENAIKAN PANGKAT
+        <div className='col-xl-12 mb-xl-12 mt-6'>
+          <div className='card card-flush h-xl-100'>
+            <div
+              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
+              style={{
+                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
+              }}
+              data-theme='light'
+            >
+              <div className='card-body py-8 mt-4 fw-bold text-white'>
+                <div className='row'>
+                  <div className='col fs-4 mb-2 fw-bold text-center'>
+                    DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA KENAIKAN PANGKAT
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col fs-4 mb-2 fw-bold text-center'>
+                    PADA SATUAN POLISI PAMONG PRAJA PRVINSI DKI JAKARTA
+                  </div>
+                </div>
               </div>
             </div>
-            <div className='row'>
-              <div className='col fs-4 mb-2 fw-bold text-center'>
-                PADA SATUAN POLISI PAMONG PRAJA PRVINSI DKI JAKARTA
+
+            <div className='card-body mt-n20'>
+              <div className='mt-n20 position-relatve'>
+                <div className='card border card-flush h-xl-100'>
+                  <div className='table-responsive mt-5 ms-5 me-5 w'>
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      progressPending={loading}
+                      progressComponent={<LoadingAnimation />}
+                      pagination
+                      paginationServer
+                      paginationTotalRows={totalRows}
+                      onChangeRowsPerPage={handlePerRowsChange}
+                      onChangePage={handlePageChange}
+                      customStyles={customStyles}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <DataTable
-            columns={columns}
-            data={data}
-            progressPending={loading}
-            progressComponent={<LoadingAnimation />}
-            pagination
-            paginationServer
-            paginationTotalRows={totalRows}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-            customStyles={customStyles}
-          />
         </div>
+        {/* end::Body */}
         <div className='row'>
           <div className='col-7 p-10'></div>
           <div className='col-4 fs-8 mb-4 fw-semibold text-center'>
@@ -694,7 +725,6 @@ export function TabDataPegawaiYangNaikPangkat() {
             <div className='col fs-6 mb-2 fw-semibold text-center'>NIP. ......................</div>
           </div>
         </div>
-        {/* end::Body */}
       </div>
     </>
   )

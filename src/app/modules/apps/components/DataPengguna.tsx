@@ -7,12 +7,11 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Swal from 'sweetalert2'
 import AsyncSelect from 'react-select/async'
-import {KTSVG} from '../../../../../_metronic/helpers'
+import {KTSVG} from '../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {LaporanRekapHeader} from './LaporanRekapHeader'
-import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
-import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
@@ -136,23 +135,17 @@ const reactSelectDarkThem = {
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/duk-pegawai`
-export const DELETE_DUK_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
-export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
-export const MASTER_URL = `${API_URL}/master`
+export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 
-export function TabDaftarUrutKepangkatan() {
+export function DataPengguna() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
 
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
-  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
-  const [valFilterNama, setFilterNama] = useState({val: ''})
-  const [valFilterNRK, setFilterNRK] = useState({val: ''})
-  const [valFilterNIP, setFilterNIP] = useState({val: ''})
-  const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
+  const [valNamaLengkap, setFilterNamaLengkap] = useState({val: ''})
+  const [valFilterEmail, setFilterEmail] = useState({val: ''})
+  const [valFilterHakAkses, setFilterHakAkses] = useState({val: ''})
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -192,7 +185,7 @@ export function TabDaftarUrutKepangkatan() {
             deleted_by: 0,
           },
         }
-        const response = await axios.delete(`${DELETE_DUK_URL}/delete/${id}`, bodyParam)
+        const response = await axios.delete(`${MANAJEMEN_PENGGUNA_URL}/delete/${id}`, bodyParam)
         if (response) {
           fetchData(1)
           Swal.fire({
@@ -229,84 +222,67 @@ export function TabDaftarUrutKepangkatan() {
     },
     {
       name: 'Nama',
-      selector: (row: any) => row.nama,
+      selector: (row: any) => row.nama_lengkap,
       sortable: true,
-      sortField: 'nama',
+      sortField: 'nama_lengkap',
       width: '150px',
       wrap: true,
     },
     {
-      name: 'NIP',
-      selector: (row: any) => row.nip,
+      name: 'ID Pegawai',
+      selector: (row: any) => row.id_pegawai,
       sortable: true,
-      sortField: 'nip',
-      width: '200px',
+      sortField: 'id_pegawai',
       wrap: true,
       center: true,
     },
     {
-      name:
-        valStatPegawai.val !== ''
-          ? valStatPegawai.val === 'PTT'
-            ? 'NPTT'
-            : valStatPegawai.val === 'PJLP'
-            ? 'NPJLP'
-            : 'NRK'
-          : 'NRK',
-      selector: (row: any) => row.nrk_nptt_npjlp,
+      name: 'No Pegawai',
+      selector: (row: any) => row.no_pegawai,
       sortable: true,
-      sortField: 'nrk_nptt_npjlp',
+      sortField: 'no_pegawai',
       wrap: true,
       center: true,
     },
     {
-      name: 'Jabatan',
-      selector: (row: any) => row.jabatan,
+      name: 'Email',
+      selector: (row: any) => row.email,
       sortable: true,
-      sortField: 'jabatan',
-      width: '250px',
+      sortField: 'email',
       wrap: true,
       center: true,
     },
     {
-      name: 'Status Kepegawaian',
-      selector: (row: any) => row.status_pegawai,
+      name: 'Kata Sandi',
+      selector: (row: any) => row.kata_sandi,
       sortable: true,
-      sortField: 'status_pegawai',
-      width: '180px',
-      wrap: true,
-      center: true,
-    },
-
-    {
-      name: 'Tempat Tugas',
-      selector: (row: any) => row.tempat_tugas,
-      sortable: true,
-      sortField: 'tempat_tugas',
-      width: '180px',
+      sortField: 'kata_sandi',
       wrap: true,
       center: true,
     },
     {
-      name: 'Tanggal Lahir',
-      selector: (row: any) => row.tanggal_lahir,
+      name: 'Hak Akses',
+      selector: (row: any) => row.hak_akses,
       sortable: true,
-      width: '150px',
+      sortField: 'hak_akses',
+      wrap: true,
       center: true,
     },
     {
-      name: 'Agama',
-      selector: (row: any) => row.agama,
+      name: 'Status Pengguna',
+      selector: (row: any) => row.status_pengguna,
       sortable: true,
-      sortField: 'agama',
+      sortField: 'status_pengguna',
       wrap: true,
+      center: true,
     },
     {
-      name: 'Alamat',
-      selector: (row: any) => row.alamat,
+      name: 'Terakhir Login',
+      selector: (row: any) => row.terakhir_login,
       sortable: true,
-      sortField: 'alamat',
+      sortField: 'terakhir_login',
       wrap: true,
+      center: true,
     },
     {
       name: 'Aksi',
@@ -339,6 +315,17 @@ export function TabDaftarUrutKepangkatan() {
                       }
                     >
                       Detail
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate(
+                          `/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-pribadi-duk/${record?.id}/${record?.status_pegawai}`,
+                          {replace: true}
+                        )
+                      }
+                    >
+                      Ubah
                     </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
@@ -380,13 +367,11 @@ export function TabDaftarUrutKepangkatan() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
       setLoading(false)
-
-      getBidangWilayah(response.data.data.kepegawaian_tempat_tugas)
     }
     fetchDT(1)
   }, [qParamFind, perPage])
@@ -394,7 +379,7 @@ export function TabDaftarUrutKepangkatan() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -410,214 +395,69 @@ export function TabDaftarUrutKepangkatan() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/filter?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
     setLoading(false)
   }
 
-  // GET DATA
-  interface SelectOptionAutoCom {
-    readonly value: string
-    readonly label: string
-    readonly color: string
-    readonly isFixed?: boolean
-    readonly isDisabled?: boolean
-  }
-
-  // GET KOTA (Wilayah / Bidang)
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
-  const filterKota = async (inputValue: string) => {
-    const response = await axios.get(MASTER_URL + '/bidang-wilayah/filter/' + inputValue)
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
-  }
-  const loadOptionsKota = (
-    inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKota(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-
-  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
-  const getBidangWilayah = async (params: any) => {
-    if (params)
-      return await axios
-        .get(`${MASTER_URL}/bidang-wilayah/findone/${parseInt(params)}`)
-        .then((response) => {
-          setIdMasterBidangWilayah((prevstate) => ({
-            ...prevstate,
-            id: response?.data?.data?.id,
-          }))
-          setValMasterBidangWilayah((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.nama,
-          }))
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-  }
-
-  // GET Kecamatan (PELAKSANA)
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
-  const filterKecamatan = async (inputValue: string) => {
-    const response = await axios.get(
-      MASTER_URL +
-        `${MASTER_URL}/pelaksana/filter?id_tempat_pelaksanaan=${parseInt(
-          idMasterBidangWilayah.id
-        )}${inputValue !== '' && `&nama=${inputValue}`}`
-    )
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
-  }
-  const loadOptionsKecamatan = (
-    inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKecamatan(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputKecamatan = (newValue: any) => {
-    setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-
-  const getPelaksana = async (params: any) => {
-    if (params)
-      return await axios
-        .get(`${MASTER_URL}/pelaksana/findone/${parseInt(params)}`)
-        .then((response) => {
-          setValMasterPelaksana((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.nama,
-          }))
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-  }
-  // END :: GET Kecamatan
-
-  // GET Kelurahan
-  // const [inputValKelurahan, setFilterKelurahan] = useState({label: '', value: null})
-  // const filterKelurahan = async (inputValue: string) => {
-  //   const response = await axios.get(
-  //     MASTER_URL +
-  //       '/findone-by-kelurahan?kecamatan=' +
-  //       inputValKecamatan.label +
-  //       '&kelurahan=' +
-  //       inputValue
-  //   )
-  //   const json = await response.data.data
-  //   return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
-  // }
-  // const loadOptionsKelurahan = (
-  //   inputValue: string,
-  //   callback: (options: SelectOptionAutoCom[]) => void
-  // ) => {
-  //   setTimeout(async () => {
-  //     callback(await filterKelurahan(inputValue))
-  //   }, 1000)
-  // }
-  // const handleChangeInputKelurahan = (newValue: any) => {
-  //   setFilterKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
-  // }
-  // // END :: GET Kelurahan
-
   const handleFilter = async () => {
     let uriParam = ''
-    if (valStatPegawai.val !== '') {
-      uriParam += `&status_pegawai=${valStatPegawai.val}`
+    if (valNamaLengkap.val !== '') {
+      uriParam += `&nama_lengkap=${valNamaLengkap.val}`
     }
-    if (valFilterNama.val !== '') {
-      uriParam += `&nama=${valFilterNama.val}`
+    if (valFilterEmail.val !== '') {
+      uriParam += `&email=${valFilterEmail.val}`
     }
-    if (valFilterNIP.val !== '') {
-      uriParam += `&nip=${valFilterNIP.val}`
-    }
-    if (valFilterNRK.val !== '') {
-      uriParam += `&nrk_nptt_pjlp=${valFilterNRK.val}`
-    }
-    if (valFilterNoPegawai.val !== '') {
-      uriParam += `&nrk_nptt_pjlp=${valFilterNoPegawai.val}`
-    }
-    if (valMasterBidangWilayah.value) {
-      uriParam += `&tempat_tugas=${valMasterBidangWilayah.value}`
-    }
-    if (valMasterPelaksana.value) {
-      uriParam += `&seksi_kecamatan=${valMasterPelaksana.value}`
+    if (valFilterHakAkses.val !== '') {
+      uriParam += `&hak_akses=${valFilterHakAkses.val}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
-    setValStatPegawai({val: ''})
-    setFilterNama({val: ''})
-    setFilterNRK({val: ''})
-    setFilterNoPegawai({val: ''})
-    setFilterNIP({val: ''})
-    setValMasterBidangWilayah({label: '', value: null})
+    setFilterEmail({val: ''})
+    setFilterHakAkses({val: ''})
+    setFilterNamaLengkap({val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const handleChangeStatPegawai = (event: {
+  const handleChangeInputNamaLengkap = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setValStatPegawai((prevValues: any) => ({
-      ...prevValues,
-      val: event.target.value,
-    }))
+    setFilterNamaLengkap({val: event.target.value})
   }
-  const handleChangeInputNama = (event: {
+
+  const handleChangeInputHakAkses = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterNama({val: event.target.value})
+    setFilterHakAkses({val: event.target.value})
   }
-  const handleChangeInputNRK = (event: {
+
+  const handleChangeInputEmail = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterNRK({val: event.target.value})
-  }
-  const handleChangeInputNoPegawai = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setFilterNoPegawai({val: event.target.value})
-  }
-  const handleChangeInputNIP = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setFilterNIP({val: event.target.value})
+    setFilterEmail({val: event.target.value})
   }
 
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh?q=1${qParamFind.strparam}`,
+      url: `${MANAJEMEN_PENGGUNA_URL}/unduh-data-pengguna?q=1${qParamFind.strparam}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
-      FileDownload(response.data, 'DATA DAFTAR URUT KEPANGKATAN.xlsx')
+      FileDownload(response.data, 'DATA PENGGUNA.xlsx')
       setbtnLoadingUnduh(false)
     })
   }
 
   return (
     <>
-      <LaporanRekapHeader />
       <div id='kt_app_content' className='app-content flex-column-fluid'>
         <div className='card'>
           <div className='card card-flush h-xl-100'>
@@ -673,157 +513,41 @@ export function TabDaftarUrutKepangkatan() {
                               type='text'
                               className='form-control form-control form-control-solid'
                               name='nama'
-                              value={valFilterNama.val}
-                              onChange={handleChangeInputNama}
+                              value={valNamaLengkap.val}
+                              onChange={handleChangeInputNamaLengkap}
                               placeholder='Masukkan nama'
                             />
                           </div>
+                          <div className='col-md-6 col-lg-6'></div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                            <div className='form-group'>
-                              <label htmlFor='' className='mb-3'>
-                                Status Kepegawaian
-                              </label>
-                              <select
-                                className='form-select form-select-solid'
-                                aria-label='Select example'
-                                value={valStatPegawai.val}
-                                onChange={handleChangeStatPegawai}
-                                name='val'
-                              >
-                                <option value=''>Pilih</option>
-                                {arrStatPegawai.map((valueInput: string) => {
-                                  return <option value={valueInput}>{valueInput}</option>
-                                })}
-                              </select>
-                            </div>
+                            <label htmlFor='' className='mb-3'>
+                              Email
+                            </label>
+                            <input
+                              type='text'
+                              className='form-control form-control form-control-solid'
+                              name='email'
+                              value={valFilterEmail.val}
+                              onChange={handleChangeInputEmail}
+                              placeholder='Masukkan Alamat Email'
+                            />
                           </div>
-                          {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                              <label htmlFor='' className='mb-3'>
-                                NRK
-                              </label>
-                              <input
-                                type='text'
-                                className='form-control form-control form-control-solid'
-                                name='nrk_nptt_npjlp'
-                                value={valFilterNRK.val}
-                                onChange={handleChangeInputNRK}
-                                placeholder='Masukkan NRK'
-                              />
-                            </div>
-                          ) : null}
-                          {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                              <label htmlFor='' className='mb-3'>
-                                NIP
-                              </label>
-                              <input
-                                type='text'
-                                className='form-control form-control form-control-solid'
-                                name='nip'
-                                value={valFilterNIP.val}
-                                onChange={handleChangeInputNIP}
-                                placeholder='Masukkan NIP'
-                              />
-                            </div>
-                          ) : null}
-                          {valStatPegawai.val !== 'PNS' && valStatPegawai.val !== '' ? (
-                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-                              <label htmlFor='' className='mb-3'>
-                                {valStatPegawai.val === 'PTT'
-                                  ? 'NPTT'
-                                  : valStatPegawai.val === 'PJLP'
-                                  ? 'NPJLP'
-                                  : ''}
-                              </label>
-                              <input
-                                type='text'
-                                className='form-control form-control form-control-solid'
-                                value={valFilterNoPegawai.val}
-                                onChange={handleChangeInputNoPegawai}
-                                placeholder={
-                                  valStatPegawai.val === 'PTT'
-                                    ? 'Masukkan NPTT'
-                                    : valStatPegawai.val === 'PJLP'
-                                    ? 'Masukkan NPJLP'
-                                    : ''
-                                }
-                              />
-                            </div>
-                          ) : null}
+                          <div className='col-md-6 col-lg-6'></div>
                           <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                            <div className='form-group'>
-                              <label htmlFor='' className='mb-3'>
-                                Wilayah / Bidang
-                              </label>
-                              <AsyncSelect
-                                cacheOptions
-                                value={
-                                  valMasterBidangWilayah.value
-                                    ? valMasterBidangWilayah
-                                    : {value: '', label: 'Pilih Pangkat'}
-                                }
-                                loadOptions={loadOptionsKota}
-                                defaultOptions
-                                onChange={handleChangeInputKota}
-                                placeholder={'Pilih'}
-                                styles={
-                                  calculatedMode === 'dark'
-                                    ? reactSelectDarkThem
-                                    : reactSelectLightThem
-                                }
-                                loadingMessage={() => 'Sedang mencari pilihan...'}
-                                noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
-                              />
-                            </div>
+                            <label htmlFor='' className='mb-3'>
+                              Hak Akses
+                            </label>
+                            <input
+                              type='text'
+                              className='form-control form-control form-control-solid'
+                              name='hak_akses'
+                              value={valFilterHakAkses.val}
+                              onChange={handleChangeInputHakAkses}
+                              placeholder='Masukkan Hak Akses'
+                            />
                           </div>
-                          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                            <div className='form-group'>
-                              <label htmlFor='' className='mb-3'>
-                                Kecamatan / Seksi
-                              </label>
-                              <AsyncSelect
-                                cacheOptions
-                                loadOptions={loadOptionsKecamatan}
-                                value={
-                                  valMasterPelaksana.value
-                                    ? valMasterPelaksana
-                                    : {value: '', label: 'Pilih Kecamatan'}
-                                }
-                                styles={
-                                  calculatedMode === 'dark'
-                                    ? reactSelectDarkThem
-                                    : reactSelectLightThem
-                                }
-                                onChange={handleChangeInputKecamatan}
-                              />
-                            </div>
-                          </div>
-                          {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                            <div className='form-group'>
-                              <label htmlFor='' className='mb-3'>
-                                Kelurahan
-                              </label>
-                              <AsyncSelect
-                                cacheOptions
-                                loadOptions={loadOptionsKelurahan}
-                                value={
-                                  inputValKelurahan.value
-                                    ? inputValKelurahan
-                                    : {value: '', label: 'Pilih Kelurahan'}
-                                }
-                                styles={
-                                  calculatedMode === 'dark'
-                                    ? reactSelectDarkThem
-                                    : reactSelectLightThem
-                                }
-                                onChange={handleChangeInputKelurahan}
-                              />
-                            </div>
-                          </div> */}
                         </div>
                       </div>
-
                       <div className='row g-8 mt-2'>
                         <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
                           <Link to='#' onClick={handleFilter}>
@@ -843,7 +567,7 @@ export function TabDaftarUrutKepangkatan() {
                           </Link>
                         </div>
                         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                          <Link to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/tambah-daftar-urut-kepangkatan'>
+                          <Link to='/apps/data-pengguna/tambah-data-pengguna'>
                             {/* begin::Add user */}
                             <button type='button' className='btn btn-primary me-2'>
                               <KTSVG
@@ -912,25 +636,10 @@ export function TabDaftarUrutKepangkatan() {
               </div>
             </div>
             <div
-              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-              style={{
-                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
-              }}
+              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-100px'
+              style={{}}
               data-theme='light'
-            >
-              <div className='card-body py-8 mt-4 fw-bold text-white'>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>
-                    DAFTAR URUT KEPANGKATAN (DUK)
-                  </div>
-                </div>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-bold text-center'>
-                    SATUAN POLISI PAMONG PRAJA..................
-                  </div>
-                </div>
-              </div>
-            </div>
+            ></div>
 
             <div className='card-body mt-n20'>
               <div className='mt-n20 position-relatve'>
@@ -963,21 +672,6 @@ export function TabDaftarUrutKepangkatan() {
           </div>
         </div>
         {/* end::Body */}
-        <div className='row me-2'>
-          <div className='col-8'></div>
-          <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
-            .......................................
-            <div className='col fs-6 mb-15 fw-semibold text-center'>
-              Kepala Satpol PP ....................................
-            </div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>
-              ..........................................................
-            </div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>
-              NIP. ..........................................................
-            </div>
-          </div>
-        </div>
       </div>
     </>
   )

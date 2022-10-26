@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {Link, useParams} from 'react-router-dom'
 import {Button, Collapse} from 'react-bootstrap'
-import {HeaderDetailWrapper} from './HeaderDetailDUK'
+import {HeaderDetailWrapper} from './HeaderDetail'
 
 export function HirarkiKepegawaianDUK() {
   const [open, setOpen] = useState(false)
@@ -508,12 +508,12 @@ export function HirarkiKepegawaianDUK() {
         </Collapse>
         <div className='d-flex flex-center'>
           <Button
-            className='btn btn-primary'
+            className='btn btn-secondary'
             onClick={() => setOpen(!open)}
             aria-controls='example-collapse-text'
             aria-expanded={open}
           >
-            Show More
+            Menampilkan lebih banyak
           </Button>
         </div>
 
@@ -523,16 +523,13 @@ export function HirarkiKepegawaianDUK() {
               className='text-reset text-decoration-none'
               to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
             >
-              <button className='float-none btn btn-secondary align-self-center m-1'>
-                {' '}
-                <i className='fa-sharp fa-solid fa-xmark'></i>Keluar
-              </button>
+              <button className='float-none btn btn-secondary align-self-center m-1'>Keluar</button>
             </Link>
             <Link
               className='text-reset text-decoration-none'
-              to={`/kepegawaian/tab-daftar-urut-kepangkatan/data-kepegawaian-duk/${id}/${status}`}
+              to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-kepegawaian-duk/${id}/${status}`}
             >
-              <button className='float-none btn btn-success align-self-center m-1'>
+              <button className='float-none btn btn-primary align-self-center m-1'>
                 <i className='fa-solid fa-arrow-left'></i>
                 Kembali
               </button>
