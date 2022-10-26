@@ -763,7 +763,6 @@ export function UpdateDataKepegawaian() {
                       Pangkat
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_pangkat
                           ? valuesFormik?.kepegawaian_pangkat
@@ -936,7 +935,6 @@ export function UpdateDataKepegawaian() {
                       Subag/Seksi/Kecamatan
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_subbag_seksi_kecamatan
                           ? valuesFormik?.kepegawaian_subbag_seksi_kecamatan
@@ -952,7 +950,6 @@ export function UpdateDataKepegawaian() {
                         handleChangeFormikSelect(e, 'kepegawaian_subbag_seksi_kecamatan')
                         await setFieldValue('kepegawaian_subbag_seksi_kecamatan', e.value)
                       }}
-                      defaultOptions
                       name='kepegawaian_subbag_seksi_kecamatan'
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
@@ -966,31 +963,6 @@ export function UpdateDataKepegawaian() {
                           </div>
                         </div>
                       )}
-                    {/* <Field
-                      type='text'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            errors.kepegawaian_subbag_seksi_kecamatan,
-                        },
-                        {
-                          'is-valid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            !errors.kepegawaian_subbag_seksi_kecamatan,
-                        }
-                      )}
-                      name='kepegawaian_subbag_seksi_kecamatan'
-                    />
-                    {touched.kepegawaian_subbag_seksi_kecamatan &&
-                      errors.kepegawaian_subbag_seksi_kecamatan && (
-                        <div className='fv-plugins-message-container'>
-                          <div className='fv-help-block'>
-                            <span role='alert'>{errors.kepegawaian_subbag_seksi_kecamatan}</span>
-                          </div>
-                        </div>
-                      )} */}
                   </div>
 
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
@@ -998,7 +970,6 @@ export function UpdateDataKepegawaian() {
                       Jabatan
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_jabatan
                           ? valuesFormik?.kepegawaian_jabatan
@@ -1014,7 +985,6 @@ export function UpdateDataKepegawaian() {
                         handleChangeFormikSelect(e, 'kepegawaian_jabatan')
                         await setFieldValue('kepegawaian_jabatan', e.value)
                       }}
-                      defaultOptions
                       name='kepegawaian_jabatan'
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
