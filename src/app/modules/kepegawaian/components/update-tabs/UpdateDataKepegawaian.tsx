@@ -141,28 +141,28 @@ const validatorForm = Yup.object().shape({
   kepegawaian_no_sk_pangkat_terakhir: Yup.string()
     .matches(/^[0-9]+$/, 'Isian harus berupa angka')
     .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_dasar_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_strutural_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_ppns_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_fungsional_pol_pp_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_dasar_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_strutural_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_ppns_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_fungsional_pol_pp_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat: Yup.string().required('Wajib diisi'),
   kepegawaian_tmtpangkat: Yup.string().required('Wajib diisi'),
   kepegawaian_npwp: Yup.string().required('Wajib diisi'),
   kepegawaian_tmt_cpns: Yup.string().required('Wajib diisi'),
   kepegawaian_tmt_pns: Yup.string().required('Wajib diisi'),
   kepegawaian_tgl_sk_pns: Yup.string().required('Wajib diisi'),
   kepegawaian_tgl_sk_pangkat_terakhir: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: Yup.string().required('Wajib diisi'),
   kepegawaian_subbag_seksi_kecamatan: Yup.string().required('Wajib diisi'),
   kepegawaian_tempat_tugas: Yup.string().required('Wajib diisi'),
   kepegawaian_pangkat: Yup.string().required('Wajib diisi'),
@@ -1548,7 +1548,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1580,7 +1580,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1687,7 +1687,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1719,7 +1719,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1826,7 +1826,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1858,7 +1858,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1964,7 +1964,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1996,7 +1996,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
