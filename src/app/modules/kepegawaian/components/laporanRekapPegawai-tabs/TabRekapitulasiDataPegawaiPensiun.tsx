@@ -135,7 +135,8 @@ const reactSelectDarkThem = {
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
-// export const KOTA_URL = `${API_URL}/master/kota`
+export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
+export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
 // export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 
@@ -149,6 +150,8 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     const [valFilterNama, setFilterNama] = useState({ val: '' })
     const [valFilterKecamatan, setFilterKecamatan] = useState({ val: '' })
     const [valFilterWilayah, setFilterWilayah] = useState({ val: '' })
+    const [inputValKec, setDataKec] = useState({ label: '', value: null })
+    const [inputValTugas, setDataTugas] = useState({ label: '', value: null })
     const [valFilterNRK, setFilterNRK] = useState({ val: '' })
     const [valFilterNIP, setFilterNIP] = useState({ val: '' })
     const [valFilterTahunPensiun, setFilterTahunPensiun] = useState({ val: '' })
@@ -467,6 +470,43 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         readonly label: string
     }
 
+    //START :: Wilayah
+    const filterTugas = async (inputValue: string) => {
+        const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
+        const json = await response.data.data
+        return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    }
+    const loadOptionsTugas = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterTugas(inputValue))
+        }, 1000)
+    }
+    const handleInputTugas = async (newValue: any) => {
+        setDataTugas((prevstate: any) => ({ ...prevstate, ...newValue }))
+        // // filterKec(newValue)
+        // // loadOptionsKec
+        // await loadOptionsKec2(newValue)
+    }
+    //END :: Wilayah
+
+    //START :: KECAMATAN
+    const filterKec = async (inputValue: string) => {
+        const response = await axios.get(`${PELAKSANA_URL}/filter?nama=${inputValue}`)
+        console.log(response.data.data)
+        const json = await response.data.data
+        return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    }
+    const loadOptionsKec = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterKec(inputValue))
+        }, 1000)
+    }
+    const handleInputKec = (newValue: any) => {
+        setDataKec((prevstate: any) => ({ ...prevstate, ...newValue }))
+    }
+    //end kecamtan
+    //END :: KECAMATAN
+
     // GET Wilayah
     // const [inputValWilayah, setFilterWilayah] = useState({ label: '', val: '' })
     // const filterWilayah = async (page: any) => {
@@ -632,13 +672,24 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                                     <label htmlFor='' className='mb-3'>
                                                         Tempat Tugas
                                                     </label>
-                                                    <input
+                                                    {/* <input
                                                         type='text'
                                                         className='form-control form-control-solid '
                                                         name='wilayah/bidang'
                                                         value={valFilterWilayah.val}
                                                         onChange={handleChangeInputWilayah}
                                                         placeholder='Masukkan Wilayah/Bidang'
+                                                    /> */}
+                                                    <AsyncSelect
+                                                        value={inputValTugas.value ? inputValTugas : { value: '', label: 'Pilih' }}
+                                                        loadOptions={loadOptionsTugas}
+                                                        defaultOptions
+                                                        onChange={handleInputTugas}
+                                                        styles={
+                                                            calculatedMode === 'dark'
+                                                                ? reactSelectDarkThem
+                                                                : reactSelectLightThem
+                                                        }
                                                     />
                                                 </div>
                                             </div>
@@ -646,13 +697,24 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                                 <label htmlFor='' className='mb-3'>
                                                     Kecamatan/Seksi
                                                 </label>
-                                                <input
+                                                {/* <input
                                                     type='text'
                                                     className='form-control form-control-solid '
                                                     name='kecamatan/seksi'
                                                     value={valFilterKecamatan.val}
                                                     onChange={handleChangeInputKecamatan}
                                                     placeholder='Masukkan Kecamatan/Seksi'
+                                                /> */}
+                                                <AsyncSelect
+                                                    value={inputValKec.value ? inputValKec : { value: '', label: 'Pilih' }}
+                                                    loadOptions={loadOptionsKec}
+                                                    // defaultOptions
+                                                    onChange={handleInputKec}
+                                                    styles={
+                                                        calculatedMode === 'dark'
+                                                            ? reactSelectDarkThem
+                                                            : reactSelectLightThem
+                                                    }
                                                 />
                                             </div>
                                             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
