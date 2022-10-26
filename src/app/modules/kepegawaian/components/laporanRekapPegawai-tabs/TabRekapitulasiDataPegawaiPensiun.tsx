@@ -585,138 +585,161 @@ export function TabRekapitulasiDataPegawaiPensiun() {
             <LaporanRekapHeader />
             <div className={`card`}>
                 {/* FILTER */}
-                <div className="accordion accordion-icon-toggle" id="kt_accordion_2">
-                    <div className="mb-5 pt-6 ms-8">
-                        <div className="accordion-header py-3 d-flex" data-bs-toggle="collapse"
-                            data-bs-target="#kt_accordion_2_item_1">
-                            <span className="accordion-icon">
-                                <span className="svg-icon svg-icon-4">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1"
-                                            transform="rotate(-180 18 13)" fill="currentColor" />
-                                        <path
-                                            d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z"
-                                            fill="currentColor" />
-                                    </svg>
-                                </span>
-                            </span>
-                            <h3 className="fs-4 fw-semibold mb-0 ms-4">
-                                Pilihan Filter
-                            </h3>
-                        </div>
-                        {/* begin::Body */}
-                        <div id='kt_advanced_search_form'>
-                            <div className='row g-8 mt-2 ms-5 me-5'>
-                                <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                                    <div className='form-group'>
-                                        <label htmlFor='' className='mb-3'>
-                                            Tempat Tugas
-                                        </label>
-                                        <input
-                                            type='text'
-                                            className='form-control form-control-solid '
-                                            name='wilayah/bidang'
-                                            value={valFilterWilayah.val}
-                                            onChange={handleChangeInputWilayah}
-                                            placeholder='Masukkan Wilayah/Bidang'
-                                        />
+                <div className='card-header border-1 pt-6'>
+                    <div className='col-xl-12 mb-xl-12 mt-6'>
+                        <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
+                            <div className='mb-5'>
+                                <div
+                                    className='accordion-header py-3 d-flex'
+                                    data-bs-toggle='collapse'
+                                    data-bs-target='#kt_accordion_2_item_1'
+                                >
+                                    <span className='accordion-icon'>
+                                        <span className='svg-icon svg-icon-4'>
+                                            <svg
+                                                width='24'
+                                                height='24'
+                                                viewBox='0 0 24 24'
+                                                fill='none'
+                                                xmlns='http://www.w3.org/2000/svg'
+                                            >
+                                                <rect
+                                                    opacity='0.5'
+                                                    x='18'
+                                                    y='13'
+                                                    width='13'
+                                                    height='2'
+                                                    rx='1'
+                                                    transform='rotate(-180 18 13)'
+                                                    fill='currentColor'
+                                                />
+                                                <path
+                                                    d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
+                                                    fill='currentColor'
+                                                />
+                                            </svg>
+                                        </span>
+                                    </span>
+                                    <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
+                                </div>
+                                <div id="kt_accordion_2_item_1" className="fs-6 collapse show ps-10"
+                                    data-bs-parent="#kt_accordion_2">
+                                    {/* begin::Body */}
+                                    <div id='kt_advanced_search_form'>
+                                        <div className='row g-8 mt-2 me-5'>
+                                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                                                <div className='form-group'>
+                                                    <label htmlFor='' className='mb-3'>
+                                                        Tempat Tugas
+                                                    </label>
+                                                    <input
+                                                        type='text'
+                                                        className='form-control form-control-solid '
+                                                        name='wilayah/bidang'
+                                                        value={valFilterWilayah.val}
+                                                        onChange={handleChangeInputWilayah}
+                                                        placeholder='Masukkan Wilayah/Bidang'
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                                                <label htmlFor='' className='mb-3'>
+                                                    Kecamatan/Seksi
+                                                </label>
+                                                <input
+                                                    type='text'
+                                                    className='form-control form-control-solid '
+                                                    name='kecamatan/seksi'
+                                                    value={valFilterKecamatan.val}
+                                                    onChange={handleChangeInputKecamatan}
+                                                    placeholder='Masukkan Kecamatan/Seksi'
+                                                />
+                                            </div>
+                                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
+                                                <label htmlFor='' className='mb-3'>
+                                                    Tahun Pensiun
+                                                </label>
+                                                <input
+                                                    type='number'
+                                                    className='form-control form-control-solid '
+                                                    name='tahun_pensiun'
+                                                    value={valFilterTahunPensiun.val}
+                                                    onChange={handleChangeInputTahunPensiun}
+                                                    placeholder='Masukkan Tahun Pensiun'
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='row g-8 mt-2 me-5'>
+                                        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                            <Link to='#' onClick={handleFilter}>
+                                                <button className='btn btn-light-primary me-2'>
+                                                    <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
+                                                    Cari
+                                                </button>
+                                            </Link>
+                                            <Link to='#' onClick={handleFilterReset}>
+                                                <button className='btn btn-light-primary'>
+                                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                                    Reset
+                                                </button>
+                                            </Link>
+                                        </div>
+                                        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
+                                            {/* begin::Filter Button */}
+                                            <button
+                                                type='button'
+                                                className='btn btn-light-primary'
+                                                data-kt-menu-trigger='click'
+                                                data-kt-menu-placement='bottom-end'
+                                                onClick={handleUnduh}
+                                            >
+                                                {btnLoadingUnduh ? (
+                                                    <>
+                                                        <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                                        Memproses Unduh...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                                        Unduh
+                                                    </>
+                                                )}
+                                            </button>
+                                            {/* end::Filter Button */}
+                                            {/* begin::SubMenu */}
+                                            <div className='menu menu-sub menu-sub-dropdown w-100px w-md-150px' data-kt-menu='true'>
+                                                {/* begin::Header */}
+                                                <div className='px-7 py-5'>
+                                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                                                </div>
+                                                {/* end::Header */}
+
+                                                {/* begin::Separator */}
+                                                <div className='separator border-gray-200'></div>
+                                                {/* end::Separator */}
+
+                                                {/* begin::Content */}
+                                                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                                    <button
+                                                        onClick={handleUnduh}
+                                                        className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                                    >
+                                                        Excel
+                                                    </button>
+                                                </div>
+                                                {/* end::Content */}
+                                            </div>
+                                            {/* end::SubMenu */}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                                    <label htmlFor='' className='mb-3'>
-                                        Kecamatan/Seksi
-                                    </label>
-                                    <input
-                                        type='text'
-                                        className='form-control form-control-solid '
-                                        name='kecamatan/seksi'
-                                        value={valFilterKecamatan.val}
-                                        onChange={handleChangeInputKecamatan}
-                                        placeholder='Masukkan Kecamatan/Seksi'
-                                    />
-                                </div>
-                                <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-                                    <label htmlFor='' className='mb-3'>
-                                        Tahun Pensiun
-                                    </label>
-                                    <input
-                                        type='number'
-                                        className='form-control form-control-solid '
-                                        name='tahun_pensiun'
-                                        value={valFilterTahunPensiun.val}
-                                        onChange={handleChangeInputTahunPensiun}
-                                        placeholder='Masukkan Tahun Pensiun'
-                                    />
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className='row g-8 mt-2 ms-5 me-5'>
-                    <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                        <Link to='#' onClick={handleFilter}>
-                            <button className='btn btn-light-primary me-2'>
-                                <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
-                                Cari
-                            </button>
-                        </Link>
-                        <Link to='#' onClick={handleFilterReset}>
-                            <button className='btn btn-light-primary'>
-                                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                Reset
-                            </button>
-                        </Link>
-                    </div>
-                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-6'>
-                        {/* begin::Filter Button */}
-                        <button
-                            type='button'
-                            className='btn btn-light-primary'
-                            data-kt-menu-trigger='click'
-                            data-kt-menu-placement='bottom-end'
-                            onClick={handleUnduh}
-                        >
-                            {btnLoadingUnduh ? (
-                                <>
-                                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                    Memproses Unduh...
-                                </>
-                            ) : (
-                                <>
-                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-                                    Unduh
-                                </>
-                            )}
-                        </button>
-                        {/* end::Filter Button */}
-                        {/* begin::SubMenu */}
-                        <div className='menu menu-sub menu-sub-dropdown w-100px w-md-150px' data-kt-menu='true'>
-                            {/* begin::Header */}
-                            <div className='px-7 py-5'>
-                                <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                            </div>
-                            {/* end::Header */}
 
-                            {/* begin::Separator */}
-                            <div className='separator border-gray-200'></div>
-                            {/* end::Separator */}
-
-                            {/* begin::Content */}
-                            <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                <button
-                                    onClick={handleUnduh}
-                                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                >
-                                    Excel
-                                </button>
-                            </div>
-                            {/* end::Content */}
-                        </div>
-                        {/* end::SubMenu */}
-                    </div>
-                </div>
 
                 <div className='col-xl-12 mb-xl-12 mt-6'>
                     <div className='card card-flush h-xl-100'>
