@@ -223,6 +223,8 @@ export function UpdateDataPribadi() {
   const optionsStatKawin = [
     {value: 'Sudah Menikah', label: 'Sudah Menikah'},
     {value: 'Belum Menikah', label: 'Belum Menikah'},
+    {value: 'Cerai Mati', label: 'Cerai Mati'},
+    {value: 'Cerai Hidup', label: 'Cerai Hidup'},
   ]
 
   // Select Provinsi sesuai KTP
