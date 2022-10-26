@@ -488,7 +488,7 @@ export function UnduhLaporanRekapitulasiPegawai() {
                 <td className='d-flex justify-content-end'>
                   {/* <!--place holder for the fixed-position footer--> */}
                   <div className='page-footer-space'>
-                    <div className='fs-6 mb-2 mt-5 fw-semibold text-center'>
+                    <div className='fs-6 mb-2 mt-7 fw-semibold text-center'>
                       ..........................................
                       <div className='fs-6 mb-15 fw-semibold text-center'>
                         Kepala Satpol PP................................
