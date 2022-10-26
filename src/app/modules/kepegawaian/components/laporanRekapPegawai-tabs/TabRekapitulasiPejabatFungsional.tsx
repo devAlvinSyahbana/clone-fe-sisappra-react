@@ -1,6 +1,6 @@
 import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import DataTable, {createTheme} from 'react-data-table-component'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
@@ -138,7 +138,6 @@ export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-pegawa
 export const MASTER_URL = `${API_URL}/master`
 
 export function TabRekapitulasiPejabatFungsional() {
-  const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
 
