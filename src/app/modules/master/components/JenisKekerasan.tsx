@@ -1,21 +1,24 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import DataTable from 'react-data-table-component';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
+import {Link, useNavigate} from 'react-router-dom'
+import DataTable from 'react-data-table-component'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import Dropdown from 'react-bootstrap/Dropdown'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import Swal from 'sweetalert2'
+import * as Yup from 'yup'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
+export const JENIS_KEKERASAN_URL = `${API_URL}/master/JenisKekerasan` //http://localhost:3000/JenisKekerasan
 
 export function JenisKekerasan() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchUsers(1);
@@ -37,78 +40,68 @@ export function JenisKekerasan() {
 
   const columns = [
     {
-      name: 'Jenis Sarana & Prasarana',
-      selector: (row: any) => row.jenis_sarana_prasarana,
+      name: 'No',
+      selector: (row: any) => row.id,
       sortable: true,
-      sortField: 'jenis_sarana_prasarana',
+      sortField: 'no',
     },
+    {},
     {
-      name: 'Status Sarana & Prasarana',
-      selector: (row: any) => row.status_sarana_prasarana,
+      name: 'Jenis Kekerasan',
+      selector: (row: any) => row.jenis_kekerasan,
       sortable: true,
-      sortField: 'status_sarana_prasarana',
+      sortField: 'Jenis Kekerasan',
     },
-    {
-      name: 'Jumlah',
-      selector: (row: any) => row.jumlah,
-      sortable: true,
-      sortField: 'jumlah',
-    },
-    {
-      name: 'Kondisi',
-      selector: (row: any) => row.kondisi,
-      sortable: true,
-      sortField: 'kondisi',
-    },
-    {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
-      sortable: true,
-      sortField: 'keterangan',
-    },
-    {
-      name: 'Dokumentasi',
-      selector: (row: any) => row.dokumentasi,
-      sortable: true,
-      sortField: 'dokumentasi',
-    },
+    {},
+    {},
     {
       name: 'Aksi',
       sortable: false,
-      text: "Action",
-      className: "action",
-      align: "left",
+      text: 'Action',
+      className: 'action',
+      align: 'left',
       cell: (record: any) => {
         return (
           <Fragment>
-
-            <div className="mb-2">
+            <div className='mb-2'>
               {[DropdownButton].map((DropdownType, idx) => (
                 <>
                   <DropdownType
                     as={ButtonGroup}
                     key={idx}
                     id={`dropdown-button-drop-${idx}`}
-                    size="sm"
-                    variant="light"
-                    title="Aksi">
-                    <Dropdown.Item>
-                      <Link to="/sarana-prasarana/LaporanSaranaPrasarana">
-                        Detail
-                      </Link>
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate('/master/JenisKekerasan/LihatJenisKekerasan/' + record.id, {replace: true})
+                      }
+                    >
+                      Detail
                     </Dropdown.Item>
-                    <Dropdown.Item href="#">Ubah</Dropdown.Item>
-                    <Dropdown.Item href="#">Hapus</Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate('/master/JenisKekerasan/UpdateJenisKekerasan/' + record.id, {replace: true})
+                      }
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                    <Dropdown.Item href='#'> 
+                      Hapus
+                    </Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
             </div>
           </Fragment>
-        );
+        )
       },
     },
-
-  ];
+  ]
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -119,7 +112,7 @@ export function JenisKekerasan() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(SARANA_PRASARANA_URL + "/find");
+    const value = await axios.get(JENIS_KEKERASAN_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);

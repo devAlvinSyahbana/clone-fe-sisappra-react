@@ -1,10 +1,7 @@
 import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import DataTable, {createTheme} from 'react-data-table-component'
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import Dropdown from 'react-bootstrap/Dropdown'
-import DropdownButton from 'react-bootstrap/DropdownButton'
 import clsx from 'clsx'
 import FileDownload from 'js-file-download'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
@@ -141,7 +138,6 @@ export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-pegawa
 export const MASTER_URL = `${API_URL}/master`
 
 export function TabRekapitulasiPejabatFungsional() {
-  const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
 
@@ -261,7 +257,7 @@ export function TabRekapitulasiPejabatFungsional() {
               <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
                 {record?.foto && record?.foto !== '' ? (
                   <div className='symbol-label'>
-                    <img src={record?.foto} alt={record?.nama} className='w-100' />
+                    <img src={`${API_URL}}/${record?.foto}`} alt={record?.nama} className='w-100' />
                   </div>
                 ) : (
                   <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
@@ -314,65 +310,6 @@ export function TabRekapitulasiPejabatFungsional() {
       sortField: 'tempat_tugas',
       wrap: true,
       center: true,
-    },
-    {
-      name: 'Keterangan',
-      // selector: (row: any) => row.agama,
-      sortable: true,
-      // sortField: 'agama',
-      wrap: true,
-      center: true,
-    },
-    {
-      name: 'Aksi',
-      sortable: false,
-      text: 'Aksi',
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='mb-2 mt-2'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/LaporanRekapitulasiPegawai/TabRekapitulasiPejabatFungsional/PejabatFungsional_DataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
-                        )
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      // onClick={() =>
-                      //   navigate(
-                      //     `/kepegawaian/LaporanRekapitulasiDataPegawai/UpdateDataPribadi/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                      //     { replace: true }
-                      //   )
-                      // }
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
     },
   ]
 
@@ -493,7 +430,9 @@ export function TabRekapitulasiPejabatFungsional() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh${qParamFind.strparam !== '' && `?${qParamFind.strparam}`}`,
+      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh${
+        qParamFind.strparam !== '' ? `?${qParamFind.strparam}` : ''
+      }`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {

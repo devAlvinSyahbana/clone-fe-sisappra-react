@@ -13,6 +13,7 @@ import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {parse} from 'path'
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
@@ -264,7 +265,7 @@ export function TabDaftarUrutKepangkatan() {
       selector: (row: any) => row.jabatan,
       sortable: true,
       sortField: 'jabatan',
-      width: '250px',
+      width: '270px',
       wrap: true,
       center: true,
     },
@@ -283,7 +284,7 @@ export function TabDaftarUrutKepangkatan() {
       selector: (row: any) => row.tempat_tugas,
       sortable: true,
       sortField: 'tempat_tugas',
-      width: '180px',
+      width: '200px',
       wrap: true,
       center: true,
     },
@@ -385,8 +386,6 @@ export function TabDaftarUrutKepangkatan() {
       setData(response.data.data)
       setTotalRows(response.data.total_data)
       setLoading(false)
-
-      getBidangWilayah(response.data.data.kepegawaian_tempat_tugas)
     }
     fetchDT(1)
   }, [qParamFind, perPage])
@@ -443,37 +442,20 @@ export function TabDaftarUrutKepangkatan() {
   }
   const handleChangeInputKota = (newValue: any) => {
     setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
+    setIdMasterBidangWilayah((prevstate) => ({
+      ...prevstate,
+      id: newValue.value,
+    }))
   }
-
   const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
-  const getBidangWilayah = async (params: any) => {
-    if (params)
-      return await axios
-        .get(`${MASTER_URL}/bidang-wilayah/findone/${parseInt(params)}`)
-        .then((response) => {
-          setIdMasterBidangWilayah((prevstate) => ({
-            ...prevstate,
-            id: response?.data?.data?.id,
-          }))
-          setValMasterBidangWilayah((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.nama,
-          }))
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-  }
 
   // GET Kecamatan (PELAKSANA)
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      MASTER_URL +
-        `${MASTER_URL}/pelaksana/filter?id_tempat_pelaksanaan=${parseInt(
-          idMasterBidangWilayah.id
-        )}${inputValue !== '' && `&nama=${inputValue}`}`
+      `${MASTER_URL}/pelaksana/filter?id_tempat_pelaksanaan=${parseInt(idMasterBidangWilayah.id)}${
+        inputValue !== '' && `&nama=${inputValue}`
+      }`
     )
     const json = await response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
@@ -488,50 +470,39 @@ export function TabDaftarUrutKepangkatan() {
   }
   const handleChangeInputKecamatan = (newValue: any) => {
     setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
+    setIdMasterPelaksana((prevstate) => ({
+      ...prevstate,
+      id: newValue.value,
+    }))
   }
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
 
-  const getPelaksana = async (params: any) => {
-    if (params)
-      return await axios
-        .get(`${MASTER_URL}/pelaksana/findone/${parseInt(params)}`)
-        .then((response) => {
-          setValMasterPelaksana((prevstate) => ({
-            ...prevstate,
-            value: response?.data?.data?.id,
-            label: response?.data?.data?.nama,
-          }))
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-  }
   // END :: GET Kecamatan
 
-  // GET Kelurahan
-  // const [inputValKelurahan, setFilterKelurahan] = useState({label: '', value: null})
-  // const filterKelurahan = async (inputValue: string) => {
-  //   const response = await axios.get(
-  //     MASTER_URL +
-  //       '/findone-by-kelurahan?kecamatan=' +
-  //       inputValKecamatan.label +
-  //       '&kelurahan=' +
-  //       inputValue
-  //   )
-  //   const json = await response.data.data
-  //   return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
-  // }
-  // const loadOptionsKelurahan = (
-  //   inputValue: string,
-  //   callback: (options: SelectOptionAutoCom[]) => void
-  // ) => {
-  //   setTimeout(async () => {
-  //     callback(await filterKelurahan(inputValue))
-  //   }, 1000)
-  // }
-  // const handleChangeInputKelurahan = (newValue: any) => {
-  //   setFilterKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
-  // }
-  // // END :: GET Kelurahan
+  // GET Jabatan
+  const [valMasterJabatan, setValMasterJabatan] = useState({value: null, label: ''})
+  const filterJabatan = async (inputValue: string) => {
+    const response = await axios.get(
+      `${MASTER_URL}/jabatan/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(
+        idMasterPelaksana.id
+      )}${inputValue !== '' && `&nama=${inputValue}`}`
+    )
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.jabatan, value: i.id}))
+  }
+  const loadOptionJabatan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterJabatan(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputJabatan = (newValue: any) => {
+    setValMasterJabatan((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // // END :: GET Jabatan
 
   const handleFilter = async () => {
     let uriParam = ''
@@ -551,10 +522,13 @@ export function TabDaftarUrutKepangkatan() {
       uriParam += `&nrk_nptt_pjlp=${valFilterNoPegawai.val}`
     }
     if (valMasterBidangWilayah.value) {
-      uriParam += `&tempat_tugas=${valMasterBidangWilayah.value}`
+      uriParam += `&id_tempat_tugas=${valMasterBidangWilayah.value}`
     }
     if (valMasterPelaksana.value) {
-      uriParam += `&seksi_kecamatan=${valMasterPelaksana.value}`
+      uriParam += `&id_seksi_kecamatan=${valMasterPelaksana.value}`
+    }
+    if (valMasterJabatan.value) {
+      uriParam += `&id_jabatan_kelurahan=${valMasterJabatan.value}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
@@ -566,6 +540,8 @@ export function TabDaftarUrutKepangkatan() {
     setFilterNoPegawai({val: ''})
     setFilterNIP({val: ''})
     setValMasterBidangWilayah({label: '', value: null})
+    setValMasterPelaksana({label: '', value: null})
+    setValMasterJabatan({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -757,7 +733,6 @@ export function TabDaftarUrutKepangkatan() {
                                 Wilayah / Bidang
                               </label>
                               <AsyncSelect
-                                cacheOptions
                                 value={
                                   valMasterBidangWilayah.value
                                     ? valMasterBidangWilayah
@@ -783,12 +758,11 @@ export function TabDaftarUrutKepangkatan() {
                                 Kecamatan / Seksi
                               </label>
                               <AsyncSelect
-                                cacheOptions
                                 loadOptions={loadOptionsKecamatan}
                                 value={
                                   valMasterPelaksana.value
                                     ? valMasterPelaksana
-                                    : {value: '', label: 'Pilih Kecamatan'}
+                                    : {value: '', label: 'Pilih Kecamatan / Seksi'}
                                 }
                                 styles={
                                   calculatedMode === 'dark'
@@ -796,31 +770,32 @@ export function TabDaftarUrutKepangkatan() {
                                     : reactSelectLightThem
                                 }
                                 onChange={handleChangeInputKecamatan}
+                                name='id_seksi_kecamatan'
                               />
                             </div>
                           </div>
-                          {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <div className='form-group'>
                               <label htmlFor='' className='mb-3'>
-                                Kelurahan
+                                Jabatan
                               </label>
                               <AsyncSelect
-                                cacheOptions
-                                loadOptions={loadOptionsKelurahan}
+                                loadOptions={loadOptionJabatan}
                                 value={
-                                  inputValKelurahan.value
-                                    ? inputValKelurahan
-                                    : {value: '', label: 'Pilih Kelurahan'}
+                                  valMasterJabatan.value
+                                    ? valMasterJabatan
+                                    : {value: '', label: 'Pilih Jabatan'}
                                 }
                                 styles={
                                   calculatedMode === 'dark'
                                     ? reactSelectDarkThem
                                     : reactSelectLightThem
                                 }
-                                onChange={handleChangeInputKelurahan}
+                                onChange={handleChangeInputJabatan}
+                                name='id_jabatan_kelurahan'
                               />
                             </div>
-                          </div> */}
+                          </div>
                         </div>
                       </div>
 
@@ -960,24 +935,24 @@ export function TabDaftarUrutKepangkatan() {
                 </div>
               </div>
             </div>
+            <div className='row me-2'>
+              <div className='col-8'></div>
+              <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
+                .......................................
+                <div className='col fs-6 mb-15 fw-semibold text-center'>
+                  Kepala Satpol PP ....................................
+                </div>
+                <div className='col fs-6 mb-2 fw-semibold text-center'>
+                  ..........................................................
+                </div>
+                <div className='col fs-6 mb-2 fw-semibold text-center'>
+                  NIP. ..........................................................
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         {/* end::Body */}
-        <div className='row me-2'>
-          <div className='col-8'></div>
-          <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
-            .......................................
-            <div className='col fs-6 mb-15 fw-semibold text-center'>
-              Kepala Satpol PP ....................................
-            </div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>
-              ..........................................................
-            </div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>
-              NIP. ..........................................................
-            </div>
-          </div>
-        </div>
       </div>
     </>
   )
