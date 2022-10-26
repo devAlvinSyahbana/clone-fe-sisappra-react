@@ -1,10 +1,9 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from 'react'
-import {SidebarMenuItemWithSub} from './SidebarMenuItemWithSub'
-import {SidebarMenuItem} from './SidebarMenuItem'
+import { SidebarMenuItemWithSub } from './SidebarMenuItemWithSub'
+import { SidebarMenuItem } from './SidebarMenuItem'
 
 const SidebarMenuMain = () => {
-
   return (
     <>
       <div className='menu-item'>
@@ -43,7 +42,11 @@ const SidebarMenuMain = () => {
           title='Dashboard Wasdak Protokol Kesehatan (PPKM)'
           hasBullet={true}
         />
-        <SidebarMenuItem to='/dashboard/peta-titik-rawan' title='Peta Titik Rawan' hasBullet={true} />
+        <SidebarMenuItem
+          to='/dashboard/peta-titik-rawan'
+          title='Peta Titik Rawan'
+          hasBullet={true}
+        />
         <SidebarMenuItem
           to='/dashboard/peta-titik-reklame'
           title='Peta Titik Reklame'
@@ -62,8 +65,16 @@ const SidebarMenuMain = () => {
         fontIcon='bi-archive'
         icon='/media/icons/duotune/general/gen055.svg'
       >
-        <SidebarMenuItem to='/pelaporan/LaporanKegiatan' title='Laporan Kegiatan' hasBullet={true} />
-        <SidebarMenuItem to='/pelaporan/LaporanKejadian' title='Laporan Kejadian' hasBullet={true} />
+        <SidebarMenuItem
+          to='/pelaporan/LaporanKegiatan'
+          title='Laporan Kegiatan'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/pelaporan/LaporanKejadian'
+          title='Laporan Kejadian'
+          hasBullet={true}
+        />
         <SidebarMenuItem
           to='/pelaporan/LaporanPengawasan'
           title='Laporan Pengawasan'
@@ -86,9 +97,13 @@ const SidebarMenuMain = () => {
           title='Informasi Data Pegawai'
           hasBullet={true}
         />
-        <SidebarMenuItem to='/kepegawaian/HirarkiPegawai' title='Hirarki Pegawai' hasBullet={true} />
         <SidebarMenuItem
-          to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-laporan-rekapitulasi-pegawai'
+          to='/kepegawaian/HirarkiPegawai'
+          title='Hirarki Pegawai'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/kepegawaian/laporan-rekapitulasi-pegawai'
           title='Laporan Rekapitulasi Pegawai'
           hasBullet={true}
         />
@@ -96,7 +111,7 @@ const SidebarMenuMain = () => {
           to='/kepegawaian/PenyidikPegawaiNegeriSipil/TabRekapitulasiPPNS'
           title='Penyidik Pegawai Negeri Sipil (PPNS)'
           hasBullet={true}
-        />        
+        />
         <SidebarMenuItem
           to='/kepegawaian/KehadiranPegawai'
           title='Kehadiran Pegawai'
@@ -152,7 +167,11 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/master/Golongan' title='Golongan' hasBullet={true} />
         <SidebarMenuItem to='/master/Eselon' title='Eselon' hasBullet={true} />
         <SidebarMenuItem to='/master/Jabatan' title='Jabatan' hasBullet={true} />
-        <SidebarMenuItem to='/master/JenisPenyelesaian' title='Jenis Penyelesaian' hasBullet={true} />
+        <SidebarMenuItem
+          to='/master/JenisPenyelesaian'
+          title='Jenis Penyelesaian'
+          hasBullet={true}
+        />
         <SidebarMenuItem to='/master/SumberInformasi' title='Sumber Informasi' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisPenerbitan' title='Jenis Penerbitan' hasBullet={true} />
@@ -163,17 +182,17 @@ const SidebarMenuMain = () => {
         </div>
       </div>
       <SidebarMenuItemWithSub
-        to='/pengaturan/manajamen-pengguna'
+        to='/manajamen-pengguna'
         title='Manajemen Pengguna'
         fontIcon='bi-chat-left'
         icon='/media/icons/duotune/general/gen051.svg'
       >
-        <SidebarMenuItem to='/apps/chat/private-chat' title='Pengguna' hasBullet={true} />
+        <SidebarMenuItem to='/apps/data-pengguna' title='Pengguna' hasBullet={true} />
         <SidebarMenuItem to='/apps/chat/group-chat' title='Hak Akses' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='Akses Kontrol' hasBullet={true} />
+        <SidebarMenuItem to='/apps/akses-kontrol' title='Akses Kontrol' hasBullet={true} />
       </SidebarMenuItemWithSub>
     </>
   )
 }
 
-export {SidebarMenuMain}
+export { SidebarMenuMain }

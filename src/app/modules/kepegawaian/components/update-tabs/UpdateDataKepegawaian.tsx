@@ -141,28 +141,28 @@ const validatorForm = Yup.object().shape({
   kepegawaian_no_sk_pangkat_terakhir: Yup.string()
     .matches(/^[0-9]+$/, 'Isian harus berupa angka')
     .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_dasar_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_strutural_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_ppns_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_fungsional_pol_pp_no_sertifikat: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-  kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_dasar_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_strutural_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_ppns_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_fungsional_pol_pp_no_sertifikat: Yup.string()
+  //   .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+  //   .required('Wajib diisi'),
+  // kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat: Yup.string().required('Wajib diisi'),
   kepegawaian_tmtpangkat: Yup.string().required('Wajib diisi'),
   kepegawaian_npwp: Yup.string().required('Wajib diisi'),
   kepegawaian_tmt_cpns: Yup.string().required('Wajib diisi'),
   kepegawaian_tmt_pns: Yup.string().required('Wajib diisi'),
   kepegawaian_tgl_sk_pns: Yup.string().required('Wajib diisi'),
   kepegawaian_tgl_sk_pangkat_terakhir: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat: Yup.string().required('Wajib diisi'),
-  kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_dasar_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_strutural_tgl_sertifikat: Yup.string().required('Wajib diisi'),
+  // kepegawaian_diklat_pol_pp_ppns_tgl_sertifikat: Yup.string().required('Wajib diisi'),
   kepegawaian_subbag_seksi_kecamatan: Yup.string().required('Wajib diisi'),
   kepegawaian_tempat_tugas: Yup.string().required('Wajib diisi'),
   kepegawaian_pangkat: Yup.string().required('Wajib diisi'),
@@ -190,6 +190,8 @@ export function UpdateDataKepegawaian() {
       getPendidikan(response.data.data.kepegawaian_pendidikan_pada_sk)
       getJabatan(response.data.data.kepegawaian_jabatan)
       getEselon(response.data.data.kepegawaian_eselon)
+      getBidangWilayah(response.data.data.kepegawaian_tempat_tugas)
+      getPelaksana(response.data.data.kepegawaian_subbag_seksi_kecamatan)
     }
     fetchData()
   }, [setData, id, status])
@@ -210,6 +212,42 @@ export function UpdateDataKepegawaian() {
   }
 
   const handleChangeFormikSelect = (value: any, name: string) => {
+    if (name === 'kepegawaian_tempat_tugas') {
+      setIdMasterBidangWilayah((prevstate) => ({
+        ...prevstate,
+        id: value.value,
+      }))
+      setValuesFormik((prevValues: any) => ({
+        ...prevValues,
+        kepegawaian_subbag_seksi_kecamatan: null,
+        kepegawaian_jabatan: null,
+      }))
+      setValMasterPelaksana((prevstate) => ({
+        ...prevstate,
+        value: '',
+        label: '',
+      }))
+      setValMasterJabatan((prevstate) => ({
+        ...prevstate,
+        value: '',
+        label: '',
+      }))
+    }
+    if (name === 'kepegawaian_subbag_seksi_kecamatan') {
+      setIdMasterPelaksana((prevstate) => ({
+        ...prevstate,
+        id: value.value,
+      }))
+      setValuesFormik((prevValues: any) => ({
+        ...prevValues,
+        kepegawaian_jabatan: null,
+      }))
+      setValMasterJabatan((prevstate) => ({
+        ...prevstate,
+        value: '',
+        label: '',
+      }))
+    }
     setValuesFormik((prevValues: any) => ({
       ...prevValues,
       [name]: value,
@@ -316,7 +354,11 @@ export function UpdateDataKepegawaian() {
 
   // Autocomplite Jabatan
   const filterjabatan = async (inputValue: string) => {
-    const response = await axios.get(`${MASTER_URL}/jabatan/filter/${inputValue}`)
+    const response = await axios.get(
+      `${MASTER_URL}/jabatan/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(
+        idMasterPelaksana.id
+      )}${inputValue !== '' && `&nama=${inputValue}`}`
+    )
     const json = await response.data.data
     return json.map((i: any) => ({label: i.jabatan, value: i.id}))
   }
@@ -346,7 +388,7 @@ export function UpdateDataKepegawaian() {
         })
   }
 
-  // Autocomplite Jabatan
+  // Autocomplite Eselon
   const filtereselon = async (inputValue: string) => {
     const response = await axios.get(`${MASTER_URL}/eselon/findone-by-eselon/${inputValue}`)
     const json = await response.data.data
@@ -359,6 +401,84 @@ export function UpdateDataKepegawaian() {
     setTimeout(async () => {
       callback(await filtereselon(inputValue))
     }, 1000)
+  }
+
+  // Autocomplite Bidang Wilayah
+  const filterbidangwilayah = async (inputValue: string) => {
+    const response = await axios.get(`${MASTER_URL}/bidang-wilayah/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
+  }
+  const loadOptionsbidangwilayah = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterbidangwilayah(inputValue))
+    }, 1000)
+  }
+
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: '', label: ''})
+  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
+  const getBidangWilayah = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/bidang-wilayah/findone/${parseInt(params)}`)
+        .then((response) => {
+          setIdMasterBidangWilayah((prevstate) => ({
+            ...prevstate,
+            id: response?.data?.data?.id,
+          }))
+          setValMasterBidangWilayah((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.nama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  // Autocomplite Pelaksana
+  const filterPelaksana = async (inputValue: string) => {
+    const response = await axios.get(
+      `${MASTER_URL}/pelaksana/filter?id_tempat_pelaksanaan=${parseInt(idMasterBidangWilayah.id)}${
+        inputValue !== '' && `&nama=${inputValue}`
+      }`
+    )
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
+  }
+  const loadOptionsPelaksana = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterPelaksana(inputValue))
+    }, 1000)
+  }
+
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
+  const getPelaksana = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_URL}/pelaksana/findone/${parseInt(params)}`)
+        .then((response) => {
+          setIdMasterPelaksana((prevstate) => ({
+            ...prevstate,
+            id: response?.data?.data?.id,
+          }))
+          setValMasterPelaksana((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.nama,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
   }
 
   return (
@@ -462,8 +582,13 @@ export function UpdateDataKepegawaian() {
                 kepegawaian_eselon: valuesFormik?.kepegawaian_eselon?.value
                   ? valuesFormik.kepegawaian_eselon.value
                   : values.kepegawaian_eselon,
-                kepegawaian_tempat_tugas: values.kepegawaian_tempat_tugas,
-                kepegawaian_subbag_seksi_kecamatan: values.kepegawaian_subbag_seksi_kecamatan,
+                kepegawaian_tempat_tugas: valuesFormik?.kepegawaian_tempat_tugas?.value
+                  ? valuesFormik.kepegawaian_tempat_tugas.value
+                  : values.kepegawaian_tempat_tugas,
+                kepegawaian_subbag_seksi_kecamatan: valuesFormik?.kepegawaian_subbag_seksi_kecamatan
+                  ?.value
+                  ? valuesFormik.kepegawaian_subbag_seksi_kecamatan.value
+                  : values.kepegawaian_subbag_seksi_kecamatan,
                 kepegawaian_kelurahan: values.kepegawaian_kelurahan,
                 kepegawaian_status_pegawai: values.kepegawaian_status_pegawai,
                 kepegawaian_no_rekening: values.kepegawaian_no_rekening,
@@ -638,7 +763,6 @@ export function UpdateDataKepegawaian() {
                       Pangkat
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_pangkat
                           ? valuesFormik?.kepegawaian_pangkat
@@ -774,25 +898,33 @@ export function UpdateDataKepegawaian() {
                     <label htmlFor='' className='mb-3 required'>
                       Tempat Tugas Bidang/Wilayah
                     </label>
-                    <Field
-                      type='text'
+                    <AsyncSelect
+                      cacheOptions
+                      value={
+                        valuesFormik?.kepegawaian_tempat_tugas
+                          ? valuesFormik?.kepegawaian_tempat_tugas
+                          : valMasterBidangWilayah && valMasterBidangWilayah.label !== ''
+                          ? valMasterBidangWilayah
+                          : {value: '', label: 'Pilih'}
+                      }
+                      styles={
+                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                      }
+                      loadOptions={loadOptionsbidangwilayah}
+                      onChange={async (e) => {
+                        handleChangeFormikSelect(e, 'kepegawaian_tempat_tugas')
+                        await setFieldValue('kepegawaian_tempat_tugas', e.value)
+                      }}
+                      defaultOptions
                       name='kepegawaian_tempat_tugas'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid':
-                            touched.kepegawaian_tempat_tugas && errors.kepegawaian_tempat_tugas,
-                        },
-                        {
-                          'is-valid':
-                            touched.kepegawaian_tempat_tugas && !errors.kepegawaian_tempat_tugas,
-                        }
-                      )}
+                      placeholder={'Pilih'}
+                      loadingMessage={() => 'Sedang mencari pilihan...'}
+                      noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                     />
                     {touched.kepegawaian_tempat_tugas && errors.kepegawaian_tempat_tugas && (
                       <div className='fv-plugins-message-container'>
                         <div className='fv-help-block'>
-                          <span role='alert'>{errors.kepegawaian_tempat_tugas}</span>
+                          <span role='alert'>Wajib Diisi</span>
                         </div>
                       </div>
                     )}
@@ -802,28 +934,32 @@ export function UpdateDataKepegawaian() {
                     <label htmlFor='' className='mb-3 required'>
                       Subag/Seksi/Kecamatan
                     </label>
-                    <Field
-                      type='text'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            errors.kepegawaian_subbag_seksi_kecamatan,
-                        },
-                        {
-                          'is-valid':
-                            touched.kepegawaian_subbag_seksi_kecamatan &&
-                            !errors.kepegawaian_subbag_seksi_kecamatan,
-                        }
-                      )}
+                    <AsyncSelect
+                      value={
+                        valuesFormik?.kepegawaian_subbag_seksi_kecamatan
+                          ? valuesFormik?.kepegawaian_subbag_seksi_kecamatan
+                          : valMasterPelaksana && valMasterPelaksana.label !== ''
+                          ? valMasterPelaksana
+                          : {value: '', label: 'Pilih'}
+                      }
+                      styles={
+                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                      }
+                      loadOptions={loadOptionsPelaksana}
+                      onChange={async (e) => {
+                        handleChangeFormikSelect(e, 'kepegawaian_subbag_seksi_kecamatan')
+                        await setFieldValue('kepegawaian_subbag_seksi_kecamatan', e.value)
+                      }}
                       name='kepegawaian_subbag_seksi_kecamatan'
+                      placeholder={'Pilih'}
+                      loadingMessage={() => 'Sedang mencari pilihan...'}
+                      noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                     />
                     {touched.kepegawaian_subbag_seksi_kecamatan &&
                       errors.kepegawaian_subbag_seksi_kecamatan && (
                         <div className='fv-plugins-message-container'>
                           <div className='fv-help-block'>
-                            <span role='alert'>{errors.kepegawaian_subbag_seksi_kecamatan}</span>
+                            <span role='alert'>Wajib Diisi</span>
                           </div>
                         </div>
                       )}
@@ -834,7 +970,6 @@ export function UpdateDataKepegawaian() {
                       Jabatan
                     </label>
                     <AsyncSelect
-                      cacheOptions
                       value={
                         valuesFormik?.kepegawaian_jabatan
                           ? valuesFormik?.kepegawaian_jabatan
@@ -850,7 +985,6 @@ export function UpdateDataKepegawaian() {
                         handleChangeFormikSelect(e, 'kepegawaian_jabatan')
                         await setFieldValue('kepegawaian_jabatan', e.value)
                       }}
-                      defaultOptions
                       name='kepegawaian_jabatan'
                       placeholder={'Pilih'}
                       loadingMessage={() => 'Sedang mencari pilihan...'}
@@ -1414,7 +1548,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1446,7 +1580,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1553,7 +1687,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1585,7 +1719,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1692,7 +1826,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1724,7 +1858,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field
@@ -1830,7 +1964,7 @@ export function UpdateDataKepegawaian() {
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xxl-6 mb-4'>
                     <div className='row'>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Nomor Sertifikat
                         </label>
                         <Field
@@ -1862,7 +1996,7 @@ export function UpdateDataKepegawaian() {
                           )}
                       </div>
                       <div className='col-12 mb-4'>
-                        <label htmlFor='' className='mb-3 required'>
+                        <label htmlFor='' className='mb-3'>
                           Tanggal Sertifikat
                         </label>
                         <Field

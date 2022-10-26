@@ -35,8 +35,8 @@ export interface DetailPegawaiInterface {
   kepegawaian_jabatan_id?: any
   kepegawaian_eselon?: any
   kepegawaian_eselon_id?: any
-  kepegawaian_tempat_tugas?: string
-  kepegawaian_subbag_seksi_kecamatan?: string
+  kepegawaian_tempat_tugas?: any
+  kepegawaian_subbag_seksi_kecamatan?: any
   kepegawaian_status_pegawai?: string
   kepegawaian_no_rekening?: string
   kepegawaian_no_karpeg?: string

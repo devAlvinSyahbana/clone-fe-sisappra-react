@@ -58,9 +58,9 @@ const HeaderDetailWrapper = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  {data && data?.foto !== '' ? (
+                  {data?.foto !== '' ? (
                     <div className='symbol-label'>
-                      <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
+                      <img src={data?.foto} alt={data?.nama} className='w-100' />
                     </div>
                   ) : (
                     <div
@@ -73,6 +73,8 @@ const HeaderDetailWrapper = () => {
                       {data?.nama?.charAt(0)}
                     </div>
                   )}
+                  {/* <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metornic' /> */}
+                  <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
               </div>
 
@@ -142,7 +144,7 @@ const HeaderDetailWrapper = () => {
                           </div>
                         </div>
 
-                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Terakhir</div>
+                        <div className='fw-bold fs-6 text-gray-400'>Pendidikan Tertinggi</div>
                       </div>
                     </div>
                   </div>
@@ -156,9 +158,9 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('detail-data-pribadi') && 'active')
+                      (location.pathname.includes('detail-data-pribadi-duk') && 'active')
                     }
-                    to={`/kepegawaian/informasi-data-pegawai/detail-data-pribadi/${id}/${status}`}
+                    to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-pribadi-duk/${id}/${status}`}
                   >
                     Data Pribadi
                   </Link>
@@ -167,9 +169,9 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('detail-data-keluarga') && 'active')
+                      (location.pathname.includes('detail-data-keluarga-duk') && 'active')
                     }
-                    to={`/kepegawaian/informasi-data-pegawai/detail-data-keluarga/${id}/${status}`}
+                    to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-keluarga-duk/${id}/${status}`}
                   >
                     Data Keluarga
                   </Link>
@@ -178,9 +180,9 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('detail-data-pendidikan') && 'active')
+                      (location.pathname.includes('detail-pendidikan-duk') && 'active')
                     }
-                    to={`/kepegawaian/informasi-data-pegawai/detail-data-pendidikan/${id}/${status}`}
+                    to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-pendidikan-duk/${id}/${status}`}
                   >
                     Pendidikan
                   </Link>
@@ -189,24 +191,24 @@ const HeaderDetailWrapper = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('detail-data-kepegawaian') && 'active')
+                      (location.pathname.includes('detail-data-kepegawaian-duk') && 'active')
                     }
-                    to={`/kepegawaian/informasi-data-pegawai/detail-data-kepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-kepegawaian-duk/${id}/${status}`}
                   >
                     Data Kepegawaian
                   </Link>
                 </li>
-                {/* <li className='nav-item'>
+                <li className='nav-item'>
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('detail-hirarki-kepegawaian') && 'active')
+                      (location.pathname.includes('detail-hirarki-kepegawaian-duk') && 'active')
                     }
-                    to={`/kepegawaian/informasi-data-pegawai/detail-hirarki-kepegawaian/${id}/${status}`}
+                    to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-hirarki-kepegawaian-duk/${id}/${status}`}
                   >
                     Hirarki Kepegawaian
                   </Link>
-                </li> */}
+                </li>
               </ul>
             </div>
           </div>
