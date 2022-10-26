@@ -23,6 +23,10 @@ import {UpdateJenisKegiatan} from './components/Update-master/UpdateJenisKegiata
 import {TambahJenisKegiatan} from './components/Tambah-master/TambahJenisKegiatan'
 
 import {JenisKejadian} from './components/JenisKejadian'
+import {LihatJenisKejadian} from './components/Lihat-master/LihatJenisKejadian'
+import {UpdateJenisKejadian} from './components/Update-master/UpdateJenisKejadian'
+import {TambahJenisKejadian} from './components/Tambah-master/TambahJenisKejadian'
+
 import {JenisPelanggaran} from './components/JenisPelanggaran'
 import {JenisPertolongan} from './components/JenisPertolongan'
 import {JenisPerdaPerkada} from './components/JenisPerdaPerkada'
@@ -310,6 +314,33 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
+          path='JenisKejadian/UpdateJenisKejadian/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Update Jenis Kejadian</PageTitle>
+              <UpdateJenisKejadian />
+            </>
+          }
+        />
+        <Route
+          path='JenisKejadian/LihatJenisKejadian/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Jenis Kejadian</PageTitle>
+              <LihatJenisKejadian />
+            </>
+          }
+        />
+        <Route
+          path='JenisKejadian/TambahJenisKejadian'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Tambah Jenis Kejadian</PageTitle>
+              <TambahJenisKejadian />
+            </>
+          }
+        />
+        <Route
           path='Agama'
           element={
             <>
@@ -351,6 +382,33 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Jabatan </PageTitle>
               <Jabatan />
+            </>
+          }
+        />
+        <Route
+          path='jabatan/tambah-jabatan'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}> Jabatan </PageTitle>
+              <Jabatan />
+            </>
+          }
+        />
+        <Route
+          path='jabatan/update-jabatan/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Update Agama</PageTitle>
+              <UpdateAgama />
+            </>
+          }
+        />
+        <Route
+          path='jabatan/lihat-jabatan/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Agama</PageTitle>
+              <LihatAgama />
             </>
           }
         />

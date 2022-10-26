@@ -10,9 +10,9 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_PENINDAKAN_URL = `${API_URL}/master/jenis-penindakan` //http://localhost:3000/jenis-penindakan
+export const JENIS_KEJADIAN_URL = `${API_URL}/master/jenis_kejadian` //http://localhost:3000/jenis_kejadian
 
-export function JenisPenindakan() {
+export function JenisKejadian() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -46,10 +46,10 @@ export function JenisPenindakan() {
       
     },
     {
-      name: 'Jenis Penindakan',
-      selector: (row: any) => row.jenis_penindakan,
+      name: 'Jenis Kejadian',
+      selector: (row: any) => row.jenis_kejadian,
       sortable: true,
-      sortField: 'jenis_penindakan',
+      sortField: 'jenis_kejadian',
     },
     {
     },
@@ -102,7 +102,7 @@ export function JenisPenindakan() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(JENIS_PENINDAKAN_URL + "/find");
+    const value = await axios.get(JENIS_KEJADIAN_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);
@@ -179,13 +179,13 @@ export function JenisPenindakan() {
       <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Tambah Jenis Penindakan</Modal.Title>
+          <Modal.Title>Tambah Jenis Kejadian</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
         <Form.Group className="mb-3 form-control-solid">
-            <Form.Label>Jenis Penindakan</Form.Label>
-            <Form.Control type="text" placeholder="Jenis Penindakan" />
+            <Form.Label>Jenis Kejadian</Form.Label>
+            <Form.Control type="text" placeholder="Jenis Kejadian" />
         </Form.Group>
 
         </Modal.Body>
