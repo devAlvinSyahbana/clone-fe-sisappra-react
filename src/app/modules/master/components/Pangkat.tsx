@@ -5,6 +5,7 @@ import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import Swal from 'sweetalert2'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -22,6 +23,40 @@ export function Pangkat() {
   useEffect(() => {
     fetchUsers(1)
   }, [])
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      title: 'Anda yakin?',
+      text: 'Ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${PANGKAT_URL}/delete/${id},{deletd_by}`)
+        console.log(response);
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        }
+      }
+    })
+  }
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -88,7 +123,7 @@ export function Pangkat() {
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item href='#'>Hapus</Dropdown.Item>
+                    <Dropdown.Item onClick={() => konfirDel(record.id)} >Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}

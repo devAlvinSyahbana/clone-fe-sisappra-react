@@ -12,6 +12,7 @@ import AsyncSelect from 'react-select/async'
 import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { ThemeModeComponent } from '../../../../../_metronic/assets/ts/layout'
 import { useThemeMode } from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import ReactToPrint from 'react-to-print'
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
@@ -141,6 +142,8 @@ export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 
 export function TabRekapitulasiDataPegawaiPensiun() {
+    let componentRef: any;
+
     const navigate = useNavigate()
     const { mode } = useThemeMode()
     const calculatedMode = mode === 'system' ? systemMode : mode
@@ -620,6 +623,21 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         })
     }
 
+    const handleUnduhPdf = async () => {
+        setbtnLoadingUnduh(true)
+        await axios({
+            url: `${KEPEGAWAIAN_URL}/Pensiun-unduh?${qParamFind.strparam}`,
+            method: 'GET',
+            responseType: 'blob', // Important
+        }).then((response) => {
+            FileDownload(
+                response.data,
+                'DATA PEGAWAI ' + (valStatPegawai.val !== '' ? valStatPegawai.val : 'PENSIUN PROVINSI DKI JAKARTA') + '.pdf'
+            )
+            setbtnLoadingUnduh(false)
+        })
+    }
+
     return (
         <>
             <LaporanRekapHeader />
@@ -670,7 +688,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                                                 <div className='form-group'>
                                                     <label htmlFor='' className='mb-3'>
-                                                        Tempat Tugas
+                                                        Wilayah/Bidang
                                                     </label>
                                                     {/* <input
                                                         type='text'
@@ -681,7 +699,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                                         placeholder='Masukkan Wilayah/Bidang'
                                                     /> */}
                                                     <AsyncSelect
-                                                        value={inputValTugas.value ? inputValTugas : { value: '', label: 'Pilih' }}
+                                                        value={inputValTugas.value ? inputValTugas : { value: '', label: 'Pilih Wilayah/Bidang' }}
                                                         loadOptions={loadOptionsTugas}
                                                         defaultOptions
                                                         onChange={handleInputTugas}
@@ -706,8 +724,9 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                                     placeholder='Masukkan Kecamatan/Seksi'
                                                 /> */}
                                                 <AsyncSelect
-                                                    value={inputValKec.value ? inputValKec : { value: '', label: 'Pilih' }}
+                                                    value={inputValKec.value ? inputValKec : { value: '', label: 'Pilih Kecamatan/Seksi' }}
                                                     loadOptions={loadOptionsKec}
+                                                    noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                                                     // defaultOptions
                                                     onChange={handleInputKec}
                                                     styles={
@@ -768,31 +787,62 @@ export function TabRekapitulasiDataPegawaiPensiun() {
                                                     </>
                                                 )}
                                             </button>
-                                            {/* end::Filter Button */}
-                                            {/* begin::SubMenu */}
-                                            <div className='menu menu-sub menu-sub-dropdown w-100px w-md-150px' data-kt-menu='true'>
-                                                {/* begin::Header */}
-                                                <div className='px-7 py-5'>
-                                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                                </div>
-                                                {/* end::Header */}
+                                            {/* <Dropdown>
+                                                <Dropdown.Toggle variant='primary' id='dropdown-basic'>
+                                                    Unduh
+                                                </Dropdown.Toggle>
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item> */}
+                                            {/* <Dropdown.Item>
+                                                        <ReactToPrint
+                                                            trigger={() => (
+                                                                <div>PDF</div>
+                                                            )}
+                                                            pageStyle='
+                            @page { 
+                                size: auto; 
+                                margin: 0mm; 
+                                } 
+                                @media 
+                                print { 
+                                
+                                .header, .header-space,
+                    .footer, .footer-space {
+                    height: 100px;
+                    }
+                    .header {
+                    position: fixed;
+                    top: 0;
+                    }
+                    .footer {
+                    position: fixed;
+                    bottom: 0;
+                    }
+                                }
 
-                                                {/* begin::Separator */}
-                                                <div className='separator border-gray-200'></div>
-                                                {/* end::Separator */}
-
-                                                {/* begin::Content */}
-                                                <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                                    <button
-                                                        onClick={handleUnduh}
-                                                        className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+            
+            
+                                @media all {
+                                .pagebreak {
+                                    display: inline;
+                                }
+                                }
+                            '
+                                                            content={() => componentRef}
+                                                        /></Dropdown.Item> */}
+                                            {/* <Dropdown.Item
+                                                        href='#'
+                                                        onClick={() =>
+                                                            navigate(
+                                                                `/kepegawaian/laporan-rekapitulasi-pegawai/tab-rekapitulasi-data-pegawai-pensiun/unduh-laporan-pegawai-pensiun-pdf`
+                                                            )
+                                                        }
                                                     >
-                                                        Excel
-                                                    </button>
-                                                </div>
-                                                {/* end::Content */}
-                                            </div>
-                                            {/* end::SubMenu */}
+                                                        PDF
+                                                    </Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown> */}
+                                            {/* end::Filter Button */}
                                         </div>
                                     </div>
                                 </div>
@@ -803,46 +853,50 @@ export function TabRekapitulasiDataPegawaiPensiun() {
 
 
 
-                <div className='col-xl-12 mb-xl-12 mt-6'>
-                    <div className='card card-flush h-xl-100'>
-                        <div
-                            className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-                            style={{
-                                backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
-                            }}
-                            data-theme='light'
-                        >
-                            <div className='card-body py-8 mt-4 fw-bold text-white'>
-                                <div className='row'>
-                                    <div className='col fs-4 mb-2 fw-bold text-center'>
-                                        DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA PENSIUN
+                {/* START :: Konten Download */}
+                {/* START :: Isi Konten Download */}
+                <div ref={(el) => (componentRef = el)}>
+                    <div className='col-xl-12 mb-xl-12 mt-6'>
+                        <div className='card card-flush h-xl-100'>
+                            <div
+                                className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
+                                style={{
+                                    backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
+                                }}
+                                data-theme='light'
+                            >
+                                <div className='card-body py-8 mt-4 fw-bold text-white'>
+                                    <div className='row'>
+                                        <div className='col fs-4 mb-2 fw-bold text-center'>
+                                            DAFTAR NAMA PEGAWAI YANG MEMASUKI MASA PENSIUN
+                                        </div>
                                     </div>
-                                </div>
-                                <div className='row'>
-                                    <div className='col fs-4 mb-2 fw-bold text-center'>
-                                        PADA SATUAN POLISI PAMONG PRAJA DKI JAKARTA
+                                    <div className='row'>
+                                        <div className='col fs-4 mb-2 fw-bold text-center'>
+                                            PADA SATUAN POLISI PAMONG PRAJA DKI JAKARTA
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className='card-body mt-n20'>
-                            <div className='mt-n20 position-relatve'>
-                                <div className='card border card-flush h-xl-100'>
-                                    <div className='table-responsive mt-5 ms-5 me-5 w'>
-                                        <DataTable
-                                            columns={columns}
-                                            data={data}
-                                            progressPending={loading}
-                                            progressComponent={<LoadingAnimation />}
-                                            pagination
-                                            paginationServer
-                                            paginationTotalRows={totalRows}
-                                            onChangeRowsPerPage={handlePerRowsChange}
-                                            onChangePage={handlePageChange}
-                                            customStyles={customStyles}
-                                            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                                        />
+                            <div className='card-body mt-n20'>
+                                <div className='mt-n20 position-relatve'>
+                                    <div className='card border card-flush h-xl-100'>
+                                        <div className='table-responsive mt-5 ms-5 me-5 w'>
+                                            <DataTable
+                                                columns={columns}
+                                                data={data}
+                                                progressPending={loading}
+                                                progressComponent={<LoadingAnimation />}
+                                                pagination
+                                                paginationServer
+                                                paginationTotalRows={totalRows}
+                                                onChangeRowsPerPage={handlePerRowsChange}
+                                                onChangePage={handlePageChange}
+                                                customStyles={customStyles}
+                                                theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

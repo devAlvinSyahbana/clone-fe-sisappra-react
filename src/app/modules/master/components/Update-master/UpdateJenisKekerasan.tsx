@@ -7,17 +7,17 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 
 export interface FormInput {
-  jenis_kejadian?: string
+  jenis_kekerasan?: string
   updated_by?: number
 }
 
 interface GetDataInterface {
   id?: number
-  jenis_kejadian?: string
+  jenis_kekerasan?: string
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEJADIAN_URL = `${API_URL}/master/jenis-kejadian` //http://localhost:3000//master/jenis-kejadian
+export const JENIS_KEKERASAN_URL = `${API_URL}/master/JenisKekerasan` //http://localhost:3000//master/JenisKekerasan
 
 export function UpdateJenisKejadian() {
   const navigate = useNavigate()
@@ -28,10 +28,10 @@ export function UpdateJenisKejadian() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${JENIS_KEJADIAN_URL}/findone/${id}`)
+      const response = await axios.get(`${JENIS_KEKERASAN_URL}/findone/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        jenis_kejadian: jsonD.jenis_kejadian,
+        jenis_kekerasan: jsonD.jenis_kekerasan,
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
@@ -58,24 +58,24 @@ export function UpdateJenisKejadian() {
 
   const formik = useFormik({
     initialValues: {
-      jenis_kejadian: '',
+      jenis_kekerasan: '',
     },
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        jenis_kejadian: valuesFormik?.jenis_kejadian
-          ? valuesFormik.jenis_kejadian
-          : valuesFormikExist?.jenis_kejadian
-          ? valuesFormikExist.jenis_kejadian
+        jenis_kekerasan: valuesFormik?.jenis_kekerasan
+          ? valuesFormik.jenis_kekerasan
+          : valuesFormikExist?.jenis_kekerasan
+          ? valuesFormikExist.jenis_kekerasan
           : '',
         updated_by: 0,
       }
       try {
-        const response = await axios.put(`${JENIS_KEJADIAN_URL}/update/${id}`, bodyparam)
+        const response = await axios.put(`${JENIS_KEKERASAN_URL}/update/${id}`, bodyparam)
         if (response) {
           if (selectedFile) {
             formData.append('file_dokumentasi', selectedFile)
-            const responseFile = await axios.post(`${JENIS_KEJADIAN_URL}/upload/${id}`, formData)
+            const responseFile = await axios.post(`${JENIS_KEKERASAN_URL}/upload/${id}`, formData)
             if (responseFile) {
               console.log('File success uploaded!')
               Swal.fire({
@@ -121,14 +121,14 @@ export function UpdateJenisKejadian() {
                       <div className='form-group'>
                         <Form.Label>Jenis Kejadian</Form.Label>
                         <Form.Control
-                          name='jenis_kejadian'
+                          name='jenis_kekerasan'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.jenis_kejadian || valuesFormik?.jenis_kejadian === ''
-                              ? valuesFormik?.jenis_kejadian
-                              : valuesFormikExist?.jenis_kejadian
-                              ? valuesFormikExist?.jenis_kejadian
+                            valuesFormik?.jenis_kekerasan || valuesFormik?.jenis_kekerasan === ''
+                              ? valuesFormik?.jenis_kekerasan
+                              : valuesFormikExist?.jenis_kekerasan
+                              ? valuesFormikExist?.jenis_kekerasan
                               : ''
                           }
                         />
