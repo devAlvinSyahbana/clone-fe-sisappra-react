@@ -849,18 +849,18 @@ export function TabDataPPNS() {
                 </div>
               </div>
             </div>
+            <div className='row me-2'>
+              <div className='col-8'></div>
+              <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
+                Kepala Satuan Polisi Pamong Praja
+                <div className='col fs-6 mb-15 fw-semibold text-center'>Provinsi DKI Jakara</div>
+                <div className='col fs-6 mb-2 fw-semibold text-center'>(Drs. Arifin, M.AP)</div>
+                <div className='col fs-6 mb-2 fw-semibold text-center'>NIP. 197206221992031003</div>
+              </div>
+            </div>
           </div>
         </div>
         {/* end::Body */}
-        <div className='row me-2'>
-          <div className='col-8'></div>
-          <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
-            Kepala Satuan Polisi Pamong Praja
-            <div className='col fs-6 mb-15 fw-semibold text-center'>Provinsi DKI Jakara</div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>(Drs. Arifin, M.AP)</div>
-            <div className='col fs-6 mb-2 fw-semibold text-center'>NIP. 197206221992031003</div>
-          </div>
-        </div>
       </div>
     </>
   )

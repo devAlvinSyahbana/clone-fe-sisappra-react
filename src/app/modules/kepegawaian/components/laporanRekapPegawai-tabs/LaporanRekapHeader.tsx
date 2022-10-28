@@ -1,5 +1,5 @@
-import {Link} from 'react-router-dom'
-import {useLocation} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 const LaporanRekapHeader = () => {
   const location = useLocation()
@@ -38,7 +38,7 @@ const LaporanRekapHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('TabRekapitulasiDataPegawaiPensiun') && 'active')
+                      (location.pathname.includes('tab-rekapitulasi-data-pegawai-pensiun') && 'active')
                     }
                     to={`/kepegawaian/laporan-rekapitulasi-pegawai/tab-rekapitulasi-data-pegawai-pensiun`}
                   >
@@ -89,4 +89,4 @@ const LaporanRekapHeader = () => {
   )
 }
 
-export {LaporanRekapHeader}
+export { LaporanRekapHeader }

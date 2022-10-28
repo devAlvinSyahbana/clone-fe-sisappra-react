@@ -10,9 +10,9 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SKPD_URL = `${API_URL}/master/jenis-kegiatan` //http://localhost:3000/master/jenis-kegiatan
+export const JENIS_KEGIATAN_URL = `${API_URL}/master/jenis-kegiatan` //http://localhost:3000/master/jenis-kegiatan
 
-export function SKPD() {
+export function JenisKegiatan() {
   const navigate = useNavigate()
 
   const [show, setShow] = useState(false)
@@ -46,10 +46,10 @@ export function SKPD() {
     },
     {},
     {
-      name: 'SKPD',
-      selector: (row: any) => row.skpd,
+      name: 'Jenis Kegiatan',
+      selector: (row: any) => row.jenis_kegiatan,
       sortable: true,
-      sortField: 'SKPD',
+      sortField: 'jenis_kegiatan',
       width: '300px',
     },
     {},
@@ -83,7 +83,7 @@ export function SKPD() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/SKPD/LihatSKPD/' + record.id, {
+                        navigate('/master/jenis-kegiatan/lihat-jenis-kegiatan/' + record.id, {
                           replace: true,
                         })
                       }
@@ -93,7 +93,7 @@ export function SKPD() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/SKPD/UpdateSKPD/' + record.id, {
+                        navigate('/master/jenis-kegiatan/update-jenis-kejadian/' + record.id, {
                           replace: true,
                         })
                       }
@@ -120,7 +120,7 @@ export function SKPD() {
 
   const fetchUsers = async (page: any) => {
     setLoading(true)
-    const value = await axios.get(SKPD_URL + '/find')
+    const value = await axios.get(JENIS_KEGIATAN_URL + '/find')
 
     setTemp(value.data.data)
     console.log('cek response api:', temp)
@@ -186,7 +186,7 @@ export function SKPD() {
         </div>
 
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <Link to='/master/SKPD/TambahSKPD'>
+          <Link to='/master/jenis-kegiatan/tambah-jenis-kegiatan'>
             <button className='btn btn-primary me-5'>
               <i className='fa-solid fa-plus'></i>
               Tambah

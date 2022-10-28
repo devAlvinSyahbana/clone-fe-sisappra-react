@@ -119,7 +119,7 @@ export function UpdateJenisKejadian() {
                   <div className='row mt-2'>
                     <div className='col-4 mb-3'>
                       <div className='form-group'>
-                        <Form.Label>Jenis Kejadian</Form.Label>
+                        <Form.Label>jenis_kejadian</Form.Label>
                         <Form.Control
                           name='jenis_kejadian'
                           className='form-control form-control-solid'
@@ -136,7 +136,7 @@ export function UpdateJenisKejadian() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/JenisKejadian'>
+                    <Link to='/master/jenis_kejadian'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali
