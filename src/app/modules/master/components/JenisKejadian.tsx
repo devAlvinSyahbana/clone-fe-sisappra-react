@@ -83,7 +83,9 @@ export function JenisKejadian() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/JenisKejadian/LihatJenisKejadian/' + record.id, {replace: true})
+                        navigate('/master/JenisKejadian/LihatJenisKejadian/' + record.id, {
+                          replace: true,
+                        })
                       }
                     >
                       Detail
@@ -91,14 +93,14 @@ export function JenisKejadian() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/JenisKejadian/UpdateJenisKejadian/' + record.id, {replace: true})
+                        navigate('/master/JenisKejadian/UpdateJenisKejadian/' + record.id, {
+                          replace: true,
+                        })
                       }
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => konfirDel(record?.id)}>
-                      Hapus
-                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => konfirDel(record?.id)}>Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -150,16 +152,37 @@ export function JenisKejadian() {
     setLoading(false)
   }
 
-  const handleSort = (column: any, sortDirection: any) => {
-    // simulate server sort
-    console.log(column, sortDirection)
-    setLoading(true)
-
-    // instead of setTimeout this is where you would handle your API call.
-    setTimeout(() => {
-      setData(orderBy(data, column.sortField, sortDirection))
-      setLoading(false)
-    }, 100)
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      title: 'Anda yakin?',
+      text: 'Ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${JENIS_KEJADIAN_URL}/delete/${id},{deleted_by}`)
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        }
+      }
+    })
   }
 
   return (
@@ -195,62 +218,8 @@ export function JenisKejadian() {
 
       <div className='table-responsive mt-5 ms-5 me-5'>
         <DataTable columns={columns} data={temp} pagination />
-        {/* <DataTable
-          columns={columns}
-          data={data}
-          progressPending={loading}
-          progressComponent={<LoadingAnimation />}
-          pagination
-          paginationServer
-          paginationTotalRows={totalRows}
-          sortServer
-          onSort={handleSort}
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-        /> */}
       </div>
       {/* end::Body */}
     </div>
   )
-}
-function orderBy(data: never[], sortField: any, sortDirection: any): React.SetStateAction<never[]> {
-  throw new Error('Function not implemented.')
-}
-
-function onEdit(record: any) {
-  throw new Error('Function not implemented.')
-}
-
-
-const konfirDel = (id: number) => {
-  Swal.fire({
-    title: 'Anda yakin?',
-    text: 'Ingin menghapus data ini',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Ya!',
-    cancelButtonText: 'Tidak!',
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      const response = await axios.delete(`${JENIS_KEJADIAN_URL}/delete/${id},{deleted_by}`)
-      if (response) {
-        fetchUsers(1)
-        Swal.fire({
-          icon: 'success',
-          title: 'Data berhasil dihapus',
-          showConfirmButton: false,
-          timer: 1500,
-        })
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Data gagal dihapus, harap mencoba lagi',
-          showConfirmButton: false,
-          timer: 1500,
-        })
-      }
-    }
-  })
 }
