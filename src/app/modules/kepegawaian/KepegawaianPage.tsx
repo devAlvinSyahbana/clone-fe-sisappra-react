@@ -32,6 +32,7 @@ import { TabDataPegawaiYangNaikPangkat } from './components/laporanRekapPegawai-
 import { TabRekapitulasiDataPegawaiPensiun } from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
 import { UnduhLaporanPegawaiPensiunPdf } from './components/laporanRekapPegawai-unduh/UnduhLaporanPegawaiPensiunPdf'
 
+<<<<<<< src/app/modules/kepegawaian/KepegawaianPage.tsx
 import { DataPribadiDUK } from './components/tabs-duk/DataPribadiDUK'
 import { DataKeluargaDUK } from './components/tabs-duk/DataKeluargaDUK'
 import { DataKepegawaianDUK } from './components/tabs-duk/DataKepegawaianDUK'
@@ -39,6 +40,16 @@ import { PendidikanDUK } from './components/tabs-duk/PendidikanDUK'
 import { HirarkiKepegawaianDUK } from './components/tabs-duk/HirarkiKepegawaianDUK'
 import { TabDaftarUrutKepangkatan } from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 import { TambahDaftarUrutKepangkatan } from './components/add-tabs-duk/TambahDaftarUrutKepangkatan'
+=======
+import {DataPribadiDUK} from './components/tabs-duk/DataPribadiDUK'
+import {DataKeluargaDUK} from './components/tabs-duk/DataKeluargaDUK'
+import {DataKepegawaianDUK} from './components/tabs-duk/DataKepegawaianDUK'
+import {PendidikanDUK} from './components/tabs-duk/PendidikanDUK'
+import {HirarkiKepegawaianDUK} from './components/tabs-duk/HirarkiKepegawaianDUK'
+import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
+import {TambahDaftarUrutKepangkatan} from './components/add-tabs-duk/TambahDaftarUrutKepangkatan'
+import {UnduhLaporanDaftarUrutKepangkatanPDF} from './components/laporanRekapPegawai-unduh/UnduhLaporanDaftarUrutKepangkatan'
+>>>>>>> src/app/modules/kepegawaian/KepegawaianPage.tsx
 
 import { UnduhLaporanRekapitulasiPegawai } from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 import { TabRekapitulasiPejabatStruktural } from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
@@ -558,6 +569,17 @@ const KepegawaianPage: React.FC = () => {
                 Tambah Data Daftar Urut Kepangkatan
               </PageTitle>
               <TambahDaftarUrutKepangkatan />
+            </>
+          }
+        />
+        <Route
+          path='laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/unduh-daftar-urut-kepangkatan'
+          element={
+            <>
+              <PageTitle breadcrumbs={daftarurutkepangkatanBreadCrumbs}>
+                Unduh Laporan Daftar Urut Kepangkatan
+              </PageTitle>
+              <UnduhLaporanDaftarUrutKepangkatanPDF />
             </>
           }
         />
