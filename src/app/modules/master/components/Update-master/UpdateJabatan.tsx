@@ -7,19 +7,19 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 
 export interface FormInput {
-  jenis_kejadian?: string
+  agama?: string
   updated_by?: number
 }
 
 interface GetDataInterface {
   id?: number
-  jenis_kejadian?: string
+  agama?: string
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEJADIAN_URL = `${API_URL}/master/jenis-kejadian` //http://localhost:3000//master/jenis-kejadian
+export const AGAMA_URL = `${API_URL}/master/agama` //http://localhost:3000//master/agama
 
-export function UpdateJenisKejadian() {
+export function UpdateAgama() {
   const navigate = useNavigate()
   const {id} = useParams()
   const [selectedFile, setSelectedFile] = useState(null)
@@ -28,10 +28,10 @@ export function UpdateJenisKejadian() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${JENIS_KEJADIAN_URL}/findone/${id}`)
+      const response = await axios.get(`${AGAMA_URL}/findone/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        jenis_kejadian: jsonD.jenis_kejadian,
+        agama: jsonD.agama,
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
@@ -58,24 +58,24 @@ export function UpdateJenisKejadian() {
 
   const formik = useFormik({
     initialValues: {
-      jenis_kejadian: '',
+      agama: '',
     },
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        jenis_kejadian: valuesFormik?.jenis_kejadian
-          ? valuesFormik.jenis_kejadian
-          : valuesFormikExist?.jenis_kejadian
-          ? valuesFormikExist.jenis_kejadian
+        agama: valuesFormik?.agama
+          ? valuesFormik.agama
+          : valuesFormikExist?.agama
+          ? valuesFormikExist.agama
           : '',
         updated_by: 0,
       }
       try {
-        const response = await axios.put(`${JENIS_KEJADIAN_URL}/update/${id}`, bodyparam)
+        const response = await axios.put(`${AGAMA_URL}/update/${id}`, bodyparam)
         if (response) {
           if (selectedFile) {
             formData.append('file_dokumentasi', selectedFile)
-            const responseFile = await axios.post(`${JENIS_KEJADIAN_URL}/upload/${id}`, formData)
+            const responseFile = await axios.post(`${AGAMA_URL}/upload/${id}`, formData)
             if (responseFile) {
               console.log('File success uploaded!')
               Swal.fire({
@@ -84,7 +84,7 @@ export function UpdateJenisKejadian() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/master/JenisKejadian', {replace: true})
+              navigate('/master/Agama', {replace: true})
             }
             return
           }
@@ -94,7 +94,7 @@ export function UpdateJenisKejadian() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/JenisKejadian', {replace: true})
+          navigate('/master/Agama', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -119,16 +119,16 @@ export function UpdateJenisKejadian() {
                   <div className='row mt-2'>
                     <div className='col-4 mb-3'>
                       <div className='form-group'>
-                        <Form.Label>Jenis Kejadian</Form.Label>
+                        <Form.Label>agama</Form.Label>
                         <Form.Control
-                          name='jenis_kejadian'
+                          name='agama'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.jenis_kejadian || valuesFormik?.jenis_kejadian === ''
-                              ? valuesFormik?.jenis_kejadian
-                              : valuesFormikExist?.jenis_kejadian
-                              ? valuesFormikExist?.jenis_kejadian
+                            valuesFormik?.agama || valuesFormik?.agama === ''
+                              ? valuesFormik?.agama
+                              : valuesFormikExist?.agama
+                              ? valuesFormikExist?.agama
                               : ''
                           }
                         />
@@ -136,7 +136,7 @@ export function UpdateJenisKejadian() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/JenisKejadian'>
+                    <Link to='/master/Agama'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali
