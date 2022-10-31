@@ -13,8 +13,6 @@ import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import ReactToPrint from 'react-to-print'
-import {parse} from 'path'
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
