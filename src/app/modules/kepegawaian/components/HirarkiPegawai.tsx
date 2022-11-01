@@ -28,24 +28,24 @@ import "./hirarki-chart/my-node.css";
 
 // OrgChart
 import OrganizationalChart from './hirarki-chart/components/orgChart';
+import { StrukturHirarki } from './hirarki-chart/components/HirarkiInterface'
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const ATASAN_URL = `${API_URL}/kepegawaian`
-
-
+export const DATA_HIRARKI_URL = `${API_URL}/master/struktur_Data_hirarki`
 
 export function HirarkiPegawai() {
   const users = useQueryResponseData()
   const isLoading = useQueryResponseLoading()
-  const data = useMemo(() => users, [users])
+  // const data = useMemo(() => users, [users])
   const columns = useMemo(() => usersColumns, [])
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
   const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
 
-  const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
-    columns,
-    data,
-  })
+  // const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
+  //   columns,
+  //   data,
+  // })
   const { id, status } = useParams()
   console.log('id, status', id, status)
   const [lgShow, setLgShow] = useState(false);
@@ -82,7 +82,7 @@ export function HirarkiPegawai() {
     setValStatPegawai({ val: event.target.value })
   }
 
-  // Struktural Organisasi
+  // Struktural Organisasi TIPE 1
   const StyledNode = styled.div`
     padding: 5px;
     border-radius: 2px;
@@ -90,7 +90,7 @@ export function HirarkiPegawai() {
     border: 1px solid black;
   `;
 
-  // Org Chart
+  // Org Chart TIPE 2
 
   const orgchart = useRef();
 
@@ -249,6 +249,23 @@ export function HirarkiPegawai() {
   };
 
   // Data Tipe 3
+  const [data, setData] = useState<StrukturHirarki>()
+
+  useEffect(() => {
+    fetchUsers(1)
+  }, [])
+
+  // const [temp, setTemp] = useState([])
+
+  const fetchUsers = async (page: any) => {
+    const response = await axios.get(`${DATA_HIRARKI_URL}/find`)
+
+    setData(response.data.data)
+
+    console.log('cek :', data)
+    return [data, setData] as const
+  }
+
   const datasatpolpp = [
     {
       id: 1,
