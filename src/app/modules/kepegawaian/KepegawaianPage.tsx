@@ -577,7 +577,7 @@ const KepegawaianPage: React.FC = () => {
 
         {/* PPNS */}
         <Route
-          path='tab-data-ppns/tambah-data-ppns/'
+          path='penyidik-pegawai-negeri-sipil/tab-data-ppns/tambah-data-ppns/'
           element={
             <>
               <PageTitle breadcrumbs={penyidikpegawainegerisipilBreadCrumbs}>
@@ -588,7 +588,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='tab-data-ppns/ubah-data-ppns/:id'
+          path='penyidik-pegawai-negeri-sipil/tab-data-ppns/ubah-data-ppns/:id'
           element={
             <>
               <PageTitle breadcrumbs={penyidikpegawainegerisipilBreadCrumbs}>
