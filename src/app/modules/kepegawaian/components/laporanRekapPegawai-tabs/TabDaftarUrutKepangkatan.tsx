@@ -13,7 +13,6 @@ import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import {parse} from 'path'
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
@@ -143,6 +142,7 @@ export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pe
 export const MASTER_URL = `${API_URL}/master`
 
 export function TabDaftarUrutKepangkatan() {
+  let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -215,7 +215,6 @@ export function TabDaftarUrutKepangkatan() {
       }
     })
   }
-
   let no = 1
 
   const columns = [
@@ -874,6 +873,21 @@ export function TabDaftarUrutKepangkatan() {
                                 className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
                               >
                                 Excel
+                              </button>
+                            </div>
+                            {/* end::Content */}
+
+                            {/* begin::Content */}
+                            <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                              <button
+                                onClick={() =>
+                                  navigate(
+                                    `/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/unduh-daftar-urut-kepangkatan`
+                                  )
+                                }
+                                className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'
+                              >
+                                PDF
                               </button>
                             </div>
                             {/* end::Content */}

@@ -31,6 +31,7 @@ import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-ta
 import {UpdateNaikPangkat} from './components/update-naik-pangkat/UpdateNaikPangkat'
 
 import {TabRekapitulasiDataPegawaiPensiun} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
+import {UnduhLaporanPegawaiPensiunPdf} from './components/laporanRekapPegawai-unduh/UnduhLaporanPegawaiPensiunPdf'
 
 import {DataPribadiDUK} from './components/tabs-duk/DataPribadiDUK'
 import {DataKeluargaDUK} from './components/tabs-duk/DataKeluargaDUK'
@@ -39,6 +40,7 @@ import {PendidikanDUK} from './components/tabs-duk/PendidikanDUK'
 import {HirarkiKepegawaianDUK} from './components/tabs-duk/HirarkiKepegawaianDUK'
 import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 import {TambahDaftarUrutKepangkatan} from './components/add-tabs-duk/TambahDaftarUrutKepangkatan'
+import {UnduhLaporanDaftarUrutKepangkatanPDF} from './components/laporanRekapPegawai-unduh/UnduhLaporanDaftarUrutKepangkatan'
 
 import {UnduhLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 import {TabRekapitulasiPejabatStruktural} from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
@@ -341,6 +343,17 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
+          path='laporan-rekapitulasi-pegawai/tab-rekapitulasi-data-pegawai-pensiun/unduh-laporan-pegawai-pensiun-pdf'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
+                Unduh Laporan Pegawai Pensiun PDF
+              </PageTitle>
+              <UnduhLaporanPegawaiPensiunPdf />
+            </>
+          }
+        />
+        <Route
           path='laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'
           element={
             <>
@@ -563,11 +576,22 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
+        <Route
+          path='laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/unduh-daftar-urut-kepangkatan'
+          element={
+            <>
+              <PageTitle breadcrumbs={daftarurutkepangkatanBreadCrumbs}>
+                Unduh Laporan Daftar Urut Kepangkatan
+              </PageTitle>
+              <UnduhLaporanDaftarUrutKepangkatanPDF />
+            </>
+          }
+        />
         {/* End DUK */}
 
         {/* PPNS */}
         <Route
-          path='tab-data-ppns/tambah-data-ppns/'
+          path='penyidik-pegawai-negeri-sipil/tab-data-ppns/tambah-data-ppns/'
           element={
             <>
               <PageTitle breadcrumbs={penyidikpegawainegerisipilBreadCrumbs}>
@@ -578,7 +602,7 @@ const KepegawaianPage: React.FC = () => {
           }
         />
         <Route
-          path='tab-data-ppns/ubah-data-ppns/:id'
+          path='penyidik-pegawai-negeri-sipil/tab-data-ppns/ubah-data-ppns/:id'
           element={
             <>
               <PageTitle breadcrumbs={penyidikpegawainegerisipilBreadCrumbs}>
