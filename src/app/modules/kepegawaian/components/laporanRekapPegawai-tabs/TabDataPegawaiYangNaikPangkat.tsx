@@ -13,6 +13,7 @@ import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import ReactToPrint from 'react-to-print'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -127,6 +128,7 @@ export interface SelectOption {
 }
 
 export function TabDataPegawaiYangNaikPangkat() {
+  let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -160,6 +162,7 @@ export function TabDataPegawaiYangNaikPangkat() {
     )
   }
 
+  var num = 1
   const columns = [
     {
       name: 'No',
@@ -167,6 +170,9 @@ export function TabDataPegawaiYangNaikPangkat() {
       sortable: true,
       sortField: 'id',
       wrap: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.skpd !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
+      },
     },
     {
       name: 'Nama',
@@ -691,68 +697,82 @@ export function TabDataPegawaiYangNaikPangkat() {
         </div>
 
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6 col-lg-6 col-sm-12'>
-            <Link to='#' onClick={handleFilter}>
-              <button className='btn btn-light-primary me-2'>
-                <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
-                Cari
-              </button>
-            </Link>
-            <Link to='#' onClick={handleFilterReset}>
-              <button className='btn btn-light-primary'>
-                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                Reset
-              </button>
-            </Link>
-          </div>
-          <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            {/* begin::Filter Button */}
-            <button
-              type='button'
-              className='btn btn-light-primary'
-              data-kt-menu-trigger='click'
-              data-kt-menu-placement='bottom-end'
-            >
-              {btnLoadingUnduh ? (
-                <>
-                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                  Memproses Unduh...
-                </>
-              ) : (
-                <>
-                  <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-                  Unduh
-                </>
-              )}
-            </button>
-            {/* end::Filter Button */}
-            {/* begin::SubMenu */}
-            <div className='menu menu-sub menu-sub-dropdown w-100px w-md-150px' data-kt-menu='true'>
-              {/* begin::Header */}
-              <div className='px-7 py-5'>
-                <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-              </div>
-              {/* end::Header */}
-
-              {/* begin::Separator */}
-              <div className='separator border-gray-200'></div>
-              {/* end::Separator */}
-
-              {/* begin::Content */}
-              <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                <button
-                  onClick={handleUnduh}
-                  className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                >
-                  Excel
+          <div className='row g-8 mt-2 ms-5 me-5'>
+            <div className='col-md-6 col-lg-6 col-sm-12'>
+              <Link to='#' onClick={handleFilter}>
+                <button className='btn btn-light-primary me-2'>
+                  <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
+                  Cari
                 </button>
-              </div>
-              {/* end::Content */}
+              </Link>
+              <Link to='#' onClick={handleFilterReset}>
+                <button className='btn btn-light-primary'>
+                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                  Reset
+                </button>
+              </Link>
             </div>
-            {/* end::SubMenu */}
+            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+              {/* begin::Filter Button */}
+              <button
+                type='button'
+                className='btn btn-light-primary'
+                data-kt-menu-trigger='click'
+                data-kt-menu-placement='bottom-end'
+              >
+                {btnLoadingUnduh ? (
+                  <>
+                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                    Memproses Unduh...
+                  </>
+                ) : (
+                  <>
+                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                    Unduh
+                  </>
+                )}
+              </button>
+              {/* end::Filter Button */}
+              {/* begin::SubMenu */}
+              <div
+                className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                data-kt-menu='true'
+              >
+                {/* begin::Header */}
+                <div className='px-7 py-5'>
+                  <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                </div>
+                {/* end::Header */}
+
+                {/* begin::Separator */}
+                <div className='separator border-gray-200'></div>
+                {/* end::Separator */}
+
+                {/* begin::Content */}
+                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                  <button
+                    onClick={handleUnduh}
+                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                  >
+                    Excel
+                  </button>
+                </div>
+                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                  <button
+                    onClick={() =>
+                      navigate(`/kepegawaian/LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf`)
+                    }
+                    className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'
+                  >
+                    PDF
+                  </button>
+                </div>
+                {/* end::Content */}
+              </div>
+              {/* end::SubMenu */}
+            </div>
           </div>
         </div>
-
         <div className='col-xl-12 mb-xl-12 mt-6'>
           <div className='card card-flush h-xl-100'>
             <div

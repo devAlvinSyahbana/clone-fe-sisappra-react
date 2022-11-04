@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from 'react'
-import { SidebarMenuItemWithSub } from './SidebarMenuItemWithSub'
-import { SidebarMenuItem } from './SidebarMenuItem'
+import {SidebarMenuItemWithSub} from './SidebarMenuItemWithSub'
+import {SidebarMenuItem} from './SidebarMenuItem'
 
 const SidebarMenuMain = () => {
   return (
@@ -188,11 +188,11 @@ const SidebarMenuMain = () => {
         icon='/media/icons/duotune/general/gen051.svg'
       >
         <SidebarMenuItem to='/apps/data-pengguna' title='Pengguna' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/group-chat' title='Hak Akses' hasBullet={true} />
+        <SidebarMenuItem to='/apps/hak-akses' title='Hak Akses' hasBullet={true} />
         <SidebarMenuItem to='/apps/akses-kontrol' title='Akses Kontrol' hasBullet={true} />
       </SidebarMenuItemWithSub>
     </>
   )
 }
 
-export { SidebarMenuMain }
+export {SidebarMenuMain}

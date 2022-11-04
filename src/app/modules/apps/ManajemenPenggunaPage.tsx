@@ -1,12 +1,18 @@
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import { DataPengguna } from './components/DataPengguna'
-import { Group } from './components/Group'
-import { AksesKontrol } from './components/AksesKontrol'
+import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
+import {PageLink, PageTitle} from '../../../_metronic/layout/core'
+import {DataPengguna} from './components/DataPengguna'
+import {Group} from './components/Group'
+import {AksesKontrol} from './components/AksesKontrol'
 
 import {AddDataPengguna} from './components/add-data-pengguna/AddDataPengguna'
 import {UpdateDataPengguna} from './components/update-data-pengguna/UpdateDataPengguna'
 import {DetailDataPengguna} from './components/detail-data-pengguna/DetailDataPengguna'
+
+import {HakAkses} from './components/HakAkses'
+import {DetailHakAkses} from './components/detail-hak-akses/DetailHakAkses'
+import {DetailPengguna} from './components/detail-hak-akses/DetailPengguna'
+import {UpdateHakAkses} from './components/update-hak-akses/UpdateHakAkses'
+import {TambahHakAkses} from './components/tambah-hak-akses/TambahHakAkses'
 
 const dataPenggunaBreadcrumbs: Array<PageLink> = [
   {
@@ -72,12 +78,58 @@ const ManajemenPenggunaPage = () => {
             </>
           }
         />
+
         <Route
           path='akses-kontrol'
           element={
             <>
               <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Akses Kontrol</PageTitle>
               <AksesKontrol />
+            </>
+          }
+        />
+        <Route
+          path='hak-akses'
+          element={
+            <>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Hak Akses</PageTitle>
+              <HakAkses />
+            </>
+          }
+        />
+        <Route
+          path='detail-hak-akses/DetailHakAkses'
+          element={
+            <>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Detail Hak Akses</PageTitle>
+              <DetailHakAkses />
+            </>
+          }
+        />
+        <Route
+          path='tambah-hak-akses/TambahHakAkses'
+          element={
+            <>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Tambah Hak Akses</PageTitle>
+              <TambahHakAkses />
+            </>
+          }
+        />
+        <Route
+          path='update-hak-akses/UpdateHakAkses/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Update Hak Akses</PageTitle>
+              <UpdateHakAkses />
+            </>
+          }
+        />
+        <Route
+          path='detail-hak-akses/DetailPengguna/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Lihat Hak Akses Pengguna</PageTitle>
+              <DetailPengguna />
             </>
           }
         />

@@ -29,6 +29,7 @@ import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
 import {AddDataPPNS} from './components/add-tabs-ppns/AddDataPPNS'
 import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
 import {UpdateNaikPangkat} from './components/update-naik-pangkat/UpdateNaikPangkat'
+import {UnduhNaikPangkatPdf} from './components/unduh-naik-pangkat/UnduhNaikPangkatPdf'
 
 import {TabRekapitulasiDataPegawaiPensiun} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
 
@@ -413,6 +414,15 @@ const KepegawaianPage: React.FC = () => {
                 Update Naik Pangkat
               </PageTitle>
               <UpdateNaikPangkat />
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Unduh Naik Pangkat PDF</PageTitle>
+              <UnduhNaikPangkatPdf />
             </>
           }
         />

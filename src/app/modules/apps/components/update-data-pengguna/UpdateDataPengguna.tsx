@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
-import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 
@@ -15,7 +14,6 @@ export interface FormInput {
   kata_sandi?: string
   hak_akses?: number
   status_pengguna?: number
-
   updated_by?: number
 }
 
@@ -58,7 +56,6 @@ export function UpdateDataPengguna() {
         kata_sandi: jsonD.kata_sandi,
         hak_akses: jsonD.hak_akses,
         status_pengguna: jsonD.status_pengguna,
-
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
