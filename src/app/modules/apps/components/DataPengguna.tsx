@@ -253,14 +253,6 @@ export function DataPengguna() {
       center: true,
     },
     {
-      name: 'Kata Sandi',
-      selector: (row: any) => row.kata_sandi,
-      sortable: true,
-      sortField: 'kata_sandi',
-      wrap: true,
-      center: true,
-    },
-    {
       name: 'Hak Akses',
       selector: (row: any) => row.hak_akses,
       sortable: true,
