@@ -137,21 +137,22 @@ createTheme(
   }
 
 export function AksesKontrol() {
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
 
-  const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
   const [valFilterModul, setFilterModul] = useState({val: ''})
 
   const [data, setData] = useState([])
+  const [temp, setTemp] = useState([])
   const [loading, setLoading] = useState(false)
-  const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+  const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(10)
+
 
     const LoadingAnimation = (props: any) => {
         return (
@@ -169,7 +170,7 @@ const navigate = useNavigate()
 
     const columns = [
         {
-            name: 'ID',
+            name: 'No',
             selector: (row: any) => row.id,
             sortable: true,
             sortField: 'id',
@@ -219,7 +220,7 @@ const navigate = useNavigate()
                                         variant="light"
                                         title="Aksi">
                                         <Dropdown.Item>
-                                            <Link to="/sarana-prasarana/LaporanSaranaPrasarana">
+                                            <Link to="#">
                                                 Detail
                                             </Link>
                                         </Dropdown.Item>
@@ -256,45 +257,28 @@ const navigate = useNavigate()
     },
   }
 
-    useEffect(() => {
-        async function fetchDT(page: number) {
-          setLoading(true)
-          const response = await axios.get(
-            `${AKSES_KONTROL_URL}/find${qParamFind.strparam}`
-          )
-          setData(response.data.data)
-          setTotalRows(response.data.total_data)
-          setLoading(false)
-          console.log('ini muncul ga sih', response)
-        }
-        fetchDT(1)
-      }, [qParamFind, perPage])
-    
-      const fetchData = async (page: number) => {
-        setLoading(true)
-        const response = await axios.get(
-          `${AKSES_KONTROL_URL}/find${qParamFind.strparam}`
-        )
-        setData(response.data.data)
-        setTotalRows(response.data.total_data)
-        setLoading(false)
-    
-        return [data, setData] as const
-      }
-    
-      const handlePageChange = (page: number) => {
-        fetchData(page)
-      }
-    
-      const handlePerRowsChange = async (newPerPage: number, page: number) => {
-        setLoading(true)
-        const response = await axios.get(
-          `${AKSES_KONTROL_URL}/find${qParamFind.strparam}`
-        )
-        setData(response.data.data)
-        setPerPage(newPerPage)
-        setLoading(false)
-      }
+   useEffect(() => {
+    fetchUsers(1)
+  }, [])
+
+  const fetchUsers = async (page: any) => {
+    setLoading(true)
+    const value = await axios.get(`${AKSES_KONTROL_URL}/find`
+    )
+
+    setTemp(value.data.data)
+    console.log('cek response api:', temp)
+
+    const response = await axios.get(
+      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
+    )
+    setData(response.data.data)
+
+    setTotalRows(response.data.total)
+    setLoading(false)
+    console.log('cek ahhh :', data)
+    return [data, setData] as const
+  }
     
       const handleFilter = async () => {
         let uriParam = ''
