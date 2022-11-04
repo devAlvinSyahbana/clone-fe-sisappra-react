@@ -300,10 +300,9 @@ export function DataPengguna() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate(
-                          `/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-pribadi-duk/${record?.id}/${record?.status_pegawai}`,
-                          {replace: true}
-                        )
+                        navigate('/apps/data-pengguna/detail-data-pengguna/' + record.id, {
+                          replace: true,
+                        })
                       }
                     >
                       Detail
@@ -311,10 +310,9 @@ export function DataPengguna() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate(
-                          `/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-pribadi-duk/${record?.id}/${record?.status_pegawai}`,
-                          {replace: true}
-                        )
+                        navigate('/apps/data-pengguna/update-data-pengguna/' + record.id, {
+                          replace: true,
+                        })
                       }
                     >
                       Ubah
