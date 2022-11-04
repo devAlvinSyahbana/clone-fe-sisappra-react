@@ -25,26 +25,45 @@ import FileDownload from 'js-file-download'
 // import MyNode from "./hirarki-chart/my-node";
 import PropTypes from "prop-types";
 import "./hirarki-chart/my-node.css";
+
+// OrgChart
+import OrganizationalChart from './hirarki-chart/components/orgChart';
+import { StrukturHirarki } from './hirarki-chart/components/HirarkiInterface'
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const ATASAN_URL = `${API_URL}/kepegawaian`
+export const DATA_HIRARKI_URL = `${API_URL}/master/struktur_Data_hirarki`
 
-
+interface DataHirarki {
+    data: [{
+      id: number,
+    parentId: string,
+    name: string,
+    positionName: string,
+    phone: string;
+    email: string;
+    team: string;
+    location: string;
+    department: string;
+    description: string;
+    imageUrl: string;
+  }]
+}
 
 export function HirarkiPegawai() {
   const users = useQueryResponseData()
   const isLoading = useQueryResponseLoading()
-  const data = useMemo(() => users, [users])
+  // const data = useMemo(() => users, [users])
   const columns = useMemo(() => usersColumns, [])
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
   const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
 
-  const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
-    columns,
-    data,
-  })
+  // const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
+  //   columns,
+  //   data,
+  // })
   const { id, status } = useParams()
-  console.log('id, status', id, status)
+  // console.log('id, status', id, status)
   const [lgShow, setLgShow] = useState(false);
   const [inputValAtasan, setDataPegawai] = useState({ label: '', value: null })
 
@@ -79,7 +98,7 @@ export function HirarkiPegawai() {
     setValStatPegawai({ val: event.target.value })
   }
 
-  // Struktural Organisasi
+  // Struktural Organisasi TIPE 1
   const StyledNode = styled.div`
     padding: 5px;
     border-radius: 2px;
@@ -87,7 +106,7 @@ export function HirarkiPegawai() {
     border: 1px solid black;
   `;
 
-  // Org Chart
+  // Org Chart TIPE 2
 
   const orgchart = useRef();
 
@@ -244,6 +263,408 @@ export function HirarkiPegawai() {
   }) => {
     setFileextension(event.target.value);
   };
+
+  // Data Tipe 3
+  const [dataHirarki, setData] = useState<DataHirarki>()
+
+  useEffect(() => {
+    let arrD: any = []
+    const fetchData = async () => {
+      const data = await axios.get(
+        `${DATA_HIRARKI_URL}/find`
+      )
+      // setData(data.data.data)
+      // let array = await data.data.data.map((data:any)=>{
+      //   return {
+      //     id: data.id,
+      //     parentId: String(data.parent_id > 0 ? data.parent_id : ''),
+      //     name: data.nama,
+      //     positionName: String(data.jabatan),
+      //     phone: "",
+      //     email: "",
+      //     team: String(data.tim),
+      //     location: "",
+      //     department: "",
+      //     description:
+      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      //     imageUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+      //   }
+      // })
+      let array = JSON.parse(`[{"id":1,"parentId":"","name":"ARIFIN","positionName":"1","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":2,"parentId":"1","name":"SAHAT PARULIAN","positionName":"2","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":3,"parentId":"1","name":"","positionName":"0","phone":"","email":"","team":"SEKRETARIAT","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":4,"parentId":"2","name":"SANTOSO","positionName":"3","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":5,"parentId":"4","name":"","positionName":"0","phone":"","email":"","team":"ANALIS KEPEGAWAIAN AHLI MUDA SELAKU SUB KOORDINATOR URUSAN BAGIAN KEPEGAWAIAN","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":6,"parentId":"4","name":"RIKKI HERMANTO SINAGA","positionName":"4","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":7,"parentId":"6","name":"HERIYANTO","positionName":"5","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":8,"parentId":"6","name":"AZRUL FATHANY","positionName":"5","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":9,"parentId":"6","name":"FARIS RUSANDI","positionName":"6","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":10,"parentId":"6","name":"MAMAN SURIAMAN","positionName":"6","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":11,"parentId":"6","name":"SITI JULAEHA","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":12,"parentId":"6","name":"MAHMUDI","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":13,"parentId":"6","name":"LUKMAN HAKIM","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":14,"parentId":"6","name":"DHANU ARESTIA HOTTI","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":15,"parentId":"6","name":"ROMA VERONICA","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":16,"parentId":"4","name":"","positionName":"0","phone":"","email":"","team":"SUB BAGIAN PROGRAM DAN KEUANGAN","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":17,"parentId":"4","name":"RIYADIANA CHLAIRANDES","positionName":"7","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":18,"parentId":"17","name":"MULJADI","positionName":"618","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":19,"parentId":"17","name":"LAURA ARDIANA","positionName":"8","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":20,"parentId":"17","name":"SITI PUSPITASARI","positionName":"619","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":21,"parentId":"17","name":"MAULVI NAZIR","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":22,"parentId":"17","name":"BAMBANG ADE IRAWAN","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":23,"parentId":"17","name":"PARTIWI","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":24,"parentId":"17","name":"FAUZUL ROFIK AL KHUSNA","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":25,"parentId":"17","name":"MUHAMMAD TAHJUDDIN ROSYI","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":26,"parentId":"4","name":"","positionName":"0","phone":"","email":"","team":"SUB BAGIAN UMUM","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":27,"parentId":"4","name":"RIMA DAHLIA","positionName":"10","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":28,"parentId":"27","name":"ELOK RISCA DAMAYANTI","positionName":"620","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":29,"parentId":"27","name":"AMBAR EKOWATI","positionName":"620","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":30,"parentId":"27","name":"MOHAMAD HANAFI","positionName":"620","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":31,"parentId":"27","name":"SAIFUL RIZAL","positionName":"621","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":32,"parentId":"27","name":"MAKMURI","positionName":"635","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":33,"parentId":"27","name":"MUKSIN","positionName":"11","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":34,"parentId":"27","name":"RULLY YUSUF","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":35,"parentId":"27","name":"YUNI FITRIASTUTI","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":36,"parentId":"27","name":"TOHIRIN","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":37,"parentId":"27","name":"DJAYADI","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":38,"parentId":"27","name":"BUDI ARIANTO","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":39,"parentId":"27","name":"SAIMIN","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":40,"parentId":"27","name":"ROFIK HIDAYAT","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":41,"parentId":"27","name":"RAHMAT SOLEH","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":42,"parentId":"27","name":"SHOLAT","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":43,"parentId":"27","name":"ADI ABDILLAH","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":44,"parentId":"27","name":"ZAINAL ABIDIN","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":45,"parentId":"27","name":"DENI HADI PERMANA","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":46,"parentId":"27","name":"ACHMAD GOFUR","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":47,"parentId":"27","name":"HARY ROMAENUR","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":48,"parentId":"27","name":"WAWAN SETIAWAN","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":49,"parentId":"27","name":"WAGIMAN","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"}]`)
+      console.log('coba array',array)
+      setData((prevState) => ({...prevState, data:array}))
+    }
+    fetchData()
+  }, [true])
+
+  const datapp = [
+    {
+      name: 'ID',
+      selector: (row: any) => row.id,
+    },
+    {
+      name: 'Parent Id',
+      selector: (row: any) => row.parent_id,
+    },
+    {
+      name: 'Nama',
+      selector: (row: any) => row.nama,
+    },
+    {
+      name: 'Jabatan',
+      selector: (row: any) => row.jabatan,
+    },
+    {
+      name: 'Tim',
+      selector: (row: any) => row.tim,
+    },
+
+  ]
+  // console.log('muncul ngga?', datapp)
+
+  const datasatpolpp = [
+    {
+      id: 1,
+      parentId: "",
+      name: "John",
+      positionName: "CEO",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      imageUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+    },
+    {
+      id: 2,
+      parentId: "1",
+      name: "Smith",
+      positionName: "COO",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/20.jpg",
+    },
+
+    {
+      id: 3,
+      parentId: "1",
+      name: "Kate",
+      positionName: "CTO",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/women/3.jpg",
+    },
+    {
+      id: 4,
+      parentId: "6",
+      team: "HR team",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    },
+    {
+      id: 5,
+      parentId: "3",
+      name: "Erica",
+      positionName: "Manager of something",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/women/8.jpg",
+    },
+    {
+      id: 6,
+      parentId: "3",
+      name: "Paul",
+      positionName: "Manager of something",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/6.jpg",
+    },
+    {
+      id: 7,
+      parentId: "5",
+      team: "Developers",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    },
+    {
+      id: 8,
+      parentId: "3",
+      name: "Tony",
+      positionName: "Manager of something",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 9,
+      parentId: "2",
+      name: "Sally",
+      positionName: "Manager of something",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/women/9.jpg",
+    },
+    {
+      id: 10,
+      parentId: "4",
+      name: "Scott",
+      positionName: "HR assistant",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/10.jpg",
+    },
+
+    {
+      id: 11,
+      parentId: "1",
+      name: "James",
+      positionName: "CGO",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/7.jpg",
+    },
+    {
+      id: 12,
+      parentId: "4",
+      name: "Tony",
+      positionName: "HR assistant",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 13,
+      parentId: "4",
+      name: "Sally",
+      positionName: "HR assistant",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/women/9.jpg",
+    },
+    {
+      id: 14,
+      parentId: "8",
+      name: "Scott",
+      positionName: "Teacher",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/10.jpg",
+    },
+
+    {
+      id: 15,
+      parentId: "8",
+      name: "James",
+      positionName: "Teacher",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/7.jpg",
+    },
+    {
+      id: 16,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 17,
+      parentId: "7",
+      name: "Sally",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/women/9.jpg",
+    },
+    {
+      id: 18,
+      parentId: "8",
+      name: "Scott",
+      positionName: "Teacher",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/10.jpg",
+    },
+    {
+      id: 19,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 20,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 21,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 22,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 23,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 24,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 25,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 26,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+    {
+      id: 27,
+      parentId: "7",
+      name: "Tony",
+      positionName: "Developer",
+      phone: "99887766",
+      email: "employee@email.com",
+      team: "",
+      location: "LA Branch",
+      department: "Marketing",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    },
+  ];
 
   return (
     <>
@@ -544,7 +965,21 @@ export function HirarkiPegawai() {
                 chartClass="myChart" */}
               {/* // NodeTemplate={this.MyNode}
               /> */}
-              <StrukturalOrganisasi />
+
+              {/* TIPE 2 */}
+              {/* <StrukturalOrganisasi /> */}
+
+              {/* TIPE 3 */}
+              {/* <h1 style={styles.title}>Organization Chart</h1> */}
+              <OrganizationalChart data={datasatpolpp} />
+              {/* <OrganizationalChart data={dataHirarki.data} />  */}
+              {/* {dataHirarki && dataHirarki.data.length > 0 && (
+                <>
+                <p>{JSON.stringify(dataHirarki.data)}</p>
+
+                <p>{JSON.stringify(datasatpolpp)}</p>
+                </>
+              )} */}
             </div>
             {/* END :: Coba org-chart */}
           </div>
