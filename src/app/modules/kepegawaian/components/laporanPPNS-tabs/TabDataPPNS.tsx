@@ -343,9 +343,12 @@ export function TabDataPPNS() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate(`/kepegawaian/tab-data-ppns/ubah-data-ppns/${record?.id}`, {
-                          replace: true,
-                        })
+                        navigate(
+                          `/kepegawaian/penyidik-pegawai-negeri-sipil/tab-data-ppns/ubah-data-ppns/${record?.id}`,
+                          {
+                            replace: true,
+                          }
+                        )
                       }
                     >
                       Ubah
@@ -734,7 +737,7 @@ export function TabDataPPNS() {
                           </Link>
                         </div>
                         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                          <Link to='/kepegawaian/tab-data-ppns/tambah-data-ppns'>
+                          <Link to='/kepegawaian/penyidik-pegawai-negeri-sipil/tab-data-ppns/tambah-data-ppns'>
                             {/* begin::Add user */}
                             <button type='button' className='btn btn-primary me-2'>
                               <KTSVG

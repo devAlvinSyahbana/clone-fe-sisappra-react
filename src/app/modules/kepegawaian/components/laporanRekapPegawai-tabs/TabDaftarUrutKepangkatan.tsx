@@ -13,7 +13,6 @@ import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import {parse} from 'path'
 
 // createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
@@ -137,12 +136,13 @@ const reactSelectDarkThem = {
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 
-export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/duk-pegawai`
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
 export const DELETE_DUK_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
 export const KEPEGAWAIAN_UNDUH_URL = `${API_URL}/kepegawaian/rekapitulasi-duk-pegawai`
 export const MASTER_URL = `${API_URL}/master`
 
 export function TabDaftarUrutKepangkatan() {
+  let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -215,7 +215,6 @@ export function TabDaftarUrutKepangkatan() {
       }
     })
   }
-
   let no = 1
 
   const columns = [
@@ -381,7 +380,7 @@ export function TabDaftarUrutKepangkatan() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${KEPEGAWAIAN_URL}/FindFilter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -393,7 +392,7 @@ export function TabDaftarUrutKepangkatan() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/filter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/FindFilter?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -409,7 +408,7 @@ export function TabDaftarUrutKepangkatan() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${KEPEGAWAIAN_URL}/filter?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${KEPEGAWAIAN_URL}/FindFilter?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -582,7 +581,7 @@ export function TabDaftarUrutKepangkatan() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${KEPEGAWAIAN_UNDUH_URL}/unduh?q=1${qParamFind.strparam}`,
+      url: `${KEPEGAWAIAN_UNDUH_URL}/UnduhExcel?q=1${qParamFind.strparam}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
@@ -874,6 +873,21 @@ export function TabDaftarUrutKepangkatan() {
                                 className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
                               >
                                 Excel
+                              </button>
+                            </div>
+                            {/* end::Content */}
+
+                            {/* begin::Content */}
+                            <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                              <button
+                                onClick={() =>
+                                  navigate(
+                                    `/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/unduh-daftar-urut-kepangkatan`
+                                  )
+                                }
+                                className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'
+                              >
+                                PDF
                               </button>
                             </div>
                             {/* end::Content */}

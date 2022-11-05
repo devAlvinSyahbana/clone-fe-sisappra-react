@@ -5,15 +5,111 @@ import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import Button from 'react-bootstrap/Button'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import AsyncSelect from 'react-select/async'
-import clsx from 'clsx'
+import {SelectOptionAutoCom} from '../KepegawaianInterface'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import ReactToPrint from 'react-to-print'
+
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
@@ -32,24 +128,19 @@ export interface SelectOption {
 }
 
 export function TabDataPegawaiYangNaikPangkat() {
+  let componentRef: any
   const navigate = useNavigate()
-
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
   const [valStatPegawai, setValStatPegawai] = useState({val: ''})
   const [valFilterNama, setFilterNama] = useState({val: ''})
   const [valFilterNRK, setFilterNRK] = useState({val: ''})
   const [valFilterNoPegawai, setFilterNoPegawai] = useState({val: ''})
-  const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
 
   const [valFilterNip, setFilterNip] = useState({val: ''})
-  const [valFilterJa, setFilterJa] = useState({val: ''})
   const [inputValStPa, setDataStPa] = useState({label: '', value: null})
-  const [inputValTugas, setDataTugas] = useState({label: '', value: null})
-  const [inputValKec, setDataKec] = useState({label: '', value: null})
   const [inputValPangkat, setDataPangkat] = useState({label: '', value: null})
-  const [inputValJabatan, setDataJabatan] = useState({label: '', value: null})
-
-  const [tmp_kot, setTmp_kot] = useState({label: '', value: ''})
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -71,6 +162,7 @@ export function TabDataPegawaiYangNaikPangkat() {
     )
   }
 
+  var num = 1
   const columns = [
     {
       name: 'No',
@@ -78,6 +170,9 @@ export function TabDataPegawaiYangNaikPangkat() {
       sortable: true,
       sortField: 'id',
       wrap: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.skpd !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
+      },
     },
     {
       name: 'Nama',
@@ -197,8 +292,10 @@ export function TabDataPegawaiYangNaikPangkat() {
                       href='#'
                       onClick={() =>
                         navigate(
-                          `/kepegawaian/TabDataPegawaiYangNaikPangkat/UpdateNaikPangkat/${record?.id}/${record?.kepegawaian_status_pegawai}`,
-                          {replace: true}
+                          `/kepegawaian/update-naik-pangkat/UpdateNaikPangkat/${record?.id}`,
+                          {
+                            replace: true,
+                          }
                         )
                       }
                     >
@@ -287,20 +384,17 @@ export function TabDataPegawaiYangNaikPangkat() {
     if (valFilterNRK.val !== '') {
       uriParam += `&nrk=${valFilterNRK.val}`
     }
-    if (valFilterJa.val) {
-      uriParam += `&tahun_jnp=${valFilterJa.val}`
-    }
-    if (inputValTugas.value) {
-      uriParam += `&tempat_tugas=${inputValTugas.value}`
+    if (valMasterBidangWilayah.value) {
+      uriParam += `&id_tempat_tugas=${valMasterBidangWilayah.value}`
     }
     if (valFilterNip.val) {
       uriParam += `&nip=${valFilterNip.val}`
     }
-    if (inputValKec.value) {
-      uriParam += `&seksi_kecamatan=${inputValKec.value}`
+    if (valMasterPelaksana.value) {
+      uriParam += `&id_seksi_kecamatan=${valMasterPelaksana.value}`
     }
-    if (inputValJabatan.value) {
-      uriParam += `&id_jabatan=${inputValJabatan.value}`
+    if (valMasterJabatan.value) {
+      uriParam += `&id_jabatan_kelurahan=${valMasterJabatan.value}`
     }
     if (inputValPangkat.value) {
       uriParam += `&id_pangkat=${inputValPangkat.value}`
@@ -317,26 +411,18 @@ export function TabDataPegawaiYangNaikPangkat() {
     setFilterNRK({val: ''})
     setFilterNoPegawai({val: ''})
     setFilterNip({val: ''})
-    setFilterJa({val: ''})
-    setDataTugas({label: '', value: null})
-    setDataKec({label: '', value: null})
+    setValMasterBidangWilayah({label: '', value: null})
+    setValMasterPelaksana({label: '', value: ''})
     setDataPangkat({label: '', value: null})
-    setDataJabatan({label: '', value: null})
+    setValMasterJabatan({label: '', value: ''})
     setDataStPa({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
-
   const handleChangeInputNama = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
     setFilterNama({val: event.target.value})
-  }
-  const handleChangeInputJa = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setFilterJa({val: event.target.value})
   }
   const handleChangeInputNRK = (event: {
     preventDefault: () => void
@@ -367,91 +453,79 @@ export function TabDataPegawaiYangNaikPangkat() {
   //end unduh
 
   //kota
-  const filterTugas = async (inputValue: string) => {
+  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
+  const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
     const json = await response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
-  const loadOptionsTugas = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+  const loadOptionsbidangwilayah = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
-      callback(await filterTugas(inputValue))
+      callback(await filterbidangwilayah(inputValue))
     }, 1000)
   }
-  const handleInputTugas = async (newValue: any) => {
-    setDataTugas((prevstate: any) => ({...prevstate, ...newValue}))
-    // // filterKec(newValue)
-    // // loadOptionsKec
-    // await loadOptionsKec2(newValue)
+  const handleChangeInputKota = (newValue: any) => {
+    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
+    setIdMasterBidangWilayah((prevstate) => ({
+      ...prevstate,
+      id: newValue.value,
+    }))
   }
   //end kota
 
-  //kecamatan
-
-  // const filterKec = async (inputValue: any) => {
-  //   if (inputValue.label != '') {
-  //     const response = await axios.get(
-  //       KECAMATAN_URL + '/findone-by-kecamatan?kota=' + inputValue.label
-  //     )
-  //     const json = await response.data.data
-  //     console.log(response.data.data)
-  //     return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
-  //   } else {
-  //   }
-  // }
-
-  // const loadOptionsKec = (inputValue: any) => {
-  //   setTimeout(async () => {
-  //     await filterKec2(inputValue)
-  //   }, 1000)
-  // }
-  // const handleInputKec = (newValue: any) => {
-  //     setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
-  //   }
-  // const filterKec2 = async (inputValue: string) => {
-  //   const response = await axios.get(
-  //     PELAKSANA_URL + '/filter?nama=' + inputValTugas.label + inputValue
-  //   )
-  //   const json = await response.data.data
-  //   return json.map((i: any) => ({label: i.name, value: i.id}))
-  // }
-  // const loadOptionsKec2 = (inputValue: string, callback: (options: SelectOption[]) => void) => {
-  //   setTimeout(async () => {
-  //     callback(await filterKec2(inputValue))
-  //   }, 1000)
-  // }
-  // const handleInputKec2 = (newValue: any) => {
-  //   setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
-  // }
-  const filterKec2 = async (inputValue: string) => {
-    const response = await axios.get(`${PELAKSANA_URL}/filter?nama=${inputValue}`)
-    console.log(response.data.data)
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
+  const filterKecamatan = async (inputValue: string) => {
+    const response = await axios.get(
+      `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${parseInt(idMasterBidangWilayah.id)}${
+        inputValue !== '' && `&nama=${inputValue}`
+      }`
+    )
     const json = await response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
-  const loadOptionsKec2 = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+  const loadOptionsKecamatan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
-      callback(await filterKec2(inputValue))
+      callback(await filterKecamatan(inputValue))
     }, 1000)
   }
-  const handleInputKec2 = (newValue: any) => {
-    setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
+  const handleChangeInputKecamatan = (newValue: any) => {
+    setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
+    setIdMasterPelaksana((prevstate) => ({
+      ...prevstate,
+      id: newValue.value,
+    }))
   }
   //end kecamtan
 
   //jabatan
-  const filterJabatan = async (inputValue: string) => {
-    const response = await axios.get(`${JABATAN_URL}/filter?nama=${inputValue}`)
-    console.log(response.data.data)
+  const [valMasterJabatan, setValMasterJabatan] = useState({value: '', label: ''})
+  const filterjabatan = async (inputValue: string) => {
+    const response = await axios.get(
+      `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(idMasterPelaksana.id)}${
+        inputValue !== '' && `&nama=${inputValue}`
+      }`
+    )
     const json = await response.data.data
     return json.map((i: any) => ({label: i.jabatan, value: i.id}))
   }
-  const loadOptionsJabatan = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+  const loadOptionsJabatan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
-      callback(await filterJabatan(inputValue))
+      callback(await filterjabatan(inputValue))
     }, 1000)
   }
-  const handleInputJabatan = (newValue: any) => {
-    setDataJabatan((prevstate: any) => ({...prevstate, ...newValue}))
+  const handleChangeInputJabatan = (newValue: any) => {
+    setValMasterJabatan((prevstate: any) => ({...prevstate, ...newValue}))
   }
   //end jabatan
 
@@ -513,11 +587,15 @@ export function TabDataPegawaiYangNaikPangkat() {
                   Wilayah / Bidang
                 </label>
                 <AsyncSelect
-                  cacheOptions
-                  value={inputValTugas.value ? inputValTugas : {value: '', label: 'Pilih'}}
-                  loadOptions={loadOptionsTugas}
+                  value={
+                    valMasterBidangWilayah.value
+                      ? valMasterBidangWilayah
+                      : {value: '', label: 'Pilih'}
+                  }
+                  loadOptions={loadOptionsbidangwilayah}
                   defaultOptions
-                  onChange={handleInputTugas}
+                  onChange={handleChangeInputKota}
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
                 />
               </div>
             </div>
@@ -542,11 +620,12 @@ export function TabDataPegawaiYangNaikPangkat() {
                   Kecamatan / Seksi
                 </label>
                 <AsyncSelect
-                  cacheOptions
-                  value={inputValKec.value ? inputValKec : {value: '', label: 'Pilih'}}
-                  loadOptions={loadOptionsKec2}
-                  // defaultOptions
-                  onChange={handleInputKec2}
+                  value={
+                    valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}
+                  }
+                  loadOptions={loadOptionsKecamatan}
+                  onChange={handleChangeInputKecamatan}
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
                 />
               </div>
             </div>
@@ -578,14 +657,13 @@ export function TabDataPegawaiYangNaikPangkat() {
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <label htmlFor='' className='mb-3'>
-                Jabatan
+                Jabatan / Kelurahan
               </label>
               <AsyncSelect
-                cacheOptions
-                value={inputValJabatan.value ? inputValJabatan : {value: '', label: 'Pilih'}}
+                value={valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}}
                 loadOptions={loadOptionsJabatan}
-                defaultOptions
-                onChange={handleInputJabatan}
+                onChange={handleChangeInputJabatan}
+                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
               />
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
@@ -599,6 +677,7 @@ export function TabDataPegawaiYangNaikPangkat() {
                   loadOptions={loadOptionsStPa}
                   defaultOptions
                   onChange={handleInputStPa}
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
                 />
               </div>
             </div>
@@ -607,67 +686,93 @@ export function TabDataPegawaiYangNaikPangkat() {
                 Pangkat
               </label>
               <AsyncSelect
-                cacheOptions
                 value={inputValPangkat.value ? inputValPangkat : {value: '', label: 'Pilih'}}
                 loadOptions={loadOptionsPangkat}
                 defaultOptions
                 onChange={handleInputPangkat}
-              />
-            </div>
-            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-              <label htmlFor='' className='mb-3'>
-                Jadwal Kenaikan
-              </label>
-              <input
-                type='text'
-                className='form-control form-control form-control-solid'
-                name='jadwal_kenaikan_pangkat'
-                value={valFilterJa.val}
-                onChange={handleChangeInputJa}
-                placeholder='Jadwal Kenaikan'
+                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
               />
             </div>
           </div>
         </div>
 
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6 col-lg-6 col-sm-12'>
-            <Link to='#'>
-              <button onClick={handleFilter} className='btn btn-primary me-2'>
-                <i className='fa-solid fa-search'></i>
-                Cari
-              </button>
-            </Link>
-            <Link to='#' onClick={handleFilterReset} className=''>
-              <button className='btn btn-primary'>
-                <i className='fa-solid fa-arrows-rotate'></i>
-                Reset
-              </button>
-            </Link>
-          </div>
-          <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Dropdown as={ButtonGroup}>
-              <Button variant='light'>
+          <div className='row g-8 mt-2 ms-5 me-5'>
+            <div className='col-md-6 col-lg-6 col-sm-12'>
+              <Link to='#' onClick={handleFilter}>
+                <button className='btn btn-light-primary me-2'>
+                  <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
+                  Cari
+                </button>
+              </Link>
+              <Link to='#' onClick={handleFilterReset}>
+                <button className='btn btn-light-primary'>
+                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                  Reset
+                </button>
+              </Link>
+            </div>
+            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+              {/* begin::Filter Button */}
+              <button
+                type='button'
+                className='btn btn-light-primary'
+                data-kt-menu-trigger='click'
+                data-kt-menu-placement='bottom-end'
+              >
                 {btnLoadingUnduh ? (
                   <>
                     <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                    Memproses...
+                    Memproses Unduh...
                   </>
                 ) : (
-                  'Unduh'
+                  <>
+                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                    Unduh
+                  </>
                 )}
-              </Button>
+              </button>
+              {/* end::Filter Button */}
+              {/* begin::SubMenu */}
+              <div
+                className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                data-kt-menu='true'
+              >
+                {/* begin::Header */}
+                <div className='px-7 py-5'>
+                  <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                </div>
+                {/* end::Header */}
 
-              <Dropdown.Toggle split variant='light' id='dropdown-split-basic' />
+                {/* begin::Separator */}
+                <div className='separator border-gray-200'></div>
+                {/* end::Separator */}
 
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={handleUnduh}>Excel</Dropdown.Item>
-                <Dropdown.Item>PDF</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                {/* begin::Content */}
+                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                  <button
+                    onClick={handleUnduh}
+                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                  >
+                    Excel
+                  </button>
+                </div>
+                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                  <button
+                    onClick={() =>
+                      navigate(`/kepegawaian/LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf`)
+                    }
+                    className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'
+                  >
+                    PDF
+                  </button>
+                </div>
+                {/* end::Content */}
+              </div>
+              {/* end::SubMenu */}
+            </div>
           </div>
         </div>
-
         <div className='col-xl-12 mb-xl-12 mt-6'>
           <div className='card card-flush h-xl-100'>
             <div
@@ -706,6 +811,7 @@ export function TabDataPegawaiYangNaikPangkat() {
                       onChangeRowsPerPage={handlePerRowsChange}
                       onChangePage={handlePageChange}
                       customStyles={customStyles}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                     />
                   </div>
                 </div>
