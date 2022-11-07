@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import DataTable, { createTheme } from 'react-data-table-component';
@@ -154,17 +154,69 @@ export function AksesKontrol() {
   const [perPage, setPerPage] = useState(10)
 
 
-    const LoadingAnimation = (props: any) => {
+  const LoadingAnimation = (props: any) => {
+    return (
+      <>
+        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+          <div className='d-flex flex-column'>
+            <h5 className='mb-1'>Sedang mengambil data...</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  const columns = [
+    {
+      name: 'NAMA AKSES KONTROL',
+      selector: (row: any) => row.jenis_sarana_prasarana,
+      sortable: true,
+      sortField: 'jenis_sarana_prasarana',
+    },
+    {
+      name: 'HAK AKSES',
+      selector: (row: any) => row.status_sarana_prasarana,
+      sortable: true,
+      sortField: 'status_sarana_prasarana',
+    },
+    {
+      name: 'TANGGAL BUAT',
+      selector: (row: any) => row.jumlah,
+      sortable: true,
+      sortField: 'jumlah',
+    },
+    {
+      name: 'Aksi',
+      sortable: false,
+      text: 'Action',
+      className: 'action',
+      align: 'left',
+      cell: (record: any) => {
         return (
-            <>
-                <div className="alert alert-primary d-flex align-items-center p-5 mb-10">
-                    {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
-                    <span className="spinner-border spinner-border-xl align-middle me-3"></span>
-                    <div className="d-flex flex-column">
-                        <h5 className="mb-1">Sedang mengambil data...</h5>
-                    </div>
-                </div>
-            </>
+          <Fragment>
+            <div className='mb-2'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item>
+                      <Link to='/sarana-prasarana/LaporanSaranaPrasarana'>Detail</Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item href='#'>Ubah</Dropdown.Item>
+                    <Dropdown.Item href='#'>Hapus</Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
         )
     }
 

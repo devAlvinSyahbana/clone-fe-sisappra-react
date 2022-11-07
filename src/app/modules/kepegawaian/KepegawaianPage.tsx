@@ -28,6 +28,8 @@ import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
 import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
 import {AddDataPPNS} from './components/add-tabs-ppns/AddDataPPNS'
 import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
+import {UpdateNaikPangkat} from './components/update-naik-pangkat/UpdateNaikPangkat'
+import {UnduhNaikPangkatPdf} from './components/unduh-naik-pangkat/UnduhNaikPangkatPdf'
 
 import {TabRekapitulasiDataPegawaiPensiun} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
 import {UnduhLaporanPegawaiPensiunPdf} from './components/laporanRekapPegawai-unduh/UnduhLaporanPegawaiPensiunPdf'
@@ -405,17 +407,39 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
+        {/*Naik Pangkat*/}
         <Route
           path='LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
-                TabData Pegawai Yang Naik Pangkat
+                Data Pegawai Yang Naik Pangkat
               </PageTitle>
               <TabDataPegawaiYangNaikPangkat />
             </>
           }
         />
+        <Route
+          path='update-naik-pangkat/UpdateNaikPangkat/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>
+                Update Naik Pangkat
+              </PageTitle>
+              <UpdateNaikPangkat />
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Unduh Naik Pangkat PDF</PageTitle>
+              <UnduhNaikPangkatPdf />
+            </>
+          }
+        />
+        {/*End Naik Pngkat*/}
         <Route
           path='laporan-rekapitulasi-pegawai/tab-rekapitulasi-pejabat-fungsional'
           element={

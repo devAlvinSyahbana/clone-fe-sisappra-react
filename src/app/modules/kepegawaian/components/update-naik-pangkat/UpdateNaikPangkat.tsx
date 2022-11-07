@@ -5,6 +5,102 @@ import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 export interface FormInput {
   nama?: string
@@ -50,6 +146,8 @@ export const STATUS_KENAIKAN_PANGKAT_URL = `${API_URL}/master/status_kenaikan_pa
 
 export function UpdateNaikPangkat() {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   const {id} = useParams()
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
@@ -73,7 +171,10 @@ export function UpdateNaikPangkat() {
         golongan: jsonD.golongan,
         tmt_pangkat: jsonD.tmt_pangkat,
         eselon: jsonD.eselon,
-        status_kenaikan_pangkat: {value: jsonD.status_kenaikan_pangkat, label: jsonD.status_kenaikan_pangkat},
+        status_kenaikan_pangkat: {
+          value: jsonD.status_kenaikan_pangkat,
+          label: jsonD.status_kenaikan_pangkat,
+        },
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
@@ -404,12 +505,20 @@ export function UpdateNaikPangkat() {
                         <AsyncSelect
                           cacheOptions
                           value={
-                            inputValPangkat.value ? inputValPangkat : valuesFormikExist.status_kenaikan_pangkat && valuesFormikExist.status_kenaikan_pangkat.value !==  "" ? valuesFormikExist.status_kenaikan_pangkat: {value: '', label: 'Pilih'}
+                            inputValPangkat.value
+                              ? inputValPangkat
+                              : valuesFormikExist.status_kenaikan_pangkat &&
+                                valuesFormikExist.status_kenaikan_pangkat.value !== ''
+                              ? valuesFormikExist.status_kenaikan_pangkat
+                              : {value: '', label: 'Pilih'}
                           }
                           loadOptions={loadOptionsPangkat}
                           defaultOptions
                           onChange={handleInputPangkat}
                           placeholder={'Pilih'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
                         />
                       </div>
                     </div>
