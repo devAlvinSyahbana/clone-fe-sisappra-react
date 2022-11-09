@@ -576,23 +576,6 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     })
   }
 
-  const handleUnduhPdf = async () => {
-    setbtnLoadingUnduh(true)
-    await axios({
-      url: `${KEPEGAWAIAN_URL}/Pensiun-unduh?${qParamFind.strparam}`,
-      method: 'GET',
-      responseType: 'blob', // Important
-    }).then((response) => {
-      FileDownload(
-        response.data,
-        'DATA PEGAWAI ' +
-          (valStatPegawai.val !== '' ? valStatPegawai.val : 'PENSIUN PROVINSI DKI JAKARTA') +
-          '.pdf'
-      )
-      setbtnLoadingUnduh(false)
-    })
-  }
-
   return (
     <>
       <LaporanRekapHeader />
