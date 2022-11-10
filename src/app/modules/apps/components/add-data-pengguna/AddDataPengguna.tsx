@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import {number} from 'yup'
+import AsyncSelect from 'react-select/async'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -122,6 +123,7 @@ export interface SelectOption {
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna` //http://localhost:3000/manajemen_pengguna/create
+export const MASTER_HAK_AKSES = `${API_URL}/manajemen-pengguna/hak-akses`
 
 export function AddDataPengguna() {
   const navigate = useNavigate()
@@ -139,6 +141,13 @@ export function AddDataPengguna() {
     setValuesFormik((prevValues: any) => ({
       ...prevValues,
       [event.target.name]: event.target.value,
+    }))
+  }
+
+  const handleChangeFormikSelect = (value: any, name: string) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [name]: value,
     }))
   }
 
@@ -162,6 +171,18 @@ export function AddDataPengguna() {
     }))
   }
 
+  // AUTOCOMPLETE HAK AKSES
+  const filterHakAkses = async (inputValue: string) => {
+    const response = await axios.get(`${MASTER_HAK_AKSES}/filter-nama_hak_akses/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.nama_hak_akses, value: i.id}))
+  }
+  const loadOptionsHakAkses = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterHakAkses(inputValue))
+    }, 1000)
+  }
+
   const formik = useFormik({
     initialValues: {
       nama_lengkap: '',
@@ -171,7 +192,7 @@ export function AddDataPengguna() {
       email: '',
       terakhir_login: '',
       status_pengguna: 0,
-      hak_akses: 0,
+      hak_akses: {value: '', label: 'Pilih Hak Akses'},
     },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
@@ -216,7 +237,7 @@ export function AddDataPengguna() {
           <div className='row mt-2'>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>Nama</Form.Label>
+                <Form.Label>Nama Lengkap</Form.Label>
                 <Form.Control
                   type='text'
                   name='nama_lengkap'
@@ -224,45 +245,6 @@ export function AddDataPengguna() {
                   onChange={handleChangeFormik}
                   value={valuesFormik?.nama_lengkap}
                   placeholder='Masukkan nama lengkap'
-                />
-              </div>
-            </div>
-            <div className='col-6 mb-6'>
-              <div className='form-group'>
-                <Form.Label>ID Pegawai</Form.Label>
-                <Form.Control
-                  type='text'
-                  name='id_pegawai'
-                  className='form-control form-control-solid'
-                  onChange={handleChangeFormik}
-                  value={valuesFormik?.id_pegawai}
-                  placeholder='Masukkan id pegawai'
-                />
-              </div>
-            </div>
-            <div className='col-6 mb-6'>
-              <div className='form-group'>
-                <Form.Label>No Pegawai</Form.Label>
-                <Form.Control
-                  type='text'
-                  name='no_pegawai'
-                  className='form-control form-control-solid'
-                  onChange={handleChangeFormik}
-                  value={valuesFormik?.no_pegawai}
-                  placeholder='Masukkan nomor pegawai'
-                />
-              </div>
-            </div>
-            <div className='col-6 mb-6'>
-              <div className='form-group'>
-                <Form.Label>Kata Sandi</Form.Label>
-                <Form.Control
-                  type='text'
-                  name='kata_sandi'
-                  className='form-control form-control-solid'
-                  onChange={handleChangeFormik}
-                  value={valuesFormik?.kata_sandi}
-                  placeholder='Masukkan kata sandi'
                 />
               </div>
             </div>
@@ -281,27 +263,32 @@ export function AddDataPengguna() {
             </div>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>Hak Akses</Form.Label>
+                <Form.Label> Password</Form.Label>
                 <Form.Control
-                  type='number'
-                  name='hak_akses'
+                  type='password'
+                  name='kata_sandi'
                   className='form-control form-control-solid'
                   onChange={handleChangeFormik}
-                  value={valuesFormik?.hak_akses}
-                  placeholder='Masukkan hak akses'
+                  value={valuesFormik?.kata_sandi}
+                  placeholder='Masukkan Password'
                 />
               </div>
             </div>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>Status Pengguna</Form.Label>
-                <Form.Control
-                  type='number'
-                  name='status_pengguna'
-                  className='form-control form-control-solid'
-                  onChange={handleChangeFormik}
-                  value={valuesFormik?.status_pengguna}
-                  placeholder='Masukkan status pengguna'
+                <Form.Label>Hak Akses</Form.Label>
+                <AsyncSelect
+                  cacheOptions
+                  loadOptions={loadOptionsHakAkses}
+                  defaultOptions
+                  onChange={(e) => handleChangeFormikSelect(e, 'hak_akses')}
+                  value={
+                    valuesFormik?.hak_akses ? valuesFormik?.hak_akses : {value: '', label: 'Pilih'}
+                  }
+                  placeholder={'Pilih'}
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                  loadingMessage={() => 'Sedang mencari pilihan...'}
+                  noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                 />
               </div>
             </div>

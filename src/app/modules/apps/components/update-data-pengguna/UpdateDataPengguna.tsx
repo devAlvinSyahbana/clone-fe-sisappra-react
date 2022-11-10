@@ -4,6 +4,103 @@ import {Link, useNavigate, useParams} from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
+import AsyncSelect from 'react-select/async'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 export interface FormInput {
   id?: number
@@ -37,8 +134,11 @@ interface GetDataInterface {
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
+export const MASTER_HAK_AKSES = `${API_URL}/manajemen-pengguna/hak-akses`
 
 export function UpdateDataPengguna() {
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   const navigate = useNavigate()
   const {id} = useParams()
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
@@ -73,6 +173,43 @@ export function UpdateDataPengguna() {
     }))
   }
 
+  const handleChangeFormikSelect = (value: any, name: string) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [name]: value,
+    }))
+  }
+
+  // GET VALUE HAK AKSES
+  const [valHakAkses, setValHakAkses] = useState({value: '', label: ''})
+  const getHakAksesVal = async (params: any) => {
+    if (params)
+      return await axios
+        .get(`${MASTER_HAK_AKSES}/findone/${parseInt(params)}`)
+        .then((response) => {
+          setValHakAkses((prevstate) => ({
+            ...prevstate,
+            value: response?.data?.data?.id,
+            label: response?.data?.data?.hak_akses,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  // AUTOCOMPLETE HAK AKSES
+  const filterHakAkses = async (inputValue: string) => {
+    const response = await axios.get(`${MASTER_HAK_AKSES}/fitler-nama_hak_akses/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.hak_akses, value: i.id}))
+  }
+  const loadOptionsHakAkses = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterHakAkses(inputValue))
+    }, 1000)
+  }
+
   const formik = useFormik({
     initialValues: {
       nama_lengkap: '',
@@ -80,7 +217,7 @@ export function UpdateDataPengguna() {
       no_pegawai: 0,
       email: '',
       kata_sandi: '',
-      hak_akses: 0,
+      hak_akses: {value: '', label: 'Pilih Hak Akses'},
       status_pengguna: 0,
     },
     onSubmit: async (values) => {
@@ -90,16 +227,6 @@ export function UpdateDataPengguna() {
           : valuesFormikExist?.nama_lengkap
           ? valuesFormikExist.nama_lengkap
           : '',
-        id_pegawai: valuesFormik?.id_pegawai
-          ? valuesFormik.id_pegawai
-          : valuesFormikExist?.id_pegawai
-          ? valuesFormikExist.id_pegawai
-          : 0,
-        no_pegawai: valuesFormik?.no_pegawai
-          ? valuesFormik.no_pegawai
-          : valuesFormikExist?.no_pegawai
-          ? valuesFormikExist.no_pegawai
-          : 0,
         email: valuesFormik?.email
           ? valuesFormik.email
           : valuesFormikExist?.email
@@ -114,11 +241,6 @@ export function UpdateDataPengguna() {
           ? valuesFormik.hak_akses
           : valuesFormikExist?.hak_akses
           ? valuesFormikExist.hak_akses
-          : 0,
-        status_pengguna: valuesFormik?.status_pengguna
-          ? valuesFormik.status_pengguna
-          : valuesFormikExist?.status_pengguna
-          ? valuesFormikExist.status_pengguna
           : 0,
         updated_by: 0,
       }
@@ -156,26 +278,9 @@ export function UpdateDataPengguna() {
               <div className='card-body'>
                 <form onSubmit={formik.handleSubmit}>
                   <div className='row mt-2'>
-                    <div className='col-4 mb-3'>
+                    <div className='col-6 mb-6'>
                       <div className='form-group'>
-                        <Form.Label>ID Pegawai</Form.Label>
-                        <Form.Control
-                          name='id_pegawai'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
-                          value={
-                            valuesFormik?.id_pegawai || valuesFormik?.id_pegawai === 0
-                              ? valuesFormik?.id_pegawai
-                              : valuesFormikExist?.id_pegawai
-                              ? valuesFormikExist?.id_pegawai
-                              : ''
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className='col-4 mb-3'>
-                      <div className='form-group'>
-                        <Form.Label>Nama</Form.Label>
+                        <Form.Label>Nama Lengkap</Form.Label>
                         <Form.Control
                           name='nama_lengkap'
                           className='form-control form-control-solid'
@@ -187,27 +292,11 @@ export function UpdateDataPengguna() {
                               ? valuesFormikExist?.nama_lengkap
                               : ''
                           }
+                          placeholder='Ubah nama lengkap'
                         />
                       </div>
                     </div>
-                    <div className='col-4 mb-3'>
-                      <div className='form-group'>
-                        <Form.Label>No Pegawai</Form.Label>
-                        <Form.Control
-                          name='no_pegawai'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
-                          value={
-                            valuesFormik?.no_pegawai || valuesFormik?.no_pegawai === 0
-                              ? valuesFormik?.no_pegawai
-                              : valuesFormikExist?.no_pegawai
-                              ? valuesFormikExist?.no_pegawai
-                              : ''
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className='col-4 mb-3'>
+                    <div className='col-6 mb-6'>
                       <div className='form-group'>
                         <Form.Label>Email</Form.Label>
                         <Form.Control
@@ -224,28 +313,11 @@ export function UpdateDataPengguna() {
                         />
                       </div>
                     </div>
-                    <div className='col-4 mb-3'>
+                    <div className='col-6 mb-6'>
                       <div className='form-group'>
-                        <Form.Label>Hak Akses</Form.Label>
+                        <Form.Label>Password</Form.Label>
                         <Form.Control
-                          type='number'
-                          name='hak_akses'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
-                          value={
-                            valuesFormik?.hak_akses || valuesFormik?.hak_akses === 0
-                              ? valuesFormik?.hak_akses
-                              : valuesFormikExist?.hak_akses
-                              ? valuesFormikExist?.hak_akses
-                              : ''
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className='col-4 mb-3'>
-                      <div className='form-group'>
-                        <Form.Label>Status Pengguna</Form.Label>
-                        <Form.Control
+                          type='password'
                           name='status_pengguna'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
@@ -256,23 +328,32 @@ export function UpdateDataPengguna() {
                               ? valuesFormikExist?.status_pengguna
                               : ''
                           }
+                          placeholder='Ubah password'
                         />
                       </div>
                     </div>
-                    <div className='col-4 mb-3'>
+                    <div className='col-6 mb-6'>
                       <div className='form-group'>
-                        <Form.Label>Kata Sandi</Form.Label>
-                        <Form.Control
-                          name='kata_sandi'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
+                        <Form.Label>Hak Akses</Form.Label>
+                        <AsyncSelect
+                          cacheOptions
+                          loadOptions={loadOptionsHakAkses}
+                          defaultOptions
+                          onChange={(e) => handleChangeFormikSelect(e, 'hak_akses')}
                           value={
-                            valuesFormik?.kata_sandi || valuesFormik?.kata_sandi === ''
-                              ? valuesFormik?.kata_sandi
-                              : valuesFormikExist?.kata_sandi
-                              ? valuesFormikExist?.kata_sandi
-                              : ''
+                            valuesFormik?.hak_akses && typeof valuesFormik?.hak_akses === 'object'
+                              ? valuesFormik?.hak_akses
+                              : valHakAkses && valHakAkses.label !== ''
+                              ? valHakAkses
+                              : {value: '', label: 'Pilih'}
                           }
+                          name='hak_akses'
+                          placeholder={'Pilih'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                          loadingMessage={() => 'Sedang mencari pilihan...'}
+                          noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                         />
                       </div>
                     </div>
