@@ -463,7 +463,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
   }
 
   // GET KOTA (Wilayah / Bidang)
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: '', label: ''})
   const filterKota = async (inputValue: string) => {
     const response = await axios.get(MASTER_URL + '/bidang-wilayah/filter/' + inputValue)
     const json = await response.data.data
@@ -486,7 +486,7 @@ export function TabRekapitulasiDataPegawaiPensiun() {
   }
   const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
 
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
       `${MASTER_URL}/pelaksana/filter?id_tempat_pelaksanaan=${parseInt(idMasterBidangWilayah.id)}${
@@ -516,26 +516,6 @@ export function TabRekapitulasiDataPegawaiPensiun() {
 
   // END :: GET Kecamatan
 
-  // GET Kelurahan
-  const [inputValKelurahan, setFilterKelurahan] = useState({label: '', value: ''})
-  const filterKelurahan = async (page: any) => {
-    const response = await axios.get(`${KELURAHAN_URL}/find`)
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
-  }
-  const loadOptionsKelurahan = (
-    inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKelurahan(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputKelurahan = (newValue: any) => {
-    setFilterKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-  // END :: GET Kelurahan
-
   const handleChangeInputTahunPensiun = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -557,14 +537,11 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     if (valFilterNIP.val !== '') {
       uriParam += `&nip=${valFilterNIP.val}`
     }
-    if (valFilterWilayah.val !== '') {
-      uriParam += `&tempat_tugas=${valFilterWilayah.val}`
+    if (valMasterBidangWilayah.value !== '') {
+      uriParam += `&tempat_tugas=${valMasterBidangWilayah.value}`
     }
-    if (valFilterKecamatan.val !== '') {
-      uriParam += `&seksi_kecamatan=${valFilterKecamatan.val}`
-    }
-    if (inputValKelurahan.value !== '') {
-      uriParam += `&kepegawaian_subbag_seksi_kelurahan=${inputValKelurahan.value}`
+    if (valMasterPelaksana.value !== '') {
+      uriParam += `&seksi_kecamatan=${valMasterPelaksana.value}`
     }
     if (valFilterTahunPensiun.val !== '') {
       uriParam += `&tahun_pensiun=${valFilterTahunPensiun.val}`
@@ -577,9 +554,8 @@ export function TabRekapitulasiDataPegawaiPensiun() {
     setFilterNama({val: ''})
     setFilterNRK({val: ''})
     setFilterNIP({val: ''})
-    setFilterWilayah({val: ''})
-    setFilterKecamatan({val: ''})
-    setFilterKelurahan({label: '', value: ''})
+    setValMasterBidangWilayah({label: '', value: ''})
+    setValMasterPelaksana({label: '', value: ''})
     setFilterTahunPensiun({val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
@@ -595,23 +571,6 @@ export function TabRekapitulasiDataPegawaiPensiun() {
         'DATA PEGAWAI ' +
           (valStatPegawai.val !== '' ? valStatPegawai.val : 'PENSIUN PROVINSI DKI JAKARTA') +
           '.xlsx'
-      )
-      setbtnLoadingUnduh(false)
-    })
-  }
-
-  const handleUnduhPdf = async () => {
-    setbtnLoadingUnduh(true)
-    await axios({
-      url: `${KEPEGAWAIAN_URL}/Pensiun-unduh?${qParamFind.strparam}`,
-      method: 'GET',
-      responseType: 'blob', // Important
-    }).then((response) => {
-      FileDownload(
-        response.data,
-        'DATA PEGAWAI ' +
-          (valStatPegawai.val !== '' ? valStatPegawai.val : 'PENSIUN PROVINSI DKI JAKARTA') +
-          '.pdf'
       )
       setbtnLoadingUnduh(false)
     })
