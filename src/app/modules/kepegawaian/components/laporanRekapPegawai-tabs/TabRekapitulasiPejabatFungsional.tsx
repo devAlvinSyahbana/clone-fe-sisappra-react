@@ -241,7 +241,18 @@ export function TabRekapitulasiPejabatFungsional() {
   const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
   const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
 
+  var num = 1
   const columns = [
+    {
+      name: 'No',
+      selector: (row: any) => row.id,
+      sortable: true,
+      sortField: 'id',
+      wrap: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{num++}</div>
+      },
+    },
     {
       name: 'Nama',
       selector: (row: any) => row.nama,
