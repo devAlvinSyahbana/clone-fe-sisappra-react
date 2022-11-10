@@ -1,5 +1,7 @@
-import React from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import {MdClose} from 'react-icons/md'
+import clsx from 'clsx'
+import {KTCardBody, toAbsoluteUrl} from '../../../../../../_metronic/helpers'
 
 const styles = {
   card: {
@@ -108,34 +110,42 @@ const EmployeeDetailsCard = (props) => {
       {props.employee.team === '' ? (
         <div>
           <div style={styles.cardHeader}>
-            <img style={styles.cardImg} src={props.employee.imageUrl} alt='Profile' />
+            {props.employee.imageUrl !== '' ? (
+              <img style={styles.cardImg} src={props.employee.imageUrl} alt='Profile' />
+            ) : (
+              <img
+                style={styles.cardImg}
+                src={toAbsoluteUrl('/media/avatars/default-avatar.png')}
+                alt='Profile'
+              />
+            )}
             <h2 style={styles.cardName}>{props.employee.name}</h2>
             <p cstyle={styles.cardRole}>{props.employee.positionName}</p>
           </div>
           <div style={styles.cardBody}>
             <div style={styles.cardItem}>
               <p style={styles.cardItemLabel}>Tempat Lahir:</p>
-              <p style={styles.cardItemValue}>{props.employee.email}</p>
+              <p style={styles.cardItemValue}>{props.employee.tempatLahir}</p>
             </div>
             <div style={styles.cardItem}>
               <p style={styles.cardItemLabel}>Tanggal Lahir:</p>
-              <p style={styles.cardItemValue}>{props.employee.email}</p>
+              <p style={styles.cardItemValue}>{props.employee.tanggaLahir}</p>
             </div>
             <div style={styles.cardItem}>
               <p style={styles.cardItemLabel}>NRK:</p>
-              <p style={styles.cardItemValue}>{props.employee.email}</p>
+              <p style={styles.cardItemValue}>{props.employee.nrk}</p>
             </div>
             <div style={styles.cardItem}>
               <p style={styles.cardItemLabel}>Status Pegawai:</p>
-              <p style={styles.cardItemValue}>{props.employee.email}</p>
+              <p style={styles.cardItemValue}>{props.employee.statusPegawai}</p>
             </div>
             <div style={styles.cardItem}>
               <p style={styles.cardItemLabel}>Jenis Kelamin:</p>
-              <p style={styles.cardItemValue}>{props.employee.email}</p>
+              <p style={styles.cardItemValue}>{props.employee.jenisKelamin}</p>
             </div>
             <div style={styles.cardItem}>
               <p style={styles.cardItemLabel}>Agama:</p>
-              <p style={styles.cardItemValue}>{props.employee.email}</p>
+              <p style={styles.cardItemValue}>{props.employee.agama}</p>
             </div>
             {/* <div style={styles.cardItem}>
                             <p style={styles.cardItemLabel}>Phone:</p>

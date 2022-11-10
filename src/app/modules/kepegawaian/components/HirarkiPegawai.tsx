@@ -12,7 +12,7 @@ import {usersColumns} from './users-list/table/columns/_columns'
 import {User} from './users-list/core/_models'
 import {UsersListLoading} from './users-list/components/loading/UsersListLoading'
 import {UsersListPagination} from './users-list/components/pagination/UsersListPagination'
-import {KTCardBody} from '../../../../_metronic/helpers'
+import {KTCardBody, toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {CustomHeaderColumn} from './users-list/table/columns/CustomHeaderColumn'
 import {ErrorMessage, Field, FieldArray, Form, Formik, FormikHelpers} from 'formik'
 import {SelectOptionAutoCom} from './KepegawaianInterface'
@@ -302,28 +302,29 @@ export function HirarkiPegawai() {
       id: 1,
       parentId: '',
       name: 'Arifin',
-      positionName: 'KEPALA SATPOL PP',
-      phone: '-',
-      email: '@email.com',
+      positionName: 'Kepala Satpol PP',
       team: '',
-      location: 'JAKARTA PUSAT',
-      department: '',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+      tempatLahir: 'Jakarta',
+      tanggalLahir: '16 Des 1967',
+      nrk: '1252151',
+      statusPegawai: 'PNS',
+      jenisKelamin: 'Laki-laki',
+      agama: 'Islam',
+      imageUrl: '',
     },
     {
       id: 2,
       parentId: '1',
       name: 'Sahat Parulian',
-      positionName: 'WAKIL KEPALA SATPOL PP',
-      phone: '-',
-      email: '@email.com',
+      positionName: 'Wakil Kepala Satpol PP',
       team: '',
-      location: 'JAKARTA PUSAT',
-      department: '',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      imageUrl: 'https://randomuser.me/api/portraits/men/20.jpg',
+      tempatLahir: 'Bekasi',
+      tanggalLahir: '16 Jan 1967',
+      nrk: '1252151',
+      statusPegawai: 'PNS',
+      jenisKelamin: 'Laki-laki',
+      agama: 'Islam',
+      imageUrl: '',
     },
     {
       id: 3,
@@ -335,6 +336,12 @@ export function HirarkiPegawai() {
       team: '',
       location: 'JAKARTA',
       department: '',
+      tempatLahir: 'Jakarta',
+      tanggalLahir: '16 Des 1967',
+      nrk: '1252151',
+      statusPegawai: 'PNS',
+      jenisKelamin: 'Laki-laki',
+      agama: 'Islam',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
@@ -859,7 +866,6 @@ export function HirarkiPegawai() {
       imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
   ]
-  console.log('ini data dummy', datasatpolpp)
 
   return (
     <>
@@ -867,320 +873,42 @@ export function HirarkiPegawai() {
         {/* begin::Body */}
         <div className='card mb-5 mb-xl-10'>
           <div className='card-body pt-9 pb-0'>
-            <div className='card-header border-0 pt-6'>
-              <div className='card-title'>
-                <div className='d-flex align-items-center position-relative my-1'>
-                  <span className='svg-icon svg-icon-1 position-absolute ms-6'>
-                    <svg
-                      width={24}
-                      height={24}
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <rect
-                        opacity='0.5'
-                        x='17.0365'
-                        y='15.1223'
-                        width='8.15546'
-                        height={2}
-                        rx={1}
-                        transform='rotate(45 17.0365 15.1223)'
-                        fill='currentColor'
-                      />
-                      <path
-                        d='M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z'
-                        fill='currentColor'
-                      />
-                    </svg>
-                  </span>
-                  <input
-                    type='text'
-                    data-kt-user-table-filter='search'
-                    className='form-control form-control-solid w-250px ps-14'
-                    placeholder='Cari pegawai'
-                  />
-                </div>
-              </div>
-              <div className='card-toolbar'>
-                <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-                  <button type='button' className='btn btn-primary' onClick={() => setLgShow(true)}>
-                    <span className='svg-icon svg-icon-2'>
-                      <svg
-                        width={24}
-                        height={24}
-                        viewBox='0 0 24 24'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <rect
-                          opacity='0.5'
-                          x='11.364'
-                          y='20.364'
-                          width={16}
-                          height={2}
-                          rx={1}
-                          transform='rotate(-90 11.364 20.364)'
-                          fill='currentColor'
-                        />
-                        <rect
-                          x='4.36396'
-                          y='11.364'
-                          width={16}
-                          height={2}
-                          rx={1}
-                          fill='currentColor'
-                        />
-                      </svg>
-                    </span>
-                    Tambah Atasan
-                  </button>
-                </div>
-                <div
-                  className='d-flex justify-content-end align-items-center d-none'
-                  data-kt-user-table-toolbar='selected'
-                >
-                  <div className='fw-bold me-5'>
-                    <span className='me-2' data-kt-user-table-select='selected_count' />
-                    Terpilih
-                  </div>
-                  <button
-                    type='button'
-                    className='btn btn-danger'
-                    data-kt-user-table-select='delete_selected'
-                  >
-                    Hapus Terpilih
-                  </button>
-                </div>
-                <div
-                  className='modal fade'
-                  id='kt_modal_export_users'
-                  tabIndex={-1}
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog modal-dialog-centered mw-650px'>
-                    <div className='modal-content'>
-                      <div className='modal-header'>
-                        <h2 className='fw-bold'>Export Pengguna</h2>
-                      </div>
-                      <div className='modal-body scroll-y mx-5 mx-xl-15 my-7'>
-                        <form id='kt_modal_export_users_form' className='form' action='#'>
-                          <div className='fv-row mb-10'>
-                            <label className='fs-6 fw-semibold form-label mb-2'>
-                              Pilih Hak Akses:
-                            </label>
-                            <select
-                              name='role'
-                              data-control='select2'
-                              data-placeholder='Pilih'
-                              data-hide-search='true'
-                              className='form-select form-select-solid fw-bold'
-                            >
-                              <option />
-                              <option value='Administrator'>Administrator</option>
-                              <option value='Analyst'>Analyst</option>
-                              <option value='Developer'>Developer</option>
-                              <option value='Support'>Support</option>
-                              <option value='Trial'>Trial</option>
-                            </select>
-                          </div>
-                          <div className='fv-row mb-10'>
-                            <label className='required fs-6 fw-semibold form-label mb-2'>
-                              Pilih Format Export:
-                            </label>
-                            <select
-                              name='format'
-                              data-control='select2'
-                              data-placeholder='Pilih'
-                              data-hide-search='true'
-                              className='form-select form-select-solid fw-bold'
-                            >
-                              <option />
-                              <option value='excel'>Excel</option>
-                              <option value='pdf'>PDF</option>
-                              <option value='cvs'>CVS</option>
-                              <option value='zip'>ZIP</option>
-                            </select>
-                          </div>
-                          <div className='text-center'>
-                            <button
-                              type='reset'
-                              className='btn btn-light me-3'
-                              data-kt-users-modal-action='cancel'
-                            >
-                              Batal
-                            </button>
-                            <button
-                              type='submit'
-                              className='btn btn-primary'
-                              data-kt-users-modal-action='submit'
-                            >
-                              <span className='indicator-label'>Export</span>
-                              <span className='indicator-progress'>
-                                Harap tunggu...
-                                <span className='spinner-border spinner-border-sm align-middle ms-2' />
-                              </span>
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
+            <div className='container pb-5 pt-5'>
+              <div className='row'>
+                <div className='col'>
+                  <div className='d-flex justify-content-center'>
+                    <img
+                      src={toAbsoluteUrl('/media/logos/logo-dki-jakarta.png')}
+                      width='250px'
+                      height='150px'
+                      alt='Profile'
+                    />
                   </div>
                 </div>
-                <Modal
-                  size='lg'
-                  show={lgShow}
-                  onHide={() => setLgShow(false)}
-                  aria-labelledby='example-modal-sizes-title-lg'
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title id='example-modal-sizes-title-lg'>
-                      <h2 className='fw-bold'>Tambah Atasan</h2>
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <Formik
-                      initialValues={initialValues}
-                      onSubmit={async (values) => {
-                        await new Promise((r) => setTimeout(r, 500))
-                        alert(JSON.stringify(values, null, 2))
-                      }}
-                    >
-                      {({values}) => (
-                        <Form>
-                          <FieldArray name='friends'>
-                            {({insert, remove, push}) => (
-                              <div>
-                                <div className='modal-content'>
-                                  <div className='modal-body scroll-y mx-5 mx-xl-15 my-7'>
-                                    <div
-                                      className='d-flex flex-column scroll-y me-n7 pe-7'
-                                      id='kt_modal_add_user_scroll'
-                                      data-kt-scroll='true'
-                                      data-kt-scroll-activate='{default: false, lg: true}'
-                                      data-kt-scroll-max-height='auto'
-                                      data-kt-scroll-dependencies='#kt_modal_add_user_header'
-                                      data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
-                                      data-kt-scroll-offset='300px'
-                                    >
-                                      <div className='form-group'>
-                                        <label htmlFor='' className='fw-semibold fs-6 mb-2'>
-                                          Status Kepegawaian
-                                        </label>
-                                        <select
-                                          className='form-select form-select-solid mb-5'
-                                          aria-label='Select example'
-                                          value={valStatPegawai.val}
-                                          onChange={handleChangeStatPegawai}
-                                          name='val'
-                                        >
-                                          <option value=''>Pilih</option>
-                                          {arrStatPegawai.map((val: string) => {
-                                            return <option value={val}>{val}</option>
-                                          })}
-                                        </select>
-                                      </div>
-                                      <div className='fv-row mb-7'>
-                                        <label className='fw-semibold fs-6 mb-2'>
-                                          NRK/NPTT/NPJLP
-                                        </label>
-                                        <AsyncSelect
-                                          cacheOptions
-                                          loadOptions={loadOptionsPegawai}
-                                          defaultOptions
-                                          onChange={handleInputPegawai}
-                                          placeholder={'Cari NRK/NPTT/NPJLP'}
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className='separator border-3 my-10'></div>
-
-                                    <label className='fw-semibold fs-6 mb-7'>Tambah bawahan</label>
-                                    {values.friends.length > 0 &&
-                                      values.friends.map((friend, index) => (
-                                        <div className='form-group mb-5'>
-                                          <div className='row' key={index}>
-                                            <div className='col-md-9'>
-                                              <label className='form-label'>NRK:</label>
-                                              <AsyncSelect
-                                                cacheOptions
-                                                loadOptions={loadOptionsPegawai}
-                                                defaultOptions
-                                                onChange={handleInputPegawai}
-                                                placeholder={'Cari NRK/NPTT/NPJLP'}
-                                              />
-                                              {/* <Field
-                                                name={`friends.${index}.nama`}
-                                                className="form-control mb-2 mb-md-0"
-                                                placeholder="Masukkan NRK/NPTT/NPJLP"
-                                                type="text"
-                                              /> */}
-                                              <ErrorMessage
-                                                name={`friends.${index}.nama`}
-                                                component='div'
-                                                className='field-error'
-                                              />
-                                            </div>
-                                            <div className='col-md-3'>
-                                              <button
-                                                type='button'
-                                                className='btn btn-sm btn-light-danger mt-3 mt-md-8'
-                                                onClick={() => remove(index)}
-                                              >
-                                                <i className='la la-trash-o' />
-                                                Delete
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    <div className='form-group mt-5'>
-                                      <button
-                                        type='button'
-                                        className='btn btn-sm btn-light-primary'
-                                        onClick={() => push({name: '', email: ''})}
-                                      >
-                                        <i className='la la-plus' />
-                                        Tambah
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </FieldArray>
-                          <div className='text-center pt-15'>
-                            <button
-                              type='reset'
-                              className='btn btn-light me-3'
-                              data-kt-users-modal-action='cancel'
-                            >
-                              Batal
-                            </button>
-                            <button
-                              type='submit'
-                              className='btn btn-primary'
-                              data-kt-users-modal-action='submit'
-                            >
-                              <span className='indicator-label'>Simpan</span>
-                              <span className='indicator-progress'>
-                                Harap tunggu...
-                                <span className='spinner-border spinner-border-sm align-middle ms-2' />
-                              </span>
-                            </button>
-                          </div>
-                        </Form>
-                      )}
-                    </Formik>
-                    {/*end::Modal content*/}
-                  </Modal.Body>
-                </Modal>
-                {/*end::Modal - Add task*/}
+                <div className='col-md'>
+                  <div className='col-12 pt-6'>
+                    <h1 className='text-dark fw-bold fs-1 text-center'>STRUKTUR ORGANISASI</h1>
+                    <h1 className='text-dark fw-bold fs-1 text-center'>
+                      SATUAN POLISI PAMONG PRAJA
+                    </h1>
+                    <h1 className='text-dark fw-bold fs-1 text-center'>PROVINSI DKI JAKARTA</h1>
+                  </div>
+                </div>
+                <div className='col'>
+                  <div className='d-flex justify-content-center pt-3'>
+                    <img
+                      src={toAbsoluteUrl('/media/logos/logo-satpol-pp.png')}
+                      width='190px'
+                      height='120px'
+                      alt='Profile'
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             {/* Menampilkan Struktur Organisasi */}
-            {datasatpp && <OrganizationalChart data={datasatpp} />}
+            {/* {datasatpp && <OrganizationalChart data={datasatpp} />} */}
+            <OrganizationalChart data={datasatpolpp} />
           </div>
         </div>
         {/* end::Body */}
