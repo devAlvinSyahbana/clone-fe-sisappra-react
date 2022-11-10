@@ -28,11 +28,12 @@ import {TabDataPPNS} from './components/laporanPPNS-tabs/TabDataPPNS'
 import {UpdateDataPPNS} from './components/update-tabs-ppns/UpdateDataPPNS'
 import {AddDataPPNS} from './components/add-tabs-ppns/AddDataPPNS'
 import {TabDataPegawaiYangNaikPangkat} from './components/laporanRekapPegawai-tabs/TabDataPegawaiYangNaikPangkat'
+import {UpdateNaikPangkat} from './components/update-naik-pangkat/UpdateNaikPangkat'
+import {UnduhNaikPangkatPdf} from './components/unduh-naik-pangkat/UnduhNaikPangkatPdf'
 
 import {TabRekapitulasiDataPegawaiPensiun} from './components/laporanRekapPegawai-tabs/TabRekapitulasiDataPegawaiPensiun'
 import {UnduhLaporanPegawaiPensiunPdf} from './components/laporanRekapPegawai-unduh/UnduhLaporanPegawaiPensiunPdf'
 
-<<<<<<< src/app/modules/kepegawaian/KepegawaianPage.tsx
 import {DataPribadiDUK} from './components/tabs-duk/DataPribadiDUK'
 import {DataKeluargaDUK} from './components/tabs-duk/DataKeluargaDUK'
 import {DataKepegawaianDUK} from './components/tabs-duk/DataKepegawaianDUK'
@@ -41,16 +42,6 @@ import {HirarkiKepegawaianDUK} from './components/tabs-duk/HirarkiKepegawaianDUK
 import {TabDaftarUrutKepangkatan} from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
 import {TambahDaftarUrutKepangkatan} from './components/add-tabs-duk/TambahDaftarUrutKepangkatan'
 import {UnduhLaporanDaftarUrutKepangkatanPDF} from './components/laporanRekapPegawai-unduh/UnduhLaporanDaftarUrutKepangkatan'
-=======
-import { DataPribadiDUK } from './components/tabs-duk/DataPribadiDUK'
-import { DataKeluargaDUK } from './components/tabs-duk/DataKeluargaDUK'
-import { DataKepegawaianDUK } from './components/tabs-duk/DataKepegawaianDUK'
-import { PendidikanDUK } from './components/tabs-duk/PendidikanDUK'
-import { HirarkiKepegawaianDUK } from './components/tabs-duk/HirarkiKepegawaianDUK'
-import { TabDaftarUrutKepangkatan } from './components/laporanRekapPegawai-tabs/TabDaftarUrutKepangkatan'
-import { TambahDaftarUrutKepangkatan } from './components/add-tabs-duk/TambahDaftarUrutKepangkatan'
-import { UnduhLaporanDaftarUrutKepangkatanPDF } from './components/laporanRekapPegawai-unduh/UnduhLaporanDaftarUrutKepangkatan'
->>>>>>> src/app/modules/kepegawaian/KepegawaianPage.tsx
 
 import {UnduhLaporanRekapitulasiPegawai} from './components/laporanRekapPegawai-unduh/UnduhLaporanRekapitulasiPegawaiPdf'
 import {TabRekapitulasiPejabatStruktural} from './components/laporanRekapPegawai-tabs/TabRekapitulasiPejabatStruktural'
@@ -416,17 +407,39 @@ const KepegawaianPage: React.FC = () => {
             </>
           }
         />
+        {/*Naik Pangkat*/}
         <Route
           path='LaporanRekapitulasiPegawai/TabDataPegawaiYangNaikPangkat'
           element={
             <>
               <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>
-                TabData Pegawai Yang Naik Pangkat
+                Data Pegawai Yang Naik Pangkat
               </PageTitle>
               <TabDataPegawaiYangNaikPangkat />
             </>
           }
         />
+        <Route
+          path='update-naik-pangkat/UpdateNaikPangkat/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={informasidatapegawaiBreadCrumbs}>
+                Update Naik Pangkat
+              </PageTitle>
+              <UpdateNaikPangkat />
+            </>
+          }
+        />
+        <Route
+          path='LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf'
+          element={
+            <>
+              <PageTitle breadcrumbs={kepegawaianBreadCrumbs}>Unduh Naik Pangkat PDF</PageTitle>
+              <UnduhNaikPangkatPdf />
+            </>
+          }
+        />
+        {/*End Naik Pngkat*/}
         <Route
           path='laporan-rekapitulasi-pegawai/tab-rekapitulasi-pejabat-fungsional'
           element={
