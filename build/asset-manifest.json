@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/static/css/main.c6b6fd63.css",
-    "main.js": "/static/js/main.cb5c9158.js",
+    "main.js": "/static/js/main.a2c7b5ef.js",
     "static/css/712.8cdfbe23.chunk.css": "/static/css/712.8cdfbe23.chunk.css",
     "static/js/712.10315980.chunk.js": "/static/js/712.10315980.chunk.js",
     "static/js/311.49a9fbc1.chunk.js": "/static/js/311.49a9fbc1.chunk.js",
     "static/css/979.8217e791.chunk.css": "/static/css/979.8217e791.chunk.css",
-    "static/js/979.99a24d56.chunk.js": "/static/js/979.99a24d56.chunk.js",
+    "static/js/979.bb2b6028.chunk.js": "/static/js/979.bb2b6028.chunk.js",
     "static/js/921.3f272cd4.chunk.js": "/static/js/921.3f272cd4.chunk.js",
     "static/css/960.27a6cf2a.chunk.css": "/static/css/960.27a6cf2a.chunk.css",
     "static/js/960.144af114.chunk.js": "/static/js/960.144af114.chunk.js",
@@ -60,12 +60,12 @@
     "static/media/fa-v4compatibility.woff2": "/static/media/fa-v4compatibility.afac89562a5301459069.woff2",
     "index.html": "/index.html",
     "main.c6b6fd63.css.map": "/static/css/main.c6b6fd63.css.map",
-    "main.cb5c9158.js.map": "/static/js/main.cb5c9158.js.map",
+    "main.a2c7b5ef.js.map": "/static/js/main.a2c7b5ef.js.map",
     "712.8cdfbe23.chunk.css.map": "/static/css/712.8cdfbe23.chunk.css.map",
     "712.10315980.chunk.js.map": "/static/js/712.10315980.chunk.js.map",
     "311.49a9fbc1.chunk.js.map": "/static/js/311.49a9fbc1.chunk.js.map",
     "979.8217e791.chunk.css.map": "/static/css/979.8217e791.chunk.css.map",
-    "979.99a24d56.chunk.js.map": "/static/js/979.99a24d56.chunk.js.map",
+    "979.bb2b6028.chunk.js.map": "/static/js/979.bb2b6028.chunk.js.map",
     "921.3f272cd4.chunk.js.map": "/static/js/921.3f272cd4.chunk.js.map",
     "960.27a6cf2a.chunk.css.map": "/static/css/960.27a6cf2a.chunk.css.map",
     "960.144af114.chunk.js.map": "/static/js/960.144af114.chunk.js.map",
@@ -91,6 +91,6 @@
   },
   "entrypoints": [
     "static/css/main.c6b6fd63.css",
-    "static/js/main.cb5c9158.js"
+    "static/js/main.a2c7b5ef.js"
   ]
 }
