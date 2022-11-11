@@ -238,7 +238,6 @@ export function DataPengguna() {
       selector: (row: any) => row.nama_lengkap,
       sortable: true,
       sortField: 'nama_lengkap',
-      width: '150px',
       wrap: true,
     },
     {
@@ -264,6 +263,7 @@ export function DataPengguna() {
       sortable: true,
       sortField: 'tgl_bergabung',
       wrap: true,
+      width: '180px',
       center: true,
     },
     {
@@ -377,9 +377,6 @@ export function DataPengguna() {
     if (valNamaLengkap.val !== '') {
       uriParam += `&nama_lengkap=${valNamaLengkap.val}`
     }
-    if (valFilterEmail.val !== '') {
-      uriParam += `&email=${valFilterEmail.val}`
-    }
     if (valFilterHakAkses.val !== '') {
       uriParam += `&hak_akses=${valFilterHakAkses.val}`
     }
@@ -387,7 +384,6 @@ export function DataPengguna() {
   }
 
   const handleFilterReset = () => {
-    setFilterEmail({val: ''})
     setFilterHakAkses({val: ''})
     setFilterNamaLengkap({val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
@@ -496,8 +492,7 @@ export function DataPengguna() {
                               </button>
                             </Link>
                           </div>
-
-                          <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
+                          <div className='d-flex justify-content-end col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <Link to='/apps/data-pengguna/tambah-data-pengguna'>
                               {/* begin::Add user */}
                               <button type='button' className='btn btn-primary me-2'>
@@ -510,8 +505,6 @@ export function DataPengguna() {
                               {/* end::Add user */}
                             </Link>
                             {/* begin::Filter Button */}
-                          </div>
-                          <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
                             <button
                               type='button'
                               className='btn btn-light-primary'
