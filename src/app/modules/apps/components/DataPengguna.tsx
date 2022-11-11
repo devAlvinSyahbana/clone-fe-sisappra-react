@@ -478,7 +478,7 @@ export function DataPengguna() {
                               name='nama'
                               value={valNamaLengkap.val}
                               onChange={handleChangeInputNamaLengkap}
-                              placeholder='Masukkan Nama / Hak Akses'
+                              placeholder='Nama / Hak Akses'
                             />
                           </div>
                           <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
