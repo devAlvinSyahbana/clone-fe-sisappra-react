@@ -11,6 +11,9 @@ import Form from 'react-bootstrap/Form'
 import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {KTSVG} from '../../../../_metronic/helpers'
+import moment from 'moment'
+import Swal from 'sweetalert2'
+import {useFormik} from 'formik'
 
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -136,6 +139,11 @@ const reactSelectDarkThem = {
   }),
 }
 
+export interface FormInput {
+  modul?: string
+  level?: string
+}
+
 export function AksesKontrol() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -168,12 +176,12 @@ export function AksesKontrol() {
   }
 
   const columns = [
-    {
-      name: 'No',
-      selector: (row: any) => row.id,
-      sortable: true,
-      sortField: 'id',
-    },
+    // {
+    //   name: 'No',
+    //   selector: (row: any) => row.id,
+    //   sortable: true,
+    //   sortField: 'id',
+    // },
     {
       name: 'Nama Akses Kontrol',
       selector: (row: any) => row.modul,
@@ -181,20 +189,20 @@ export function AksesKontrol() {
       sortField: 'modul',
     },
     {
-      name: 'HAK AKSES KODE',
+      name: 'Hak Akses Kode',
       selector: (row: any) => row.kode,
       sortable: true,
       sortField: 'kode',
     },
-    {
-      name: 'HAK AKSES',
-      selector: (row: any) => row.level,
-      sortable: true,
-      sortField: 'level',
-    },
+    // {
+    //   name: 'HAK AKSES',
+    //   selector: (row: any) => row.level,
+    //   sortable: true,
+    //   sortField: 'level',
+    // },
     {
       name: 'TANGGAL BUAT',
-      selector: (row: any) => row.tanggal_buat,
+      selector: (row: any) => moment(row.tanggal_buat).format('D MMMM YYYY'),
       sortable: true,
       sortField: 'tanggal_buat',
     },
@@ -222,7 +230,9 @@ export function AksesKontrol() {
                       <Link to='#'>Detail</Link>
                     </Dropdown.Item>
                     <Dropdown.Item href='#'>Ubah</Dropdown.Item>
-                    <Dropdown.Item href='#'>Hapus</Dropdown.Item>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                      Hapus
+                    </Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -262,8 +272,11 @@ export function AksesKontrol() {
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
 
     setTemp(value.data.data)
-    console.log('cek response api:', temp)
-
+    setTotalRows(value.data.total)
+    console.log('cek response api real:', temp)
+    setLoading(false)
+    return [temp, setTemp] as const
+    // setLoading(false)
     const response = await axios.get(
       `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
     )
@@ -271,7 +284,7 @@ export function AksesKontrol() {
 
     setTotalRows(response.data.total)
     setLoading(false)
-    console.log('cek ahhh :', data)
+    console.log('cek dummy :', data)
     return [data, setData] as const
   }
 
@@ -294,6 +307,88 @@ export function AksesKontrol() {
   }) => {
     setFilterModul({val: event.target.value})
   }
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      text: 'Anda yakin ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+      color: '#000000',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        }
+      }
+    })
+  }
+
+  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+
+  const handleChangeFormik = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      modul: '',
+      level: '',
+    },
+    onSubmit: async (values) => {
+      const bodyparam: FormInput = {
+        modul: valuesFormik?.modul ? valuesFormik.modul : '',
+        level: valuesFormik?.level ? valuesFormik.level : '',
+      }
+      try {
+        const response = await axios.post(`${AKSES_KONTROL_URL}/create`, bodyparam)
+        if (response) {
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil disimpan',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          navigate('/apps/data-pengguna/', {
+            replace: true,
+          })
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          text: 'Data gagal disimpan, harap mencoba lagi',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        console.error(error)
+      }
+    },
+  })
 
   return (
     <div className={`card`}>
@@ -357,12 +452,12 @@ export function AksesKontrol() {
       <div className='table-responsive mt-5 ms-5 me-5'>
         <DataTable
           columns={columns}
-          data={data}
-          progressPending={loading}
+          data={temp}
+          // progressPending={loading}
           progressComponent={<LoadingAnimation />}
-          // pagination
+          pagination
           // paginationServer
-          // paginationTotalRows={totalRows}
+          paginationTotalRows={totalRows}
           // onChangeRowsPerPage={handlePerRowsChange}
           // onChangePage={handlePageChange}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
