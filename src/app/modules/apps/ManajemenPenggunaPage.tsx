@@ -2,7 +2,7 @@ import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 import {DataPengguna} from './components/DataPengguna'
 import {Group} from './components/Group'
-import {AksesKontrol} from './components/AksesKontrol'
+// import {AksesKontrol} from './components/AksesKontrol'
 
 import {AddDataPengguna} from './components/add-data-pengguna/AddDataPengguna'
 import {UpdateDataPengguna} from './components/update-data-pengguna/UpdateDataPengguna'
@@ -79,7 +79,7 @@ const ManajemenPenggunaPage = () => {
           }
         />
 
-        <Route
+        {/* <Route
           path='akses-kontrol'
           element={
             <>
@@ -87,7 +87,7 @@ const ManajemenPenggunaPage = () => {
               <AksesKontrol />
             </>
           }
-        />
+        /> */}
         <Route
           path='hak-akses'
           element={

@@ -209,56 +209,6 @@ export function UpdateNaikPangkat() {
     onSubmit: async (values) => {
       console.log(inputValPangkat)
       const bodyparam: FormInput = {
-        // nama: valuesFormik?.nama
-        //   ? valuesFormik.nama
-        //   : valuesFormikExist?.nama
-        //   ? valuesFormikExist.nama
-        //   : '',
-        // nrk: valuesFormik?.nrk
-        //   ? valuesFormik.nrk
-        //   : valuesFormikExist?.nrk
-        //   ? valuesFormikExist.nrk
-        //   : 0,
-        // nip: valuesFormik?.nip
-        //   ? valuesFormik.nip
-        //   : valuesFormikExist?.nip
-        //   ? valuesFormikExist.nip
-        //   : '',
-        // jabatan: valuesFormik?.jabatan
-        //   ? valuesFormik.jabatan
-        //   : valuesFormikExist?.jabatan
-        //   ? valuesFormikExist.jabatan
-        //   : '',
-        // tempat_tugas: valuesFormik?.tempat_tugas
-        //   ? valuesFormik.tempat_tugas
-        //   : valuesFormikExist?.tempat_tugas
-        //   ? valuesFormikExist.tempat_tugas
-        //   : '',
-        // subbag_seksi_kecamatan: valuesFormik?.subbag_seksi_kecamatan
-        //   ? valuesFormik.subbag_seksi_kecamatan
-        //   : valuesFormikExist?.subbag_seksi_kecamatan
-        //   ? valuesFormikExist.subbag_seksi_kecamatan
-        //   : '',
-        // pangkat: valuesFormik?.pangkat
-        //   ? valuesFormik.pangkat
-        //   : valuesFormikExist?.pangkat
-        //   ? valuesFormikExist.pangkat
-        //   : '',
-        // golongan: valuesFormik?.golongan
-        //   ? valuesFormik.golongan
-        //   : valuesFormikExist?.golongan
-        //   ? valuesFormikExist.golongan
-        //   : '',
-        // tmt_pangkat: valuesFormik?.tmt_pangkat
-        //   ? valuesFormik.tmt_pangkat
-        //   : valuesFormikExist?.tmt_pangkat
-        //   ? valuesFormikExist.tmt_pangkat
-        //   : 0,
-        // eselon: valuesFormik?.eselon
-        //   ? valuesFormik.eselon
-        //   : valuesFormikExist?.eselon
-        //   ? valuesFormikExist.eselon
-        //   : '',
         status_kenaikan_pangkat: inputValPangkat?.value
           ? inputValPangkat.value
           : valuesFormikExist?.status_kenaikan_pangkat
