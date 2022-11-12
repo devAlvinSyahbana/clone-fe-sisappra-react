@@ -33,11 +33,6 @@ export interface PelaporanState {
     tindak_lanjut__denda__no_validasi_bank: string
 }
 
-export interface ApiResponse {
-    data: any,
-    success: boolean
-}
-
 const initialState: PelaporanState = {
     value: 0,
     jenis_kegiatan_list: [],
@@ -70,6 +65,8 @@ const initialState: PelaporanState = {
     tindak_lanjut__denda__no_validasi_bank: "23423423",
 }
 
+type SetProp = {field: string, value: any}
+
 export const pelaporanKegiatanSlice = createSlice({
     name: 'pelaporanKegiatan',
     initialState,
@@ -77,14 +74,12 @@ export const pelaporanKegiatanSlice = createSlice({
         setJenisKegiatanList: (state: PelaporanState, action:PayloadAction<Array<{label: string, value: string}>>)  => {
             state.jenis_kegiatan_list = action.payload
         },
-        jenisKegiatanIdChanged: (state: PelaporanState, action:PayloadAction<string | undefined>) => {
-            state.kegiatan__jenis_kegiatan_id = Number(action.payload)
-        },
-        jumlahPersonilChanged: (state: PelaporanState, action:PayloadAction<number>) => {
-            state.kegiatan__jumlah_personil = action.payload
-        },
-        uraianKegiatanChanged: (state: PelaporanState, action:PayloadAction<string>) => {
-            state.kegiatan__uraian_kegiatan = action.payload
+        setPropChanged: (state: PelaporanState, action:PayloadAction<SetProp>) => {
+              switch (action.payload.field) {
+                  case 'kegiatan__jenis_kegiatan_id': state.kegiatan__jenis_kegiatan_id = Number(action.payload.value); break;
+                  case 'kegiatan__jumlah_personil': state.kegiatan__jumlah_personil = Number(action.payload.value); break;
+                  case 'kegiatan__uraian_kegiatan': state.kegiatan__uraian_kegiatan = String(action.payload.value); break;
+              }
         },
         increment: (state: PelaporanState) => {
             // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -103,6 +98,6 @@ export const pelaporanKegiatanSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setJenisKegiatanList, jenisKegiatanIdChanged, jumlahPersonilChanged, uraianKegiatanChanged } = pelaporanKegiatanSlice.actions
+export const { setJenisKegiatanList, setPropChanged } = pelaporanKegiatanSlice.actions
 
 export default pelaporanKegiatanSlice.reducer

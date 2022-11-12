@@ -2,11 +2,7 @@ import React, {FC, useEffect} from "react";
 import Select from 'react-select'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../redux/store";
-import {
-    jenisKegiatanIdChanged,
-    jumlahPersonilChanged,
-    uraianKegiatanChanged
-} from "../../../../redux/slices/pelaporan-kegiatan.slice";
+import {setPropChanged} from "../../../../redux/slices/pelaporan-kegiatan.slice";
 
 interface ComboBox {
     label: string,
@@ -22,18 +18,14 @@ type SelectOptionType = { label: string, value: string }
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ }) => {
     const dispatch = useDispatch()
     const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.jenis_kegiatan_list)
-    const jenisKegiatanId = useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id)
-    const jumlahPersonil = useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__jumlah_personil)
 
     return (<div className='w-50'>
         <div className='pb-10 pb-lg-15'>
             <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
 
-            {jumlahPersonil}
-
             <div className="mb-10">
                 <label className="required form-label">Jenis Kegiatan</label>
-                <Select options={jenisKegiatanList} onChange={(o)=>dispatch(jenisKegiatanIdChanged(o?.value))}/>
+                <Select options={jenisKegiatanList} onChange={(o)=>dispatch(setPropChanged({value: o?.value, field: 'kegiatan__jenis_kegiatan_id'}))}/>
             </div>
 
             <div className="mb-10">
@@ -41,7 +33,8 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ }) => {
                 <input
                     type="number"
                     className="form-control"
-                    onChange={(o:any)=>dispatch(jumlahPersonilChanged(o.target.value))}
+                    value={useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__jumlah_personil)}
+                    onChange={(o:any)=>dispatch(setPropChanged({value: o.target.value, field: 'kegiatan__jumlah_personil'}))}
                 />
             </div>
 
@@ -49,7 +42,8 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ }) => {
                 <label className="required form-label">Uraian Kegiatan</label>
                 <textarea
                     className="form-control"
-                    onChange={(o:any)=>dispatch(uraianKegiatanChanged(o.target.value))}
+                    value={useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__uraian_kegiatan)}
+                    onChange={(o:any)=>dispatch(setPropChanged({value: o.target.value, field: 'kegiatan__uraian_kegiatan'}))}
                 />
             </div>
 
