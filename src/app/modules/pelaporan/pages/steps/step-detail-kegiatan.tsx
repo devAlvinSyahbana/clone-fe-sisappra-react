@@ -2,7 +2,7 @@ import React, {FC, useEffect} from "react";
 import Select from 'react-select'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../redux/store";
-import {setPropChanged} from "../../../../redux/slices/pelaporan-kegiatan.slice";
+import {updateProp} from "../../../../redux/slices/pelaporan-kegiatan.slice";
 
 interface ComboBox {
     label: string,
@@ -23,9 +23,11 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ }) => {
         <div className='pb-10 pb-lg-15'>
             <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
 
+            {useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id)}
+
             <div className="mb-10">
                 <label className="required form-label">Jenis Kegiatan</label>
-                <Select options={jenisKegiatanList} onChange={(o)=>dispatch(setPropChanged({value: o?.value, field: 'kegiatan__jenis_kegiatan_id'}))}/>
+                <Select options={jenisKegiatanList} onChange={(o)=>dispatch(updateProp({value: o?.value, field: 'kegiatan__jenis_kegiatan_id'}))}/>
             </div>
 
             <div className="mb-10">
@@ -34,7 +36,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ }) => {
                     type="number"
                     className="form-control"
                     value={useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__jumlah_personil)}
-                    onChange={(o:any)=>dispatch(setPropChanged({value: o.target.value, field: 'kegiatan__jumlah_personil'}))}
+                    onChange={(o:any)=>dispatch(updateProp({value: o.target.value, field: 'kegiatan__jumlah_personil'}))}
                 />
             </div>
 
@@ -43,7 +45,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ }) => {
                 <textarea
                     className="form-control"
                     value={useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__uraian_kegiatan)}
-                    onChange={(o:any)=>dispatch(setPropChanged({value: o.target.value, field: 'kegiatan__uraian_kegiatan'}))}
+                    onChange={(o:any)=>dispatch(updateProp({value: o.target.value, field: 'kegiatan__uraian_kegiatan'}))}
                 />
             </div>
 

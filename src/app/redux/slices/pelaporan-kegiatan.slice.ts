@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-export interface PelaporanState {
+export interface PelaporanState extends Record<string,any> {
     value: number,
     jenis_kegiatan_list: Array<{label: string, value: string}>,
     kegiatan__jenis_kegiatan_id: number,
@@ -74,30 +74,13 @@ export const pelaporanKegiatanSlice = createSlice({
         setJenisKegiatanList: (state: PelaporanState, action:PayloadAction<Array<{label: string, value: string}>>)  => {
             state.jenis_kegiatan_list = action.payload
         },
-        setPropChanged: (state: PelaporanState, action:PayloadAction<SetProp>) => {
-              switch (action.payload.field) {
-                  case 'kegiatan__jenis_kegiatan_id': state.kegiatan__jenis_kegiatan_id = Number(action.payload.value); break;
-                  case 'kegiatan__jumlah_personil': state.kegiatan__jumlah_personil = Number(action.payload.value); break;
-                  case 'kegiatan__uraian_kegiatan': state.kegiatan__uraian_kegiatan = String(action.payload.value); break;
-              }
-        },
-        increment: (state: PelaporanState) => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            state.value += 1
-        },
-        decrement: (state: PelaporanState) => {
-            state.value -= 1
-        },
-        incrementByAmount: (state: PelaporanState, action: PayloadAction<number>) => {
-            state.value += action.payload
-        },
+        updateProp: (state: PelaporanState, action:PayloadAction<SetProp>) => {
+            state[action.payload.field] = action.payload.value;
+        }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setJenisKegiatanList, setPropChanged } = pelaporanKegiatanSlice.actions
+export const { setJenisKegiatanList, updateProp } = pelaporanKegiatanSlice.actions
 
 export default pelaporanKegiatanSlice.reducer
