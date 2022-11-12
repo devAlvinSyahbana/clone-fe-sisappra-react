@@ -9,6 +9,7 @@ import { LaporanPengawasan } from './components/LaporanPengawasan'
 import { LaporanTamuDaerah } from './components/LaporanTamuDaerah'
 import { TambahTamuDaerah } from './components/TambahTamuDaerah'
 import { DetailLaporanKegiatan } from './components/DetailLaporanKegiatan'
+import {AddKegiatanUmumPage} from "./pages/kegiatan-umum-new";
 
 
 const pelaporanBreadCrumbs: Array<PageLink> = [
@@ -50,7 +51,7 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Kegiatan</PageTitle>
-              <TambahLaporanKegiatan />
+              <AddKegiatanUmumPage />
             </>
           }
         />
