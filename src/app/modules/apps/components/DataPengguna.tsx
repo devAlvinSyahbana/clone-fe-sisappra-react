@@ -253,14 +253,6 @@ export function DataPengguna() {
       center: true,
     },
     {
-      name: 'Kata Sandi',
-      selector: (row: any) => row.kata_sandi,
-      sortable: true,
-      sortField: 'kata_sandi',
-      wrap: true,
-      center: true,
-    },
-    {
       name: 'Hak Akses',
       selector: (row: any) => row.hak_akses,
       sortable: true,
@@ -308,10 +300,9 @@ export function DataPengguna() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate(
-                          `/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-pribadi-duk/${record?.id}/${record?.status_pegawai}`,
-                          {replace: true}
-                        )
+                        navigate('/apps/data-pengguna/detail-data-pengguna/' + record.id, {
+                          replace: true,
+                        })
                       }
                     >
                       Detail
@@ -319,10 +310,9 @@ export function DataPengguna() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate(
-                          `/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan/detail-data-pribadi-duk/${record?.id}/${record?.status_pegawai}`,
-                          {replace: true}
-                        )
+                        navigate('/apps/data-pengguna/update-data-pengguna/' + record.id, {
+                          replace: true,
+                        })
                       }
                     >
                       Ubah
