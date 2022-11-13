@@ -8,7 +8,7 @@ import { LaporanPengawasan } from './pages/LaporanPengawasan'
 import { LaporanTamuDaerah } from './pages/LaporanTamuDaerah'
 import { TambahTamuDaerah } from './pages/TambahTamuDaerah'
 import { DetailLaporanKegiatan } from './pages/DetailLaporanKegiatan'
-import {AddKegiatanUmumPage} from "./pages/kegiatan-umum-new";
+import {AddKegiatanUmumPage} from "./pages/add-kegiatan-umum.page";
 
 
 const pelaporanBreadCrumbs: Array<PageLink> = [

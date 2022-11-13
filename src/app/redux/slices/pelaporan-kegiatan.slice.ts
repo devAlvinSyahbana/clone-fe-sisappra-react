@@ -44,7 +44,7 @@ export const initialState: PelaporanKegiatanState = {
     kegiatan__jumlah_personil: 0,
     kegiatan__uraian_kegiatan: "",
     kegiatan__tanggal: "2022-01-23",
-    kegiatan__jam: "20:20:39+00:00",
+    kegiatan__jam: "08:00:00",
     kegiatan__lokasi: "",
 
     tindak_lanjut__administrasi__jenis_pasal_id: 0,

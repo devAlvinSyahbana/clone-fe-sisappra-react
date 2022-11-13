@@ -1,4 +1,4 @@
-import {FC, useEffect, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {StepDetailKegiatan} from "./steps/step-detail-kegiatan";
 import {StepTindaklanjut} from "./steps/step-tindaklanjut";
 import {StepDokumentasi} from "./steps/step-dokumentasi";
@@ -21,7 +21,7 @@ export const AddKegiatanUmumPage: FC = () => {
     //
 
     const updateJenisKegiatanList = () => {
-        axios.get('http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama').then(res => {
+        axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then(res => {
             const data = res.data.data
                 .map((d: any) => ({label: d.text, value: String(d.value)}))
                 .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
@@ -53,13 +53,13 @@ export const AddKegiatanUmumPage: FC = () => {
 
     const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
 
-    const submitStep = (values: PelaporanKegiatanState, actions: FormikValues) => {
+    const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
 
     }
 
     return (<>
-        <Formik validationSchema={currentSchema} initialValues={initialState} onSubmit={submitStep}>
-            {({ handleReset, handleSubmit, errors, values}) => (
+        <Formik validationSchema={currentSchema} initialValues={initialState} onSubmit={submitPelaporanKegiatan}>
+            {({handleReset, handleSubmit, errors, values}) => (
                 <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
                     <div className='card'>
                         <div className='card-body'>
@@ -78,7 +78,7 @@ export const AddKegiatanUmumPage: FC = () => {
 
                             <div className="tab-content" id="myTabContent">
                                 <div className="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
-                                    <StepDetailKegiatan values={values} />
+                                    <StepDetailKegiatan values={values}/>
                                 </div>
                                 <div className="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
                                     <StepTindaklanjut/>
@@ -90,7 +90,36 @@ export const AddKegiatanUmumPage: FC = () => {
                         </div>
                     </div>
                     <div className='card mt-5'>
-                        <div className='card-body'>sdfsdf</div>
+                        <div className='card-body'>
+                            {/*<div className="float-lg-none">*/}
+                            {/*    */}
+                            {/*</div>*/}
+                            <div className="row w-100">
+                                <div className="col">
+
+                                </div>
+                                <div className="col">
+                                    <div className="row">
+                                        <a href="#" className="col-5 btn btn-flex btn-secondary px-6 m-3">
+                                            <span className="svg-icon svg-icon-2x"><i
+                                                className='fa-solid fa-arrow-left'></i></span>
+                                            <span className="d-flex flex-column align-items-start ms-2">
+                                                <span className="fs-3 fw-bold">Kembali</span>
+                                                <span className="fs-7">Some description</span>
+                                            </span>
+                                        </a>
+                                        <button type="submit" className="col-5 btn btn-flex btn-primary px-6 m-3">
+                                            <span className="svg-icon svg-icon-2x"><i
+                                                className='fa-solid fa-paper-plane'></i></span>
+                                            <span className="d-flex flex-column align-items-start ms-2">
+                                                <span className="fs-3 fw-bold">Simpan</span>
+                                                <span className="fs-7">Some description</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </Form>
             )}

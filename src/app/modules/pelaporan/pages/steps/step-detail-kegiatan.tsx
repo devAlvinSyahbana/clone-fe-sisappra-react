@@ -55,8 +55,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ handleChange, 
         <div className='pb-10 pb-lg-15'>
             <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
 
-            {useSelector((s:RootState)=> s.pelaporanKegiatan.kegiatan__jam)}
-
             <div className="mb-10">
                 <label className="required form-label">Jenis Kegiatan</label>
                 <Field
