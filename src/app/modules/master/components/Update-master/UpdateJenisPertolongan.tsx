@@ -7,18 +7,18 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 
 export interface FormInput {
-  kota?: string
+  jenis_pertolongan?: string
   updated_by?: number
 }
 
 interface GetDataInterface {
   id?: number
   kode?: string
-  kota?: string
+  jenis_pertolongan?: string
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const KOTA_URL = `${API_URL}/master/kota` //http://localhost:3000//master/kota
+export const JENIS_PERTOLONGAN_URL = `${API_URL}/master/jenis-pertolongan` //http://localhost:3000//master/JenisPertolongan
 
 export function UpdateJenisPertolongan() {
   const navigate = useNavigate()
@@ -29,10 +29,10 @@ export function UpdateJenisPertolongan() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${KOTA_URL}/findone/${id}`)
+      const response = await axios.get(`${JENIS_PERTOLONGAN_URL}/findone/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        kota: jsonD.kota,
+        jenis_pertolongan: jsonD.jenis_pertolongan,
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
@@ -59,24 +59,24 @@ export function UpdateJenisPertolongan() {
 
   const formik = useFormik({
     initialValues: {
-      kota: '',
+      jenis_pertolongan: '',
     },
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        kota: valuesFormik?.kota
-          ? valuesFormik.kota
-          : valuesFormikExist?.kota
-          ? valuesFormikExist.kota
+        jenis_pertolongan: valuesFormik?.jenis_pertolongan
+          ? valuesFormik.jenis_pertolongan
+          : valuesFormikExist?.jenis_pertolongan
+          ? valuesFormikExist.jenis_pertolongan
           : '',
         updated_by: 0,
       }
       try {
-        const response = await axios.put(`${KOTA_URL}/update/${id}`, bodyparam)
+        const response = await axios.put(`${JENIS_PERTOLONGAN_URL}/update/${id}`, bodyparam)
         if (response) {
           if (selectedFile) {
             formData.append('file_dokumentasi', selectedFile)
-            const responseFile = await axios.post(`${KOTA_URL}/upload/${id}`, formData)
+            const responseFile = await axios.post(`${JENIS_PERTOLONGAN_URL}/upload/${id}`, formData)
             if (responseFile) {
               console.log('File success uploaded!')
               Swal.fire({
@@ -85,7 +85,7 @@ export function UpdateJenisPertolongan() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/master/Kota', {replace: true})
+              navigate('/master/JenisPertolongan', {replace: true})
             }
             return
           }
@@ -95,7 +95,7 @@ export function UpdateJenisPertolongan() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/Kota', {replace: true})
+          navigate('/master/JenisPertolongan', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -120,16 +120,16 @@ export function UpdateJenisPertolongan() {
                   <div className='row mt-2'>
                     <div className='col-4 mb-3'>
                       <div className='form-group'>
-                        <Form.Label>Kota</Form.Label>
+                        <Form.Label>Jenis Pertolongan</Form.Label>
                         <Form.Control
-                          name='kota'
+                          name='jenis_pertolongan'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.kota || valuesFormik?.kota === ''
-                              ? valuesFormik?.kota
-                              : valuesFormikExist?.kota
-                              ? valuesFormikExist?.kota
+                            valuesFormik?.jenis_pertolongan || valuesFormik?.jenis_pertolongan === ''
+                              ? valuesFormik?.jenis_pertolongan
+                              : valuesFormikExist?.jenis_pertolongan
+                              ? valuesFormikExist?.jenis_pertolongan
                               : ''
                           }
                         />
@@ -137,7 +137,7 @@ export function UpdateJenisPertolongan() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/Kota'>
+                    <Link to='/master/JenisPertolongan'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

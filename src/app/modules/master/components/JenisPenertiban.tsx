@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DataTable from 'react-data-table-component';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -11,32 +11,34 @@ import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2'
 import { useFormik } from 'formik'
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const ESELON_URL = `${API_URL}/master/eselon` //http://localhost:3000/master/eselon
-
 export interface FormInput {
-  eselon?: string
+  jenis_penertiban?: string
   created_by?: number
 }
 
-export function Eselon() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
+export const PENERTIBAN_URL = `${API_URL}/master/jenis-penertiban` //http://localhost:3000/jenis-penertiban
+
+export function JenisPenertiban() {
+  
   const navigate = useNavigate()
+  const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
+  const [show, setShow] = useState(false)
   const handleKataClose = () => setShowKata(false)
   const [showKata, setShowKata] = useState(false)
   const [qParamFind, setUriFind] = useState({ strparam: '' })
-  const [valFilterEselon, setFilterEselon] = useState({ val: '' }) //3
+  const [valFilterJenisPenertiban, setFilterJenisPenertiban] = useState({ val: '' }) //3
   const handleKataShow = () => setShowKata(true)
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [perPage, setPerPage] = useState(10);
 
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
   useEffect(() => {
     async function fetchDT(page: number) {
       setLoading(true)
-      const response = await axios.get(`${ESELON_URL}/filter/${qParamFind.strparam}`)
+      const response = await axios.get(`${PENERTIBAN_URL}/filter/${qParamFind.strparam}`)
       setTemp(response.data.data)
       setTotalRows(response.data.total_data)
       setLoading(false)
@@ -45,6 +47,20 @@ export function Eselon() {
     fetchDT(1)
   }, [qParamFind, perPage])
 
+  //2
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterJenisPenertiban.val !== '') {
+      uriParam += `${valFilterJenisPenertiban.val}`
+    }
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  }
+  const handleChangeInputJenisPenertiban = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setFilterJenisPenertiban({ val: event.target.value })
+  } //4
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -58,20 +74,19 @@ export function Eselon() {
       </>
     )
   }
-  
   const formik = useFormik({
     initialValues: {
-      eselon: '',
+      jenis_penertiban: '',
       id_modul_permission: 0,
     },
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        eselon: valuesFormik?.eselon ? valuesFormik.eselon : '',
+        jenis_penertiban: valuesFormik?.jenis_penertiban ? valuesFormik.jenis_penertiban : '',
         created_by: 0,
       }
       try {
-        const response = await axios.post(`${ESELON_URL}/create`, bodyparam)
+        const response = await axios.post(`${PENERTIBAN_URL}/create`, bodyparam)
         if (response) {
           Swal.fire({
             icon: 'success',
@@ -79,7 +94,7 @@ export function Eselon() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/Eselon', { replace: true })
+          navigate('/master/JenisPenertiban', { replace: true })
         }
       } catch (error) {
         Swal.fire({
@@ -92,21 +107,29 @@ export function Eselon() {
       }
     },
   })
+
   const columns = [
     {
       name: 'No',
       selector: (row: any) => row.id,
       sortable: true,
-      sortField: 'no',
+      sortField: 'id',
     },
-    {},
+   
     {
-      name: 'Eselon',
-      selector: (row: any) => row.eselon,
+      name: 'Jenis Penertiban',
+      selector: (row: any) => row.jenis_penertiban,
       sortable: true,
-      sortField: 'eselon',
+      sortField: 'jenis_penertiban',
     },
-    {},
+    {
+      name: 'kode',
+      selector: (row: any) => row.kode,
+      sortable: true,
+      sortField: 'kode',
+    },
+    {
+    },
     {
       name: 'Aksi',
       sortable: false,
@@ -127,23 +150,21 @@ export function Eselon() {
                     size="sm"
                     variant="light"
                     title="Aksi">
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate('/master/Eselon/LihatEselon/' + record.id, {replace: true})
-                      }
-                    >
-                      Detail
+                    <Dropdown.Item onClick={() =>
+                        navigate('/master/JenisPenertiban/LihatJenisPenertiban/' + record.id, {
+                          replace: true,
+                        })
+                      }>
+                      
+                        Detail
                     </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate('/master/Eselon/UpdateEselon/' + record.id, {replace: true})
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>Hapus</Dropdown.Item>
+                    <Dropdown.Item onClick={() =>
+                        navigate('/master/JenisPenertiban/UpdateJenisPenertiban/' + record.id, {
+                          replace: true,
+                        })
+                      }> 
+                        Ubah</Dropdown.Item>
+                    <Dropdown.Item onClick={() => konfirDel(record?.id)}>Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -162,19 +183,9 @@ export function Eselon() {
    
   const [temp, setTemp] = useState([]);
 
-  const handleChangeFormik = (event: {
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setValuesFormik((prevValues: any) => ({
-      ...prevValues,
-      [event.target.name]: event.target.value,
-    }))
-  }
-
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(ESELON_URL + "/find");
+    const value = await axios.get(PENERTIBAN_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);
@@ -202,6 +213,19 @@ export function Eselon() {
     setPerPage(newPerPage);
     setLoading(false);
   };
+
+  const handleSort = (column: any, sortDirection: any) => {
+    // simulate server sort
+    console.log(column, sortDirection);
+    setLoading(true);
+
+    // instead of setTimeout this is where you would handle your API call.
+    setTimeout(() => {
+      setData(orderBy(data, column.sortField, sortDirection));
+      setLoading(false);
+    }, 100);
+  };
+
   const konfirDel = (id: number) => {
     Swal.fire({
       title: 'Anda yakin?',
@@ -219,7 +243,7 @@ export function Eselon() {
             deleted_by: 0,
           },
         }
-        const response = await axios.delete(`${ESELON_URL}/delete/${id}`, bodyParam)
+        const response = await axios.delete(`${PENERTIBAN_URL}/delete/${id}`, bodyParam)
         if (response) {
           fetchUsers(1)
           Swal.fire({
@@ -239,18 +263,14 @@ export function Eselon() {
       }
     })
   }
-  const handleFilter = async () => {
-    let uriParam = ''
-    if (valFilterEselon.val !== '') {
-      uriParam += `${valFilterEselon.val}`
-    }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
-  }
-  const handleChangeInputEselon = (event: {
+  const handleChangeFormik = (event: {
     preventDefault: () => void
     target: { value: any; name: any }
   }) => {
-    setFilterEselon({ val: event.target.value })
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
   }
   return (
     <div className={`card`}>
@@ -258,21 +278,21 @@ export function Eselon() {
       <div className="row g-8 mt-2 ms-5 me-5">
           <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
             <label htmlFor='' className='mb-3'>
-              Eselon
+              Jenis Penertiban
             </label>
             <input
             type='text'
             className='form-control form-control form-control-solid'
             name='q'
-            value={valFilterEselon.val}
-            onChange={handleChangeInputEselon} //5
-            placeholder='Eselon'
+            value={valFilterJenisPenertiban.val}
+            onChange={handleChangeInputJenisPenertiban} //5
+            placeholder='Jenis Penertiban'
           />
           </div>
       </div>
       <div className="row g-8 mt-2 ms-5 me-5">
         <div className='col-md-6 col-lg-6 col-sm-12'>
-        <Link to='#' onClick={handleFilter}> 
+         <Link to='#' onClick={handleFilter}> 
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
@@ -281,8 +301,8 @@ export function Eselon() {
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-        <Link to='#' onClick={handleKataShow}>
-            <button className='btn btn-primary me-5' onClick={handleShow}>
+          <Link to='#i'>
+            <button className='btn btn-primary me-5' onClick={handleKataShow}>
               <i className="fa-solid fa-plus"></i>
               Tambah
             </button>
@@ -293,20 +313,20 @@ export function Eselon() {
       <>
       <Modal show={showKata} onHide={handleKataClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Tambah eselon</Modal.Title>
+            <Modal.Title>Tambah Jenis Penertiban</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form onSubmit={formik.handleSubmit}>
               <div className='row mt-2'>
                 <div className='col-12 mb-6'>
                   <div className='form-group'>
-                    <Form.Label>eselon</Form.Label>
+                    <Form.Label>Jenis Penertiban</Form.Label>
                     <br />
                     <Form.Control
-                      name='eselon'
+                      name='jenis_penertiban'
                       className='form-control form-control-solid'
                       onChange={handleChangeFormik}
-                      value={valuesFormik?.eselon}
+                      value={valuesFormik?.jenis_penertiban}
                     />
                   </div>
                 </div>
@@ -354,5 +374,11 @@ export function Eselon() {
     </div>
   )
 }
+function orderBy(data: never[], sortField: any, sortDirection: any): React.SetStateAction<never[]> {
+  throw new Error('Function not implemented.');
+}
 
+function onEdit(record: any) {
+  throw new Error('Function not implemented.');
+}
 

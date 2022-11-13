@@ -7,19 +7,19 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 
 export interface FormInput {
-  jenis_kekerasan?: string
+  sumber_informasi?: string
   updated_by?: number
 }
 
 interface GetDataInterface {
   id?: number
-  jenis_kekerasan?: string
+  sumber_informasi?: string
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEKERASAN_URL = `${API_URL}/master/jenis-kekerasan` //http://localhost:3000//master/JenisKekerasan
+export const SUMBER_INFORMASI_URL = `${API_URL}/master/sumber-informasi` //http://localhost:3000//master/jenis-kejadian
 
-export function UpdateJenisKekerasan() {
+export function UpdateSumberInformasi() {
   const navigate = useNavigate()
   const {id} = useParams()
   const [selectedFile, setSelectedFile] = useState(null)
@@ -28,10 +28,10 @@ export function UpdateJenisKekerasan() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${JENIS_KEKERASAN_URL}/findone/${id}`)
+      const response = await axios.get(`${SUMBER_INFORMASI_URL}/findone/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        jenis_kekerasan: jsonD.jenis_kekerasan,
+        sumber_informasi: jsonD.sumber_informasi,
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
@@ -58,24 +58,24 @@ export function UpdateJenisKekerasan() {
 
   const formik = useFormik({
     initialValues: {
-      jenis_kekerasan: '',
+      sumber_informasi: '',
     },
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        jenis_kekerasan: valuesFormik?.jenis_kekerasan
-          ? valuesFormik.jenis_kekerasan
-          : valuesFormikExist?.jenis_kekerasan
-          ? valuesFormikExist.jenis_kekerasan
+        sumber_informasi: valuesFormik?.sumber_informasi
+          ? valuesFormik.sumber_informasi
+          : valuesFormikExist?.sumber_informasi
+          ? valuesFormikExist.sumber_informasi
           : '',
         updated_by: 0,
       }
       try {
-        const response = await axios.put(`${JENIS_KEKERASAN_URL}/update/${id}`, bodyparam)
+        const response = await axios.put(`${SUMBER_INFORMASI_URL}/update/${id}`, bodyparam)
         if (response) {
           if (selectedFile) {
             formData.append('file_dokumentasi', selectedFile)
-            const responseFile = await axios.post(`${JENIS_KEKERASAN_URL}/upload/${id}`, formData)
+            const responseFile = await axios.post(`${SUMBER_INFORMASI_URL}/upload/${id}`, formData)
             if (responseFile) {
               console.log('File success uploaded!')
               Swal.fire({
@@ -84,7 +84,7 @@ export function UpdateJenisKekerasan() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/master/JenisKekerasan', {replace: true})
+              navigate('/master/SumberInformasi', {replace: true})
             }
             return
           }
@@ -94,7 +94,7 @@ export function UpdateJenisKekerasan() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/JenisKekerasan', {replace: true})
+          navigate('/master/SumberInformasi', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -121,14 +121,14 @@ export function UpdateJenisKekerasan() {
                       <div className='form-group'>
                         <Form.Label>Jenis Kejadian</Form.Label>
                         <Form.Control
-                          name='jenis_kekerasan'
+                          name='sumber_informasi'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.jenis_kekerasan || valuesFormik?.jenis_kekerasan === ''
-                              ? valuesFormik?.jenis_kekerasan
-                              : valuesFormikExist?.jenis_kekerasan
-                              ? valuesFormikExist?.jenis_kekerasan
+                            valuesFormik?.sumber_informasi || valuesFormik?.sumber_informasi === ''
+                              ? valuesFormik?.sumber_informasi
+                              : valuesFormikExist?.sumber_informasi
+                              ? valuesFormikExist?.sumber_informasi
                               : ''
                           }
                         />
@@ -136,7 +136,7 @@ export function UpdateJenisKekerasan() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/JenisKekerasan'>
+                    <Link to='/master/SumberInformasi'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

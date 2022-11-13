@@ -5,6 +5,8 @@ import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import Swal from 'sweetalert2'
+import { useFormik } from 'formik'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -12,16 +14,52 @@ import Form from 'react-bootstrap/Form'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const JENIS_KORBAN_JIWA_URL = `${API_URL}/master/jenis-korban-jiwa` //http://localhost:3000/jenis-korban-jiwa
 
+export interface FormInput {
+  jenis_korban_jiwa?: string
+  created_by?: number
+}
+
 export function KorbanJiwa() {
   const navigate = useNavigate()
 
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+  const handleKataClose = () => setShowKata(false)
+  const [showKata, setShowKata] = useState(false)
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [valFilterKorbanJiwa, setFilterKorbanJiwa] = useState({ val: '' }) //3
+  const handleKataShow = () => setShowKata(true)
+  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+  const [perPage, setPerPage] = useState(10)
 
   useEffect(() => {
+    async function fetchDT(page: number) {
+      setLoading(true)
+      const response = await axios.get(`${JENIS_KORBAN_JIWA_URL}/filter/${qParamFind.strparam}`)
+      setTemp(response.data.data)
+      setTotalRows(response.data.total_data)
+      setLoading(false)
+    }
     fetchUsers(1)
-  }, [])
+    fetchDT(1)
+  }, [qParamFind, perPage])
+
+
+  const handleChangeInputKorbanJiwa = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setFilterKorbanJiwa({ val: event.target.value })
+  } //4
+
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterKorbanJiwa.val !== '') {
+      uriParam += `${valFilterKorbanJiwa.val}`
+    }
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  }
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -36,7 +74,7 @@ export function KorbanJiwa() {
       </>
     )
   }
-
+  
   const columns = [
     {
       name: 'No',
@@ -90,7 +128,7 @@ export function KorbanJiwa() {
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item href='#'>Hapus</Dropdown.Item>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -104,7 +142,6 @@ export function KorbanJiwa() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
 
   const [temp, setTemp] = useState([])
 
@@ -153,7 +190,43 @@ export function KorbanJiwa() {
       setLoading(false)
     }, 100)
   }
-
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      title: 'Anda yakin?',
+      text: 'Ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const bodyParam = {
+          data: {
+            deleted_by: 0,
+          },
+        }
+        const response = await axios.delete(`${JENIS_KORBAN_JIWA_URL}/delete/${id}`, bodyParam)
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        }
+      }
+    })
+  }
   return (
     <div className={`card`}>
       {/* begin::Body */}
@@ -162,12 +235,19 @@ export function KorbanJiwa() {
           <label htmlFor='' className='mb-3'>
             Korban Jiwa
           </label>
-          <input type='text' className='form-control form-control form-control-solid' name='tags' />
+          <input
+            type='text'
+            className='form-control form-control form-control-solid'
+            name='q'
+            value={valFilterKorbanJiwa.val}
+            onChange={handleChangeInputKorbanJiwa} //5
+            placeholder='Korban Jiwa'
+          />
         </div>
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
+          <Link to='#' onClick={handleFilter}> 
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
