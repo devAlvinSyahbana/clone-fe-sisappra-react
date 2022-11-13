@@ -7,19 +7,19 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 
 export interface FormInput {
-  jenis_kekerasan?: string
+  eselon?: string
   updated_by?: number
 }
 
 interface GetDataInterface {
   id?: number
-  jenis_kekerasan?: string
+  eselon?: string
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEKERASAN_URL = `${API_URL}/master/jenis-kekerasan` //http://localhost:3000//master/JenisKekerasan
+export const ESELON_URL = `${API_URL}/master/eselon` //http://localhost:3000//master/jenis-kejadian
 
-export function UpdateJenisKekerasan() {
+export function UpdateEselon() {
   const navigate = useNavigate()
   const {id} = useParams()
   const [selectedFile, setSelectedFile] = useState(null)
@@ -28,10 +28,10 @@ export function UpdateJenisKekerasan() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${JENIS_KEKERASAN_URL}/findone/${id}`)
+      const response = await axios.get(`${ESELON_URL}/findone/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        jenis_kekerasan: jsonD.jenis_kekerasan,
+        eselon: jsonD.eselon,
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
@@ -58,24 +58,24 @@ export function UpdateJenisKekerasan() {
 
   const formik = useFormik({
     initialValues: {
-      jenis_kekerasan: '',
+      eselon: '',
     },
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        jenis_kekerasan: valuesFormik?.jenis_kekerasan
-          ? valuesFormik.jenis_kekerasan
-          : valuesFormikExist?.jenis_kekerasan
-          ? valuesFormikExist.jenis_kekerasan
+        eselon: valuesFormik?.eselon
+          ? valuesFormik.eselon
+          : valuesFormikExist?.eselon
+          ? valuesFormikExist.eselon
           : '',
         updated_by: 0,
       }
       try {
-        const response = await axios.put(`${JENIS_KEKERASAN_URL}/update/${id}`, bodyparam)
+        const response = await axios.put(`${ESELON_URL}/update/${id}`, bodyparam)
         if (response) {
           if (selectedFile) {
             formData.append('file_dokumentasi', selectedFile)
-            const responseFile = await axios.post(`${JENIS_KEKERASAN_URL}/upload/${id}`, formData)
+            const responseFile = await axios.post(`${ESELON_URL}/upload/${id}`, formData)
             if (responseFile) {
               console.log('File success uploaded!')
               Swal.fire({
@@ -84,7 +84,7 @@ export function UpdateJenisKekerasan() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/master/JenisKekerasan', {replace: true})
+              navigate('/master/Eselon', {replace: true})
             }
             return
           }
@@ -94,7 +94,7 @@ export function UpdateJenisKekerasan() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/JenisKekerasan', {replace: true})
+          navigate('/master/Eselon', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -119,16 +119,16 @@ export function UpdateJenisKekerasan() {
                   <div className='row mt-2'>
                     <div className='col-4 mb-3'>
                       <div className='form-group'>
-                        <Form.Label>Jenis Kejadian</Form.Label>
+                        <Form.Label>Eselon</Form.Label>
                         <Form.Control
-                          name='jenis_kekerasan'
+                          name='eselon'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.jenis_kekerasan || valuesFormik?.jenis_kekerasan === ''
-                              ? valuesFormik?.jenis_kekerasan
-                              : valuesFormikExist?.jenis_kekerasan
-                              ? valuesFormikExist?.jenis_kekerasan
+                            valuesFormik?.eselon || valuesFormik?.eselon === ''
+                              ? valuesFormik?.eselon
+                              : valuesFormikExist?.eselon
+                              ? valuesFormikExist?.eselon
                               : ''
                           }
                         />
@@ -136,7 +136,7 @@ export function UpdateJenisKekerasan() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/JenisKekerasan'>
+                    <Link to='/master/Eselon'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

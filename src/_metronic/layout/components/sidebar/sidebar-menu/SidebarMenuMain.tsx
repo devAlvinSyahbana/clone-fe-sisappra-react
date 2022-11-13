@@ -157,11 +157,27 @@ const SidebarMenuMain = () => {
         />
         <SidebarMenuItem to='/master/JenisPenindakan' title='Jenis Penindakan' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisPelanggaran' title='Jenis Pelanggaran' hasBullet={true} />
-        <SidebarMenuItem to='/master/TempatPelaksana' title='Tempat Pelaksana' hasBullet={true} />
+        
+        <SidebarMenuItem
+          to='/master/TempatPelaksanaan'
+          title='Tempat Pelaksanaan'
+          hasBullet={true}
+        />
+
         <SidebarMenuItem to='/master/Pendidikan' title='Pendidikan' hasBullet={true} />
         <SidebarMenuItem
           to='/master/JenisSaranaPrasarana'
           title='Jenis Sarana Prasarana'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/master/KondisiSaranaPrasarana'
+          title='Kondisi Sarana Prasarana'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/master/StatusSaranaPrasarana'
+          title='Status Sarana Prasarana'
           hasBullet={true}
         />
         <SidebarMenuItem to='/master/Golongan' title='Golongan' hasBullet={true} />
@@ -174,7 +190,7 @@ const SidebarMenuMain = () => {
         />
         <SidebarMenuItem to='/master/SumberInformasi' title='Sumber Informasi' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
-        <SidebarMenuItem to='/master/JenisPenerbitan' title='Jenis Penerbitan' hasBullet={true} />
+        <SidebarMenuItem to='/master/JenisPenertiban' title='Jenis Penertiban' hasBullet={true} />
       </SidebarMenuItemWithSub>
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>

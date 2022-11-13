@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DataTable from 'react-data-table-component';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -8,18 +8,42 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Swal from 'sweetalert2'
+import { useFormik } from 'formik'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const JENIS_KORBAN_MATERIAL_URL = `${API_URL}/master/jenis-korban-material` //http://localhost:3000/jenis-korban-material
 
+export interface FormInput {
+  jenis_korban_material?: string
+  created_by?: number
+}
+
 export function KorbanMaterial() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const navigate = useNavigate()
+  const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
+  const [show, setShow] = useState(false)
+  const handleKataClose = () => setShowKata(false)
+  const [showKata, setShowKata] = useState(false)
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [valFilterKorbanMaterial, setFilterKorbanMaterial] = useState({ val: '' })
+  const handleKataShow = () => setShowKata(true)
+  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+  const [inputValTugas, setDataTugas] = useState({ label: '', value: null })
+  const [perPage, setPerPage] = useState(10);
+
 
   useEffect(() => {
-    fetchUsers(1);
-  }, []);
+    async function fetchDT(page: number) {
+      setLoading(true)
+      const response = await axios.get(`${JENIS_KORBAN_MATERIAL_URL}/filter/${qParamFind.strparam}`)
+      setTemp(response.data.data)
+      setTotalRows(response.data.total_data)
+      setLoading(false)
+    }
+    fetchUsers(1)
+    fetchDT(1)
+  }, [qParamFind, perPage])
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -45,14 +69,10 @@ export function KorbanMaterial() {
     {
     },
     {
-    },
-    {
       name: 'Jenis Korban Material',
       selector: (row: any) => row.jenis_korban_material,
       sortable: true,
       sortField: 'jenis_korban_material',
-    },
-    {
     },
     {
     },
@@ -76,13 +96,23 @@ export function KorbanMaterial() {
                     size="sm"
                     variant="light"
                     title="Aksi">
-                    <Dropdown.Item>
-                      <Link to="/sarana-prasarana/LaporanSaranaPrasarana">
-                        Detail
-                      </Link>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate('/master/KorbanMaterial/LihatKorbanMaterial/' + record.id, { replace: true })
+                      }
+                    >
+                      Detail
                     </Dropdown.Item>
-                    <Dropdown.Item href="#">Ubah</Dropdown.Item>
-                    <Dropdown.Item href="#">Hapus</Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate('/master/KorbanMaterial/UpdateKorbanMaterial/' + record.id, { replace: true })
+                      }
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -97,7 +127,6 @@ export function KorbanMaterial() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(10);
    
   const [temp, setTemp] = useState([]);
 
@@ -144,6 +173,98 @@ export function KorbanMaterial() {
     }, 100);
   };
 
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      title: 'Anda yakin?',
+      text: 'Ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const bodyParam = {
+          data: {
+            deleted_by: 0,
+          },
+        }
+        const response = await axios.delete(`${JENIS_KORBAN_MATERIAL_URL}/delete/${id}`, bodyParam)
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        }
+      }
+    })
+  }
+  const formik = useFormik({
+    initialValues: {
+      jenis_korban_material: '',
+      kategori: '',
+    },
+    onSubmit: async (values) => {
+      let formData = new FormData()
+      const bodyparam: FormInput = {
+        jenis_korban_material: valuesFormik?.jenis_korban_material ? valuesFormik.jenis_korban_material : '',
+        created_by: 0,
+      }
+      try {
+        const response = await axios.post(`${JENIS_KORBAN_MATERIAL_URL}/create`, bodyparam)
+        if (response) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil disimpan',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          navigate('/master/KorbanMaterial', { replace: true })
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Data gagal disimpan, harap mencoba lagi',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        console.error(error)
+      }
+    },
+  })
+  const handleChangeFormik = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
+  }
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterKorbanMaterial.val !== '') {
+      uriParam += `${valFilterKorbanMaterial.val}`
+    }
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  }
+  const handleChangeInputKorbanMaterial = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setFilterKorbanMaterial({ val: event.target.value })
+  }
 
   return (
     <div className={`card`}>
@@ -154,12 +275,18 @@ export function KorbanMaterial() {
               Korban Material
             </label>
             <input
-              type='text' className='form-control form-control form-control-solid' name='tags'/>
+            type='text'
+            className='form-control form-control form-control-solid'
+            name='q'
+            value={valFilterKorbanMaterial.val}
+            onChange={handleChangeInputKorbanMaterial}
+            placeholder='Korban Material'
+          />
           </div>
       </div>
       <div className="row g-8 mt-2 ms-5 me-5">
         <div className='col-md-6 col-lg-6 col-sm-12'>
-        <Link to='#'>
+        <Link to='#' onClick={handleFilter}>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
@@ -168,8 +295,8 @@ export function KorbanMaterial() {
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-          <Link to='#i'>
-            <button className='btn btn-primary me-5' onClick={handleShow}>
+        <Link to='#' onClick={handleKataShow}>
+            <button className='btn btn-primary me-5'>
               <i className="fa-solid fa-plus"></i>
               Tambah
             </button>
@@ -177,28 +304,43 @@ export function KorbanMaterial() {
         </div>
       </div>
       <>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Tambah Korban Material</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-
-        <Form.Group className="mb-3 form-control-solid">
-            <Form.Label>Korban Material</Form.Label>
-            <Form.Control type="text" placeholder="Korban Material" />
-        </Form.Group>
-
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-          <i className="fa-solid fa-paper-plane"></i>
-            Simpan
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <Modal show={showKata} onHide={handleKataClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Tambah Korban Material</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={formik.handleSubmit}>
+              <div className='row mt-2'>
+                <div className='col-12 mb-6'>
+                  <div className='form-group'>
+                    <Form.Label>Korban Material</Form.Label>
+                    <br />
+                    <Form.Control
+                      name='jenis_korban_material'
+                      className='form-control form-control-solid'
+                      onChange={handleChangeFormik}
+                      value={valuesFormik?.jenis_korban_material}
+                    />
+                  </div>
+                </div>
+              </div>
+              <Modal.Footer>
+                <div className='d-grid gap-2 d-md-flex justify-content-md-left'>
+                  <Link to='master/KorbanMaterial' >
+                    <button className='btn btn-secondary' >
+                      <i className='fa fa-close'></i>
+                      Batal
+                    </button>
+                  </Link>
+                  <button className='btn btn-primary' type='submit'>
+                    <i className='fa-solid fa-paper-plane'></i>
+                    Simpan
+                  </button>
+                </div>
+              </Modal.Footer>
+            </form>
+          </Modal.Body>
+        </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5'>
       <DataTable
