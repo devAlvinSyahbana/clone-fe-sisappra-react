@@ -7,20 +7,19 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 
 export interface FormInput {
-  kota?: string
+  jenis_korban_material?: string
   updated_by?: number
 }
 
 interface GetDataInterface {
   id?: number
-  kode?: string
-  kota?: string
+  jenis_korban_material?: string
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const KOTA_URL = `${API_URL}/master/kota` //http://localhost:3000//master/kota
+export const JENIS_KORBAN_MATERIAL_URL = `${API_URL}/master/jenis-korban-material` //http://localhost:3000/master/korban_jiwa
 
-export function UpdatKorbanMaterial() {
+export function UpdateKorbanMaterial() {
   const navigate = useNavigate()
   const {id} = useParams()
   const [selectedFile, setSelectedFile] = useState(null)
@@ -29,10 +28,10 @@ export function UpdatKorbanMaterial() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${KOTA_URL}/findone/${id}`)
+      const response = await axios.get(`${JENIS_KORBAN_MATERIAL_URL}/findone/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        kota: jsonD.kota,
+        jenis_korban_material: jsonD.jenis_korban_material,
         updated_by: 0,
       }
       setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
@@ -59,24 +58,24 @@ export function UpdatKorbanMaterial() {
 
   const formik = useFormik({
     initialValues: {
-      kota: '',
+      jenis_korban_material: '',
     },
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        kota: valuesFormik?.kota
-          ? valuesFormik.kota
-          : valuesFormikExist?.kota
-          ? valuesFormikExist.kota
+        jenis_korban_material: valuesFormik?.jenis_korban_material
+          ? valuesFormik.jenis_korban_material
+          : valuesFormikExist?.jenis_korban_material
+          ? valuesFormikExist.jenis_korban_material
           : '',
         updated_by: 0,
       }
       try {
-        const response = await axios.put(`${KOTA_URL}/update/${id}`, bodyparam)
+        const response = await axios.put(`${JENIS_KORBAN_MATERIAL_URL}/update/${id}`, bodyparam)
         if (response) {
           if (selectedFile) {
             formData.append('file_dokumentasi', selectedFile)
-            const responseFile = await axios.post(`${KOTA_URL}/upload/${id}`, formData)
+            const responseFile = await axios.post(`${JENIS_KORBAN_MATERIAL_URL}/upload/${id}`, formData)
             if (responseFile) {
               console.log('File success uploaded!')
               Swal.fire({
@@ -85,7 +84,7 @@ export function UpdatKorbanMaterial() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/master/Kota', {replace: true})
+              navigate('/master/KorbanMaterial', {replace: true})
             }
             return
           }
@@ -95,7 +94,7 @@ export function UpdatKorbanMaterial() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/Kota', {replace: true})
+          navigate('/master/KorbanMaterial', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -120,16 +119,16 @@ export function UpdatKorbanMaterial() {
                   <div className='row mt-2'>
                     <div className='col-4 mb-3'>
                       <div className='form-group'>
-                        <Form.Label>Kota</Form.Label>
+                        <Form.Label>Korban Material</Form.Label>
                         <Form.Control
-                          name='kota'
+                          name='jenis_korban_material'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={
-                            valuesFormik?.kota || valuesFormik?.kota === ''
-                              ? valuesFormik?.kota
-                              : valuesFormikExist?.kota
-                              ? valuesFormikExist?.kota
+                            valuesFormik?.jenis_korban_material || valuesFormik?.jenis_korban_material === ''
+                              ? valuesFormik?.jenis_korban_material
+                              : valuesFormikExist?.jenis_korban_material
+                              ? valuesFormikExist?.jenis_korban_material
                               : ''
                           }
                         />
@@ -137,7 +136,7 @@ export function UpdatKorbanMaterial() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/Kota'>
+                    <Link to='/master/KorbanMaterial'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

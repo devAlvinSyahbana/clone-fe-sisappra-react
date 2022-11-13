@@ -4,9 +4,9 @@ import {Link, useParams} from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 
 export interface FormInput {
-  jenis_kegiatan?: string
-  updated_by?: string
+  jenis_penertiban?: string
   kode?: string
+  updated_by?: string
 }
 
 export interface SelectOption {
@@ -19,23 +19,23 @@ export interface SelectOption {
 
 interface GetDataInterface {
   id?: number
-  jenis_kegiatan?: string
   kode?: string
+  jenis_penertiban?: string
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEGIATAN_URL = `${API_URL}/master/jenis-kegiatan` //http://localhost:3000/jenis_kegiatan
+export const JENIS_PENERTIBAN_URL = `${API_URL}/master/jenis-penertiban` //http://localhost:3000/sarana-prasarana
 
-export function LihatJenisKegiatan() {
+export function LihatJenisPenertiban() {
   const {id} = useParams()
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${JENIS_KEGIATAN_URL}/findone/${id}`)
+      const response = await axios.get(`${JENIS_PENERTIBAN_URL}/findone/${id}`)
       const jsonD: GetDataInterface = response.data.data
       const paramValue: FormInput = {
-        jenis_kegiatan: jsonD.jenis_kegiatan,
+        jenis_penertiban: jsonD.jenis_penertiban,
         kode: jsonD.kode,
         updated_by: '',
       }
@@ -55,22 +55,18 @@ export function LihatJenisKegiatan() {
                   <div className='row mt-2'>
                     <div className='col-5 mb-6'>
                       <div className='form-group'>
-                        <Form.Label>Jenis Kegiatan</Form.Label>
+                        <Form.Label>Jenis Penertiban</Form.Label>
                         <Form.Control
-                          name='jenis kegiatan'
+                          name='jenis_penertiban'
                           className='form-control form-control-solid'
-                          value={
-                            valuesFormikExist?.jenis_kegiatan
-                              ? valuesFormikExist?.jenis_kegiatan
-                              : ''
-                          }
+                          value={valuesFormikExist?.jenis_penertiban ? valuesFormikExist?.jenis_penertiban : ''}
                           readOnly
                         />
                       </div>
                     </div>
                     <div className='col-5 mb-6'>
                       <div className='form-group'>
-                        <Form.Label>kode</Form.Label>
+                        <Form.Label>Kode</Form.Label>
                         <Form.Control
                           name='kode'
                           className='form-control form-control-solid'
@@ -81,7 +77,7 @@ export function LihatJenisKegiatan() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/JenisKegiatan'>
+                    <Link to='/master/JenisPenertiban'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali
