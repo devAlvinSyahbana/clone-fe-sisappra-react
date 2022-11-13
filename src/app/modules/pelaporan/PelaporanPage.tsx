@@ -1,14 +1,13 @@
 import React from 'react'
 import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import { LaporanKegiatan } from './components/LaporanKegiatan'
-import { TambahLaporanKegiatan } from './components/TambahLaporanKegiatan'
-import { LaporanKejadian } from './components/LaporanKejadian'
-import { TambahLaporanKejadian } from './components/TambahLaporanKejadian'
-import { LaporanPengawasan } from './components/LaporanPengawasan'
-import { LaporanTamuDaerah } from './components/LaporanTamuDaerah'
-import { TambahTamuDaerah } from './components/TambahTamuDaerah'
-import { DetailLaporanKegiatan } from './components/DetailLaporanKegiatan'
+import { LaporanKegiatan } from './pages/LaporanKegiatan'
+import { LaporanKejadian } from './pages/LaporanKejadian'
+import { TambahLaporanKejadian } from './pages/TambahLaporanKejadian'
+import { LaporanPengawasan } from './pages/LaporanPengawasan'
+import { LaporanTamuDaerah } from './pages/LaporanTamuDaerah'
+import { TambahTamuDaerah } from './pages/TambahTamuDaerah'
+import { DetailLaporanKegiatan } from './pages/DetailLaporanKegiatan'
 import {AddKegiatanUmumPage} from "./pages/kegiatan-umum-new";
 
 

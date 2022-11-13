@@ -1,76 +1,155 @@
-import React, {FC, useEffect} from "react";
-import Select from 'react-select'
+import React, {ChangeEvent, FC, SyntheticEvent, useEffect} from "react";
+import Select, {OptionProps} from 'react-select'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../redux/store";
-import {updateProp} from "../../../../redux/slices/pelaporan-kegiatan.slice";
-
-interface ComboBox {
-    label: string,
-    value: string
-}
+import {changedValue} from "../../../../redux/slices/pelaporan-kegiatan.slice";
+import {ErrorMessage, Field, FormikValues} from "formik";
+import {
+    DatePickerField,
+    SelectField,
+    TimePickerField,
+    ToFieldStateBNV,
+    ToFieldStateCE
+} from '../../components/fields.formikcto'
+import axios from "axios";
 
 interface StepDetailKegiatanProps {
-
+    handleChange?: {
+        /** Classic React change handler, keyed by input name */
+        (e: React.ChangeEvent<any>): void;
+        /** Preact-like linkState. Will return a handleChange function.  */
+            <T = string | React.ChangeEvent<any>>(field: T): T extends React.ChangeEvent<any> ? void : (e: string | React.ChangeEvent<any>) => void;
+    };
+    values: FormikValues;
+    handleBlur?: {
+        /** Classic React blur handler, keyed by input name */
+        (e: React.FocusEvent<any>): void;
+        /** Preact-like linkState. Will return a handleBlur function. */
+            <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void;
+    };
 }
 
-type SelectOptionType = { label: string, value: string }
-
-export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ }) => {
+export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ handleChange, values, handleBlur }) => {
     const dispatch = useDispatch()
-    const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.jenis_kegiatan_list)
+    const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
+    const jenisKegiatan = useSelector((s:RootState) => (s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id))
+
+    const updateJenisPasalList = () => {
+        axios.get(`http://localhost:3001/jenis-perda-perkada?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`).then(res => {
+            const data = res.data.data
+                .map((d: any) => ({label: d.text, value: String(d.value)}))
+            dispatch(changedValue(ToFieldStateBNV('list_jenis_pasal', data)))
+        })
+    }
+
+    const updateJenisPenyelesaianList = () => {
+        axios.get(`http://localhost:3001/jenis-penyelesaian?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`).then(res => {
+            const data = res.data.data
+                .map((d: any) => ({label: d.text, value: String(d.value)}))
+            dispatch(changedValue(ToFieldStateBNV('list_jenis_penyelesaian', data)))
+        })
+    }
+
 
     return (<div className='w-50'>
         <div className='pb-10 pb-lg-15'>
             <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
 
-            {useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id)}
+            {useSelector((s:RootState)=> s.pelaporanKegiatan.kegiatan__jam)}
 
             <div className="mb-10">
                 <label className="required form-label">Jenis Kegiatan</label>
-                <Select options={jenisKegiatanList} onChange={(o)=>dispatch(updateProp({value: o?.value, field: 'kegiatan__jenis_kegiatan_id'}))}/>
+                <Field
+                    name="kegiatan__jenis_kegiatan_selection"
+                    target="kegiatan__jenis_kegiatan_id"
+                    className="form-control"
+                    component={SelectField}
+                    options={jenisKegiatanList}
+                    onChange={(o:ChangeEvent<any>)=>{
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                        updateJenisPasalList()
+                        updateJenisPenyelesaianList()
+                    }}
+                />
+                <div className='text-danger mt-2'>
+                    <ErrorMessage name='kegiatan__jenis_kegiatan_id' />
+                </div>
             </div>
 
             <div className="mb-10">
-                <label className="required form-label">Jumlah Personil</label>
-                <input
+                <label htmlFor="kegiatan__jumlah_personil" className="required form-label">Jumlah Personil</label>
+                <Field
                     type="number"
+                    name="kegiatan__jumlah_personil"
                     className="form-control"
-                    value={useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__jumlah_personil)}
-                    onChange={(o:any)=>dispatch(updateProp({value: o.target.value, field: 'kegiatan__jumlah_personil'}))}
+                    onKeyUp={(o:ChangeEvent<any>) => {
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
                 />
+                <div className='text-danger mt-2'>
+                    <ErrorMessage name='kegiatan__jumlah_personil' />
+                </div>
             </div>
 
             <div className="mb-10">
                 <label className="required form-label">Uraian Kegiatan</label>
-                <textarea
+                <Field
+                    as="textarea"
+                    type="text"
+                    name="kegiatan__uraian_kegiatan"
                     className="form-control"
-                    value={useSelector((s: RootState) => s.pelaporanKegiatan.kegiatan__uraian_kegiatan)}
-                    onChange={(o:any)=>dispatch(updateProp({value: o.target.value, field: 'kegiatan__uraian_kegiatan'}))}
+                    onKeyUp={(o:any) => {
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
                 />
+                <div className='text-danger mt-2'>
+                    <ErrorMessage name='kegiatan__uraian_kegiatan' />
+                </div>
             </div>
 
             <div className="mb-10">
                 <label className="required form-label">Tanggal Kegiatan</label>
-                <input
-                    type="date"
+                <Field
+                    name="kegiatan__tanggal"
                     className="form-control"
+                    component={DatePickerField}
+                    onChange={(o:any)=>{
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
                 />
+                <div className='text-danger mt-2'>
+                    <ErrorMessage name='kegiatan__tanggal' />
+                </div>
             </div>
 
             <div className="mb-10">
                 <label className="required form-label">Waktu Kegiatan</label>
-                <input
-                    type="time"
+                <Field
+                    name="kegiatan__jam"
                     className="form-control"
+                    component={TimePickerField}
+                    onChange={(o:any)=>{
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
                 />
+                <div className='text-danger mt-2'>
+                    <ErrorMessage name='kegiatan__jam' />
+                </div>
             </div>
 
             <div className="mb-10">
                 <label className="required form-label">Lokasi Kegiatan</label>
-                <input
+                <Field
                     type="text"
+                    name="kegiatan__lokasi"
                     className="form-control"
+                    onKeyUp={(o:any) => {
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
                 />
+                <div className='text-danger mt-2'>
+                    <ErrorMessage name='kegiatan__lokasi' />
+                </div>
             </div>
 
         </div>
