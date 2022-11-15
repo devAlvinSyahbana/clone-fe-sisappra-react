@@ -94,7 +94,7 @@ export function Pendidikan() {
   const [loading, setLoading] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
-   
+
   const [temp, setTemp] = useState([]);
 
   const fetchUsers = async (page: any) => {
@@ -102,15 +102,15 @@ export function Pendidikan() {
     const value = await axios.get(PENDIDIKAN_URL + "/find");
 
     setTemp(value.data.data);
-    console.log('cek response api:',temp);
+    console.log('cek response api:', temp);
 
-    
+
     const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`);
     setData(response.data.data);
-   
+
     setTotalRows(response.data.total);
     setLoading(false);
-    console.log('cek ahhh :' ,data);
+    console.log('cek ahhh :', data);
     return [data, setData] as const;
   };
 
@@ -145,24 +145,24 @@ export function Pendidikan() {
     <div className={`card`}>
       {/* begin::Body */}
       <div className="row g-8 mt-2 ms-5 me-5">
-          <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
-            <label htmlFor='' className='mb-3'>
-              Pendidikan
-            </label>
-            <input
-              type='text' className='form-control form-control form-control-solid' name='tags'/>
-          </div>
+        <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
+          <label htmlFor='' className='mb-3'>
+            Pendidikan
+          </label>
+          <input
+            type='text' className='form-control form-control form-control-solid' name='tags' />
+        </div>
       </div>
       <div className="row g-8 mt-2 ms-5 me-5">
         <div className='col-md-6 col-lg-6 col-sm-12'>
-        <Link to='#'>
+          <Link to='#'>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
             </button>
           </Link>
         </div>
-        
+
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
           <Link to='#'>
             <button className='btn btn-primary me-5' onClick={handleShow}>
@@ -172,37 +172,37 @@ export function Pendidikan() {
           </Link>
         </div>
       </div>
-      
+
       <>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Tambah Pendidikan</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Tambah Pendidikan</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
 
-        <Form.Group className="mb-3 form-control-solid">
-            <Form.Label>Pendidikan</Form.Label>
-            <Form.Control type="text" placeholder="Pendidikan" />
-        </Form.Group>
+            <Form.Group className="mb-3 form-control-solid">
+              <Form.Label>Pendidikan</Form.Label>
+              <Form.Control type="text" placeholder="Pendidikan" />
+            </Form.Group>
 
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-          <i className="fa-solid fa-paper-plane"></i>
-            Simpan
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+              <i className="fa-solid fa-paper-plane"></i>
+              Simpan
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
 
       <div className='table-responsive mt-5 ms-5 me-5'>
-      <DataTable
-            columns={columns}
-            data={temp}
-            pagination
+        <DataTable
+          columns={columns}
+          data={temp}
+          pagination
         />
         {/* <DataTable
           columns={columns}
@@ -223,10 +223,10 @@ export function Pendidikan() {
   )
 }
 function orderBy(data: never[], sortField: any, sortDirection: any): React.SetStateAction<never[]> {
-    throw new Error('Function not implemented.');
-  }
-  
+  throw new Error('Function not implemented.');
+}
+
 function onEdit(record: any) {
-throw new Error('Function not implemented.');
+  throw new Error('Function not implemented.');
 }
 
