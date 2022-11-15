@@ -34,7 +34,7 @@ import OrganizationalChart from './hirarki-chart/components/orgChart'
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const ATASAN_URL = `${API_URL}/kepegawaian`
-export const DATA_HIRARKI_URL = `${API_URL}/master/struktur_Data_hirarki`
+export const DATA_HIRARKI_URL = `${API_URL}/master/struktur_data_hirarki`
 
 export function HirarkiPegawai() {
   const users = useQueryResponseData()
@@ -280,28 +280,27 @@ export function HirarkiPegawai() {
 
   useEffect(() => {
     const fetchDataPP = async () => {
-      const value = await axios.get(`${DATA_HIRARKI_URL}/find/hirarki`)
+      const value = await axios.get(`${DATA_HIRARKI_URL}/find-bagan`)
       const fixedData = value.data.data.map((item: any) => {
-        const {parentid, positionname, imageurl, ...newItem} = item
+        const {parentid, position_name, ...newItem} = item
         return {
           ...newItem,
-          parentId: parentid == 0 ? '' : parentid + '',
-          positionName: positionname,
-          imageUrl: imageurl,
+          parentId: parentid == '0' ? '' : parentid + '',
+          positionName: position_name,
         }
       })
       setDataSatPP(fixedData)
-
-      console.log('ini buat data test', datasatpp)
     }
+    console.log('ini buat data test', datasatpp)
     fetchDataPP()
   }, [])
+
+  const datasatpol = [{id: 1, parentId: '', positionName: 'KEPALA SATPOL PP DKI JAKARTA', team: ''}]
 
   const datasatpolpp = [
     {
       id: 1,
       parentId: '',
-      name: 'Arifin',
       positionName: 'Kepala Satpol PP',
       team: '',
       tempatLahir: 'Jakarta',
@@ -328,7 +327,7 @@ export function HirarkiPegawai() {
     },
     {
       id: 3,
-      parentId: '2',
+      parentId: '43',
       name: 'Kate',
       positionName: 'SEKRETARIAT',
       phone: '-',
@@ -399,7 +398,7 @@ export function HirarkiPegawai() {
     },
     {
       id: 8,
-      parentId: '2',
+      parentId: '44',
       name: 'Kate',
       positionName: 'BIDANG KETENTRAMAN DAN KETERTIBAN UMUM',
       phone: '-',
@@ -451,7 +450,7 @@ export function HirarkiPegawai() {
     },
     {
       id: 12,
-      parentId: '2',
+      parentId: '45',
       name: 'Kate',
       positionName: 'BIDANG PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA DAN INDUSTRI',
       phone: '-',
@@ -503,7 +502,7 @@ export function HirarkiPegawai() {
     },
     {
       id: 16,
-      parentId: '2',
+      parentId: '46',
       name: 'Kate',
       positionName: 'Bidang Perlindungan Masyarakat',
       phone: '-',
@@ -555,7 +554,7 @@ export function HirarkiPegawai() {
     },
     {
       id: 20,
-      parentId: '2',
+      parentId: '47',
       name: 'Kate',
       positionName: 'Bidang Penegakan dan Penindakan',
       phone: '-',
@@ -607,7 +606,7 @@ export function HirarkiPegawai() {
     },
     {
       id: 24,
-      parentId: '2',
+      parentId: '48',
       name: 'Kate',
       positionName: 'Bidang PPNS',
       phone: '-',
@@ -659,7 +658,7 @@ export function HirarkiPegawai() {
     },
     {
       id: 28,
-      parentId: '2',
+      parentId: '49',
       name: 'Kate',
       positionName: 'Satpol PP Kota',
       phone: '-',
@@ -763,7 +762,7 @@ export function HirarkiPegawai() {
     },
     {
       id: 36,
-      parentId: '2',
+      parentId: '50',
       name: 'Kate',
       positionName: 'Satpol PP Kabupaten',
       phone: '-',
@@ -865,6 +864,54 @@ export function HirarkiPegawai() {
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
+    {
+      id: 43,
+      parentId: '2',
+      team: 'Sekretariat',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 44,
+      parentId: '2',
+      team: 'Bidang Ketentraman',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 45,
+      parentId: '2',
+      team: 'Bidang Pengawasan',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 46,
+      parentId: '2',
+      team: 'Bidang Perlindungan Masyarakat',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 47,
+      parentId: '2',
+      team: 'Bidang Penegakan dan Penindakan',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 48,
+      parentId: '2',
+      team: 'Bidang PPNS',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 49,
+      parentId: '2',
+      team: 'Satpol PP Kota',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 50,
+      parentId: '2',
+      team: 'Satpol PP Kabupaten',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
   ]
 
   return (
@@ -908,7 +955,7 @@ export function HirarkiPegawai() {
             </div>
             {/* Menampilkan Struktur Organisasi */}
             {/* {datasatpp && <OrganizationalChart data={datasatpp} />} */}
-            <OrganizationalChart data={datasatpolpp} />
+            <OrganizationalChart data={datasatpp} />
           </div>
         </div>
         {/* end::Body */}
