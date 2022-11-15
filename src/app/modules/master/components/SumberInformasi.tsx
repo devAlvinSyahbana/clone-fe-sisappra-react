@@ -1,24 +1,30 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
-import DataTable from 'react-data-table-component';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
+import DataTable from 'react-data-table-component'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import Dropdown from 'react-bootstrap/Dropdown'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
+import Form from 'react-bootstrap/Form'
+import AsyncSelect from 'react-select/async'
 import { useFormik } from 'formik'
-
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SUMBER_INFORMASI_URL = `${API_URL}/master/sumber-informasi` //http://localhost:3000/sarana-prasarana
+import * as Yup from 'yup'
+import clsx from 'clsx'
 
 export interface FormInput {
   sumber_informasi?: string
   created_by?: number
 }
 
+const validatorForm = Yup.object().shape({
+  sumber_informasi: Yup.string().required('Wajib diisi'),
+})
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
+export const SUMBER_INFORMASI_URL = `${API_URL}/master/sumber-informasi` //http://localhost:3000/master/kota
 
 export function SumberInformasi() {
   const navigate = useNavigate()
@@ -30,57 +36,34 @@ export function SumberInformasi() {
   const [valFilterSumberInformasi, setFilterSumberInformasi] = useState({ val: '' }) //3
   const handleKataShow = () => setShowKata(true)
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
-  const [perPage, setPerPage] = useState(10);
 
   useEffect(() => {
-    fetchUsers(1);
-  }, []);
+    fetchUsers(1)
+  }, [])
 
   const LoadingAnimation = (props: any) => {
     return (
       <>
-        <div className="alert alert-primary d-flex align-items-center p-5 mb-10">
+        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
           {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
-          <span className="spinner-border spinner-border-xl align-middle me-3"></span>
-          <div className="d-flex flex-column">
-            <h5 className="mb-1">Sedang mengambil data...</h5>
+          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+          <div className='d-flex flex-column'>
+            <h5 className='mb-1'>Sedang mengambil data...</h5>
           </div>
         </div>
       </>
     )
   }
-
-  const handleChangeFormik = (event: {
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setValuesFormik((prevValues: any) => ({
-      ...prevValues,
-      [event.target.name]: event.target.value,
-    }))
-  }
- 
-  useEffect(() => {
-    async function fetchDT(page: number) {
-      setLoading(true)
-      const response = await axios.get(`${SUMBER_INFORMASI_URL}/filter/${qParamFind.strparam}`)
-      setTemp(response.data.data)
-      setTotalRows(response.data.total_data)
-      setLoading(false)
-    }
-    fetchUsers(1)
-    fetchDT(1)
-  }, [qParamFind, perPage])
-
   const formik = useFormik({
     initialValues: {
-      sumber_informasi: '',
-      id_modul_permission: 0,
+      ...valuesFormik,
     },
+    validationSchema: validatorForm,
+    enableReinitialize: true,
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        sumber_informasi: valuesFormik?.sumber_informasi ? valuesFormik.sumber_informasi : '',
+        sumber_informasi: valuesFormik?.sumber_informasi,
         created_by: 0,
       }
       try {
@@ -92,7 +75,13 @@ export function SumberInformasi() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/SumberInformasi', { replace: true })
+          // navigate('/master/Kota', { replace: true })
+          fetchUsers(1)
+          setValuesFormik((prevValues: any) => ({
+            ...prevValues,
+            sumber_informasi: '',
+          }))
+          handleKataClose()
         }
       } catch (error) {
         Swal.fire({
@@ -105,120 +94,6 @@ export function SumberInformasi() {
       }
     },
   })
-  const columns = [
-    {
-      name: 'No',
-      selector: (row: any) => row.id,
-      sortable: true,
-      sortField: 'id',
-    },
-    {
-    },
-    {
-      name: 'Sumber Informasi',
-      selector: (row: any) => row.sumber_informasi,
-      sortable: true,
-      sortField: 'sumber_informasi',
-    },
-    {
-    },
-    {
-      name: 'Aksi',
-      sortable: false,
-      text: "Action",
-      className: "action",
-      align: "left",
-      cell: (record: any) => {
-        return (
-          <Fragment>
-
-            <div className="mb-2">
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size="sm"
-                    variant="light"
-                    title="Aksi">
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate('/master/SumberInformasi/LihatSumberInformasi/' + record.id, { replace: true })
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate('/master/SumberInformasi/UpdateSumberInformasi/' + record.id, { replace: true })
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => konfirDel(record?.id)}>Hapus</Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        );
-      },
-    },
-
-  ];
-
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [totalRows, setTotalRows] = useState(0);
-  
-   
-  const [temp, setTemp] = useState([]);
-
-  const fetchUsers = async (page: any) => {
-    setLoading(true);
-    const value = await axios.get(SUMBER_INFORMASI_URL + "/find");
-
-    setTemp(value.data.data);
-    console.log('cek response api:',temp);
-
-    
-    const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`);
-    setData(response.data.data);
-   
-    setTotalRows(response.data.total);
-    setLoading(false);
-    console.log('cek ahhh :' ,data);
-    return [data, setData] as const;
-  };
-
-  const handlePageChange = (page: any) => {
-    fetchUsers(page);
-  };
-
-  const handlePerRowsChange = async (newPerPage: any, page: any) => {
-    setLoading(true);
-
-    const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${newPerPage}delay=1`);
-
-    setData(response.data.data);
-    setPerPage(newPerPage);
-    setLoading(false);
-  };
-
-  const handleSort = (column: any, sortDirection: any) => {
-    // simulate server sort
-    console.log(column, sortDirection);
-    setLoading(true);
-
-    // instead of setTimeout this is where you would handle your API call.
-    setTimeout(() => {
-      setData(orderBy(data, column.sortField, sortDirection));
-      setLoading(false);
-    }, 100);
-  };
 
   const konfirDel = (id: number) => {
     Swal.fire({
@@ -257,14 +132,75 @@ export function SumberInformasi() {
       }
     })
   }
+var num =1
+  const columns = [
+    {
+      name: 'No',
+      selector: (row: any) => row.id,
+      sortable: true,
+      sortField: 'no',
+      wrap: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.sumber_informasi !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
+      },
+    },
+    {
+      name: 'Sumber Informasi',
+      selector: (row: any) => row.sumber_informasi,
+      sortable: true,
+      sortField: 'sumber_informasi',
+      width: '400px',
+      wrap: true,
+    },
+    {
+      name: 'Aksi',
+      sortable: false,
+      text: 'Action',
+      className: 'action',
+      align: 'left',
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='mb-2  mt-2'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate('/master/SumberInformasi/LihatSumberInformasi/' + record.id, { replace: true })
+                      }
+                    >
+                      Detail
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      onClick={() =>
+                        navigate('/master/SumberInformasi/UpdateSumberInformasi/' + record.id, { replace: true })
+                      }
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                      Hapus
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
+            </div>
+          </Fragment>
+        )
+      },
+    },
+  ]
 
-  const handleFilter = async () => {
-    let uriParam = ''
-    if (valFilterSumberInformasi.val !== '') {
-      uriParam += `${valFilterSumberInformasi.val}`
-    }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
-  }
   const handleChangeInputSumberInformasi = (event: {
     preventDefault: () => void
     target: { value: any; name: any }
@@ -272,45 +208,118 @@ export function SumberInformasi() {
     setFilterSumberInformasi({ val: event.target.value })
   } //4
 
+  const handleChangeFormikSelect = (value: any, name: string) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [name]: value,
+    }))
+  }
+  const handleChangeFormik = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    console.log(event.target)
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
+  }
+
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(10)
+
+  const [temp, setTemp] = useState([])
+
+  useEffect(() => {
+    async function fetchDT(page: number) {
+      setLoading(true)
+      const response = await axios.get(`${SUMBER_INFORMASI_URL}/filter/${qParamFind.strparam}`)
+      setTemp(response.data.data)
+      setTotalRows(response.data.total_data)
+      setLoading(false)
+    }
+    fetchUsers(1)
+    fetchDT(1)
+  }, [qParamFind, perPage])
+
+  //2
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterSumberInformasi.val !== '') {
+      uriParam += `${valFilterSumberInformasi.val}`
+    }
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  }
+
+  const fetchUsers = async (page: any) => {
+    setLoading(true)
+    const value = await axios.get(`${SUMBER_INFORMASI_URL}/find`)
+
+    setTemp(value.data.data)
+    console.log('cek kota:', temp)
+
+    return [data, setTemp] as const
+  }
+
   return (
     <div className={`card`}>
       {/* begin::Body */}
-      <div className="row g-8 mt-2 ms-5 me-5">
-          <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
-            <label htmlFor='' className='mb-3'>
-              Sumber Informasi
-            </label>
-            <input
+      <div className='row g-8 mt-2 ms-5 me-5'>
+        <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
+          <label htmlFor='' className='mb-3'>
+            SumberInformasi
+          </label>
+          <input
             type='text'
             className='form-control form-control form-control-solid'
             name='q'
             value={valFilterSumberInformasi.val}
             onChange={handleChangeInputSumberInformasi} //5
-            placeholder='SumberInformasi'
+            placeholder='Sumber Informasi'
           />
-          </div>
+        </div>
       </div>
-      <div className="row g-8 mt-2 ms-5 me-5">
+      <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-        <Link to='#' onClick={handleFilter}> 
+          {/* 1 */}
+          <Link to='#' onClick={handleFilter}> 
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
             </button>
           </Link>
         </div>
-        
-        <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-          <Link to='#i'>
-            <button className='btn btn-primary me-5' onClick={handleKataShow}>
-              <i className="fa-solid fa-plus"></i>
+
+        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+          <Link to='#' onClick={handleKataShow}>
+            <button className='btn btn-primary me-5'>
+              <i className='fa-solid fa-plus'></i>
               Tambah
             </button>
           </Link>
         </div>
       </div>
       <>
-      <Modal show={showKata} onHide={handleKataClose}>
+        {/* onSubmit: async (values) => {
+      const bodyparam: FormInput = {}
+      valuesFormik?.kota ? (bodyparam.kota = valuesFormik.kota) : delete bodyparam.kota
+
+      try {
+        const response = await axios.post(`${KOTA_URL}/create`, bodyparam)
+        if (response) {
+          fetchUsers(1)
+          handleClose()
+          setValuesFormik({})
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }, */}
+      </>
+      <>
+        <Modal show={showKata} onHide={handleKataClose}>
           <Modal.Header closeButton>
             <Modal.Title>Tambah Sumber Informasi</Modal.Title>
           </Modal.Header>
@@ -323,16 +332,31 @@ export function SumberInformasi() {
                     <br />
                     <Form.Control
                       name='sumber_informasi'
-                      className='form-control form-control-solid'
+                      className={clsx(
+                        'form-control form-control-solid mb-1',
+                        {
+                          'is-invalid': formik.touched.sumber_informasi && formik.errors.sumber_informasi,
+                        },
+                        {
+                          'is-valid': formik.touched.sumber_informasi && !formik.errors.sumber_informasi,
+                        }
+                      )}
                       onChange={handleChangeFormik}
                       value={valuesFormik?.sumber_informasi}
                     />
+                    {formik.touched.sumber_informasi && formik.errors.sumber_informasi && (
+                      <div className='fv-plugins-message-container'>
+                        <div className='fv-help-block'>
+                          <span role='alert'>{formik.errors.sumber_informasi}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
               <Modal.Footer>
               <div className='d-grid gap-2 d-md-flex justify-content-md-left'>
-                <Link to='master/JenisSaranaPrasarana' >
+                <Link to='/apps/detail-hak-akses/DetailHakAkses' >
                   <button className='btn btn-secondary' >
                     <i className='fa fa-close'></i>
                     Batal
@@ -348,12 +372,9 @@ export function SumberInformasi() {
           </Modal.Body>
         </Modal>
       </>
-      <div className='table-responsive mt-5 ms-5 me-5'>
-      <DataTable
-            columns={columns}
-            data={temp}
-            pagination
-        />
+
+      <div className='table-responsive mt-30 ms-30 me-1'>
+        <DataTable columns={columns} data={temp} pagination />
         {/* <DataTable
           columns={columns}
           data={data}
@@ -363,20 +384,12 @@ export function SumberInformasi() {
           paginationServer
           paginationTotalRows={totalRows}
           sortServer
-          onSort={handleSort}
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
+          // onSort={handleSort}
+          // onChangeRowsPerPage={handlePerRowsChange}
+          // onChangePage={handlePageChange}
         /> */}
       </div>
       {/* end::Body */}
     </div>
   )
 }
-function orderBy(data: never[], sortField: any, sortDirection: any): React.SetStateAction<never[]> {
-  throw new Error('Function not implemented.');
-}
-
-function onEdit(record: any) {
-  throw new Error('Function not implemented.');
-}
-
