@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useEffect, useRef} from 'react'
+import axios from 'axios'
+import React, {useEffect, useRef, useState} from 'react'
 import ApexCharts, {ApexOptions} from 'apexcharts'
 import {getCSSVariableValue} from '../../../assets/ts/_utils'
 import {useThemeMode} from '../../layout/theme-mode/ThemeModeProvider'
+import {JumlahSeluruhSatpol} from '../../../../app/modules/kepegawaian/components/LaporanRekapPegawaiInterface'
+import {KTSVG} from '../../../helpers'
 
 type Props = {
   className: string
@@ -10,9 +13,15 @@ type Props = {
   chartHeight: string
 }
 
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+
 const MixedWidget10: React.FC<Props> = ({className, chartColor, chartHeight}) => {
   const chartRef = useRef<HTMLDivElement | null>(null)
   const {mode} = useThemeMode()
+
+  const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
+
   const refreshChart = () => {
     if (!chartRef.current) {
       return
@@ -28,6 +37,13 @@ const MixedWidget10: React.FC<Props> = ({className, chartColor, chartHeight}) =>
 
   useEffect(() => {
     const chart = refreshChart()
+
+    const fetchData = async () => {
+      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp`)
+
+      setJpegawaisatpol(jsatpol.data.data)
+    }
+    fetchData()
 
     return () => {
       if (chart) {
@@ -46,19 +62,78 @@ const MixedWidget10: React.FC<Props> = ({className, chartColor, chartHeight}) =>
           <div className='d-flex flex-stack flex-wrap'>
             <div className='me-2'>
               <a href='#' className='text-dark text-hover-primary fw-bold fs-3'>
-                Generate Reports
+                Summary Sub Modul Sisappra
               </a>
-
-              <div className='text-muted fs-7 fw-semibold'>Finance and accounting reports</div>
             </div>
-
-            <div className={`fw-bold fs-3 text-${chartColor}`}>$24,500</div>
           </div>
+          {/* begin::Stats */}
+          <div className='card-p mt-n35 '>
+            {/* begin::Row */}
+            <div className='row g-0'>
+              {/* begin::Col */}
+              <div className='col bg-light-primary px-6 py-8 rounded-2 me-7 mb-7'>
+                <div className='text-primary '>Total Data</div>
+                <div className='text-primary fw-semibold fs-6'>Seluruh Pegawai Satpol PP</div>
+                <div className='text-primary fw-bold mt-3 text-end'>
+                  {jpegawaisatpol?.jmlh_seluruh_pegawai_satpol !== 0
+                    ? jpegawaisatpol?.jmlh_seluruh_pegawai_satpol
+                    : '-'}{' '}
+                  orang
+                </div>
+              </div>
+              {/* end::Col */}
+              {/* begin::Col */}
+              <div className='col bg-light-primary px-6 py-8 rounded-2 mb-7'>
+                <div className='text-primary fs-6'> Total Data</div>
+                <div className='text-primary fw-semibold fs-6'> PNS</div>
+                <div className='text-primary fw-bold mt-3 text-end'>
+                  {' '}
+                  {jpegawaisatpol?.jmlh_seluruh_pns !== 0
+                    ? jpegawaisatpol?.jmlh_seluruh_pns
+                    : '-'}{' '}
+                  orang
+                </div>
+              </div>
+              {/* end::Col */}
+            </div>
+            {/* end::Row */}
+            {/* begin::Row */}
+            <div className='row g-0'>
+              {/* begin::Col */}
+              <div className='col bg-light-primary px-6 py-8 rounded-2 me-7'>
+                <div className='text-primary fs-6 mt-2'>Total Data </div>
+                <div className='text-primary fw-semibold fs-6'>PTT</div>
+                <div className='text-primary fw-bold mt-3 text-end'>
+                  {' '}
+                  {jpegawaisatpol?.jmlh_seluruh_non_pns_ptt !== 0
+                    ? jpegawaisatpol?.jmlh_seluruh_non_pns_ptt
+                    : '-'}{' '}
+                  orang
+                </div>
+              </div>
+              {/* end::Col */}
+              {/* begin::Col */}
+              <div className='col bg-light-primary px-6 py-8 rounded-2'>
+                <div className='text-primary  fs-6 mt-2'>Total Data</div>
+                <div className='text-primary fw-semibold'>PJLP</div>
+                <div className='text-primary fw-bold mt-3 text-end'>
+                  {' '}
+                  {jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp !== 0
+                    ? jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp
+                    : '-'}{' '}
+                  orang
+                </div>
+              </div>
+              {/* end::Col */}
+            </div>
+            {/* end::Row */}
+          </div>
+          {/* end::Stats */}
         </div>
         {/* end::Stats */}
 
         {/* begin::Chart */}
-        <div ref={chartRef} className='mixed-widget-7-chart card-rounded-bottom'></div>
+        <div className='mixed-widget-7-chart card-rounded-bottom'></div>
         {/* end::Chart */}
       </div>
       {/* end::Body */}

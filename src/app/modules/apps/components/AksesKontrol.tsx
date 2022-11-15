@@ -343,8 +343,6 @@ export function AksesKontrol() {
     })
   }
 
-  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
-
   const handleChangeFormik = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -354,6 +352,8 @@ export function AksesKontrol() {
       [event.target.name]: event.target.value,
     }))
   }
+
+  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
 
   const formik = useFormik({
     initialValues: {
@@ -374,7 +374,7 @@ export function AksesKontrol() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/apps/data-pengguna/', {
+          navigate('/apps/akses-kontrol', {
             replace: true,
           })
         }
@@ -433,20 +433,34 @@ export function AksesKontrol() {
             <Modal.Title>Tambah Akses Kontrol</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form.Group className='mb-3 form-control-solid'>
-              <Form.Label>Nama Akses Kontrol</Form.Label>
-              <Form.Control type='text' placeholder='Masukkan Nama Akses Kontrol' />
-            </Form.Group>
+            <form onSubmit={formik.handleSubmit}>
+              <div className='row mt-2'>
+                <div className='col-4 mb-6'>
+                  <div className='form-group'>
+                    <Form.Label>Modul</Form.Label>
+                    <Form.Control
+                      name='modul'
+                      className='form-control form-control-solid'
+                      onChange={handleChangeFormik}
+                      value={valuesFormik?.modul}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
+                <Link to='/apps/detail-hak-akses/DetailHakAkses'>
+                  <button className='btn btn-secondary'>
+                    <i className='fa fa-close'></i>
+                    Batal
+                  </button>
+                </Link>
+                <button className='btn btn-primary' type='submit'>
+                  <i className='fa-solid fa-paper-plane'></i>
+                  Simpan
+                </button>
+              </div>
+            </form>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant='secondary' onClick={handleClose}>
-              Batal
-            </Button>
-            <Button variant='primary' onClick={handleClose}>
-              <i className='fa-solid fa-paper-plane'></i>
-              Simpan
-            </Button>
-          </Modal.Footer>
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5'>
