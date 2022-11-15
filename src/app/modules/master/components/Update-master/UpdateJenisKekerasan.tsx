@@ -17,9 +17,9 @@ interface GetDataInterface {
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEKERASAN_URL = `${API_URL}/master/JenisKekerasan` //http://localhost:3000//master/JenisKekerasan
+export const JENIS_KEKERASAN_URL = `${API_URL}/master/jenis-kekerasan` //http://localhost:3000//master/JenisKekerasan
 
-export function UpdateJenisKejadian() {
+export function UpdateJenisKekerasan() {
   const navigate = useNavigate()
   const {id} = useParams()
   const [selectedFile, setSelectedFile] = useState(null)
@@ -84,7 +84,7 @@ export function UpdateJenisKejadian() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/master/JenisKejadian', {replace: true})
+              navigate('/master/JenisKekerasan', {replace: true})
             }
             return
           }
@@ -94,7 +94,7 @@ export function UpdateJenisKejadian() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/JenisKejadian', {replace: true})
+          navigate('/master/JenisKekerasan', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -136,7 +136,7 @@ export function UpdateJenisKejadian() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/JenisKejadian'>
+                    <Link to='/master/JenisKekerasan'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

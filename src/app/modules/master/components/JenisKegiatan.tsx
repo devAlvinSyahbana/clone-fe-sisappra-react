@@ -5,6 +5,7 @@ import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import Swal from 'sweetalert2'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -12,17 +13,48 @@ import Form from 'react-bootstrap/Form'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const JENIS_KEGIATAN_URL = `${API_URL}/master/jenis-kegiatan` //http://localhost:3000/master/jenis-kegiatan
 
+export interface FormInput {
+  kota?: string
+  created_by?: number
+}
+
 export function JenisKegiatan() {
   const navigate = useNavigate()
 
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const handleKataClose = () => setShowKata(false)
+  const [showKata, setShowKata] = useState(false)
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [valFilterJenisKegiatan, setFilterJenisKegiatan] = useState({ val: '' }) //3
+  const handleKataShow = () => setShowKata(true)
+  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+  const [perPage, setPerPage] = useState(10)
 
   useEffect(() => {
+    async function fetchDT(page: number) {
+      setLoading(true)
+      const response = await axios.get(`${JENIS_KEGIATAN_URL}/filter/${qParamFind.strparam}`)
+      setTemp(response.data.data)
+      setTotalRows(response.data.total_data)
+      setLoading(false)
+    }
     fetchUsers(1)
-  }, [])
+    fetchDT(1)
+  }, [qParamFind, perPage])
 
+  const handleChangeInputJenisKegiatan = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setFilterJenisKegiatan({ val: event.target.value })
+  }
+
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterJenisKegiatan.val !== '') {
+      uriParam += `${valFilterJenisKegiatan.val}`
+    }
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  }
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -100,7 +132,7 @@ export function JenisKegiatan() {
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item href='#'>Hapus</Dropdown.Item>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -114,7 +146,7 @@ export function JenisKegiatan() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
+  
 
   const [temp, setTemp] = useState([])
 
@@ -164,6 +196,44 @@ export function JenisKegiatan() {
     }, 100)
   }
 
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      title: 'Anda yakin?',
+      text: 'Ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const bodyParam = {
+          data: {
+            deleted_by: 0,
+          },
+        }
+        const response = await axios.delete(`${JENIS_KEGIATAN_URL}/delete/${id}`, bodyParam)
+        if (response) {
+          fetchUsers(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        }
+      }
+    })
+  }
   return (
     <div className={`card`}>
       {/* begin::Body */}
@@ -172,12 +242,17 @@ export function JenisKegiatan() {
           <label htmlFor='' className='mb-3'>
             Jenis Kegiatan
           </label>
-          <input type='text' className='form-control form-control form-control-solid' name='tags' />
+          <input type='text'
+            className='form-control form-control form-control-solid'
+            name='q'
+            value={valFilterJenisKegiatan.val}
+            onChange={handleChangeInputJenisKegiatan} //5
+            placeholder='Jenis Kegiatan' />
         </div>
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
+          <Link to='#' onClick={handleFilter}> 
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari

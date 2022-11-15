@@ -24,7 +24,7 @@ interface GetDataInterface {
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEGIATAN_URL = `${API_URL}/master/jenis_kegiatan` //http://localhost:3000/jenis_kegiatan
+export const JENIS_KEGIATAN_URL = `${API_URL}/master/jenis-kegiatan` //http://localhost:3000/jenis_kegiatan
 
 export function LihatJenisKegiatan() {
   const {id} = useParams()
@@ -81,7 +81,7 @@ export function LihatJenisKegiatan() {
                     </div>
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/jenis_kegiatan'>
+                    <Link to='/master/JenisKegiatan'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

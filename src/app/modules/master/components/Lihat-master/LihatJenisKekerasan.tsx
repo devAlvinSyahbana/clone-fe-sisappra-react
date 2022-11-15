@@ -22,7 +22,7 @@ interface GetDataInterface {
 }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEKERASAN_URL = `${API_URL}/master/JenisKekerasan` //http://localhost:3000/JenisKekerasan
+export const JENIS_KEKERASAN_URL = `${API_URL}/master/jenis-kekerasan` //http://localhost:3000/JenisKekerasan
 
 export function LihatJenisKekerasan() {
   const {id} = useParams()

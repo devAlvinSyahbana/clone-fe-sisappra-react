@@ -119,7 +119,7 @@ const EmployeeDetailsCard = (props) => {
                 alt='Profile'
               />
             )}
-            <h2 style={styles.cardName}>{props.employee.name}</h2>
+            {/* <h2 style={styles.cardName}>{props.employee.name}</h2> */}
             <p cstyle={styles.cardRole}>{props.employee.positionName}</p>
           </div>
           <div style={styles.cardBody}>

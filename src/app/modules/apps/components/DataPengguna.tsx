@@ -6,10 +6,9 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Swal from 'sweetalert2'
-import AsyncSelect from 'react-select/async'
 import {KTSVG} from '../../../../_metronic/helpers'
+import moment from 'moment'
 import FileDownload from 'js-file-download'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
@@ -208,6 +207,20 @@ export function DataPengguna() {
     })
   }
 
+  const GetHakAkses = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`)
+        const result: string = data.data.nama_hak_akses
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
   let no = 1
 
   const columns = [
@@ -225,32 +238,7 @@ export function DataPengguna() {
       selector: (row: any) => row.nama_lengkap,
       sortable: true,
       sortField: 'nama_lengkap',
-      width: '150px',
       wrap: true,
-    },
-    {
-      name: 'ID Pegawai',
-      selector: (row: any) => row.id_pegawai,
-      sortable: true,
-      sortField: 'id_pegawai',
-      wrap: true,
-      center: true,
-    },
-    {
-      name: 'No Pegawai',
-      selector: (row: any) => row.no_pegawai,
-      sortable: true,
-      sortField: 'no_pegawai',
-      wrap: true,
-      center: true,
-    },
-    {
-      name: 'Email',
-      selector: (row: any) => row.email,
-      sortable: true,
-      sortField: 'email',
-      wrap: true,
-      center: true,
     },
     {
       name: 'Hak Akses',
@@ -259,14 +247,7 @@ export function DataPengguna() {
       sortField: 'hak_akses',
       wrap: true,
       center: true,
-    },
-    {
-      name: 'Status Pengguna',
-      selector: (row: any) => row.status_pengguna,
-      sortable: true,
-      sortField: 'status_pengguna',
-      wrap: true,
-      center: true,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.hak_akses)} />,
     },
     {
       name: 'Terakhir Login',
@@ -274,6 +255,15 @@ export function DataPengguna() {
       sortable: true,
       sortField: 'terakhir_login',
       wrap: true,
+      center: true,
+    },
+    {
+      name: 'Tanggal Bergabung',
+      selector: (row: any) => moment(row.tgl_bergabung).format('D MMMM YYYY'),
+      sortable: true,
+      sortField: 'tgl_bergabung',
+      wrap: true,
+      width: '180px',
       center: true,
     },
     {
@@ -297,16 +287,6 @@ export function DataPengguna() {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate('/apps/data-pengguna/detail-data-pengguna/' + record.id, {
-                          replace: true,
-                        })
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
@@ -397,9 +377,6 @@ export function DataPengguna() {
     if (valNamaLengkap.val !== '') {
       uriParam += `&nama_lengkap=${valNamaLengkap.val}`
     }
-    if (valFilterEmail.val !== '') {
-      uriParam += `&email=${valFilterEmail.val}`
-    }
     if (valFilterHakAkses.val !== '') {
       uriParam += `&hak_akses=${valFilterHakAkses.val}`
     }
@@ -407,7 +384,6 @@ export function DataPengguna() {
   }
 
   const handleFilterReset = () => {
-    setFilterEmail({val: ''})
     setFilterHakAkses({val: ''})
     setFilterNamaLengkap({val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
@@ -452,7 +428,7 @@ export function DataPengguna() {
         <div className='card'>
           <div className='card card-flush h-xl-100'>
             <div className='card-header border-1 pt-6'>
-              <div className='col-xl-12 mb-xl-12 mt-6'>
+              <div className='col-xl-12  mt-6'>
                 <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
                   <div className='mb-5'>
                     <div
@@ -495,102 +471,67 @@ export function DataPengguna() {
                     >
                       <div id='kt_advanced_search_form'>
                         <div className='row g-8 mt-2'>
-                          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                            <label htmlFor='' className='mb-3'>
-                              Nama
-                            </label>
+                          <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
                             <input
                               type='text'
                               className='form-control form-control form-control-solid'
                               name='nama'
                               value={valNamaLengkap.val}
                               onChange={handleChangeInputNamaLengkap}
-                              placeholder='Masukkan nama'
+                              placeholder='Nama / Hak Akses'
                             />
                           </div>
-                          <div className='col-md-6 col-lg-6'></div>
-                          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                            <label htmlFor='' className='mb-3'>
-                              Email
-                            </label>
-                            <input
-                              type='text'
-                              className='form-control form-control form-control-solid'
-                              name='email'
-                              value={valFilterEmail.val}
-                              onChange={handleChangeInputEmail}
-                              placeholder='Masukkan Alamat Email'
-                            />
+                          <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
+                            <Link to='#' onClick={handleFilter}>
+                              <button className='btn btn-light-primary me-2'>
+                                <KTSVG
+                                  path='/media/icons/duotune/general/gen021.svg'
+                                  className='svg-icon-2'
+                                />
+                                Cari
+                              </button>
+                            </Link>
                           </div>
-                          <div className='col-md-6 col-lg-6'></div>
-                          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                            <label htmlFor='' className='mb-3'>
-                              Hak Akses
-                            </label>
-                            <input
-                              type='text'
-                              className='form-control form-control form-control-solid'
-                              name='hak_akses'
-                              value={valFilterHakAkses.val}
-                              onChange={handleChangeInputHakAkses}
-                              placeholder='Masukkan Hak Akses'
-                            />
+                          <div className='d-flex justify-content-end col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                            <Link to='/apps/data-pengguna/tambah-data-pengguna'>
+                              {/* begin::Add user */}
+                              <button type='button' className='btn btn-primary me-2'>
+                                <KTSVG
+                                  path='/media/icons/duotune/arrows/arr075.svg'
+                                  className='svg-icon-2'
+                                />
+                                Tambah
+                              </button>
+                              {/* end::Add user */}
+                            </Link>
+                            {/* begin::Filter Button */}
+                            <button
+                              type='button'
+                              className='btn btn-light-primary'
+                              data-kt-menu-trigger='click'
+                              data-kt-menu-placement='bottom-end'
+                            >
+                              {btnLoadingUnduh ? (
+                                <>
+                                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                  Memproses Unduh...
+                                </>
+                              ) : (
+                                <>
+                                  <KTSVG
+                                    path='/media/icons/duotune/arrows/arr078.svg'
+                                    className='svg-icon-2'
+                                  />
+                                  Unduh
+                                </>
+                              )}
+                            </button>
+                            {/* end::Filter Button */}
                           </div>
                         </div>
                       </div>
                       <div className='row g-8 mt-2'>
-                        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                          <Link to='#' onClick={handleFilter}>
-                            <button className='btn btn-light-primary me-2'>
-                              <KTSVG
-                                path='/media/icons/duotune/general/gen021.svg'
-                                className='svg-icon-2'
-                              />
-                              Cari
-                            </button>
-                          </Link>
-                          <Link to='#' onClick={handleFilterReset}>
-                            <button className='btn btn-light-primary'>
-                              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                              Reset
-                            </button>
-                          </Link>
-                        </div>
                         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                          <Link to='/apps/data-pengguna/tambah-data-pengguna'>
-                            {/* begin::Add user */}
-                            <button type='button' className='btn btn-primary me-2'>
-                              <KTSVG
-                                path='/media/icons/duotune/arrows/arr075.svg'
-                                className='svg-icon-2'
-                              />
-                              Tambah
-                            </button>
-                            {/* end::Add user */}
-                          </Link>
-                          {/* begin::Filter Button */}
-                          <button
-                            type='button'
-                            className='btn btn-light-primary'
-                            data-kt-menu-trigger='click'
-                            data-kt-menu-placement='bottom-end'
-                          >
-                            {btnLoadingUnduh ? (
-                              <>
-                                <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                Memproses Unduh...
-                              </>
-                            ) : (
-                              <>
-                                <KTSVG
-                                  path='/media/icons/duotune/arrows/arr078.svg'
-                                  className='svg-icon-2'
-                                />
-                                Unduh
-                              </>
-                            )}
-                          </button>
-                          {/* end::Filter Button */}
                           {/* begin::SubMenu */}
                           <div
                             className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
