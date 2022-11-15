@@ -2,14 +2,14 @@
 import {useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {useAuth} from '../core/Auth'
+import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 
 const loginSchema = Yup.object().shape({
-  no_pegawai: Yup.string()
-    .required('Wajib diisi'),
+  no_pegawai: Yup.string().required('Wajib diisi'),
   kata_sandi: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
@@ -30,6 +30,7 @@ const initialValues = {
 export function Login() {
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
+  const nav = useNavigate()
 
   const formik = useFormik({
     initialValues,
@@ -38,9 +39,11 @@ export function Login() {
       setLoading(true)
       try {
         const {data: auth} = await login(values.no_pegawai, values.kata_sandi)
+        console.log(auth)
         saveAuth(auth)
         const {data: user} = await getUserByToken(auth.api_token)
         setCurrentUser(user.data)
+        nav('/dashboard')
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
@@ -60,8 +63,9 @@ export function Login() {
     >
       {/* begin::Heading */}
       <div className='text-center mb-11'>
-        <h1 className='text-dark fw-bolder mb-3'>Login Aplikasi</h1>
-        <div className='text-gray-500 fw-semibold fs-6'>Login untuk menggunakan aplikasi</div>
+        <img alt='Logo' src={toAbsoluteUrl('/myasset/logosatpol.png')} className='h-150px' />
+        <h1 className='text-dark fw-bolder mb-3'>Login</h1>
+        {/* <div className='text-gray-500 fw-semibold fs-6'>Login untuk menggunakan aplikasi</div> */}
       </div>
       {/* begin::Heading */}
 
@@ -136,14 +140,14 @@ export function Login() {
       {/* end::Wrapper */}
 
       {/* begin::Action */}
-      <div className='d-grid mb-10'>
+      <div className='d-grid'>
         <button
           type='submit'
           id='kt_sign_in_submit'
           className='btn btn-primary'
           disabled={formik.isSubmitting || !formik.isValid}
         >
-          {!loading && <span className='indicator-label'>Masuk</span>}
+          {!loading && <span className='indicator-label rounded-lg'>Masuk</span>}
           {loading && (
             <span className='indicator-progress' style={{display: 'block'}}>
               Harap tunggu...
@@ -151,6 +155,12 @@ export function Login() {
             </span>
           )}
         </button>
+      </div>
+      <hr />
+      <div className='d-grid '>
+        <Link to='/auth/registrasi' className='btn btn-secondary'>
+          Resgistrasi Baru
+        </Link>
       </div>
       {/* end::Action */}
     </form>

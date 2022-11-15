@@ -3,6 +3,7 @@ export interface AuthModel {
   refreshToken?: string
   no_pegawai?: string
   kata_sandi?: string
+  email?: string
 }
 
 export interface UserModel {

@@ -11,7 +11,7 @@ export function lupaKataSandi() {
 }
 
 export function ForgotPassword() {
-  const [value, setValue] = useState({email: 'string'})
+  const [value, setValue] = useState({email: 'satpolpp@jakarta.go.id'})
   useEffect(() => {
     // declare the data fetching function
     const fetchData = async () => {
