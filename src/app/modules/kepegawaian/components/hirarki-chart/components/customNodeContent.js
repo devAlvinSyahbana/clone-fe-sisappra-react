@@ -84,7 +84,7 @@ const CustomNodeContent = (props) => {
                                 src={props.data.imageUrl}
                                 alt="Profile"
                             /> */}
-              {props.data.imageUrl !== '' ? (
+              {/* {props.data.imageUrl !== '' ? (
                 <img style={styles.nodeImg} src={props.data.imageUrl} alt='Profile' />
               ) : (
                 <img
@@ -92,16 +92,16 @@ const CustomNodeContent = (props) => {
                   src={toAbsoluteUrl('/media/avatars/default-avatar.png')}
                   alt='Profile'
                 />
-              )}
+              )} */}
               <div style={styles.nodeInfo}>
                 <div style={styles.nodeRole}>{props.data.positionName}</div>
-                <div style={styles.nodeName}>{props.data.name}</div>
-                {props.data.department && (
+                {/* <div style={styles.nodeName}>{props.data.name}</div> */}
+                {/* {props.data.department && (
                   <div style={styles.nodeDepartment}>
                     <FaBuilding style={styles.icon} />
                     <div>{props.data.department}</div>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           ) : (

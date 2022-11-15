@@ -18,6 +18,7 @@ import {useFormik} from 'formik'
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
+export const AKSES_KONTROL2_URL = `${API_URL}/manajemen-penggunaakses-kontrol`
 
 // Theme for dark or light interface
 createTheme(
@@ -157,7 +158,6 @@ export function AksesKontrol() {
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
@@ -229,7 +229,7 @@ export function AksesKontrol() {
                     <Dropdown.Item>
                       <Link to='#'>Detail</Link>
                     </Dropdown.Item>
-                    <Dropdown.Item href='#'>Ubah</Dropdown.Item>
+                    <Dropdown.Item onClick={() => doEdit(record.id)}>Ubah</Dropdown.Item>
                     <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
                       Hapus
                     </Dropdown.Item>
@@ -264,10 +264,10 @@ export function AksesKontrol() {
   }
 
   useEffect(() => {
-    fetchUsers(1)
+    fetchUsers()
   }, [])
 
-  const fetchUsers = async (page: any) => {
+  const fetchUsers = async () => {
     setLoading(true)
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
 
@@ -277,15 +277,6 @@ export function AksesKontrol() {
     setLoading(false)
     return [temp, setTemp] as const
     // setLoading(false)
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
-    )
-    setData(response.data.data)
-
-    setTotalRows(response.data.total)
-    setLoading(false)
-    console.log('cek dummy :', data)
-    return [data, setData] as const
   }
 
   const handleFilter = async () => {
@@ -322,7 +313,7 @@ export function AksesKontrol() {
       if (result.isConfirmed) {
         const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
         if (response) {
-          fetchUsers(1)
+          fetchUsers()
           Swal.fire({
             icon: 'success',
             text: 'Data berhasil dihapus',
@@ -354,29 +345,49 @@ export function AksesKontrol() {
   }
 
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+  const [aksi, setAksi] = useState(0)
 
   const formik = useFormik({
     initialValues: {
       modul: '',
       level: '',
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, {setSubmitting}) => {
       const bodyparam: FormInput = {
         modul: valuesFormik?.modul ? valuesFormik.modul : '',
         level: valuesFormik?.level ? valuesFormik.level : '',
       }
+      setSubmitting(true)
       try {
-        const response = await axios.post(`${AKSES_KONTROL_URL}/create`, bodyparam)
-        if (response) {
-          Swal.fire({
-            icon: 'success',
-            text: 'Data berhasil disimpan',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-          navigate('/apps/akses-kontrol', {
-            replace: true,
-          })
+        if (aksi === 0) {
+          const response = await axios.post(`${AKSES_KONTROL_URL}/create`, bodyparam)
+          if (response) {
+            Swal.fire({
+              icon: 'success',
+              text: 'Data berhasil disimpan',
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            handleClose()
+            fetchUsers()
+            setSubmitting(false)
+          }
+        } else {
+          const response = await axios.put(
+            `${AKSES_KONTROL2_URL}/update/${idEditData.id}`,
+            bodyparam
+          )
+          if (response) {
+            Swal.fire({
+              icon: 'success',
+              text: 'Data berhasil disimpan',
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            handleClose()
+            fetchUsers()
+            setSubmitting(false)
+          }
         }
       } catch (error) {
         Swal.fire({
@@ -389,6 +400,33 @@ export function AksesKontrol() {
       }
     },
   })
+
+  const doAdd = () => {
+    setShow(true)
+    setAksi(0)
+    setValuesFormik({
+      modul: '',
+      level: '',
+    })
+  }
+  const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
+  const getDetail = async (idparam: any) => {
+    const {data} = await axios.get(`${AKSES_KONTROL_URL}/findone/${parseInt(idparam)}`)
+    setIdEditData((prevstate) => ({
+      ...prevstate,
+      id: parseInt(idparam),
+    }))
+    setValuesFormik((prevstate) => ({
+      ...prevstate,
+      ...data.data,
+    }))
+  }
+
+  const doEdit = (id: any) => {
+    setShow(true)
+    setAksi(1)
+    getDetail(id)
+  }
 
   return (
     <div className={`card`}>
@@ -417,10 +455,9 @@ export function AksesKontrol() {
             </button>
           </Link>
         </div>
-
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
           <Link to='#i'>
-            <button className='btn btn-light-primary me-2' onClick={handleShow}>
+            <button className='btn btn-light-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
               Tambah
             </button>
@@ -430,36 +467,36 @@ export function AksesKontrol() {
       <>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Tambah Akses Kontrol</Modal.Title>
+            <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Akses Kontrol</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <form onSubmit={formik.handleSubmit}>
-              <div className='row mt-2'>
-                <div className='col-4 mb-6'>
-                  <div className='form-group'>
-                    <Form.Label>Modul</Form.Label>
-                    <Form.Control
-                      name='modul'
-                      className='form-control form-control-solid'
-                      onChange={handleChangeFormik}
-                      value={valuesFormik?.modul}
-                    />
+            <div className='row mt-2 '>
+              <form onSubmit={formik.handleSubmit}>
+                <div className='form-group'>
+                  <Form.Label>Nama Akses Kontrol</Form.Label>
+                  <Form.Control
+                    name='modul'
+                    className='form-control form-control-solid'
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.modul}
+                  />
+                </div>
+                <div className='row justify-content-end'>
+                  <div className='col align-self-end '>
+                    <button className='btn btn-primary' type='submit'>
+                      <i className='fa-solid fa-paper-plane'></i>
+                      Simpan
+                    </button>
                   </div>
                 </div>
-              </div>
-              <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                <Link to='/apps/detail-hak-akses/DetailHakAkses'>
-                  <button className='btn btn-secondary'>
-                    <i className='fa fa-close'></i>
-                    Batal
-                  </button>
-                </Link>
-                <button className='btn btn-primary' type='submit'>
-                  <i className='fa-solid fa-paper-plane'></i>
-                  Simpan
+              </form>
+              <div className='col '>
+                <button className='btn btn-secondary' onClick={handleClose}>
+                  <i className='fa fa-close'></i>
+                  Batal
                 </button>
               </div>
-            </form>
+            </div>
           </Modal.Body>
         </Modal>
       </>
