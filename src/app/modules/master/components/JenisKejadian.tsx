@@ -1,6 +1,6 @@
-import React, {useState, useEffect, Fragment} from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -25,10 +25,36 @@ export function JenisKejadian() {
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [perPage, setPerPage] = useState(10)
+  const [valFilterJenisKejadian, setFilterJenisKejadian] = useState({ val: '' })
+  
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterJenisKejadian.val !== '') {
+      uriParam += `${valFilterJenisKejadian.val}`
+    }
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  }
+
+  const handleChangeInputJenisKejadian = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setFilterJenisKejadian({ val: event.target.value })
+  } 
 
   useEffect(() => {
+    async function fetchDT(page: number) {
+      setLoading(true)
+      const response = await axios.get(`${JENIS_KEJADIAN_URL}/filter/${qParamFind.strparam}`)
+      setTemp(response.data.data)
+      setTotalRows(response.data.total_data)
+      setLoading(false)
+    }
     fetchUsers(1)
-  }, [])
+    fetchDT(1)
+  }, [qParamFind, perPage])
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -43,13 +69,17 @@ export function JenisKejadian() {
       </>
     )
   }
-
+  var num=1;
   const columns = [
     {
       name: 'No',
       selector: (row: any) => row.id,
       sortable: true,
       sortField: 'no',
+      wrap: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.jenis_kejadian !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
+      },
     },
     {},
     {
@@ -114,7 +144,7 @@ export function JenisKejadian() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
+ 
 
   const [temp, setTemp] = useState([])
 
@@ -164,7 +194,12 @@ export function JenisKejadian() {
       cancelButtonText: 'Tidak!',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await axios.delete(`${JENIS_KEJADIAN_URL}/delete/${id},{deleted_by}`)
+        const bodyParam = {
+          data: {
+            deleted_by: 0,
+          },
+        }
+        const response = await axios.delete(`${JENIS_KEJADIAN_URL}/delete/${id}`, bodyParam)
         if (response) {
           fetchUsers(1)
           Swal.fire({
@@ -193,12 +228,17 @@ export function JenisKejadian() {
           <label htmlFor='' className='mb-3'>
             Jenis Kejaidan
           </label>
-          <input type='text' className='form-control form-control form-control-solid' name='tags' />
+          <input type='text'
+            className='form-control form-control form-control-solid'
+            name='q'
+            value={valFilterJenisKejadian.val}
+            onChange={handleChangeInputJenisKejadian} //5
+            placeholder='JenisKejadian' />
         </div>
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
+          <Link to='#' onClick={handleFilter}>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari

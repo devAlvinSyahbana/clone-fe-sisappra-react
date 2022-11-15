@@ -12,38 +12,29 @@ import Swal from 'sweetalert2'
 import { useFormik } from 'formik'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_BANTUAN_URL = `${API_URL}/master/jenis-bantuan` //http://localhost:3000/jenis-korban-material
+export const KONDISI_SARANA_PRASARANA_URL = `${API_URL}/master/kondisi-sarana-prasarana` //http://localhost:3000/kondisi-sarana-prasarana
 
 export interface FormInput {
-  jenis_bantuan?: string
+  kondisi_sarana_prasarana?: string
   created_by?: number
 }
 
-export function JenisBantuan() {
+
+export function KondisiSaranaPrasarana() {
   const navigate = useNavigate()
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
   const [show, setShow] = useState(false)
   const handleKataClose = () => setShowKata(false)
   const [showKata, setShowKata] = useState(false)
   const [qParamFind, setUriFind] = useState({ strparam: '' })
-  const [valFilterJenisBantuan, setFilterJenisBantuan] = useState({ val: '' })
+  const [valFilterKondisiSaranaPrasarana, setFilterKondisiSaranaPrasarana] = useState({ val: '' }) //3
   const handleKataShow = () => setShowKata(true)
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
-  const [inputValTugas, setDataTugas] = useState({ label: '', value: null })
   const [perPage, setPerPage] = useState(10);
 
-
   useEffect(() => {
-    async function fetchDT(page: number) {
-      setLoading(true)
-      const response = await axios.get(`${JENIS_BANTUAN_URL}/filter/${qParamFind.strparam}`)
-      setTemp(response.data.data)
-      setTotalRows(response.data.total_data)
-      setLoading(false)
-    }
-    fetchUsers(1)
-    fetchDT(1)
-  }, [qParamFind, perPage])
+    fetchUsers(1);
+  }, []);
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -59,6 +50,61 @@ export function JenisBantuan() {
     )
   }
 
+  const handleChangeFormik = (event: {
+    preventDefault: () => void
+    target: { value: any; name: any }
+  }) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
+  }
+ 
+  useEffect(() => {
+    async function fetchDT(page: number) {
+      setLoading(true)
+      const response = await axios.get(`${KONDISI_SARANA_PRASARANA_URL}/filter/${qParamFind.strparam}`)
+      setTemp(response.data.data)
+      setTotalRows(response.data.total_data)
+      setLoading(false)
+    }
+    fetchUsers(1)
+    fetchDT(1)
+  }, [qParamFind, perPage])
+
+  const formik = useFormik({
+    initialValues: {
+      kondisi_sarana_prasarana: '',
+      id_modul_permission: 0,
+    },
+    onSubmit: async (values) => {
+      let formData = new FormData()
+      const bodyparam: FormInput = {
+        kondisi_sarana_prasarana: valuesFormik?.kondisi_sarana_prasarana ? valuesFormik.kondisi_sarana_prasarana : '',
+        created_by: 0,
+      }
+      try {
+        const response = await axios.post(`${KONDISI_SARANA_PRASARANA_URL}/create`, bodyparam)
+        if (response) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil disimpan',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          navigate('/master/KondisiSaranaPrasarana', { replace: true })
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Data gagal disimpan, harap mencoba lagi',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        console.error(error)
+      }
+    },
+  })
   const columns = [
     {
       name: 'No',
@@ -69,10 +115,10 @@ export function JenisBantuan() {
     {
     },
     {
-      name: 'Jenis bantuan',
-      selector: (row: any) => row.jenis_bantuan,
+      name: 'kondisi SaranaPrasarana',
+      selector: (row: any) => row.kondisi_sarana_prasarana,
       sortable: true,
-      sortField: 'jenis_bantuan',
+      sortField: 'kondisi_sarana_prasarana',
     },
     {
     },
@@ -99,7 +145,7 @@ export function JenisBantuan() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/JenisBantuan/LihatJenisBantuan/' + record.id, { replace: true })
+                        navigate('/master/KondisiSaranaPrasarana/LihatKondisiSaranaPrasarana/' + record.id, { replace: true })
                       }
                     >
                       Detail
@@ -107,12 +153,12 @@ export function JenisBantuan() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/JenisBantuan/UpdateJenisBantuan/' + record.id, { replace: true })
+                        navigate('/master/KondisiSaranaPrasarana/UpdateKondisiSaranaPrasarana/' + record.id, { replace: true })
                       }
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>Hapus</Dropdown.Item>
+                    <Dropdown.Item onClick={() => konfirDel(record?.id)}>Hapus</Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -127,12 +173,13 @@ export function JenisBantuan() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
+  
    
   const [temp, setTemp] = useState([]);
 
   const fetchUsers = async (page: any) => {
     setLoading(true);
-    const value = await axios.get(JENIS_BANTUAN_URL + "/find");
+    const value = await axios.get(KONDISI_SARANA_PRASARANA_URL + "/find");
 
     setTemp(value.data.data);
     console.log('cek response api:',temp);
@@ -190,7 +237,7 @@ export function JenisBantuan() {
             deleted_by: 0,
           },
         }
-        const response = await axios.delete(`${JENIS_BANTUAN_URL}/delete/${id}`, bodyParam)
+        const response = await axios.delete(`${KONDISI_SARANA_PRASARANA_URL}/delete/${id}`, bodyParam)
         if (response) {
           fetchUsers(1)
           Swal.fire({
@@ -210,61 +257,20 @@ export function JenisBantuan() {
       }
     })
   }
-  const formik = useFormik({
-    initialValues: {
-      jenis_bantuan: '',
-      kategori: '',
-    },
-    onSubmit: async (values) => {
-      let formData = new FormData()
-      const bodyparam: FormInput = {
-        jenis_bantuan: valuesFormik?.jenis_bantuan ? valuesFormik.jenis_bantuan : '',
-        created_by: 0,
-      }
-      try {
-        const response = await axios.post(`${JENIS_BANTUAN_URL}/create`, bodyparam)
-        if (response) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data berhasil disimpan',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-          navigate('/master/JenisBantuan', { replace: true })
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Data gagal disimpan, harap mencoba lagi',
-          showConfirmButton: false,
-          timer: 1500,
-        })
-        console.error(error)
-      }
-    },
-  })
-  const handleChangeFormik = (event: {
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setValuesFormik((prevValues: any) => ({
-      ...prevValues,
-      [event.target.name]: event.target.value,
-    }))
-  }
+
   const handleFilter = async () => {
     let uriParam = ''
-    if (valFilterJenisBantuan.val !== '') {
-      uriParam += `${valFilterJenisBantuan.val}`
+    if (valFilterKondisiSaranaPrasarana.val !== '') {
+      uriParam += `${valFilterKondisiSaranaPrasarana.val}`
     }
     setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
-  const handleChangeInputJenisBantuan = (event: {
+  const handleChangeInputKondisiSaranaPrasarana = (event: {
     preventDefault: () => void
     target: { value: any; name: any }
   }) => {
-    setFilterJenisBantuan({ val: event.target.value })
-  }
+    setFilterKondisiSaranaPrasarana({ val: event.target.value })
+  } //4
 
   return (
     <div className={`card`}>
@@ -272,21 +278,21 @@ export function JenisBantuan() {
       <div className="row g-8 mt-2 ms-5 me-5">
           <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
             <label htmlFor='' className='mb-3'>
-              Jenis bantuan
+              Kondisi Sarana Prasarana
             </label>
             <input
             type='text'
             className='form-control form-control form-control-solid'
             name='q'
-            value={valFilterJenisBantuan.val}
-            onChange={handleChangeInputJenisBantuan}
-            placeholder='Jenis bantuan'
+            value={valFilterKondisiSaranaPrasarana.val}
+            onChange={handleChangeInputKondisiSaranaPrasarana} //5
+            placeholder='KondisiSaranaPrasarana'
           />
           </div>
       </div>
       <div className="row g-8 mt-2 ms-5 me-5">
         <div className='col-md-6 col-lg-6 col-sm-12'>
-        <Link to='#' onClick={handleFilter}>
+        <Link to='#' onClick={handleFilter}> 
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
@@ -295,8 +301,8 @@ export function JenisBantuan() {
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-        <Link to='#' onClick={handleKataShow}>
-            <button className='btn btn-primary me-5'>
+          <Link to='#i'>
+            <button className='btn btn-primary me-5' onClick={handleKataShow}>
               <i className="fa-solid fa-plus"></i>
               Tambah
             </button>
@@ -306,37 +312,37 @@ export function JenisBantuan() {
       <>
       <Modal show={showKata} onHide={handleKataClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Tambah Jenis bantuan</Modal.Title>
+            <Modal.Title>Tambah Kondisi Sarana Prasarana</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form onSubmit={formik.handleSubmit}>
               <div className='row mt-2'>
                 <div className='col-12 mb-6'>
                   <div className='form-group'>
-                    <Form.Label>Jenis bantuan</Form.Label>
+                    <Form.Label>Kondisi Sarana Prasarana</Form.Label>
                     <br />
                     <Form.Control
-                      name='jenis_bantuan'
+                      name='kondisi_sarana_prasarana'
                       className='form-control form-control-solid'
                       onChange={handleChangeFormik}
-                      value={valuesFormik?.jenis_bantuan}
+                      value={valuesFormik?.kondisi_sarana_prasarana}
                     />
                   </div>
                 </div>
               </div>
               <Modal.Footer>
-                <div className='d-grid gap-2 d-md-flex justify-content-md-left'>
-                  <Link to='master/JenisBantuan' >
-                    <button className='btn btn-secondary' >
-                      <i className='fa fa-close'></i>
-                      Batal
-                    </button>
-                  </Link>
-                  <button className='btn btn-primary' type='submit'>
-                    <i className='fa-solid fa-paper-plane'></i>
-                    Simpan
+              <div className='d-grid gap-2 d-md-flex justify-content-md-left'>
+                <Link to='master/KondisiSaranaPrasarana' >
+                  <button className='btn btn-secondary' >
+                    <i className='fa fa-close'></i>
+                    Batal
                   </button>
-                </div>
+                </Link>
+                <button className='btn btn-primary' type='submit'>
+                  <i className='fa-solid fa-paper-plane'></i>
+                  Simpan
+                </button>
+              </div>
               </Modal.Footer>
             </form>
           </Modal.Body>

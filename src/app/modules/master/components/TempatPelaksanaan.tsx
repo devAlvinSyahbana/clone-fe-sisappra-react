@@ -9,33 +9,38 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
 import Form from 'react-bootstrap/Form'
+import clsx from 'clsx'
 import AsyncSelect from 'react-select/async'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import clsx from 'clsx'
 
 export interface FormInput {
-  sumber_informasi?: string
+  nama?: string
+  kategori?: string
   created_by?: number
 }
-
-const validatorForm = Yup.object().shape({
-  sumber_informasi: Yup.string().required('Wajib diisi'),
-})
+export interface SelectOption {
+  readonly value: string
+  readonly label: string
+  readonly color: string
+  readonly isFixed?: boolean
+  readonly isDisabled?: boolean
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const SUMBER_INFORMASI_URL = `${API_URL}/master/sumber-informasi` //http://localhost:3000/master/kota
+//export const name_URL = `${API_URL}/master/tempat-pelaksanaan` //http://localhost:3000/master/kota
+export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
 
-export function SumberInformasi() {
+export function TempatPelaksanaan() {
   const navigate = useNavigate()
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
   const [show, setShow] = useState(false)
   const handleKataClose = () => setShowKata(false)
   const [showKata, setShowKata] = useState(false)
   const [qParamFind, setUriFind] = useState({ strparam: '' })
-  const [valFilterSumberInformasi, setFilterSumberInformasi] = useState({ val: '' }) //3
+  const [valFilterTempatPelaksanaan, setFilterTempatPelaksanaan] = useState({ val: '' })
   const handleKataShow = () => setShowKata(true)
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+  const [inputValTugas, setDataTugas] = useState({ label: '', value: null })
 
   useEffect(() => {
     fetchUsers(1)
@@ -56,18 +61,18 @@ export function SumberInformasi() {
   }
   const formik = useFormik({
     initialValues: {
-      ...valuesFormik,
+      nama: '',
+      kategori: '',
     },
-    validationSchema: validatorForm,
-    enableReinitialize: true,
     onSubmit: async (values) => {
       let formData = new FormData()
       const bodyparam: FormInput = {
-        sumber_informasi: valuesFormik?.sumber_informasi,
+        nama: valuesFormik?.nama ? valuesFormik.nama : '',
+        kategori: valuesFormik?.kategori ? valuesFormik.kategori : '',
         created_by: 0,
       }
       try {
-        const response = await axios.post(`${SUMBER_INFORMASI_URL}/create`, bodyparam)
+        const response = await axios.post(`${BIDANG_WILAYAH_URL}/create`, bodyparam)
         if (response) {
           Swal.fire({
             icon: 'success',
@@ -75,13 +80,7 @@ export function SumberInformasi() {
             showConfirmButton: false,
             timer: 1500,
           })
-          // navigate('/master/Kota', { replace: true })
-          fetchUsers(1)
-          setValuesFormik((prevValues: any) => ({
-            ...prevValues,
-            sumber_informasi: '',
-          }))
-          handleKataClose()
+          navigate('/master/TempatPelaksanaan', { replace: true })
         }
       } catch (error) {
         Swal.fire({
@@ -112,7 +111,7 @@ export function SumberInformasi() {
             deleted_by: 0,
           },
         }
-        const response = await axios.delete(`${SUMBER_INFORMASI_URL}/delete/${id}`, bodyParam)
+        const response = await axios.delete(`${BIDANG_WILAYAH_URL}/delete/${id}`, bodyParam)
         if (response) {
           fetchUsers(1)
           Swal.fire({
@@ -132,7 +131,7 @@ export function SumberInformasi() {
       }
     })
   }
-var num =1
+  var num = 1;
   const columns = [
     {
       name: 'No',
@@ -141,15 +140,29 @@ var num =1
       sortField: 'no',
       wrap: true,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{row.sumber_informasi !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
+        return <div className='mb-2 mt-2'>{row.nama !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
       },
     },
     {
-      name: 'Sumber Informasi',
-      selector: (row: any) => row.sumber_informasi,
+      name: 'Wilayah/Bidang',
+      selector: (row: any) => row.nama,
       sortable: true,
-      sortField: 'sumber_informasi',
+      sortField: 'name',
       width: '400px',
+      wrap: true,
+    },
+    {
+      name: 'Kode',
+      selector: (row: any) => row.kode,
+      sortable: true,
+      sortField: 'kode',
+      wrap: true,
+    },
+    {
+      name: 'Kategori',
+      selector: (row: any) => row.kategori,
+      sortable: true,
+      sortField: 'kategori',
       wrap: true,
     },
     {
@@ -175,7 +188,7 @@ var num =1
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/SumberInformasi/LihatSumberInformasi/' + record.id, { replace: true })
+                        navigate('/master/TempatPelaksanaan/LihatTempatPelaksanaan/' + record.id, { replace: true })
                       }
                     >
                       Detail
@@ -183,7 +196,7 @@ var num =1
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/SumberInformasi/UpdateSumberInformasi/' + record.id, { replace: true })
+                        navigate('/master/TempatPelaksanaan/UpdateTempatPelaksanaan/' + record.id, { replace: true })
                       }
                     >
                       Ubah
@@ -201,12 +214,12 @@ var num =1
     },
   ]
 
-  const handleChangeInputSumberInformasi = (event: {
+  const handleChangeInputTempatPelaksana = (event: {
     preventDefault: () => void
     target: { value: any; name: any }
   }) => {
-    setFilterSumberInformasi({ val: event.target.value })
-  } //4
+    setFilterTempatPelaksanaan({ val: event.target.value })
+  }
 
   const handleChangeFormikSelect = (value: any, name: string) => {
     setValuesFormik((prevValues: any) => ({
@@ -218,11 +231,24 @@ var num =1
     preventDefault: () => void
     target: { value: any; name: any }
   }) => {
-    console.log(event.target)
     setValuesFormik((prevValues: any) => ({
       ...prevValues,
       [event.target.name]: event.target.value,
     }))
+  }
+  
+  const filterTugas = async (inputValue: string) => {
+    const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
+    const json = await response.data.data
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
+  }
+  const loadOptionsTugas = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterTugas(inputValue))
+    }, 1000)
+  }
+  const handleInputTugas = async (newValue: any) => {
+    setDataTugas((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   const [data, setData] = useState([])
@@ -235,7 +261,7 @@ var num =1
   useEffect(() => {
     async function fetchDT(page: number) {
       setLoading(true)
-      const response = await axios.get(`${SUMBER_INFORMASI_URL}/filter/${qParamFind.strparam}`)
+      const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${qParamFind.strparam}`)
       setTemp(response.data.data)
       setTotalRows(response.data.total_data)
       setLoading(false)
@@ -244,18 +270,17 @@ var num =1
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  //2
   const handleFilter = async () => {
     let uriParam = ''
-    if (valFilterSumberInformasi.val !== '') {
-      uriParam += `${valFilterSumberInformasi.val}`
+    if (valFilterTempatPelaksanaan.val !== '') {
+      uriParam += `${valFilterTempatPelaksanaan.val}`
     }
     setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const fetchUsers = async (page: any) => {
     setLoading(true)
-    const value = await axios.get(`${SUMBER_INFORMASI_URL}/find`)
+    const value = await axios.get(`${BIDANG_WILAYAH_URL}/find`)
 
     setTemp(value.data.data)
     console.log('cek kota:', temp)
@@ -269,22 +294,21 @@ var num =1
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
           <label htmlFor='' className='mb-3'>
-            SumberInformasi
+            Wilayah/Bidang
           </label>
           <input
             type='text'
             className='form-control form-control form-control-solid'
             name='q'
-            value={valFilterSumberInformasi.val}
-            onChange={handleChangeInputSumberInformasi} //5
-            placeholder='Sumber Informasi'
+            value={valFilterTempatPelaksanaan.val}
+            onChange={handleChangeInputTempatPelaksana}
+            placeholder='TempatPelaksana'
           />
         </div>
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          {/* 1 */}
-          <Link to='#' onClick={handleFilter}> 
+          <Link to='#' onClick={handleFilter}>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
@@ -321,52 +345,45 @@ var num =1
       <>
         <Modal show={showKata} onHide={handleKataClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Tambah Sumber Informasi</Modal.Title>
+            <Modal.Title>Tambah Wilayah/Bidang</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form onSubmit={formik.handleSubmit}>
               <div className='row mt-2'>
                 <div className='col-12 mb-6'>
                   <div className='form-group'>
-                    <Form.Label>Sumber Informasi</Form.Label>
+                    <Form.Label>Wilayah/Bidang</Form.Label>
                     <br />
                     <Form.Control
-                      name='sumber_informasi'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid': formik.touched.sumber_informasi && formik.errors.sumber_informasi,
-                        },
-                        {
-                          'is-valid': formik.touched.sumber_informasi && !formik.errors.sumber_informasi,
-                        }
-                      )}
+                      name='nama'
+                      className='form-control form-control-solid'
                       onChange={handleChangeFormik}
-                      value={valuesFormik?.sumber_informasi}
+                      value={valuesFormik?.nama}
                     />
-                    {formik.touched.sumber_informasi && formik.errors.sumber_informasi && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.sumber_informasi}</span>
-                        </div>
-                      </div>
-                    )}
+                    <Form.Label>Kategori</Form.Label>
+                    <br />
+                    <Form.Control
+                      name='kategori'
+                      className='form-control form-control-solid'
+                      onChange={handleChangeFormik}
+                      value={valuesFormik?.kategori}
+                    />
                   </div>
                 </div>
               </div>
               <Modal.Footer>
-              <div className='d-grid gap-2 d-md-flex justify-content-md-left'>
-                <Link to='/apps/detail-hak-akses/DetailHakAkses' >
-                  <button className='btn btn-secondary' >
-                    <i className='fa fa-close'></i>
-                    Batal
+                <div className='d-grid gap-2 d-md-flex justify-content-md-left'>
+                  <Link to='/apps/detail-hak-akses/DetailHakAkses' >
+                    <button className='btn btn-secondary' >
+                      <i className='fa fa-close'></i>
+                      Batal
+                    </button>
+                  </Link>
+                  <button className='btn btn-primary' type='submit'>
+                    <i className='fa-solid fa-paper-plane'></i>
+                    Simpan
                   </button>
-                </Link>
-                <button className='btn btn-primary' type='submit'>
-                  <i className='fa-solid fa-paper-plane'></i>
-                  Simpan
-                </button>
-              </div>
+                </div>
               </Modal.Footer>
             </form>
           </Modal.Body>
@@ -384,9 +401,9 @@ var num =1
           paginationServer
           paginationTotalRows={totalRows}
           sortServer
-          // onSort={handleSort}
-          // onChangeRowsPerPage={handlePerRowsChange}
-          // onChangePage={handlePageChange}
+          onSort={handleSort}
+          onChangeRowsPerPage={handlePerRowsChange}
+          onChangePage={handlePageChange}
         /> */}
       </div>
       {/* end::Body */}
