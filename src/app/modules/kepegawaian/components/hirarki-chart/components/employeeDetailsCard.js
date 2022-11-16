@@ -2,6 +2,8 @@ import {useState, useEffect, Fragment} from 'react'
 import {MdClose} from 'react-icons/md'
 import clsx from 'clsx'
 import {KTCardBody, toAbsoluteUrl} from '../../../../../../_metronic/helpers'
+import axios from 'axios'
+import DataTable, {createTheme} from 'react-data-table-component'
 
 const styles = {
   card: {
@@ -101,70 +103,149 @@ const styles = {
   },
 }
 
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const DATA_HIRARKI_URL = `${API_URL}/master/struktur_data_hirarki`
+
 const EmployeeDetailsCard = (props) => {
+  const [datasatpp, setDataSatPP] = useState()
+
+  useEffect(() => {
+    const fetchDataPP = async (id) => {
+      const value = await axios.get(`${DATA_HIRARKI_URL}/find/${props.employee.id}`)
+      const fixedData = value.data.data.map((item) => {
+        const {parentid, position_name, ...newItem} = item
+        return {
+          ...newItem,
+          parentId: parentid == '0' ? '' : parentid + '',
+          positionName:
+            position_name == props.employee.positionName ? position_name : position_name,
+        }
+      })
+      setDataSatPP(fixedData)
+    }
+    fetchDataPP()
+    console.log('ini buat data test', datasatpp)
+  }, [])
+
+  let num = 1
+
+  const columns = [
+    {
+      name: 'No',
+      sortable: true,
+      sortField: 'kepegawaian_nrk',
+      wrap: true,
+      cell: (record) => {
+        return <div className='mt-5 mb-5'>{num++}</div>
+      },
+    },
+    {
+      name: 'Nama',
+      selector: (row) => row.name,
+      sortable: true,
+      sortField: 'nama',
+      center: true,
+      wrap: true,
+    },
+    {
+      name: 'Tempat Lahir',
+      selector: (row) => row.tempat_lahir,
+      sortable: true,
+      sortField: 'tempat_lahir',
+      width: '240px',
+      center: true,
+      wrap: true,
+    },
+    {
+      name: 'Tanggal Lahir',
+      selector: (row) => row.tanggal_lahir,
+      sortable: true,
+      sortField: 'tanggal_lahir',
+      width: '240px',
+      center: true,
+      wrap: true,
+    },
+    // {
+    //   name: 'NRK',
+    //   selector: (row) => row.nrk,
+    //   sortable: true,
+    //   sortField: 'nrk',
+    //   center: true,
+    //   wrap: true,
+    // },
+    {
+      name: 'Status Pegawai',
+      selector: (row) => row.status_pegawai,
+      sortable: true,
+      sortField: 'status_pegawai',
+      width: '240px',
+      center: true,
+      wrap: true,
+    },
+    {
+      name: 'JK',
+      selector: (row) => row.jenis_kelamin,
+      sortable: true,
+      sortField: 'jenis_kelamin',
+      center: true,
+      wrap: true,
+    },
+    {
+      name: 'Agama',
+      selector: (row) => row.agama,
+      sortable: true,
+      sortField: 'agama',
+      center: true,
+      wrap: true,
+    },
+  ]
   return (
     <div style={styles.card}>
       <button style={styles.cardCloseBtn} onClick={props.handleClose}>
-        <MdClose />
+        <i className='fa fa-close' />
       </button>
       {props.employee.team === '' ? (
         <div>
           <div style={styles.cardHeader}>
-            {props.employee.imageUrl !== '' ? (
-              <img style={styles.cardImg} src={props.employee.imageUrl} alt='Profile' />
-            ) : (
-              <img
-                style={styles.cardImg}
-                src={toAbsoluteUrl('/media/avatars/default-avatar.png')}
-                alt='Profile'
-              />
-            )}
             {/* <h2 style={styles.cardName}>{props.employee.name}</h2> */}
-            <p cstyle={styles.cardRole}>{props.employee.positionName}</p>
+            <h2 cstyle={styles.cardName}>{props.employee.positionName}</h2>
+            <p cstyle={styles.cardRole}>List Nama</p>
           </div>
           <div style={styles.cardBody}>
-            <div style={styles.cardItem}>
-              <p style={styles.cardItemLabel}>Tempat Lahir:</p>
-              <p style={styles.cardItemValue}>{props.employee.tempatLahir}</p>
-            </div>
-            <div style={styles.cardItem}>
-              <p style={styles.cardItemLabel}>Tanggal Lahir:</p>
-              <p style={styles.cardItemValue}>{props.employee.tanggaLahir}</p>
-            </div>
-            <div style={styles.cardItem}>
-              <p style={styles.cardItemLabel}>NRK:</p>
-              <p style={styles.cardItemValue}>{props.employee.nrk}</p>
-            </div>
-            <div style={styles.cardItem}>
-              <p style={styles.cardItemLabel}>Status Pegawai:</p>
-              <p style={styles.cardItemValue}>{props.employee.statusPegawai}</p>
-            </div>
-            <div style={styles.cardItem}>
-              <p style={styles.cardItemLabel}>Jenis Kelamin:</p>
-              <p style={styles.cardItemValue}>{props.employee.jenisKelamin}</p>
-            </div>
-            <div style={styles.cardItem}>
-              <p style={styles.cardItemLabel}>Agama:</p>
-              <p style={styles.cardItemValue}>{props.employee.agama}</p>
-            </div>
-            {/* <div style={styles.cardItem}>
-                            <p style={styles.cardItemLabel}>Phone:</p>
-                            <p style={styles.cardItemValue}>{props.employee.phone}</p>
-                        </div>
-                        <div style={styles.cardItem}>
-                            <p style={styles.cardItemLabel}>Email:</p>
-                            <p style={styles.cardItemValue}>{props.employee.email}</p>
-                        </div>
-                        <div style={styles.cardItem}>
-                            <p style={styles.cardItemLabel}>Location:</p>
-                            <p style={styles.cardItemValue}>{props.employee.location}</p>
-                        </div>
-                        {props.employee.department && (
-                            <div style={styles.cardItem}>
-                                <p style={styles.cardItemLabel}>Department:</p>
-                                <p style={styles.cardItemValue}>{props.employee.department}</p>
-                            </div>
-                        )} */}
+            <DataTable
+              columns={columns}
+              data={datasatpp}
+              // progressPending={loading}
+              // progressComponent={<LoadingAnimation />}
+              highlightOnHover
+              // theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            />
           </div>
         </div>
       ) : (
