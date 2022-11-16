@@ -20,7 +20,6 @@ const loginSchema = Yup.object().shape({
 const initialValues = {
   no_pegawai: '12345',
   kata_sandi: 'qwerty',
-  recaptcha: '',
 }
 
 /*
@@ -32,27 +31,35 @@ const initialValues = {
 export function Login() {
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
-  const captchaRef = useRef(null)
-  const token = captchaRef.current.getValue()
+  const [captcha, setCaptcha] = useState<string | null>(null)
+  const captchaRef = useRef<ReCAPTCHA>(null)
 
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
+      console.log(captcha)
       setLoading(true)
       try {
-        const {data: auth} = await login(values.no_pegawai, values.kata_sandi)
-        console.log(auth)
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user.data)
-        console.log(user)
+        if (captcha) {
+          const {data: auth} = await login(values.no_pegawai, values.kata_sandi)
+          saveAuth(auth)
+          const {data: user} = await getUserByToken(auth.api_token)
+          setCurrentUser(user.data)
+        }
+        saveAuth(undefined)
+        setSubmitting(false)
+        setLoading(false)
+        setStatus('cek captcha terlebih dahulu!')
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
         setStatus('Akun tidak terdaftar!')
         setSubmitting(false)
         setLoading(false)
+        setCaptcha(null)
+        captchaRef.current?.reset()
+        console.log(captcha)
       }
     },
   })
@@ -137,17 +144,18 @@ export function Login() {
         {/* end::Link */}
       </div>
       {/* end::Wrapper */}
+
       {/* begin::Recaptcha Wrapper */}
       <div className='d-flex justify-content-center mb-3'>
         <ReCAPTCHA
+          // sitekey='6LeY5hAjAAAAANRE7la_kwyyzR3cyyFvre6sKvBn' // real test key
           sitekey='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+          onChange={(value) => {
+            console.log('Captcha value:', value)
+            setCaptcha(value)
+            // if (value === null) setCapcha({val: `${value}`, expired: true})
+          }}
           ref={captchaRef}
-          // verifyCallback={(response) => {
-          //   setFieldValue('recaptcha', response)
-          // }}
-          // onloadCallback={() => {
-          //   console.log('done loading!')
-          // }}
         />
       </div>
       {/* end::Recaptcha Wrapper */}
