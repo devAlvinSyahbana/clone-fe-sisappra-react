@@ -62,7 +62,7 @@ const MixedWidget10: React.FC<Props> = ({className, chartColor, chartHeight}) =>
           <div className='d-flex flex-stack flex-wrap'>
             <div className='me-2'>
               <a href='#' className='text-dark text-hover-primary fw-bold fs-3'>
-                Summary Sub Modul Sisappra
+                Data Pegawai
               </a>
             </div>
           </div>
