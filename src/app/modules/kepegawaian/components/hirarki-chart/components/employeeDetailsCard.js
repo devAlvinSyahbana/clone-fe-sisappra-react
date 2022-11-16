@@ -228,7 +228,7 @@ const EmployeeDetailsCard = (props) => {
   return (
     <div style={styles.card}>
       <button style={styles.cardCloseBtn} onClick={props.handleClose}>
-        <MdClose />
+        <i className='fa fa-close' />
       </button>
       {props.employee.team === '' ? (
         <div>
