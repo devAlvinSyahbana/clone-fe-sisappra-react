@@ -1,12 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {useAuth} from '../core/Auth'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 const loginSchema = Yup.object().shape({
   no_pegawai: Yup.string().required('Wajib diisi'),
@@ -19,6 +20,7 @@ const loginSchema = Yup.object().shape({
 const initialValues = {
   no_pegawai: '12345',
   kata_sandi: 'qwerty',
+  recaptcha: '',
 }
 
 /*
@@ -30,7 +32,8 @@ const initialValues = {
 export function Login() {
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
-  const nav = useNavigate()
+  const captchaRef = useRef(null)
+  const token = captchaRef.current.getValue()
 
   const formik = useFormik({
     initialValues,
@@ -43,7 +46,7 @@ export function Login() {
         saveAuth(auth)
         const {data: user} = await getUserByToken(auth.api_token)
         setCurrentUser(user.data)
-        nav('/dashboard')
+        console.log(user)
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
@@ -68,13 +71,11 @@ export function Login() {
         {/* <div className='text-gray-500 fw-semibold fs-6'>Login untuk menggunakan aplikasi</div> */}
       </div>
       {/* begin::Heading */}
-
       {formik.status ? (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       ) : null}
-
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
         <label className='form-label fs-6 fw-bolder text-dark'>NRK/NPTT/NPJLP</label>
@@ -99,7 +100,6 @@ export function Login() {
         )}
       </div>
       {/* end::Form group */}
-
       {/* begin::Form group */}
       <div className='fv-row mb-3'>
         <label className='form-label fw-bolder text-dark fs-6 mb-0'>Password</label>
@@ -126,7 +126,6 @@ export function Login() {
         )}
       </div>
       {/* end::Form group */}
-
       {/* begin::Wrapper */}
       <div className='d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8'>
         <div />
@@ -138,6 +137,20 @@ export function Login() {
         {/* end::Link */}
       </div>
       {/* end::Wrapper */}
+      {/* begin::Recaptcha Wrapper */}
+      <div className='d-flex justify-content-center mb-3'>
+        <ReCAPTCHA
+          sitekey='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+          ref={captchaRef}
+          // verifyCallback={(response) => {
+          //   setFieldValue('recaptcha', response)
+          // }}
+          // onloadCallback={() => {
+          //   console.log('done loading!')
+          // }}
+        />
+      </div>
+      {/* end::Recaptcha Wrapper */}
 
       {/* begin::Action */}
       <div className='d-grid'>
