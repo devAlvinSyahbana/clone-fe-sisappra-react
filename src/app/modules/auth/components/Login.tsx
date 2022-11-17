@@ -50,11 +50,11 @@ export function Login() {
         saveAuth(undefined)
         setSubmitting(false)
         setLoading(false)
-        setStatus('cek captcha terlebih dahulu!')
+        setStatus('Cek captcha terlebih dahulu!')
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
-        setStatus('Akun tidak terdaftar!')
+        setStatus('Login gagal, pastikan NRP atau password sudah benar!')
         setSubmitting(false)
         setLoading(false)
         setCaptcha(null)
@@ -73,13 +73,13 @@ export function Login() {
     >
       {/* begin::Heading */}
       <div className='text-center mb-11'>
-        <img alt='Logo' src={toAbsoluteUrl('/myasset/logosatpol.png')} className='h-150px' />
-        <h1 className='text-dark fw-bolder mb-3'>Login</h1>
+        {/* <img alt='Logo' src={toAbsoluteUrl('/myasset/logosatpol.png')} className='h-150px' /> */}
+        <h1 className='text-dark fw-bolder mb-3'>LOGIN</h1>
         {/* <div className='text-gray-500 fw-semibold fs-6'>Login untuk menggunakan aplikasi</div> */}
       </div>
       {/* begin::Heading */}
       {formik.status ? (
-        <div className='mb-lg-15 alert alert-danger'>
+        <div className='mb-lg-10 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       ) : null}
@@ -134,7 +134,7 @@ export function Login() {
       </div>
       {/* end::Form group */}
       {/* begin::Wrapper */}
-      <div className='d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8'>
+      <div className='d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-5'>
         <div />
 
         {/* begin::Link */}

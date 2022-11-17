@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {useEffect} from 'react'
 import {Outlet} from 'react-router-dom'
-// import {toAbsoluteUrl} from '../../../_metronic/helpers'
+import {toAbsoluteUrl} from '../../../_metronic/helpers'
 
 const AuthLayout = () => {
   useEffect(() => {
@@ -23,7 +23,7 @@ const AuthLayout = () => {
         {/* begin::Form */}
         <div className='d-flex flex-center flex-column flex-lg-row-fluid'>
           {/* begin::Wrapper */}
-          <div className='w-lg-500px p-10'>
+          <div className='d-flex flex-column flex-center py-5 px-5 px-md-15 w-100'>
             <Outlet />
           </div>
           {/* end::Wrapper */}
@@ -35,7 +35,7 @@ const AuthLayout = () => {
       {/* begin::Aside */}
       <div className='d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2'>
         {/* begin::Content */}
-        <div className='d-flex flex-column flex-center py-15 px-5 px-md-15 w-100'>
+        <div className='d-flex flex-column flex-center pb-5 pt-10 px-5 py-md-15 px-md-15 w-100'>
           {/* begin::Logo */}
           {/* <Link to='/' className='mb-12'>
             <img alt='Logo' src={toAbsoluteUrl('/media/logos/custom-1.png')} className='h-75px' />
@@ -55,9 +55,14 @@ const AuthLayout = () => {
           {/* end::Title */}
 
           {/* begin::Text */}
-          <div className='text-white fs-1x text-center'>
+          <div className='text-white fs-1 text-center'>
             Sistem Informasi Satuan Polisi Pamong Praja
           </div>
+          <img
+            alt='Logo'
+            src={toAbsoluteUrl('/myasset/logosatpol.png')}
+            className='h-150px h-lg-350px'
+          />
           {/* end::Text */}
         </div>
         {/* end::Content */}

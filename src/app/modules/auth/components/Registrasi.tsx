@@ -62,17 +62,21 @@ export function Registrasi() {
     >
       {/* begin::Heading */}
       <div className='text-center mb-11'>
-        <img alt='Logo' src={toAbsoluteUrl('/myasset/logosatpol.png')} className='h-150px' />
-        <h1 className='text-dark fw-bolder mb-3'>Login</h1>
+        {/* <img alt='Logo' src={toAbsoluteUrl('/myasset/logosatpol.png')} className='h-150px' /> */}
+        <h1 className='text-dark fw-bolder mb-3'>BUAT AKUN</h1>
         {/* <div className='text-gray-500 fw-semibold fs-6'>Login untuk menggunakan aplikasi</div> */}
       </div>
       {/* begin::Heading */}
 
       {formik.status ? (
-        <div className='mb-lg-15 alert alert-danger'>
+        <div className='mb-lg-10 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
-      ) : null}
+      ) : (
+        <div className='mb-lg-10 alert alert-info'>
+          <div className='alert-text font-weight-bold'>Pastikan NRK/NPTT/NPJLP sudah terdaftar</div>
+        </div>
+      )}
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
@@ -165,7 +169,7 @@ export function Registrasi() {
           className='btn btn-primary'
           disabled={formik.isSubmitting || !formik.isValid}
         >
-          {!loading && <span className='indicator-label rounded-lg'>Daftar</span>}
+          {!loading && <span className='indicator-label rounded-lg'>Buat Akun</span>}
           {loading && (
             <span className='indicator-progress' style={{display: 'block'}}>
               Harap tunggu...
