@@ -6,7 +6,6 @@ import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {useAuth} from '../core/Auth'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import ReCAPTCHA from 'react-google-recaptcha'
 
 const loginSchema = Yup.object().shape({
@@ -73,16 +72,22 @@ export function Login() {
     >
       {/* begin::Heading */}
       <div className='text-center mb-11'>
-        {/* <img alt='Logo' src={toAbsoluteUrl('/myasset/logosatpol.png')} className='h-150px' /> */}
         <h1 className='text-dark fw-bolder mb-3'>LOGIN</h1>
-        {/* <div className='text-gray-500 fw-semibold fs-6'>Login untuk menggunakan aplikasi</div> */}
       </div>
       {/* begin::Heading */}
+
       {formik.status ? (
         <div className='mb-lg-10 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
-      ) : null}
+      ) : (
+        <div className='mb-lg-10 alert alert-info'>
+          <div className='alert-text font-weight-bold'>
+            Masukkan NRK/NPTT/NPJLP dan password anda
+          </div>
+        </div>
+      )}
+
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
         <label className='form-label fs-6 fw-bolder text-dark'>NRK/NPTT/NPJLP</label>
@@ -107,6 +112,7 @@ export function Login() {
         )}
       </div>
       {/* end::Form group */}
+
       {/* begin::Form group */}
       <div className='fv-row mb-3'>
         <label className='form-label fw-bolder text-dark fs-6 mb-0'>Password</label>
@@ -133,10 +139,10 @@ export function Login() {
         )}
       </div>
       {/* end::Form group */}
-      {/* begin::Wrapper */}
-      <div className='d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-5'>
-        <div />
 
+      {/* begin::Wrapper */}
+      <div className='d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-6'>
+        <div />
         {/* begin::Link */}
         <Link to='/auth/forgot-password' className='link-primary'>
           Lupa Password ?
@@ -146,14 +152,13 @@ export function Login() {
       {/* end::Wrapper */}
 
       {/* begin::Recaptcha Wrapper */}
-      <div className='d-flex justify-content-center mb-3'>
+      <div className='d-flex justify-content-center w-md-100 mb-3'>
         <ReCAPTCHA
-          // sitekey='6LeY5hAjAAAAANRE7la_kwyyzR3cyyFvre6sKvBn' // real test key
-          sitekey='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+          sitekey='6LeY5hAjAAAAANRE7la_kwyyzR3cyyFvre6sKvBn' // real test key
+          // sitekey='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' // unlimited test key from google
           onChange={(value) => {
             console.log('Captcha value:', value)
             setCaptcha(value)
-            // if (value === null) setCapcha({val: `${value}`, expired: true})
           }}
           ref={captchaRef}
         />
