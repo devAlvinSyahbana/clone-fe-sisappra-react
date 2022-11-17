@@ -6,7 +6,6 @@ import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {getUserByToken, register} from '../core/_requests'
 import {useAuth} from '../core/Auth'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 
 const regSchema = Yup.object().shape({
   no_pegawai: Yup.string().required('Wajib diisi'),
@@ -62,9 +61,7 @@ export function Registrasi() {
     >
       {/* begin::Heading */}
       <div className='text-center mb-11'>
-        {/* <img alt='Logo' src={toAbsoluteUrl('/myasset/logosatpol.png')} className='h-150px' /> */}
         <h1 className='text-dark fw-bolder mb-3'>BUAT AKUN</h1>
-        {/* <div className='text-gray-500 fw-semibold fs-6'>Login untuk menggunakan aplikasi</div> */}
       </div>
       {/* begin::Heading */}
 
