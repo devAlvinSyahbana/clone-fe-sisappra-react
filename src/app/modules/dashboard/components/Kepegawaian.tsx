@@ -104,7 +104,7 @@ export const Kepegawaian: FC = () => {
   const [dataPT, setDataPT] = useState([])
   const [dataG, setDataG] = useState([])
   const [dataE, setDataE] = useState([])
-  const [dataU, setDataU] = useState([])
+  // const [dataU, setDataU] = useState([])
   const [dataSP, setDataSP] = useState([])
 
   useEffect(() => {
@@ -124,7 +124,7 @@ export const Kepegawaian: FC = () => {
     const response = await axios.get(`${SUM_STATUS_KEPEGAWAIAN_URL}`)
     const responsePT = await axios.get(`${SUM_PENDIDIKAN_TERAKHIR_URL}`)
     const responseG = await axios.get(`${SUM_GOLONGAN_URL}`)
-    const responseU = await axios.get(`${SUM_USIA_URL}`)
+    // const responseU = await axios.get(`${SUM_USIA_URL}`)
     const responseE = await axios.get(`${SUM_ESELON_URL}`)
     const responseSP = await axios.get(`${SUM_STATUS_PNS_URL}`)
 
@@ -132,7 +132,7 @@ export const Kepegawaian: FC = () => {
     setDataPT(responsePT.data.data)
     setDataG(responseG.data.data)
     setDataE(responseE.data.data)
-    setDataU(responseU.data.data)
+    // setDataU(responseU.data.data)
     setDataSP(responseSP.data.data)
     console.log('cek :', data)
     return [data, setData] as const
@@ -176,19 +176,11 @@ export const Kepegawaian: FC = () => {
                         <option value='e'>2022</option>
                       </select>
                     </div>
-                    {/* {showResults.isShowed && showResults.val === '1' ? (
+                    {/* {showResults.isShowed && (
                       <>
-                        <BarC chartID={data} />
+                        <BarC chartID={data} valueField='count' categoryField='eselon' />
                       </>
-                    ) : null || (showResults.isShowed && showResults.val === '2') ? (
-                      <>
-                        <BarC chartID={data} />
-                      </>
-                    ) : null || (showResults.isShowed && showResults.val === '3') ? (
-                      <>
-                        <BarC chartID={data} />
-                      </>
-                    ) : null} */}
+                    )} */}
                   </div>
                 </div>
               </div>
@@ -229,19 +221,11 @@ export const Kepegawaian: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '4' ? (
+                  {showResults.isShowed && (
                     <>
                       <PieC chartID={data} valueField='count' categoryField='status_kepegawaian' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '5') ? (
-                    <>
-                      <PieC chartID={data} valueField='count' categoryField='status_kepegawaian' />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '6') ? (
-                    <>
-                      <PieC chartID={data} valueField='count' categoryField='status_kepegawaian' />
-                    </>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>
@@ -282,7 +266,7 @@ export const Kepegawaian: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '7' ? (
+                  {showResults.isShowed && (
                     <>
                       <PieC
                         chartID={dataPT}
@@ -290,23 +274,7 @@ export const Kepegawaian: FC = () => {
                         categoryField='pendidikan_terakhir'
                       />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '8') ? (
-                    <>
-                      <PieC
-                        chartID={dataPT}
-                        valueField='count'
-                        categoryField='pendidikan_terakhir'
-                      />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '9') ? (
-                    <>
-                      <PieC
-                        chartID={dataPT}
-                        valueField='count'
-                        categoryField='pendidikan_terakhir'
-                      />
-                    </>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>
@@ -346,26 +314,18 @@ export const Kepegawaian: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '10' ? (
+                  {showResults.isShowed && (
                     <>
                       <PieC chartID={dataG} valueField='count' categoryField='golongan' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '11') ? (
-                    <>
-                      <PieC chartID={dataG} valueField='count' categoryField='golongan' />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '12') ? (
-                    <>
-                      <PieC chartID={dataG} valueField='count' categoryField='golongan' />
-                    </>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>
             <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
-                <div className='card-header bg-primary'>
-                  <h3 className='card-title text-center text-white'>
+                <div className='card-header justify-content-center bg-primary'>
+                  <h3 className='card-title  text-white'>
                     Jumlah Personil Satpol PP Berdasarkan Jenis Eselon
                   </h3>
                 </div>
@@ -398,23 +358,59 @@ export const Kepegawaian: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '13' ? (
+                  {showResults.isShowed && (
                     <>
                       <PieC chartID={dataE} valueField='count' categoryField='eselon' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '14') ? (
-                    <>
-                      <PieC chartID={dataE} valueField='count' categoryField='eselon' />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '15') ? (
-                    <>
-                      <PieC chartID={dataE} valueField='count' categoryField='eselon' />
-                    </>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>
-            <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-12'>
+              <div className='card card-bordered border-primary'>
+                <div className='card-header bg-primary justify-content-center'>
+                  <h3 className='card-title text-white '>
+                    Jumlah Personil Satpol PP Berdasarkan PPNS
+                  </h3>
+                </div>
+                <div className='card-body'>
+                  <div className='row'>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
+                      <select
+                        className='form-select form-select-solid'
+                        aria-label='Select example'
+                        id='select_status'
+                        onChange={Find}
+                      >
+                        <option value='19'>Provinsi</option>
+                        <option value='20'>Kabupaten</option>
+                        <option value='21'>Kecamatan</option>
+                      </select>
+                    </div>
+                    <div className='col-md-5 col-lg-5 col-sm-12'>
+                      <select
+                        className='form-select form-select-solid'
+                        aria-label='Select example'
+                        id='select_tahun'
+                        onChange={Find}
+                      >
+                        <option value='a'>2018</option>
+                        <option value='b'>2019</option>
+                        <option value='c'>2020</option>
+                        <option value='d'>2021</option>
+                        <option value='e'>2022</option>
+                      </select>
+                    </div>
+                  </div>
+                  {showResults.isShowed && (
+                    <>
+                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-12'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
                   <h3 className='card-title text-white'>
@@ -450,71 +446,19 @@ export const Kepegawaian: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {showResults.isShowed && showResults.val === '16' ? (
+                  {/* {showResults.isShowed && showResults.val === '16' ? (
                     <>
-                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
+                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '17') ? (
                     <>
-                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
+                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
                     </>
                   ) : null || (showResults.isShowed && showResults.val === '18') ? (
                     <>
-                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
+                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
                     </>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-            <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
-              <div className='card card-bordered border-primary'>
-                <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title text-white'>
-                    Jumlah Personil Satpol PP Berdasarkan PPNS
-                  </h3>
-                </div>
-                <div className='card-body'>
-                  <div className='row'>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_status'
-                        onChange={Find}
-                      >
-                        <option value='19'>Provinsi</option>
-                        <option value='20'>Kabupaten</option>
-                        <option value='21'>Kecamatan</option>
-                      </select>
-                    </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                  </div>
-                  {showResults.isShowed && showResults.val === '19' ? (
-                    <>
-                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '20') ? (
-                    <>
-                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '21') ? (
-                    <>
-                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
-                    </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
