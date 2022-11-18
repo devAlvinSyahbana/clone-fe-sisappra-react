@@ -28,11 +28,11 @@ const AuthLayout = () => {
       }}
     >
       {/* begin::Body */}
-      <div className='d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1'>
+      <div className='d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 py-lg-0 order-2 order-lg-1'>
         {/* begin::Form */}
         <div className='d-flex flex-center flex-column flex-lg-row-fluid'>
           {/* begin::Wrapper */}
-          <div className='d-flex flex-column flex-center py-5 px-5 py-md-10 px-md-15 mt-n15 mt-lg-0 w-lg-75 w-100 border border-dark bg-white bg-opacity-25 rounded-3'>
+          <div className='d-flex flex-column flex-center py-5 px-5 py-md-10 px-md-15 mt-n10 mt-lg-0 w-lg-75 w-100 border border-dark bg-white bg-opacity-25 rounded-3'>
             <Outlet />
           </div>
           {/* end::Wrapper */}
@@ -56,7 +56,7 @@ const AuthLayout = () => {
           <img
             alt='Logo'
             src={toAbsoluteUrl('/myasset/logosatpol.png')}
-            className='h-150px h-md-225px h-lg-350px'
+            className='h-125px h-md-225px h-lg-350px'
           />
           {/* end::Text */}
         </div>

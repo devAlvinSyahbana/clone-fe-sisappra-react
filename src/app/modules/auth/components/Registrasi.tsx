@@ -68,11 +68,11 @@ export function Registrasi() {
       {/* begin::Heading */}
 
       {formik.status ? (
-        <div className='mb-lg-10 alert alert-danger'>
+        <div className='mb-lg-8 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       ) : (
-        <div className='mb-lg-10 alert alert-info'>
+        <div className='mb-lg-8 alert alert-info'>
           <div className='alert-text font-weight-bold'>Pastikan NRK/NPTT/NPJLP sudah terdaftar</div>
         </div>
       )}
