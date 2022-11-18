@@ -5,6 +5,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Swal from 'sweetalert2'
+import clsx from 'clsx'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Modal from 'react-bootstrap/Modal'
@@ -172,7 +173,7 @@ export function DetailHakAkses() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -184,7 +185,7 @@ export function DetailHakAkses() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/hak-akses/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -200,7 +201,7 @@ export function DetailHakAkses() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/hak-akses/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -214,7 +215,7 @@ export function DetailHakAkses() {
     // instead of setTimeout this is where you would handle your API call.
   }
 
-  const konfirDel = (id: number, status_pegawai: string) => {
+  const konfirDel = (id: number, hak_akses: string) => {
     Swal.fire({
       text: 'Anda yakin ingin menghapus data ini',
       icon: 'warning',
@@ -228,14 +229,11 @@ export function DetailHakAkses() {
       if (result.isConfirmed) {
         const bodyParam = {
           data: {
-            status_pegawai: status_pegawai,
+            hak_akses: '',
             deleted_by: 0,
           },
         }
-        const response = await axios.delete(
-          `${MANAJEMEN_PENGGUNA_URL}/hak-akses/delete/${id}`,
-          bodyParam
-        )
+        const response = await axios.delete(`${MANAJEMEN_PENGGUNA_URL}delete/${id}`, bodyParam)
         if (response) {
           fetchData(1)
           Swal.fire({
@@ -291,29 +289,59 @@ export function DetailHakAkses() {
     setFilterPengguna({val: event.target.value})
   }
 
-  let no = 1
+  var num = 1
   const columns = [
     {
-      name: 'Kode',
-      selector: (row: any) => row.kode,
+      name: 'ID',
+      selector: (row: any) => row.id,
       sortable: true,
-      sortField: 'kode',
+      sortField: 'id',
       wrap: true,
       center: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.id !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
+      },
     },
     {
-      name: 'Nama Hak Akses',
-      selector: (row: any) => row.nama_hak_akses,
+      name: 'Pengguna',
+      selector: (row: any) => row.nama_lengkap,
+      sortField: 'nama_lengkap',
       sortable: true,
-      sortField: 'nama_hak_akses',
-      width: '150px',
+      minWidth: '200px',
       wrap: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='d-flex align-items-center'>
+              {/* begin:: Avatar */}
+              <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
+                {record?.foto !== '' ? (
+                  <div className='symbol-label'>
+                    <img
+                      src={`${API_URL}/${record?.foto}`}
+                      alt={record?.nama_lengkap}
+                      className='w-100'
+                    />
+                  </div>
+                ) : (
+                  <div className={clsx('symbol-label fs-3', `bg-light-primary`, `text-primary`)}>
+                    {record?.nama_lengkap.charAt(0)}
+                  </div>
+                )}
+              </div>
+              <div className='d-flex flex-column'>
+                <span>{record?.nama_lengkap}</span>
+              </div>
+            </div>
+          </Fragment>
+        )
+      },
     },
     {
-      name: 'Nama Permission',
-      selector: (row: any) => row.nama_permission,
+      name: 'Tanggal Bergabung',
+      selector: (row: any) => row.tgl_bergabung,
       sortable: true,
-      sortField: 'nama_permission',
+      sortField: 'tgl_bergabung',
       wrap: true,
       center: true,
     },
@@ -350,7 +378,7 @@ export function DetailHakAkses() {
                     </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
-                      onClick={() => konfirDel(record.id, record.status_pegawai)}
+                      onClick={() => konfirDel(record.id, record.nama_lengkap)}
                     >
                       Hapus
                     </Dropdown.Item>
@@ -1080,6 +1108,9 @@ export function DetailHakAkses() {
         </Modal>
         <div id='kt_app_content' className='app-content flex-column-fluid'>
           <div className='card'>
+            <label className=' m-9'>
+              <h2>Pengguna Terdaftar</h2>
+            </label>
             <div className='col-6 '>
               <Link className='text-reset text-decoration-none' to={`/apps/hak-akses`}>
                 <button className='float-none btn btn-secondary align-self-center m-12'>
