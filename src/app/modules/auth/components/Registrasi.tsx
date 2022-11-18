@@ -8,12 +8,14 @@ import {getUserByToken, register} from '../core/_requests'
 import {useAuth} from '../core/Auth'
 
 const regSchema = Yup.object().shape({
-  no_pegawai: Yup.string().required('Wajib diisi'),
+  no_pegawai: Yup.string().min(5, 'Tidak Valid').required('Wajib diisi'),
   kata_sandi: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
+    .min(5, 'Minimum 5 karakter')
+    .max(50, 'Maximum 50 karakter')
     .required('Wajib diisi'),
-  email: Yup.string().required('Wajib diisi'),
+  email: Yup.string()
+    .email('Periksa kembali, pastikan format email sesuai')
+    .required('Wajib diisi'),
 })
 
 const initialValues = {
@@ -60,7 +62,7 @@ export function Registrasi() {
       id='kt_login_signin_form'
     >
       {/* begin::Heading */}
-      <div className='text-center mb-11'>
+      <div className='text-center mb-8'>
         <h1 className='text-white fw-bolder mb-3'>BUAT AKUN</h1>
       </div>
       {/* begin::Heading */}
@@ -93,8 +95,10 @@ export function Registrasi() {
           autoComplete='off'
         />
         {formik.touched.no_pegawai && formik.errors.no_pegawai && (
-          <div className='fv-plugins-message-container'>
-            <span role='alert'>{formik.errors.no_pegawai}</span>
+          <div className='fv-plugins-message-container mb-n7'>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.no_pegawai}</span>
+            </div>
           </div>
         )}
       </div>
@@ -118,7 +122,7 @@ export function Registrasi() {
           )}
         />
         {formik.touched.kata_sandi && formik.errors.kata_sandi && (
-          <div className='fv-plugins-message-container'>
+          <div className='fv-plugins-message-container mb-n7'>
             <div className='fv-help-block'>
               <span role='alert'>{formik.errors.kata_sandi}</span>
             </div>
@@ -128,7 +132,7 @@ export function Registrasi() {
       {/* end::Form group */}
 
       {/* begin::Form group */}
-      <div className='fv-row mb-8'>
+      <div className='fv-row mb-10'>
         <label className='form-label fw-bolder text-white fs-6 mb-0'>Email</label>
         <input
           type='email'
@@ -145,7 +149,7 @@ export function Registrasi() {
           )}
         />
         {formik.touched.email && formik.errors.email && (
-          <div className='fv-plugins-message-container'>
+          <div className='fv-plugins-message-container mb-n7'>
             <div className='fv-help-block'>
               <span role='alert'>{formik.errors.email}</span>
             </div>
