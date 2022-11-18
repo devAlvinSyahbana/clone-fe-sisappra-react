@@ -2,7 +2,9 @@ import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 import {DataPengguna} from './components/DataPengguna'
 import {Group} from './components/Group'
+
 import {AksesKontrol} from './components/AksesKontrol'
+import {ManajemenPermission} from './components/manajemen-permission/ManajemenPermission'
 
 import {AddDataPengguna} from './components/add-data-pengguna/AddDataPengguna'
 import {UpdateDataPengguna} from './components/update-data-pengguna/UpdateDataPengguna'
@@ -88,6 +90,17 @@ const ManajemenPenggunaPage = () => {
             </>
           }
         />
+        <Route
+          // path='akses-kontrol/manajemen-permission'
+          path='akses-kontrol/manajemen-permission/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Manajemen Permission</PageTitle>
+              <ManajemenPermission />
+            </>
+          }
+        />
+
         <Route
           path='hak-akses'
           element={
