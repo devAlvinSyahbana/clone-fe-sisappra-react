@@ -22,8 +22,9 @@ const AuthLayout = () => {
       style={{
         // backgroundColor: '#151521',
         opacity: '1',
-        background:
-          'repeating-linear-gradient( -45deg, #1a1a1f, #1a1a1f 5px, #151521 5px, #151521 25px',
+        background: 'linear-gradient(117deg, rgba(13,13,140,1) 0%, rgba(21,21,33,1) 56%)',
+        // background:
+        //   'repeating-linear-gradient( -45deg, #1a1a1f, #1a1a1f 5px, #151521 5px, #151521 25px',
       }}
     >
       {/* begin::Body */}
