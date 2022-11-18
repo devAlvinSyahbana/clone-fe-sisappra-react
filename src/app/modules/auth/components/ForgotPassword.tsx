@@ -35,7 +35,7 @@ export function ForgotPassword() {
     >
       <div className='text-center mb-10'>
         {/* begin::Title */}
-        <h1 className='text-dark fw-bolder mb-3'>Lupa Password ?</h1>
+        <h1 className='text-white fw-bolder mb-3'>Lupa Password ?</h1>
         {/* end::Title */}
 
         {/* begin::Link */}
@@ -45,7 +45,7 @@ export function ForgotPassword() {
         {/* end::Link */}
       </div>
       <div className='mb-10 p-8 rounded alert alert-primary text-center'>
-        <div className='alert-text font-weight-bold'>
+        <div className='alert-text font-weight-bold fs-4'>
           {value.email && <a href={`mailto:${value.email}`}>{value.email}</a>}
         </div>
       </div>

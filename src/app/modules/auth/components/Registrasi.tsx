@@ -61,7 +61,7 @@ export function Registrasi() {
     >
       {/* begin::Heading */}
       <div className='text-center mb-11'>
-        <h1 className='text-dark fw-bolder mb-3'>BUAT AKUN</h1>
+        <h1 className='text-white fw-bolder mb-3'>BUAT AKUN</h1>
       </div>
       {/* begin::Heading */}
 
@@ -77,7 +77,7 @@ export function Registrasi() {
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
-        <label className='form-label fs-6 fw-bolder text-dark'>NRK/NPTT/NPJLP</label>
+        <label className='form-label fs-6 fw-bolder text-white'>NRK/NPTT/NPJLP</label>
         <input
           placeholder='NRK/NPTT/NPJLP'
           {...formik.getFieldProps('no_pegawai')}
@@ -102,7 +102,7 @@ export function Registrasi() {
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
-        <label className='form-label fw-bolder text-dark fs-6 mb-0'>Password</label>
+        <label className='form-label fw-bolder text-white fs-6 mb-0'>Password</label>
         <input
           type='password'
           autoComplete='off'
@@ -129,7 +129,7 @@ export function Registrasi() {
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
-        <label className='form-label fw-bolder text-dark fs-6 mb-0'>Email</label>
+        <label className='form-label fw-bolder text-white fs-6 mb-0'>Email</label>
         <input
           type='email'
           autoComplete='off'

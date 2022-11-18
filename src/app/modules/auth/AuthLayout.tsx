@@ -18,7 +18,7 @@ const AuthLayout = () => {
 
   return (
     <div
-      className='d-flex flex-column flex-lg-row flex-column-fluid h-100'
+      className='d-flex flex-column flex-lg-row flex-column-fluid min-vh-100'
       style={{
         // backgroundColor: '#151521',
         opacity: '1',
@@ -31,7 +31,7 @@ const AuthLayout = () => {
         {/* begin::Form */}
         <div className='d-flex flex-center flex-column flex-lg-row-fluid'>
           {/* begin::Wrapper */}
-          <div className='d-flex flex-column flex-center py-5 px-5 px-md-15 mt-n15 mt-lg-0 w-100 border border-dark bg-white bg-opacity-25 rounded-3'>
+          <div className='d-flex flex-column flex-center py-5 px-5 py-md-10 px-md-15 mt-n15 mt-lg-0 w-lg-75 w-100 border border-dark bg-white bg-opacity-25 rounded-3'>
             <Outlet />
           </div>
           {/* end::Wrapper */}
