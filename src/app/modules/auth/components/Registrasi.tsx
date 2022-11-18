@@ -79,10 +79,10 @@ export function Registrasi() {
       <div className='fv-row mb-8'>
         <label className='form-label fs-6 fw-bolder text-white'>NRK/NPTT/NPJLP</label>
         <input
-          placeholder='NRK/NPTT/NPJLP'
+          placeholder='NRK / NPTT / NPJLP'
           {...formik.getFieldProps('no_pegawai')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-control bg-transparent text-white',
             {'is-invalid': formik.touched.no_pegawai && formik.errors.no_pegawai},
             {
               'is-valid': formik.touched.no_pegawai && !formik.errors.no_pegawai,
@@ -108,7 +108,7 @@ export function Registrasi() {
           autoComplete='off'
           {...formik.getFieldProps('kata_sandi')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-control bg-transparent text-white',
             {
               'is-invalid': formik.touched.kata_sandi && formik.errors.kata_sandi,
             },
@@ -135,7 +135,7 @@ export function Registrasi() {
           autoComplete='off'
           {...formik.getFieldProps('email')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-control bg-transparent text-white',
             {
               'is-invalid': formik.touched.email && formik.errors.email,
             },
