@@ -9,7 +9,7 @@ import ReactCrop, {centerCrop, makeAspectCrop, Crop, PixelCrop} from 'react-imag
 import Modal from 'react-bootstrap/Modal'
 import 'react-image-crop/dist/ReactCrop.css'
 import clsx from 'clsx'
-import {DetailPegawaiInterface} from './KepegawaianInterface'
+// import {DetailPegawaiInterface} from './KepegawaianInterface'
 import {canvasPreview} from './handlerFoto/canvasPreview'
 import {useDebounceEffect} from './handlerFoto/useDebounceEffect'
 
@@ -64,7 +64,7 @@ interface FileFotoInterface {
 export function UpdateHakAkses() {
   const navigate = useNavigate()
   const {id} = useParams()
-  const [data, setData] = useState<DetailPegawaiInterface>()
+  // const [data, setData] = useState<DetailPegawaiInterface>()
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
   const [qParamFind, setUriFind] = useState({strparam: ''})
