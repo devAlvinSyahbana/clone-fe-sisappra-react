@@ -175,13 +175,13 @@ export function AksesKontrol() {
     )
   }
 
+  let number = 1
+
   const columns = [
-    // {
-    //   name: 'No',
-    //   selector: (row: any) => row.id,
-    //   sortable: true,
-    //   sortField: 'id',
-    // },
+    {
+      name: 'No',
+      selector: (row: any) => row.id,
+    },
     {
       name: 'Nama Akses Kontrol',
       selector: (row: any) => row.modul,
@@ -223,7 +223,7 @@ export function AksesKontrol() {
                     <Dropdown.Item
                       onClick={() =>
                         // navigate('/apps/data-pengguna/update-data-pengguna/' + record.id, {
-                        navigate('/apps/akses-kontrol/manajemen-permission')
+                        navigate(`/apps/akses-kontrol/manajemen-permission`)
                       }
                     >
                       Manajemen Permission
@@ -431,22 +431,20 @@ export function AksesKontrol() {
     <div className={`card`}>
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
-          <label htmlFor='' className='mb-3'>
-            Akses Kontrol
-          </label>
+        <label htmlFor='' className='mb-3'>
+          Akses Kontrol
+        </label>
+        <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
           <input
             type='text'
             className='form-control form-control form-control-solid'
-            name='modul'
-            value={valFilterModul.val}
-            onChange={handleChangeInputModul}
-            placeholder='Cari Akses Kontrol'
+            name='nama'
+            // value={valNamaLengkap.val}
+            // onChange={handleChangeInputNamaLengkap}
+            placeholder='Nama / Hak Akses'
           />
         </div>
-      </div>
-      <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-12'>
+        <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
           <Link to='#' onClick={handleFilter}>
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
@@ -458,7 +456,7 @@ export function AksesKontrol() {
           <Link to='#i'>
             <button className='btn btn-light-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah
+              Tambah Akses Kontrol
             </button>
           </Link>
         </div>

@@ -399,14 +399,6 @@ export function ManajemenPermission() {
           <label htmlFor='' className='mb-3'>
             Akses Kontrol
           </label>
-          <input
-            type='text'
-            className='form-control form-control form-control-solid'
-            name='modul'
-            value={valFilterModul.val}
-            onChange={handleChangeInputModul}
-            placeholder='Cari Akses Kontrol'
-          />
         </div>
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>

@@ -92,7 +92,7 @@ const ManajemenPenggunaPage = () => {
         />
         <Route
           // path='akses-kontrol/manajemen-permission'
-          path='akses-kontrol/manajemen-permission/:id'
+          path='akses-kontrol/manajemen-permission'
           element={
             <>
               <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Manajemen Permission</PageTitle>
