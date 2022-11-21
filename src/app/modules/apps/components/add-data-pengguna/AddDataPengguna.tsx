@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
@@ -109,14 +109,12 @@ const reactSelectDarkThem = {
 
 export interface FormInput {
   nama_lengkap?: string
-  id_pegawai?: string
   no_pegawai?: string
   kata_sandi?: string
   email?: string
-  terakhir_login?: string
-  hak_akses?: number
-  status_pengguna?: number
-  foto?: any
+  hak_akses?: any
+  status_pengguna?: any
+  foto?: string
 }
 
 export interface SelectOption {
@@ -157,9 +155,11 @@ export function AddDataPengguna() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
+  const arrStatPegawai = ['Non - PNS', 'PNS', 'PTT', 'PJLP']
 
-  const [valInputHakAkses, setValHakAkses] = useState({val: 0})
-  const [valInputStatusPengguna, setValStatusPengguna] = useState({val: 0})
+  // const {id} = useParams()
+  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
+  const [valInputNoPegawai, setValNoPegawai] = useState({val: ''})
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
@@ -192,11 +192,21 @@ export function AddDataPengguna() {
     }))
   }
 
-  const handleChangeHakAkses = (event: {
+  const handleChangeStatPegawai = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setValHakAkses((prevValues: any) => ({
+    setValStatPegawai((prevValues: any) => ({
+      ...prevValues,
+      val: event.target.value,
+    }))
+  }
+
+  const handleChangeNoPegawai = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setValNoPegawai((prevValues: any) => ({
       ...prevValues,
       val: event.target.value,
     }))
@@ -217,28 +227,29 @@ export function AddDataPengguna() {
   const formik = useFormik({
     initialValues: {
       nama_lengkap: '',
-      id_pegawai: '',
       no_pegawai: '',
       kata_sandi: '',
       email: '',
-      terakhir_login: '',
-      status_pengguna: 0,
+      foto: '',
+      status_pengguna: {value: '', label: 'Pilih status pengguna'},
       hak_akses: {value: '', label: 'Pilih Hak Akses'},
     },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
         nama_lengkap: valuesFormik?.nama_lengkap ? valuesFormik.nama_lengkap : '',
-        id_pegawai: valuesFormik?.id_pegawai ? valuesFormik.id_pegawai : '',
-        no_pegawai: valuesFormik?.no_pegawai ? valuesFormik.no_pegawai : '',
+        foto: valuesFormik?.foto ? valuesFormik.foto : '',
         kata_sandi: valuesFormik?.kata_sandi ? valuesFormik.kata_sandi : '',
         email: valuesFormik?.email ? valuesFormik.email : '',
-        terakhir_login: valuesFormik?.terakhir_login ? valuesFormik.terakhir_login : '',
-        hak_akses: valInputHakAkses?.val ? valInputHakAkses.val : 0,
-        status_pengguna: valInputStatusPengguna?.val ? valInputStatusPengguna.val : 0,
+        status_pengguna: valuesFormik?.status_pengguna ? valuesFormik.status_pengguna : 0,
+        hak_akses: valuesFormik?.hak_akses?.value ? valuesFormik.hak_akses.value : 0,
+        no_pegawai: valInputNoPegawai?.val ? valInputNoPegawai.val : '',
       }
       try {
         const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/create`, bodyparam)
         if (response) {
+          if (selectedFile) {
+            handleSubmitFoto(response.data.id)
+          }
           Swal.fire({
             icon: 'success',
             text: 'Data berhasil disimpan',
@@ -261,13 +272,16 @@ export function AddDataPengguna() {
     },
   })
 
-  const handleSubmitFoto = async (e: any) => {
-    e.preventDefault()
+  // Begin Picture
+  const handleSubmitFoto = async (id: number) => {
     let formData = new FormData()
     try {
       if (selectedFile && selectedFile?.croppedImage) {
-        formData.append('foto', selectedFile?.croppedImage)
-        const responseFile = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/update`, formData)
+        formData.append('image_file', selectedFile?.croppedImage)
+        const responseFile = await axios.post(
+          `${MANAJEMEN_PENGGUNA_URL}/update-image/${id}`,
+          formData
+        )
         if (responseFile) {
           console.log('File success uploaded!')
           Swal.fire({
@@ -277,8 +291,6 @@ export function AddDataPengguna() {
             timer: 1500,
           })
           setSelectedFile({croppedImage: null})
-          // fetchDT()
-          handleClose()
         }
         return
       }
@@ -437,7 +449,7 @@ export function AddDataPengguna() {
                     <Modal.Title id='example-modal-sizes-title-md'>Tambah Foto</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    <form className='form' onSubmit={handleSubmitFoto}>
+                    <form className='form'>
                       <div
                         className='d-flex flex-column scroll-y me-n7 pe-7'
                         id='kt_modal_add_user_scroll'
@@ -554,7 +566,8 @@ export function AddDataPengguna() {
                             Tutup
                           </button>
                           <button
-                            type='submit'
+                            type='button'
+                            onClick={handleClose}
                             className='float-none btn btn-primary align-self-center m-1'
                             disabled={!selectedFile?.croppedImage}
                           >
@@ -569,19 +582,66 @@ export function AddDataPengguna() {
             </div>
           </div>
           <div className='row mt-2'>
+            {valStatPegawai.val === 'Non - PNS' ? (
+              <div className='col-6 mb-6'>
+                <div className='form-group'>
+                  <Form.Label>Nama Lengkap</Form.Label>
+                  <Form.Control
+                    type='text'
+                    name='nama_lengkap'
+                    className='form-control form-control-solid'
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.nama_lengkap}
+                    placeholder='Masukkan nama lengkap'
+                  />
+                </div>
+              </div>
+            ) : null}
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>Nama Lengkap</Form.Label>
-                <Form.Control
-                  type='text'
-                  name='nama_lengkap'
-                  className='form-control form-control-solid'
-                  onChange={handleChangeFormik}
-                  value={valuesFormik?.nama_lengkap}
-                  placeholder='Masukkan nama lengkap'
-                />
+                <Form.Label>Status Kepegawaian</Form.Label>
+                <select
+                  className='form-select form-select-solid'
+                  aria-label='Select example'
+                  value={valStatPegawai.val}
+                  onChange={handleChangeStatPegawai}
+                  name='status_pegawai'
+                >
+                  {arrStatPegawai.map((val: string) => {
+                    return <option value={val}>{val}</option>
+                  })}
+                </select>
               </div>
+              {valStatPegawai.val !== '' && valStatPegawai.val !== 'Non - PNS' ? (
+                <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 p-3' id='fil_nrk'>
+                  <label htmlFor='' className='mb-3'>
+                    {valStatPegawai.val === 'PNS'
+                      ? 'NRK'
+                      : valStatPegawai.val === 'PTT'
+                      ? 'NPTT'
+                      : valStatPegawai.val === 'PJLP'
+                      ? 'NPJLP'
+                      : ''}
+                  </label>
+                  <input
+                    type='number'
+                    className='form-control form-control form-control-solid'
+                    value={valuesFormik?.no_pegawai}
+                    onChange={handleChangeNoPegawai}
+                    placeholder={
+                      valStatPegawai.val === 'PNS'
+                        ? 'Masukkan nomor NRK'
+                        : valStatPegawai.val === 'PTT'
+                        ? 'Masukkan nomor NPTT'
+                        : valStatPegawai.val === 'PJLP'
+                        ? 'Masukkan nomor NPJLP'
+                        : ''
+                    }
+                  />
+                </div>
+              ) : null}
             </div>
+
             <div className='col-6 mb-6'>
               <div className='form-group'>
                 <Form.Label>Email</Form.Label>
