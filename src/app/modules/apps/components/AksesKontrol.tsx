@@ -431,8 +431,8 @@ export function AksesKontrol() {
     <div className={`card`}>
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <label htmlFor='' className='mb-3'>
-          Akses Kontrol
+        <label>
+          <h3>Akses Kontrol</h3>
         </label>
         <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
           <input
