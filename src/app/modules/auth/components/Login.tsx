@@ -42,7 +42,6 @@ export function Login() {
         if (captcha) {
           const {data: auth} = await login(values.no_pegawai, values.kata_sandi)
           saveAuth(auth)
-          console.log(auth)
           const {data: user} = await getUserByToken(auth.api_token)
           setCurrentUser(user.data)
         }

@@ -1,4 +1,5 @@
 export interface AuthModel {
+  code?: number
   api_token: string
   refreshToken?: string
   no_pegawai?: string

@@ -41,13 +41,19 @@ export function Registrasi() {
       setLoading(true)
       try {
         const {data: auth} = await register(values.no_pegawai, values.kata_sandi, values.email)
+        if (auth.code === 208) {
+          saveAuth(undefined)
+          setStatus('Akun sudah terdaftar! Silahkan login')
+          setSubmitting(false)
+          return setLoading(false)
+        }
         saveAuth(auth)
         const {data: user} = await getUserByToken(auth.api_token)
         setCurrentUser(user.data)
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
-        setStatus('Akun sudah terdaftar!')
+        setStatus('NRK/NPTT/NPJLP tidak ada dalam database mohon hubungi admin!')
         setSubmitting(false)
         setLoading(false)
       }
