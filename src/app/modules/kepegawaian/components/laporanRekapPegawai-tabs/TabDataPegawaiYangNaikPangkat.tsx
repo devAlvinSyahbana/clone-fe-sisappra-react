@@ -113,8 +113,8 @@ const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
-export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
 export const JABATAN_URL = `${API_URL}/master/jabatan`
+export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
 export const PANGKAT_URL = `${API_URL}/master/pangkat`
 
 export const STATUS_KENAIKAN_PANGKAT_URL = `${API_URL}/master/status_kenaikan_pangkat`
