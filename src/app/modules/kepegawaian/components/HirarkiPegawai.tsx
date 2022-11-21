@@ -1,54 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react'
-import Modal from 'react-bootstrap/Modal';
+import React, {useEffect, useRef, useState} from 'react'
+import Modal from 'react-bootstrap/Modal'
 
-import { useMemo } from 'react'
-import { useTable, ColumnInstance, Row } from 'react-table'
-import { CustomRow } from './users-list/table/columns/CustomRow'
-import { useQueryResponseData, useQueryResponseLoading } from './users-list/core/QueryResponseProvider'
-import { usersColumns } from './users-list/table/columns/_columns'
-import { User } from './users-list/core/_models'
-import { UsersListLoading } from './users-list/components/loading/UsersListLoading'
-import { UsersListPagination } from './users-list/components/pagination/UsersListPagination'
-import { KTCardBody } from '../../../../_metronic/helpers'
-import { CustomHeaderColumn } from './users-list/table/columns/CustomHeaderColumn';
-import { ErrorMessage, Field, FieldArray, Form, Formik, FormikHelpers } from 'formik';
-import { SelectOptionAutoCom } from './KepegawaianInterface'
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import AsyncSelect from 'react-select/async';
+import {useMemo} from 'react'
+import {useTable, ColumnInstance, Row} from 'react-table'
+import {CustomRow} from './users-list/table/columns/CustomRow'
+import {
+  useQueryResponseData,
+  useQueryResponseLoading,
+} from './users-list/core/QueryResponseProvider'
+import {usersColumns} from './users-list/table/columns/_columns'
+import {User} from './users-list/core/_models'
+import {UsersListLoading} from './users-list/components/loading/UsersListLoading'
+import {UsersListPagination} from './users-list/components/pagination/UsersListPagination'
+import {KTCardBody, toAbsoluteUrl} from '../../../../_metronic/helpers'
+import {CustomHeaderColumn} from './users-list/table/columns/CustomHeaderColumn'
+import {ErrorMessage, Field, FieldArray, Form, Formik, FormikHelpers} from 'formik'
+import {SelectOptionAutoCom} from './KepegawaianInterface'
+import axios from 'axios'
+import {useParams} from 'react-router-dom'
+import AsyncSelect from 'react-select/async'
 // Chart
-import { Tree, TreeNode } from 'react-organizational-chart';
-import styled from 'styled-components';
-import OrganizationChart from "@dabeng/react-orgchart";
-import StrukturalOrganisasi from "./hirarki-chart/StrukturalOrganisasi";
+import {Tree, TreeNode} from 'react-organizational-chart'
+import styled from 'styled-components'
+import OrganizationChart from '@dabeng/react-orgchart'
+import StrukturalOrganisasi from './hirarki-chart/StrukturalOrganisasi'
 import FileDownload from 'js-file-download'
 // import MyNode from "./hirarki-chart/my-node";
-import PropTypes from "prop-types";
-import "./hirarki-chart/my-node.css";
+import PropTypes from 'prop-types'
+import './hirarki-chart/my-node.css'
 
 // OrgChart
-import OrganizationalChart from './hirarki-chart/components/orgChart';
-import { StrukturHirarki } from './hirarki-chart/components/HirarkiInterface'
+import OrganizationalChart from './hirarki-chart/components/orgChart'
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const ATASAN_URL = `${API_URL}/kepegawaian`
-export const DATA_HIRARKI_URL = `${API_URL}/master/struktur_Data_hirarki`
-
-interface DataHirarki {
-    data: [{
-      id: number,
-    parentId: string,
-    name: string,
-    positionName: string,
-    phone: string;
-    email: string;
-    team: string;
-    location: string;
-    department: string;
-    description: string;
-    imageUrl: string;
-  }]
-}
+export const DATA_HIRARKI_URL = `${API_URL}/master/struktur_data_hirarki`
 
 export function HirarkiPegawai() {
   const users = useQueryResponseData()
@@ -56,16 +42,16 @@ export function HirarkiPegawai() {
   // const data = useMemo(() => users, [users])
   const columns = useMemo(() => usersColumns, [])
   const arrStatPegawai = ['PNS', 'PTT', 'PJLP']
-  const [valStatPegawai, setValStatPegawai] = useState({ val: '' })
+  const [valStatPegawai, setValStatPegawai] = useState({val: ''})
 
   // const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
   //   columns,
   //   data,
   // })
-  const { id, status } = useParams()
+  const {id, status} = useParams()
   // console.log('id, status', id, status)
-  const [lgShow, setLgShow] = useState(false);
-  const [inputValAtasan, setDataPegawai] = useState({ label: '', value: null })
+  const [lgShow, setLgShow] = useState(false)
+  const [inputValAtasan, setDataPegawai] = useState({label: '', value: null})
 
   const initialValues = {
     friends: [
@@ -74,28 +60,35 @@ export function HirarkiPegawai() {
         nama: '',
       },
     ],
-  };
+  }
 
   // Autocomplete Pegawai
   const filterPegawai = async (inputValue: string) => {
-    const response = await axios.get(`${ATASAN_URL}/auto-search-pegawai?status=${valStatPegawai.val ? valStatPegawai.val : "PNS"}&nomor=${inputValue}`)
+    const response = await axios.get(
+      `${ATASAN_URL}/auto-search-pegawai?status=${
+        valStatPegawai.val ? valStatPegawai.val : 'PNS'
+      }&nomor=${inputValue}`
+    )
     const json = await response.data.data
-    return json.map((i: any) => ({ label: i.no_pegawai + " - " + i.nama, value: i.id }))
+    return json.map((i: any) => ({label: i.no_pegawai + ' - ' + i.nama, value: i.id}))
   }
-  const loadOptionsPegawai = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+  const loadOptionsPegawai = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
       callback(await filterPegawai(inputValue))
     }, 1000)
   }
   const handleInputPegawai = (newValue: any) => {
-    setDataPegawai((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setDataPegawai((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const handleChangeStatPegawai = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setValStatPegawai({ val: event.target.value })
+    setValStatPegawai({val: event.target.value})
   }
 
   // Struktural Organisasi TIPE 1
@@ -104,128 +97,152 @@ export function HirarkiPegawai() {
     border-radius: 2px;
     display: inline-block;
     border: 1px solid black;
-  `;
+  `
 
   // Org Chart TIPE 2
 
-  const orgchart = useRef();
+  const orgchart = useRef()
 
   const ds = {
-    id: "level1",
-    name: "Lao Lao",
-    title: "KEPALA SATPOL PP",
+    id: 'level1',
+    name: 'Lao Lao',
+    title: 'KEPALA SATPOL PP',
     children: [
       {
-        id: "sublevel1",
-        name: "Bo Miao",
-        title: "WAKIL KEPALA SATPOL PP",
+        id: 'sublevel1',
+        name: 'Bo Miao',
+        title: 'WAKIL KEPALA SATPOL PP',
         children: [
           {
-            id: "sublevel1.2.1",
-            name: "Su Miao",
-            title: "SEKRETARIAT",
+            id: 'sublevel1.2.1',
+            name: 'Su Miao',
+            title: 'SEKRETARIAT',
             children: [
-              { id: "sublevel1.2.1.1", name: "Tie Hua", title: "SUBBAGIAN UMUM" },
-              { id: "sublevel1.2.1.2", name: "Hei Hei", title: "SUBBAGIAN KEPEGAWAIAN" },
-              { id: "sublevel1.2.1.3", name: "Pang Pang", title: "SUBBAGIAN PROGRAM DAN KEUANGAN" },
-              { id: "sublevel1.2.1.4", name: "Pang Pang", title: "SUBBAGIAN PERALATAN DAN PERLENGKAPAN" }
-            ]
-          },
-          {
-            id: "sublevel1.2.2",
-            name: "Su Miao",
-            title: "BIDANG KETENTRAMAN DAN KETERTIBAN UMUM",
-            children: [
-              { id: "sublevel1.2.2.1", name: "Tie Hua", title: "SEKSI PENGADUAN DAN SENGKETA" },
-              { id: "sublevel1.2.2.2", name: "Hei Hei", title: "SEKSI KETERTIBAN SARANA DAN PRASARANA KOTA" },
-              { id: "sublevel1.2.2.3", name: "Pang Pang", title: "SEKSI DATA DAN INFORMASI" }
-            ]
-          },
-          {
-            id: "sublevel1.2.3",
-            name: "Su Miao",
-            title: "BIDANG PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA, HIBURAN DAN REKREASI",
-            children: [
-              { id: "sublevel1.2.3.1", name: "Tie Hua", title: "SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA INDUSTRI" },
-              { id: "sublevel1.2.3.2", name: "Hei Hei", title: "SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA NON INDUSTRI" },
-              { id: "sublevel1.2.3.3", name: "Pang Pang", title: "SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA HIBURAN DAN REKREASI" }
-            ]
-          },
-          {
-            id: "sublevel1.2.4",
-            name: "Su Miao",
-            title: "BIDANG PERLINDUNGAN MASYARAKAT",
-            children: [
-              { id: "sublevel1.2.4.1", name: "Tie Hua", title: "SEKSI PENGARAHAN DAN PENGENDALIAN" },
-              { id: "sublevel1.2.4.2", name: "Hei Hei", title: "SEKSI PROTOKOL DAN PENGENDALIAN" },
-              { id: "sublevel1.2.4.3", name: "Pang Pang", title: "SEKSI BIMBINGAN DAN PENYULUHAN" }
-            ]
-          },
-          {
-            id: "sublevel1.2.5",
-            name: "Su Miao",
-            title: "BIDANG PENEGAKAN DAN PENINDAKAN",
-            children: [
-              { id: "sublevel1.2.5.1", name: "Tie Hua", title: "SEKSI PEMANTAUAN" },
-              { id: "sublevel1.2.5.2", name: "Hei Hei", title: "SEKSI OPERASI" },
-              { id: "sublevel1.2.5.3", name: "Pang Pang", title: "SEKSI ANALISA DAN EVALUASI" }
-            ]
-          },
-          {
-            id: "sublevel1.2.6",
-            name: "Su Miao",
-            title: "BIDANG PPNS",
-            children: [
-              { id: "sublevel1.2.6.1", name: "Tie Hua", title: "SEKSI PEMBINAAN" },
-              { id: "sublevel1.2.6.2", name: "Hei Hei", title: "SEKSI PENYELIDIKAN" },
-              { id: "sublevel1.2.6.3", name: "Pang Pang", title: "SEKSI HUBUNGAN ANTAR LEMBAGA" }
-            ]
-          },
-          {
-            id: "sublevel1.2.7",
-            name: "Su Miao",
-            title: "SATPOL PP KOTA",
-            children: [
-              { id: "sublevel1.2.7.1", name: "Tie Hua", title: "SUBBAGIAN TATA USAHA" },
-              { id: "sublevel1.2.7.2", name: "Hei Hei", title: "SEKSI KETENTRAMAN" },
-              { id: "sublevel1.2.7.3", name: "Pang Pang", title: "SEKSI PERLINDUNGAN MASYARAKAT" },
-              { id: "sublevel1.2.7.4", name: "Pang Pang", title: "SEKSI PPNS DAN PENINDAKAN" },
+              {id: 'sublevel1.2.1.1', name: 'Tie Hua', title: 'SUBBAGIAN UMUM'},
+              {id: 'sublevel1.2.1.2', name: 'Hei Hei', title: 'SUBBAGIAN KEPEGAWAIAN'},
+              {id: 'sublevel1.2.1.3', name: 'Pang Pang', title: 'SUBBAGIAN PROGRAM DAN KEUANGAN'},
               {
-                id: "sublevel1.2.7.5", name: "Pang Pang", title: "SATPOL PP KECAMATAN",
-                children: [
-                  { id: "sublevel1.2.7.5.1", name: "Pang Pang", title: "SATPOL PP KELURAHAN" }
-                ]
+                id: 'sublevel1.2.1.4',
+                name: 'Pang Pang',
+                title: 'SUBBAGIAN PERALATAN DAN PERLENGKAPAN',
               },
-              { id: "sublevel1.2.7.6", name: "Pang Pang", title: "SUB KELOMPOK JABATAN FUNGSIONAL" }
-            ]
+            ],
           },
           {
-            id: "sublevel1.2.8",
-            name: "Su Miao",
-            title: "SATPOL PP KABUPATEN",
+            id: 'sublevel1.2.2',
+            name: 'Su Miao',
+            title: 'BIDANG KETENTRAMAN DAN KETERTIBAN UMUM',
             children: [
-              { id: "sublevel1.2.8.1", name: "Tie Hua", title: "SUBBAGIAN TATA USAHA" },
-              { id: "sublevel1.2.8.2", name: "Hei Hei", title: "SEKSI KETENTRAMAN" },
-              { id: "sublevel1.2.8.3", name: "Pang Pang", title: "SEKSI PERLINDUNGAN MASYARAKAT" },
-              { id: "sublevel1.2.8.4", name: "Pang Pang", title: "SEKSI PPNS DAN PENINDAKAN" },
+              {id: 'sublevel1.2.2.1', name: 'Tie Hua', title: 'SEKSI PENGADUAN DAN SENGKETA'},
               {
-                id: "sublevel1.2.8.5", name: "Pang Pang", title: "SATPOL PP KECAMATAN",
-                children: [
-                  { id: "sublevel1.2.8.5.1", name: "Pang Pang", title: "SATPOL PP KELURAHAN" }
-                ]
+                id: 'sublevel1.2.2.2',
+                name: 'Hei Hei',
+                title: 'SEKSI KETERTIBAN SARANA DAN PRASARANA KOTA',
               },
-              { id: "sublevel1.2.8.6", name: "Pang Pang", title: "SUB KELOMPOK JABATAN FUNGSIONAL" }
-            ]
+              {id: 'sublevel1.2.2.3', name: 'Pang Pang', title: 'SEKSI DATA DAN INFORMASI'},
+            ],
           },
           {
-            id: "sublevel1.2.9",
-            name: "Su Miao",
-            title: "KELOMPOK JABATAN FUNGSIONAL",
+            id: 'sublevel1.2.3',
+            name: 'Su Miao',
+            title: 'BIDANG PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA, HIBURAN DAN REKREASI',
+            children: [
+              {
+                id: 'sublevel1.2.3.1',
+                name: 'Tie Hua',
+                title: 'SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA INDUSTRI',
+              },
+              {
+                id: 'sublevel1.2.3.2',
+                name: 'Hei Hei',
+                title: 'SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA NON INDUSTRI',
+              },
+              {
+                id: 'sublevel1.2.3.3',
+                name: 'Pang Pang',
+                title: 'SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA HIBURAN DAN REKREASI',
+              },
+            ],
           },
-        ]
+          {
+            id: 'sublevel1.2.4',
+            name: 'Su Miao',
+            title: 'BIDANG PERLINDUNGAN MASYARAKAT',
+            children: [
+              {id: 'sublevel1.2.4.1', name: 'Tie Hua', title: 'SEKSI PENGARAHAN DAN PENGENDALIAN'},
+              {id: 'sublevel1.2.4.2', name: 'Hei Hei', title: 'SEKSI PROTOKOL DAN PENGENDALIAN'},
+              {id: 'sublevel1.2.4.3', name: 'Pang Pang', title: 'SEKSI BIMBINGAN DAN PENYULUHAN'},
+            ],
+          },
+          {
+            id: 'sublevel1.2.5',
+            name: 'Su Miao',
+            title: 'BIDANG PENEGAKAN DAN PENINDAKAN',
+            children: [
+              {id: 'sublevel1.2.5.1', name: 'Tie Hua', title: 'SEKSI PEMANTAUAN'},
+              {id: 'sublevel1.2.5.2', name: 'Hei Hei', title: 'SEKSI OPERASI'},
+              {id: 'sublevel1.2.5.3', name: 'Pang Pang', title: 'SEKSI ANALISA DAN EVALUASI'},
+            ],
+          },
+          {
+            id: 'sublevel1.2.6',
+            name: 'Su Miao',
+            title: 'BIDANG PPNS',
+            children: [
+              {id: 'sublevel1.2.6.1', name: 'Tie Hua', title: 'SEKSI PEMBINAAN'},
+              {id: 'sublevel1.2.6.2', name: 'Hei Hei', title: 'SEKSI PENYELIDIKAN'},
+              {id: 'sublevel1.2.6.3', name: 'Pang Pang', title: 'SEKSI HUBUNGAN ANTAR LEMBAGA'},
+            ],
+          },
+          {
+            id: 'sublevel1.2.7',
+            name: 'Su Miao',
+            title: 'SATPOL PP KOTA',
+            children: [
+              {id: 'sublevel1.2.7.1', name: 'Tie Hua', title: 'SUBBAGIAN TATA USAHA'},
+              {id: 'sublevel1.2.7.2', name: 'Hei Hei', title: 'SEKSI KETENTRAMAN'},
+              {id: 'sublevel1.2.7.3', name: 'Pang Pang', title: 'SEKSI PERLINDUNGAN MASYARAKAT'},
+              {id: 'sublevel1.2.7.4', name: 'Pang Pang', title: 'SEKSI PPNS DAN PENINDAKAN'},
+              {
+                id: 'sublevel1.2.7.5',
+                name: 'Pang Pang',
+                title: 'SATPOL PP KECAMATAN',
+                children: [
+                  {id: 'sublevel1.2.7.5.1', name: 'Pang Pang', title: 'SATPOL PP KELURAHAN'},
+                ],
+              },
+              {id: 'sublevel1.2.7.6', name: 'Pang Pang', title: 'SUB KELOMPOK JABATAN FUNGSIONAL'},
+            ],
+          },
+          {
+            id: 'sublevel1.2.8',
+            name: 'Su Miao',
+            title: 'SATPOL PP KABUPATEN',
+            children: [
+              {id: 'sublevel1.2.8.1', name: 'Tie Hua', title: 'SUBBAGIAN TATA USAHA'},
+              {id: 'sublevel1.2.8.2', name: 'Hei Hei', title: 'SEKSI KETENTRAMAN'},
+              {id: 'sublevel1.2.8.3', name: 'Pang Pang', title: 'SEKSI PERLINDUNGAN MASYARAKAT'},
+              {id: 'sublevel1.2.8.4', name: 'Pang Pang', title: 'SEKSI PPNS DAN PENINDAKAN'},
+              {
+                id: 'sublevel1.2.8.5',
+                name: 'Pang Pang',
+                title: 'SATPOL PP KECAMATAN',
+                children: [
+                  {id: 'sublevel1.2.8.5.1', name: 'Pang Pang', title: 'SATPOL PP KELURAHAN'},
+                ],
+              },
+              {id: 'sublevel1.2.8.6', name: 'Pang Pang', title: 'SUB KELOMPOK JABATAN FUNGSIONAL'},
+            ],
+          },
+          {
+            id: 'sublevel1.2.9',
+            name: 'Su Miao',
+            title: 'KELOMPOK JABATAN FUNGSIONAL',
+          },
+        ],
       },
-    ]
-  };
+    ],
+  }
 
   const exportTo = async () => {
     // setbtnLoadingUnduh(true)
@@ -234,10 +251,7 @@ export function HirarkiPegawai() {
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
-      FileDownload(
-        response.data,
-        filename + fileextension
-      )
+      FileDownload(response.data, filename + fileextension)
       // setbtnLoadingUnduh(false)
     })
   }
@@ -247,424 +261,658 @@ export function HirarkiPegawai() {
   // orgchart.current.exportTo(filename, fileextension);
   // };
 
-  const [filename, setFilename] = useState("organization_chart");
-  const [fileextension, setFileextension] = useState("png");
+  const [filename, setFilename] = useState('organization_chart')
+  const [fileextension, setFileextension] = useState('png')
 
-  const onNameChange = (event: {
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setFilename(event.target.value);
-  };
+  const onNameChange = (event: {preventDefault: () => void; target: {value: any; name: any}}) => {
+    setFilename(event.target.value)
+  }
 
   const onExtensionChange = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setFileextension(event.target.value);
-  };
+    setFileextension(event.target.value)
+  }
 
   // Data Tipe 3
-  const [dataHirarki, setData] = useState<DataHirarki>()
+  const [datasatpp, setDataSatPP] = useState()
 
   useEffect(() => {
-    let arrD: any = []
-    const fetchData = async () => {
-      const data = await axios.get(
-        `${DATA_HIRARKI_URL}/find`
-      )
-      // setData(data.data.data)
-      // let array = await data.data.data.map((data:any)=>{
-      //   return {
-      //     id: data.id,
-      //     parentId: String(data.parent_id > 0 ? data.parent_id : ''),
-      //     name: data.nama,
-      //     positionName: String(data.jabatan),
-      //     phone: "",
-      //     email: "",
-      //     team: String(data.tim),
-      //     location: "",
-      //     department: "",
-      //     description:
-      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      //     imageUrl: "https://randomuser.me/api/portraits/men/1.jpg",
-      //   }
-      // })
-      let array = JSON.parse(`[{"id":1,"parentId":"","name":"ARIFIN","positionName":"1","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":2,"parentId":"1","name":"SAHAT PARULIAN","positionName":"2","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":3,"parentId":"1","name":"","positionName":"0","phone":"","email":"","team":"SEKRETARIAT","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":4,"parentId":"2","name":"SANTOSO","positionName":"3","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":5,"parentId":"4","name":"","positionName":"0","phone":"","email":"","team":"ANALIS KEPEGAWAIAN AHLI MUDA SELAKU SUB KOORDINATOR URUSAN BAGIAN KEPEGAWAIAN","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":6,"parentId":"4","name":"RIKKI HERMANTO SINAGA","positionName":"4","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":7,"parentId":"6","name":"HERIYANTO","positionName":"5","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":8,"parentId":"6","name":"AZRUL FATHANY","positionName":"5","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":9,"parentId":"6","name":"FARIS RUSANDI","positionName":"6","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":10,"parentId":"6","name":"MAMAN SURIAMAN","positionName":"6","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":11,"parentId":"6","name":"SITI JULAEHA","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":12,"parentId":"6","name":"MAHMUDI","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":13,"parentId":"6","name":"LUKMAN HAKIM","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":14,"parentId":"6","name":"DHANU ARESTIA HOTTI","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":15,"parentId":"6","name":"ROMA VERONICA","positionName":"616","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":16,"parentId":"4","name":"","positionName":"0","phone":"","email":"","team":"SUB BAGIAN PROGRAM DAN KEUANGAN","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":17,"parentId":"4","name":"RIYADIANA CHLAIRANDES","positionName":"7","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":18,"parentId":"17","name":"MULJADI","positionName":"618","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":19,"parentId":"17","name":"LAURA ARDIANA","positionName":"8","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":20,"parentId":"17","name":"SITI PUSPITASARI","positionName":"619","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":21,"parentId":"17","name":"MAULVI NAZIR","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":22,"parentId":"17","name":"BAMBANG ADE IRAWAN","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":23,"parentId":"17","name":"PARTIWI","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":24,"parentId":"17","name":"FAUZUL ROFIK AL KHUSNA","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":25,"parentId":"17","name":"MUHAMMAD TAHJUDDIN ROSYI","positionName":"9","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":26,"parentId":"4","name":"","positionName":"0","phone":"","email":"","team":"SUB BAGIAN UMUM","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":27,"parentId":"4","name":"RIMA DAHLIA","positionName":"10","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":28,"parentId":"27","name":"ELOK RISCA DAMAYANTI","positionName":"620","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":29,"parentId":"27","name":"AMBAR EKOWATI","positionName":"620","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":30,"parentId":"27","name":"MOHAMAD HANAFI","positionName":"620","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":31,"parentId":"27","name":"SAIFUL RIZAL","positionName":"621","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":32,"parentId":"27","name":"MAKMURI","positionName":"635","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":33,"parentId":"27","name":"MUKSIN","positionName":"11","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":34,"parentId":"27","name":"RULLY YUSUF","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":35,"parentId":"27","name":"YUNI FITRIASTUTI","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":36,"parentId":"27","name":"TOHIRIN","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":37,"parentId":"27","name":"DJAYADI","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":38,"parentId":"27","name":"BUDI ARIANTO","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":39,"parentId":"27","name":"SAIMIN","positionName":"12","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":40,"parentId":"27","name":"ROFIK HIDAYAT","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":41,"parentId":"27","name":"RAHMAT SOLEH","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":42,"parentId":"27","name":"SHOLAT","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":43,"parentId":"27","name":"ADI ABDILLAH","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":44,"parentId":"27","name":"ZAINAL ABIDIN","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":45,"parentId":"27","name":"DENI HADI PERMANA","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":46,"parentId":"27","name":"ACHMAD GOFUR","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":47,"parentId":"27","name":"HARY ROMAENUR","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":48,"parentId":"27","name":"WAWAN SETIAWAN","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"},{"id":49,"parentId":"27","name":"WAGIMAN","positionName":"634","phone":"","email":"","team":"","location":"","department":"","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","imageUrl":"https://randomuser.me/api/portraits/men/1.jpg"}]`)
-      console.log('coba array',array)
-      setData((prevState) => ({...prevState, data:array}))
+    const fetchDataPP = async () => {
+      const value = await axios.get(`${DATA_HIRARKI_URL}/find-bagan`)
+      const fixedData = value.data.data.map((item: any) => {
+        const {parentid, position_name, ...newItem} = item
+        return {
+          ...newItem,
+          parentId: parentid == '0' ? '' : parentid + '',
+          positionName: position_name,
+        }
+      })
+      setDataSatPP(fixedData)
     }
-    fetchData()
-  }, [true])
+    console.log('ini buat data test', datasatpp)
+    fetchDataPP()
+  }, [])
 
-  const datapp = [
-    {
-      name: 'ID',
-      selector: (row: any) => row.id,
-    },
-    {
-      name: 'Parent Id',
-      selector: (row: any) => row.parent_id,
-    },
-    {
-      name: 'Nama',
-      selector: (row: any) => row.nama,
-    },
-    {
-      name: 'Jabatan',
-      selector: (row: any) => row.jabatan,
-    },
-    {
-      name: 'Tim',
-      selector: (row: any) => row.tim,
-    },
-
-  ]
-  // console.log('muncul ngga?', datapp)
+  const datasatpol = [{id: 1, parentId: '', positionName: 'KEPALA SATPOL PP DKI JAKARTA', team: ''}]
 
   const datasatpolpp = [
     {
       id: 1,
-      parentId: "",
-      name: "John",
-      positionName: "CEO",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      imageUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+      parentId: '',
+      positionName: 'Kepala Satpol PP',
+      team: '',
+      tempatLahir: 'Jakarta',
+      tanggalLahir: '16 Des 1967',
+      nrk: '1252151',
+      statusPegawai: 'PNS',
+      jenisKelamin: 'Laki-laki',
+      agama: 'Islam',
+      imageUrl: '',
     },
     {
       id: 2,
-      parentId: "1",
-      name: "Smith",
-      positionName: "COO",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/20.jpg",
+      parentId: '1',
+      name: 'Sahat Parulian',
+      positionName: 'Wakil Kepala Satpol PP',
+      team: '',
+      tempatLahir: 'Bekasi',
+      tanggalLahir: '16 Jan 1967',
+      nrk: '1252151',
+      statusPegawai: 'PNS',
+      jenisKelamin: 'Laki-laki',
+      agama: 'Islam',
+      imageUrl: '',
     },
-
     {
       id: 3,
-      parentId: "1",
-      name: "Kate",
-      positionName: "CTO",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/women/3.jpg",
+      parentId: '43',
+      name: 'Kate',
+      positionName: 'SEKRETARIAT',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      tempatLahir: 'Jakarta',
+      tanggalLahir: '16 Des 1967',
+      nrk: '1252151',
+      statusPegawai: 'PNS',
+      jenisKelamin: 'Laki-laki',
+      agama: 'Islam',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 4,
-      parentId: "6",
-      team: "HR team",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      parentId: '3',
+      name: 'Kate',
+      positionName: 'SUBBAGIAN UMUM',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 5,
-      parentId: "3",
-      name: "Erica",
-      positionName: "Manager of something",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/women/8.jpg",
+      parentId: '3',
+      name: 'Kate',
+      positionName: 'SUBBAGIAN KEPEGAWAIAN',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 6,
-      parentId: "3",
-      name: "Paul",
-      positionName: "Manager of something",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/6.jpg",
+      parentId: '3',
+      name: 'Kate',
+      positionName: 'SUBBAGIAN PROGRAM DAN KEUANGAN',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 7,
-      parentId: "5",
-      team: "Developers",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      parentId: '3',
+      name: 'Kate',
+      positionName: 'SUBBAGIAN PERALATAN DAN PERLENGKAPAN',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 8,
-      parentId: "3",
-      name: "Tony",
-      positionName: "Manager of something",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '44',
+      name: 'Kate',
+      positionName: 'BIDANG KETENTRAMAN DAN KETERTIBAN UMUM',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
     },
     {
       id: 9,
-      parentId: "2",
-      name: "Sally",
-      positionName: "Manager of something",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/women/9.jpg",
+      parentId: '8',
+      name: 'Kate',
+      positionName: 'SEKSI PENGADUAN DAN SENGKETA',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 10,
-      parentId: "4",
-      name: "Scott",
-      positionName: "HR assistant",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/10.jpg",
+      parentId: '8',
+      name: 'Kate',
+      positionName: 'SEKSI KETERTIBAN SARANA DAN PRASARAN KOTA',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
-
     {
       id: 11,
-      parentId: "1",
-      name: "James",
-      positionName: "CGO",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/7.jpg",
+      parentId: '8',
+      name: 'Kate',
+      positionName: 'SEKSI DATA DAN INFORMASI',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 12,
-      parentId: "4",
-      name: "Tony",
-      positionName: "HR assistant",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '45',
+      name: 'Kate',
+      positionName: 'BIDANG PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA DAN INDUSTRI',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
     },
     {
       id: 13,
-      parentId: "4",
-      name: "Sally",
-      positionName: "HR assistant",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/women/9.jpg",
+      parentId: '12',
+      name: 'Kate',
+      positionName: 'SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA INDUSTRI',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 14,
-      parentId: "8",
-      name: "Scott",
-      positionName: "Teacher",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/10.jpg",
+      parentId: '12',
+      name: 'Kate',
+      positionName: 'SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA NON INDUSTRI',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
-
     {
       id: 15,
-      parentId: "8",
-      name: "James",
-      positionName: "Teacher",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/7.jpg",
+      parentId: '12',
+      name: 'Kate',
+      positionName: 'SEKSI PENGAWASAN DAN PENGENDALIAN TEMPAT USAHA HIBURAN DAN REKREASI',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 16,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '46',
+      name: 'Kate',
+      positionName: 'Bidang Perlindungan Masyarakat',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
     },
     {
       id: 17,
-      parentId: "7",
-      name: "Sally",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/women/9.jpg",
+      parentId: '16',
+      name: 'Kate',
+      positionName: 'Seksi Pengerahan dan Pengendalian',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 18,
-      parentId: "8",
-      name: "Scott",
-      positionName: "Teacher",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/10.jpg",
+      parentId: '16',
+      name: 'Kate',
+      positionName: 'Seksi Protokol dan Pengamanan Obyek Vital',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 19,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '16',
+      name: 'Kate',
+      positionName: 'Seksi Bimbingan dan Penyuluhan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 20,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '47',
+      name: 'Kate',
+      positionName: 'Bidang Penegakan dan Penindakan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
     },
     {
       id: 21,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '20',
+      name: 'Kate',
+      positionName: 'Seksi Pemantauan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 22,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '20',
+      name: 'Kate',
+      positionName: 'Seksi Operasi',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 23,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '20',
+      name: 'Kate',
+      positionName: 'Seksi Analisa dan Evakuasi',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 24,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '48',
+      name: 'Kate',
+      positionName: 'Bidang PPNS',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
     },
     {
       id: 25,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '24',
+      name: 'Kate',
+      positionName: 'Seksi Pembinaan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 26,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '24',
+      name: 'Kate',
+      positionName: 'Seksi Penyelidikan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       id: 27,
-      parentId: "7",
-      name: "Tony",
-      positionName: "Developer",
-      phone: "99887766",
-      email: "employee@email.com",
-      team: "",
-      location: "LA Branch",
-      department: "Marketing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      imageUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+      parentId: '24',
+      name: 'Kate',
+      positionName: 'Seksi Hubungan Antar Lembaga',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
-  ];
+    {
+      id: 28,
+      parentId: '49',
+      name: 'Kate',
+      positionName: 'Satpol PP Kota',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
+    },
+    {
+      id: 29,
+      parentId: '28',
+      name: 'Kate',
+      positionName: 'Subbagian Tata Usaha',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 30,
+      parentId: '28',
+      name: 'Kate',
+      positionName: 'Seksi Ketentraman',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 31,
+      parentId: '28',
+      name: 'Kate',
+      positionName: 'Seksi Perlindungan Masyarakat',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 32,
+      parentId: '28',
+      name: 'Kate',
+      positionName: 'Seksi PPNS dan Penindakan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 33,
+      parentId: '28',
+      name: 'Kate',
+      positionName: 'Satpol PP Kecamatan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 34,
+      parentId: '33',
+      name: 'Kate',
+      positionName: 'Satpol PP Kelurahan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 35,
+      parentId: '28',
+      name: 'Kate',
+      positionName: 'Sub Kelompok Jabatan Fungsional',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 36,
+      parentId: '50',
+      name: 'Kate',
+      positionName: 'Satpol PP Kabupaten',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
+    },
+    {
+      id: 37,
+      parentId: '36',
+      name: 'Kate',
+      positionName: 'Subbagian Tata Usaha',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 38,
+      parentId: '36',
+      name: 'Kate',
+      positionName: 'Seksi Ketentraman',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 39,
+      parentId: '36',
+      name: 'Kate',
+      positionName: 'Seksi Perlindungan Masyarakat',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 39,
+      parentId: '36',
+      name: 'Kate',
+      positionName: 'Seksi PPNS dan Penindakan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 40,
+      parentId: '36',
+      name: 'Kate',
+      positionName: 'Satpol PP Kecamatan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 41,
+      parentId: '40',
+      name: 'Kate',
+      positionName: 'Satpol PP Kelurahan',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 42,
+      parentId: '36',
+      name: 'Kate',
+      positionName: 'Sub Kelompok Jabatan Fungsional',
+      phone: '-',
+      email: '@email.com',
+      team: '',
+      location: 'JAKARTA',
+      department: '',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      imageUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+    },
+    {
+      id: 43,
+      parentId: '2',
+      team: 'Sekretariat',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 44,
+      parentId: '2',
+      team: 'Bidang Ketentraman',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 45,
+      parentId: '2',
+      team: 'Bidang Pengawasan',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 46,
+      parentId: '2',
+      team: 'Bidang Perlindungan Masyarakat',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 47,
+      parentId: '2',
+      team: 'Bidang Penegakan dan Penindakan',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 48,
+      parentId: '2',
+      team: 'Bidang PPNS',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 49,
+      parentId: '2',
+      team: 'Satpol PP Kota',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      id: 50,
+      parentId: '2',
+      team: 'Satpol PP Kabupaten',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+  ]
 
   return (
     <>
@@ -672,316 +920,42 @@ export function HirarkiPegawai() {
         {/* begin::Body */}
         <div className='card mb-5 mb-xl-10'>
           <div className='card-body pt-9 pb-0'>
-            <div className='card-header border-0 pt-6'>
-              <div className='card-title'>
-                <div className="d-flex align-items-center position-relative my-1">
-                  <span className="svg-icon svg-icon-1 position-absolute ms-6">
-                    <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height={2} rx={1} transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                      <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-                    </svg>
-                  </span>
-                  <input type="text" data-kt-user-table-filter="search" className="form-control form-control-solid w-250px ps-14" placeholder="Cari pegawai" />
-                </div>
-              </div>
-              <div className="card-toolbar">
-                <div className="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                  <button type="button" className="btn btn-primary" onClick={() => setLgShow(true)}>
-                    <span className="svg-icon svg-icon-2">
-                      <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect opacity="0.5" x="11.364" y="20.364" width={16} height={2} rx={1} transform="rotate(-90 11.364 20.364)" fill="currentColor" />
-                        <rect x="4.36396" y="11.364" width={16} height={2} rx={1} fill="currentColor" />
-                      </svg>
-                    </span>
-                    Tambah Atasan
-                  </button>
-                </div>
-                <div className="d-flex justify-content-end align-items-center d-none" data-kt-user-table-toolbar="selected">
-                  <div className="fw-bold me-5">
-                    <span className="me-2" data-kt-user-table-select="selected_count" />Terpilih
-                  </div>
-                  <button type="button" className="btn btn-danger" data-kt-user-table-select="delete_selected">
-                    Hapus Terpilih
-                  </button>
-                </div>
-                <div className="modal fade" id="kt_modal_export_users" tabIndex={-1} aria-hidden="true">
-                  <div className="modal-dialog modal-dialog-centered mw-650px">
-                    <div className="modal-content">
-                      <div className="modal-header">
-                        <h2 className="fw-bold">Export Pengguna</h2>
-                      </div>
-                      <div className="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                        <form id="kt_modal_export_users_form" className="form" action="#">
-                          <div className="fv-row mb-10">
-                            <label className="fs-6 fw-semibold form-label mb-2">Pilih Hak Akses:</label>
-                            <select name="role" data-control="select2" data-placeholder="Pilih" data-hide-search="true" className="form-select form-select-solid fw-bold">
-                              <option />
-                              <option value="Administrator">
-                                Administrator
-                              </option>
-                              <option value="Analyst">Analyst</option>
-                              <option value="Developer">
-                                Developer
-                              </option>
-                              <option value="Support">Support</option>
-                              <option value="Trial">Trial</option>
-                            </select>
-                          </div>
-                          <div className="fv-row mb-10">
-                            <label className="required fs-6 fw-semibold form-label mb-2">Pilih Format Export:</label>
-                            <select name="format" data-control="select2" data-placeholder="Pilih" data-hide-search="true" className="form-select form-select-solid fw-bold">
-                              <option />
-                              <option value="excel">Excel</option>
-                              <option value="pdf">PDF</option>
-                              <option value="cvs">CVS</option>
-                              <option value="zip">ZIP</option>
-                            </select>
-                          </div>
-                          <div className="text-center">
-                            <button type="reset" className="btn btn-light me-3" data-kt-users-modal-action="cancel">
-                              Batal
-                            </button>
-                            <button type="submit" className="btn btn-primary" data-kt-users-modal-action="submit">
-                              <span className="indicator-label">Export</span>
-                              <span className="indicator-progress">Harap tunggu...
-                                <span className="spinner-border spinner-border-sm align-middle ms-2" /></span>
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
+            <div className='container pb-5 pt-5'>
+              <div className='row'>
+                <div className='col'>
+                  <div className='d-flex justify-content-center'>
+                    <img
+                      src={toAbsoluteUrl('/media/logos/logo-dki-jakarta.png')}
+                      width='250px'
+                      height='150px'
+                      alt='Profile'
+                    />
                   </div>
                 </div>
-                <Modal
-                  size="lg"
-                  show={lgShow}
-                  onHide={() => setLgShow(false)}
-                  aria-labelledby="example-modal-sizes-title-lg"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-lg">
-                      <h2 className="fw-bold">Tambah Atasan</h2>
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <Formik
-                      initialValues={initialValues}
-                      onSubmit={async (values) => {
-                        await new Promise((r) => setTimeout(r, 500));
-                        alert(JSON.stringify(values, null, 2));
-                      }}
-                    >
-                      {({ values }) => (
-                        <Form>
-                          <FieldArray name="friends">
-                            {({ insert, remove, push }) => (
-                              <div>
-                                <div className="modal-content">
-                                  <div className="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                                    <div className="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
-                                      <div className='form-group'>
-                                        <label htmlFor='' className='fw-semibold fs-6 mb-2'>
-                                          Status Kepegawaian
-                                        </label>
-                                        <select
-                                          className='form-select form-select-solid mb-5'
-                                          aria-label='Select example'
-                                          value={valStatPegawai.val}
-                                          onChange={handleChangeStatPegawai}
-                                          name='val'
-                                        >
-                                          <option value=''>Pilih</option>
-                                          {arrStatPegawai.map((val: string) => {
-                                            return <option value={val}>{val}</option>
-                                          })}
-                                        </select>
-                                      </div>
-                                      <div className="fv-row mb-7">
-                                        <label className="fw-semibold fs-6 mb-2">NRK/NPTT/NPJLP</label>
-                                        <AsyncSelect
-                                          cacheOptions
-                                          loadOptions={loadOptionsPegawai}
-                                          defaultOptions
-                                          onChange={handleInputPegawai}
-                                          placeholder={'Cari NRK/NPTT/NPJLP'}
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className='separator border-3 my-10'></div>
-
-                                    <label className="fw-semibold fs-6 mb-7">Tambah bawahan</label>
-                                    {values.friends.length > 0 &&
-                                      values.friends.map((friend, index) => (
-
-
-                                        <div className='form-group mb-5'>
-                                          <div className="row" key={index}>
-                                            <div className="col-md-9">
-                                              <label className="form-label">NRK:</label>
-                                              <AsyncSelect
-                                                cacheOptions
-                                                loadOptions={loadOptionsPegawai}
-                                                defaultOptions
-                                                onChange={handleInputPegawai}
-                                                placeholder={'Cari NRK/NPTT/NPJLP'}
-                                              />
-                                              {/* <Field
-                                                name={`friends.${index}.nama`}
-                                                className="form-control mb-2 mb-md-0"
-                                                placeholder="Masukkan NRK/NPTT/NPJLP"
-                                                type="text"
-                                              /> */}
-                                              <ErrorMessage
-                                                name={`friends.${index}.nama`}
-                                                component="div"
-                                                className="field-error"
-                                              />
-                                            </div>
-                                            <div className="col-md-3">
-                                              <button
-                                                type="button"
-                                                className="btn btn-sm btn-light-danger mt-3 mt-md-8"
-                                                onClick={() => remove(index)}
-                                              >
-                                                <i className="la la-trash-o" />
-                                                Delete
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                      ))}
-                                    <div className="form-group mt-5">
-                                      <button
-                                        type="button"
-                                        className="btn btn-sm btn-light-primary"
-                                        onClick={() => push({ name: '', email: '' })}
-                                      >
-                                        <i className="la la-plus" />
-                                        Tambah
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </FieldArray>
-                          <div className="text-center pt-15">
-                            <button type="reset" className="btn btn-light me-3" data-kt-users-modal-action="cancel">
-                              Batal
-                            </button>
-                            <button type="submit" className="btn btn-primary" data-kt-users-modal-action="submit">
-                              <span className="indicator-label">Simpan</span>
-                              <span className="indicator-progress">Harap tunggu...
-                                <span className="spinner-border spinner-border-sm align-middle ms-2" /></span>
-                            </button>
-                          </div>
-                        </Form>
-                      )}
-                    </Formik>
-                    {/*end::Modal content*/}
-                  </Modal.Body>
-                </Modal>
-                {/*end::Modal - Add task*/}
+                <div className='col-md'>
+                  <div className='col-12 pt-6'>
+                    <h1 className='text-dark fw-bold fs-1 text-center'>STRUKTUR ORGANISASI</h1>
+                    <h1 className='text-dark fw-bold fs-1 text-center'>
+                      SATUAN POLISI PAMONG PRAJA
+                    </h1>
+                    <h1 className='text-dark fw-bold fs-1 text-center'>PROVINSI DKI JAKARTA</h1>
+                  </div>
+                </div>
+                <div className='col'>
+                  <div className='d-flex justify-content-center pt-3'>
+                    <img
+                      src={toAbsoluteUrl('/media/logos/logo-satpol-pp.png')}
+                      width='190px'
+                      height='120px'
+                      alt='Profile'
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* <div>
-              <KTCardBody className='py-4'>
-                <div className='table-responsive'>
-                  <table
-                    id='kt_table_users'
-                    className='table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer'
-                    {...getTableProps()}
-                  >
-                    <thead>
-                      <tr className='text-start text-muted fw-bolder fs-7 text-uppercase gs-0'>
-                        {headers.map((column: ColumnInstance<User>) => (
-                          <CustomHeaderColumn key={column.id} column={column} />
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className='text-gray-600 fw-bold' {...getTableBodyProps()}>
-                      {rows.length > 0 ? (
-                        rows.map((row: Row<User>, i) => {
-                          prepareRow(row)
-                          return <CustomRow row={row} key={`row-${i}-${row.id}`} />
-                        })
-                      ) : (
-                        <tr>
-                          <td colSpan={7}>
-                            <div className='d-flex text-center w-100 align-content-center justify-content-center'>
-                              No matching records found
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-                <UsersListPagination />
-                {isLoading && <UsersListLoading />}
-              </KTCardBody>
-            </div> */}
-
-            {/* START :: Coba org-chart */}
-            <div>
-              {/* <section className="toolbar">
-                <label htmlFor="txt-filename">Filename:</label>
-                <input
-                  id="txt-filename"
-                  type="text"
-                  value={filename}
-                  onChange={onNameChange}
-                  style={{ fontSize: "1rem", marginRight: "2rem" }}
-                />
-                <span>Fileextension: </span>
-                <input
-                  id="rd-png"
-                  type="radio"
-                  value="png"
-                  checked={fileextension === "png"}
-                  onChange={onExtensionChange}
-                />
-                <label htmlFor="rd-png">png</label>
-                <input
-                  style={{ marginLeft: "1rem" }}
-                  id="rd-pdf"
-                  type="radio"
-                  value="pdf"
-                  checked={fileextension === "pdf"}
-                  onChange={onExtensionChange}
-                />
-                <label htmlFor="rd-pdf">pdf</label>
-                <button onClick={exportTo} style={{ marginLeft: "2rem" }}>
-                  Export
-                </button>
-              </section>
-              <OrganizationChart
-                datasource={ds}
-                pan={true}
-                zoom={true}
-                chartClass="myChart" */}
-              {/* // NodeTemplate={this.MyNode}
-              /> */}
-
-              {/* TIPE 2 */}
-              {/* <StrukturalOrganisasi /> */}
-
-              {/* TIPE 3 */}
-              {/* <h1 style={styles.title}>Organization Chart</h1> */}
-              <OrganizationalChart data={datasatpolpp} />
-              {/* <OrganizationalChart data={dataHirarki.data} />  */}
-              {/* {dataHirarki && dataHirarki.data.length > 0 && (
-                <>
-                <p>{JSON.stringify(dataHirarki.data)}</p>
-
-                <p>{JSON.stringify(datasatpolpp)}</p>
-                </>
-              )} */}
-            </div>
-            {/* END :: Coba org-chart */}
+            {/* Menampilkan Struktur Organisasi */}
+            {/* {datasatpp && <OrganizationalChart data={datasatpp} />} */}
+            <OrganizationalChart data={datasatpp} />
           </div>
         </div>
         {/* end::Body */}
