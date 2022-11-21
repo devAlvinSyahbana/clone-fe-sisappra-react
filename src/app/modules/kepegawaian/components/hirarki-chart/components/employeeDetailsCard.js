@@ -251,15 +251,16 @@ const EmployeeDetailsCard = (props) => {
       ) : (
         <div>
           <div style={styles.cardHeader}>
-            <h2>{props.employee.team} Team</h2>
+            <h2>{props.employee.team}</h2>
           </div>
-          <h4>Team Members:</h4>
+          <h4>LIST {props.employee.team === 'Wilayah' ? 'WILAYAH' : 'BIDANG'} :</h4>
           <div style={styles.cardBodyTeamMembers}>
             {props.employees
               .filter((employee) => employee.parentId === props.employee.id.toString())
               .map((employee) => (
                 <div style={styles.cardItemTeam} key={employee.id}>
-                  <img style={styles.cardItemImg} src={employee.imageUrl} alt='Profile' />
+                  <i class='bi bi-circle-fill'></i>
+                  {/* <img style={styles.cardItemImg} src={employee.imageUrl} alt='Profile' /> */}
                   <p style={styles.cardItemName}>{employee.name}</p>
                   <p style={styles.cardItemRole}>{employee.positionName}</p>
                 </div>
