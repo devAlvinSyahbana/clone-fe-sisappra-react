@@ -8,9 +8,9 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
-import {KTSVG} from '../../../../_metronic/helpers'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import moment from 'moment'
 import Swal from 'sweetalert2'
 import {useFormik} from 'formik'
@@ -145,7 +145,7 @@ export interface FormInput {
   level?: string
 }
 
-export function AksesKontrol() {
+export function ManajemenPermission() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -176,29 +176,17 @@ export function AksesKontrol() {
   }
 
   const columns = [
-    // {
-    //   name: 'No',
-    //   selector: (row: any) => row.id,
-    //   sortable: true,
-    //   sortField: 'id',
-    // },
     {
-      name: 'Nama Akses Kontrol',
-      selector: (row: any) => row.modul,
+      name: 'No',
+      selector: (row: any) => row.id,
       sortable: true,
-      sortField: 'modul',
+      sortField: 'id',
     },
     {
-      name: 'Hak Akses Kode',
-      selector: (row: any) => row.kode,
+      name: 'Nama Permission',
+      selector: (row: any) => row.nama_permission,
       sortable: true,
-      sortField: 'kode',
-    },
-    {
-      name: 'TANGGAL BUAT',
-      selector: (row: any) => moment(row.tanggal_buat).format('D MMMM YYYY'),
-      sortable: true,
-      sortField: 'tanggal_buat',
+      sortField: 'nama_permission',
     },
     {
       name: 'Aksi',
@@ -210,31 +198,7 @@ export function AksesKontrol() {
         return (
           <Fragment>
             <div className='mb-2'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item
-                      onClick={() =>
-                        // navigate('/apps/data-pengguna/update-data-pengguna/' + record.id, {
-                        navigate('/apps/akses-kontrol/manajemen-permission')
-                      }
-                    >
-                      Manajemen Permission
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => doEdit(record.id)}>Ubah</Dropdown.Item>
-                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
+              <button onClick={() => konfirDel(record.id)}>Hapus</button>
             </div>
           </Fragment>
         )
@@ -446,14 +410,6 @@ export function AksesKontrol() {
         </div>
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#' onClick={handleFilter}>
-            <button className='btn btn-light-primary me-2'>
-              <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
-              Cari
-            </button>
-          </Link>
-        </div>
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
           <Link to='#i'>
             <button className='btn btn-light-primary me-2' onClick={doAdd}>
@@ -469,33 +425,99 @@ export function AksesKontrol() {
             <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Akses Kontrol</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className='row mt-2 '>
-              <form onSubmit={formik.handleSubmit}>
-                <div className='form-group'>
-                  <Form.Label>Nama Akses Kontrol</Form.Label>
-                  <Form.Control
-                    name='modul'
-                    className='form-control form-control-solid'
-                    onChange={handleChangeFormik}
-                    value={valuesFormik?.modul}
-                  />
-                </div>
-                <div className='row justify-content-end'>
-                  <div className='col align-self-end '>
-                    <button className='btn btn-primary' type='submit'>
-                      <i className='fa-solid fa-paper-plane'></i>
-                      Simpan
-                    </button>
+            {['checkbox'].map((type) => (
+              <div className='row mt-2 '>
+                <form onSubmit={formik.handleSubmit}>
+                  <table className='table align-middle table-row-dashed fs-6 gy-5'>
+                    <tbody className='text-gray-600 fw-semibold'>
+                      <tr>
+                        <td>
+                          <h5 className='card-title m-0'>Pilih Permission</h5>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div className='d-flex'>
+                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                              <Form.Check inline id={`inline-${type}-1`} />
+                              <span className=''>Akses</span>
+                            </label>
+                          </div>
+                        </td>
+                        <td>
+                          <div className='d-flex'>
+                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                              <Form.Check inline id={`inline-${type}-1`} />
+                              <span className=''>Hapus</span>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div className='d-flex'>
+                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                              <Form.Check inline id={`inline-${type}-1`} />
+                              <span className=''>Lihat</span>
+                            </label>
+                          </div>
+                        </td>
+                        <td>
+                          <div className='d-flex'>
+                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                              <Form.Check inline id={`inline-${type}-1`} />
+                              <span className=''>Download</span>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div className='d-flex'>
+                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                              <Form.Check inline id={`inline-${type}-1`} />
+                              <span className=''>Tambah</span>
+                            </label>
+                          </div>
+                        </td>
+                        <td>
+                          <div className='d-flex'>
+                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                              <Form.Check inline id={`inline-${type}-1`} />
+                              <span className=''>Edit</span>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div className='d-flex'>
+                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                              <Form.Check inline id={`inline-${type}-1`} />
+                              <span className=''>Pilih Semua</span>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div className='row justify-content-end'>
+                    <div className='col align-self-end '>
+                      <button className='btn btn-primary' type='submit'>
+                        <i className='fa-solid fa-paper-plane'></i>
+                        Simpan
+                      </button>
+                    </div>
                   </div>
+                </form>
+                <div className='col '>
+                  <button className='btn btn-secondary' onClick={handleClose}>
+                    <i className='fa fa-close'></i>
+                    Batal
+                  </button>
                 </div>
-              </form>
-              <div className='col '>
-                <button className='btn btn-secondary' onClick={handleClose}>
-                  <i className='fa fa-close'></i>
-                  Batal
-                </button>
               </div>
-            </div>
+            ))}
           </Modal.Body>
         </Modal>
       </>
