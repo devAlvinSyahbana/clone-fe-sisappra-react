@@ -1,7 +1,7 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable, {createTheme} from 'react-data-table-component'
+import DataTable, {createTheme, ExpanderComponentProps} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -14,6 +14,7 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import moment from 'moment'
 import Swal from 'sweetalert2'
 import {useFormik} from 'formik'
+import {Row} from 'react-bootstrap'
 
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -161,6 +162,27 @@ export function AksesKontrol() {
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterModul.val !== '') {
+      uriParam += `&modul=${valFilterModul.val}`
+    }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterReset = () => {
+    setFilterModul({val: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+
+  const handleChangeInputModul = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterModul({val: event.target.value})
+  }
+
+  // START::CRUD
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -175,8 +197,25 @@ export function AksesKontrol() {
     )
   }
 
-  let number = 1
+  // TABLE
+  // interface Props extends ExpanderComponentProps<row> {
+  //   // currently, props that extend ExpanderComponentProps must be set to optional.
+  //   someTitleProp?: string
+  // }
 
+  // const ExpandableRowComponent: React.FC<Props> = ({data, someTitleProp}) => {
+  //   return (
+  //     <>
+  //       <p>{someTitleProp}</p>
+  //       <p>{data.title}</p>
+  //       <p>{data.director}</p>
+  //       <p>{data.year}</p>
+  //     </>
+  //   )
+  // }
+
+  let number = 1
+  // Kolom table
   const columns = [
     {
       name: 'No',
@@ -196,7 +235,7 @@ export function AksesKontrol() {
     },
     {
       name: 'TANGGAL BUAT',
-      selector: (row: any) => moment(row.tanggal_buat).format('D MMMM YYYY'),
+      selector: (row: any) => moment(row.tanggal_buat).format('D MMMM YYYY, h:mm a'),
       sortable: true,
       sortField: 'tanggal_buat',
     },
@@ -205,7 +244,6 @@ export function AksesKontrol() {
       sortable: false,
       text: 'Action',
       className: 'action',
-      align: 'left',
       cell: (record: any) => {
         return (
           <Fragment>
@@ -242,26 +280,7 @@ export function AksesKontrol() {
     },
   ]
 
-  const customStyles = {
-    rows: {
-      style: {
-        minHeight: '72px', // override the row height
-      },
-    },
-    headCells: {
-      style: {
-        paddingLeft: '8px', // override the cell padding for head cells
-        paddingRight: '8px',
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: '8px', // override the cell padding for data cells
-        paddingRight: '8px',
-      },
-    },
-  }
-
+  // START :: VIEW
   useEffect(() => {
     fetchUsers()
   }, [])
@@ -277,62 +296,7 @@ export function AksesKontrol() {
     return [temp, setTemp] as const
     // setLoading(false)
   }
-
-  const handleFilter = async () => {
-    let uriParam = ''
-    if (valFilterModul.val !== '') {
-      uriParam += `&modul=${valFilterModul.val}`
-    }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
-  }
-
-  const handleFilterReset = () => {
-    setFilterModul({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
-  }
-
-  const handleChangeInputModul = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setFilterModul({val: event.target.value})
-  }
-
-  const konfirDel = (id: number) => {
-    Swal.fire({
-      text: 'Anda yakin ingin menghapus data ini',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya!',
-      cancelButtonText: 'Tidak!',
-      color: '#000000',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
-        if (response) {
-          fetchUsers()
-          Swal.fire({
-            icon: 'success',
-            text: 'Data berhasil dihapus',
-            showConfirmButton: false,
-            timer: 1500,
-            color: '#000000',
-          })
-        } else {
-          Swal.fire({
-            icon: 'error',
-            text: 'Data gagal dihapus, harap mencoba lagi',
-            showConfirmButton: false,
-            timer: 1500,
-            color: '#000000',
-          })
-        }
-      }
-    })
-  }
-
+  // END :: VIEW
   const handleChangeFormik = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -345,7 +309,7 @@ export function AksesKontrol() {
 
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [aksi, setAksi] = useState(0)
-
+  // ADD N UPDATE
   const formik = useFormik({
     initialValues: {
       modul: '',
@@ -409,6 +373,7 @@ export function AksesKontrol() {
     })
   }
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
+  // GET ID FOR UPDATE
   const getDetail = async (idparam: any) => {
     const {data} = await axios.get(`${AKSES_KONTROL_URL}/findone/${parseInt(idparam)}`)
     setIdEditData((prevstate) => ({
@@ -426,6 +391,42 @@ export function AksesKontrol() {
     setAksi(1)
     getDetail(id)
   }
+  // DELETE
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      text: 'Anda yakin ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+      color: '#000000',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
+        if (response) {
+          fetchUsers()
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        }
+      }
+    })
+  }
+  // END::CRUD
 
   return (
     <div className={`card`}>
@@ -454,7 +455,7 @@ export function AksesKontrol() {
         </div>
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
           <Link to='#i'>
-            <button className='btn btn-light-primary me-2' onClick={doAdd}>
+            <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
               Tambah Akses Kontrol
             </button>
@@ -462,7 +463,7 @@ export function AksesKontrol() {
         </div>
       </div>
       <>
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
           <Modal.Header closeButton>
             <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Akses Kontrol</Modal.Title>
           </Modal.Header>
@@ -478,26 +479,31 @@ export function AksesKontrol() {
                     value={valuesFormik?.modul}
                   />
                 </div>
-                <div className='row justify-content-end'>
-                  <div className='col align-self-end '>
-                    <button className='btn btn-primary' type='submit'>
+                <div className='p-0 mt-6'>
+                  <div className='text-center'>
+                    <button
+                      className='float-none btn btn-light align-self-center m-1'
+                      onClick={handleClose}
+                      type='button'
+                    >
+                      <i className='fa fa-close'></i>
+                      Batal
+                    </button>
+                    <button
+                      className='float-none btn btn-primary align-self-center m-1'
+                      type='submit'
+                    >
                       <i className='fa-solid fa-paper-plane'></i>
                       Simpan
                     </button>
                   </div>
                 </div>
               </form>
-              <div className='col '>
-                <button className='btn btn-secondary' onClick={handleClose}>
-                  <i className='fa fa-close'></i>
-                  Batal
-                </button>
-              </div>
             </div>
           </Modal.Body>
         </Modal>
       </>
-      <div className='table-responsive mt-5 ms-5 me-5'>
+      <div className='table-responsive mt-5 ms-5 me-5 w'>
         <DataTable
           columns={columns}
           data={temp}
@@ -506,6 +512,11 @@ export function AksesKontrol() {
           pagination
           // paginationServer
           paginationTotalRows={totalRows}
+          expandableRows
+          //    expandableRowsComponent={(row) => (
+          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+          // )}
+          // expandableRowsComponent={ExpandedComponent}
           // onChangeRowsPerPage={handlePerRowsChange}
           // onChangePage={handlePageChange}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
@@ -522,3 +533,26 @@ export function AksesKontrol() {
     </div>
   )
 }
+
+// const ExpandedComponent = ({ row, handleInputChange }) => {
+//   return (
+//     <div className="ExpandedComponent">
+//       <div className="ExpandedComponent_Row">
+//         <label>Surname</label>
+//         <input
+//           value={row.data.surname}
+//           onChange={(e) =>
+//             handleInputChange(row.data, "surname", e.target.value)
+//           }
+//         />
+//       </div>
+//       <div className="ExpandedComponent_Row">
+//         <label>Age</label>
+//         <input
+//           value={row.data.age}
+//           onChange={(e) => handleInputChange(row.data, "age", e.target.value)}
+//         />
+//       </div>
+//     </div>
+//   );
+// };

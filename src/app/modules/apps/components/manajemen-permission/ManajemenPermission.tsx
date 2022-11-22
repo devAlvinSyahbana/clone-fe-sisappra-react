@@ -396,8 +396,8 @@ export function ManajemenPermission() {
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
-          <label htmlFor='' className='mb-3'>
-            Akses Kontrol
+          <label>
+            <h3>Manajemen Permission</h3>
           </label>
         </div>
       </div>
@@ -412,13 +412,13 @@ export function ManajemenPermission() {
         </div>
       </div>
       <>
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
           <Modal.Header closeButton>
             <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Akses Kontrol</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {['checkbox'].map((type) => (
-              <div className='row mt-2 '>
+              <div>
                 <form onSubmit={formik.handleSubmit}>
                   <table className='table align-middle table-row-dashed fs-6 gy-5'>
                     <tbody className='text-gray-600 fw-semibold'>
@@ -493,21 +493,26 @@ export function ManajemenPermission() {
                       </tr>
                     </tbody>
                   </table>
-                  <div className='row justify-content-end'>
-                    <div className='col align-self-end '>
-                      <button className='btn btn-primary' type='submit'>
+                  <div className='p-0 mt-6'>
+                    <div className='text-center'>
+                      <button
+                        className='float-none btn btn-light align-self-center m-1'
+                        onClick={handleClose}
+                        type='button'
+                      >
+                        <i className='fa fa-close'></i>
+                        Batal
+                      </button>
+                      <button
+                        className='float-none btn btn-primary align-self-center m-1'
+                        type='submit'
+                      >
                         <i className='fa-solid fa-paper-plane'></i>
                         Simpan
                       </button>
                     </div>
                   </div>
                 </form>
-                <div className='col '>
-                  <button className='btn btn-secondary' onClick={handleClose}>
-                    <i className='fa fa-close'></i>
-                    Batal
-                  </button>
-                </div>
               </div>
             ))}
           </Modal.Body>
