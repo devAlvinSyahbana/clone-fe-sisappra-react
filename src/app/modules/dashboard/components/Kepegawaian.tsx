@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect, FC} from 'react'
 import axios from 'axios'
-import PieC from '../chart/piechart/piechart'
 import BarC from '../chart/barchart/barchart'
+import PieC from '../chart/piechart/piechart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const SUM_PEGAWAI_WILAYAH_URL = `${API_URL}/dashboard/sum-pegawai-wilayah`
 export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}/dashboard/sum-status-kepegawaian`
 export const SUM_PENDIDIKAN_TERAKHIR_URL = `${API_URL}/dashboard/sum-pendidikan-terakhir`
 export const SUM_GOLONGAN_URL = `${API_URL}/dashboard/sum-golongan`
@@ -100,6 +101,7 @@ export const Kepegawaian: FC = () => {
     }
   }
 
+  const [dataSPW, setDataSPW] = useState([])
   const [data, setData] = useState([])
   const [dataPT, setDataPT] = useState([])
   const [dataG, setDataG] = useState([])
@@ -121,6 +123,7 @@ export const Kepegawaian: FC = () => {
     // // setTemp(valuePT.data.dataPT)
     // console.log('cek response api:', temp)
 
+    const responseSPW = await axios.get(`${SUM_PEGAWAI_WILAYAH_URL}`)
     const response = await axios.get(`${SUM_STATUS_KEPEGAWAIAN_URL}`)
     const responsePT = await axios.get(`${SUM_PENDIDIKAN_TERAKHIR_URL}`)
     const responseG = await axios.get(`${SUM_GOLONGAN_URL}`)
@@ -128,6 +131,7 @@ export const Kepegawaian: FC = () => {
     const responseE = await axios.get(`${SUM_ESELON_URL}`)
     const responseSP = await axios.get(`${SUM_STATUS_PNS_URL}`)
 
+    setDataSPW(responseSPW.data.data)
     setData(response.data.data)
     setDataPT(responsePT.data.data)
     setDataG(responseG.data.data)
@@ -162,11 +166,19 @@ export const Kepegawaian: FC = () => {
                         <option value='3'>Kecamatan</option>
                       </select>
                     </div>
-                    {/* {showResults.isShowed && (
+                    {showResults.isShowed && showResults.val === '1' ? (
                       <>
-                        <BarC chartID={data} valueField='count' categoryField='eselon' />
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
                       </>
-                    )} */}
+                    ) : null || (showResults.isShowed && showResults.val === '2') ? (
+                      <>
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
+                      </>
+                    ) : null || (showResults.isShowed && showResults.val === '3') ? (
+                      <>
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
+                      </>
+                    ) : null}
                   </div>
                 </div>
               </div>
