@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
 import clsx from 'clsx'
-import {Modal} from 'react-bootstrap'
+import {Modal, Tooltip, OverlayTrigger} from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import Swal from 'sweetalert2'
 import ReactCrop, {centerCrop, makeAspectCrop, Crop, PixelCrop} from 'react-image-crop'
@@ -52,8 +52,10 @@ const UpdateHeaderDetail = () => {
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
   const [show, setShow] = useState(false)
+  const [showFullBody, setShowFullBody] = useState(false)
   const handleClose = () => setShow(false)
   const [selectedFile, setSelectedFile] = useState<FileFotoInterface>()
+  const [selectedFileFullBody, setSelectedFileFullBody] = useState<FileFotoInterface>()
 
   // handler croping foto
   const [imgSrc, setImgSrc] = useState('')
@@ -127,6 +129,43 @@ const UpdateHeaderDetail = () => {
             timer: 1500,
           })
           setSelectedFile({croppedImage: null})
+          setSelectedFileFullBody({croppedImage: null})
+          fetchDT()
+          handleClose()
+        }
+        return
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        text: 'Data gagal disimpan, harap mencoba lagi',
+        showConfirmButton: false,
+        timer: 1500,
+      })
+      console.error(error)
+    }
+  }
+
+  const handleSubmitFotoFullBody = async (e: any) => {
+    e.preventDefault()
+    let formData = new FormData()
+    try {
+      if (selectedFileFullBody && selectedFileFullBody?.croppedImage) {
+        formData.append('foto_full_body', selectedFileFullBody?.croppedImage)
+        const responseFile = await axios.post(
+          `${KEPEGAWAIAN_URL}/update-file/${id}/${status}`,
+          formData
+        )
+        if (responseFile) {
+          console.log('File success uploaded!')
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil disimpan',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          setSelectedFile({croppedImage: null})
+          setSelectedFileFullBody({croppedImage: null})
           fetchDT()
           handleClose()
         }
@@ -146,6 +185,7 @@ const UpdateHeaderDetail = () => {
   const doEditFoto = () => {
     setShow(true)
     setSelectedFile({croppedImage: null})
+    setSelectedFileFullBody({croppedImage: null})
     setImgSrc('')
     setCrop(undefined)
   }
@@ -239,6 +279,7 @@ const UpdateHeaderDetail = () => {
     }
     let croppedImage = new File([u8arr], filename, {type: mime})
     setSelectedFile((prev) => ({...prev, croppedImage: croppedImage}))
+    setSelectedFileFullBody((prev) => ({...prev, croppedImage: croppedImage}))
   }
 
   return (
@@ -267,6 +308,21 @@ const UpdateHeaderDetail = () => {
                     )}
                   </div>
                   <div className='overlay-layer bg-dark bg-opacity-10 align-items-end justify-content-center'>
+                    {data && data?.foto_full_body !== '' && (
+                      <OverlayTrigger
+                        key={'bottom'}
+                        placement={'bottom'}
+                        overlay={<Tooltip id={`tooltip-bottom`}>Lihat Foto Seluruh Tubuh.</Tooltip>}
+                      >
+                        <button
+                          type='button'
+                          className='btn btn-sm btn-icon btn-secondary btn-shadow mb-2'
+                          onClick={() => setShowFullBody(true)}
+                        >
+                          <i className='bi bi-fullscreen'></i>
+                        </button>
+                      </OverlayTrigger>
+                    )}
                     <button
                       type='button'
                       onClick={() => doEditFoto()}
@@ -276,6 +332,18 @@ const UpdateHeaderDetail = () => {
                     </button>
                   </div>
                 </div>
+                <Modal show={showFullBody} fullscreen={true} onHide={() => setShowFullBody(false)}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Foto Seluruh Tubuh</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <img
+                      src={`${API_URL}/${data?.foto_full_body}`}
+                      alt={data?.nama}
+                      className='w-100'
+                    />
+                  </Modal.Body>
+                </Modal>
                 <Modal
                   show={show}
                   onHide={handleClose}
@@ -288,99 +356,116 @@ const UpdateHeaderDetail = () => {
                     <Modal.Title id='example-modal-sizes-title-md'>Ubah Foto</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    <form className='form' onSubmit={handleSubmitFoto}>
-                      <div
-                        className='d-flex flex-column scroll-y me-n7 pe-7'
-                        id='kt_modal_add_user_scroll'
-                        data-kt-scroll='true'
-                        data-kt-scroll-activate='{default: false, lg: true}'
-                        data-kt-scroll-max-height='auto'
-                        data-kt-scroll-dependencies='#kt_modal_add_user_header'
-                        data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
-                        data-kt-scroll-offset='300px'
-                      >
-                        <div className='fv-row mb-7'>
-                          <div className='form-group'>
-                            <Form.Label>File Foto</Form.Label>
-                            <Form.Control
-                              type='file'
-                              className='form-control form-control-solid'
-                              id='firstimg'
-                              onChange={onSelectFile}
-                              accept='image/jpeg,image/png'
-                            />
-                            <small className='mt-4'>
-                              *File yang dapat di upload berformat (.jpeg, .png)
-                            </small>
-                          </div>
-                          {!!imgSrc && (
-                            <>
-                              <div className='separator border-3 my-10'></div>
-                              <h5 className='mt-6 fs-5'>Cropping Foto</h5>
-                              <ReactCrop
-                                crop={crop}
-                                onChange={(_, percentCrop) => setCrop(percentCrop)}
-                                onComplete={(c) => {
-                                  onCropComplete(c)
-                                  setCompletedCrop(c)
-                                }}
-                                aspect={aspect}
-                                className='mt-4'
-                              >
-                                <img
-                                  ref={imgRef}
-                                  alt='Crop me'
-                                  src={imgSrc}
-                                  style={{transform: `scale(${scale}) rotate(${rotate}deg)`}}
-                                  onLoad={onImageLoad}
+                    <ul className='nav nav-tabs nav-line-tabs mb-5 fs-6'>
+                      <li className='nav-item'>
+                        <a className='nav-link active' data-bs-toggle='tab' href='#kt_tab_pane_1'>
+                          Setengah Badan
+                        </a>
+                      </li>
+                      <li className='nav-item'>
+                        <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_2'>
+                          Seluruh Tubuh
+                        </a>
+                      </li>
+                    </ul>
+                    <div className='tab-content' id='myTabContent'>
+                      <div className='tab-pane fade active show' id='kt_tab_pane_1' role='tabpanel'>
+                        <form className='form' onSubmit={handleSubmitFoto}>
+                          <div
+                            className='d-flex flex-column scroll-y me-n7 pe-7'
+                            id='kt_modal_add_user_scroll'
+                            data-kt-scroll='true'
+                            data-kt-scroll-activate='{default: false, lg: true}'
+                            data-kt-scroll-max-height='auto'
+                            data-kt-scroll-dependencies='#kt_modal_add_user_header'
+                            data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
+                            data-kt-scroll-offset='300px'
+                          >
+                            <div className='fv-row mb-7'>
+                              <div className='form-group'>
+                                <Form.Label>File Foto</Form.Label>
+                                <Form.Control
+                                  type='file'
+                                  className='form-control form-control-solid'
+                                  id='firstimg'
+                                  onChange={onSelectFile}
+                                  accept='image/jpeg,image/png'
                                 />
-                              </ReactCrop>
-                              <div className='row mt-4'>
-                                <div className='col-12 mb-4'>
-                                  <div className='form-check form-check-custom form-check-solid'>
-                                    <input
-                                      className='form-check-input'
-                                      type='checkbox'
-                                      value=''
-                                      id='flexCheckDefault'
-                                      onChange={handleToggleAspectClick}
-                                    />
-                                    <label className='form-check-label' htmlFor='flexCheckDefault'>
-                                      Toggle aspect {aspect ? 'off' : 'on'}
-                                    </label>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12 mb-4'>
-                                  <label htmlFor='scale-input'>Scale: </label>
-                                  <input
-                                    id='scale-input'
-                                    type='number'
-                                    step='0.1'
-                                    value={scale}
-                                    disabled={!imgSrc}
-                                    onChange={(e) => setScale(Number(e.target.value))}
-                                    className='form-control form-control-solid'
-                                  />
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12 mb-4'>
-                                  <label htmlFor='rotate-input'>Rotate: </label>
-                                  <input
-                                    id='rotate-input'
-                                    type='number'
-                                    value={rotate}
-                                    disabled={!imgSrc}
-                                    onChange={(e) =>
-                                      setRotate(
-                                        Math.min(180, Math.max(-180, Number(e.target.value)))
-                                      )
-                                    }
-                                    className='form-control form-control-solid'
-                                  />
-                                </div>
+                                <small className='mt-4'>
+                                  *File yang dapat di upload berformat (.jpeg, .png)
+                                </small>
                               </div>
-                            </>
-                          )}
-                          {/* <div>
+                              {!!imgSrc && (
+                                <>
+                                  <div className='separator border-3 my-10'></div>
+                                  <h5 className='mt-6 fs-5'>Cropping Foto</h5>
+                                  <ReactCrop
+                                    crop={crop}
+                                    onChange={(_, percentCrop) => setCrop(percentCrop)}
+                                    onComplete={(c) => {
+                                      onCropComplete(c)
+                                      setCompletedCrop(c)
+                                    }}
+                                    aspect={aspect}
+                                    className='mt-4'
+                                  >
+                                    <img
+                                      ref={imgRef}
+                                      alt='Crop me'
+                                      src={imgSrc}
+                                      style={{transform: `scale(${scale}) rotate(${rotate}deg)`}}
+                                      onLoad={onImageLoad}
+                                    />
+                                  </ReactCrop>
+                                  <div className='row mt-4'>
+                                    <div className='col-12 mb-4'>
+                                      <div className='form-check form-check-custom form-check-solid'>
+                                        <input
+                                          className='form-check-input'
+                                          type='checkbox'
+                                          value=''
+                                          id='flexCheckDefault'
+                                          onChange={handleToggleAspectClick}
+                                        />
+                                        <label
+                                          className='form-check-label'
+                                          htmlFor='flexCheckDefault'
+                                        >
+                                          Toggle aspect {aspect ? 'off' : 'on'}
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12 mb-4'>
+                                      <label htmlFor='scale-input'>Scale: </label>
+                                      <input
+                                        id='scale-input'
+                                        type='number'
+                                        step='0.1'
+                                        value={scale}
+                                        disabled={!imgSrc}
+                                        onChange={(e) => setScale(Number(e.target.value))}
+                                        className='form-control form-control-solid'
+                                      />
+                                    </div>
+                                    <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12 mb-4'>
+                                      <label htmlFor='rotate-input'>Rotate: </label>
+                                      <input
+                                        id='rotate-input'
+                                        type='number'
+                                        value={rotate}
+                                        disabled={!imgSrc}
+                                        onChange={(e) =>
+                                          setRotate(
+                                            Math.min(180, Math.max(-180, Number(e.target.value)))
+                                          )
+                                        }
+                                        className='form-control form-control-solid'
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                              {/* <div>
                             {!!completedCrop && (
                               <canvas
                                 ref={previewCanvasRef}
@@ -393,27 +478,160 @@ const UpdateHeaderDetail = () => {
                               />
                             )}
                           </div> */}
-                        </div>
+                            </div>
+                          </div>
+                          <div className='p-0 mt-6'>
+                            <div className='text-center'>
+                              <button
+                                type='button'
+                                onClick={handleClose}
+                                className='float-none btn btn-light align-self-center m-1'
+                              >
+                                Tutup
+                              </button>
+                              <button
+                                type='submit'
+                                className='float-none btn btn-primary align-self-center m-1'
+                                disabled={!selectedFile?.croppedImage}
+                              >
+                                Simpan
+                              </button>
+                            </div>
+                          </div>
+                        </form>
                       </div>
-                      <div className='p-0 mt-6'>
-                        <div className='text-center'>
-                          <button
-                            type='button'
-                            onClick={handleClose}
-                            className='float-none btn btn-light align-self-center m-1'
+                      <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
+                        <form className='form' onSubmit={handleSubmitFotoFullBody}>
+                          <div
+                            className='d-flex flex-column scroll-y me-n7 pe-7'
+                            id='kt_modal_add_user_scroll'
+                            data-kt-scroll='true'
+                            data-kt-scroll-activate='{default: false, lg: true}'
+                            data-kt-scroll-max-height='auto'
+                            data-kt-scroll-dependencies='#kt_modal_add_user_header'
+                            data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
+                            data-kt-scroll-offset='300px'
                           >
-                            Tutup
-                          </button>
-                          <button
-                            type='submit'
-                            className='float-none btn btn-primary align-self-center m-1'
-                            disabled={!selectedFile?.croppedImage}
-                          >
-                            Simpan
-                          </button>
-                        </div>
+                            <div className='fv-row mb-7'>
+                              <div className='form-group'>
+                                <Form.Label>File Foto</Form.Label>
+                                <Form.Control
+                                  type='file'
+                                  className='form-control form-control-solid'
+                                  id='firstimg'
+                                  onChange={onSelectFile}
+                                  accept='image/jpeg,image/png'
+                                />
+                                <small className='mt-4'>
+                                  *File yang dapat di upload berformat (.jpeg, .png)
+                                </small>
+                              </div>
+                              {!!imgSrc && (
+                                <>
+                                  <div className='separator border-3 my-10'></div>
+                                  <h5 className='mt-6 fs-5'>Cropping Foto</h5>
+                                  <ReactCrop
+                                    crop={crop}
+                                    onChange={(_, percentCrop) => setCrop(percentCrop)}
+                                    onComplete={(c) => {
+                                      onCropComplete(c)
+                                      setCompletedCrop(c)
+                                    }}
+                                    aspect={aspect}
+                                    className='mt-4'
+                                  >
+                                    <img
+                                      ref={imgRef}
+                                      alt='Crop me'
+                                      src={imgSrc}
+                                      style={{transform: `scale(${scale}) rotate(${rotate}deg)`}}
+                                      onLoad={onImageLoad}
+                                    />
+                                  </ReactCrop>
+                                  <div className='row mt-4'>
+                                    <div className='col-12 mb-4'>
+                                      <div className='form-check form-check-custom form-check-solid'>
+                                        <input
+                                          className='form-check-input'
+                                          type='checkbox'
+                                          value=''
+                                          id='flexCheckDefault'
+                                          onChange={handleToggleAspectClick}
+                                        />
+                                        <label
+                                          className='form-check-label'
+                                          htmlFor='flexCheckDefault'
+                                        >
+                                          Toggle aspect {aspect ? 'off' : 'on'}
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12 mb-4'>
+                                      <label htmlFor='scale-input'>Scale: </label>
+                                      <input
+                                        id='scale-input'
+                                        type='number'
+                                        step='0.1'
+                                        value={scale}
+                                        disabled={!imgSrc}
+                                        onChange={(e) => setScale(Number(e.target.value))}
+                                        className='form-control form-control-solid'
+                                      />
+                                    </div>
+                                    <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12 mb-4'>
+                                      <label htmlFor='rotate-input'>Rotate: </label>
+                                      <input
+                                        id='rotate-input'
+                                        type='number'
+                                        value={rotate}
+                                        disabled={!imgSrc}
+                                        onChange={(e) =>
+                                          setRotate(
+                                            Math.min(180, Math.max(-180, Number(e.target.value)))
+                                          )
+                                        }
+                                        className='form-control form-control-solid'
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                              {/* <div>
+                            {!!completedCrop && (
+                              <canvas
+                                ref={previewCanvasRef}
+                                style={{
+                                  border: '1px solid black',
+                                  objectFit: 'contain',
+                                  width: completedCrop.width,
+                                  height: completedCrop.height,
+                                }}
+                              />
+                            )}
+                          </div> */}
+                            </div>
+                          </div>
+                          <div className='p-0 mt-6'>
+                            <div className='text-center'>
+                              <button
+                                type='button'
+                                onClick={handleClose}
+                                className='float-none btn btn-light align-self-center m-1'
+                              >
+                                Tutup
+                              </button>
+                              <button
+                                type='submit'
+                                className='float-none btn btn-primary align-self-center m-1'
+                                disabled={!selectedFileFullBody?.croppedImage}
+                              >
+                                Simpan
+                              </button>
+                            </div>
+                          </div>
+                        </form>
                       </div>
-                    </form>
+                    </div>
                   </Modal.Body>
                 </Modal>
               </div>
