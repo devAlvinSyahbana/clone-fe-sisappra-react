@@ -308,7 +308,7 @@ const UpdateHeaderDetail = () => {
                     )}
                   </div>
                   <div className='overlay-layer bg-dark bg-opacity-10 align-items-end justify-content-center'>
-                    {data && data?.foto_full_body !== '' && (
+                    {data && data?.foto_full_body && data?.foto_full_body !== '' && (
                       <OverlayTrigger
                         key={'bottom'}
                         placement={'bottom'}
