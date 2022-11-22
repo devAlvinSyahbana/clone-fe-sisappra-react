@@ -105,9 +105,10 @@ const CustomNodeContent = (props) => {
               </div>
             </div>
           ) : (
-            <div style={styles.nodeTeam}>
-              <div style={styles.nodeTeamName}>{props.data.team}</div>
-              {props._children !== null &&
+            <div style={styles.nodeContent}>
+              <div style={styles.nodeInfo}>
+                <div style={styles.nodeRole}>{props.data.team}</div>
+                {/* {props._children !== null &&
                 props._children
                   .slice(0, 4)
                   .map((child) => (
@@ -117,7 +118,8 @@ const CustomNodeContent = (props) => {
                       src={child.data.imageUrl}
                       alt='team member'
                     />
-                  ))}
+                  ))} */}
+              </div>
             </div>
           )}
         </div>
