@@ -157,7 +157,7 @@ const SidebarMenuMain = () => {
         />
         <SidebarMenuItem to='/master/JenisPenindakan' title='Jenis Penindakan' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisPelanggaran' title='Jenis Pelanggaran' hasBullet={true} />
-        
+
         <SidebarMenuItem
           to='/master/TempatPelaksanaan'
           title='Tempat Pelaksanaan'
@@ -198,7 +198,7 @@ const SidebarMenuMain = () => {
         </div>
       </div>
       <SidebarMenuItemWithSub
-        to='/manajamen-pengguna'
+        to='/apps'
         title='Manajemen Pengguna'
         fontIcon='bi-chat-left'
         icon='/media/icons/duotune/general/gen051.svg'
