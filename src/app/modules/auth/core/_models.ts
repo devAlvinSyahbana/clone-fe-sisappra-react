@@ -1,8 +1,10 @@
 export interface AuthModel {
+  code?: number
   api_token: string
   refreshToken?: string
   no_pegawai?: string
   kata_sandi?: string
+  email?: string
 }
 
 export interface UserModel {
