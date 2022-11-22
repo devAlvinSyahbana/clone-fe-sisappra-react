@@ -59,13 +59,21 @@ const UpdateHeaderDetail = () => {
 
   // handler croping foto
   const [imgSrc, setImgSrc] = useState('')
+  const [imgSrcFullBody, setImgSrcFullBody] = useState('')
   const previewCanvasRef = useRef<HTMLCanvasElement>(null)
+  const previewCanvasRefFullBody = useRef<HTMLCanvasElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
+  const imgRefFullBody = useRef<HTMLImageElement>(null)
   const [crop, setCrop] = useState<Crop>()
+  const [cropFullBody, setCropFullBody] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
+  const [completedCropFullBody, setCompletedCropFullBody] = useState<PixelCrop>()
   const [scale, setScale] = useState(1)
+  const [scaleFullBody, setScaleFullBody] = useState(1)
   const [rotate, setRotate] = useState(0)
+  const [rotateFullBody, setRotateFullBody] = useState(0)
   const [aspect, setAspect] = useState<number | undefined>(16 / 9)
+  const [aspectFullBody, setAspectFullBody] = useState<number | undefined>(16 / 9)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -129,7 +137,6 @@ const UpdateHeaderDetail = () => {
             timer: 1500,
           })
           setSelectedFile({croppedImage: null})
-          setSelectedFileFullBody({croppedImage: null})
           fetchDT()
           handleClose()
         }
@@ -145,7 +152,6 @@ const UpdateHeaderDetail = () => {
       console.error(error)
     }
   }
-
   const handleSubmitFotoFullBody = async (e: any) => {
     e.preventDefault()
     let formData = new FormData()
@@ -164,7 +170,6 @@ const UpdateHeaderDetail = () => {
             showConfirmButton: false,
             timer: 1500,
           })
-          setSelectedFile({croppedImage: null})
           setSelectedFileFullBody({croppedImage: null})
           fetchDT()
           handleClose()
@@ -185,9 +190,11 @@ const UpdateHeaderDetail = () => {
   const doEditFoto = () => {
     setShow(true)
     setSelectedFile({croppedImage: null})
-    setSelectedFileFullBody({croppedImage: null})
     setImgSrc('')
     setCrop(undefined)
+    setSelectedFileFullBody({croppedImage: null})
+    setImgSrcFullBody('')
+    setCropFullBody(undefined)
   }
 
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,11 +205,25 @@ const UpdateHeaderDetail = () => {
       reader.readAsDataURL(e.target.files[0])
     }
   }
+  const onSelectFileFullBody = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setCropFullBody(undefined) // Makes crop preview update between images.
+      const reader = new FileReader()
+      reader.addEventListener('load', () => setImgSrcFullBody(reader.result?.toString() || ''))
+      reader.readAsDataURL(e.target.files[0])
+    }
+  }
 
   const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     if (aspect) {
       const {width, height} = e.currentTarget
       setCrop(centerAspectCrop(width, height, aspect))
+    }
+  }
+  const onImageLoadFullBody = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    if (aspect) {
+      const {width, height} = e.currentTarget
+      setCropFullBody(centerAspectCrop(width, height, aspect))
     }
   }
 
@@ -217,9 +238,24 @@ const UpdateHeaderDetail = () => {
         // We use canvasPreview as it's much faster than imgPreview.
         canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop, scale, rotate)
       }
+      if (
+        completedCropFullBody?.width &&
+        completedCropFullBody?.height &&
+        imgRefFullBody.current &&
+        previewCanvasRefFullBody.current
+      ) {
+        // We use canvasPreview as it's much faster than imgPreview.
+        canvasPreview(
+          imgRefFullBody.current,
+          previewCanvasRefFullBody.current,
+          completedCropFullBody,
+          scaleFullBody,
+          rotateFullBody
+        )
+      }
     },
     100,
-    [completedCrop, scale, rotate]
+    [completedCrop, scale, rotate, completedCropFullBody, scaleFullBody, rotateFullBody]
   )
 
   const handleToggleAspectClick = () => {
@@ -231,10 +267,24 @@ const UpdateHeaderDetail = () => {
       setCrop(centerAspectCrop(width, height, 16 / 9))
     }
   }
+  const handleToggleAspectClickFullBody = () => {
+    if (aspectFullBody) {
+      setAspectFullBody(undefined)
+    } else if (imgRefFullBody.current) {
+      const {width, height} = imgRefFullBody.current
+      setAspectFullBody(16 / 9)
+      setCropFullBody(centerAspectCrop(width, height, 16 / 9))
+    }
+  }
 
   const onCropComplete = (crop: any) => {
     if (imgRef && crop.width && crop.height) {
       getCroppedImg(imgRef.current, crop)
+    }
+  }
+  const onCropCompleteFullBody = (crop: any) => {
+    if (imgRefFullBody && crop.width && crop.height) {
+      getCroppedImgFullBody(imgRefFullBody.current, crop)
     }
   }
 
@@ -266,6 +316,34 @@ const UpdateHeaderDetail = () => {
       }
     })
   }
+  const getCroppedImgFullBody = (image: any, crop: any) => {
+    const canvas = document.createElement('canvas')
+    const scaleX = image.naturalWidth / image.width
+    const scaleY = image.naturalHeight / image.height
+    canvas.width = crop.width
+    canvas.height = crop.height
+    const ctx = canvas.getContext('2d')
+
+    ctx?.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    )
+
+    const reader = new FileReader()
+    canvas.toBlob((blob: any) => {
+      reader.readAsDataURL(blob)
+      reader.onloadend = () => {
+        dataURLtoFileFullBody(reader.result, 'cropped_foto.png')
+      }
+    })
+  }
 
   const dataURLtoFile = (dataurl: any, filename: string) => {
     let arr = dataurl.split(','),
@@ -279,6 +357,18 @@ const UpdateHeaderDetail = () => {
     }
     let croppedImage = new File([u8arr], filename, {type: mime})
     setSelectedFile((prev) => ({...prev, croppedImage: croppedImage}))
+  }
+  const dataURLtoFileFullBody = (dataurl: any, filename: string) => {
+    let arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n)
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+    let croppedImage = new File([u8arr], filename, {type: mime})
     setSelectedFileFullBody((prev) => ({...prev, croppedImage: croppedImage}))
   }
 
@@ -289,7 +379,7 @@ const UpdateHeaderDetail = () => {
           <div className='row'>
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
-                <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
+                <div className='symbol symbol-160px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
                   <div className='overlay-wrapper'>
                     {data && data?.foto !== '' ? (
                       <div className='symbol-label'>
@@ -465,19 +555,6 @@ const UpdateHeaderDetail = () => {
                                   </div>
                                 </>
                               )}
-                              {/* <div>
-                            {!!completedCrop && (
-                              <canvas
-                                ref={previewCanvasRef}
-                                style={{
-                                  border: '1px solid black',
-                                  objectFit: 'contain',
-                                  width: completedCrop.width,
-                                  height: completedCrop.height,
-                                }}
-                              />
-                            )}
-                          </div> */}
                             </div>
                           </div>
                           <div className='p-0 mt-6'>
@@ -519,33 +596,35 @@ const UpdateHeaderDetail = () => {
                                   type='file'
                                   className='form-control form-control-solid'
                                   id='firstimg'
-                                  onChange={onSelectFile}
+                                  onChange={onSelectFileFullBody}
                                   accept='image/jpeg,image/png'
                                 />
                                 <small className='mt-4'>
                                   *File yang dapat di upload berformat (.jpeg, .png)
                                 </small>
                               </div>
-                              {!!imgSrc && (
+                              {!!imgSrcFullBody && (
                                 <>
                                   <div className='separator border-3 my-10'></div>
                                   <h5 className='mt-6 fs-5'>Cropping Foto</h5>
                                   <ReactCrop
-                                    crop={crop}
-                                    onChange={(_, percentCrop) => setCrop(percentCrop)}
+                                    crop={cropFullBody}
+                                    onChange={(_, percentCrop) => setCropFullBody(percentCrop)}
                                     onComplete={(c) => {
-                                      onCropComplete(c)
-                                      setCompletedCrop(c)
+                                      onCropCompleteFullBody(c)
+                                      setCompletedCropFullBody(c)
                                     }}
-                                    aspect={aspect}
+                                    aspect={aspectFullBody}
                                     className='mt-4'
                                   >
                                     <img
-                                      ref={imgRef}
+                                      ref={imgRefFullBody}
                                       alt='Crop me'
-                                      src={imgSrc}
-                                      style={{transform: `scale(${scale}) rotate(${rotate}deg)`}}
-                                      onLoad={onImageLoad}
+                                      src={imgSrcFullBody}
+                                      style={{
+                                        transform: `scale(${scaleFullBody}) rotate(${rotateFullBody}deg)`,
+                                      }}
+                                      onLoad={onImageLoadFullBody}
                                     />
                                   </ReactCrop>
                                   <div className='row mt-4'>
@@ -555,14 +634,14 @@ const UpdateHeaderDetail = () => {
                                           className='form-check-input'
                                           type='checkbox'
                                           value=''
-                                          id='flexCheckDefault'
-                                          onChange={handleToggleAspectClick}
+                                          id='flexCheckDefault1'
+                                          onChange={handleToggleAspectClickFullBody}
                                         />
                                         <label
                                           className='form-check-label'
-                                          htmlFor='flexCheckDefault'
+                                          htmlFor='flexCheckDefault1'
                                         >
-                                          Toggle aspect {aspect ? 'off' : 'on'}
+                                          Toggle aspect {aspectFullBody ? 'off' : 'on'}
                                         </label>
                                       </div>
                                     </div>
@@ -572,9 +651,9 @@ const UpdateHeaderDetail = () => {
                                         id='scale-input'
                                         type='number'
                                         step='0.1'
-                                        value={scale}
-                                        disabled={!imgSrc}
-                                        onChange={(e) => setScale(Number(e.target.value))}
+                                        value={scaleFullBody}
+                                        disabled={!imgSrcFullBody}
+                                        onChange={(e) => setScaleFullBody(Number(e.target.value))}
                                         className='form-control form-control-solid'
                                       />
                                     </div>
@@ -583,8 +662,8 @@ const UpdateHeaderDetail = () => {
                                       <input
                                         id='rotate-input'
                                         type='number'
-                                        value={rotate}
-                                        disabled={!imgSrc}
+                                        value={rotateFullBody}
+                                        disabled={!imgSrcFullBody}
                                         onChange={(e) =>
                                           setRotate(
                                             Math.min(180, Math.max(-180, Number(e.target.value)))
@@ -596,19 +675,6 @@ const UpdateHeaderDetail = () => {
                                   </div>
                                 </>
                               )}
-                              {/* <div>
-                            {!!completedCrop && (
-                              <canvas
-                                ref={previewCanvasRef}
-                                style={{
-                                  border: '1px solid black',
-                                  objectFit: 'contain',
-                                  width: completedCrop.width,
-                                  height: completedCrop.height,
-                                }}
-                              />
-                            )}
-                          </div> */}
                             </div>
                           </div>
                           <div className='p-0 mt-6'>
