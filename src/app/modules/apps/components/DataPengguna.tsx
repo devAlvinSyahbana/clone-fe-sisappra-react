@@ -307,11 +307,11 @@ export function DataPengguna() {
     },
     {
       name: 'Tanggal Bergabung',
-      selector: (row: any) => moment(row.tgl_bergabung).format('D MMMM YYYY'),
+      selector: (row: any) => moment(row.tgl_bergabung).format('D MMMM YYYY, h:mm a'),
       sortable: true,
       sortField: 'tgl_bergabung',
       wrap: true,
-      width: '180px',
+      width: '190px',
       center: true,
     },
     {
