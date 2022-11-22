@@ -77,7 +77,7 @@ const HeaderDetailWrapper = () => {
                       </div>
                     )}
                   </div>
-                  {data && data?.foto_full_body !== '' && (
+                  {data && data?.foto_full_body && data?.foto_full_body !== '' && (
                     <div className='overlay-layer bg-dark bg-opacity-10 align-items-end justify-content-center'>
                       <OverlayTrigger
                         key={'bottom'}
