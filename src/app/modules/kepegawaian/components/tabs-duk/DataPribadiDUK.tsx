@@ -198,7 +198,15 @@ export function DataPribadiDUK() {
         <div className='card mb-5 mb-xl-10'>
           <div className='card-header cursor-pointer'>
             <div className='card-title m-0'>
-              <h3 className='fw-bold m-0'>Data Pribadi</h3>
+              <h3 className='fw-bold'>Data Pribadi</h3>
+            </div>
+            <div className='card-toolbar'>
+              <Link
+                className='text-reset text-decoration-none m-0'
+                to={`/kepegawaian/informasi-data-pegawai/ubah-data-pribadi/${id}/${status}`}
+              >
+                <button className='float-none btn btn-light-primary align-self-center'>Ubah</button>
+              </Link>
             </div>
           </div>
           <div className='card-body p-9'>
@@ -396,7 +404,7 @@ export function DataPribadiDUK() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
-                  <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
                       Kecamatan
                     </label>
@@ -485,7 +493,7 @@ export function DataPribadiDUK() {
               </div>
               <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12 mb-4'>
                 <div className='row'>
-                  <div className='col-xxl-6 col-md-10 col-lg-6 col-sm-12'>
+                  <div className='col-xxl-6 col-md-6 col-lg-6 col-sm-12'>
                     <label htmlFor='' className='mb-3'>
                       Kecamatan
                     </label>
