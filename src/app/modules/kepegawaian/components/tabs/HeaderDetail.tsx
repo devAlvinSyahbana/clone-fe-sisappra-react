@@ -59,7 +59,7 @@ const HeaderDetailWrapper = () => {
           <div className='row'>
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
-                <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
+                <div className='symbol symbol-160px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
                   <div className='overlay-wrapper'>
                     {data && data?.foto !== '' ? (
                       <div className='symbol-label'>
