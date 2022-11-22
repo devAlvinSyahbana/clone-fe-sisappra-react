@@ -264,11 +264,11 @@ export function DataPengguna() {
       },
     },
     {
-      name: 'NRK/NPTT/NPJLP',
+      name: 'NRK / NPTT / NPJLP',
       selector: (row: any) => row.no_pegawai,
       sortable: true,
       sortField: 'no_pegawai',
-      width: '140px',
+      width: '150px',
       wrap: true,
     },
     {
@@ -284,7 +284,7 @@ export function DataPengguna() {
       selector: (row: any) => row.email,
       sortable: true,
       sortField: 'email',
-      width: '140px',
+      width: '150px',
       wrap: true,
     },
     {
@@ -432,6 +432,13 @@ export function DataPengguna() {
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
+  const handleFilterReset = () => {
+    setFilterNamaLengkap({val: ''})
+    setFilterHakAkses({label: '', value: null})
+
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+
   const handleChangeInputNamaLengkap = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -500,7 +507,7 @@ export function DataPengguna() {
                     >
                       <div id='kt_advanced_search_form'>
                         <div className='row g-8 mt-2'>
-                          <div className='col-xxl-2 col-lg-2 col-md-2 col-sm-12'>
+                          <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
                             <input
                               type='text'
                               className='form-control form-control form-control-solid'
@@ -510,7 +517,7 @@ export function DataPengguna() {
                               placeholder='Masukkan Nama'
                             />
                           </div>
-                          <div className='col-xxl-2 col-lg-2 col-md-2 col-sm-12'>
+                          <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
                             <AsyncSelect
                               cacheOptions
                               value={
@@ -531,7 +538,9 @@ export function DataPengguna() {
                               noOptionsMessage={() => 'Ketik untuk mencari pilihan'}
                             />
                           </div>
-                          <div className='col-xxl-2 col-lg-2 col-md-2 col-sm-12'>
+                        </div>
+                        <div className='row g-8 mt-2'>
+                          <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-6'>
                             <Link to='#' onClick={handleFilter}>
                               <button className='btn btn-light-primary me-2'>
                                 <KTSVG
@@ -541,8 +550,14 @@ export function DataPengguna() {
                                 Cari
                               </button>
                             </Link>
+                            <Link to='#' onClick={handleFilterReset}>
+                              <button className='btn btn-light-primary'>
+                                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                Reset
+                              </button>
+                            </Link>
                           </div>
-                          <div className='d-flex justify-content-end col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                          <div className='text-end col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                             <Link to='/apps/data-pengguna/tambah-data-pengguna'>
                               {/* begin::Add user */}
                               <button type='button' className='btn btn-primary me-2'>
