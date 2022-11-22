@@ -104,7 +104,7 @@ export const Kepegawaian: FC = () => {
   const [dataPT, setDataPT] = useState([])
   const [dataG, setDataG] = useState([])
   const [dataE, setDataE] = useState([])
-  // const [dataU, setDataU] = useState([])
+  const [dataU, setDataU] = useState([])
   const [dataSP, setDataSP] = useState([])
 
   useEffect(() => {
@@ -124,7 +124,7 @@ export const Kepegawaian: FC = () => {
     const response = await axios.get(`${SUM_STATUS_KEPEGAWAIAN_URL}`)
     const responsePT = await axios.get(`${SUM_PENDIDIKAN_TERAKHIR_URL}`)
     const responseG = await axios.get(`${SUM_GOLONGAN_URL}`)
-    // const responseU = await axios.get(`${SUM_USIA_URL}`)
+    const responseU = await axios.get(`${SUM_USIA_URL}`)
     const responseE = await axios.get(`${SUM_ESELON_URL}`)
     const responseSP = await axios.get(`${SUM_STATUS_PNS_URL}`)
 
@@ -132,7 +132,7 @@ export const Kepegawaian: FC = () => {
     setDataPT(responsePT.data.data)
     setDataG(responseG.data.data)
     setDataE(responseE.data.data)
-    // setDataU(responseU.data.data)
+    setDataU(responseU.data.data)
     setDataSP(responseSP.data.data)
     console.log('cek :', data)
     return [data, setData] as const
@@ -404,7 +404,7 @@ export const Kepegawaian: FC = () => {
                   </div>
                   {showResults.isShowed && (
                     <>
-                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
+                      <PieC chartID={dataSP} valueField='count' categoryField='skpd' />
                     </>
                   )}
                 </div>
@@ -446,19 +446,11 @@ export const Kepegawaian: FC = () => {
                       </select>
                     </div>
                   </div>
-                  {/* {showResults.isShowed && showResults.val === '16' ? (
+                  {showResults.isShowed && (
                     <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
+                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '17') ? (
-                    <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '18') ? (
-                    <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
-                    </>
-                  ) : null} */}
+                  )}
                 </div>
               </div>
             </div>
