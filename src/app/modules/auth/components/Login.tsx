@@ -43,7 +43,7 @@ export function Login() {
           const {data: auth} = await login(values.no_pegawai, values.kata_sandi)
           saveAuth(auth)
           const {data: user} = await getUserByToken(auth.api_token)
-          setCurrentUser(user.data)
+          return setCurrentUser(user.data)
         }
         saveAuth(undefined)
         setSubmitting(false)

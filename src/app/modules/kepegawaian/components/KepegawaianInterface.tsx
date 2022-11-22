@@ -65,6 +65,7 @@ export interface DetailPegawaiInterface {
   kepegawaian_diklat_fungsional_pol_pp_tgl_sertifikat?: string | undefined
   kepegawaian_diklat_fungsional_pol_pp_file_sertifikat?: string
   foto?: string
+  foto_full_body?: string
   kepegawaian_pangkat?: any
   kepegawaian_pangkat_id?: string
   kepegawaian_pangkat_name?: string
