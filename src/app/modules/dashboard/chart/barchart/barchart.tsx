@@ -8,16 +8,16 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
   const chartID = props.chartID
   const valueField = props.valueField
   const categoryField = props.categoryField
-  console.log('Props Result', chartID)
-  console.log({chartID})
+  // console.log('Props Result', chartID)
+  // console.log({chartID})
 
   useLayoutEffect(() => {
     // Create root and chart
-    var root = am5.Root.new(chartID)
+    const root = am5.Root.new(categoryField)
 
     root.setThemes([am5themes_Animated.new(root)])
 
-    var chart = root.container.children.push(
+    const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
         panX: true,
         panY: true,
@@ -80,10 +80,10 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
     chart.appear(1000, 100)
 
     // // Add legend
-    // var legend = chart.children.push(am5.Legend.new(root, {}))
+    // const legend = chart.children.push(am5.Legend.new(root, {}))
     // legend.data.setAll(chart.series.values)
   }, [chartID, valueField, categoryField])
 
-  return <div id={chartID} style={{height: 400}}></div>
+  return <div id={categoryField} style={{height: 400}}></div>
 }
 export default Pie

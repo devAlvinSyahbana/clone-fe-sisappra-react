@@ -80,7 +80,7 @@ export const KetentramandanKetertibanUmum: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    {/* <div className='col-md-4 col-lg-4 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -91,7 +91,7 @@ export const KetentramandanKetertibanUmum: FC = () => {
                         <option value='2'>Kabupaten</option>
                         <option value='3'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {/* {showResults.isShowed && showResults.val === '1' ? (
                     <>
@@ -118,7 +118,7 @@ export const KetentramandanKetertibanUmum: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    {/* <div className='col-md-4 col-lg-4 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -129,7 +129,7 @@ export const KetentramandanKetertibanUmum: FC = () => {
                         <option value='5'>Kabupaten</option>
                         <option value='6'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
@@ -166,7 +166,7 @@ export const KetentramandanKetertibanUmum: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    {/* <div className='col-md-4 col-lg-4 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -177,7 +177,7 @@ export const KetentramandanKetertibanUmum: FC = () => {
                         <option value='8'>Kabupaten</option>
                         <option value='9'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '7' ? (
                     <>

@@ -101,7 +101,7 @@ const WasdakProtokolKesehatan: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    {/* <div className='col-md-4 col-lg-4 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -112,7 +112,7 @@ const WasdakProtokolKesehatan: FC = () => {
                         <option value='2'>Kabupaten</option>
                         <option value='3'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
@@ -139,7 +139,7 @@ const WasdakProtokolKesehatan: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    {/* <div className='col-md-4 col-lg-4 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -150,7 +150,7 @@ const WasdakProtokolKesehatan: FC = () => {
                         <option value='5'>Kabupaten</option>
                         <option value='6'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
@@ -175,7 +175,7 @@ const WasdakProtokolKesehatan: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    {/* <div className='col-md-4 col-lg-4 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -186,7 +186,7 @@ const WasdakProtokolKesehatan: FC = () => {
                         <option value='8'>Kabupaten</option>
                         <option value='9'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '7' ? (
                     <>
@@ -213,7 +213,7 @@ const WasdakProtokolKesehatan: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    {/* <div className='col-md-4 col-lg-4 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -224,7 +224,7 @@ const WasdakProtokolKesehatan: FC = () => {
                         <option value='11'>Kabupaten</option>
                         <option value='12'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '10' ? (
                     <>
@@ -251,7 +251,7 @@ const WasdakProtokolKesehatan: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
+                    {/* <div className='col-md-4 col-lg-4 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -262,7 +262,7 @@ const WasdakProtokolKesehatan: FC = () => {
                         <option value='14'>Kabupaten</option>
                         <option value='15'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '13' ? (
                     <>

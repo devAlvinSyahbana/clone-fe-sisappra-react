@@ -3,14 +3,13 @@ import {KTSVG} from '../../../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
-import clsx from 'clsx'
-import {Modal, Tooltip, OverlayTrigger} from 'react-bootstrap'
 import {
   DetailPegawaiInterface,
   JumlahKeluargaInterface,
   PendidikanInterface,
   DetailMasterJabatan,
 } from '../KepegawaianInterface'
+import {HeaderWidget} from './HeaderWidget'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KEPEGAWAIAN_URL = `${API_URL}/informasi-data-pegawai`
@@ -22,7 +21,6 @@ const HeaderDetailWrapper = () => {
   const [data, setData] = useState<DetailPegawaiInterface>()
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
-  const [show, setShow] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,107 +55,77 @@ const HeaderDetailWrapper = () => {
       <div className='card mb-5 mb-xl-10'>
         <div className='card-body pt-9 pb-0'>
           <div className='row'>
-            <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
-              <div className='me-7 mb-4'>
-                <div className='symbol symbol-160px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
-                  <div className='overlay-wrapper'>
-                    {data && data?.foto !== '' ? (
-                      <div className='symbol-label'>
-                        <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
-                      </div>
-                    ) : (
-                      <div
-                        className={clsx(
-                          'symbol-label fs-1',
-                          `bg-light-secondary`,
-                          `text-dark-secondary`
-                        )}
-                      >
-                        {data?.nama?.charAt(0)}
-                      </div>
-                    )}
-                  </div>
-                  {data && data?.foto_full_body && data?.foto_full_body !== '' && (
-                    <div className='overlay-layer bg-dark bg-opacity-10 align-items-end justify-content-center'>
-                      <OverlayTrigger
-                        key={'bottom'}
-                        placement={'bottom'}
-                        overlay={<Tooltip id={`tooltip-bottom`}>Lihat Foto Seluruh Tubuh.</Tooltip>}
-                      >
-                        <button
-                          type='button'
-                          className='btn btn-sm btn-icon btn-secondary btn-shadow mb-2'
-                          onClick={() => setShow(true)}
-                        >
-                          <i className='bi bi-fullscreen'></i>
-                        </button>
-                      </OverlayTrigger>
-                    </div>
-                  )}
-                </div>
-                <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Foto Seluruh Tubuh</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <img
-                      src={`${API_URL}/${data?.foto_full_body}`}
-                      alt={data?.nama}
-                      className='w-100'
-                    />
-                  </Modal.Body>
-                </Modal>
-              </div>
-
+            <div className='col-12 mb-3'>
+              <HeaderWidget className='card-xl-stretch mb-xl-8' color='secondary' data={data} />
+            </div>
+            <div
+              className='d-flex flex-wrap flex-sm-nowrap mb-3'
+              style={{
+                marginTop: '60px',
+              }}
+            >
               <div className='flex-grow-1'>
                 <div className='mb-2'>
                   <div className='d-flex align-items-center mb-2'>
-                    <div className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
+                    <div className='text-gray-800 text-hover-primary fs-1 fw-bolder me-1'>
                       {data?.nama !== '' ? data?.nama : '-'}
                     </div>
                   </div>
-                  <div className='row fw-bold fs-6 mb-4 pe-2'>
-                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
-                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
-                        <KTSVG
-                          path='/media/icons/duotune/communication/com006.svg'
-                          className='svg-icon-4 me-1'
-                        />
-                        {data?.kepegawaian_status_pegawai !== ''
-                          ? data?.kepegawaian_status_pegawai
-                          : '-'}
-                      </div>
-                    </div>
-                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
-                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
-                        <KTSVG
-                          path='/media/icons/duotune/communication/com005.svg'
-                          className='svg-icon-4 me-1'
-                        />
-                        {data?.no_hp !== '' ? data?.no_hp : '-'}
-                      </div>
-                    </div>
-                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
-                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
-                        <KTSVG
-                          path='/media/icons/duotune/communication/com011.svg'
-                          className='svg-icon-4 me-1'
-                        />
-                        -
-                      </div>
-                    </div>
-                    <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3'>
-                      <div className='d-flex align-items-center text-gray-400 text-hover-primary mb-2'>
-                        <i className='fa-solid fa-address-card me-1'></i>
-                        {detailJabatan?.jabatan ? detailJabatan?.jabatan : '-'}
-                      </div>
-                    </div>
-                  </div>
                 </div>
-
+                <div className="separator border-secondary my-10"></div>
                 <div className='d-flex flex-wrap flex-stack'>
                   <div className='d-flex flex-column flex-grow-1 pe-8'>
                     <div className='d-flex flex-wrap'>
+                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                        <div className='d-flex align-items-center'>
+                          <div className='fs-2 fw-bolder'>
+                            <KTSVG
+                              path='/media/icons/duotune/communication/com006.svg'
+                              className='svg-icon-1 me-2'
+                            />
+                            {data?.kepegawaian_status_pegawai !== ''
+                              ? data?.kepegawaian_status_pegawai
+                              : '-'}
+                          </div>
+                        </div>
+
+                        <div className='fw-bold fs-6 text-gray-400'>Status Pegawai</div>
+                      </div>
+                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                        <div className='d-flex align-items-center'>
+                          <div className='fs-2 fw-bolder'>
+                            <KTSVG
+                              path='/media/icons/duotune/communication/com005.svg'
+                              className='svg-icon-1 me-2'
+                            />
+                            {data?.no_hp !== '' ? data?.no_hp : '-'}
+                          </div>
+                        </div>
+
+                        <div className='fw-bold fs-6 text-gray-400'>No. Kontak</div>
+                      </div>
+                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                        <div className='d-flex align-items-center'>
+                          <div className='fs-2 fw-bolder'>
+                            <KTSVG
+                              path='/media/icons/duotune/communication/com011.svg'
+                              className='svg-icon-1 me-2'
+                            />-
+                          </div>
+                        </div>
+
+                        <div className='fw-bold fs-6 text-gray-400'>Email</div>
+                      </div>
+                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                        <div className='d-flex align-items-center'>
+                          <div className='fs-2 fw-bolder'>
+                            <i className='fa-solid fa-address-card me-2'></i>
+                            {detailJabatan?.jabatan ? detailJabatan?.jabatan : '-'}
+                          </div>
+                        </div>
+
+                        <div className='fw-bold fs-6 text-gray-400'>Jabatan</div>
+                      </div>
                       <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
                           <div className='fs-2 fw-bolder'>
