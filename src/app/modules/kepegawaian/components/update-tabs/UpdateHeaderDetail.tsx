@@ -712,7 +712,15 @@ const UpdateHeaderDetail = () => {
                       />
                     </div>
                   ) : (
-                    <></>
+                    <div
+                      className={clsx(
+                        'symbol-label fs-1',
+                        `bg-light-secondary`,
+                        `text-dark-secondary`
+                      )}
+                    >
+                      {data?.nama?.charAt(0)}
+                    </div>
                   )}
                 </div>
               </div>
