@@ -1,10 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
+import axios from 'axios'
 import ApexCharts, {ApexOptions} from 'apexcharts'
 import {KTSVG} from '../../../helpers'
 import {getCSSVariableValue} from '../../../assets/ts/_utils'
 import {Dropdown1} from '../../content/dropdown/Dropdown1'
 import {useThemeMode} from '../../layout/theme-mode/ThemeModeProvider'
+import {JumlahSeluruhSatpol} from '../../../../app/modules/kepegawaian/components/LaporanRekapPegawaiInterface'
 
 type Props = {
   className: string
@@ -13,9 +15,15 @@ type Props = {
   chartHeight: string
 }
 
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const KEPEGAWAIAN_URL = `${API_URL}/kepegawaian`
+
 const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, strokeColor}) => {
   const chartRef = useRef<HTMLDivElement | null>(null)
   const {mode} = useThemeMode()
+
+  const [jpegawaisatpol, setJpegawaisatpol] = useState<JumlahSeluruhSatpol>()
+
   const refreshChart = () => {
     if (!chartRef.current) {
       return
@@ -34,6 +42,14 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
 
   useEffect(() => {
     const chart = refreshChart()
+
+    const fetchData = async () => {
+      const jsatpol = await axios.get(`${KEPEGAWAIAN_URL}/rekapitulasi-jumlah-pegawai-polpp`)
+
+      setJpegawaisatpol(jsatpol.data.data)
+    }
+    fetchData()
+
     return () => {
       if (chart) {
         chart.destroy()
@@ -46,7 +62,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
     <div className={`card ${className}`}>
       {/* begin::Header */}
       <div className={`card-header border-0 py-5 bg-${chartColor}`}>
-        <h3 className='card-title fw-bold text-white'>Link</h3>
+        <h3 className='card-title fw-bold text-white'>Data Pegawai</h3>
       </div>
       {/* end::Header */}
       {/* begin::Body */}
@@ -62,25 +78,28 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
           {/* begin::Row */}
           <div className='row g-0'>
             {/* begin::Col */}
-            <div className='col bg-light-info px-6 py-8 rounded-2 me-7 mb-7 text-center'>
-              <KTSVG
-                path='/media/icons/duotune/general/gen032.svg'
-                className='svg-icon-3x svg-icon-info d-block my-2'
-              />
-              <a href='/dashboard/dashboard-kepegawaian' className='text-info fw-semibold fs-6'>
-                Modul Dashboard
-              </a>
+            <div className='col bg-light-info px-6 py-8 rounded-2 me-7 mb-7 '>
+              <div className='text-info '>Total Data</div>
+              <div className='text-info fw-semibold fs-6'>Seluruh Pegawai Satpol PP</div>
+              <div className='text-info fw-bold mt-3 text-end'>
+                {jpegawaisatpol?.jmlh_seluruh_pegawai_satpol !== 0
+                  ? jpegawaisatpol?.jmlh_seluruh_pegawai_satpol
+                  : '-'}{' '}
+                orang
+              </div>
             </div>
             {/* end::Col */}
             {/* begin::Col */}
-            <div className='col bg-light-primary px-6 py-8 rounded-2 mb-7 text-center'>
-              <KTSVG
-                path='/media/icons/duotune/arrows/arr075.svg'
-                className='svg-icon-3x svg-icon-primary d-block my-2'
-              />
-              <a href='/pelaporan/LaporanKegiatan' className='text-primary fw-semibold fs-6'>
-                Modul Pelaporan
-              </a>
+            <div className='col bg-light-primary px-6 py-8 rounded-2 mb-7 '>
+              <div className='text-primary fs-6'> Total Data</div>
+              <div className='text-primary fw-semibold fs-6'> PNS</div>
+              <div className='text-primary fw-bold mt-3 text-end'>
+                {' '}
+                {jpegawaisatpol?.jmlh_seluruh_pns !== 0
+                  ? jpegawaisatpol?.jmlh_seluruh_pns
+                  : '-'}{' '}
+                orang
+              </div>
             </div>
             {/* end::Col */}
           </div>
@@ -88,59 +107,33 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
           {/* begin::Row */}
           <div className='row g-0'>
             {/* begin::Col */}
-            <div className='col bg-light-danger px-6 py-8 rounded-2 me-7 text-center'>
-              <KTSVG
-                path='/media/icons/duotune/abstract/abs027.svg'
-                className='svg-icon-3x svg-icon-danger d-block my-2'
-              />
-              <a
-                href='/kepegawaian/informasi-data-pegawai'
-                className='text-danger fw-semibold fs-6 mt-2'
-              >
-                Modul Kepegawaian
-              </a>
+            <div className='col bg-light-danger px-6 py-8 rounded-2 me-7 '>
+              <div className='text-danger fs-6 mt-2'>Total Data </div>
+              <div className='text-danger fw-semibold fs-6'>PTT</div>
+              <div className='text-danger fw-bold mt-3 text-end'>
+                {' '}
+                {jpegawaisatpol?.jmlh_seluruh_non_pns_ptt !== 0
+                  ? jpegawaisatpol?.jmlh_seluruh_non_pns_ptt
+                  : '-'}{' '}
+                orang
+              </div>
             </div>
             {/* end::Col */}
             {/* begin::Col */}
-            <div className='col bg-light-success px-6 py-8 rounded-2 text-center'>
-              <KTSVG
-                path='/media/icons/duotune/communication/com010.svg'
-                className='svg-icon-3x svg-icon-success d-block my-2'
-              />
-              <a
-                href='/sarana-prasarana/LaporanSaranaPrasarana'
-                className='text-success fw-semibold fs-6 mt-2'
-              >
-                Modul Sarana & Prasarana
-              </a>
+            <div className='col bg-light-success px-6 py-8 rounded-2 '>
+              <div className='text-success  fs-6 mt-2'>Total Data</div>
+              <div className='text-success fw-semibold'>PJLP</div>
+              <div className='text-success fw-bold mt-3 text-end'>
+                {' '}
+                {jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp !== 0
+                  ? jpegawaisatpol?.jmlh_seluruh_non_pns_pjlp
+                  : '-'}{' '}
+                orang
+              </div>
             </div>
             {/* end::Col */}
           </div>
           {/* end::Row */}
-          <div className='row g-0'>
-            {/* begin::Col */}
-            <div className='col bg-light-warning px-6 py-8 rounded-2 mb-7 me-6 mt-4 text-center'>
-              <KTSVG
-                path='/media/icons/duotune/general/gen032.svg'
-                className='svg-icon-3x svg-icon-warning d-block my-2'
-              />
-              <a href='/master/Kota' className='text-warning fw-semibold fs-6'>
-                Modul Master
-              </a>
-            </div>
-            {/* end::Col */}
-            {/* begin::Col */}
-            <div className='col bg-light-danger px-6 py-8 rounded-2 mb-7 mt-4 text-center'>
-              <KTSVG
-                path='/media/icons/duotune/general/gen032.svg'
-                className='svg-icon-3x svg-icon-danger d-block my-2'
-              />
-              <a href='/apps/data-pengguna' className='text-danger fw-semibold fs-6'>
-                Modul Manajemen Pengguna
-              </a>
-            </div>
-            {/* end::Col */}
-          </div>
         </div>
         {/* end::Stats */}
       </div>

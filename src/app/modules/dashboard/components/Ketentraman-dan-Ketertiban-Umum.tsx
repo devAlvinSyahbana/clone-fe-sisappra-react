@@ -92,20 +92,6 @@ export const KetentramandanKetertibanUmum: FC = () => {
                         <option value='3'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
                   </div>
                   {/* {showResults.isShowed && showResults.val === '1' ? (
                     <>
@@ -142,20 +128,6 @@ export const KetentramandanKetertibanUmum: FC = () => {
                         <option value='4'>Provinsi</option>
                         <option value='5'>Kabupaten</option>
                         <option value='6'>Kecamatan</option>
-                      </select>
-                    </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
                       </select>
                     </div>
                   </div>
@@ -204,20 +176,6 @@ export const KetentramandanKetertibanUmum: FC = () => {
                         <option value='7'>Provinsi</option>
                         <option value='8'>Kabupaten</option>
                         <option value='9'>Kecamatan</option>
-                      </select>
-                    </div>
-                    <div className='col-md-4 col-lg-4 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
                       </select>
                     </div>
                   </div>
