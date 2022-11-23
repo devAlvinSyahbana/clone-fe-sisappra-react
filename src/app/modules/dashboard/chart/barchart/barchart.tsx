@@ -8,57 +8,82 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
   const chartID = props.chartID
   const valueField = props.valueField
   const categoryField = props.categoryField
-  console.log('Props Result', chartID)
-  console.log({chartID})
+  // console.log('Props Result', chartID)
+  // console.log({chartID})
 
   useLayoutEffect(() => {
     // Create root and chart
-    var root = am5.Root.new(chartID)
+    const root = am5.Root.new(categoryField)
 
     root.setThemes([am5themes_Animated.new(root)])
 
-    var chart = root.container.children.push(
+    const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        panY: false,
+        panX: true,
+        panY: true,
+        wheelX: 'panX',
         wheelY: 'zoomX',
-        layout: root.verticalLayout,
+        pinchZoomX: true,
       })
     )
 
-    // Craete Y-axis
+    let cursor = chart.set('cursor', am5xy.XYCursor.new(root, {}))
+    cursor.lineY.set('visible', false)
+
+    let xRenderer = am5xy.AxisRendererX.new(root, {minGridDistance: 30})
+    xRenderer.labels.template.setAll({
+      rotation: -90,
+      centerY: am5.p50,
+      centerX: am5.p100,
+      paddingRight: 15,
+    })
+
     let yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
+        maxDeviation: 0.3,
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     )
 
-    // Create X-Axis
-    var xAxis = chart.xAxes.push(
+    let xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        maxDeviation: 0.2,
-        renderer: am5xy.AxisRendererX.new(root, {}),
+        maxDeviation: 0.3,
         categoryField: categoryField,
-      })
-    )
-    xAxis.data.setAll(chartID)
-
-    // Create series
-    var series1 = chart.series.push(
-      am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: valueField,
-        categoryXField: categoryField,
+        renderer: xRenderer,
         tooltip: am5.Tooltip.new(root, {}),
       })
     )
-    series1.data.setAll(chartID)
 
-    // Add legend
-    var legend = chart.children.push(am5.Legend.new(root, {}))
-    legend.data.setAll(chart.series.values)
+    // Create series
+    let series = chart.series.push(
+      am5xy.ColumnSeries.new(root, {
+        name: 'Series 1',
+        xAxis: xAxis,
+        yAxis: yAxis,
+        valueYField: valueField,
+        sequencedInterpolation: true,
+        categoryXField: categoryField,
+        tooltip: am5.Tooltip.new(root, {
+          labelText: '{valueY}',
+        }),
+      })
+    )
+    xAxis.data.setAll(chartID)
+    series.data.setAll(chartID)
+
+    // series.columns.template.setAll({cornerRadiusTL: 5, cornerRadiusTR: 5})
+    // series.columns.template.adapters.add('fill', function (fill, target) {
+    //   return chart.get('colors').getIndex(series.columns.indexOf(target))
+    // })
+
+    series.appear(1000)
+    chart.appear(1000, 100)
+
+    // // Add legend
+    // const legend = chart.children.push(am5.Legend.new(root, {}))
+    // legend.data.setAll(chart.series.values)
   }, [chartID, valueField, categoryField])
 
-  return <div id={chartID} style={{height: 200}}></div>
+  return <div id={categoryField} style={{height: 400}}></div>
 }
 export default Pie

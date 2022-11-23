@@ -6,6 +6,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Swal from 'sweetalert2'
 import clsx from 'clsx'
+import moment from 'moment'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Modal from 'react-bootstrap/Modal'
@@ -134,6 +135,10 @@ const reactSelectDarkThem = {
   }),
 }
 
+export interface JumlahPengguna {
+  total_data?: number
+}
+
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const SARANA_PRASARANA_URL = `${API_URL}/sarana-prasarana` //http://localhost:3000/sarana-prasarana
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
@@ -144,9 +149,9 @@ export function DetailHakAkses() {
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-  const [valFilterPengguna, setFilterPengguna] = useState({val: ''})
+  const [valNamaLengkap, setFilterNamaLengkap] = useState({val: ''})
   const calculatedMode = mode === 'system' ? systemMode : mode
-
+  const [jumlah_Pengguna, setJumlahPengguna] = useState<JumlahPengguna>()
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -170,17 +175,25 @@ export function DetailHakAkses() {
   const [temp, setTemp] = useState([])
 
   useEffect(() => {
-    async function fetchDT(page: number) {
-      setLoading(true)
-      const response = await axios.get(
-        `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+    const fetchData = async () => {
+      const jumlah_Pengguna = await axios.get(
+        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data`
       )
-      setData(response.data.data)
-      setTotalRows(response.data.total_data)
-      setLoading(false)
+
+      setJumlahPengguna(jumlah_Pengguna.data.data)
     }
     fetchDT(1)
+    fetchData()
   }, [qParamFind, perPage])
+  async function fetchDT(page: number) {
+    setLoading(true)
+    const response = await axios.get(
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+    )
+    setData(response.data.data)
+    setTotalRows(response.data.total_data)
+    setLoading(false)
+  }
 
   const fetchData = async (page: number) => {
     setLoading(true)
@@ -215,7 +228,7 @@ export function DetailHakAkses() {
     // instead of setTimeout this is where you would handle your API call.
   }
 
-  const konfirDel = (id: number, hak_akses: string) => {
+  const konfirDel = (id: number, hak_akses: number) => {
     Swal.fire({
       text: 'Anda yakin ingin menghapus data ini',
       icon: 'warning',
@@ -229,7 +242,7 @@ export function DetailHakAkses() {
       if (result.isConfirmed) {
         const bodyParam = {
           data: {
-            hak_akses: '',
+            hak_akses: 0,
             deleted_by: 0,
           },
         }
@@ -277,16 +290,16 @@ export function DetailHakAkses() {
 
   const handleFilter = async () => {
     let uriParam = ''
-    if (valFilterPengguna.val !== '') {
-      uriParam += `${valFilterPengguna.val}`
+    if (valNamaLengkap.val !== '') {
+      uriParam += `&nama_lengkap=${valNamaLengkap.val}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
-  const handleChangeInputPengguna = (event: {
+  const handleChangeInputNamaLengkap = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterPengguna({val: event.target.value})
+    setFilterNamaLengkap({val: event.target.value})
   }
 
   var num = 1
@@ -339,9 +352,9 @@ export function DetailHakAkses() {
     },
     {
       name: 'Tanggal Bergabung',
-      selector: (row: any) => row.tgl_bergabung,
       sortable: true,
       sortField: 'tgl_bergabung',
+      selector: (row: any) => moment(row.tgl_bergabung).format('D MMMM YYYY'),
       wrap: true,
       center: true,
     },
@@ -1109,9 +1122,15 @@ export function DetailHakAkses() {
         <div id='kt_app_content' className='app-content flex-column-fluid'>
           <div className='card'>
             <label className=' m-9'>
-              <h2>Pengguna Terdaftar</h2>
+              <h2>
+                Pengguna Terdaftar ({/* Jumlah Pengguna */}
+                {jumlah_Pengguna?.total_data !== 0
+                  ? jumlah_Pengguna?.total_data
+                  : 'Tidak Ada Pengguna'}
+                {/* End jumlah */})
+              </h2>
             </label>
-            <div className='col-6 '>
+            <div className='col-6 mt-1'>
               <Link className='text-reset text-decoration-none' to={`/apps/hak-akses`}>
                 <button className='float-none btn btn-secondary align-self-center m-12'>
                   <i className='fa-solid fa-arrow-left '></i>
@@ -1121,7 +1140,7 @@ export function DetailHakAkses() {
             </div>
             <div className='card card-flush h-xl-100'>
               <div className='card-header border-1 pt-6'>
-                <div className='col-xl-12 mb-xl-12 mt-6'>
+                <div className='col-xl-12 mb-xl-12 mt-2'>
                   <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
                     <div className='mb-5'>
                       <div
@@ -1163,18 +1182,15 @@ export function DetailHakAkses() {
                         data-bs-parent='#kt_accordion_2'
                       >
                         <div id='kt_advanced_search_form'>
-                          <div className='row g-8 mt-2'>
-                            <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                              <label htmlFor='' className='mb-3'>
-                                Nama Hak Akses
-                              </label>
+                          <div className='row g-2 mt-2'>
+                            <div className='col-xxl-20 col-lg-4 col-md-20 col-sm-12'>
                               <input
                                 type='text'
                                 className='form-control form-control form-control-solid'
-                                name='q'
-                                value={valFilterPengguna.val}
-                                onChange={handleChangeInputPengguna}
-                                placeholder='Pengguna'
+                                name='nama'
+                                value={valNamaLengkap.val}
+                                onChange={handleChangeInputNamaLengkap}
+                                placeholder='Masukkan Nama'
                               />
                             </div>
                           </div>
