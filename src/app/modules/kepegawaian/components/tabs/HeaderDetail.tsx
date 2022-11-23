@@ -108,6 +108,29 @@ const HeaderDetailWrapper = () => {
                   </Modal.Body>
                 </Modal>
               </div>
+              <div className='me-7 mb-4'>
+                <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
+                  {data && data?.foto !== '' ? (
+                    <div className='symbol-label'>
+                      <img
+                        src={`${API_URL}/${data?.foto_full_body}`}
+                        alt={data?.nama}
+                        className='w-100'
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className={clsx(
+                        'symbol-label fs-1',
+                        `bg-light-secondary`,
+                        `text-dark-secondary`
+                      )}
+                    >
+                      {data?.nama?.charAt(0)}
+                    </div>
+                  )}
+                </div>
+              </div>
 
               <div className='flex-grow-1'>
                 <div className='mb-2'>
