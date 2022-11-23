@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect, FC} from 'react'
 import axios from 'axios'
-import PieC from '../chart/piechart/piechart'
 import BarC from '../chart/barchart/barchart'
+import PieC from '../chart/piechart/piechart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const SUM_PEGAWAI_WILAYAH_URL = `${API_URL}/dashboard/sum-pegawai-wilayah`
 export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}/dashboard/sum-status-kepegawaian`
 export const SUM_PENDIDIKAN_TERAKHIR_URL = `${API_URL}/dashboard/sum-pendidikan-terakhir`
 export const SUM_GOLONGAN_URL = `${API_URL}/dashboard/sum-golongan`
@@ -100,11 +101,12 @@ export const Kepegawaian: FC = () => {
     }
   }
 
+  const [dataSPW, setDataSPW] = useState([])
   const [data, setData] = useState([])
   const [dataPT, setDataPT] = useState([])
   const [dataG, setDataG] = useState([])
   const [dataE, setDataE] = useState([])
-  // const [dataU, setDataU] = useState([])
+  const [dataU, setDataU] = useState([])
   const [dataSP, setDataSP] = useState([])
 
   useEffect(() => {
@@ -121,18 +123,20 @@ export const Kepegawaian: FC = () => {
     // // setTemp(valuePT.data.dataPT)
     // console.log('cek response api:', temp)
 
+    const responseSPW = await axios.get(`${SUM_PEGAWAI_WILAYAH_URL}`)
     const response = await axios.get(`${SUM_STATUS_KEPEGAWAIAN_URL}`)
     const responsePT = await axios.get(`${SUM_PENDIDIKAN_TERAKHIR_URL}`)
     const responseG = await axios.get(`${SUM_GOLONGAN_URL}`)
-    // const responseU = await axios.get(`${SUM_USIA_URL}`)
+    const responseU = await axios.get(`${SUM_USIA_URL}`)
     const responseE = await axios.get(`${SUM_ESELON_URL}`)
     const responseSP = await axios.get(`${SUM_STATUS_PNS_URL}`)
 
+    setDataSPW(responseSPW.data.data)
     setData(response.data.data)
     setDataPT(responsePT.data.data)
     setDataG(responseG.data.data)
     setDataE(responseE.data.data)
-    // setDataU(responseU.data.data)
+    setDataU(responseU.data.data)
     setDataSP(responseSP.data.data)
     console.log('cek :', data)
     return [data, setData] as const
@@ -162,25 +166,19 @@ export const Kepegawaian: FC = () => {
                         <option value='3'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-2 col-lg-2 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                    {/* {showResults.isShowed && (
+                    {showResults.isShowed && showResults.val === '1' ? (
                       <>
-                        <BarC chartID={data} valueField='count' categoryField='eselon' />
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
                       </>
-                    )} */}
+                    ) : null || (showResults.isShowed && showResults.val === '2') ? (
+                      <>
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
+                      </>
+                    ) : null || (showResults.isShowed && showResults.val === '3') ? (
+                      <>
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
+                      </>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -204,20 +202,6 @@ export const Kepegawaian: FC = () => {
                         <option value='4'>Provinsi</option>
                         <option value='5'>Kabupaten</option>
                         <option value='6'>Kecamatan</option>
-                      </select>
-                    </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
                       </select>
                     </div>
                   </div>
@@ -249,20 +233,6 @@ export const Kepegawaian: FC = () => {
                         <option value='7'>Provinsi</option>
                         <option value='8'>Kabupaten</option>
                         <option value='9'>Kecamatan</option>
-                      </select>
-                    </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
                       </select>
                     </div>
                   </div>
@@ -299,20 +269,6 @@ export const Kepegawaian: FC = () => {
                         <option value='12'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
                   </div>
                   {showResults.isShowed && (
                     <>
@@ -341,20 +297,6 @@ export const Kepegawaian: FC = () => {
                         <option value='13'>Provinsi</option>
                         <option value='14'>Kabupaten</option>
                         <option value='15'>Kecamatan</option>
-                      </select>
-                    </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
                       </select>
                     </div>
                   </div>
@@ -387,24 +329,10 @@ export const Kepegawaian: FC = () => {
                         <option value='21'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
                   </div>
                   {showResults.isShowed && (
                     <>
-                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
+                      <PieC chartID={dataSP} valueField='count' categoryField='skpd' />
                     </>
                   )}
                 </div>
@@ -431,34 +359,12 @@ export const Kepegawaian: FC = () => {
                         <option value='18'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
                   </div>
-                  {/* {showResults.isShowed && showResults.val === '16' ? (
+                  {showResults.isShowed && (
                     <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
+                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '17') ? (
-                    <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '18') ? (
-                    <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
-                    </>
-                  ) : null} */}
+                  )}
                 </div>
               </div>
             </div>
