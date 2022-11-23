@@ -111,7 +111,7 @@ const ManajemenPenggunaPage = () => {
           }
         />
         <Route
-          path='detail-hak-akses/DetailHakAkses'
+          path='detail-hak-akses/DetailHakAkses/:id'
           element={
             <>
               <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Detail Hak Akses</PageTitle>
@@ -132,7 +132,7 @@ const ManajemenPenggunaPage = () => {
           path='update-hak-akses/UpdateHakAkses/:id'
           element={
             <>
-              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Update Hak Akses</PageTitle>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Detail Hak Akses</PageTitle>
               <UpdateHakAkses />
             </>
           }
