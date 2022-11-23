@@ -398,7 +398,7 @@ const UpdateHeaderDetail = () => {
                     )}
                   </div>
                   <div className='overlay-layer bg-dark bg-opacity-10 align-items-end justify-content-center'>
-                    {data && data?.foto_full_body && data?.foto_full_body !== '' && (
+                    {/* {data && data?.foto_full_body && data?.foto_full_body !== '' && (
                       <OverlayTrigger
                         key={'bottom'}
                         placement={'bottom'}
@@ -412,7 +412,7 @@ const UpdateHeaderDetail = () => {
                           <i className='bi bi-fullscreen'></i>
                         </button>
                       </OverlayTrigger>
-                    )}
+                    )} */}
                     <button
                       type='button'
                       onClick={() => doEditFoto()}
@@ -422,7 +422,7 @@ const UpdateHeaderDetail = () => {
                     </button>
                   </div>
                 </div>
-                <Modal show={showFullBody} fullscreen={true} onHide={() => setShowFullBody(false)}>
+                {/* <Modal show={showFullBody} fullscreen={true} onHide={() => setShowFullBody(false)}>
                   <Modal.Header closeButton>
                     <Modal.Title>Foto Seluruh Tubuh</Modal.Title>
                   </Modal.Header>
@@ -433,7 +433,7 @@ const UpdateHeaderDetail = () => {
                       className='w-100'
                     />
                   </Modal.Body>
-                </Modal>
+                </Modal> */}
                 <Modal
                   show={show}
                   onHide={handleClose}
@@ -712,15 +712,7 @@ const UpdateHeaderDetail = () => {
                       />
                     </div>
                   ) : (
-                    <div
-                      className={clsx(
-                        'symbol-label fs-1',
-                        `bg-light-secondary`,
-                        `text-dark-secondary`
-                      )}
-                    >
-                      {data?.nama?.charAt(0)}
-                    </div>
+                    <></>
                   )}
                 </div>
               </div>
