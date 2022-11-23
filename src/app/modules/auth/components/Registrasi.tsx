@@ -43,17 +43,40 @@ export function Registrasi() {
         const {data: auth} = await register(values.no_pegawai, values.kata_sandi, values.email)
         if (auth.code === 208) {
           saveAuth(undefined)
-          setStatus('Akun sudah terdaftar! Silahkan login')
+          setStatus(
+            <div className='mb-lg-8 alert alert-danger'>
+              <div className='alert-text font-weight-bold'>
+                Akun sudah terdaftar! Silahkan login
+              </div>
+            </div>
+          )
           setSubmitting(false)
           return setLoading(false)
         }
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user.data)
+        saveAuth(undefined)
+        await getUserByToken(auth.api_token)
+        setStatus(
+          <div className='mb-lg-8 alert alert-success'>
+            <div className='alert-text font-weight-bold'>
+              Akun anda berhasil teregistrasi! Silahkan{' '}
+              <Link to='/auth/login' className='fw-bold'>
+                Login
+              </Link>
+            </div>
+          </div>
+        )
+        setSubmitting(false)
+        return setLoading(false)
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
-        setStatus('NRK/NPTT/NPJLP tidak ada dalam database mohon hubungi admin!')
+        setStatus(
+          <div className='mb-lg-8 alert alert-danger'>
+            <div className='alert-text font-weight-bold'>
+              NRK/NPTT/NPJLP tidak ada dalam database mohon hubungi admin!
+            </div>
+          </div>
+        )
         setSubmitting(false)
         setLoading(false)
       }
@@ -74,9 +97,7 @@ export function Registrasi() {
       {/* begin::Heading */}
 
       {formik.status ? (
-        <div className='mb-lg-8 alert alert-danger'>
-          <div className='alert-text font-weight-bold'>{formik.status}</div>
-        </div>
+        <>{formik.status}</>
       ) : (
         <div className='mb-lg-8 alert alert-info'>
           <div className='alert-text font-weight-bold'>Pastikan NRK/NPTT/NPJLP sudah terdaftar</div>
