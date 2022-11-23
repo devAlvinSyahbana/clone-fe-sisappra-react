@@ -61,7 +61,7 @@ const HeaderDetailWrapper = () => {
             <div
               className='d-flex flex-wrap flex-sm-nowrap mb-3'
               style={{
-                marginTop: '55px',
+                marginTop: '60px',
               }}
             >
               <div className='flex-grow-1'>

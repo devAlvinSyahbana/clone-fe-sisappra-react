@@ -20,16 +20,21 @@ const HeaderWidget: React.FC<Props> = ({className, color, data}) => {
         <div className='overlay overflow-hidden'>
           <div className='overlay-wrapper'>
             {/* begin::Header */}
-            <div
-              className={`px-10 pt-7 card-rounded h-250px w-100 bg-${color} bgi-no-repeat bgi-size-cover bgi-position-y-center bgi-position-x-center align-items-center`}
-              style={{
-                backgroundImage: 'url(' + `${API_URL}/${data?.foto_full_body}` + ')',
-              }}
-            ></div>
+            {data && data?.foto_full_body && data?.foto_full_body !== '' ? (
+              <div
+                className={`px-10 pt-7 card-rounded h-250px w-100 bg-${color} bgi-no-repeat bgi-size-cover bgi-position-y-center bgi-position-x-center align-items-center`}
+                style={{
+                  backgroundImage: 'url(' + `${API_URL}/${data?.foto_full_body}` + ')',
+                }}
+              ></div>
+            ) : (
+              <div className={`px-10 pt-7 card-rounded h-250px w-100 bg-${color}`}>
+              </div>
+            )}
             {/* end::Header */}
           </div>
           <div className='overlay-layer bg-dark bg-opacity-10 align-items-center justify-content-center'>
-            {data && data?.foto_full_body && data?.foto_full_body !== '' && (
+            {data && data?.foto_full_body && data?.foto_full_body !== '' ? (
               <OverlayTrigger
                 key={'top'}
                 placement={'top'}
@@ -43,6 +48,8 @@ const HeaderWidget: React.FC<Props> = ({className, color, data}) => {
                   <i className='bi bi-fullscreen'></i>
                 </button>
               </OverlayTrigger>
+            ): (
+              <h1>Tidak ada foto seluruh tubuh</h1>
             )}
           </div>
         </div>
