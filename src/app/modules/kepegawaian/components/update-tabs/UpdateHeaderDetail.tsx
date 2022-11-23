@@ -90,7 +90,6 @@ const UpdateHeaderDetail = () => {
         setPendidikan((prevstate) => ({...prevstate, jenis_pendidikan: data.data.pendidikan}))
       }
       setData(response.data.data)
-      console.log(data)
       getDetailJabatan(response.data.data.kepegawaian_jabatan)
     }
     fetchData()
