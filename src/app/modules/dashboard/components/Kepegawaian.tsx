@@ -150,7 +150,7 @@ export const Kepegawaian: FC = () => {
             <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title text-white'>Jumlah Personil Satpol PP Per Wilayah</h3>
+                  <h3 className='card-title text-white'>Pegawai Satpol PP DKI Jakarta</h3>
                 </div>
                 <div className='card-body'>
                   <div className='row'>
@@ -301,7 +301,7 @@ export const Kepegawaian: FC = () => {
             <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title  text-white'>
+                  <h3 className='card-title  text-white text-center'>
                     Jumlah Personil Satpol PP Berdasarkan Jenis Eselon
                   </h3>
                 </div>
