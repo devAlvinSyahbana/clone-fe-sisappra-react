@@ -169,7 +169,7 @@ export function UpdateHakAkses() {
       }
       try {
         const response = await axios.put(
-          `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
+          `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`,
           bodyparam
         )
         if (response) {
@@ -308,7 +308,7 @@ export function UpdateHakAkses() {
   }
 
   return (
-    <div className='row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5 g-xl-3'>
+    <div className='row row-cols-10 row-cols-md-20 row-cols-xl-30 g-50 g-xl-30'>
       <div className='flex-lg-row-fluid ms-lg-20'>
         <div className='tab-content' id='myTabContent'>
           <div
@@ -320,13 +320,14 @@ export function UpdateHakAkses() {
               <div className='card page-title d-flex flex-column justify-content-center flex-wrap me-3'>
                 <div className='card-body'>
                   <div className='d-grid gap-2 d-md-flex justify-content-md'>
-                    <Link to='/apps/detail-hak-akses/DetailHakAkses'>
+                    <Link to='/apps/detail-hak-akses/DetailHakAkses/'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali
                       </button>
                     </Link>
                   </div>
+
                   <div className='col-md-6 class="d-flex flex-center  py-5 px-20 '>
                     <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
                       <div className='overlay-wrapper'>
@@ -350,19 +351,6 @@ export function UpdateHakAkses() {
                             {data?.nama?.charAt(0)}
                           </div>
                         )} */}
-                        <Form.Control
-                          name='foto'
-                          className='form-control form-control-solid'
-                          onChange={handleChangeFormik}
-                          value={
-                            valuesFormik?.foto || valuesFormik?.foto === ''
-                              ? valuesFormik?.foto
-                              : valuesFormikExist?.foto
-                              ? valuesFormikExist?.foto
-                              : ''
-                          }
-                          readOnly
-                        />
                       </div>
                       <div className='overlay-layer bg-dark bg-opacity-10 align-items-end justify-content-center'></div>
                     </div>
@@ -416,6 +404,7 @@ export function UpdateHakAkses() {
                           <td>
                             <Form.Control
                               name='kata_sandi'
+                              type='password'
                               className='form-control form-control-solid'
                               onChange={handleChangeFormik}
                               value={
