@@ -69,8 +69,8 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
       <div className='card-body p-0'>
         {/* begin::Chart */}
         <div
-          ref={chartRef}
-          className={`mixed-widget-2-chart card-rounded-bottom bg-${chartColor}`}
+          // ref={chartRef}
+          className={`mixed-widget-2-chart card-rounded-bottom bg-${chartColor} h-50`}
         ></div>
         {/* end::Chart */}
         {/* begin::Stats */}
