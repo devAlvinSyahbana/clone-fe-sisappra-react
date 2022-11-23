@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom'
 import {useLocation, useParams} from 'react-router-dom'
 import axios from 'axios'
 import clsx from 'clsx'
-import {Modal, Tooltip, OverlayTrigger} from 'react-bootstrap'
 import {
   DetailPegawaiInterface,
   JumlahKeluargaInterface,
@@ -22,7 +21,7 @@ const HeaderDetailWrapper = () => {
   const [data, setData] = useState<DetailPegawaiInterface>()
   const [jkeluarga, setJkeluarga] = useState<JumlahKeluargaInterface>()
   const [pendidikan, setPendidikan] = useState<PendidikanInterface>()
-  const [show, setShow] = useState(false)
+  // const [show, setShow] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,54 +58,46 @@ const HeaderDetailWrapper = () => {
           <div className='row'>
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
-                <div className='symbol symbol-160px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
-                  <div className='overlay-wrapper'>
-                    {data && data?.foto !== '' ? (
-                      <div className='symbol-label'>
-                        <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
-                      </div>
-                    ) : (
-                      <div
-                        className={clsx(
-                          'symbol-label fs-1',
-                          `bg-light-secondary`,
-                          `text-dark-secondary`
-                        )}
-                      >
-                        {data?.nama?.charAt(0)}
-                      </div>
-                    )}
-                  </div>
-                  {data && data?.foto_full_body && data?.foto_full_body !== '' && (
-                    <div className='overlay-layer bg-dark bg-opacity-10 align-items-end justify-content-center'>
-                      <OverlayTrigger
-                        key={'bottom'}
-                        placement={'bottom'}
-                        overlay={<Tooltip id={`tooltip-bottom`}>Lihat Foto Seluruh Tubuh.</Tooltip>}
-                      >
-                        <button
-                          type='button'
-                          className='btn btn-sm btn-icon btn-secondary btn-shadow mb-2'
-                          onClick={() => setShow(true)}
-                        >
-                          <i className='bi bi-fullscreen'></i>
-                        </button>
-                      </OverlayTrigger>
+                <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
+                  {data && data?.foto !== '' ? (
+                    <div className='symbol-label'>
+                      <img src={`${API_URL}/${data?.foto}`} alt={data?.nama} className='w-100' />
+                    </div>
+                  ) : (
+                    <div
+                      className={clsx(
+                        'symbol-label fs-1',
+                        `bg-light-secondary`,
+                        `text-dark-secondary`
+                      )}
+                    >
+                      {data?.nama?.charAt(0)}
                     </div>
                   )}
                 </div>
-                <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Foto Seluruh Tubuh</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <img
-                      src={`${API_URL}/${data?.foto_full_body}`}
-                      alt={data?.nama}
-                      className='w-100'
-                    />
-                  </Modal.Body>
-                </Modal>
+              </div>
+              <div className='me-7 mb-4'>
+                <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
+                  {data && data?.foto !== '' ? (
+                    <div className='symbol-label'>
+                      <img
+                        src={`${API_URL}/${data?.foto_full_body}`}
+                        alt={data?.nama}
+                        className='w-100'
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className={clsx(
+                        'symbol-label fs-1',
+                        `bg-light-secondary`,
+                        `text-dark-secondary`
+                      )}
+                    >
+                      {data?.nama?.charAt(0)}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className='flex-grow-1'>
