@@ -2,34 +2,35 @@
 import React, {useState, useEffect, FC} from 'react'
 import axios from 'axios'
 import PieC from '../chart/piechart/piechart'
+import BarC from '../chart/barchart/barchart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SUM_SARANA_PRASARANA_URL = `${API_URL}/dashboard/sum-jenis-sarana_prasarana`
 
 const SaranadanPrasarana: FC = () => {
-  const [showResults, setShowResults] = useState({isShowed: false, val: ''})
-  const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
-    console.log(typeof event.target.value)
+  // const [showResults, setShowResults] = useState({isShowed: false, val: ''})
+  // const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
+  //   console.log(typeof event.target.value)
 
-    if (event.target.value === '1') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '2') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '3') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '4') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '5') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '6') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-  }
+  //   if (event.target.value === '1') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '2') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '3') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '4') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '5') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '6') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  // }
 
   const [data, setData] = useState([])
 
@@ -73,7 +74,7 @@ const SaranadanPrasarana: FC = () => {
                       </select>
                     </div> */}
                   </div>
-                  {showResults.isShowed && showResults.val === '1' ? (
+                  {/* {showResults.isShowed && showResults.val === '1' ? (
                     <>
                       <PieC chartID='pie-one' />
                     </>
@@ -85,7 +86,7 @@ const SaranadanPrasarana: FC = () => {
                     <>
                       <PieC chartID='pie-one' />
                     </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
@@ -97,6 +98,7 @@ const SaranadanPrasarana: FC = () => {
                   </h3>
                 </div>
                 <div className='card-body'>
+                  
                   <div className='row'>
                     {/* <div className='col-md-2 col-lg-2 col-sm-12'>
                       <select
@@ -110,8 +112,13 @@ const SaranadanPrasarana: FC = () => {
                         <option value='6'>Kecamatan</option>
                       </select>
                     </div> */}
-                  </div>
-                  {showResults.isShowed && showResults.val === '4' ? (
+                  {
+                  data?.length >= 1 ? (
+                    <BarC chartID={data} valueField='jumlah' categoryField='jenis_sarana_prasarana'/>
+                  ) : (
+                    <>loading...</>
+                  )
+                  /* {showResults.isShowed && showResults.val === '4' ? (
                     <>
                       <PieC
                         chartID={data}
@@ -135,7 +142,8 @@ const SaranadanPrasarana: FC = () => {
                         categoryField='jenis_sarana_prasarana'
                       />
                     </>
-                  ) : null}
+                  ) : null} */}
+                  </div>
                 </div>
               </div>
             </div>
