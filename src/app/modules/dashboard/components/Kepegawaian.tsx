@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect, FC} from 'react'
 import axios from 'axios'
-import PieC from '../chart/piechart/piechart'
 import BarC from '../chart/barchart/barchart'
+import PieC from '../chart/piechart/piechart'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const SUM_PEGAWAI_WILAYAH_URL = `${API_URL}/dashboard/sum-pegawai-wilayah`
 export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}/dashboard/sum-status-kepegawaian`
 export const SUM_PENDIDIKAN_TERAKHIR_URL = `${API_URL}/dashboard/sum-pendidikan-terakhir`
 export const SUM_GOLONGAN_URL = `${API_URL}/dashboard/sum-golongan`
@@ -13,98 +14,99 @@ export const SUM_USIA_URL = `${API_URL}/dashboard/sum-usia`
 export const SUM_STATUS_PNS_URL = `${API_URL}/dashboard/sum-status-ppns`
 
 export const Kepegawaian: FC = () => {
-  const [showResults, setShowResults] = useState({isShowed: false, val: ''})
-  const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
-    console.log(typeof event.target.value)
+  // const [showResults, setShowResults] = useState({isShowed: false, val: ''})
+  // const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
+  //   console.log(typeof event.target.value)
 
-    if (event.target.value === '1') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '2') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '3') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '4') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '5') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '6') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '7') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '8') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '9') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '10') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '11') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '12') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '13') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '14') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '15') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '16') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '17') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '18') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '19') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '20') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '21') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '22') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '23') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '24') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '25') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '26') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '27') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-  }
+  //   if (event.target.value === '1') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '2') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '3') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '4') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '5') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '6') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '7') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '8') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '9') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '10') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '11') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '12') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '13') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '14') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '15') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '16') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '17') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '18') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '19') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '20') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '21') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '22') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '23') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '24') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '25') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '26') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  //   if (event.target.value === '27') {
+  //     setShowResults({isShowed: true, val: event.target.value})
+  //   }
+  // }
 
+  const [dataSPW, setDataSPW] = useState([])
   const [data, setData] = useState([])
   const [dataPT, setDataPT] = useState([])
   const [dataG, setDataG] = useState([])
   const [dataE, setDataE] = useState([])
-  // const [dataU, setDataU] = useState([])
+  const [dataU, setDataU] = useState([])
   const [dataSP, setDataSP] = useState([])
 
   useEffect(() => {
@@ -121,20 +123,22 @@ export const Kepegawaian: FC = () => {
     // // setTemp(valuePT.data.dataPT)
     // console.log('cek response api:', temp)
 
+    const responseSPW = await axios.get(`${SUM_PEGAWAI_WILAYAH_URL}`)
     const response = await axios.get(`${SUM_STATUS_KEPEGAWAIAN_URL}`)
     const responsePT = await axios.get(`${SUM_PENDIDIKAN_TERAKHIR_URL}`)
     const responseG = await axios.get(`${SUM_GOLONGAN_URL}`)
-    // const responseU = await axios.get(`${SUM_USIA_URL}`)
+    const responseU = await axios.get(`${SUM_USIA_URL}`)
     const responseE = await axios.get(`${SUM_ESELON_URL}`)
     const responseSP = await axios.get(`${SUM_STATUS_PNS_URL}`)
 
+    setDataSPW(responseSPW.data.data)
     setData(response.data.data)
     setDataPT(responsePT.data.data)
     setDataG(responseG.data.data)
     setDataE(responseE.data.data)
-    // setDataU(responseU.data.data)
+    setDataU(responseU.data.data)
     setDataSP(responseSP.data.data)
-    console.log('cek :', data)
+    // console.log('cek :', dataE)
     return [data, setData] as const
   }
 
@@ -146,11 +150,11 @@ export const Kepegawaian: FC = () => {
             <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title text-white'>Jumlah Personil Satpol PP Per Wilayah</h3>
+                  <h3 className='card-title text-white'>Pegawai Satpol PP DKI Jakarta</h3>
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-2 col-lg-2 col-sm-12'>
+                    {/* <div className='col-md-2 col-lg-2 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -161,26 +165,25 @@ export const Kepegawaian: FC = () => {
                         <option value='2'>Kabupaten</option>
                         <option value='3'>Kecamatan</option>
                       </select>
-                    </div>
-                    <div className='col-md-2 col-lg-2 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                    {/* {showResults.isShowed && (
+                    </div> */}
+                    {dataSPW?.length >= 1 ? (
+                      <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
+                    ) : (
+                      <>loading...</>
+                    )}
+                    {/* {showResults.isShowed && showResults.val === '1' ? (
                       <>
-                        <BarC chartID={data} valueField='count' categoryField='eselon' />
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
                       </>
-                    )} */}
+                    ) : null || (showResults.isShowed && showResults.val === '2') ? (
+                      <>
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
+                      </>
+                    ) : null || (showResults.isShowed && showResults.val === '3') ? (
+                      <>
+                        <BarC chartID={dataSPW} valueField='count' categoryField='wilayah' />
+                      </>
+                    ) : null} */}
                   </div>
                 </div>
               </div>
@@ -193,7 +196,7 @@ export const Kepegawaian: FC = () => {
                   </h3>
                 </div>
                 <div className='card-body'>
-                  <div className='row'>
+                  {/* <div className='row'>
                     <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
@@ -206,26 +209,17 @@ export const Kepegawaian: FC = () => {
                         <option value='6'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                  </div>
-                  {showResults.isShowed && (
+                  </div> */}
+                  {data?.length >= 1 ? (
+                    <PieC chartID={data} valueField='count' categoryField='status_kepegawaian' />
+                  ) : (
+                    <>loading...</>
+                  )}
+                  {/* {showResults.isShowed && (
                     <>
                       <PieC chartID={data} valueField='count' categoryField='status_kepegawaian' />
                     </>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
@@ -238,7 +232,7 @@ export const Kepegawaian: FC = () => {
                   </h3>
                 </div>
                 <div className='card-body'>
-                  <div className='row'>
+                  {/* <div className='row'>
                     <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
@@ -251,22 +245,13 @@ export const Kepegawaian: FC = () => {
                         <option value='9'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                  </div>
-                  {showResults.isShowed && (
+                  </div> */}
+                  {dataPT?.length >= 1 ? (
+                    <PieC chartID={dataPT} valueField='count' categoryField='pendidikan_terakhir' />
+                  ) : (
+                    <>loading...</>
+                  )}
+                  {/* {showResults.isShowed && (
                     <>
                       <PieC
                         chartID={dataPT}
@@ -274,7 +259,7 @@ export const Kepegawaian: FC = () => {
                         categoryField='pendidikan_terakhir'
                       />
                     </>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
@@ -286,7 +271,7 @@ export const Kepegawaian: FC = () => {
                   </h3>
                 </div>
                 <div className='card-body'>
-                  <div className='row'>
+                  {/* <div className='row'>
                     <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
@@ -299,38 +284,29 @@ export const Kepegawaian: FC = () => {
                         <option value='12'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                  </div>
-                  {showResults.isShowed && (
+                  </div> */}
+                  {dataG?.length >= 1 ? (
+                    <PieC chartID={dataG} valueField='count' categoryField='golongan' />
+                  ) : (
+                    <>loading...</>
+                  )}
+                  {/* {showResults.isShowed && (
                     <>
                       <PieC chartID={dataG} valueField='count' categoryField='golongan' />
                     </>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
             <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title  text-white'>
+                  <h3 className='card-title  text-white text-center'>
                     Jumlah Personil Satpol PP Berdasarkan Jenis Eselon
                   </h3>
                 </div>
                 <div className='card-body'>
-                  <div className='row'>
+                  {/* <div className='row'>
                     <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
@@ -343,26 +319,17 @@ export const Kepegawaian: FC = () => {
                         <option value='15'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                  </div>
-                  {showResults.isShowed && (
+                  </div> */}
+                  {dataE?.length >= 1 ? (
+                    <PieC chartID={dataE} valueField='count' categoryField='eselon' />
+                  ) : (
+                    <>loading...</>
+                  )}
+                  {/* {showResults.isShowed && (
                     <>
                       <PieC chartID={dataE} valueField='count' categoryField='eselon' />
                     </>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
@@ -374,7 +341,7 @@ export const Kepegawaian: FC = () => {
                   </h3>
                 </div>
                 <div className='card-body'>
-                  <div className='row'>
+                  {/* <div className='row'>
                     <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
@@ -387,26 +354,17 @@ export const Kepegawaian: FC = () => {
                         <option value='21'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                  </div>
-                  {showResults.isShowed && (
-                    <>
-                      <PieC chartID={dataSP} valueField='count' categoryField='status_ppns' />
-                    </>
+                  </div> */}
+                  {dataSP?.length >= 1 ? (
+                    <PieC chartID={dataSP} valueField='count' categoryField='skpd' />
+                  ) : (
+                    <>loading...</>
                   )}
+                  {/* {showResults.isShowed && (
+                    <>
+                      <PieC chartID={dataSP} valueField='count' categoryField='skpd' />
+                    </>
+                  )} */}
                 </div>
               </div>
             </div>
@@ -418,7 +376,7 @@ export const Kepegawaian: FC = () => {
                   </h3>
                 </div>
                 <div className='card-body'>
-                  <div className='row'>
+                  {/* <div className='row'>
                     <div className='col-md-5 col-lg-5 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
@@ -431,34 +389,17 @@ export const Kepegawaian: FC = () => {
                         <option value='18'>Kecamatan</option>
                       </select>
                     </div>
-                    <div className='col-md-5 col-lg-5 col-sm-12'>
-                      <select
-                        className='form-select form-select-solid'
-                        aria-label='Select example'
-                        id='select_tahun'
-                        onChange={Find}
-                      >
-                        <option value='a'>2018</option>
-                        <option value='b'>2019</option>
-                        <option value='c'>2020</option>
-                        <option value='d'>2021</option>
-                        <option value='e'>2022</option>
-                      </select>
-                    </div>
-                  </div>
-                  {/* {showResults.isShowed && showResults.val === '16' ? (
+                  </div> */}
+                  {dataU?.length >= 1 ? (
+                    <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
+                  ) : (
+                    <>loading...</>
+                  )}
+                  {/* {showResults.isShowed && (
                     <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
+                      <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
                     </>
-                  ) : null || (showResults.isShowed && showResults.val === '17') ? (
-                    <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
-                    </>
-                  ) : null || (showResults.isShowed && showResults.val === '18') ? (
-                    <>
-                      <PieC chartID={dataE} valueField='jumlah' categoryField='range_umur' />
-                    </>
-                  ) : null} */}
+                  )} */}
                 </div>
               </div>
             </div>

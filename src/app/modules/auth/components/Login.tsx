@@ -21,6 +21,8 @@ const initialValues = {
   kata_sandi: 'qwerty',
 }
 
+export const SITE_KEY = `${process.env.REACT_APP_RECAPTCHA_SITE_TEST_KEY}`
+
 /*
   Formik+YUP+Typescript:
   https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
@@ -43,7 +45,7 @@ export function Login() {
           const {data: auth} = await login(values.no_pegawai, values.kata_sandi)
           saveAuth(auth)
           const {data: user} = await getUserByToken(auth.api_token)
-          setCurrentUser(user.data)
+          return setCurrentUser(user.data)
         }
         saveAuth(undefined)
         setSubmitting(false)
@@ -152,8 +154,7 @@ export function Login() {
       {/* begin::Recaptcha Wrapper */}
       <div className='d-flex justify-content-center w-md-100 mb-lg-5 mb-3'>
         <ReCAPTCHA
-          sitekey='6LeY5hAjAAAAANRE7la_kwyyzR3cyyFvre6sKvBn' // real test key
-          // sitekey='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' // unlimited test key from google
+          sitekey={`${process.env.REACT_APP_RECAPTCHA_SITE_KEY}`}
           onChange={(value) => {
             setCaptcha(value)
           }}
