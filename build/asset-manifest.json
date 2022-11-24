@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/static/css/main.c6b6fd63.css",
-    "main.js": "/static/js/main.83413899.js",
+    "main.js": "/static/js/main.080541e9.js",
     "static/css/712.8cdfbe23.chunk.css": "/static/css/712.8cdfbe23.chunk.css",
     "static/js/712.901d1610.chunk.js": "/static/js/712.901d1610.chunk.js",
     "static/js/311.2696a6a7.chunk.js": "/static/js/311.2696a6a7.chunk.js",
     "static/css/528.e2db8a94.chunk.css": "/static/css/528.e2db8a94.chunk.css",
-    "static/js/528.caf20516.chunk.js": "/static/js/528.caf20516.chunk.js",
+    "static/js/528.0162a77b.chunk.js": "/static/js/528.0162a77b.chunk.js",
     "static/js/671.b95cd488.chunk.js": "/static/js/671.b95cd488.chunk.js",
     "static/css/960.27a6cf2a.chunk.css": "/static/css/960.27a6cf2a.chunk.css",
     "static/js/960.90caa04b.chunk.js": "/static/js/960.90caa04b.chunk.js",
@@ -61,12 +61,12 @@
     "static/media/fa-v4compatibility.woff2": "/static/media/fa-v4compatibility.afac89562a5301459069.woff2",
     "index.html": "/index.html",
     "main.c6b6fd63.css.map": "/static/css/main.c6b6fd63.css.map",
-    "main.83413899.js.map": "/static/js/main.83413899.js.map",
+    "main.080541e9.js.map": "/static/js/main.080541e9.js.map",
     "712.8cdfbe23.chunk.css.map": "/static/css/712.8cdfbe23.chunk.css.map",
     "712.901d1610.chunk.js.map": "/static/js/712.901d1610.chunk.js.map",
     "311.2696a6a7.chunk.js.map": "/static/js/311.2696a6a7.chunk.js.map",
     "528.e2db8a94.chunk.css.map": "/static/css/528.e2db8a94.chunk.css.map",
-    "528.caf20516.chunk.js.map": "/static/js/528.caf20516.chunk.js.map",
+    "528.0162a77b.chunk.js.map": "/static/js/528.0162a77b.chunk.js.map",
     "671.b95cd488.chunk.js.map": "/static/js/671.b95cd488.chunk.js.map",
     "960.27a6cf2a.chunk.css.map": "/static/css/960.27a6cf2a.chunk.css.map",
     "960.90caa04b.chunk.js.map": "/static/js/960.90caa04b.chunk.js.map",
@@ -93,6 +93,6 @@
   },
   "entrypoints": [
     "static/css/main.c6b6fd63.css",
-    "static/js/main.83413899.js"
+    "static/js/main.080541e9.js"
   ]
 }
