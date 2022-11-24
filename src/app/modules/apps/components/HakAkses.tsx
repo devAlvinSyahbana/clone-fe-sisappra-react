@@ -1,7 +1,7 @@
-import React, {useState, useEffect, Fragment} from 'react'
+import {useState, useEffect} from 'react'
 import axios from 'axios'
 import CardGroup from 'react-bootstrap/CardGroup'
-import {Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -9,6 +9,7 @@ import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 import Accordion from 'react-bootstrap/Accordion'
+// import {ids} from 'webpack'
 // import {SelectOptionAutoCom} from '../KepegawaianInterface'
 
 //creat
@@ -75,15 +76,14 @@ export function HakAkses() {
   const [qParamFind, setUriFind] = useState({strparam: ''})
 
   const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [temp, setTemp] = useState([])
-  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+  const [valuesFormik, setValuesFormik] = useState<FormInput>({})
   const [jumlah_Pengguna, setJumlahPengguna] = useState<JumlahPengguna>()
-  // const [valuesFormikW, setValuesFormikW] = React.useState<wilayah>({})
-  // const [valuesFormikK, setValuesFormikK] = React.useState<kecamtan>({})
-  // const [valuesFormikJ, setValuesFormikJ] = React.useState<jabatan>({})
+
+  const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
+  const [modulPermission, setModulPermission] = useState<any[]>([])
+  const [akm, setAkm] = useState([])
 
   //check
   const [valStatCheck, setValStatCheck] = useState({val: ''})
@@ -91,7 +91,7 @@ export function HakAkses() {
   useEffect(() => {
     const fetchData = async () => {
       const jumlah_Pengguna = await axios.get(
-        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data`
+        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/1`
       )
 
       setJumlahPengguna(jumlah_Pengguna.data.data)
@@ -99,17 +99,19 @@ export function HakAkses() {
     fetchDT(1)
     fetchData()
     fetchUsers()
+    fetchPermission()
     fetchMapping()
   }, [qParamFind])
+
   async function fetchDT(page: number) {
-    setLoading(true)
     const response = await axios.get(
       `${MANAJEMEN_PENGGUNA_URL}/hak-akses/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
+    // console.log(data)
     setTotalRows(response.data.total_data)
-    setLoading(false)
   }
+
   const handleChangeStatAKses = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -236,24 +238,28 @@ export function HakAkses() {
 
   //akses kontrol
   const fetchUsers = async () => {
-    setLoading(true)
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
-    setTemp(value.data.data)
+    setAksesKontrol(value?.data?.data)
     setTotalRows(value.data.total)
-    setLoading(false)
-    return [temp, setTemp] as const
+    // console.log('cek akses kontrol', aksesKontrol)
   }
   //end akses kontrol
 
+  //modul permission
+  const fetchPermission = async () => {
+    const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/modul-permission/find`)
+    setModulPermission(value?.data?.data)
+    setTotalRows(value.data.total)
+    console.log('cek mp', modulPermission)
+  }
+  //modul permission
+
   // mapping
   const fetchMapping = async () => {
-    setLoading(true)
     const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/find`)
-    setTemp(value.data.data)
+    setAkm(value.data.data)
     setTotalRows(value.data.total)
-    console.log('cek mapping:', temp)
-    setLoading(false)
-    return [temp, setTemp] as const
+    // console.log('cek mapping:', akm)
   }
   //end mapping
 
@@ -265,7 +271,7 @@ export function HakAkses() {
           data.map((d: any, i: number) => {
             return (
               <>
-                <div className='col-md-4'>
+                <div className='col-md-4' key={d.kode}>
                   <div className='card card-flush h-md-100'>
                     <div className='card-header'>
                       <div className='card-title'>
@@ -353,49 +359,50 @@ export function HakAkses() {
                 </div>
               </div>
               {valStatAKses.val === 'Pelaksana' || valStatAKses.val === '' ? (
-                <div>
-                  <label htmlFor='' className='mb-3'>
-                    Wilayah/Bidang
-                  </label>
-                  <AsyncSelect
-                    value={
-                      valMasterBidangWilayah.value
-                        ? valMasterBidangWilayah
-                        : {value: '', label: 'Pilih'}
-                    }
-                    loadOptions={loadOptionsbidangwilayah}
-                    defaultOptions
-                    onChange={handleChangeInputKota}
-                  />
-                </div>
-              ) : null}
-              {valStatAKses.val === 'Pelaksana' || valStatAKses.val === '' ? (
-                <div>
-                  <label htmlFor='' className='mb-3'>
-                    Kecamtan
-                  </label>
+                <>
+                  <div>
+                    <label htmlFor='' className='mb-3'>
+                      Wilayah/Bidang
+                    </label>
+                    <AsyncSelect
+                      value={
+                        valMasterBidangWilayah.value
+                          ? valMasterBidangWilayah
+                          : {value: '', label: 'Pilih'}
+                      }
+                      loadOptions={loadOptionsbidangwilayah}
+                      defaultOptions
+                      onChange={handleChangeInputKota}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor='' className='mb-3'>
+                      Kecamatan
+                    </label>
 
-                  <AsyncSelect
-                    value={
-                      valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}
-                    }
-                    loadOptions={loadOptionsKecamatan}
-                    onChange={handleChangeInputKecamatan}
-                  />
-                </div>
+                    <AsyncSelect
+                      value={
+                        valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}
+                      }
+                      loadOptions={loadOptionsKecamatan}
+                      onChange={handleChangeInputKecamatan}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor='' className='mb-3'>
+                      Jabatan
+                    </label>
+                    <AsyncSelect
+                      value={
+                        valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}
+                      }
+                      loadOptions={loadOptionsJabatan}
+                      onChange={handleChangeInputJabatan}
+                    />
+                  </div>
+                </>
               ) : null}
-              {valStatAKses.val === 'Pelaksana' || valStatAKses.val === '' ? (
-                <div>
-                  <label htmlFor='' className='mb-3'>
-                    Jabatan
-                  </label>
-                  <AsyncSelect
-                    value={valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}}
-                    loadOptions={loadOptionsJabatan}
-                    onChange={handleChangeInputJabatan}
-                  />
-                </div>
-              ) : null}
+
               {valStatAKses.val === 'Non-Pelaksana' || valStatAKses.val === '' ? (
                 <div>
                   <label htmlFor='' className='mb-3'>
@@ -411,1497 +418,68 @@ export function HakAkses() {
               ) : null}
               {['checkbox'].map((type) => (
                 <div className='fv-row'>
+                  <span className='fs-5 fw-bold form-label mb-2'>Akses Kontrol</span>
                   <div className='table-responsive'>
-                    <table className='table align-middle table-row-dashed fs-6 gy-5'>
-                      <tbody className='text-gray-600 fw-semibold'>
-                        <label className='fs-5 fw-bold form-label mb-2'>Akses Kontrol</label>
-                        {data &&
-                          data.length > 0 &&
-                          data.map((d: any, i: number) => {
+                    <div className='table align-middle table-row-dashed fs-6 gy-5'>
+                      <div className='text-gray-600 fw-semibold'>
+                        {aksesKontrol &&
+                          aksesKontrol.length > 0 &&
+                          aksesKontrol.map((ak: any) => {
                             return (
                               <>
                                 {/* Dashboard */}
-                                <Accordion defaultActiveKey='0'>
-                                  <Accordion.Item eventKey='1'>
-                                    <Accordion.Header>
-                                      <h3>Dashboard</h3>
-                                    </Accordion.Header>
-                                    <Accordion.Body>
-                                      <tr>
-                                        <td className='text-gray-800'>
-                                          <h3>Dashboard</h3>
-                                        </td>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <h5 className='card-title m-0'>Dashboard Kepegawaian</h5>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                            <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Lihat</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <h5 className='text-gray-800'>
-                                          Dashboard Sarana & Prasarana
-                                        </h5>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                            <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Lihat</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <h5 className='text-gray-800'>
-                                          Dashboard Penegakan Perda dan Perkada
-                                        </h5>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                            <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Lihat</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <h5 className='text-gray-800'>
-                                          Dashboard Ketentraman dan Ketertiban Umum
-                                        </h5>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                            <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Lihat</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <h5 className='text-gray-800'>
-                                          Dashboard Wasdak Protokol Kesehatan(PPKM)
-                                        </h5>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                            <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Lihat</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <h5 className='text-gray-800'>
-                                          Dashboard Peta Titik Rawan
-                                        </h5>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                            <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Lihat</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <h5 className='text-gray-800'>
-                                          Dashboard Peta Titik Reklame
-                                        </h5>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                            <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Lihat</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <h5 className='text-gray-800'>Dashboard Ploting Anggota</h5>
-                                        <td>
-                                          <div className='d-flex'>
-                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Akses</span>
-                                            </label>
-                                            <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                              <Form.Check />
-                                              <span className='form-check-label'>Lihat</span>
-                                            </label>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    </Accordion.Body>
-                                  </Accordion.Item>
-                                </Accordion>
+                                {ak.level.split('-').length < 2 ? (
+                                  <Accordion key={ak.id} defaultActiveKey='0'>
+                                    <Accordion.Item eventKey='1'>
+                                      <Accordion.Header>
+                                        <h3>{ak.modul}</h3>
+                                      </Accordion.Header>
+                                      <Accordion.Body>
+                                        {aksesKontrol.map((ak2: any) => {
+                                          return (
+                                            <>
+                                              {ak2.level.split('-')[0] === ak.level ? (
+                                                <div className='d-flex align-items-center py-4 mb-4'>
+                                                  <h5 className='card-title m-0 w-50'>
+                                                    {ak2.modul}
+                                                  </h5>
+                                                  <div className='d-flex w-50'>
+                                                    {modulPermission.map((mp: any) => {
+                                                      return (
+                                                        <>
+                                                          {mp.akses_kontrol === ak2.id ? (
+                                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                                                              <Form.Check />
+                                                              <span className='form-check-label'>
+                                                                {mp.nama_permission}
+                                                              </span>
+                                                            </label>
+                                                          ) : (
+                                                            <></>
+                                                          )}
+                                                        </>
+                                                      )
+                                                    })}
+                                                  </div>
+                                                </div>
+                                              ) : (
+                                                <></>
+                                              )}
+                                            </>
+                                          )
+                                        })}
+                                      </Accordion.Body>
+                                    </Accordion.Item>
+                                  </Accordion>
+                                ) : (
+                                  <></>
+                                )}
                                 {/* end Dashboard */}
                               </>
                             )
                           })}
-                        {/* Dashboard
-                        <Accordion defaultActiveKey='0'>
-                          <Accordion.Item eventKey='1'>
-                            <Accordion.Header>
-                              <h3>Dashboard</h3>
-                            </Accordion.Header>
-                            <Accordion.Body>
-                              <tr>
-                                <td className='text-gray-800'>
-                                  <h3>Dashboard</h3>
-                                </td>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='card-title m-0'>Dashboard Kepegawaian</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Dashboard Sarana & Prasarana</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>
-                                  Dashboard Penegakan Perda dan Perkada
-                                </h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>
-                                  Dashboard Ketentraman dan Ketertiban Umum
-                                </h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>
-                                  Dashboard Wasdak Protokol Kesehatan(PPKM)
-                                </h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Dashboard Peta Titik Rawan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Dashboard Peta Titik Reklame</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Dashboard Ploting Anggota</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Accordion>
-                        {/* end Dashboard */}
-                        {/* Pelaporan */}
-                        {/* <Accordion defaultActiveKey='0'>
-                          <Accordion.Item eventKey='1'>
-                            <Accordion.Header>
-                              <h3>Pelaporan</h3>
-                            </Accordion.Header>
-                            <Accordion.Body>
-                              <tr>
-                                <td className='text-gray-800'>
-                                  <h3>Pelaporan</h3>
-                                </td>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Laporan Kegiatan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Laporan Kejadian</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Laporan Pengawasan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Laporan Tamu Daerah</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Accordion> */}
-                        {/* Kepegawai */}
-                        {/* <Accordion defaultActiveKey='0'>
-                          <Accordion.Item eventKey='1'>
-                            <Accordion.Header>
-                              <h3>Kepegawai</h3>
-                            </Accordion.Header>
-                            <Accordion.Body>
-                              <tr>
-                                <td className='text-gray-800'>
-                                  <h3>Kepegawai</h3>
-                                </td>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Informasi Data AKses</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Hirarki AKses</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Laporan Rekapitulasi AKses</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Laporan Rekapitulasi AKses</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Daftar Urut Kepegawain</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>
-                                  Rekapitulasi Data AKses yang Pensiun
-                                </h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>
-                                  Rekapitulasi Data AKses yang Naik Pangkat
-                                </h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>
-                                  Rekapitulasi Data AKses Pejabat Struktural
-                                </h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>
-                                  Rekapitulasi Data Pejabat Fungsional Pol PP (JFT)
-                                </h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Penyidik AKses Negri Sipil (PPNS)</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Kehadiran AKses</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jadwal Piket</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Accordion> */}
-                        {/* Sarana & Prasarana */}
-                        {/* <Accordion defaultActiveKey='0'>
-                          <Accordion.Item eventKey='1'>
-                            <Accordion.Header>
-                              <h3>Sarana & Prasarana</h3>
-                            </Accordion.Header>
-                            <Accordion.Body>
-                              <tr>
-                                <td className='text-gray-800'>
-                                  <h3>Sarana & Prasarana</h3>
-                                </td>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Laporan Sarana & Prasarana</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Unduh</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Accordion> */}
-                        {/* Master */}
-                        {/* <Accordion defaultActiveKey='0'>
-                          <Accordion.Item eventKey='1'>
-                            <Accordion.Header>
-                              <h3>Master</h3>
-                            </Accordion.Header>
-                            <Accordion.Body>
-                              <tr>
-                                <td className='text-gray-800'>
-                                  <h3>Master</h3>
-                                </td>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Kota</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>SKPD</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Pangkat</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Agama</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Korban Jiwa</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Kecamatan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Kelurahan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Kegiatan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Kejadian</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Instansi Terkait</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Bantuan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Korban Material</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Pertolongan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Perda / Perkada</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Penindkan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Pelanggaran</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Tempat Pelaksana</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Pendidikan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Sarana & Prasana</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Golongan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Eselon</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jabatan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Penyelesaian</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Sumber Informasi</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <h5 className='text-gray-800'>Jenis Pendidikan</h5>
-                                <td>
-                                  <div className='d-flex'>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Akses</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Lihat</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Tambah</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-1`} />
-                                      <span className='form-check-label'>Edit</span>
-                                    </label>
-                                    <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                      <Form.Check inline id={`inline-${type}-4`} />
-                                      <span className='form-check-label'>Hapus</span>
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Accordion> */}
-                      </tbody>
-                    </table>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
