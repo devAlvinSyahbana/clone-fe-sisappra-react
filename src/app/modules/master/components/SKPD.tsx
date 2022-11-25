@@ -289,8 +289,6 @@ export function SKPD() {
   // START :: VIEW
   useEffect(() => {
     fetchUsers(1)
-    console.log('cek kota by temp:', temp)
-    // test
   }, [])
 
   useEffect(() => {
@@ -309,20 +307,11 @@ export function SKPD() {
   const fetchUsers = async (page: any) => {
     setLoading(true)
     const value = await axios.get(`${SKPD_URL}/find`)
-
-    // console.log('cek kota:', value.data.data)
-    // let newid = value.data.data
-    // for (let i = 0; i < temp.length; i++) {
-    //   newid[i].id = i + 1
-    // }
     let items = value.data.data
     Array.from(items).forEach((item: any, index: any) => {
       item.serial = index + 1
     })
     setTemp(items)
-    // setTemp(value.data.data)
-
-    // return [data, setTemp] as const
   }
   // END :: VIEW
   const handleChangeFormik = (event: {
