@@ -218,7 +218,7 @@ export function AksesKontrol() {
       selector: (row: any) => row.modul,
     },
     {
-      name: 'Hak Akses Kode',
+      name: 'Hak Akses',
       sortable: true,
       sortField: 'kode',
       selector: (row: any) => row.kode,
@@ -437,8 +437,8 @@ export function AksesKontrol() {
             type='text'
             className='form-control form-control form-control-solid'
             name='nama'
-            // value={valNamaLengkap.val}
-            // onChange={handleChangeInputNamaLengkap}
+            value={valFilterModul.val}
+            onChange={handleChangeInputModul}
             placeholder='Nama / Hak Akses'
           />
         </div>

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import {Link, useNavigate, useLocation} from 'react-router-dom'
+import {Link, useNavigate, useLocation, useParams} from 'react-router-dom'
 import DataTable, {createTheme, ExpanderComponentProps} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -20,6 +20,7 @@ import clsx from 'clsx'
 
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
 export const MODUL_PERMISSION_URL = `${API_URL}/manajemen-pengguna/modul-permission`
 
 // Theme for dark or light interface
@@ -143,7 +144,7 @@ const reactSelectDarkThem = {
 }
 
 export interface FormInput {
-  akses_kontrol?: string
+  akses_kontrol?: number
   nama_permission?: string
   modul?: string
   status?: number
@@ -195,12 +196,12 @@ export function ManajemenPermission() {
       sortable: true,
       sortField: 'nama_permission',
     },
-    {
-      name: 'Akses Kontrol',
-      selector: (row: any) => row.akses_kontrol,
-      sortable: true,
-      sortField: 'akses_kontrol',
-    },
+    // {
+    //   name: 'Akses Kontrol',
+    //   selector: (row: any) => row.akses_kontrol,
+    //   sortable: true,
+    //   sortField: 'akses_kontrol',
+    // },
     {
       name: 'Aksi',
       sortable: false,
@@ -209,9 +210,12 @@ export function ManajemenPermission() {
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='mb-2'>
-              <button onClick={() => konfirDel(record.id)}>Hapus</button>
-            </div>
+            <button
+              className='btn btn-light-danger btn-sm me-2'
+              onClick={() => konfirDel(record.id)}
+            >
+              Hapus
+            </button>
           </Fragment>
         )
       },
@@ -223,21 +227,30 @@ export function ManajemenPermission() {
     fetchUsers()
   }, [])
 
+  const [nama, setNama] = useState<FormInput>()
+  const {id} = useParams()
+
   const location: any = useLocation()
 
   const fetchUsers = async () => {
     setLoading(true)
     const value = await axios.get(`${MODUL_PERMISSION_URL}/find`)
-    const currentMenu = location.state.id_akses
+    const nama = await axios.get(`${AKSES_KONTROL_URL}/findone/${id}`)
+    const currentMenu = nama.data.data.id
     const manage = value.data.data.filter((item: any) =>
       item.akses_kontrol == currentMenu ? currentMenu : ''
     )
+    // const currentMenu = location.state.id_akses
+    // const manage = value.data.data.filter((item: any) =>
+    //   item.akses_kontrol == currentMenu ? currentMenu : ''
+    // )
 
     setTemp(manage)
-    setTotalRows(value.data.data.length)
+    setTotalRows(manage.length)
     console.log(manage, currentMenu)
     setLoading(false)
     setValuesFormik({akses_kontrol: currentMenu})
+    setNama(nama.data.data)
     return [temp, setTemp] as const
   }
   // END :: VIEW
@@ -347,18 +360,8 @@ export function ManajemenPermission() {
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
         <label>
-          <Link to={`/apps/akses-kontrol`}>
-            <button className='btn btn-light' onClick={() => navigate(-1)}>
-              Back
-            </button>
-          </Link>
+          <h3>Modul Permission {nama?.modul}</h3>
         </label>
-        <div className='col d-flex justify-content-start'>
-          <h3>
-            Modul Permission
-            {/* {location.state.nama_modul} */}
-          </h3>
-        </div>
         <div className='col d-flex justify-content-end'>
           <Link to='#'>
             <button className='btn btn-primary me-2' onClick={doAdd}>
@@ -452,6 +455,12 @@ export function ManajemenPermission() {
             </div>
           }
         />
+      </div>
+      <div className='col d-flex justify-content-center mb-10'>
+        <button className='btn btn-light' onClick={() => navigate(-1)}>
+          <i className='fa-solid fa-arrow-left' />
+          Kembali
+        </button>
       </div>
       {/* end::Body */}
     </div>
