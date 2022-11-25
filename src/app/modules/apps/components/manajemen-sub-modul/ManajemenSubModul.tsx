@@ -400,16 +400,8 @@ export function ManajemenSubModul() {
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
         <label>
-          <button className='btn btn-light' onClick={() => navigate(-1)}>
-            Back
-          </button>
+          <h3>Manajemen Sub Modul {nama?.modul}</h3>
         </label>
-        <div className='col d-flex justify-content-start'>
-          <h3>
-            Manajemen Sub Modul {nama?.modul}
-            {/* {location.state.parentName == null ? null : location.state.parentName } */}
-          </h3>
-        </div>
         <div className='col d-flex justify-content-end'>
           <Link to=''>
             <button className='btn btn-primary me-2' onClick={doAdd}>
@@ -521,6 +513,12 @@ export function ManajemenSubModul() {
             </div>
           }
         />
+      </div>
+      <div className='col d-flex justify-content-center mb-10'>
+        <button className='btn btn-light' onClick={() => navigate(-1)}>
+          <i className='fa-solid fa-arrow-left' />
+          Kembali
+        </button>
       </div>
       {/* end::Body */}
     </div>

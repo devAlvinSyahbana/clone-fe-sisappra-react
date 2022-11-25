@@ -196,12 +196,12 @@ export function ManajemenPermission() {
       sortable: true,
       sortField: 'nama_permission',
     },
-    {
-      name: 'Akses Kontrol',
-      selector: (row: any) => row.akses_kontrol,
-      sortable: true,
-      sortField: 'akses_kontrol',
-    },
+    // {
+    //   name: 'Akses Kontrol',
+    //   selector: (row: any) => row.akses_kontrol,
+    //   sortable: true,
+    //   sortField: 'akses_kontrol',
+    // },
     {
       name: 'Aksi',
       sortable: false,
@@ -210,9 +210,12 @@ export function ManajemenPermission() {
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='mb-2'>
-              <button onClick={() => konfirDel(record.id)}>Hapus</button>
-            </div>
+            <button
+              className='btn btn-light-danger btn-sm me-2'
+              onClick={() => konfirDel(record.id)}
+            >
+              Hapus
+            </button>
           </Fragment>
         )
       },
@@ -357,15 +360,8 @@ export function ManajemenPermission() {
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
         <label>
-          <Link to={`/apps/akses-kontrol`}>
-            <button className='btn btn-light' onClick={() => navigate(-1)}>
-              Back
-            </button>
-          </Link>
-        </label>
-        <div className='col d-flex justify-content-start'>
           <h3>Modul Permission {nama?.modul}</h3>
-        </div>
+        </label>
         <div className='col d-flex justify-content-end'>
           <Link to='#'>
             <button className='btn btn-primary me-2' onClick={doAdd}>
@@ -459,6 +455,12 @@ export function ManajemenPermission() {
             </div>
           }
         />
+      </div>
+      <div className='col d-flex justify-content-center mb-10'>
+        <button className='btn btn-light' onClick={() => navigate(-1)}>
+          <i className='fa-solid fa-arrow-left' />
+          Kembali
+        </button>
       </div>
       {/* end::Body */}
     </div>
