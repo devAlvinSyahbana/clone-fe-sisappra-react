@@ -229,7 +229,6 @@ export function SKPD() {
       selector: (row: any) => row.serial,
       sortable: true,
       cell: (row: any) => {
-        // console.log(row)
         return <div className='mb-2 mt-2'>{row.serial}</div>
       },
     },
