@@ -1,7 +1,6 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import * as Yup from 'yup'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link, useNavigate, useParams, useLocation} from 'react-router-dom'
 import DataTable, {createTheme, ExpanderComponentProps} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -9,19 +8,20 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
-import {KTSVG} from '../../../../_metronic/helpers'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import {useFormik} from 'formik'
-import clsx from 'clsx'
+import {useFormik, FormikHelpers} from 'formik'
 import {Row} from 'react-bootstrap'
+import * as Yup from 'yup'
+import clsx from 'clsx'
 
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const JENIS_PENERTIBAN_URL = `${API_URL}/master/jenis-penertiban`
-
+export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
+export const AKSES_KONTROL2_URL = `${API_URL}/manajemen-penggunaakses-kontrol`
 
 // Theme for dark or light interface
 createTheme(
@@ -142,39 +142,22 @@ const reactSelectDarkThem = {
     borderColor: 'hsl(240deg 13% 13%)',
   }),
 }
-const customStyles = {
-  rows: {
-    style: {
-      minHeight: '105px', // override the row height
-    },
-  },
-  headCells: {
-    style: {
-      paddingLeft: '14px', // override the cell padding for head cells
-      paddingRight: '14px',
-    },
-  },
-  cells: {
-    style: {
-      paddingLeft: '14px', // override the cell padding for data cells
-      paddingRight: '14px',
-    },
-  },
-}
+
 export interface FormInput {
-  jenis_penertiban?: string
+  modul?: string
+  level?: string
 }
 
 const validatorForm = Yup.object().shape({
-  jenis_penertiban: Yup.string().required('Wajib diisi'),
+  modul: Yup.string().required('Wajib diisi'),
 })
 
-export function JenisPenertiban() {
+export function ManajemenSubModul() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
 
-  const [valFilterJenisPenertiban, setFilterJenisPenertiban] = useState({val: ''}) //4
+  const [valFilterModul, setFilterModul] = useState({val: ''})
 
   const [data, setData] = useState([])
   const [temp, setTemp] = useState([])
@@ -184,26 +167,6 @@ export function JenisPenertiban() {
   const handleClose = () => setShow(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-
-  const handleFilter = async () => { //3
-    let uriParam = ''
-    if (valFilterJenisPenertiban.val !== '') {
-      uriParam += `${valFilterJenisPenertiban.val}`
-    }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
-  }
-
-  const handleFilterReset = () => {
-    setFilterJenisPenertiban({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
-  }
-
-  const handleChangeInputJenisPenertiban = (event: { //5
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setFilterJenisPenertiban({ val: event.target.value })
-  }
 
   // START::CRUD
   const LoadingAnimation = (props: any) => {
@@ -220,28 +183,18 @@ export function JenisPenertiban() {
     )
   }
 
-
   let number = 1
   // Kolom table
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
-      cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{ number++ }</div>
-      },
+      selector: (row: any) => (row.level !== '' ? row.id : (row.id = '')),
     },
     {
-      name: 'Jenis Penertiban',
-      selector: (row: any) => row.jenis_penertiban,
+      name: 'Nama Akses Kontrol',
       sortable: true,
-      sortField: 'jenis_penertiban',
-    },
-    {
-      name: 'Kode',
-      selector: (row: any) => row.kode,
-      sortable: true,
-      sortField: 'kode',
+      sortField: 'modul',
+      selector: (row: any) => (row.level !== '' ? row.modul : (row.modul = '')),
     },
     {
       name: 'Aksi',
@@ -263,12 +216,13 @@ export function JenisPenertiban() {
                     title='Aksi'
                   >
                     <Dropdown.Item
-                      href='#'
                       onClick={() =>
-                        navigate('/master/JenisPenertiban/LihatJenisPenertiban/' + record.id, {replace: true})
+                        navigate(`/apps/akses-kontrol/manajemen-permission/` + record.id, {
+                          state: {id_akses: record.id, nama_modul: record.modul},
+                        })
                       }
                     >
-                      Detail
+                      Manajemen Permission
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => doEdit(record.id)}>Ubah</Dropdown.Item>
                     <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
@@ -285,30 +239,24 @@ export function JenisPenertiban() {
   ]
 
   // START :: VIEW
+  const location: any = useLocation()
+
   useEffect(() => {
-    fetchUsers(1)
+    fetchUsers()
   }, [])
 
-  useEffect(() => {
-    async function fetchDT(page: number) {
-      setLoading(true)
-      const response = await axios.get(`${JENIS_PENERTIBAN_URL}/filter/${qParamFind.strparam}`)
-      setTemp(response.data.data)
-      setTotalRows(response.data.total_data)
-      setLoading(false)
-    }
-    fetchUsers(1)
-    fetchDT(1)
-  }, [qParamFind, perPage])
-
-  const fetchUsers = async (page: any) => {
+  const fetchUsers = async () => {
     setLoading(true)
-    const value = await axios.get(`${JENIS_PENERTIBAN_URL}/find`)
+    const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
+    const currentMenu = location.state.parent + '-'
+    const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
 
-    setTemp(value.data.data)
-    console.log('cek kota:', temp)
-
-    return [data, setTemp] as const
+    setTemp(children)
+    setTotalRows(children.length)
+    console.log(location, children, currentMenu)
+    setLoading(false)
+    setValuesFormik({level: currentMenu})
+    return [temp, setTemp] as const
   }
   // END :: VIEW
   const handleChangeFormik = (event: {
@@ -321,8 +269,9 @@ export function JenisPenertiban() {
     }))
   }
 
-  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [aksi, setAksi] = useState(0)
+  const [valuesFormik, setValuesFormik] = useState<FormInput>()
+  // const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
 
   // ADD N UPDATE
   const formik = useFormik({
@@ -331,14 +280,11 @@ export function JenisPenertiban() {
     },
     validationSchema: validatorForm,
     enableReinitialize: true,
-    onSubmit: async (values, {setSubmitting}) => {
+    onSubmit: async (values, {setSubmitting}: FormikHelpers<FormInput>) => {
       setSubmitting(true)
-      const bodyparam: FormInput = {
-        jenis_penertiban: valuesFormik?.jenis_penertiban, //? valuesFormik.jenis_penertiban : '',
-      }
       try {
         if (aksi === 0) {
-          const response = await axios.post(`${JENIS_PENERTIBAN_URL}/create`, bodyparam)
+          const response = await axios.post(`${AKSES_KONTROL_URL}/create`, {...valuesFormik})
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -347,14 +293,13 @@ export function JenisPenertiban() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers(1)
+            fetchUsers()
             setSubmitting(false)
           }
         } else {
-          const response = await axios.put(
-            `${JENIS_PENERTIBAN_URL}/update/${idEditData.id}`,
-            bodyparam
-          )
+          const response = await axios.put(`${AKSES_KONTROL2_URL}/update/${idEditData.id}`, {
+            ...valuesFormik,
+          })
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -363,7 +308,7 @@ export function JenisPenertiban() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers(1)
+            fetchUsers()
             setSubmitting(false)
           }
         }
@@ -383,14 +328,14 @@ export function JenisPenertiban() {
     setShow(true)
     setAksi(0)
     setValuesFormik({
-      jenis_penertiban: '',
+      modul: '',
+      level: location.state.parent + '-',
     })
   }
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
-  
   // GET ID FOR UPDATE
   const getDetail = async (idparam: any) => {
-    const {data} = await axios.get(`${JENIS_PENERTIBAN_URL}/findone/${parseInt(idparam)}`)
+    const {data} = await axios.get(`${AKSES_KONTROL_URL}/findone/${parseInt(idparam)}`)
     setIdEditData((prevstate) => ({
       ...prevstate,
       id: parseInt(idparam),
@@ -406,7 +351,6 @@ export function JenisPenertiban() {
     setAksi(1)
     getDetail(id)
   }
-  
   // DELETE
   const konfirDel = (id: number) => {
     Swal.fire({
@@ -420,14 +364,9 @@ export function JenisPenertiban() {
       color: '#000000',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const bodyParam = {
-          data: {
-            deleted_by: 0,
-          },
-        }
-        const response = await axios.delete(`${JENIS_PENERTIBAN_URL}/delete/${id}`, bodyParam)
+        const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
         if (response) {
-          fetchUsers(1)
+          fetchUsers()
           Swal.fire({
             icon: 'success',
             text: 'Data berhasil dihapus',
@@ -454,33 +393,21 @@ export function JenisPenertiban() {
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
         <label>
-          <h3>Jenis Penertiban</h3>
+          <button className='btn btn-light' onClick={() => navigate(-1)}>
+            Back
+          </button>
         </label>
-        <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-          <input
-            type='text'
-            className='form-control form-control form-control-solid'
-            name='q'
-            value={valFilterJenisPenertiban.val} //4
-            onChange={handleChangeInputJenisPenertiban}
-            placeholder='Jenis Penertiban'
-            // 2
-          />
+        <div className='col d-flex justify-content-start'>
+          <h3>
+            Manajemen Sub Modul{' '}
+            {/* {location.state.parentName == null ? null : location.state.parentName} */}
+          </h3>
         </div>
-        <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-          <Link to='#' onClick={handleFilter}> 
-          {/* 1 */}
-            <button className='btn btn-light-primary me-2'>
-              <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
-              Cari
-            </button>
-          </Link>
-        </div>
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#i'>
+        <div className='col d-flex justify-content-end'>
+          <Link to=''>
             <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah 
+              Tambah Sub Modul
             </button>
           </Link>
         </div>
@@ -488,34 +415,60 @@ export function JenisPenertiban() {
       <>
         <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
           <Modal.Header closeButton>
-            <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Jenis Penertiban</Modal.Title>
+            <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Sub Modul</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className='row mt-2 '>
               <form onSubmit={formik.handleSubmit}>
                 <div className='form-group'>
-                  <Form.Label>Jenis Penertiban</Form.Label>
+                  <Form.Label>Nama Akses Kontrol</Form.Label>
                   <Form.Control
-                      name='jenis_penertiban'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid': formik.touched.jenis_penertiban && formik.errors.jenis_penertiban,
-                        },
-                        {
-                          'is-valid': formik.touched.jenis_penertiban && !formik.errors.jenis_penertiban,
-                        }
-                      )}
-                      onChange={handleChangeFormik}
-                      value={valuesFormik?.jenis_penertiban}
-                    />
-                    {formik.touched.jenis_penertiban && formik.errors.jenis_penertiban && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.jenis_penertiban}</span>
-                        </div>
-                      </div>
+                    name='modul'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.modul && formik.errors.modul,
+                      },
+                      {
+                        'is-valid': formik.touched.modul && !formik.errors.modul,
+                      }
                     )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.modul}
+                    placeholder='Masukkan Nama Akses Kontrol'
+                  />
+                  {formik.touched.modul && formik.errors.modul && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.modul}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className='form-group'>
+                  <Form.Label>Level</Form.Label>
+                  <Form.Control
+                    name='level'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.level && formik.errors.level,
+                      },
+                      {
+                        'is-valid': formik.touched.level && !formik.errors.level,
+                      }
+                    )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.level}
+                    placeholder='Masukkan Level Akses'
+                  />
+                  {formik.touched.level && formik.errors.level && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.level}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className='p-0 mt-6'>
                   <div className='text-center'>
@@ -546,16 +499,10 @@ export function JenisPenertiban() {
           columns={columns}
           data={temp}
           // progressPending={loading}
-          customStyles={customStyles}
           progressComponent={<LoadingAnimation />}
           pagination
           // paginationServer
           paginationTotalRows={totalRows}
-          
-          //    expandableRowsComponent={(row) => (
-          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
-          // )}
-          // expandableRowsComponent={ExpandedComponent}
           // onChangeRowsPerPage={handlePerRowsChange}
           // onChangePage={handlePageChange}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
@@ -572,26 +519,3 @@ export function JenisPenertiban() {
     </div>
   )
 }
-
-// const ExpandedComponent = ({ row, handleInputChange }) => {
-//   return (
-//     <div className="ExpandedComponent">
-//       <div className="ExpandedComponent_Row">
-//         <label>Surname</label>
-//         <input
-//           value={row.data.surname}
-//           onChange={(e) =>
-//             handleInputChange(row.data, "surname", e.target.value)
-//           }
-//         />
-//       </div>
-//       <div className="ExpandedComponent_Row">
-//         <label>Age</label>
-//         <input
-//           value={row.data.age}
-//           onChange={(e) => handleInputChange(row.data, "age", e.target.value)}
-//         />
-//       </div>
-//     </div>
-//   );
-// };

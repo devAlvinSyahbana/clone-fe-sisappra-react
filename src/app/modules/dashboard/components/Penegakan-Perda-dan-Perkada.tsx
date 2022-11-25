@@ -65,7 +65,7 @@ const PenegakanPerdadanPerkada: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-2 col-lg-2 col-sm-12'>
+                    {/* <div className='col-md-2 col-lg-2 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -76,7 +76,7 @@ const PenegakanPerdadanPerkada: FC = () => {
                         <option value='2'>Kabupaten</option>
                         <option value='3'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
@@ -103,7 +103,7 @@ const PenegakanPerdadanPerkada: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    <div className='col-md-2 col-lg-2 col-sm-12'>
+                    {/* <div className='col-md-2 col-lg-2 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -114,7 +114,7 @@ const PenegakanPerdadanPerkada: FC = () => {
                         <option value='5'>Kabupaten</option>
                         <option value='6'>Kecamatan</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   {showResults.isShowed && showResults.val === '4' ? (
                     <>
