@@ -221,7 +221,7 @@ export function SKPD() {
     )
   }
 
-  let number = 1
+  // let number = 1
   // Kolom table
   const columns = [
     {
