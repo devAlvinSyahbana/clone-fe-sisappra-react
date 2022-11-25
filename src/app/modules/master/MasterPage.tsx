@@ -82,6 +82,8 @@ import { UpdateSKPD } from './components/Update-master/UpdateSKPD'
 import { LihatSKPD } from './components/Lihat-master/LihatSKPD'
 
 import { Pendidikan } from './components/Pendidikan'
+import { LihatPendidikan } from './components/Lihat-master/LihatPendidikan'
+
 
 import { JenisSaranaPrasarana } from './components/JenisSaranaPrasarana'
 import { UpdateJenisSaranaPrasarana } from './components/Update-master/UpdateJenisSaranaPrasarana'
@@ -194,6 +196,15 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat SKPD</PageTitle>
               <LihatSKPD />
+            </>
+          }
+        />
+        <Route
+          path='Pendidikan/LihatPendidikan/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Pendidikan</PageTitle>
+              <LihatPendidikan />
             </>
           }
         />
