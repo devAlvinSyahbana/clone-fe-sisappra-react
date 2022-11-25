@@ -41,6 +41,7 @@ export function Registrasi() {
       setLoading(true)
       try {
         const {data: auth} = await register(values.no_pegawai, values.kata_sandi, values.email)
+        console.log(auth)
         if (auth.code === 208) {
           saveAuth(undefined)
           setStatus(
@@ -55,6 +56,7 @@ export function Registrasi() {
         }
         saveAuth(undefined)
         await getUserByToken(auth.api_token)
+        // setCurrentUser(user.data)
         setStatus(
           <div className='mb-lg-8 alert alert-success'>
             <div className='alert-text font-weight-bold'>
@@ -67,6 +69,7 @@ export function Registrasi() {
         )
         setSubmitting(false)
         return setLoading(false)
+        // saveAuth(auth)
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
@@ -99,6 +102,9 @@ export function Registrasi() {
       {formik.status ? (
         <>{formik.status}</>
       ) : (
+        // <div className='mb-lg-8 alert alert-danger'>
+        //   <div className='alert-text font-weight-bold'></div>
+        // </div>
         <div className='mb-lg-8 alert alert-info'>
           <div className='alert-text font-weight-bold'>Pastikan NRK/NPTT/NPJLP sudah terdaftar</div>
         </div>

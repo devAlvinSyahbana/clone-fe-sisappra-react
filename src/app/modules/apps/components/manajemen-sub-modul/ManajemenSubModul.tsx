@@ -1,6 +1,6 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import {Link, useNavigate, useLocation} from 'react-router-dom'
+import {Link, useNavigate, useParams, useLocation} from 'react-router-dom'
 import DataTable, {createTheme, ExpanderComponentProps} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -20,7 +20,8 @@ import clsx from 'clsx'
 
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const MODUL_PERMISSION_URL = `${API_URL}/manajemen-pengguna/modul-permission`
+export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
+export const AKSES_KONTROL2_URL = `${API_URL}/manajemen-penggunaakses-kontrol`
 
 // Theme for dark or light interface
 createTheme(
@@ -143,20 +144,20 @@ const reactSelectDarkThem = {
 }
 
 export interface FormInput {
-  akses_kontrol?: string
-  nama_permission?: string
   modul?: string
-  status?: number
+  level?: string
 }
 
 const validatorForm = Yup.object().shape({
-  nama_permission: Yup.string().required('Wajib diisi'),
+  modul: Yup.string().required('Wajib diisi'),
 })
 
-export function ManajemenPermission() {
+export function ManajemenSubModul() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
+
+  const [valFilterModul, setFilterModul] = useState({val: ''})
 
   const [data, setData] = useState([])
   const [temp, setTemp] = useState([])
@@ -187,19 +188,13 @@ export function ManajemenPermission() {
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => (row.level !== '' ? row.id : (row.id = '')),
     },
     {
-      name: 'Nama Permission',
-      selector: (row: any) => row.nama_permission,
+      name: 'Nama Akses Kontrol',
       sortable: true,
-      sortField: 'nama_permission',
-    },
-    {
-      name: 'Akses Kontrol',
-      selector: (row: any) => row.akses_kontrol,
-      sortable: true,
-      sortField: 'akses_kontrol',
+      sortField: 'modul',
+      selector: (row: any) => (row.level !== '' ? row.modul : (row.modul = '')),
     },
     {
       name: 'Aksi',
@@ -210,7 +205,32 @@ export function ManajemenPermission() {
         return (
           <Fragment>
             <div className='mb-2'>
-              <button onClick={() => konfirDel(record.id)}>Hapus</button>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item
+                      onClick={() =>
+                        navigate(`/apps/akses-kontrol/manajemen-permission/` + record.id, {
+                          state: {id_akses: record.id, nama_modul: record.modul},
+                        })
+                      }
+                    >
+                      Manajemen Permission
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => doEdit(record.id)}>Ubah</Dropdown.Item>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                      Hapus
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
             </div>
           </Fragment>
         )
@@ -219,25 +239,23 @@ export function ManajemenPermission() {
   ]
 
   // START :: VIEW
+  const location: any = useLocation()
+
   useEffect(() => {
     fetchUsers()
   }, [])
 
-  const location: any = useLocation()
-
   const fetchUsers = async () => {
     setLoading(true)
-    const value = await axios.get(`${MODUL_PERMISSION_URL}/find`)
-    const currentMenu = location.state.id_akses
-    const manage = value.data.data.filter((item: any) =>
-      item.akses_kontrol == currentMenu ? currentMenu : ''
-    )
+    const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
+    const currentMenu = location.state.parent + '-'
+    const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
 
-    setTemp(manage)
-    setTotalRows(value.data.data.length)
-    console.log(manage, currentMenu)
+    setTemp(children)
+    setTotalRows(children.length)
+    console.log(location, children, currentMenu)
     setLoading(false)
-    setValuesFormik({akses_kontrol: currentMenu})
+    setValuesFormik({level: currentMenu})
     return [temp, setTemp] as const
   }
   // END :: VIEW
@@ -253,8 +271,9 @@ export function ManajemenPermission() {
 
   const [aksi, setAksi] = useState(0)
   const [valuesFormik, setValuesFormik] = useState<FormInput>()
+  // const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
 
-  // ADD
+  // ADD N UPDATE
   const formik = useFormik({
     initialValues: {
       ...valuesFormik,
@@ -265,7 +284,20 @@ export function ManajemenPermission() {
       setSubmitting(true)
       try {
         if (aksi === 0) {
-          const response = await axios.post(`${MODUL_PERMISSION_URL}/create`, {
+          const response = await axios.post(`${AKSES_KONTROL_URL}/create`, {...valuesFormik})
+          if (response) {
+            Swal.fire({
+              icon: 'success',
+              text: 'Data berhasil disimpan',
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            handleClose()
+            fetchUsers()
+            setSubmitting(false)
+          }
+        } else {
+          const response = await axios.put(`${AKSES_KONTROL2_URL}/update/${idEditData.id}`, {
             ...valuesFormik,
           })
           if (response) {
@@ -277,7 +309,6 @@ export function ManajemenPermission() {
             })
             handleClose()
             fetchUsers()
-            console.log(location)
             setSubmitting(false)
           }
         }
@@ -297,14 +328,29 @@ export function ManajemenPermission() {
     setShow(true)
     setAksi(0)
     setValuesFormik({
-      nama_permission: '',
-      akses_kontrol: location.state.id_akses,
-      status: 0,
+      modul: '',
+      level: location.state.parent + '-',
     })
   }
+  const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
+  // GET ID FOR UPDATE
+  const getDetail = async (idparam: any) => {
+    const {data} = await axios.get(`${AKSES_KONTROL_URL}/findone/${parseInt(idparam)}`)
+    setIdEditData((prevstate) => ({
+      ...prevstate,
+      id: parseInt(idparam),
+    }))
+    setValuesFormik((prevstate) => ({
+      ...prevstate,
+      ...data.data,
+    }))
+  }
 
-  // const nama = location.state.nama_modul === '' ? '' : location.state.nama_modul
-
+  const doEdit = (id: any) => {
+    setShow(true)
+    setAksi(1)
+    getDetail(id)
+  }
   // DELETE
   const konfirDel = (id: number) => {
     Swal.fire({
@@ -318,7 +364,7 @@ export function ManajemenPermission() {
       color: '#000000',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await axios.delete(`${MODUL_PERMISSION_URL}/delete/${id}`)
+        const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
         if (response) {
           fetchUsers()
           Swal.fire({
@@ -347,23 +393,21 @@ export function ManajemenPermission() {
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
         <label>
-          <Link to={`/apps/akses-kontrol`}>
-            <button className='btn btn-light' onClick={() => navigate(-1)}>
-              Back
-            </button>
-          </Link>
+          <button className='btn btn-light' onClick={() => navigate(-1)}>
+            Back
+          </button>
         </label>
         <div className='col d-flex justify-content-start'>
           <h3>
-            Modul Permission
-            {/* {location.state.nama_modul} */}
+            Manajemen Sub Modul{' '}
+            {/* {location.state.parentName == null ? null : location.state.parentName} */}
           </h3>
         </div>
         <div className='col d-flex justify-content-end'>
-          <Link to='#'>
+          <Link to=''>
             <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah Permission
+              Tambah Sub Modul
             </button>
           </Link>
         </div>
@@ -371,45 +415,60 @@ export function ManajemenPermission() {
       <>
         <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
           <Modal.Header closeButton>
-            <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Akses Kontrol</Modal.Title>
+            <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Sub Modul</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className='row mt-2 '>
               <form onSubmit={formik.handleSubmit}>
                 <div className='form-group'>
-                  <Form.Label>Nama Permission</Form.Label>
+                  <Form.Label>Nama Akses Kontrol</Form.Label>
                   <Form.Control
-                    name='nama_permission'
+                    name='modul'
                     className={clsx(
                       'form-control form-control-solid mb-1',
                       {
-                        'is-invalid':
-                          formik.touched.nama_permission && formik.errors.nama_permission,
+                        'is-invalid': formik.touched.modul && formik.errors.modul,
                       },
                       {
-                        'is-valid':
-                          formik.touched.nama_permission && !formik.errors.nama_permission,
+                        'is-valid': formik.touched.modul && !formik.errors.modul,
                       }
                     )}
                     onChange={handleChangeFormik}
-                    value={valuesFormik?.nama_permission}
-                    placeholder='Masukkan Nama Permission'
+                    value={valuesFormik?.modul}
+                    placeholder='Masukkan Nama Akses Kontrol'
                   />
-                  {formik.touched.nama_permission && formik.errors.nama_permission && (
+                  {formik.touched.modul && formik.errors.modul && (
                     <div className='fv-plugins-message-container'>
                       <div className='fv-help-block'>
-                        <span role='alert'>{formik.errors.nama_permission}</span>
+                        <span role='alert'>{formik.errors.modul}</span>
                       </div>
                     </div>
                   )}
+                </div>
+                <div className='form-group'>
+                  <Form.Label>Level</Form.Label>
                   <Form.Control
-                    name='akses_kontrol'
-                    className='form-control form-control-solid mb-1'
+                    name='level'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.level && formik.errors.level,
+                      },
+                      {
+                        'is-valid': formik.touched.level && !formik.errors.level,
+                      }
+                    )}
                     onChange={handleChangeFormik}
-                    value={valuesFormik?.akses_kontrol}
-                    placeholder='Masukkan Nama Permission'
-                    hidden
+                    value={valuesFormik?.level}
+                    placeholder='Masukkan Level Akses'
                   />
+                  {formik.touched.level && formik.errors.level && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.level}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className='p-0 mt-6'>
                   <div className='text-center'>
@@ -439,10 +498,13 @@ export function ManajemenPermission() {
         <DataTable
           columns={columns}
           data={temp}
-          progressPending={loading}
+          // progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
+          // paginationServer
           paginationTotalRows={totalRows}
+          // onChangeRowsPerPage={handlePerRowsChange}
+          // onChangePage={handlePageChange}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
           noDataComponent={
             <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>

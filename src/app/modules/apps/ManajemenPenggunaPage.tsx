@@ -5,6 +5,7 @@ import {Group} from './components/Group'
 
 import {AksesKontrol} from './components/AksesKontrol'
 import {ManajemenPermission} from './components/manajemen-permission/ManajemenPermission'
+import {ManajemenSubModul} from './components/manajemen-sub-modul/ManajemenSubModul'
 
 import {AddDataPengguna} from './components/add-data-pengguna/AddDataPengguna'
 import {UpdateDataPengguna} from './components/update-data-pengguna/UpdateDataPengguna'
@@ -100,6 +101,16 @@ const ManajemenPenggunaPage = () => {
             </>
           }
         />
+        <Route
+          // path='akses-kontrol/manajemen-sub-modul'
+          path='akses-kontrol/manajemen-sub-modul/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Manajemen Sub Modul</PageTitle>
+              <ManajemenSubModul />
+            </>
+          }
+        />
 
         <Route
           path='hak-akses'
@@ -111,7 +122,7 @@ const ManajemenPenggunaPage = () => {
           }
         />
         <Route
-          path='detail-hak-akses/DetailHakAkses'
+          path='detail-hak-akses/DetailHakAkses/:id'
           element={
             <>
               <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Detail Hak Akses</PageTitle>
@@ -132,7 +143,7 @@ const ManajemenPenggunaPage = () => {
           path='update-hak-akses/UpdateHakAkses/:id'
           element={
             <>
-              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Update Hak Akses</PageTitle>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Detail Hak Akses</PageTitle>
               <UpdateHakAkses />
             </>
           }
