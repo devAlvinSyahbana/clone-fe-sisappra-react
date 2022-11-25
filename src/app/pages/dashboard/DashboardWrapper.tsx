@@ -17,11 +17,11 @@ const DashboardPage: FC = () => (
         />
       </div>
       <div className='col-xxl-12'>
-        <MixedWidget10
+        {/* <MixedWidget10
           className='card-xxl-stretch-50 mb-5 mb-xl-8'
           chartColor='primary'
           chartHeight='150px'
-        />
+        /> */}
         {/* <MixedWidget11
           className='card-xxl-stretch-50 mb-5 mb-xl-8'
           chartColor='primary'
