@@ -245,16 +245,23 @@ export function ManajemenSubModul() {
     fetchUsers()
   }, [])
 
+  const [nama, setNama] = useState<FormInput>()
+  const {id} = useParams()
+
   const fetchUsers = async () => {
     setLoading(true)
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
-    const currentMenu = location.state.parent + '-'
+    const nama = await axios.get(`${AKSES_KONTROL_URL}/findone/${id}`)
+    const currentMenu = nama.data.data.level + '-'
     const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
+    // const currentMenu = location.state.parent + '-'
+    // const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
 
     setTemp(children)
     setTotalRows(children.length)
     console.log(location, children, currentMenu)
     setLoading(false)
+    setNama(nama.data.data)
     setValuesFormik({level: currentMenu})
     return [temp, setTemp] as const
   }
@@ -393,16 +400,8 @@ export function ManajemenSubModul() {
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
         <label>
-          <button className='btn btn-light' onClick={() => navigate(-1)}>
-            Back
-          </button>
+          <h3>Manajemen Sub Modul {nama?.modul}</h3>
         </label>
-        <div className='col d-flex justify-content-start'>
-          <h3>
-            Manajemen Sub Modul{' '}
-            {/* {location.state.parentName == null ? null : location.state.parentName} */}
-          </h3>
-        </div>
         <div className='col d-flex justify-content-end'>
           <Link to=''>
             <button className='btn btn-primary me-2' onClick={doAdd}>
@@ -514,6 +513,12 @@ export function ManajemenSubModul() {
             </div>
           }
         />
+      </div>
+      <div className='col d-flex justify-content-center mb-10'>
+        <button className='btn btn-light' onClick={() => navigate(-1)}>
+          <i className='fa-solid fa-arrow-left' />
+          Kembali
+        </button>
       </div>
       {/* end::Body */}
     </div>
