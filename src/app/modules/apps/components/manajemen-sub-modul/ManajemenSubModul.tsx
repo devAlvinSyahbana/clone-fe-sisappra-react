@@ -245,16 +245,23 @@ export function ManajemenSubModul() {
     fetchUsers()
   }, [])
 
+  const [nama, setNama] = useState<FormInput>()
+  const {id} = useParams()
+
   const fetchUsers = async () => {
     setLoading(true)
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
-    const currentMenu = location.state.parent + '-'
+    const nama = await axios.get(`${AKSES_KONTROL_URL}/findone/${id}`)
+    const currentMenu = nama.data.data.level + '-'
     const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
+    // const currentMenu = location.state.parent + '-'
+    // const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
 
     setTemp(children)
     setTotalRows(children.length)
     console.log(location, children, currentMenu)
     setLoading(false)
+    setNama(nama.data.data)
     setValuesFormik({level: currentMenu})
     return [temp, setTemp] as const
   }
@@ -399,8 +406,8 @@ export function ManajemenSubModul() {
         </label>
         <div className='col d-flex justify-content-start'>
           <h3>
-            Manajemen Sub Modul{' '}
-            {/* {location.state.parentName == null ? null : location.state.parentName} */}
+            Manajemen Sub Modul {nama?.modul}
+            {/* {location.state.parentName == null ? null : location.state.parentName } */}
           </h3>
         </div>
         <div className='col d-flex justify-content-end'>
