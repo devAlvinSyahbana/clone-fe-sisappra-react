@@ -251,7 +251,6 @@ export function HakAkses() {
     const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/find`)
     setTemp(value.data.data)
     setTotalRows(value.data.total)
-    console.log('cek mapping:', temp)
     setLoading(false)
     return [temp, setTemp] as const
   }
