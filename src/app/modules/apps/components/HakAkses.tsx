@@ -416,73 +416,65 @@ export function HakAkses() {
                   />
                 </div>
               ) : null}
-              {['checkbox'].map((type) => (
-                <div className='fv-row'>
-                  <span className='fs-5 fw-bold form-label mb-2'>Akses Kontrol</span>
-                  <div className='table-responsive'>
-                    <div className='table align-middle table-row-dashed fs-6 gy-5'>
-                      <div className='text-gray-600 fw-semibold'>
-                        {aksesKontrol &&
-                          aksesKontrol.length > 0 &&
-                          aksesKontrol.map((ak: any) => {
-                            return (
-                              <>
-                                {/* Dashboard */}
-                                {ak.level.split('-').length < 2 ? (
-                                  <Accordion key={ak.id} defaultActiveKey='0'>
-                                    <Accordion.Item eventKey='1'>
-                                      <Accordion.Header>
-                                        <h3>{ak.modul}</h3>
-                                      </Accordion.Header>
-                                      <Accordion.Body>
-                                        {aksesKontrol.map((ak2: any) => {
-                                          return (
-                                            <>
-                                              {ak2.level.split('-')[0] === ak.level ? (
-                                                <div className='d-flex align-items-center py-4 mb-4'>
-                                                  <h5 className='card-title m-0 w-50'>
-                                                    {ak2.modul}
-                                                  </h5>
-                                                  <div className='d-flex w-50'>
-                                                    {modulPermission.map((mp: any) => {
-                                                      return (
-                                                        <>
-                                                          {mp.akses_kontrol === ak2.id ? (
-                                                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                                              <Form.Check />
-                                                              <span className='form-check-label'>
-                                                                {mp.nama_permission}
-                                                              </span>
-                                                            </label>
-                                                          ) : (
-                                                            <></>
-                                                          )}
-                                                        </>
-                                                      )
-                                                    })}
-                                                  </div>
+              {/* Akses Kontrol */}
+              <div className='fv-row'>
+                <span className='fs-5 fw-bold form-label mb-2'>Akses Kontrol</span>
+                <div className='table-responsive'>
+                  <div className='table align-middle table-row-dashed fs-6 gy-5'>
+                    <div className='text-gray-600 fw-semibold'>
+                      {aksesKontrol &&
+                        aksesKontrol.length > 0 &&
+                        aksesKontrol.map((ak: any) => {
+                          return (
+                            <>
+                              {/* Dashboard */}
+                              {ak.level.split('-').length < 2 && (
+                                <Accordion key={ak.id} defaultActiveKey='0'>
+                                  <Accordion.Item eventKey='1'>
+                                    <Accordion.Header>
+                                      <h3>{ak.modul}</h3>
+                                    </Accordion.Header>
+                                    <Accordion.Body>
+                                      {aksesKontrol.map((ak2: any) => {
+                                        return (
+                                          <>
+                                            {ak2.level.split('-')[0] === ak.level && (
+                                              <div className='d-flex align-items-center py-4 mb-4'>
+                                                <h5 className='card-title m-0 w-50'>{ak2.modul}</h5>
+                                                <div className='d-flex w-50'>
+                                                  {modulPermission.map((mp: any) => {
+                                                    return (
+                                                      <>
+                                                        {mp.akses_kontrol === ak2.id && (
+                                                          <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                                                            <Form.Check />
+                                                            <span className='form-check-label'>
+                                                              {mp.nama_permission}
+                                                            </span>
+                                                          </label>
+                                                        )}
+                                                      </>
+                                                    )
+                                                  })}
                                                 </div>
-                                              ) : (
-                                                <></>
-                                              )}
-                                            </>
-                                          )
-                                        })}
-                                      </Accordion.Body>
-                                    </Accordion.Item>
-                                  </Accordion>
-                                ) : (
-                                  <></>
-                                )}
-                                {/* end Dashboard */}
-                              </>
-                            )
-                          })}
-                      </div>
+                                              </div>
+                                            )}
+                                          </>
+                                        )
+                                      })}
+                                    </Accordion.Body>
+                                  </Accordion.Item>
+                                </Accordion>
+                              )}
+                              {/* end Dashboard */}
+                            </>
+                          )
+                        })}
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
+              {/* Akses Kontrol */}
             </Modal.Body>
             <Modal.Footer>
               <Button variant='secondary' onClick={handleTambahClose}>
