@@ -20,7 +20,9 @@ export interface DefaultCTOField {
 }
 
 export interface DatePickerFieldProps extends DefaultCTOField {}
-export interface TimePickerFieldProps extends DefaultCTOField {}
+export interface TimePickerFieldProps extends DefaultCTOField {
+    range: boolean;
+}
 export interface SelectFieldProps extends DefaultCTOField {
     target: string;
 }
@@ -37,14 +39,14 @@ export const DatePickerField = ({ className, field, onChange }: FieldProps & Dat
     />
 )
 
-export const TimePickerField = ({ field, form, className, onChange }: FieldProps & TimePickerFieldProps) => (
+export const TimePickerField = ({ field, range, form, className, onChange }: FieldProps & TimePickerFieldProps) => (
     <DatePicker
         disableDayPicker
         containerClassName={className}
         inputClass="form-control"
         format="HH:mm:ss"
         plugins={[
-            <TimePicker defaultValue={field.value} />
+            <TimePicker />
         ]}
         onChange={(o:DateObject)=>{
             field.onChange({target:{name:field.name, value: o?.toString() }})

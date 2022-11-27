@@ -40,6 +40,9 @@ export const initialState: PelaporanKegiatanState = {
     list_jenis_penindakan: [],
     list_jenis_penyelesaian: [],
     list_jenis_usaha: [],
+
+    filter_jenis_kegiatan_id: 0,
+
     kegiatan__jenis_kegiatan_id: 0,
     kegiatan__jumlah_personil: 0,
     kegiatan__uraian_kegiatan: "",
@@ -69,6 +72,13 @@ export const initialState: PelaporanKegiatanState = {
     tindak_lanjut__denda__no_validasi_bank: "23423423",
 }
 
+export const createSchemaFilterPelaporanKegiatan = [
+    Yup.object({
+        filter_jenis_kegiatan_id: Yup.number().integer().moreThan(0).label('Jenis Kegiatan'),
+        filter_jenis_kegiatan_id_selection: Yup.object(),
+    })
+]
+
 export const createSchemaPelaporanKegiatan = [
     Yup.object({
         kegiatan__jenis_kegiatan_id: Yup.number().integer().moreThan(0).required().label('Jenis Kegiatan'),
@@ -76,7 +86,8 @@ export const createSchemaPelaporanKegiatan = [
         kegiatan__jumlah_personil: Yup.number().integer().moreThan(0).required().label('Jumlah Personil'),
         kegiatan__uraian_kegiatan: Yup.string().min(10).max(1000).required().label('Uraian Kegiatan'),
         kegiatan__tanggal: Yup.date().required().label('Tanggal Kegiatan'),
-        kegiatan__jam: Yup.string().required().label('Waktu Kegiatan'),
+        kegiatan__jam_start: Yup.string().required().label('Waktu Kegiatan'),
+        kegiatan__jam_end: Yup.string().required().label('Waktu Kegiatan'),
         kegiatan__lokasi: Yup.string().min(3).max(64).required().label('Lokasi Kegiatan'),
 
         tindak_lanjut__administrasi__jenis_pasal_id: Yup.number().integer().moreThan(0).required().label('Jenis Pasal'),

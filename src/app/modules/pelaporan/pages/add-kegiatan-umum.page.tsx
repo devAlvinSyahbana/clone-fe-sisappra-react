@@ -17,14 +17,14 @@ import {RootState} from "../../../redux/store";
 const excludeJenisKegiatan = ["SIDANG TIPIRING", "PENERTIBAN BANGUNAN", "KEGIATAN PPKM", "LAPORAN MASYARAKAT", "PENERTIBAN MINUMAN BERALKOHOL", "PENGAMANAN"]
 
 export const AddKegiatanUmumPage: FC = () => {
+    const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
     const dispatch = useDispatch()
-    //
 
     const updateJenisKegiatanList = () => {
         axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then(res => {
             const data = res.data.data
                 .map((d: any) => ({label: d.text, value: String(d.value)}))
-                .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+                // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
             dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))
         })
     }
@@ -51,7 +51,7 @@ export const AddKegiatanUmumPage: FC = () => {
         updateJenisPenindakanList()
     })
 
-    const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
+
 
     const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
 

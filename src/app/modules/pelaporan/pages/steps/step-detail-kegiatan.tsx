@@ -122,17 +122,35 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ handleChange, 
 
             <div className="mb-10">
                 <label className="required form-label">Waktu Kegiatan</label>
-                <Field
-                    name="kegiatan__jam"
-                    className="form-control"
-                    component={TimePickerField}
-                    onChange={(o:any)=>{
-                        dispatch(changedValue(ToFieldStateCE(o)))
-                    }}
-                />
-                <div className='text-danger mt-2'>
-                    <ErrorMessage name='kegiatan__jam' />
+                <div className="row">
+                    <div className="col">
+                        <Field
+                            name="kegiatan__jam_start"
+                            className="form-control"
+                            component={TimePickerField}
+                            onChange={(o:any)=>{
+                                dispatch(changedValue(ToFieldStateCE(o)))
+                            }}
+                        />
+                        <div className='text-danger mt-2'>
+                            <ErrorMessage name='kegiatan__jam_start' />
+                        </div>
+                    </div>
+                    <div className="col">
+                        <Field
+                            name="kegiatan__jam_end"
+                            className="form-control"
+                            component={TimePickerField}
+                            onChange={(o:any)=>{
+                                dispatch(changedValue(ToFieldStateCE(o)))
+                            }}
+                        />
+                        <div className='text-danger mt-2'>
+                            <ErrorMessage name='kegiatan__jam_end' />
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <div className="mb-10">
