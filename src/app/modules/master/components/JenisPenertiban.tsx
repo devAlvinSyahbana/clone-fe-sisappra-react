@@ -177,7 +177,7 @@ export function JenisPenertiban() {
   const [valFilterJenisPenertiban, setFilterJenisPenertiban] = useState({val: ''}) //4
 
   const [data, setData] = useState([])
-  const [temp, setTemp] = useState([])
+  const [temp, setTemp] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
@@ -226,9 +226,10 @@ export function JenisPenertiban() {
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
+      sortable: true,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{ number++ }</div>
+        return <div className='mb-2 mt-2'>{ row.serial }</div>
       },
     },
     {
@@ -542,7 +543,8 @@ export function JenisPenertiban() {
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5 w'>
-        <DataTable
+      {temp?.length > 0 && temp && (
+          <DataTable
           columns={columns}
           data={temp}
           // progressPending={loading}
@@ -567,6 +569,7 @@ export function JenisPenertiban() {
             </div>
           }
         />
+        )}
       </div>
       {/* end::Body */}
     </div>
