@@ -8,7 +8,7 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
   const chartID = props.chartID
   const valueField = props.valueField
   const categoryField = props.categoryField
-  console.log('Props Result', chartID)
+  console.log('Chart ID', categoryField)
   console.log({chartID})
 
   useLayoutEffect(() => {
@@ -19,9 +19,11 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
 
     var chart = root.container.children.push(
       am5xy.XYChart.new(root, {
+        panX: false,
         panY: false,
-        wheelY: 'zoomX',
-        layout: root.verticalLayout,
+        wheelX: "panX",
+        wheelY: "zoomX",
+        layout: root.verticalLayout
       })
     )
 
@@ -44,35 +46,23 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
 
     // Create series
     // Create series
-    var series1 = chart.series.push(
-      am5xy.ColumnSeries.new(root, {
-        name: 'Layak',
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: valueField,
-        categoryXField: categoryField != 'Tidak Layak'? categoryField : '',
-        tooltip: am5.Tooltip.new(root, {}),
-      })
-    )
-    series1.data.setAll(chartID)
-
-      // Create series
-      var series2 = chart.series.push(
+      var series1 = chart.series.push(
         am5xy.ColumnSeries.new(root, {
-          name: 'Tidak Layak',
           xAxis: xAxis,
           yAxis: yAxis,
           valueYField: valueField,
-          categoryXField: categoryField != 'Layak'? categoryField : '',
+          categoryXField: categoryField,
           tooltip: am5.Tooltip.new(root, {}),
         })
       )
-      series2.data.setAll(chartID)
+      series1.data.setAll(chartID)
 
     // Add legend
     var legend = chart.children.push(am5.Legend.new(root, {}))
     legend.data.setAll(chart.series.values)
+    
   }, [chartID, valueField, categoryField])
+
 
   return <div id={chartID} style={{height: 200}}></div>
 }
