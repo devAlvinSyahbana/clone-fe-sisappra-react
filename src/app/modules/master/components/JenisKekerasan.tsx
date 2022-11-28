@@ -179,7 +179,7 @@ export function JenisKekerasan() {
 
   const [data, setData] = useState([])
   const [temp, setTemp] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
@@ -299,14 +299,17 @@ export function JenisKekerasan() {
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchUsers = async (page: any) => {
+  const fetchUsers = async (page: any) => { //urutan 3
     setLoading(true)
     const value = await axios.get(`${JENIS_KEKERASAN_URL}/find`)
-
-    setTemp(value.data.data)
-    console.log('cek kota:', temp)
-
-    return [data, setTemp] as const
+    const timeout = setTimeout(() => {
+      let items = value.data.data
+    Array.from(items).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+    setTemp(items)
+    }, 150);
+    return () => clearTimeout(timeout)
   }
   // END :: VIEW
   const handleChangeFormik = (event: {
@@ -545,7 +548,7 @@ export function JenisKekerasan() {
           <DataTable
           columns={columns}
           data={temp}
-          // progressPending={loading}
+          progressPending={loading}
           customStyles={customStyles}
           progressComponent={<LoadingAnimation />}
           pagination
