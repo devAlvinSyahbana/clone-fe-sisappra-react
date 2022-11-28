@@ -2,43 +2,31 @@
 import React, {useState, useEffect, FC} from 'react'
 import axios from 'axios'
 import PieC from '../chart/piechart/piechart'
+import BarC from '../chart/barchart/barchart2'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SUM_SARANA_PRASARANA_URL = `${API_URL}/dashboard/sum-jenis-sarana_prasarana`
 
 const SaranadanPrasarana: FC = () => {
+  let kondisi = ''
   const [showResults, setShowResults] = useState({isShowed: false, val: ''})
   const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
-    console.log(typeof event.target.value)
-
-    if (event.target.value === '1') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '2') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '3') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '4') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '5') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '6') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
+    kondisi = event.target.value
+    fetchUsers(kondisi)
   }
 
   const [data, setData] = useState([])
 
   useEffect(() => {
-    fetchUsers(1)
+    fetchUsers('Layak')
   }, [])
 
-  const fetchUsers = async (page: any) => {
-    const response = await axios.get(`${SUM_SARANA_PRASARANA_URL}`)
+  const fetchUsers = async (kondisi : any) => {
+    const response = await axios.get(`${SUM_SARANA_PRASARANA_URL}`,{
+      params:{
+        kondisi : kondisi
+      }
+    })
 
     setData(response.data.data)
 
@@ -73,7 +61,7 @@ const SaranadanPrasarana: FC = () => {
                       </select>
                     </div> */}
                   </div>
-                  {showResults.isShowed && showResults.val === '1' ? (
+                  {/* {showResults.isShowed && showResults.val === '1' ? (
                     <>
                       <PieC chartID='pie-one' />
                     </>
@@ -85,7 +73,7 @@ const SaranadanPrasarana: FC = () => {
                     <>
                       <PieC chartID='pie-one' />
                     </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
@@ -97,21 +85,26 @@ const SaranadanPrasarana: FC = () => {
                   </h3>
                 </div>
                 <div className='card-body'>
+                  
                   <div className='row'>
-                    {/* <div className='col-md-2 col-lg-2 col-sm-12'>
+                    <div className='col-md-2 col-lg-2 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
                         id='select_status'
                         onChange={Find}
                       >
-                        <option value='4'>Provinsi</option>
-                        <option value='5'>Kabupaten</option>
-                        <option value='6'>Kecamatan</option>
+                        <option value='Layak'>Layak</option>
+                        <option value='Tidak Layak'>Tidak Layak</option>
                       </select>
-                    </div> */}
-                  </div>
-                  {showResults.isShowed && showResults.val === '4' ? (
+                    </div>
+                  {
+                  data?.length >= 1 ? (
+                    <BarC chartID={data} valueField='jumlah' categoryField="jenis_sarana_prasarana"/>
+                  ) : (
+                    <>loading...</>
+                  )
+                  /* {showResults.isShowed && showResults.val === '4' ? (
                     <>
                       <PieC
                         chartID={data}
@@ -135,7 +128,8 @@ const SaranadanPrasarana: FC = () => {
                         categoryField='jenis_sarana_prasarana'
                       />
                     </>
-                  ) : null}
+                  ) : null} */}
+                  </div>
                 </div>
               </div>
             </div>
