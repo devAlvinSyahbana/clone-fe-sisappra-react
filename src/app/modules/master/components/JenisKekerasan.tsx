@@ -227,9 +227,10 @@ export function JenisKekerasan() {
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
+      sortable: true,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{ number++ }</div>
+        return <div className='mb-2 mt-2'>{ row.serial }</div>
       },
     },
     {},
@@ -540,7 +541,8 @@ export function JenisKekerasan() {
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5 w'>
-        <DataTable
+      {temp?.length > 0 && temp && (
+          <DataTable
           columns={columns}
           data={temp}
           // progressPending={loading}
@@ -565,6 +567,7 @@ export function JenisKekerasan() {
             </div>
           }
         />
+        )}
       </div>
       {/* end::Body */}
     </div>

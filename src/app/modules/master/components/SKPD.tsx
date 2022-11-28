@@ -177,7 +177,7 @@ export function SKPD() {
 
   const [data, setData] = useState([])
   const [temp, setTemp] = useState<any[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
@@ -304,13 +304,18 @@ export function SKPD() {
   }, [qParamFind, perPage])
 
   const fetchUsers = async (page: any) => {
+    //urutan 3
     setLoading(true)
     const value = await axios.get(`${SKPD_URL}/find`)
-    let items = value.data.data
-    Array.from(items).forEach((item: any, index: any) => {
-      item.serial = index + 1
-    })
-    setTemp(items)
+    const timeout = setTimeout(() => {
+      let items = value.data.data
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
+      setLoading(false)
+    }, 50)
+    return () => clearTimeout(timeout)
   }
   // END :: VIEW
   const handleChangeFormik = (event: {
@@ -540,12 +545,12 @@ export function SKPD() {
           </Modal.Body>
         </Modal>
       </>
-      <div className='table-responsive mt-5 ms-5 me-5 w'>
-        {temp?.length > 0 && temp && (
+      {temp && temp?.length >= 1 && (
+        <div className='table-responsive mt-5 ms-5 me-5 w'>
           <DataTable
             columns={columns}
             data={temp}
-            // progressPending={loading}
+            progressPending={loading}
             customStyles={customStyles}
             progressComponent={<LoadingAnimation />}
             pagination
@@ -566,8 +571,8 @@ export function SKPD() {
               </div>
             }
           />
-        )}
-      </div>
+        </div>
+      )}
       {/* end::Body */}
     </div>
   )

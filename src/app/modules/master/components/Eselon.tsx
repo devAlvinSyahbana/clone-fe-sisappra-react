@@ -180,7 +180,7 @@ export function Eselon() {
   const [valFilterEselon, setFilterEselon] = useState({val: ''}) //4
 
   const [data, setData] = useState([])
-  const [temp, setTemp] = useState([])
+  const [temp, setTemp] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
@@ -229,9 +229,10 @@ export function Eselon() {
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
+      sortable: true,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{ number++ }</div>
+        return <div className='mb-2 mt-2'>{ row.serial }</div>
       },
     },
     {},
@@ -304,11 +305,10 @@ export function Eselon() {
   const fetchUsers = async (page: any) => {
     setLoading(true)
     const value = await axios.get(`${ESELON_URL}/find`)
-
-    setTemp(value.data.data)
-    console.log('cek kota:', temp)
-
-    return [data, setTemp] as const
+    let items = value.data.data 
+    Array.from(items).forEach((item: any, index: any) => {
+       item.serial = index + 1})
+    setTemp(items)
   }
   // END :: VIEW
   const handleChangeFormik = (event: {
@@ -543,12 +543,13 @@ export function Eselon() {
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5 w'>
-        <DataTable
+      {temp?.length > 0 && temp && (
+          <DataTable
           columns={columns}
           data={temp}
           // progressPending={loading}
-          progressComponent={<LoadingAnimation />}
           customStyles={customStyles}
+          progressComponent={<LoadingAnimation />}
           pagination
           // paginationServer
           paginationTotalRows={totalRows}
@@ -568,6 +569,7 @@ export function Eselon() {
             </div>
           }
         />
+        )}
       </div>
       {/* end::Body */}
     </div>
