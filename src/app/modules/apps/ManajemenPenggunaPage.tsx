@@ -5,6 +5,7 @@ import {Group} from './components/Group'
 
 import {AksesKontrol} from './components/AksesKontrol'
 import {ManajemenPermission} from './components/manajemen-permission/ManajemenPermission'
+import {ManajemenSubModul} from './components/manajemen-sub-modul/ManajemenSubModul'
 
 import {AddDataPengguna} from './components/add-data-pengguna/AddDataPengguna'
 import {UpdateDataPengguna} from './components/update-data-pengguna/UpdateDataPengguna'
@@ -97,6 +98,16 @@ const ManajemenPenggunaPage = () => {
             <>
               <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Manajemen Permission</PageTitle>
               <ManajemenPermission />
+            </>
+          }
+        />
+        <Route
+          // path='akses-kontrol/manajemen-sub-modul'
+          path='akses-kontrol/manajemen-sub-modul/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Manajemen Sub Modul</PageTitle>
+              <ManajemenSubModul />
             </>
           }
         />
