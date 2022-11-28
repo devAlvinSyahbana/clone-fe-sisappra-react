@@ -545,34 +545,33 @@ export function SKPD() {
           </Modal.Body>
         </Modal>
       </>
-      {temp && temp?.length >= 1 && (
-        <div className='table-responsive mt-5 ms-5 me-5 w'>
-          <DataTable
-            columns={columns}
-            data={temp}
-            progressPending={loading}
-            customStyles={customStyles}
-            progressComponent={<LoadingAnimation />}
-            pagination
-            // paginationServer
-            paginationTotalRows={totalRows}
-            //    expandableRowsComponent={(row) => (
-            //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
-            // )}
-            // expandableRowsComponent={ExpandedComponent}
-            // onChangeRowsPerPage={handlePerRowsChange}
-            // onChangePage={handlePageChange}
-            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-            noDataComponent={
-              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-                <div className='d-flex flex-column'>
-                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
-                </div>
+      <div className='table-responsive mt-5 ms-5 me-5 w'>
+        <DataTable
+          columns={columns}
+          data={temp}
+          progressPending={loading}
+          customStyles={customStyles}
+          progressComponent={<LoadingAnimation />}
+          pagination
+          // paginationServer
+          paginationTotalRows={totalRows}
+          //    expandableRowsComponent={(row) => (
+          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+          // )}
+          // expandableRowsComponent={ExpandedComponent}
+          // onChangeRowsPerPage={handlePerRowsChange}
+          // onChangePage={handlePageChange}
+          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+          noDataComponent={
+            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+              <div className='d-flex flex-column'>
+                <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
               </div>
-            }
-          />
-        </div>
-      )}
+            </div>
+          }
+        />
+      </div>
+
       {/* end::Body */}
     </div>
   )
