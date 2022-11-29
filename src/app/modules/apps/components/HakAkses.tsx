@@ -14,6 +14,9 @@ import Accordion from 'react-bootstrap/Accordion'
 
 //creat
 export interface FormInput {
+  wilayah_bidang?: any
+  kecamatan?: any
+  jabatan?: any
   nama_hak_akses?: string
   created_by?: number
 }
@@ -66,18 +69,14 @@ export function HakAkses() {
   const [showTambah, setTambahShow] = useState(false)
   const handleTambahClose = () => setTambahShow(false)
   const handleTambahShow = () => setTambahShow(true)
-  //non pelaksana
-  const [showNon, setNonShow] = useState(false)
-  const handleNonClose = () => setNonShow(false)
-  const handleNonShow = () => setNonShow(true)
-  //radio batton
+  //pelaksana & non plaksana
   const [valStatAKses, setValStatAKses] = useState({val: ''})
   const arrStatAKses = ['Pelaksana', 'Non-Pelaksana']
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind] = useState({strparam: ''})
 
   const [data, setData] = useState([])
   const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
+  const [perPage] = useState(10)
   const [valuesFormik, setValuesFormik] = useState<FormInput>({})
   const [jumlah_Pengguna, setJumlahPengguna] = useState<JumlahPengguna>()
 
@@ -85,13 +84,10 @@ export function HakAkses() {
   const [modulPermission, setModulPermission] = useState<any[]>([])
   const [akm, setAkm] = useState([])
 
-  //check
-  const [valStatCheck, setValStatCheck] = useState({val: ''})
-
   useEffect(() => {
     const fetchData = async () => {
       const jumlah_Pengguna = await axios.get(
-        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/1`
+        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/1 `
       )
 
       setJumlahPengguna(jumlah_Pengguna.data.data)
@@ -104,11 +100,8 @@ export function HakAkses() {
   }, [qParamFind])
 
   async function fetchDT(page: number) {
-    const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/hak-akses/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
-    )
+    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
     setData(response.data.data)
-    // console.log(data)
     setTotalRows(response.data.total_data)
   }
 
@@ -122,18 +115,23 @@ export function HakAkses() {
   //onSubmit
   const formik = useFormik({
     initialValues: {
+      wilayah_bidang: {value: '', label: 'Pilih'},
+      kecamatan: {value: '', label: 'Pilih'},
+      jabatan: {value: '', label: 'Pilih'},
       nama_hak_akses: '',
     },
     onSubmit: async (values) => {
-      let formData = new FormData()
       const bodyparam: FormInput = {
         nama_hak_akses: valuesFormik?.nama_hak_akses ? valuesFormik.nama_hak_akses : '',
+        wilayah_bidang: valMasterBidangWilayah?.value ? valMasterBidangWilayah.value : '',
+        kecamatan: valMasterPelaksana?.value ? valMasterPelaksana.value : '',
+        jabatan: valMasterJabatan?.value ? valMasterJabatan.value : '',
         created_by: 0,
       }
       try {
         const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
+        fetchDT(1)
         if (response) {
-          fetchDT(1)
           Swal.fire({
             icon: 'success',
             title: 'Data berhasil disimpan',
@@ -260,8 +258,8 @@ export function HakAkses() {
     setAkm(value.data.data)
     setTotalRows(value.data.total)
     // console.log('cek mapping:', akm)
-    setLoading(false)
-    return [temp, setTemp] as const
+    // setLoading(false)
+    // return [temp, setTemp] as const
   }
   //end mapping
 
@@ -278,6 +276,17 @@ export function HakAkses() {
                     <div className='card-header'>
                       <div className='card-title'>
                         <a>{d?.nama_hak_akses}</a>
+                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                          <a>{d?.wilayah_bidang}</a>
+                        </div>
+
+                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                          <a>{d?.kecamatan}</a>
+                        </div>
+
+                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                          <a>{d?.jabatan}</a>
+                        </div>
                       </div>
                     </div>
                     <div className='card-body pt-1'>
@@ -295,7 +304,9 @@ export function HakAkses() {
                           <button
                             className='btn btn-light btn-active-primary my-1 me-2'
                             onClick={() =>
-                              navigate(`/apps/detail-hak-akses/DetailHakAkses/${d?.id}`)
+                              navigate(`/apps/detail-hak-akses/DetailHakAkses/` + d.id, {
+                                state: {parent: d.hak_akses, parentName: d.hak_akses},
+                              })
                             }
                           >
                             Detail Hak Akses
@@ -363,7 +374,7 @@ export function HakAkses() {
               {valStatAKses.val === 'Pelaksana' || valStatAKses.val === '' ? (
                 <>
                   <div>
-                    <label htmlFor='' className='mb-3'>
+                    <label htmlFor='' className='mb-5'>
                       Wilayah/Bidang
                     </label>
                     <AsyncSelect
@@ -378,7 +389,7 @@ export function HakAkses() {
                     />
                   </div>
                   <div>
-                    <label htmlFor='' className='mb-3'>
+                    <label htmlFor='' className='mb-5'>
                       Kecamatan
                     </label>
 
@@ -391,7 +402,7 @@ export function HakAkses() {
                     />
                   </div>
                   <div>
-                    <label htmlFor='' className='mb-3'>
+                    <label htmlFor='' className='mb-5'>
                       Jabatan
                     </label>
                     <AsyncSelect
@@ -405,7 +416,7 @@ export function HakAkses() {
                 </>
               ) : null}
 
-              {valStatAKses.val === 'Non-Pelaksana' || valStatAKses.val === '' ? (
+              {valStatAKses.val === 'Non-Pelaksana' ? (
                 <div>
                   <label htmlFor='' className='mb-3'>
                     Nama Hak Akses
