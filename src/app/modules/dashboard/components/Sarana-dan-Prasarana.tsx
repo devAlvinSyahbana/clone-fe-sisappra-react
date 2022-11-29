@@ -2,36 +2,45 @@
 import React, {useState, useEffect, FC} from 'react'
 import axios from 'axios'
 import PieC from '../chart/piechart/piechart'
-import BarC from '../chart/barchart/barchart2'
+import BarC1 from '../chart/barchart/barchart'
+import BarC2 from '../chart/barchart/barchart2'
+import { string } from 'yup/lib/locale'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SUM_SARANA_PRASARANA_URL = `${API_URL}/dashboard/sum-jenis-sarana_prasarana`
+export const SUM_SARANA_PRASARANA_TIDAK_LAYAK_URL = `${API_URL}/dashboard/sum-jenis-sarana_prasarana-tidak-layak`
 
 const SaranadanPrasarana: FC = () => {
-  let kondisi = ''
-  const [showResults, setShowResults] = useState({isShowed: false, val: ''})
-  const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
-    kondisi = event.target.value
-    fetchUsers(kondisi)
-  }
+  // let kondisi = ''
+  // const [showResults, setShowResults] = useState({isShowed: false, val: ''})
+  // const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
+    // kondisi = event.target.value
+    // useEffect(() => {
+    //   fetchUsers()
+    // }, [])
+  
+  // }
 
-  const [data, setData] = useState([])
+  const [datalayak, setDatalayak] = useState([])
+  const [datatidaklayak, setDatatidaklayak] = useState([])
 
   useEffect(() => {
-    fetchUsers('Layak')
+    fetchUsers()
   }, [])
 
-  const fetchUsers = async (kondisi : any) => {
-    const response = await axios.get(`${SUM_SARANA_PRASARANA_URL}`,{
-      params:{
-        kondisi : kondisi
-      }
+  const fetchUsers = async () => {
+    const responselayak = await axios.get(`${SUM_SARANA_PRASARANA_URL}`,{
+    
     })
 
-    setData(response.data.data)
+    const responsetidaklayak = await axios.get(`${SUM_SARANA_PRASARANA_TIDAK_LAYAK_URL}`,{
+      
+    })
 
-    console.log('cek :', data)
-    return [data, setData] as const
+    setDatalayak(responselayak.data.data)
+    setDatatidaklayak(responsetidaklayak.data.data)
+
+    return [datalayak, datatidaklayak,setDatalayak,setDatatidaklayak] as const
   }
 
   return (
@@ -88,7 +97,8 @@ const SaranadanPrasarana: FC = () => {
                   
                   <div className='row'>
                     <div className='col-md-2 col-lg-2 col-sm-12'>
-                      <select
+                      <h3>Layak</h3>
+                      {/* <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
                         id='select_status'
@@ -96,11 +106,56 @@ const SaranadanPrasarana: FC = () => {
                       >
                         <option value='Layak'>Layak</option>
                         <option value='Tidak Layak'>Tidak Layak</option>
-                      </select>
+                      </select> */}
                     </div>
                   {
-                  data?.length >= 1 ? (
-                    <BarC chartID={data} valueField='jumlah' categoryField="jenis_sarana_prasarana"/>
+                  datalayak?.length >= 1 ? (
+                    <BarC2 chartID={datalayak} valueField='jumlah' categoryField="jenis_sarana_prasarana"/>
+                  ) : (
+                    <>loading...</>
+                  )
+                  /* {showResults.isShowed && showResults.val === '4' ? (
+                    <>
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
+                    </>
+                  ) : null || (showResults.isShowed && showResults.val === '5') ? (
+                    <>
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
+                    </>
+                  ) : null || (showResults.isShowed && showResults.val === '6') ? (
+                    <>
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
+                    </>
+                  ) : null} */}
+                  </div>
+                  <div className='row'>
+                    <div className='col-md-2 col-lg-2 col-sm-12'>
+                      <h3>Tidak Layak</h3>
+                      {/* <select
+                        className='form-select form-select-solid'
+                        aria-label='Select example'
+                        id='select_status'
+                        onChange={Find}
+                      >
+                        <option value='Layak'>Layak</option>
+                        <option value='Tidak Layak'>Tidak Layak</option>
+                      </select> */}
+                    </div>
+                  {
+                  datatidaklayak?.length >= 1 ? (
+                    <BarC2 chartID={datatidaklayak} valueField='jumlah_tidak_layak' categoryField="jenis_sapras"/>
                   ) : (
                     <>loading...</>
                   )
