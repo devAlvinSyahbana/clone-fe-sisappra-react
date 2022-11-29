@@ -294,10 +294,17 @@ export function SKPD() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(`${SKPD_URL}/filter/${qParamFind.strparam}`)
-      setTemp(response.data.data)
+      // setTemp(response.data.data)
       setTotalRows(response.data.total_data)
-
-      setLoading(false)
+      const timeout = setTimeout(() => {
+        let items = response.data.data
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 60)
+      return () => clearTimeout(timeout)
     }
     fetchUsers(1)
     fetchDT(1)
