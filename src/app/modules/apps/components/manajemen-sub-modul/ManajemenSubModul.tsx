@@ -188,7 +188,7 @@ export function ManajemenSubModul() {
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => (row.level !== '' ? row.id : (row.id = '')),
+      selector: (row: any) => row.serial,
     },
     {
       name: 'Nama Akses Kontrol',
@@ -256,9 +256,13 @@ export function ManajemenSubModul() {
     const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
     // const currentMenu = location.state.parent + '-'
     // const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
+    let items = children
+    Array.from(items).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
 
-    setTemp(children)
-    setTotalRows(children.length)
+    setTemp(items)
+    setTotalRows(items.length)
     console.log(location, children, currentMenu)
     setLoading(false)
     setNama(nama.data.data)
