@@ -183,12 +183,11 @@ export function ManajemenPermission() {
     )
   }
 
-  let number = 1
   // Kolom table
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
     },
     {
       name: 'Nama Permission',
@@ -240,16 +239,20 @@ export function ManajemenPermission() {
     const manage = value.data.data.filter((item: any) =>
       item.akses_kontrol == currentMenu ? currentMenu : ''
     )
+    let items = manage
+    Array.from(items).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
     // const currentMenu = location.state.id_akses
     // const manage = value.data.data.filter((item: any) =>
     //   item.akses_kontrol == currentMenu ? currentMenu : ''
     // )
 
-    setTemp(manage)
-    setTotalRows(manage.length)
+    setTemp(items)
+    setTotalRows(items.length)
     console.log(manage, currentMenu)
     setLoading(false)
-    setValuesFormik({akses_kontrol: currentMenu})
+    setValuesFormik({akses_kontrol: currentMenu, status: 0})
     setNama(nama.data.data)
     return [temp, setTemp] as const
   }

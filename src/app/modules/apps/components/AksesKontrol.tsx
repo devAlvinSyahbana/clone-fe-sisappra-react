@@ -204,12 +204,11 @@ export function AksesKontrol() {
     )
   }
 
-  let number = 1
   // Kolom table
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
     },
     {
       name: 'Nama Akses Kontrol',
@@ -282,19 +281,23 @@ export function AksesKontrol() {
 
   // START :: VIEW
   useEffect(() => {
-    fetchUsers()
-  }, [qParamFind])
+    fetchUsers(1)
+  }, [qParamFind, perPage])
 
   // Munculin data table
-  const fetchUsers = async () => {
+  const fetchUsers = async (page: number) => {
     setLoading(true)
     const value = await axios.get(
-      `${AKSES_KONTROL_URL}/find?limit=10&offset=1${qParamFind.strparam}`
+      `${AKSES_KONTROL_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     const Parents = value.data.data.filter((item: any) => item.level.split('-').length == 1)
-
-    setTemp(Parents)
-    setTotalRows(Parents.length)
+    let items = Parents
+    Array.from(items).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+    setTemp(items)
+    // setTemp(Parents)
+    setTotalRows(items.length)
     setLoading(false)
     console.log(Parents)
     return [temp, setTemp] as const
@@ -335,7 +338,7 @@ export function AksesKontrol() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers()
+            fetchUsers(1)
             setSubmitting(false)
           }
         } else {
@@ -350,7 +353,7 @@ export function AksesKontrol() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers()
+            fetchUsers(1)
             setSubmitting(false)
           }
         }
@@ -408,7 +411,7 @@ export function AksesKontrol() {
       if (result.isConfirmed) {
         const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
         if (response) {
-          fetchUsers()
+          fetchUsers(1)
           Swal.fire({
             icon: 'success',
             text: 'Data berhasil dihapus',
