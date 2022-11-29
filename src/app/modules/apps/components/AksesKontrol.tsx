@@ -283,11 +283,14 @@ export function AksesKontrol() {
   // START :: VIEW
   useEffect(() => {
     fetchUsers()
-  }, [])
+  }, [qParamFind])
 
+  // Munculin data table
   const fetchUsers = async () => {
     setLoading(true)
-    const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
+    const value = await axios.get(
+      `${AKSES_KONTROL_URL}/find?limit=10&offset=1${qParamFind.strparam}`
+    )
     const Parents = value.data.data.filter((item: any) => item.level.split('-').length == 1)
 
     setTemp(Parents)
@@ -298,6 +301,7 @@ export function AksesKontrol() {
   }
 
   // END :: VIEW
+
   const handleChangeFormik = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -447,6 +451,12 @@ export function AksesKontrol() {
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
+            </button>
+          </Link>
+          <Link to='#' onClick={handleFilterReset}>
+            <button className='btn btn-light-primary me-2'>
+              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+              Reset
             </button>
           </Link>
         </div>
