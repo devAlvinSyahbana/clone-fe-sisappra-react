@@ -7,6 +7,8 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import * as Yup from 'yup'
+import clsx from 'clsx'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -115,6 +117,18 @@ export interface FormInput {
   uu_yg_dikawal?: string
 }
 
+const addPPNSSchema = Yup.object().shape({
+  pejabat_ppns_nama: Yup.string().required('Wajib diisi'),
+  pejabat_ppns_nip: Yup.string().required('Wajib diisi'),
+  pejabat_ppns_nrk: Yup.string()
+    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
+    .required('Wajib diisi'),
+  no_ktp_ppns: Yup.string().required('Wajib diisi'),
+  no_sk_ppns: Yup.string().required('Wajib diisi'),
+  wilayah_kerja: Yup.string().required('Wajib diisi'),
+  uu_yg_dikawal: Yup.string().required('Wajib diisi'),
+})
+
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -189,18 +203,12 @@ export function AddDataPPNS() {
 
   const formik = useFormik({
     initialValues: {
-      skpd: {value: '', label: 'Pilih Skpd'},
-      pejabat_ppns_pangkat: {value: '', label: 'Pilih Pangkat'},
-      pejabat_ppns_golongan: {value: '', label: 'Pilih Golongan'},
-      pejabat_ppns_nama: '',
-      pejabat_ppns_nip: '',
-      pejabat_ppns_nrk: '',
-      no_sk_ppns: '',
-      no_ktp_ppns: '',
-      wilayah_kerja: '',
-      uu_yg_dikawal: '',
+      ...valuesFormik,
     },
-    onSubmit: async (values) => {
+    validationSchema: addPPNSSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, {setSubmitting}) => {
+      setSubmitting(true)
       const bodyparam: FormInput = {
         skpd: valuesFormik?.skpd?.value ? valuesFormik.skpd.value : 0,
         pejabat_ppns_pangkat: valuesFormik?.pejabat_ppns_pangkat?.value
@@ -227,6 +235,7 @@ export function AddDataPPNS() {
             timer: 1500,
           })
           navigate('/kepegawaian/penyidik-pegawai-negeri-sipil/tab-data-ppns', {replace: true})
+          setSubmitting(false)
         }
       } catch (error) {
         Swal.fire({
@@ -247,7 +256,7 @@ export function AddDataPPNS() {
           <div className='row mt-2'>
             <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6 mb-6'>
               <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
+                <label htmlFor='' className='mb-3 required'>
                   SKPD
                 </label>
                 <AsyncSelect
@@ -265,46 +274,100 @@ export function AddDataPPNS() {
             </div>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>Nama</Form.Label>
+                <Form.Label className='required'>Nama</Form.Label>
                 <Form.Control
-                  type='text'
+                  // type='text'
+                  {...formik.getFieldProps('pejabat_ppns_nama')}
+                  className={clsx(
+                    'form-control bg-transparent',
+                    {
+                      'is-invalid':
+                        formik.touched.pejabat_ppns_nama && formik.errors.pejabat_ppns_nama,
+                    },
+                    {
+                      'is-valid':
+                        formik.touched.pejabat_ppns_nama && !formik.errors.pejabat_ppns_nama,
+                    }
+                  )}
                   name='pejabat_ppns_nama'
-                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
                   value={valuesFormik?.pejabat_ppns_nama}
                   placeholder='Masukkan Nama'
                 />
+                {formik.touched.pejabat_ppns_nama && formik.errors.pejabat_ppns_nama && (
+                  <div className='fv-plugins-message-container mb-n7'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{formik.errors.pejabat_ppns_nama}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>NIP</Form.Label>
+                <Form.Label className='required'>NIP</Form.Label>
                 <Form.Control
-                  type='text'
+                  // type='text'
+                  {...formik.getFieldProps('pejabat_ppns_nip')}
+                  className={clsx(
+                    'form-control bg-transparent',
+                    {
+                      'is-invalid':
+                        formik.touched.pejabat_ppns_nip && formik.errors.pejabat_ppns_nip,
+                    },
+                    {
+                      'is-valid':
+                        formik.touched.pejabat_ppns_nip && !formik.errors.pejabat_ppns_nip,
+                    }
+                  )}
                   name='pejabat_ppns_nip'
-                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
                   value={valuesFormik?.pejabat_ppns_nip}
                   placeholder='Masukkan NIP'
                 />
+                {formik.touched.pejabat_ppns_nip && formik.errors.pejabat_ppns_nip && (
+                  <div className='fv-plugins-message-container mb-n7'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{formik.errors.pejabat_ppns_nip}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>NRK</Form.Label>
+                <Form.Label className='required'>NRK</Form.Label>
                 <Form.Control
-                  type='text'
+                  {...formik.getFieldProps('pejabat_ppns_nrk')}
+                  className={clsx(
+                    'form-control bg-transparent',
+                    {
+                      'is-invalid':
+                        formik.touched.pejabat_ppns_nrk && formik.errors.pejabat_ppns_nrk,
+                    },
+                    {
+                      'is-valid':
+                        formik.touched.pejabat_ppns_nrk && !formik.errors.pejabat_ppns_nrk,
+                    }
+                  )}
+                  // type='text'
                   name='pejabat_ppns_nrk'
-                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
                   value={valuesFormik?.pejabat_ppns_nrk}
                   placeholder='Masukkan NRK'
                 />
+                {formik.touched.pejabat_ppns_nrk && formik.errors.pejabat_ppns_nrk && (
+                  <div className='fv-plugins-message-container mb-n7'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{formik.errors.pejabat_ppns_nrk}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6 mb-6'>
               <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
+                <label htmlFor='' className='mb-3 required'>
                   Pangkat
                 </label>
                 <AsyncSelect
@@ -326,7 +389,7 @@ export function AddDataPPNS() {
             </div>
             <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6 mb-6'>
               <div className='form-group'>
-                <label htmlFor='' className='mb-3'>
+                <label htmlFor='' className='mb-3 required'>
                   Golongan
                 </label>
                 <AsyncSelect
@@ -349,54 +412,110 @@ export function AddDataPPNS() {
 
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>No. SK. PPNS</Form.Label>
+                <Form.Label className='required'>No. SK. PPNS</Form.Label>
                 <Form.Control
-                  type='text'
+                  {...formik.getFieldProps('no_sk_ppns')}
+                  className={clsx(
+                    'form-control bg-transparent',
+                    {'is-invalid': formik.touched.no_sk_ppns && formik.errors.no_sk_ppns},
+                    {
+                      'is-valid': formik.touched.no_sk_ppns && !formik.errors.no_sk_ppns,
+                    }
+                  )}
+                  // type='text'
                   name='no_sk_ppns'
-                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
                   value={valuesFormik?.no_sk_ppns}
                   placeholder='Masukkan No SK PPNS'
                 />
+                {formik.touched.no_sk_ppns && formik.errors.no_sk_ppns && (
+                  <div className='fv-plugins-message-container mb-n7'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{formik.errors.no_sk_ppns}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>No. KTP. PPNS</Form.Label>
+                <Form.Label className='required'>No. KTP. PPNS</Form.Label>
                 <Form.Control
-                  type='text'
+                  {...formik.getFieldProps('no_ktp_ppns')}
+                  className={clsx(
+                    'form-control bg-transparent',
+                    {'is-invalid': formik.touched.no_ktp_ppns && formik.errors.no_ktp_ppns},
+                    {
+                      'is-valid': formik.touched.no_ktp_ppns && !formik.errors.no_ktp_ppns,
+                    }
+                  )}
+                  // type='text'
                   name='no_ktp_ppns'
-                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
                   value={valuesFormik?.no_ktp_ppns}
                   placeholder='Masukkan No KTP PPNS'
                 />
+                {formik.touched.no_ktp_ppns && formik.errors.no_ktp_ppns && (
+                  <div className='fv-plugins-message-container mb-n7'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{formik.errors.no_ktp_ppns}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>Wilayah Kerja</Form.Label>
+                <Form.Label className='required'>Wilayah Kerja</Form.Label>
                 <Form.Control
-                  type='text'
+                  {...formik.getFieldProps('wilayah_kerja')}
+                  className={clsx(
+                    'form-control bg-transparent',
+                    {'is-invalid': formik.touched.wilayah_kerja && formik.errors.wilayah_kerja},
+                    {
+                      'is-valid': formik.touched.wilayah_kerja && !formik.errors.wilayah_kerja,
+                    }
+                  )}
+                  // type='text'
                   name='wilayah_kerja'
-                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
                   value={valuesFormik?.wilayah_kerja}
                   placeholder='Masukkan Wilayah Kerja'
                 />
+                {formik.touched.wilayah_kerja && formik.errors.wilayah_kerja && (
+                  <div className='fv-plugins-message-container mb-n7'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{formik.errors.wilayah_kerja}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label>UU yg dikawal</Form.Label>
+                <Form.Label className='required'>UU yg dikawal</Form.Label>
                 <Form.Control
-                  type='text'
+                  {...formik.getFieldProps('uu_yg_dikawal')}
+                  className={clsx(
+                    'form-control bg-transparent',
+                    {'is-invalid': formik.touched.uu_yg_dikawal && formik.errors.uu_yg_dikawal},
+                    {
+                      'is-valid': formik.touched.uu_yg_dikawal && !formik.errors.uu_yg_dikawal,
+                    }
+                  )}
+                  // type='text'
                   name='uu_yg_dikawal'
-                  className='form-control form-control-solid'
                   onChange={handleChangeFormik}
                   value={valuesFormik?.uu_yg_dikawal}
                   placeholder='Masukkan UU yg dikawal'
                 />
+                {formik.touched.uu_yg_dikawal && formik.errors.uu_yg_dikawal && (
+                  <div className='fv-plugins-message-container mb-n7'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{formik.errors.uu_yg_dikawal}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -406,7 +525,12 @@ export function AddDataPPNS() {
                 <i className='fa-solid fa-xmark'></i>Batal
               </button>
             </Link>
-            <button className='float-none btn btn-primary align-self-center m-1' type='submit'>
+
+            <button
+              className='float-none btn btn-primary align-self-center m-1'
+              type='submit'
+              disabled={formik.isSubmitting || !formik.isValid}
+            >
               <i className='fa-solid fa-paper-plane'></i>
               Simpan
             </button>
