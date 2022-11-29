@@ -22,7 +22,6 @@ import {Row} from 'react-bootstrap'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SKPD_URL = `${API_URL}/master/skpd`
 
-
 // Theme for dark or light interface
 createTheme(
   'darkMetro',
@@ -177,20 +176,21 @@ export function SKPD() {
   const [valFilterSKPD, setFilterSKPD] = useState({val: ''}) //4
 
   const [data, setData] = useState([])
-  const [temp, setTemp] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [temp, setTemp] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
-  const handleFilter = async () => { //3
+  const handleFilter = async () => {
+    //3
     let uriParam = ''
     if (valFilterSKPD.val !== '') {
       uriParam += `${valFilterSKPD.val}`
     }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
@@ -198,11 +198,12 @@ export function SKPD() {
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const handleChangeInputSKPD = (event: { //5
+  const handleChangeInputSKPD = (event: {
+    //5
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setFilterSKPD({ val: event.target.value })
+    setFilterSKPD({val: event.target.value})
   }
 
   // START::CRUD
@@ -220,15 +221,15 @@ export function SKPD() {
     )
   }
 
-
-  let number = 1
+  // let number = 1
   // Kolom table
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
+      sortable: true,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{ number++ }</div>
+        return <div className='mb-2 mt-2'>{row.serial}</div>
       },
     },
     {
@@ -293,22 +294,35 @@ export function SKPD() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(`${SKPD_URL}/filter/${qParamFind.strparam}`)
-      setTemp(response.data.data)
+      // setTemp(response.data.data)
       setTotalRows(response.data.total_data)
-      setLoading(false)
+      const timeout = setTimeout(() => {
+        let items = response.data.data
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 60)
+      return () => clearTimeout(timeout)
     }
     fetchUsers(1)
     fetchDT(1)
   }, [qParamFind, perPage])
 
   const fetchUsers = async (page: any) => {
+    //urutan 3
     setLoading(true)
     const value = await axios.get(`${SKPD_URL}/find`)
-
-    setTemp(value.data.data)
-    console.log('cek kota:', temp)
-
-    return [data, setTemp] as const
+    const timeout = setTimeout(() => {
+      let items = value.data.data
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
+      setLoading(false)
+    }, 50)
+    return () => clearTimeout(timeout)
   }
   // END :: VIEW
   const handleChangeFormik = (event: {
@@ -351,10 +365,7 @@ export function SKPD() {
             setSubmitting(false)
           }
         } else {
-          const response = await axios.put(
-            `${SKPD_URL}/update/${idEditData.id}`,
-            bodyparam
-          )
+          const response = await axios.put(`${SKPD_URL}/update/${idEditData.id}`, bodyparam)
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -387,7 +398,7 @@ export function SKPD() {
     })
   }
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
-  
+
   // GET ID FOR UPDATE
   const getDetail = async (idparam: any) => {
     const {data} = await axios.get(`${SKPD_URL}/findone/${parseInt(idparam)}`)
@@ -406,7 +417,7 @@ export function SKPD() {
     setAksi(1)
     getDetail(id)
   }
-  
+
   // DELETE
   const konfirDel = (id: number) => {
     Swal.fire({
@@ -468,8 +479,8 @@ export function SKPD() {
           />
         </div>
         <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-          <Link to='#' onClick={handleFilter}> 
-          {/* 1 */}
+          <Link to='#' onClick={handleFilter}>
+            {/* 1 */}
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
@@ -480,7 +491,7 @@ export function SKPD() {
           <Link to='#i'>
             <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah 
+              Tambah
             </button>
           </Link>
         </div>
@@ -496,26 +507,26 @@ export function SKPD() {
                 <div className='form-group'>
                   <Form.Label>SKPD</Form.Label>
                   <Form.Control
-                      name='skpd'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid': formik.touched.skpd && formik.errors.skpd,
-                        },
-                        {
-                          'is-valid': formik.touched.skpd && !formik.errors.skpd,
-                        }
-                      )}
-                      onChange={handleChangeFormik}
-                      value={valuesFormik?.skpd}
-                    />
-                    {formik.touched.skpd && formik.errors.skpd && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.skpd}</span>
-                        </div>
-                      </div>
+                    name='skpd'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.skpd && formik.errors.skpd,
+                      },
+                      {
+                        'is-valid': formik.touched.skpd && !formik.errors.skpd,
+                      }
                     )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.skpd}
+                  />
+                  {formik.touched.skpd && formik.errors.skpd && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.skpd}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className='p-0 mt-6'>
                   <div className='text-center'>
@@ -545,13 +556,12 @@ export function SKPD() {
         <DataTable
           columns={columns}
           data={temp}
-          // progressPending={loading}
+          progressPending={loading}
           customStyles={customStyles}
           progressComponent={<LoadingAnimation />}
           pagination
           // paginationServer
           paginationTotalRows={totalRows}
-          
           //    expandableRowsComponent={(row) => (
           //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
           // )}
@@ -568,6 +578,7 @@ export function SKPD() {
           }
         />
       </div>
+
       {/* end::Body */}
     </div>
   )

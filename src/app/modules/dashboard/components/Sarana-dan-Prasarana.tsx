@@ -2,48 +2,48 @@
 import React, {useState, useEffect, FC} from 'react'
 import axios from 'axios'
 import PieC from '../chart/piechart/piechart'
+// import BarC2 from '../chart/barchart/barchart2'
+import BarC1 from '../chart/barchart/barchart'
+import {string} from 'yup/lib/locale'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SUM_SARANA_PRASARANA_URL = `${API_URL}/dashboard/sum-jenis-sarana_prasarana`
 
 const SaranadanPrasarana: FC = () => {
-  const [showResults, setShowResults] = useState({isShowed: false, val: ''})
-  const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
-    console.log(typeof event.target.value)
+  // let kondisi = ''
+  // const [showResults, setShowResults] = useState({isShowed: false, val: ''})
+  // const Find = (event: {preventDefault: () => void; target: {value: string}}) => {
+  // kondisi = event.target.value
+  // useEffect(() => {
+  //   fetchUsers()
+  // }, [])
 
-    if (event.target.value === '1') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '2') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '3') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '4') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '5') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-    if (event.target.value === '6') {
-      setShowResults({isShowed: true, val: event.target.value})
-    }
-  }
+  // }
 
-  const [data, setData] = useState([])
+  const [datalayak, setDatalayak] = useState([])
+  const [datatidaklayak, setDatatidaklayak] = useState([])
 
   useEffect(() => {
-    fetchUsers(1)
+    fetchUsers()
   }, [])
 
-  const fetchUsers = async (page: any) => {
-    const response = await axios.get(`${SUM_SARANA_PRASARANA_URL}`)
+  const fetchUsers = async () => {
+    const responselayak = await axios.get(`${SUM_SARANA_PRASARANA_URL}`, {
+      params: {
+        kondisi: 'Layak',
+      },
+    })
 
-    setData(response.data.data)
+    const responsetidaklayak = await axios.get(`${SUM_SARANA_PRASARANA_URL}`, {
+      params: {
+        kondisi: 'Tidak Layak',
+      },
+    })
 
-    console.log('cek :', data)
-    return [data, setData] as const
+    setDatalayak(responselayak.data.data)
+    setDatatidaklayak(responsetidaklayak.data.data)
+
+    return [datalayak, datatidaklayak, setDatalayak, setDatatidaklayak] as const
   }
 
   return (
@@ -73,7 +73,7 @@ const SaranadanPrasarana: FC = () => {
                       </select>
                     </div> */}
                   </div>
-                  {showResults.isShowed && showResults.val === '1' ? (
+                  {/* {showResults.isShowed && showResults.val === '1' ? (
                     <>
                       <PieC chartID='pie-one' />
                     </>
@@ -85,7 +85,7 @@ const SaranadanPrasarana: FC = () => {
                     <>
                       <PieC chartID='pie-one' />
                     </>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
@@ -98,20 +98,29 @@ const SaranadanPrasarana: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    {/* <div className='col-md-2 col-lg-2 col-sm-12'>
-                      <select
+                    <div className='col-md-2 col-lg-2 col-sm-12'>
+                      <h3>Layak</h3>
+                      {/* <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
                         id='select_status'
                         onChange={Find}
                       >
-                        <option value='4'>Provinsi</option>
-                        <option value='5'>Kabupaten</option>
-                        <option value='6'>Kecamatan</option>
-                      </select>
-                    </div> */}
-                  </div>
-                  {showResults.isShowed && showResults.val === '4' ? (
+                        <option value='Layak'>Layak</option>
+                        <option value='Tidak Layak'>Tidak Layak</option>
+                      </select> */}
+                    </div>
+                    {
+                      datalayak?.length >= 1 ? (
+                        <BarC1
+                          chartID={datalayak}
+                          valueField='jumlah'
+                          categoryField='jenis_sarana_prasarana'
+                        />
+                      ) : (
+                        <>loading...</>
+                      )
+                      /* {showResults.isShowed && showResults.val === '4' ? (
                     <>
                       <PieC
                         chartID={data}
@@ -135,7 +144,59 @@ const SaranadanPrasarana: FC = () => {
                         categoryField='jenis_sarana_prasarana'
                       />
                     </>
-                  ) : null}
+                  ) : null} */
+                    }
+                  </div>
+                  <div className='row'>
+                    <div className='col-md-2 col-lg-2 col-sm-12'>
+                      <h3>Tidak Layak</h3>
+                      {/* <select
+                        className='form-select form-select-solid'
+                        aria-label='Select example'
+                        id='select_status'
+                        onChange={Find}
+                      >
+                        <option value='Layak'>Layak</option>
+                        <option value='Tidak Layak'>Tidak Layak</option>
+                      </select> */}
+                    </div>
+                    {
+                      datatidaklayak?.length >= 1 ? (
+                        <BarC1
+                          chartID={datatidaklayak}
+                          valueField='jumlah'
+                          categoryField='jenis_sarana_prasarana'
+                        />
+                      ) : (
+                        <>loading...</>
+                      )
+                      /* {showResults.isShowed && showResults.val === '4' ? (
+                    <>
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
+                    </>
+                  ) : null || (showResults.isShowed && showResults.val === '5') ? (
+                    <>
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
+                    </>
+                  ) : null || (showResults.isShowed && showResults.val === '6') ? (
+                    <>
+                      <PieC
+                        chartID={data}
+                        valueField='count'
+                        categoryField='jenis_sarana_prasarana'
+                      />
+                    </>
+                  ) : null} */
+                    }
+                  </div>
                 </div>
               </div>
             </div>
