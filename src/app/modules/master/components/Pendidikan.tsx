@@ -294,9 +294,19 @@ export function Pendidikan() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(`${PENDIDIKAN_URL}/filter-pendidikan/${qParamFind.strparam}`)
-      setTemp(response.data.data)
+      // setTemp(response.data.data)
       setTotalRows(response.data.total_data)
+      const timeout = setTimeout(() => {
+        let items = response.data.data
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
       setLoading(false)
+      }, 100);
+      
+      return () => clearTimeout(timeout)
+      
     }
     fetchUsers(1)
     fetchDT(1)
@@ -311,7 +321,8 @@ export function Pendidikan() {
       item.serial = index + 1
     })
     setTemp(items)
-    }, 150);
+    setLoading(false)
+    }, 50);
     return () => clearTimeout(timeout)
   }
   // END :: VIEW
