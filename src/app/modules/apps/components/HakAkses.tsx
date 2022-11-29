@@ -84,7 +84,6 @@ export function HakAkses() {
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<any[]>([])
   const [akm, setAkm] = useState([])
-  const [hakAksesId, SetHakAksesId] = useState<number>()
 
   //check
   const [valStatCheck, setValStatCheck] = useState({val: ''})
@@ -128,59 +127,48 @@ export function HakAkses() {
     },
     onSubmit: async (values: any) => {
       // let formData = new FormData()
-      // const bodyparam: FormInput = {
-      //   // nama_hak_akses: valuesFormik?.nama_hak_akses ? valuesFormik.nama_hak_akses : '',
-      //   nama_hak_akses: values.nama_hak_akses,
-      //   created_by: 0,
-      // }
+      const bodyparam: FormInput = {
+        // nama_hak_akses: valuesFormik?.nama_hak_akses ? valuesFormik.nama_hak_akses : '',
+        nama_hak_akses: values.nama_hak_akses,
+        created_by: 0,
+      }
       try {
-        // const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
-        const value = await axios.get(
-          `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${values.nama_hak_akses}`
-        )
-        // console.log(value.data.data.id)
-        SetHakAksesId(value.data.data.id)
-        alert(JSON.stringify(values, null, 2))
-        for (let i = 0; i < modulPermission.length; i++) {
-          let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
-          // console.log(mp)
-          // console.log(values.value_permission)
-          if (values.value_permission.includes(mp)) {
-            await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-              id_hak_akses: value.data.data.id,
-              id_akses_kontrol: modulPermission[i].akses_kontrol,
-              id_permission: modulPermission[i].id,
-              value_permission: true,
-            })
-            // console.log(true)
-          } else {
-            await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-              id_hak_akses: value.data.data.id,
-              id_akses_kontrol: modulPermission[i].akses_kontrol,
-              id_permission: modulPermission[i].id,
-              value_permission: false,
-            })
-            // console.log(false)
+        const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
+        if (response) {
+          const value = await axios.get(
+            `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${values.nama_hak_akses}`
+          )
+          // alert(JSON.stringify(values, null, 2))
+          for (let i = 0; i < modulPermission.length; i++) {
+            let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
+            // console.log(mp)
+            // console.log(values.value_permission)
+            if (values.value_permission.includes(mp)) {
+              await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+                id_hak_akses: value.data.data.id,
+                id_akses_kontrol: modulPermission[i].akses_kontrol,
+                id_permission: modulPermission[i].id,
+                value_permission: true,
+              })
+            } else {
+              await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+                id_hak_akses: value.data.data.id,
+                id_akses_kontrol: modulPermission[i].akses_kontrol,
+                id_permission: modulPermission[i].id,
+                value_permission: false,
+              })
+            }
           }
+          fetchDT(1)
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil disimpan',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          values.value_permission = []
+          setTambahShow(false)
         }
-
-        // console.log('cek: ', mp)
-        // for (let i = 0; i < values.value_permission.length; i++) {
-        //   // console.log(value.data.data.id)
-        // }
-        // console.log(values)
-        // if (response) {
-        //   setTimeout(async () => {
-        //     // fetchDT(1)
-        //     Swal.fire({
-        //       icon: 'success',
-        //       title: 'Data berhasil disimpan',
-        //       showConfirmButton: false,
-        //       timer: 1500,
-        //     })
-        //   }, 100)
-        //   return () => clearTimeout(100)
-        // }
       } catch (error) {
         Swal.fire({
           icon: 'error',
