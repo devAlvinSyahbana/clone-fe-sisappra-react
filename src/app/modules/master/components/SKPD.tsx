@@ -176,7 +176,7 @@ export function SKPD() {
   const [valFilterSKPD, setFilterSKPD] = useState({val: ''}) //4
 
   const [data, setData] = useState([])
-  const [temp, setTemp] = useState<any[]>([])
+  const [temp, setTemp] = useState<any[]>([]) // Urutan 1
   const [loading, setLoading] = useState(true)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
