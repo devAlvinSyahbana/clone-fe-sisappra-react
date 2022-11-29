@@ -204,12 +204,11 @@ export function AksesKontrol() {
     )
   }
 
-  let number = 1
   // Kolom table
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
     },
     {
       name: 'Nama Akses Kontrol',
@@ -282,22 +281,30 @@ export function AksesKontrol() {
 
   // START :: VIEW
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers(1)
+  }, [qParamFind, perPage])
 
-  const fetchUsers = async () => {
+  // Munculin data table
+  const fetchUsers = async (page: number) => {
     setLoading(true)
-    const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
+    const value = await axios.get(
+      `${AKSES_KONTROL_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+    )
     const Parents = value.data.data.filter((item: any) => item.level.split('-').length == 1)
-
-    setTemp(Parents)
-    setTotalRows(Parents.length)
+    let items = Parents
+    Array.from(items).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+    setTemp(items)
+    // setTemp(Parents)
+    setTotalRows(items.length)
     setLoading(false)
     console.log(Parents)
     return [temp, setTemp] as const
   }
 
   // END :: VIEW
+
   const handleChangeFormik = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -331,7 +338,7 @@ export function AksesKontrol() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers()
+            fetchUsers(1)
             setSubmitting(false)
           }
         } else {
@@ -346,7 +353,7 @@ export function AksesKontrol() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers()
+            fetchUsers(1)
             setSubmitting(false)
           }
         }
@@ -404,7 +411,7 @@ export function AksesKontrol() {
       if (result.isConfirmed) {
         const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
         if (response) {
-          fetchUsers()
+          fetchUsers(1)
           Swal.fire({
             icon: 'success',
             text: 'Data berhasil dihapus',
@@ -447,6 +454,12 @@ export function AksesKontrol() {
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
+            </button>
+          </Link>
+          <Link to='#' onClick={handleFilterReset}>
+            <button className='btn btn-light-primary me-2'>
+              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+              Reset
             </button>
           </Link>
         </div>
