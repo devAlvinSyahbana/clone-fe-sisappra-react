@@ -14,6 +14,7 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
   useLayoutEffect(() => {
     // Create root and chart
     const root = am5.Root.new(categoryField)
+    
 
     root.setThemes([am5themes_Animated.new(root)])
 
@@ -32,7 +33,7 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
 
     let xRenderer = am5xy.AxisRendererX.new(root, {minGridDistance: 30})
     xRenderer.labels.template.setAll({
-      rotation: -90,
+      rotation: -35,
       centerY: am5.p50,
       centerX: am5.p100,
       paddingRight: 15,

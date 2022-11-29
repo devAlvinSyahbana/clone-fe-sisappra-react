@@ -13,8 +13,11 @@ import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {KTSVG} from '../../../../_metronic/helpers'
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import {useFormik} from 'formik'
+import {useFormik, FormikHelpers} from 'formik'
 import {Row} from 'react-bootstrap'
+import * as Yup from 'yup'
+import clsx from 'clsx'
+import {Item1} from '../../../../_metronic/partials/content/activity/Item1'
 
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -146,6 +149,10 @@ export interface FormInput {
   level?: string
 }
 
+const validatorForm = Yup.object().shape({
+  modul: Yup.string().required('Wajib diisi'),
+})
+
 export function AksesKontrol() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -197,44 +204,26 @@ export function AksesKontrol() {
     )
   }
 
-  // TABLE
-  // interface Props extends ExpanderComponentProps<row> {
-  //   // currently, props that extend ExpanderComponentProps must be set to optional.
-  //   someTitleProp?: string
-  // }
-
-  // const ExpandableRowComponent: React.FC<Props> = ({data, someTitleProp}) => {
-  //   return (
-  //     <>
-  //       <p>{someTitleProp}</p>
-  //       <p>{data.title}</p>
-  //       <p>{data.director}</p>
-  //       <p>{data.year}</p>
-  //     </>
-  //   )
-  // }
-
-  let number = 1
   // Kolom table
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
     },
     {
       name: 'Nama Akses Kontrol',
-      selector: (row: any) => row.modul,
       sortable: true,
       sortField: 'modul',
+      selector: (row: any) => row.modul,
     },
     {
-      name: 'Hak Akses Kode',
-      selector: (row: any) => row.kode,
+      name: 'Hak Akses',
       sortable: true,
       sortField: 'kode',
+      selector: (row: any) => row.kode,
     },
     {
-      name: 'TANGGAL BUAT',
+      name: 'Tanggal Buat',
       selector: (row: any) => moment(row.tanggal_buat).format('D MMMM YYYY, h:mm a'),
       sortable: true,
       sortField: 'tanggal_buat',
@@ -260,11 +249,21 @@ export function AksesKontrol() {
                   >
                     <Dropdown.Item
                       onClick={() =>
-                        // navigate('/apps/data-pengguna/update-data-pengguna/' + record.id, {
-                        navigate(`/apps/akses-kontrol/manajemen-permission`)
+                        navigate(`/apps/akses-kontrol/manajemen-permission/` + record.id, {
+                          state: {id_akses: record.id, nama_modul: record.modul},
+                        })
                       }
                     >
                       Manajemen Permission
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() =>
+                        navigate(`/apps/akses-kontrol/manajemen-sub-modul/` + record.id, {
+                          state: {parent: record.level, parentName: record.modul},
+                        })
+                      }
+                    >
+                      Manajamen Sub-Modul
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => doEdit(record.id)}>Ubah</Dropdown.Item>
                     <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
@@ -282,21 +281,30 @@ export function AksesKontrol() {
 
   // START :: VIEW
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers(1)
+  }, [qParamFind, perPage])
 
-  const fetchUsers = async () => {
+  // Munculin data table
+  const fetchUsers = async (page: number) => {
     setLoading(true)
-    const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
-
-    setTemp(value.data.data)
-    setTotalRows(value.data.total)
-    console.log('cek response api real:', temp)
+    const value = await axios.get(
+      `${AKSES_KONTROL_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+    )
+    const Parents = value.data.data.filter((item: any) => item.level.split('-').length == 1)
+    let items = Parents
+    Array.from(items).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+    setTemp(items)
+    // setTemp(Parents)
+    setTotalRows(items.length)
     setLoading(false)
+    console.log(Parents)
     return [temp, setTemp] as const
-    // setLoading(false)
   }
+
   // END :: VIEW
+
   const handleChangeFormik = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
@@ -307,23 +315,21 @@ export function AksesKontrol() {
     }))
   }
 
-  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
   const [aksi, setAksi] = useState(0)
+  const [valuesFormik, setValuesFormik] = useState<FormInput>()
+
   // ADD N UPDATE
   const formik = useFormik({
     initialValues: {
-      modul: '',
-      level: '',
+      ...valuesFormik,
     },
-    onSubmit: async (values, {setSubmitting}) => {
-      const bodyparam: FormInput = {
-        modul: valuesFormik?.modul ? valuesFormik.modul : '',
-        level: valuesFormik?.level ? valuesFormik.level : '',
-      }
+    validationSchema: validatorForm,
+    enableReinitialize: true,
+    onSubmit: async (values, {setSubmitting}: FormikHelpers<FormInput>) => {
       setSubmitting(true)
       try {
         if (aksi === 0) {
-          const response = await axios.post(`${AKSES_KONTROL_URL}/create`, bodyparam)
+          const response = await axios.post(`${AKSES_KONTROL_URL}/create`, {...valuesFormik})
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -332,14 +338,13 @@ export function AksesKontrol() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers()
+            fetchUsers(1)
             setSubmitting(false)
           }
         } else {
-          const response = await axios.put(
-            `${AKSES_KONTROL2_URL}/update/${idEditData.id}`,
-            bodyparam
-          )
+          const response = await axios.put(`${AKSES_KONTROL2_URL}/update/${idEditData.id}`, {
+            ...valuesFormik,
+          })
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -348,7 +353,7 @@ export function AksesKontrol() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers()
+            fetchUsers(1)
             setSubmitting(false)
           }
         }
@@ -406,7 +411,7 @@ export function AksesKontrol() {
       if (result.isConfirmed) {
         const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
         if (response) {
-          fetchUsers()
+          fetchUsers(1)
           Swal.fire({
             icon: 'success',
             text: 'Data berhasil dihapus',
@@ -427,7 +432,6 @@ export function AksesKontrol() {
     })
   }
   // END::CRUD
-
   return (
     <div className={`card`}>
       {/* begin::Body */}
@@ -440,8 +444,8 @@ export function AksesKontrol() {
             type='text'
             className='form-control form-control form-control-solid'
             name='nama'
-            // value={valNamaLengkap.val}
-            // onChange={handleChangeInputNamaLengkap}
+            value={valFilterModul.val}
+            onChange={handleChangeInputModul}
             placeholder='Nama / Hak Akses'
           />
         </div>
@@ -450,6 +454,12 @@ export function AksesKontrol() {
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
+            </button>
+          </Link>
+          <Link to='#' onClick={handleFilterReset}>
+            <button className='btn btn-light-primary me-2'>
+              <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+              Reset
             </button>
           </Link>
         </div>
@@ -474,10 +484,26 @@ export function AksesKontrol() {
                   <Form.Label>Nama Akses Kontrol</Form.Label>
                   <Form.Control
                     name='modul'
-                    className='form-control form-control-solid'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.modul && formik.errors.modul,
+                      },
+                      {
+                        'is-valid': formik.touched.modul && !formik.errors.modul,
+                      }
+                    )}
                     onChange={handleChangeFormik}
                     value={valuesFormik?.modul}
+                    placeholder='Masukkan Nama Akses Kontrol'
                   />
+                  {formik.touched.modul && formik.errors.modul && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.modul}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className='p-0 mt-6'>
                   <div className='text-center'>
@@ -507,18 +533,10 @@ export function AksesKontrol() {
         <DataTable
           columns={columns}
           data={temp}
-          // progressPending={loading}
+          progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
-          // paginationServer
           paginationTotalRows={totalRows}
-          expandableRows
-          //    expandableRowsComponent={(row) => (
-          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
-          // )}
-          // expandableRowsComponent={ExpandedComponent}
-          // onChangeRowsPerPage={handlePerRowsChange}
-          // onChangePage={handlePageChange}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
           noDataComponent={
             <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
@@ -533,26 +551,3 @@ export function AksesKontrol() {
     </div>
   )
 }
-
-// const ExpandedComponent = ({ row, handleInputChange }) => {
-//   return (
-//     <div className="ExpandedComponent">
-//       <div className="ExpandedComponent_Row">
-//         <label>Surname</label>
-//         <input
-//           value={row.data.surname}
-//           onChange={(e) =>
-//             handleInputChange(row.data, "surname", e.target.value)
-//           }
-//         />
-//       </div>
-//       <div className="ExpandedComponent_Row">
-//         <label>Age</label>
-//         <input
-//           value={row.data.age}
-//           onChange={(e) => handleInputChange(row.data, "age", e.target.value)}
-//         />
-//       </div>
-//     </div>
-//   );
-// };

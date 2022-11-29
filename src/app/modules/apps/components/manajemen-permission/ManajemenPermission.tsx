@@ -1,7 +1,7 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
-import DataTable, {createTheme} from 'react-data-table-component'
+import {Link, useNavigate, useLocation, useParams} from 'react-router-dom'
+import DataTable, {createTheme, ExpanderComponentProps} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -13,12 +13,15 @@ import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import {useFormik} from 'formik'
+import {useFormik, FormikHelpers} from 'formik'
+import {Row} from 'react-bootstrap'
+import * as Yup from 'yup'
+import clsx from 'clsx'
 
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
-export const AKSES_KONTROL2_URL = `${API_URL}/manajemen-penggunaakses-kontrol`
+export const MODUL_PERMISSION_URL = `${API_URL}/manajemen-pengguna/modul-permission`
 
 // Theme for dark or light interface
 createTheme(
@@ -141,16 +144,20 @@ const reactSelectDarkThem = {
 }
 
 export interface FormInput {
+  akses_kontrol?: number
+  nama_permission?: string
   modul?: string
-  level?: string
+  status?: number
 }
+
+const validatorForm = Yup.object().shape({
+  nama_permission: Yup.string().required('Wajib diisi'),
+})
 
 export function ManajemenPermission() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
-
-  const [valFilterModul, setFilterModul] = useState({val: ''})
 
   const [data, setData] = useState([])
   const [temp, setTemp] = useState([])
@@ -161,6 +168,7 @@ export function ManajemenPermission() {
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
+  // START::CRUD
   const LoadingAnimation = (props: any) => {
     return (
       <>
@@ -175,12 +183,11 @@ export function ManajemenPermission() {
     )
   }
 
+  // Kolom table
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
-      sortable: true,
-      sortField: 'id',
+      selector: (row: any) => row.serial,
     },
     {
       name: 'Nama Permission',
@@ -188,80 +195,133 @@ export function ManajemenPermission() {
       sortable: true,
       sortField: 'nama_permission',
     },
+    // {
+    //   name: 'Akses Kontrol',
+    //   selector: (row: any) => row.akses_kontrol,
+    //   sortable: true,
+    //   sortField: 'akses_kontrol',
+    // },
     {
       name: 'Aksi',
       sortable: false,
       text: 'Action',
       className: 'action',
-      align: 'left',
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='mb-2'>
-              <button onClick={() => konfirDel(record.id)}>Hapus</button>
-            </div>
+            <button
+              className='btn btn-light-danger btn-sm me-2'
+              onClick={() => konfirDel(record.id)}
+            >
+              Hapus
+            </button>
           </Fragment>
         )
       },
     },
   ]
 
-  const customStyles = {
-    rows: {
-      style: {
-        minHeight: '72px', // override the row height
-      },
-    },
-    headCells: {
-      style: {
-        paddingLeft: '8px', // override the cell padding for head cells
-        paddingRight: '8px',
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: '8px', // override the cell padding for data cells
-        paddingRight: '8px',
-      },
-    },
-  }
-
+  // START :: VIEW
   useEffect(() => {
     fetchUsers()
   }, [])
 
+  const [nama, setNama] = useState<FormInput>()
+  const {id} = useParams()
+
+  const location: any = useLocation()
+
   const fetchUsers = async () => {
     setLoading(true)
-    const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
+    const value = await axios.get(`${MODUL_PERMISSION_URL}/find`)
+    const nama = await axios.get(`${AKSES_KONTROL_URL}/findone/${id}`)
+    const currentMenu = nama.data.data.id
+    const manage = value.data.data.filter((item: any) =>
+      item.akses_kontrol == currentMenu ? currentMenu : ''
+    )
+    let items = manage
+    Array.from(items).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+    // const currentMenu = location.state.id_akses
+    // const manage = value.data.data.filter((item: any) =>
+    //   item.akses_kontrol == currentMenu ? currentMenu : ''
+    // )
 
-    setTemp(value.data.data)
-    setTotalRows(value.data.total)
-    console.log('cek response api real:', temp)
+    setTemp(items)
+    setTotalRows(items.length)
+    console.log(manage, currentMenu)
     setLoading(false)
+    setValuesFormik({akses_kontrol: currentMenu, status: 0})
+    setNama(nama.data.data)
     return [temp, setTemp] as const
-    // setLoading(false)
   }
-
-  const handleFilter = async () => {
-    let uriParam = ''
-    if (valFilterModul.val !== '') {
-      uriParam += `&modul=${valFilterModul.val}`
-    }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
-  }
-
-  const handleFilterReset = () => {
-    setFilterModul({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
-  }
-
-  const handleChangeInputModul = (event: {
+  // END :: VIEW
+  const handleChangeFormik = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterModul({val: event.target.value})
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
   }
 
+  const [aksi, setAksi] = useState(0)
+  const [valuesFormik, setValuesFormik] = useState<FormInput>()
+
+  // ADD
+  const formik = useFormik({
+    initialValues: {
+      ...valuesFormik,
+    },
+    validationSchema: validatorForm,
+    enableReinitialize: true,
+    onSubmit: async (values, {setSubmitting}: FormikHelpers<FormInput>) => {
+      setSubmitting(true)
+      try {
+        if (aksi === 0) {
+          const response = await axios.post(`${MODUL_PERMISSION_URL}/create`, {
+            ...valuesFormik,
+          })
+          if (response) {
+            Swal.fire({
+              icon: 'success',
+              text: 'Data berhasil disimpan',
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            handleClose()
+            fetchUsers()
+            console.log(location)
+            setSubmitting(false)
+          }
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          text: 'Data gagal disimpan, harap mencoba lagi',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        console.error(error)
+      }
+    },
+  })
+
+  const doAdd = () => {
+    setShow(true)
+    setAksi(0)
+    setValuesFormik({
+      nama_permission: '',
+      akses_kontrol: location.state.id_akses,
+      status: 0,
+    })
+  }
+
+  // const nama = location.state.nama_modul === '' ? '' : location.state.nama_modul
+
+  // DELETE
   const konfirDel = (id: number) => {
     Swal.fire({
       text: 'Anda yakin ingin menghapus data ini',
@@ -274,7 +334,7 @@ export function ManajemenPermission() {
       color: '#000000',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await axios.delete(`${AKSES_KONTROL_URL}/delete/${id}`)
+        const response = await axios.delete(`${MODUL_PERMISSION_URL}/delete/${id}`)
         if (response) {
           fetchUsers()
           Swal.fire({
@@ -296,117 +356,20 @@ export function ManajemenPermission() {
       }
     })
   }
-
-  const handleChangeFormik = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setValuesFormik((prevValues: any) => ({
-      ...prevValues,
-      [event.target.name]: event.target.value,
-    }))
-  }
-
-  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
-  const [aksi, setAksi] = useState(0)
-
-  const formik = useFormik({
-    initialValues: {
-      modul: '',
-      level: '',
-    },
-    onSubmit: async (values, {setSubmitting}) => {
-      const bodyparam: FormInput = {
-        modul: valuesFormik?.modul ? valuesFormik.modul : '',
-        level: valuesFormik?.level ? valuesFormik.level : '',
-      }
-      setSubmitting(true)
-      try {
-        if (aksi === 0) {
-          const response = await axios.post(`${AKSES_KONTROL_URL}/create`, bodyparam)
-          if (response) {
-            Swal.fire({
-              icon: 'success',
-              text: 'Data berhasil disimpan',
-              showConfirmButton: false,
-              timer: 1500,
-            })
-            handleClose()
-            fetchUsers()
-            setSubmitting(false)
-          }
-        } else {
-          const response = await axios.put(
-            `${AKSES_KONTROL2_URL}/update/${idEditData.id}`,
-            bodyparam
-          )
-          if (response) {
-            Swal.fire({
-              icon: 'success',
-              text: 'Data berhasil disimpan',
-              showConfirmButton: false,
-              timer: 1500,
-            })
-            handleClose()
-            fetchUsers()
-            setSubmitting(false)
-          }
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: 'error',
-          text: 'Data gagal disimpan, harap mencoba lagi',
-          showConfirmButton: false,
-          timer: 1500,
-        })
-        console.error(error)
-      }
-    },
-  })
-
-  const doAdd = () => {
-    setShow(true)
-    setAksi(0)
-    setValuesFormik({
-      modul: '',
-      level: '',
-    })
-  }
-  const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
-  const getDetail = async (idparam: any) => {
-    const {data} = await axios.get(`${AKSES_KONTROL_URL}/findone/${parseInt(idparam)}`)
-    setIdEditData((prevstate) => ({
-      ...prevstate,
-      id: parseInt(idparam),
-    }))
-    setValuesFormik((prevstate) => ({
-      ...prevstate,
-      ...data.data,
-    }))
-  }
-
-  const doEdit = (id: any) => {
-    setShow(true)
-    setAksi(1)
-    getDetail(id)
-  }
+  // END::CRUD
 
   return (
     <div className={`card`}>
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
-          <label>
-            <h3>Manajemen Permission</h3>
-          </label>
-        </div>
-      </div>
-      <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#i'>
-            <button className='btn btn-light-primary me-2' onClick={doAdd}>
+        <label>
+          <h3>Modul Permission {nama?.modul}</h3>
+        </label>
+        <div className='col d-flex justify-content-end'>
+          <Link to='#'>
+            <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah
+              Tambah Permission
             </button>
           </Link>
         </div>
@@ -417,118 +380,75 @@ export function ManajemenPermission() {
             <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Akses Kontrol</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {['checkbox'].map((type) => (
-              <div>
-                <form onSubmit={formik.handleSubmit}>
-                  <table className='table align-middle table-row-dashed fs-6 gy-5'>
-                    <tbody className='text-gray-600 fw-semibold'>
-                      <tr>
-                        <td>
-                          <h5 className='card-title m-0'>Pilih Permission</h5>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className='d-flex'>
-                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                              <Form.Check inline id={`inline-${type}-1`} />
-                              <span className=''>Akses</span>
-                            </label>
-                          </div>
-                        </td>
-                        <td>
-                          <div className='d-flex'>
-                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                              <Form.Check inline id={`inline-${type}-1`} />
-                              <span className=''>Hapus</span>
-                            </label>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className='d-flex'>
-                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                              <Form.Check inline id={`inline-${type}-1`} />
-                              <span className=''>Lihat</span>
-                            </label>
-                          </div>
-                        </td>
-                        <td>
-                          <div className='d-flex'>
-                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                              <Form.Check inline id={`inline-${type}-1`} />
-                              <span className=''>Download</span>
-                            </label>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className='d-flex'>
-                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                              <Form.Check inline id={`inline-${type}-1`} />
-                              <span className=''>Tambah</span>
-                            </label>
-                          </div>
-                        </td>
-                        <td>
-                          <div className='d-flex'>
-                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                              <Form.Check inline id={`inline-${type}-1`} />
-                              <span className=''>Edit</span>
-                            </label>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className='d-flex'>
-                            <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                              <Form.Check inline id={`inline-${type}-1`} />
-                              <span className=''>Pilih Semua</span>
-                            </label>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div className='p-0 mt-6'>
-                    <div className='text-center'>
-                      <button
-                        className='float-none btn btn-light align-self-center m-1'
-                        onClick={handleClose}
-                        type='button'
-                      >
-                        <i className='fa fa-close'></i>
-                        Batal
-                      </button>
-                      <button
-                        className='float-none btn btn-primary align-self-center m-1'
-                        type='submit'
-                      >
-                        <i className='fa-solid fa-paper-plane'></i>
-                        Simpan
-                      </button>
+            <div className='row mt-2 '>
+              <form onSubmit={formik.handleSubmit}>
+                <div className='form-group'>
+                  <Form.Label>Nama Permission</Form.Label>
+                  <Form.Control
+                    name='nama_permission'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid':
+                          formik.touched.nama_permission && formik.errors.nama_permission,
+                      },
+                      {
+                        'is-valid':
+                          formik.touched.nama_permission && !formik.errors.nama_permission,
+                      }
+                    )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.nama_permission}
+                    placeholder='Masukkan Nama Permission'
+                  />
+                  {formik.touched.nama_permission && formik.errors.nama_permission && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.nama_permission}</span>
+                      </div>
                     </div>
+                  )}
+                  <Form.Control
+                    name='akses_kontrol'
+                    className='form-control form-control-solid mb-1'
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.akses_kontrol}
+                    placeholder='Masukkan Nama Permission'
+                    hidden
+                  />
+                </div>
+                <div className='p-0 mt-6'>
+                  <div className='text-center'>
+                    <button
+                      className='float-none btn btn-light align-self-center m-1'
+                      onClick={handleClose}
+                      type='button'
+                    >
+                      <i className='fa fa-close'></i>
+                      Batal
+                    </button>
+                    <button
+                      className='float-none btn btn-primary align-self-center m-1'
+                      type='submit'
+                    >
+                      <i className='fa-solid fa-paper-plane'></i>
+                      Simpan
+                    </button>
                   </div>
-                </form>
-              </div>
-            ))}
+                </div>
+              </form>
+            </div>
           </Modal.Body>
         </Modal>
       </>
-      <div className='table-responsive mt-5 ms-5 me-5'>
+      <div className='table-responsive mt-5 ms-5 me-5 w'>
         <DataTable
           columns={columns}
           data={temp}
-          // progressPending={loading}
+          progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
-          // paginationServer
           paginationTotalRows={totalRows}
-          // onChangeRowsPerPage={handlePerRowsChange}
-          // onChangePage={handlePageChange}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
           noDataComponent={
             <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
@@ -538,6 +458,12 @@ export function ManajemenPermission() {
             </div>
           }
         />
+      </div>
+      <div className='col d-flex justify-content-center mb-10'>
+        <button className='btn btn-light' onClick={() => navigate(-1)}>
+          <i className='fa-solid fa-arrow-left' />
+          Kembali
+        </button>
       </div>
       {/* end::Body */}
     </div>
