@@ -26,7 +26,7 @@ export function TambahKecamatan() {
   }) => {
     setValuesFormik((prevValues: any) => ({
       ...prevValues,
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value.toUpperCase(),
     }))
   }
 
@@ -45,6 +45,7 @@ export function TambahKecamatan() {
       }
       try {
         const response = await axios.post(`${KECAMATAN_URL}/create`, bodyparam)
+        console.log(response.data, valuesFormik)
         if (response) {
           if (selectedFile) {
             formData.append('file_dokumentasi', selectedFile)
@@ -110,7 +111,7 @@ export function TambahKecamatan() {
                       <div className='form-group'>
                         <Form.Label>Kode Kota</Form.Label>
                         <Form.Control
-                          name='kode kota'
+                          name='kode_kota'
                           className='form-control form-control-solid'
                           onChange={handleChangeFormik}
                           value={valuesFormik?.kode_kota}
