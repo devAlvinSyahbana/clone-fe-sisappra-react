@@ -136,10 +136,6 @@ const reactSelectDarkThem = {
   }),
 }
 
-export interface FormInput {
-  nama_hak_akses?: string
-  created_by?: number
-}
 export interface JumlahPengguna {
   total_data?: number
 }
@@ -219,68 +215,72 @@ export function DetailHakAkses() {
     )
   }
 
-  const formik = useFormik({
-    initialValues: {
-      nama_hak_akses: '',
-      value_permission: [],
-    },
-    onSubmit: async (values: any) => {
-      // let formData = new FormData()
-      const bodyparam: FormInput = {
-        // nama_hak_akses: valuesFormik?.nama_hak_akses ? valuesFormik.nama_hak_akses : '',
-        nama_hak_akses: values.nama_hak_akses,
-        created_by: 0,
-      }
-      try {
-        // const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
-        // if (response) {
-        // const value = await axios.get(
-        //   `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${values.nama_hak_akses}`
-        // )
-        alert(JSON.stringify(values, null, 2))
-        for (let i = 0; i < modulPermission.length; i++) {
-          let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
-          console.log(mp)
-          console.log(values.value_permission)
-          if (values.value_permission.includes(mp)) {
-            // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-            //   // id_hak_akses: value.data.data.id,
-            //   // id_akses_kontrol: modulPermission[i].akses_kontrol,
-            //   // id_permission: modulPermission[i].id,
-            //   // value_permission: true,
-            // })
-            console.log(true)
-          } else {
-            // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-            //   id_hak_akses: value.data.data.id,
-            //   id_akses_kontrol: modulPermission[i].akses_kontrol,
-            //   id_permission: modulPermission[i].id,
-            //   value_permission: false,
-            // })
-            console.log(false)
-          }
-          // }
-          fetchDT(1)
-          Swal.fire({
-            icon: 'success',
-            title: 'Data berhasil disimpan',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-          values.value_permission = []
-          setShow(false)
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Data gagal disimpan, harap mencoba lagi',
-          showConfirmButton: false,
-          timer: 1500,
-        })
-        console.error(error)
-      }
-    },
-  })
+  // const formik = useFormik({
+  //   initialValues: {
+  //     nama_hak_akses: '',
+  //     value_permission: [],
+  //   },
+  //   onSubmit: async (values: any) => {
+  //     // let formData = new FormData()
+  //     const bodyparam: FormInput = {
+  //       // nama_hak_akses: valuesFormik?.nama_hak_akses ? valuesFormik.nama_hak_akses : '',
+  //       nama_hak_akses: values.nama_hak_akses,
+  //       updated_by: 0,
+  //     }
+  //     try {
+  //       // const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
+  //       const response = await axios.put(
+  //         `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
+  //         bodyparam
+  //       )
+  //       // if (response) {
+  //       // const value = await axios.get(
+  //       //   `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${values.nama_hak_akses}`
+  //       // )
+  //       // alert(JSON.stringify(values, null, 2))
+  //       for (let i = 0; i < modulPermission.length; i++) {
+  //         let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
+  //         // console.log(mp)
+  //         // console.log(values.value_permission)
+  //         if (values.value_permission.includes(mp)) {
+  //           // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+  //           //   // id_hak_akses: value.data.data.id,
+  //           //   // id_akses_kontrol: modulPermission[i].akses_kontrol,
+  //           //   // id_permission: modulPermission[i].id,
+  //           //   // value_permission: true,
+  //           // })
+  //           console.log(true)
+  //         } else {
+  //           // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+  //           //   id_hak_akses: value.data.data.id,
+  //           //   id_akses_kontrol: modulPermission[i].akses_kontrol,
+  //           //   id_permission: modulPermission[i].id,
+  //           //   value_permission: false,
+  //           // })
+  //           console.log(false)
+  //         }
+  //         // }
+  //         fetchDT(1)
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: 'Data berhasil disimpan',
+  //           showConfirmButton: false,
+  //           timer: 1500,
+  //         })
+  //         values.value_permission = []
+  //         setShow(false)
+  //       }
+  //     } catch (error) {
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'Data gagal disimpan, harap mencoba lagi',
+  //         showConfirmButton: false,
+  //         timer: 1500,
+  //       })
+  //       console.error(error)
+  //     }
+  //   },
+  // })
 
   const handlePageChange = (page: number) => {
     fetchData(page)
@@ -297,44 +297,44 @@ export function DetailHakAkses() {
   }
   // End Data Tabel
 
-  // const formik = useFormik({
-  //   initialValues: {
-  //     nama_hak_akses: '',
-  //   },
-  //   onSubmit: async (values) => {
-  //     const bodyparam: FormInput = {
-  //       nama_hak_akses: inputValHakAkses?.value
-  //         ? inputValHakAkses.value
-  //         : valuesFormikExist?.nama_hak_akses
-  //         ? valuesFormikExist.nama_hak_akses
-  //         : '',
-  //       updated_by: 0,
-  //     }
-  //     try {
-  //       const response = await axios.put(
-  //         `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
-  //         bodyparam
-  //       )
-  //       if (response) {
-  //         Swal.fire({
-  //           icon: 'success',
-  //           title: 'Data berhasil disimpan',
-  //           showConfirmButton: false,
-  //           timer: 1500,
-  //         })
-  //         handleClose()
-  //       }
-  //     } catch (error) {
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'Data gagal disimpan, harap mencoba lagi',
-  //         showConfirmButton: false,
-  //         timer: 1500,
-  //       })
-  //       console.error(error)
-  //     }
-  //   },
-  // })
+  const formik = useFormik({
+    initialValues: {
+      nama_hak_akses: '',
+    },
+    onSubmit: async (values) => {
+      const bodyparam: FormInput = {
+        nama_hak_akses: inputValHakAkses?.value
+          ? inputValHakAkses.value
+          : valuesFormikExist?.nama_hak_akses
+          ? valuesFormikExist.nama_hak_akses
+          : '',
+        updated_by: 0,
+      }
+      try {
+        const response = await axios.put(
+          `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
+          bodyparam
+        )
+        if (response) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil disimpan',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          handleClose()
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Data gagal disimpan, harap mencoba lagi',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        console.error(error)
+      }
+    },
+  })
 
   const handleChangeFormik = (event: {
     preventDefault: () => void
@@ -431,18 +431,19 @@ export function DetailHakAkses() {
 
   const setPermissionStatus = async (
     id: number,
+    id_hak_akses: number,
     id_permission: number,
     id_akses_kontrol: number,
     value_permission: boolean
   ) => {
     const request = {
-      id_hak_akses: id,
+      id_hak_akses: id_hak_akses,
       id_akses_kontrol: id_akses_kontrol,
       id_permission: id_permission,
       value_permission: value_permission === true ? false : true,
     }
     await axios.put(`${API_URL}/manajemen-penggunaakses-kontrol-mapping/update/${id}`, request)
-    return fetchMapping(1)
+    fetchMapping(1)
   }
 
   // USE EFFECT + FETCH FUNCTION
@@ -526,7 +527,7 @@ export function DetailHakAkses() {
       `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/filter/{id_hak_akses}?limit=${perPage}&offset=${page}&id_hak_akses=${id}`
     )
     setAkm(value.data.data)
-    console.log('cek akm, ', value.data.data)
+    // console.log('cek akm, ', value.data.data)
     setTotalRows(value.data.total)
   }
   //end mapping
@@ -729,6 +730,7 @@ export function DetailHakAkses() {
                                                                       onChange={() =>
                                                                         setPermissionStatus(
                                                                           mapping.id,
+                                                                          mapping.id_hak_akses,
                                                                           mapping.id_permission,
                                                                           mp.akses_kontrol,
                                                                           mapping.value_permission
