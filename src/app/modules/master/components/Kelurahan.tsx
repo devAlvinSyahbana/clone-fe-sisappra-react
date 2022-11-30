@@ -9,20 +9,24 @@ import Swal from 'sweetalert2'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import {Kecamatan} from './Kecamatan'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan` //http://localhost:3000/master/kelurahan
 
 export function Kelurahan() {
+  // STATE SECTION
   const navigate = useNavigate()
+  const [valFilterKelurahan, setFilterKelurahan] = useState({val: ''})
+  const [valFilterKecamatan, setFilterKecamatan] = useState({val: ''})
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [loading, setLoading] = useState(false)
+  const [perPage, setPerPage] = useState(10)
+  const [temp, setTemp] = useState([])
+  const [totalRows, setTotalRows] = useState(0)
+  // const [data, setData] = useState([])
 
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
-
-  useEffect(() => {
-    fetchUsers(1)
-  }, [])
+  // END STATE SECTION
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -38,12 +42,39 @@ export function Kelurahan() {
     )
   }
 
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterKecamatan.val !== '') {
+      uriParam += `kecamatan=${valFilterKecamatan.val}`
+    }
+    if (valFilterKelurahan.val !== '') {
+      uriParam += `&kelurahan=${valFilterKelurahan.val}`
+    }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleChangeInputKelurahan = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterKelurahan({val: event.target.value})
+  }
+  const handleChangeInputKecamatan = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterKecamatan({val: event.target.value})
+  }
+
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
       sortable: true,
       sortField: 'no',
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Kode Kelurahan',
@@ -105,7 +136,9 @@ export function Kelurahan() {
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>Hapus</Dropdown.Item>
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                      Hapus
+                    </Dropdown.Item>
                   </DropdownType>
                 </>
               ))}
@@ -116,58 +149,78 @@ export function Kelurahan() {
     },
   ]
 
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
+  useEffect(() => {
+    fetchUsers(1)
+  }, [])
 
-  const [temp, setTemp] = useState([])
+  //if(valFilterKecamatan.val ? valFilterKecamatan.val : '' || valFilterKelurahan.val ? valFilterKelurahan.val : ''){
+  useEffect(() => {
+    async function fetchDT(page: number) {
+      setLoading(true)
+      console.log(qParamFind)
+      const response = await axios.get(
+        `${KELURAHAN_URL}/findone-by-kelurahan?${qParamFind.strparam}`
+      )
+      console.log(response.data.data)
+      // setTotalRows(response.data.total_data)
+      const timeout = setTimeout(() => {
+        let items = response.data.data
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 100)
+
+      return () => clearTimeout(timeout)
+    }
+    fetchUsers(1)
+    fetchDT(1)
+  }, [qParamFind, perPage])
+  //}
 
   const fetchUsers = async (page: any) => {
     setLoading(true)
     const value = await axios.get(KELURAHAN_URL + '/find')
-
-    setTemp(value.data.data)
-    console.log('cek response api:', temp)
-
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
-    )
-    setData(response.data.data)
-
-    setTotalRows(response.data.total)
-    setLoading(false)
-    console.log('cek ahhh :', data)
-    return [data, setData] as const
-  }
-
-  const handlePageChange = (page: any) => {
-    fetchUsers(page)
-  }
-
-  const handlePerRowsChange = async (newPerPage: any, page: any) => {
-    setLoading(true)
-
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${newPerPage}delay=1`
-    )
-
-    setData(response.data.data)
-    setPerPage(newPerPage)
-    setLoading(false)
-  }
-
-  const handleSort = (column: any, sortDirection: any) => {
-    // simulate server sort
-    console.log(column, sortDirection)
-    setLoading(true)
-
-    // instead of setTimeout this is where you would handle your API call.
-    setTimeout(() => {
-      setData(orderBy(data, column.sortField, sortDirection))
+    const timeout = setTimeout(() => {
+      let items = value.data.data
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
       setLoading(false)
-    }, 100)
+    }, 50)
+    return () => clearTimeout(timeout)
   }
+
+  // const handlePageChange = (page: any) => {
+  //   fetchUsers(page)
+  // }
+
+  // const handlePerRowsChange = async (newPerPage: any, page: any) => {
+  //   setLoading(true)
+
+  //   const response = await axios.get(
+  //     `https://reqres.in/api/users?page=${page}&per_page=${newPerPage}delay=1`
+  //   )
+
+  //   setData(response.data.data)
+  //   setPerPage(newPerPage)
+  //   setLoading(false)
+  // }
+
+  // const handleSort = (column: any, sortDirection: any) => {
+  //   // simulate server sort
+  //   console.log(column, sortDirection)
+  //   setLoading(true)
+
+  //   // instead of setTimeout this is where you would handle your API call.
+  //   setTimeout(() => {
+  //     setData(orderBy(data, column.sortField, sortDirection))
+  //     setLoading(false)
+  //   }, 100)
+  // }
+
   const konfirDel = (id: number) => {
     Swal.fire({
       title: 'Anda yakin?',
@@ -210,25 +263,43 @@ export function Kelurahan() {
     <div className={`card`}>
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
+        {/* {valFilterKecamatan.val === 'PNS' || valFilterKecamatan.val === '' ? ( */}
+        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
           <label htmlFor='' className='mb-3'>
             Kecamatan
           </label>
-          <input type='text' className='form-control form-control form-control-solid' name='tags' />
+          <input
+            type='text'
+            className='form-control form-control form-control-solid'
+            name='kecamatan'
+            value={valFilterKecamatan.val}
+            onChange={handleChangeInputKecamatan}
+            placeholder='Kecamatan'
+          />
         </div>
+        {/* ) : null} */}
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
+        {/* {valFilterKelurahan.val === 'PNS' || valFilterKelurahan.val === '' ? ( */}
+        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
           <label htmlFor='' className='mb-3'>
             Kelurahan
           </label>
-          <input type='text' className='form-control form-control form-control-solid' name='tags' />
+          <input
+            type='text'
+            className='form-control form-control form-control-solid'
+            name='kelurahan'
+            value={valFilterKelurahan.val}
+            onChange={handleChangeInputKelurahan}
+            placeholder='Kelurahan'
+          />
         </div>
+        {/* ) : null} */}
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
           <Link to='#'>
-            <button className='btn btn-primary'>
+            <button onClick={handleFilter} className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
             </button>
@@ -246,20 +317,15 @@ export function Kelurahan() {
       </div>
 
       <div className='table-responsive mt-5 ms-5 me-5'>
-        <DataTable columns={columns} data={temp} pagination />
-        {/* <DataTable
+        {/* <DataTable columns={columns} data={temp} pagination /> */}
+        <DataTable
           columns={columns}
-          data={data}
+          data={temp}
           progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
-          paginationServer
           paginationTotalRows={totalRows}
-          sortServer
-          onSort={handleSort}
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-        /> */}
+        />
       </div>
       {/* end::Body */}
     </div>
