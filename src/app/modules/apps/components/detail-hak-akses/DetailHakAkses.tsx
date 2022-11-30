@@ -1,21 +1,21 @@
-import {useState, useEffect, Fragment} from 'react'
+import {useState, useEffect} from 'react'
 import axios from 'axios'
 import DataTable, {createTheme} from 'react-data-table-component'
 import {Link, useNavigate, useParams} from 'react-router-dom'
-import Dropdown from 'react-bootstrap/Dropdown'
-import DropdownButton from 'react-bootstrap/DropdownButton'
 import Swal from 'sweetalert2'
 import {useFormik} from 'formik'
 import clsx from 'clsx'
 import moment from 'moment'
-import {KTSVG} from '../../../../../_metronic/helpers'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import Dropdown from 'react-bootstrap/Dropdown'
+import DropdownButton from 'react-bootstrap/DropdownButton'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import Accordion from 'react-bootstrap/Accordion'
+import {KTSVG} from '../../../../../_metronic/helpers'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import Accordion from 'react-bootstrap/Accordion'
 
 createTheme(
   'darkMetro',
@@ -157,14 +157,6 @@ export interface HakAkses {
   kecamatan: number
   jabatan: number
 }
-
-// export interface AksesKontrolMapping {
-//   id: number
-//   id_hak_akses: number
-//   id_akses_kontrol: number
-//   id_permission: number
-//   value_permission: boolean
-// }
 
 export interface SelectOption {
   readonly value: string
@@ -562,7 +554,7 @@ export function DetailHakAkses() {
       wrap: true,
       cell: (record: any) => {
         return (
-          <Fragment>
+          <>
             <div className='d-flex align-items-center'>
               {/* begin:: Avatar */}
               <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
@@ -584,7 +576,7 @@ export function DetailHakAkses() {
                 <span>{record?.nama_lengkap}</span>
               </div>
             </div>
-          </Fragment>
+          </>
         )
       },
     },
@@ -605,7 +597,7 @@ export function DetailHakAkses() {
       fixed: true,
       cell: (record: any) => {
         return (
-          <Fragment>
+          <>
             <div className='d-flex mb-2 mt-2 flex-end'>
               {[DropdownButton].map((DropdownType, idx) => (
                 <>
@@ -637,7 +629,7 @@ export function DetailHakAkses() {
                 </>
               ))}
             </div>
-          </Fragment>
+          </>
         )
       },
     },
