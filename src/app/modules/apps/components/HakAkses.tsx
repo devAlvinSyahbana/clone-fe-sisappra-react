@@ -79,7 +79,7 @@ export function HakAkses() {
   const handleTambahClose = () => setTambahShow(false)
   const handleTambahShow = () => setTambahShow(true)
   //pelaksana & non plaksana
-  const [valStatAKses, setValStatAKses] = useState({val: ''})
+  const [valStatAKses, setValStatAKses] = useState({val: 'Pelaksana'})
   const arrStatAKses = ['Pelaksana', 'Non-Pelaksana']
   const [qParamFind] = useState({strparam: ''})
 
@@ -131,13 +131,20 @@ export function HakAkses() {
       value_permission: [],
     },
     onSubmit: async (values: any) => {
-      const bodyparam: FormInput = {
-        nama_hak_akses:
+      let statusAkses: string
+      if (valStatAKses.val === 'Pelaksana') {
+        statusAkses =
           valMasterBidangWilayah.label +
           ' ' +
           valMasterPelaksana.label +
           ' ' +
-          valMasterJabatan.label,
+          valMasterJabatan.label
+      } else {
+        statusAkses = values.nama_hak_akses
+      }
+
+      const bodyparam: FormInput = {
+        nama_hak_akses: statusAkses,
         wilayah_bidang: valMasterBidangWilayah?.value ? valMasterBidangWilayah.value : 0,
         kecamatan: valMasterPelaksana?.value ? valMasterPelaksana.value : 0,
         jabatan: valMasterJabatan?.value ? valMasterJabatan.value : 0,
@@ -147,8 +154,9 @@ export function HakAkses() {
         const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
         fetchDT(1)
         if (response) {
+          // console.log(bodyparam.nama_hak_akses)
           const value = await axios.get(
-            `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${values.nama_hak_akses}`
+            `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${bodyparam.nama_hak_akses}`
           )
           // alert(JSON.stringify(values, null, 2))
           for (let i = 0; i < modulPermission.length; i++) {
@@ -218,20 +226,22 @@ export function HakAkses() {
   }
   //end nama_hak_akses
 
-  const handleChangeFormik = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setValuesFormik((prevValues: any) => ({
-      ...prevValues,
-      [event.target.name]: event.target.value,
-    }))
-  }
+  // const handleChangeFormik = (event: {
+  //   preventDefault: () => void
+  //   target: {value: any; name: any}
+  // }) => {
+  //   setValuesFormik((prevValues: any) => ({
+  //     ...prevValues,
+  //     [event.target.name]: event.target.value,
+  //   }))
+  // }
+
+  // kecamatan
   const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${parseInt(idMasterBidangWilayah.id)}${
+      `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
         inputValue !== '' && `&nama=${inputValue}`
       }`
     )
@@ -253,7 +263,7 @@ export function HakAkses() {
       id: newValue.value,
     }))
   }
-  //end kecamtan
+  //end kecamatan
 
   //jabatan
   const [valMasterJabatan, setValMasterJabatan] = useState({value: '', label: ''})
@@ -317,20 +327,9 @@ export function HakAkses() {
                   <div className='card card-flush h-md-100'>
                     <div className='card-header'>
                       <div className='card-title'>
-                        <div className='col-xxl-10 col-lg-10 col-md-10 col-sm-12'>
+                        <div className=''>
                           <a>{d?.nama_hak_akses}</a>
                         </div>
-                        {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                          <a>{d?.wilayah_bidang}</a>
-                        </div>
-
-                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                          <a>{d?.kecamatan}</a>
-                        </div>
-
-                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                          <a>{d?.jabatan}</a>
-                        </div> */}
                       </div>
                     </div>
                     <div className='card-body pt-1'>
@@ -415,7 +414,7 @@ export function HakAkses() {
                   </select>
                 </div>
               </div>
-              {valStatAKses.val === 'Pelaksana' || valStatAKses.val === '' ? (
+              {valStatAKses.val === 'Pelaksana' ? (
                 <>
                   <div>
                     <label htmlFor='' className='mb-5'>

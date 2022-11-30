@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react'
+import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import DataTable, {createTheme} from 'react-data-table-component'
 import {Link, useNavigate, useParams} from 'react-router-dom'
@@ -13,7 +13,6 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import {useFormik} from 'formik'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import Accordion from 'react-bootstrap/Accordion'
@@ -149,6 +148,24 @@ export interface FormInput {
   updated_by?: number
 }
 
+export interface HakAkses {
+  id?: number
+  nama_hak_akses?: string
+  kode?: string
+  nama_permission: string
+  wilayah_bidang: number
+  kecamatan: number
+  jabatan: number
+}
+
+// export interface AksesKontrolMapping {
+//   id: number
+//   id_hak_akses: number
+//   id_akses_kontrol: number
+//   id_permission: number
+//   value_permission: boolean
+// }
+
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -166,6 +183,7 @@ export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
 
 export function DetailHakAkses() {
+  // STATE SECTION
   const {id} = useParams()
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -173,22 +191,27 @@ export function DetailHakAkses() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const [hakAkses, setHakAkses] = useState<any>([])
-  const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
-  const [modulPermission, setModulPermission] = useState<any[]>([])
-  const [akm, setAkm] = useState([])
-
   const [valNamaLengkap, setFilterNamaLengkap] = useState({val: ''})
   const calculatedMode = mode === 'system' ? systemMode : mode
   //
   const [jumlah_Pengguna, setJumlahPengguna] = useState<JumlahPengguna>()
+  const [hakAkses, setHakAkses] = useState<HakAkses>()
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<any[]>([])
-  const [akm, setAkm] = useState([])
+  const [akm, setAkm] = useState<any[]>([])
   //
-  const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
+  const [valuesFormikExist, setValuesFormikExist] = useState<FormInput>({})
   const [inputValHakAkses, setDataHakAkses] = useState({label: '', value: null})
-  const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
+  const [valuesFormik, setValuesFormik] = useState<FormInput>({})
+
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(10)
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+
+  const [temp, setTemp] = useState([])
+  // END STATE SECTION
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -204,53 +227,6 @@ export function DetailHakAkses() {
     )
   }
 
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
-
-  const [temp, setTemp] = useState([])
-
-  useEffect(() => {
-    const fetchDataAwal = async () => {
-      const jumlah_Pengguna = await axios.get(
-        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/1`
-      )
-
-      setJumlahPengguna(jumlah_Pengguna.data.data)
-    }
-    fetchDT(1)
-    fetchData()
-    fetchPermission()
-    fetchMapping()
-    fetchUsers()
-  }, [qParamFind, perPage])
-
-  //Data Tabel
-  async function fetchDT(page: number) {
-    setLoading(true)
-    const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
-    )
-    setData(response.data.data)
-    setTotalRows(response.data.total_data)
-    setLoading(false)
-  }
-
-  const fetchData = async (page: number) => {
-    setLoading(true)
-    const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
-    )
-    setData(response.data.data)
-    setTotalRows(response.data.total_data)
-    setLoading(false)
-
-    return [data, setData] as const
-  }
-
-  //onSubmit
   const formik = useFormik({
     initialValues: {
       nama_hak_akses: '',
@@ -264,34 +240,34 @@ export function DetailHakAkses() {
         created_by: 0,
       }
       try {
-        const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
-        if (response) {
-          const value = await axios.get(
-            `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${values.nama_hak_akses}`
-          )
-          // alert(JSON.stringify(values, null, 2))
-          for (let i = 0; i < modulPermission.length; i++) {
-            let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
-            // console.log(mp)
-            // console.log(values.value_permission)
-            if (values.value_permission.includes(mp)) {
-              // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-              //   // id_hak_akses: value.data.data.id,
-              //   // id_akses_kontrol: modulPermission[i].akses_kontrol,
-              //   // id_permission: modulPermission[i].id,
-              //   // value_permission: true,
-              // })
-              console.log(true)
-            } else {
-              // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-              //   id_hak_akses: value.data.data.id,
-              //   id_akses_kontrol: modulPermission[i].akses_kontrol,
-              //   id_permission: modulPermission[i].id,
-              //   value_permission: false,
-              // })
-              console.log(false)
-            }
+        // const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
+        // if (response) {
+        // const value = await axios.get(
+        //   `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${values.nama_hak_akses}`
+        // )
+        alert(JSON.stringify(values, null, 2))
+        for (let i = 0; i < modulPermission.length; i++) {
+          let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
+          console.log(mp)
+          console.log(values.value_permission)
+          if (values.value_permission.includes(mp)) {
+            // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+            //   // id_hak_akses: value.data.data.id,
+            //   // id_akses_kontrol: modulPermission[i].akses_kontrol,
+            //   // id_permission: modulPermission[i].id,
+            //   // value_permission: true,
+            // })
+            console.log(true)
+          } else {
+            // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+            //   id_hak_akses: value.data.data.id,
+            //   id_akses_kontrol: modulPermission[i].akses_kontrol,
+            //   id_permission: modulPermission[i].id,
+            //   value_permission: false,
+            // })
+            console.log(false)
           }
+          // }
           fetchDT(1)
           Swal.fire({
             icon: 'success',
@@ -329,61 +305,44 @@ export function DetailHakAkses() {
   }
   // End Data Tabel
 
-  const handleShowEdit = () => {
-    fetchUpdate()
-  }
-
-  //Update Nama Hak Akses
-  const fetchUpdate = async () => {
-    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`)
-    if (response) {
-      const jsonD: GetDataInterface = response.data.data
-      const paramValue: FormInput = {
-        nama_hak_akses: jsonD.nama_hak_akses,
-        updated_by: 0,
-      }
-      setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
-      handleShow()
-    }
-  }
-  const formik = useFormik({
-    initialValues: {
-      nama_hak_akses: '',
-    },
-    onSubmit: async (values) => {
-      const bodyparam: FormInput = {
-        nama_hak_akses: inputValHakAkses?.value
-          ? inputValHakAkses.value
-          : valuesFormikExist?.nama_hak_akses
-          ? valuesFormikExist.nama_hak_akses
-          : '',
-        updated_by: 0,
-      }
-      try {
-        const response = await axios.put(
-          `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
-          bodyparam
-        )
-        if (response) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data berhasil disimpan',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-          handleClose()
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Data gagal disimpan, harap mencoba lagi',
-          showConfirmButton: false,
-          timer: 1500,
-        })
-        console.error(error)
-      }
-    },
-  })
+  // const formik = useFormik({
+  //   initialValues: {
+  //     nama_hak_akses: '',
+  //   },
+  //   onSubmit: async (values) => {
+  //     const bodyparam: FormInput = {
+  //       nama_hak_akses: inputValHakAkses?.value
+  //         ? inputValHakAkses.value
+  //         : valuesFormikExist?.nama_hak_akses
+  //         ? valuesFormikExist.nama_hak_akses
+  //         : '',
+  //       updated_by: 0,
+  //     }
+  //     try {
+  //       const response = await axios.put(
+  //         `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
+  //         bodyparam
+  //       )
+  //       if (response) {
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: 'Data berhasil disimpan',
+  //           showConfirmButton: false,
+  //           timer: 1500,
+  //         })
+  //         handleClose()
+  //       }
+  //     } catch (error) {
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'Data gagal disimpan, harap mencoba lagi',
+  //         showConfirmButton: false,
+  //         timer: 1500,
+  //       })
+  //       console.error(error)
+  //     }
+  //   },
+  // })
 
   const handleChangeFormik = (event: {
     preventDefault: () => void
@@ -403,42 +362,6 @@ export function DetailHakAkses() {
 
     // instead of setTimeout this is where you would handle your API call.
   }
-
-  //hak akses
-  const fetchHakAkses = async () => {
-    const response = await axios.get(`${FIND_ID_HAK_AKSES_URL}/${currentPath}`)
-    setHakAkses(response.data.data)
-    setTotalRows(response.data.total_data)
-    console.log('cek id ', hakAkses)
-  }
-  //end hak akses
-
-  //akses kontrol
-  const fetchUsers = async () => {
-    const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
-    setAksesKontrol(value?.data?.data)
-    setTotalRows(value.data.total)
-    // console.log('cek akses kontrol', aksesKontrol)
-  }
-  //end akses kontrol
-
-  //modul permission
-  const fetchPermission = async () => {
-    const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/modul-permission/find`)
-    setModulPermission(value?.data?.data)
-    setTotalRows(value.data.total)
-    console.log('cek mp', modulPermission)
-  }
-  //modul permission
-
-  // mapping
-  const fetchMapping = async () => {
-    const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/find`)
-    setAkm(value.data.data)
-    setTotalRows(value.data.total)
-    // console.log('cek mapping:', akm)
-  }
-  //end mapping
 
   const konfirDel = (id: number, hak_akses: number) => {
     Swal.fire({
@@ -514,6 +437,81 @@ export function DetailHakAkses() {
     setFilterNamaLengkap({val: event.target.value})
   }
 
+  const setPermissionStatus = async (
+    id: number,
+    id_permission: number,
+    id_akses_kontrol: number,
+    value_permission: boolean
+  ) => {
+    const request = {
+      id_hak_akses: id,
+      id_akses_kontrol: id_akses_kontrol,
+      id_permission: id_permission,
+      value_permission: value_permission === true ? false : true,
+    }
+    await axios.put(`${API_URL}/manajemen-penggunaakses-kontrol-mapping/update/${id}`, request)
+    return
+  }
+
+  // USE EFFECT + FETCH FUNCTION
+  useEffect(() => {
+    const fetchDataAwal = async () => {
+      const jumlah_Pengguna = await axios.get(
+        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/1`
+      )
+      const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`)
+      setHakAkses(response.data.data)
+      setJumlahPengguna(jumlah_Pengguna.data.data)
+    }
+    fetchDataAwal()
+    fetchDT(1)
+    fetchData(1)
+    fetchPermission()
+    fetchMapping(1)
+    fetchUsers()
+  }, [qParamFind, perPage])
+
+  const handleShowEdit = () => {
+    fetchUpdate()
+  }
+
+  //Data Tabel
+  const fetchDT = async (page: number) => {
+    setLoading(true)
+    const response = await axios.get(
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+    )
+    setData(response.data.data)
+    setTotalRows(response.data.total_data)
+    setLoading(false)
+  }
+
+  const fetchData = async (page: number) => {
+    setLoading(true)
+    const response = await axios.get(
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+    )
+    setData(response.data.data)
+    setTotalRows(response.data.total_data)
+    setLoading(false)
+
+    return [data, setData] as const
+  }
+
+  //Update Nama Hak Akses
+  const fetchUpdate = async () => {
+    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`)
+    if (response) {
+      const jsonD: GetDataInterface = response.data.data
+      const paramValue: FormInput = {
+        nama_hak_akses: jsonD.nama_hak_akses,
+        updated_by: 0,
+      }
+      setValuesFormikExist((prevstate) => ({...prevstate, ...paramValue}))
+      handleShow()
+    }
+  }
+
   //akses kontrol
   const fetchUsers = async () => {
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
@@ -531,12 +529,16 @@ export function DetailHakAkses() {
   //modul permission
 
   // mapping
-  const fetchMapping = async () => {
-    const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/find`)
+  const fetchMapping = async (page: number) => {
+    const value = await axios.get(
+      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/filter/{id_hak_akses}?limit=${perPage}&offset=${page}&id_hak_akses=${id}`
+    )
     setAkm(value.data.data)
+    console.log('cek akm, ', value.data.data)
     setTotalRows(value.data.total)
   }
   //end mapping
+  // EMD USE EFFECT + FETCH FUNCTION
 
   var num = 1
   const columns = [
@@ -640,6 +642,7 @@ export function DetailHakAkses() {
       },
     },
   ]
+
   return (
     <>
       <div className='row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5 g-xl-9'>
@@ -723,12 +726,32 @@ export function DetailHakAkses() {
                                                       <>
                                                         {mp.akses_kontrol === ak2.id && (
                                                           <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                                            <input
-                                                              name='value_permission'
-                                                              type='checkbox'
-                                                              onChange={formik.handleChange}
-                                                              value={ak2.id + ' ' + mp.id}
-                                                            />
+                                                            {akm.map((mapping: any) => {
+                                                              return (
+                                                                <>
+                                                                  {mapping.id_permission ===
+                                                                    mp.id && (
+                                                                    <input
+                                                                      name='value_permission'
+                                                                      type='checkbox'
+                                                                      onChange={() =>
+                                                                        setPermissionStatus(
+                                                                          mapping.id,
+                                                                          mapping.id_permission,
+                                                                          mp.akses_kontrol,
+                                                                          mapping.value_permission
+                                                                        )
+                                                                      }
+                                                                      value={ak2.id + ' ' + mp.id}
+                                                                      checked={
+                                                                        mapping.value_permission ===
+                                                                        true
+                                                                      }
+                                                                    />
+                                                                  )}
+                                                                </>
+                                                              )
+                                                            })}
                                                             <span className='form-check-label'>
                                                               {mp.nama_permission}
                                                             </span>
