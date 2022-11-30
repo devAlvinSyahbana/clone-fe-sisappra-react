@@ -308,27 +308,20 @@ export function UpdateHakAkses() {
   }
 
   return (
-    <div className='row row-cols-10 row-cols-md-20 row-cols-xl-30 g-50 g-xl-30'>
-      <div className='flex-lg-row-fluid ms-lg-20'>
-        <div className='tab-content' id='myTabContent'>
-          <div
-            className='tab-pane fade show active'
-            id='kt_user_view_overview_security'
-            role='tabpanel'
-          >
-            <div className='col-md-6 class="d-flex flex-center flex-column py-5'>
-              <div className='card page-title d-flex flex-column justify-content-center flex-wrap me-3'>
+    <div className='card mb-1 mb-xl-1'>
+      <div className='flex-lg-row-fluid ms-lg-10'>
+        <div className='d-grid gap-2 d-md-flex justify-content-md mt-3'>
+          <button className='btn btn-secondary' onClick={() => navigate(-1)}>
+            <i className='fa-solid fa-arrow-left'></i>
+            Kembali
+          </button>
+        </div>
+        <div className='row mt-2'>
+          <div className='col-12 mb-6 text-center'>
+            <div className='me-7 mb-4'>
+              <div className='symbol symbol-10px symbol-lg-100px symbol-fixed position-relative overlay overflow-hidden'>
                 <div className='card-body'>
-                  <div className='d-grid gap-2 d-md-flex justify-content-md'>
-                    <Link to='/apps/detail-hak-akses/DetailHakAkses/'>
-                      <button className='btn btn-secondary'>
-                        <i className='fa-solid fa-arrow-left'></i>
-                        Kembali
-                      </button>
-                    </Link>
-                  </div>
-
-                  <div className='col-md-6 class="d-flex flex-center  py-5 px-20 '>
+                  <div className='col-md-2 class="d-flex flex-center  py-3 px-10 '>
                     <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative overlay overflow-hidden'>
                       <div className='overlay-wrapper'>
                         {/* {data && data?.foto !== '' ? (
