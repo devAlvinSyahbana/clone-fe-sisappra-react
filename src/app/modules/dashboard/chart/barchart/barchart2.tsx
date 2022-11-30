@@ -80,16 +80,16 @@ function Pie(props: { chartID: any; valueField?: any; categoryField: any }) {
     yAxis.data.setAll(chartID);
     series1.data.setAll(chartID)
 
-    sortCategoryAxis();
-    // Get series item by category
-    function getSeriesItem(category: any) {
-      for (var i = 0; i < series1.dataItems.length; i++) {
-        var dataItem = series1.dataItems[i];
-        if (dataItem.get("categoryY") == category) {
-          return dataItem;
-        }
-      }
-    }
+    // sortCategoryAxis();
+    // // Get series item by category
+    // function getSeriesItem(category: any) {
+    //   for (var i = 0; i < series1.dataItems.length; i++) {
+    //     var dataItem = series1.dataItems[i];
+    //     if (dataItem.get("categoryY") == category) {
+    //       return dataItem;
+    //     }
+    //   }
+    // }
 
     chart.set("cursor", am5xy.XYCursor.new(root, {
       behavior: "none",
@@ -97,49 +97,69 @@ function Pie(props: { chartID: any; valueField?: any; categoryField: any }) {
       yAxis: yAxis
     }));
 
-    // Axis sorting
-    function sortCategoryAxis() {
+    // // Axis sorting
+    // function sortCategoryAxis() {
 
-      // Sort by value
-      series1.dataItems.sort(function (x, y) {
-        return x.get("valueX") ? - y.get("valueX")! : 0; // descending
-        //return y.get("valueY") - x.get("valueX"); // ascending
-      })
+    //   // Sort by value
+    //   series1.dataItems.sort(function (x, y) {
+    //     return x.get("valueX") ? - y.get("valueX")! : 0; // descending
+    //     //return y.get("valueY") - x.get("valueX"); // ascending
+    //   })
 
-      // Go through each axis item
-      am5.array.each(yAxis.dataItems, function (dataItem) {
-        // get corresponding series item
-        var seriesDataItem = getSeriesItem(dataItem.get("category"));
+    //   // Go through each axis item
+    //   am5.array.each(yAxis.dataItems, function (dataItem) {
+    //     // get corresponding series item
+    //     var seriesDataItem = getSeriesItem(dataItem.get("category"));
 
-        if (seriesDataItem) {
-          // get index of series data item
-          var index = series1.dataItems.indexOf(seriesDataItem);
-          // calculate delta position
-          var deltaPosition = (index - dataItem.get("index", 0)) / series1.dataItems.length;
-          // set index to be the same as series data item index
-          dataItem.set("index", index);
-          // set deltaPosition instanlty
-          dataItem.set("deltaPosition", -deltaPosition);
-          // animate delta position to 0
-          dataItem.animate({
-            key: "deltaPosition",
-            to: 0,
-            duration: 1000,
-            easing: am5.ease.out(am5.ease.cubic)
-          })
-        }
-      });
+    //     if (seriesDataItem) {
+    //       // get index of series data item
+    //       var index = series1.dataItems.indexOf(seriesDataItem);
+    //       // calculate delta position
+    //       var deltaPosition = (index - dataItem.get("index", 0)) / series1.dataItems.length;
+    //       // set index to be the same as series data item index
+    //       dataItem.set("index", index);
+    //       // set deltaPosition instanlty
+    //       dataItem.set("deltaPosition", -deltaPosition);
+    //       // animate delta position to 0
+    //       dataItem.animate({
+    //         key: "deltaPosition",
+    //         to: 0,
+    //         duration: 1000,
+    //         easing: am5.ease.out(am5.ease.cubic)
+    //       })
+    //     }
+    //   });
 
-      // Sort axis items by index.
-      // This changes the order instantly, but as deltaPosition is set,
-      // they keep in the same places and then animate to true positions.
-      yAxis.dataItems.sort(function (x, y) {
-        return x.get("index") ? - y.get("index")! : 0;
-      });
-    }
+    //   // Sort axis items by index.
+    //   // This changes the order instantly, but as deltaPosition is set,
+    //   // they keep in the same places and then animate to true positions.
+    //   yAxis.dataItems.sort(function (x, y) {
+    //     return x.get("index") ? - y.get("index")! : 0;
+    //   });
+    // }
 
-    series1.appear(1000)
-    chart.appear(1000, 100)
+    // setInterval(function () {
+    //   updateData();
+    // }, )
+    
+    // function updateData() {
+    //   am5.array.each(series1.dataItems, function (dataItem) {
+    //     var value = dataItem.get("valueX")!;
+    //     if (value < 0) {
+    //       value = 500000000;
+    //     }
+    //     // both valueY and workingValueY should be changed, we only animate workingValueY
+    //     dataItem.set("valueX", value);
+    //     dataItem.animate({
+    //       key: "valueXWorking",
+    //       to: value,
+    //       duration: 600,
+    //       easing: am5.ease.out(am5.ease.cubic)
+    //     });
+    //   })
+    
+    //   sortCategoryAxis();
+    // }
   }, [chartID, valueField, categoryField])
 
 
