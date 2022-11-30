@@ -59,6 +59,15 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
+export interface DataPermission {
+  id: number
+  akses_kontrol: number
+  nama_permission: string
+  status: number
+  akses_kontrol_name: string
+  akses_kontrol_id: number
+}
+
 export function HakAkses() {
   const navigate = useNavigate()
   //handle ubah
@@ -81,7 +90,7 @@ export function HakAkses() {
   const [jumlah_Pengguna, setJumlahPengguna] = useState<JumlahPengguna>()
 
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
-  const [modulPermission, setModulPermission] = useState<any[]>([])
+  const [modulPermission, setModulPermission] = useState<DataPermission[]>([])
   const [akm, setAkm] = useState([])
 
   useEffect(() => {
@@ -121,12 +130,17 @@ export function HakAkses() {
       nama_hak_akses: '',
       value_permission: [],
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       const bodyparam: FormInput = {
-        nama_hak_akses: valuesFormik?.nama_hak_akses ? valuesFormik.nama_hak_akses : '',
-        wilayah_bidang: valMasterBidangWilayah?.value ? valMasterBidangWilayah.value : '',
-        kecamatan: valMasterPelaksana?.value ? valMasterPelaksana.value : '',
-        jabatan: valMasterJabatan?.value ? valMasterJabatan.value : '',
+        nama_hak_akses:
+          valMasterBidangWilayah.label +
+          ' ' +
+          valMasterPelaksana.label +
+          ' ' +
+          valMasterJabatan.label,
+        wilayah_bidang: valMasterBidangWilayah?.value ? valMasterBidangWilayah.value : 0,
+        kecamatan: valMasterPelaksana?.value ? valMasterPelaksana.value : 0,
+        jabatan: valMasterJabatan?.value ? valMasterJabatan.value : 0,
         created_by: 0,
       }
       try {
@@ -139,9 +153,7 @@ export function HakAkses() {
           // alert(JSON.stringify(values, null, 2))
           for (let i = 0; i < modulPermission.length; i++) {
             let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
-            // console.log(mp)
-            // console.log(values.value_permission)
-            if (values.value_permission.includes(mp)) {
+            if (mp && values.value_permission.includes(mp)) {
               await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
                 id_hak_akses: value.data.data.id,
                 id_akses_kontrol: modulPermission[i].akses_kontrol,
@@ -157,7 +169,7 @@ export function HakAkses() {
               })
             }
           }
-          fetchDT(1)
+
           Swal.fire({
             icon: 'success',
             title: 'Data berhasil disimpan',
@@ -167,6 +179,8 @@ export function HakAkses() {
           values.value_permission = []
           setTambahShow(false)
         }
+        fetchDT(1)
+        handleTambahClose()
       } catch (error) {
         Swal.fire({
           icon: 'error',
@@ -303,8 +317,10 @@ export function HakAkses() {
                   <div className='card card-flush h-md-100'>
                     <div className='card-header'>
                       <div className='card-title'>
-                        <a>{d?.nama_hak_akses}</a>
-                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                        <div className='col-xxl-10 col-lg-10 col-md-10 col-sm-12'>
+                          <a>{d?.nama_hak_akses}</a>
+                        </div>
+                        {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                           <a>{d?.wilayah_bidang}</a>
                         </div>
 
@@ -314,7 +330,7 @@ export function HakAkses() {
 
                         <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
                           <a>{d?.jabatan}</a>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                     <div className='card-body pt-1'>

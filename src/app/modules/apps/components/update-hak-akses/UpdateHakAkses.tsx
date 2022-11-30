@@ -311,12 +311,10 @@ export function UpdateHakAkses() {
     <div className='card mb-1 mb-xl-1'>
       <div className='flex-lg-row-fluid ms-lg-10'>
         <div className='d-grid gap-2 d-md-flex justify-content-md mt-3'>
-          <Link to='/apps/detail-hak-akses/DetailHakAkses/'>
-            <button className='btn btn-secondary'>
-              <i className='fa-solid fa-arrow-left'></i>
-              Kembali
-            </button>
-          </Link>
+          <button className='btn btn-secondary' onClick={() => navigate(-1)}>
+            <i className='fa-solid fa-arrow-left'></i>
+            Kembali
+          </button>
         </div>
         <div className='row mt-2'>
           <div className='col-12 mb-6 text-center'>
