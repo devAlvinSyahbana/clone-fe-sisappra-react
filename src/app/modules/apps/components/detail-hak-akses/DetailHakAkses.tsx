@@ -442,7 +442,7 @@ export function DetailHakAkses() {
       value_permission: value_permission === true ? false : true,
     }
     await axios.put(`${API_URL}/manajemen-penggunaakses-kontrol-mapping/update/${id}`, request)
-    return
+    return fetchMapping(1)
   }
 
   // USE EFFECT + FETCH FUNCTION
