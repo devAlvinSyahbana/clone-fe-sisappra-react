@@ -164,7 +164,7 @@ export function DetailHakAkses() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const [hakAkses, setHakAkses] = useState<any[]>([])
+  const [hakAkses, setHakAkses] = useState<any>([])
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<any[]>([])
   const [akm, setAkm] = useState([])
