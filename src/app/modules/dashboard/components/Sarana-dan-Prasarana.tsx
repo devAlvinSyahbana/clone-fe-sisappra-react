@@ -48,7 +48,7 @@ const SaranadanPrasarana: FC = () => {
       <div className='tab-content' id='myTabContent'>
         <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
           <div className='row'>
-            <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
+            {/* <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
                   <h3 className='card-title text-white'>
@@ -57,7 +57,7 @@ const SaranadanPrasarana: FC = () => {
                 </div>
                 <div className='card-body'>
                   <div className='row'>
-                    {/* <div className='col-md-2 col-lg-2 col-sm-12'>
+                     <div className='col-md-2 col-lg-2 col-sm-12'>
                       <select
                         className='form-select form-select-solid'
                         aria-label='Select example'
@@ -68,9 +68,9 @@ const SaranadanPrasarana: FC = () => {
                         <option value='2'>Kabupaten</option>
                         <option value='3'>Kecamatan</option>
                       </select>
-                    </div> */}
+                    </div> 
                   </div>
-                  {/* {showResults.isShowed && showResults.val === '1' ? (
+                   {showResults.isShowed && showResults.val === '1' ? (
                     <>
                       <PieC chartID='pie-one' />
                     </>
@@ -82,10 +82,10 @@ const SaranadanPrasarana: FC = () => {
                     <>
                       <PieC chartID='pie-one' />
                     </>
-                  ) : null} */}
+                  ) : null} 
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
