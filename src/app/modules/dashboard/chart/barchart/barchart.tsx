@@ -14,6 +14,7 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
   useLayoutEffect(() => {
     // Create root and chart
     const root = am5.Root.new(categoryField)
+    
 
     root.setThemes([am5themes_Animated.new(root)])
 

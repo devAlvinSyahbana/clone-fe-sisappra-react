@@ -303,7 +303,8 @@ export function SKPD() {
         })
         setTemp(items)
         setLoading(false)
-      }, 60)
+      }, 100)
+
       return () => clearTimeout(timeout)
     }
     fetchUsers(1)

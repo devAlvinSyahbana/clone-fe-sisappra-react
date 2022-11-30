@@ -293,9 +293,18 @@ export function Pangkat() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(`${PANGKAT_URL}/filter/${qParamFind.strparam}`)
-      setTemp(response.data.data)
+      // setTemp(response.data.data)
       setTotalRows(response.data.total_data)
-      setLoading(false)
+      const timeout = setTimeout(() => {
+        let items = response.data.data
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 100)
+
+      return () => clearTimeout(timeout)
     }
     fetchUsers(1)
     fetchDT(1)
@@ -311,7 +320,8 @@ export function Pangkat() {
         item.serial = index + 1
       })
       setTemp(items)
-    }, 150)
+      setLoading(false)
+    }, 50)
     return () => clearTimeout(timeout)
   }
   // END :: VIEW
