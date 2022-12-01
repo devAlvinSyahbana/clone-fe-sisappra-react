@@ -152,7 +152,7 @@ export function HakAkses() {
       }
       try {
         const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
-        console.log(response.data)
+        // console.log(response.data)
         fetchDT(1)
         if (response) {
           // console.log(bodyparam.nama_hak_akses)
@@ -298,7 +298,7 @@ export function HakAkses() {
     const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/modul-permission/find`)
     setModulPermission(value?.data?.data)
     setTotalRows(value.data.total)
-    console.log('cek mp', modulPermission)
+    // console.log('cek mp', modulPermission)
   }
   //modul permission
 
