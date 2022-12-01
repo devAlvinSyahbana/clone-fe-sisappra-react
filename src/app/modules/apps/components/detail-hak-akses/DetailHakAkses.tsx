@@ -611,48 +611,6 @@ export function DetailHakAkses() {
                                             {ak2.level.split('-')[0] === ak.level && (
                                               <div className='d-flex align-items-center py-4 mb-4'>
                                                 <h5 className='card-title m-0 w-50'>{ak2.modul}</h5>
-                                                {/* <div className='d-flex w-50'>
-                                                  {modulPermission.map((mp: any) => {
-                                                    return (
-                                                      <>
-                                                        {mp.akses_kontrol === ak2.id && (
-                                                          <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
-                                                            {akm.map((mapping: any) => {
-                                                              return (
-                                                                <>
-                                                                  {mapping.id_permission ===
-                                                                    mp.id && (
-                                                                    <input
-                                                                      name='value_permission'
-                                                                      type='checkbox'
-                                                                      onChange={() =>
-                                                                        setPermissionStatus(
-                                                                          mapping.id,
-                                                                          mapping.id_hak_akses,
-                                                                          mapping.id_permission,
-                                                                          mp.akses_kontrol,
-                                                                          mapping.value_permission
-                                                                        )
-                                                                      }
-                                                                      value={ak2.id + ' ' + mp.id}
-                                                                      checked={
-                                                                        mapping.value_permission ===
-                                                                        true
-                                                                      }
-                                                                    />
-                                                                  )}
-                                                                </>
-                                                              )
-                                                            })}
-                                                            <span className='form-check-label'>
-                                                              {mp.nama_permission}
-                                                            </span>
-                                                          </label>
-                                                        )}
-                                                      </>
-                                                    )
-                                                  })}
-                                                </div> */}
                                                 <div className='d-flex w-50'>
                                                   {modulPermission.map((mp: any) => {
                                                     return (
