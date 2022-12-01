@@ -477,7 +477,7 @@ export function AksesKontrol() {
             name='nama'
             value={valFilterModul.val}
             onChange={handleChangeInputModul}
-            placeholder='Cari nama modul'
+            placeholder='Masukkan Nama Modul'
           />
         </div>
         <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
