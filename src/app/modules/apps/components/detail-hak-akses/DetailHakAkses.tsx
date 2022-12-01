@@ -219,13 +219,11 @@ export function DetailHakAkses() {
     )
   }
 
-  const initialValues = {
-    nama_hak_akses: '',
-    value_permission: akm,
-  }
-
   const formik = useFormik({
-    initialValues,
+    initialValues: {
+      nama_hak_akses: '',
+      value_permission: akm,
+    },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
         nama_hak_akses: values.nama_hak_akses,
@@ -358,6 +356,14 @@ export function DetailHakAkses() {
     setLoading(true)
 
     // instead of setTimeout this is where you would handle your API call.
+  }
+
+  const handleCheck = (val: string) => {
+    // formik.values.value_permission = initialValues.value_permission
+    console.log(formik.values.value_permission.includes(val))
+    console.log(val)
+    console.log(akm)
+    return formik.values.value_permission.includes(val)
   }
 
   const konfirDel = (id: number, hak_akses: number) => {
@@ -536,8 +542,9 @@ export function DetailHakAkses() {
       if (value.data.data[i].value_permission)
         items.push(value.data.data[i].id_akses_kontrol + ' ' + value.data.data[i].id_permission)
     }
-    console.log('cek akm, ', items)
+    // console.log('cek akm, ', items)
     setAkm(items)
+    formik.values.value_permission = items
     setTotalRows(value.data.total)
   }
   //end mapping
@@ -776,7 +783,7 @@ export function DetailHakAkses() {
                                                               type='checkbox'
                                                               onChange={formik.handleChange}
                                                               value={ak2.id + ' ' + mp.id}
-                                                              checked={initialValues.value_permission.includes(
+                                                              checked={handleCheck(
                                                                 ak2.id + ' ' + mp.id
                                                               )}
                                                             />
