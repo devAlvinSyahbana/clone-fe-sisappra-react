@@ -16,6 +16,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {ADDRGETNETWORKPARAMS} from 'dns'
 
 //THEME
 createTheme(
@@ -168,10 +169,6 @@ export interface SelectOption {
   readonly isFixed?: boolean
   readonly isDisabled?: boolean
 }
-interface GetDataInterface {
-  id?: number
-  nama_hak_akses?: string
-}
 // END INTERFACE
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -196,14 +193,11 @@ export function DetailHakAkses() {
   const [modulPermission, setModulPermission] = useState<any[]>([])
   const [aksesKontrolMapping, setAksesKontrolMapping] = useState<any[]>([])
   //
-
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({strparam: ''})
-
-  const [temp, setTemp] = useState([])
   // END STATE SECTION
 
   const LoadingAnimation = (props: any) => {
@@ -235,7 +229,6 @@ export function DetailHakAkses() {
           `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
           bodyparam
         )
-        console.log(response.data)
         alert(JSON.stringify(values, null, 2))
         if (response) {
           for (let i = 0; i < modulPermission.length; i++) {
@@ -243,23 +236,30 @@ export function DetailHakAkses() {
             // console.log(mp)
             // console.log('cek akm, ', aksesKontrolMapping)
             if (aksesKontrolMapping.length === modulPermission.length) {
+              // let akm: string = aksesKontrolMapping[i].id_akses_kontrol + ' ' + aksesKontrolMapping[i].id_permission
+
               if (values.value_permission.includes(mp)) {
-                // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-                //   // id_hak_akses: value.data.data.id,
-                //   // id_akses_kontrol: modulPermission[i].akses_kontrol,
-                //   // id_permission: modulPermission[i].id,
-                //   // value_permission: true,
+                // await axios.put(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`, {
+                // id_hak_akses: id,
+                // id_akses_kontrol: modulPermission[i].akses_kontrol,
+                // id_permission: modulPermission[i].id,
+                // value_permission: true,
                 // })
                 console.log('tt')
               } else {
-                // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-                //   id_hak_akses: value.data.data.id,
+                // await axios.put(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`, {
+                //   id_hak_akses: id,
                 //   id_akses_kontrol: modulPermission[i].akses_kontrol,
                 //   id_permission: modulPermission[i].id,
                 //   value_permission: false,
                 // })
                 console.log(id, 'tf')
               }
+            } else if (
+              aksesKontrolMapping.length < modulPermission.length &&
+              aksesKontrolMapping.length > 0
+            ) {
+              console.log(true)
             } else {
               if (values.value_permission.includes(mp)) {
                 await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
@@ -280,14 +280,15 @@ export function DetailHakAkses() {
               }
             }
           }
-          // Swal.fire({
-          //   icon: 'success',
-          //   title: 'Data berhasil disimpan',
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // })
+          Swal.fire({
+            icon: 'success',
+            title: 'Data berhasil disimpan',
+            showConfirmButton: false,
+            timer: 1500,
+          })
           values.value_permission = []
-          // setShow(false)
+          fetchMapping(1)
+          setShow(false)
         }
       } catch (error) {
         Swal.fire({
@@ -398,7 +399,7 @@ export function DetailHakAkses() {
     setFilterNamaLengkap({val: event.target.value})
   }
 
-  // USE EFFECT + FETCH FUNCTION
+  // USEEFFECT + FETCH FUNCTION
   useEffect(() => {
     fetchDataAwal()
     fetchData(1)
@@ -463,7 +464,7 @@ export function DetailHakAkses() {
     setTotalRows(value.data.total)
   }
   //end mapping
-  // EMD USE EFFECT + FETCH FUNCTION
+  // EMD USEEFFECT + FETCH FUNCTION
 
   var num = 1
   const columns = [
