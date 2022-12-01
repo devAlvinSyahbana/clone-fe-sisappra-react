@@ -152,25 +152,23 @@ export function HakAkses() {
       }
       try {
         const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
+        console.log(response.data)
         fetchDT(1)
         if (response) {
           // console.log(bodyparam.nama_hak_akses)
-          const value = await axios.get(
-            `${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone-by-nama-hak-akses/${bodyparam.nama_hak_akses}`
-          )
           // alert(JSON.stringify(values, null, 2))
           for (let i = 0; i < modulPermission.length; i++) {
             let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
             if (mp && values.value_permission.includes(mp)) {
               await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-                id_hak_akses: value.data.data.id,
+                id_hak_akses: response.data.data.id,
                 id_akses_kontrol: modulPermission[i].akses_kontrol,
                 id_permission: modulPermission[i].id,
                 value_permission: true,
               })
             } else {
               await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-                id_hak_akses: value.data.data.id,
+                id_hak_akses: response.data.data.id,
                 id_akses_kontrol: modulPermission[i].akses_kontrol,
                 id_permission: modulPermission[i].id,
                 value_permission: false,
