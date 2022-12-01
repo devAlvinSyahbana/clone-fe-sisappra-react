@@ -176,7 +176,6 @@ export function DetailHakAkses() {
   const [akm, setAkm] = useState([])
   //
   const [valuesFormikExist, setValuesFormikExist] = React.useState<FormInput>({})
-  const [inputValHakAkses, setDataHakAkses] = useState({label: '', value: null})
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
 
   const LoadingAnimation = (props: any) => {
@@ -198,15 +197,16 @@ export function DetailHakAkses() {
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({strparam: ''})
-
+  const [hakAkses, setHakAkses] = useState(id)
+  const [totalDataa, setTotalData] = useState(id)
   const [temp, setTemp] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       const jumlah_Pengguna = await axios.get(
-        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/1`
+        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/{id_hak_akses}?id_hak_akses=${totalDataa}`
       )
-
+      console.log(jumlah_Pengguna)
       setJumlahPengguna(jumlah_Pengguna.data.data)
     }
     fetchDT(1)
@@ -214,14 +214,15 @@ export function DetailHakAkses() {
     fetchPermission()
     fetchMapping()
     fetchUsers()
-  }, [qParamFind, perPage])
+  }, [qParamFind, perPage, hakAkses])
 
   //Data Tabel
   async function fetchDT(page: number) {
     setLoading(true)
     const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}&hak_akses=${hakAkses}`
     )
+    console.log(response.data.data)
     setData(response.data.data)
     setTotalRows(response.data.total_data)
     setLoading(false)
@@ -230,7 +231,7 @@ export function DetailHakAkses() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}&hak_akses=${hakAkses}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -246,7 +247,7 @@ export function DetailHakAkses() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${newPerPage}&offset=${page}${qParamFind.strparam}&hak_akses=${hakAkses}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -277,8 +278,8 @@ export function DetailHakAkses() {
     },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
-        nama_hak_akses: inputValHakAkses?.value
-          ? inputValHakAkses.value
+        nama_hak_akses: valuesFormik?.nama_hak_akses
+          ? valuesFormik.nama_hak_akses
           : valuesFormikExist?.nama_hak_akses
           ? valuesFormikExist.nama_hak_akses
           : '',
@@ -329,7 +330,7 @@ export function DetailHakAkses() {
     // instead of setTimeout this is where you would handle your API call.
   }
 
-  const konfirDel = (id: number, hak_akses: number) => {
+  const konfirDel = (id: number, status_pegawai: string) => {
     Swal.fire({
       text: 'Anda yakin ingin menghapus data ini',
       icon: 'warning',
@@ -343,11 +344,11 @@ export function DetailHakAkses() {
       if (result.isConfirmed) {
         const bodyParam = {
           data: {
-            hak_akses: 0,
+            status_pegawai: status_pegawai,
             deleted_by: 0,
           },
         }
-        const response = await axios.delete(`${MANAJEMEN_PENGGUNA_URL}delete/${id}`, bodyParam)
+        const response = await axios.delete(`${MANAJEMEN_PENGGUNA_URL}/delete/${id}`, bodyParam)
         if (response) {
           fetchData(1)
           Swal.fire({

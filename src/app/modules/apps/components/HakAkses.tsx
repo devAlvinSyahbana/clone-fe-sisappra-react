@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import CardGroup from 'react-bootstrap/CardGroup'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -70,6 +70,7 @@ export interface DataPermission {
 
 export function HakAkses() {
   const navigate = useNavigate()
+  const {id} = useParams()
   //handle ubah
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
@@ -92,13 +93,14 @@ export function HakAkses() {
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<DataPermission[]>([])
   const [akm, setAkm] = useState([])
+  const [totalDataa, setTotalData] = useState(id)
 
   useEffect(() => {
     const fetchData = async () => {
       const jumlah_Pengguna = await axios.get(
-        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/1 `
+        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/{id_hak_akses}?id_hak_akses=${totalDataa}`
       )
-
+      console.log(jumlah_Pengguna)
       setJumlahPengguna(jumlah_Pengguna.data.data)
     }
     fetchDT(1)
@@ -198,6 +200,7 @@ export function HakAkses() {
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
+
     const json = await response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
@@ -290,7 +293,6 @@ export function HakAkses() {
     const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/modul-permission/find`)
     setModulPermission(value?.data?.data)
     setTotalRows(value.data.total)
-    console.log('cek mp', modulPermission)
   }
   //modul permission
 
@@ -320,17 +322,6 @@ export function HakAkses() {
                         <div className='col-xxl-10 col-lg-10 col-md-10 col-sm-12'>
                           <a>{d?.nama_hak_akses}</a>
                         </div>
-                        {/* <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                          <a>{d?.wilayah_bidang}</a>
-                        </div>
-
-                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                          <a>{d?.kecamatan}</a>
-                        </div>
-
-                        <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
-                          <a>{d?.jabatan}</a>
-                        </div> */}
                       </div>
                     </div>
                     <div className='card-body pt-1'>
