@@ -17,6 +17,14 @@ export function Kecamatan() {
   const navigate = useNavigate()
 
   const [show, setShow] = useState(false)
+  const [valFilterKota, setFilterKota] = useState({val: ''})
+  const [valFilterKecamatan, setFilterKecamatan] = useState({val: ''})
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(10)
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+ 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
@@ -36,6 +44,30 @@ export function Kecamatan() {
         </div>
       </>
     )
+  }
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterKota.val !== '') {
+      uriParam += `kota=${valFilterKota.val}`
+    }
+    if (valFilterKecamatan.val !== '') {
+      uriParam += `&kecamatan=${valFilterKecamatan.val}`
+    }
+    
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleChangeInputKota = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterKota({val: event.target.value})
+  }
+  const handleChangeInputKecamatan = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterKecamatan({val: event.target.value})
   }
 
   const columns = [
@@ -124,29 +156,47 @@ export function Kecamatan() {
     },
   ]
 
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
+
 
   const [temp, setTemp] = useState([])
+
+  useEffect(() => {
+    async function fetchDT(page: number) {
+      setLoading(true)
+      console.log(qParamFind)
+      const response = await axios.get(
+        `${KECAMATAN_URL}/findone-by-kecamatan?${qParamFind.strparam}`
+      )
+      console.log(response.data.data)
+      // setTotalRows(response.data.total_data)
+      const timeout = setTimeout(() => {
+        let items = response.data.data
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 100)
+
+      return () => clearTimeout(timeout)
+    }
+    fetchUsers(1)
+    fetchDT(1)
+  }, [qParamFind, perPage])
+  //}
 
   const fetchUsers = async (page: any) => {
     setLoading(true)
     const value = await axios.get(KECAMATAN_URL + '/find')
-
-    setTemp(value.data.data)
-    console.log('cek response api:', temp)
-
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
-    )
-    setData(response.data.data)
-
-    setTotalRows(response.data.total)
-    setLoading(false)
-    console.log('cek ahhh :', data)
-    return [data, setData] as const
+    const timeout = setTimeout(() => {
+      let items = value.data.data
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
+      setLoading(false)
+    }, 50)
+    return () => clearTimeout(timeout)
   }
 
   const handlePageChange = (page: any) => {
@@ -223,10 +273,13 @@ export function Kecamatan() {
               Kota
             </label>
             <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              name='tags'
-            />
+            type='text'
+            className='form-control form-control form-control-solid'
+            name='kota'
+            value={valFilterKota.val}
+            onChange={handleChangeInputKota}
+            placeholder='kota'
+          />
           </div>
         </div>
       </div>
@@ -237,16 +290,19 @@ export function Kecamatan() {
               Kecamatan
             </label>
             <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              name='tags'
-            />
+            type='text'
+            className='form-control form-control form-control-solid'
+            name='kecamatan'
+            value={valFilterKecamatan.val}
+            onChange={handleChangeInputKecamatan}
+            placeholder='Kecamatan'
+          />
           </div>
         </div>
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
+          <Link onClick={handleFilter} to='#'>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
@@ -265,20 +321,15 @@ export function Kecamatan() {
       </div>
 
       <div className='table-responsive mt-5 ms-5 me-5'>
-        <DataTable columns={columns} data={temp} pagination />
-        {/* <DataTable
+        {/* <DataTable columns={columns} data={temp} pagination /> */}
+        <DataTable
           columns={columns}
-          data={data}
+          data={temp}
           progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
-          paginationServer
           paginationTotalRows={totalRows}
-          sortServer
-          onSort={handleSort}
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-        /> */}
+        />
       </div>
       {/* end::Body */}
     </div>
