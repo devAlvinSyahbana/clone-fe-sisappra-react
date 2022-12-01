@@ -178,6 +178,7 @@ export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
 export function DetailHakAkses() {
   // STATE SECTION
   const {id} = useParams()
+  const idnumb = id
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const [show, setShow] = useState(false)
@@ -229,31 +230,35 @@ export function DetailHakAkses() {
           `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
           bodyparam
         )
-        alert(JSON.stringify(values, null, 2))
+        // alert(JSON.stringify(values, null, 2))
         if (response) {
           for (let i = 0; i < modulPermission.length; i++) {
             let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
-            // console.log(mp)
             // console.log('cek akm, ', aksesKontrolMapping)
             if (aksesKontrolMapping.length === modulPermission.length) {
               // let akm: string = aksesKontrolMapping[i].id_akses_kontrol + ' ' + aksesKontrolMapping[i].id_permission
-
               if (values.value_permission.includes(mp)) {
-                // await axios.put(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`, {
-                // id_hak_akses: id,
-                // id_akses_kontrol: modulPermission[i].akses_kontrol,
-                // id_permission: modulPermission[i].id,
-                // value_permission: true,
-                // })
-                console.log('tt')
+                await axios.put(
+                  `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`,
+                  {
+                    id_hak_akses: id,
+                    id_akses_kontrol: modulPermission[i].akses_kontrol,
+                    id_permission: modulPermission[i].id,
+                    value_permission: true,
+                  }
+                )
+                // console.log('tt')
               } else {
-                // await axios.put(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`, {
-                //   id_hak_akses: id,
-                //   id_akses_kontrol: modulPermission[i].akses_kontrol,
-                //   id_permission: modulPermission[i].id,
-                //   value_permission: false,
-                // })
-                console.log(id, 'tf')
+                await axios.put(
+                  `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`,
+                  {
+                    id_hak_akses: id,
+                    id_akses_kontrol: modulPermission[i].akses_kontrol,
+                    id_permission: modulPermission[i].id,
+                    value_permission: false,
+                  }
+                )
+                // console.log(id, 'tf')
               }
             } else if (
               aksesKontrolMapping.length < modulPermission.length &&
