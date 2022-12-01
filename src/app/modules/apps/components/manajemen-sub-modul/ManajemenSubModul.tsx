@@ -250,7 +250,7 @@ export function ManajemenSubModul() {
 
   const fetchUsers = async () => {
     setLoading(true)
-    const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
+    const value = await axios.get(`${AKSES_KONTROL_URL}/find-all`)
     const nama = await axios.get(`${AKSES_KONTROL_URL}/findone/${id}`)
     const currentMenu = nama.data.data.level + '-'
     const children = value.data.data.filter((item: any) => item.level.startsWith(currentMenu))
