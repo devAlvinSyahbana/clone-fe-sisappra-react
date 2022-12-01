@@ -194,7 +194,7 @@ export function DetailHakAkses() {
   const [hakAkses, setHakAkses] = useState<HakAkses>()
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<any[]>([])
-  const [akm, setAkm] = useState<any[]>([])
+  const [aksesKontrolMapping, setAksesKontrolMapping] = useState<any[]>([])
   //
 
   const [data, setData] = useState([])
@@ -223,7 +223,7 @@ export function DetailHakAkses() {
   const formik = useFormik({
     initialValues: {
       nama_hak_akses: '',
-      value_permission: akm,
+      value_permission: aksesKontrolMapping,
     },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
@@ -235,37 +235,59 @@ export function DetailHakAkses() {
           `${MANAJEMEN_PENGGUNA_URL}/hak-akses/update/${id}`,
           bodyparam
         )
+        console.log(response.data)
+        alert(JSON.stringify(values, null, 2))
         if (response) {
-          alert(JSON.stringify(values, null, 2))
           for (let i = 0; i < modulPermission.length; i++) {
             let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
             // console.log(mp)
-            if (values.value_permission.includes(mp)) {
-              // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-              //   // id_hak_akses: value.data.data.id,
-              //   // id_akses_kontrol: modulPermission[i].akses_kontrol,
-              //   // id_permission: modulPermission[i].id,
-              //   // value_permission: true,
-              // })
-              // console.log(true)
+            // console.log('cek akm, ', aksesKontrolMapping)
+            if (aksesKontrolMapping.length === modulPermission.length) {
+              if (values.value_permission.includes(mp)) {
+                // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+                //   // id_hak_akses: value.data.data.id,
+                //   // id_akses_kontrol: modulPermission[i].akses_kontrol,
+                //   // id_permission: modulPermission[i].id,
+                //   // value_permission: true,
+                // })
+                console.log('tt')
+              } else {
+                // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+                //   id_hak_akses: value.data.data.id,
+                //   id_akses_kontrol: modulPermission[i].akses_kontrol,
+                //   id_permission: modulPermission[i].id,
+                //   value_permission: false,
+                // })
+                console.log(id, 'tf')
+              }
             } else {
-              // await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
-              //   id_hak_akses: value.data.data.id,
-              //   id_akses_kontrol: modulPermission[i].akses_kontrol,
-              //   id_permission: modulPermission[i].id,
-              //   value_permission: false,
-              // })
-              // console.log(false)
+              if (values.value_permission.includes(mp)) {
+                await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+                  id_hak_akses: id,
+                  id_akses_kontrol: modulPermission[i].akses_kontrol,
+                  id_permission: modulPermission[i].id,
+                  value_permission: true,
+                })
+                // console.log('ft')
+              } else {
+                await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
+                  id_hak_akses: id,
+                  id_akses_kontrol: modulPermission[i].akses_kontrol,
+                  id_permission: modulPermission[i].id,
+                  value_permission: false,
+                })
+                // console.log('ff')
+              }
             }
           }
-          Swal.fire({
-            icon: 'success',
-            title: 'Data berhasil disimpan',
-            showConfirmButton: false,
-            timer: 1500,
-          })
+          // Swal.fire({
+          //   icon: 'success',
+          //   title: 'Data berhasil disimpan',
+          //   showConfirmButton: false,
+          //   timer: 1500,
+          // })
           values.value_permission = []
-          setShow(false)
+          // setShow(false)
         }
       } catch (error) {
         Swal.fire({
@@ -383,7 +405,11 @@ export function DetailHakAkses() {
     fetchAksesKontrol()
     fetchPermission()
     fetchMapping(1)
-  }, [qParamFind, perPage, formik.isSubmitting])
+  }, [qParamFind, perPage])
+
+  useEffect(() => {
+    fetchDataAwal()
+  }, [formik.isSubmitting])
 
   //Data Tabel
   const fetchDataAwal = async () => {
@@ -409,7 +435,7 @@ export function DetailHakAkses() {
   //akses kontrol
   const fetchAksesKontrol = async () => {
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
-    setAksesKontrol(value?.data?.data)
+    setAksesKontrol(value.data.data)
     setTotalRows(value.data.total)
   }
   //end akses kontrol
@@ -417,7 +443,7 @@ export function DetailHakAkses() {
   //modul permission
   const fetchPermission = async () => {
     const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/modul-permission/find`)
-    setModulPermission(value?.data?.data)
+    setModulPermission(value.data.data)
     setTotalRows(value.data.total)
   }
   //modul permission
@@ -432,8 +458,7 @@ export function DetailHakAkses() {
       if (value.data.data[i].value_permission)
         items.push(value.data.data[i].id_akses_kontrol + ' ' + value.data.data[i].id_permission)
     }
-    console.log('cek akm, ', value.data.data)
-    setAkm(items)
+    setAksesKontrolMapping(value.data.data)
     formik.values.value_permission = items
     setTotalRows(value.data.total)
   }
@@ -599,7 +624,7 @@ export function DetailHakAkses() {
                             <>
                               {/* Dashboard */}
                               {ak.level.split('-').length < 2 && (
-                                <Accordion key={ak.id} defaultActiveKey='0'>
+                                <Accordion key={'ak' + ak.id} defaultActiveKey='0'>
                                   <Accordion.Item eventKey='1'>
                                     <Accordion.Header>
                                       <h3>{ak.modul}</h3>
@@ -609,14 +634,20 @@ export function DetailHakAkses() {
                                         return (
                                           <>
                                             {ak2.level.split('-')[0] === ak.level && (
-                                              <div className='d-flex align-items-center py-4 mb-4'>
+                                              <div
+                                                className='d-flex align-items-center py-4 mb-4'
+                                                key={'ak2' + ak2.id}
+                                              >
                                                 <h5 className='card-title m-0 w-50'>{ak2.modul}</h5>
                                                 <div className='d-flex w-50'>
                                                   {modulPermission.map((mp: any) => {
                                                     return (
                                                       <>
                                                         {mp.akses_kontrol === ak2.id && (
-                                                          <label className='form-check form-check-custom form-check-solid me-5 me-lg-20'>
+                                                          <label
+                                                            className='form-check form-check-custom form-check-solid me-5 me-lg-20'
+                                                            key={'mp' + ak2.id}
+                                                          >
                                                             <input
                                                               name='value_permission'
                                                               type='checkbox'
