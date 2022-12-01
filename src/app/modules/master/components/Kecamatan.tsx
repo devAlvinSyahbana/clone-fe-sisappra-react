@@ -1,11 +1,13 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme, ExpanderComponentProps} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Swal from 'sweetalert2'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -13,10 +15,67 @@ import Form from 'react-bootstrap/Form'
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const KECAMATAN_URL = `${API_URL}/master/kecamatan` //http://localhost:3000/master/kecamatan
 
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+
+const customStyles = {
+  rows: {
+    style: {
+      minHeight: '105px', // override the row height
+    },
+  },
+  headCells: {
+    style: {
+      paddingLeft: '14px', // override the cell padding for head cells
+      paddingRight: '14px',
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: '14px', // override the cell padding for data cells
+      paddingRight: '14px',
+    },
+  },
+}
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
 export function Kecamatan() {
   const navigate = useNavigate()
 
   const [show, setShow] = useState(false)
+  const [valFilterKota, setFilterKota] = useState({val: ''})
+  const [valFilterKecamatan, setFilterKecamatan] = useState({val: ''})
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(10)
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
+ 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
@@ -37,13 +96,40 @@ export function Kecamatan() {
       </>
     )
   }
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (valFilterKota.val !== '') {
+      uriParam += `kota=${valFilterKota.val}`
+    }
+    if (valFilterKecamatan.val !== '') {
+      uriParam += `&kecamatan=${valFilterKecamatan.val}`
+    }
+    
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleChangeInputKota = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterKota({val: event.target.value})
+  }
+  const handleChangeInputKecamatan = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setFilterKecamatan({val: event.target.value})
+  }
 
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
       sortable: true,
       sortField: 'no',
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Kode Kecamatan',
@@ -124,29 +210,47 @@ export function Kecamatan() {
     },
   ]
 
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
+
 
   const [temp, setTemp] = useState([])
+
+  useEffect(() => {
+    async function fetchDT(page: number) {
+      setLoading(true)
+      console.log(qParamFind)
+      const response = await axios.get(
+        `${KECAMATAN_URL}/findone-by-kecamatan?${qParamFind.strparam}`
+      )
+      console.log(response.data.data)
+      // setTotalRows(response.data.total_data)
+      const timeout = setTimeout(() => {
+        let items = response.data.data
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 100)
+
+      return () => clearTimeout(timeout)
+    }
+    fetchUsers(1)
+    fetchDT(1)
+  }, [qParamFind, perPage])
+  //}
 
   const fetchUsers = async (page: any) => {
     setLoading(true)
     const value = await axios.get(KECAMATAN_URL + '/find')
-
-    setTemp(value.data.data)
-    console.log('cek response api:', temp)
-
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
-    )
-    setData(response.data.data)
-
-    setTotalRows(response.data.total)
-    setLoading(false)
-    console.log('cek ahhh :', data)
-    return [data, setData] as const
+    const timeout = setTimeout(() => {
+      let items = value.data.data
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
+      setLoading(false)
+    }, 50)
+    return () => clearTimeout(timeout)
   }
 
   const handlePageChange = (page: any) => {
@@ -223,10 +327,13 @@ export function Kecamatan() {
               Kota
             </label>
             <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              name='tags'
-            />
+            type='text'
+            className='form-control form-control form-control-solid'
+            name='kota'
+            value={valFilterKota.val}
+            onChange={handleChangeInputKota}
+            placeholder='kota'
+          />
           </div>
         </div>
       </div>
@@ -237,16 +344,19 @@ export function Kecamatan() {
               Kecamatan
             </label>
             <input
-              type='text'
-              className='form-control form-control form-control-solid'
-              name='tags'
-            />
+            type='text'
+            className='form-control form-control form-control-solid'
+            name='kecamatan'
+            value={valFilterKecamatan.val}
+            onChange={handleChangeInputKecamatan}
+            placeholder='Kecamatan'
+          />
           </div>
         </div>
       </div>
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#'>
+          <Link onClick={handleFilter} to='#'>
             <button className='btn btn-primary'>
               <i className='fa-solid fa-search'></i>
               Cari
@@ -265,20 +375,42 @@ export function Kecamatan() {
       </div>
 
       <div className='table-responsive mt-5 ms-5 me-5'>
-        <DataTable columns={columns} data={temp} pagination />
+        {/* <DataTable columns={columns} data={temp} pagination /> */}
         {/* <DataTable
           columns={columns}
-          data={data}
+          data={temp}
           progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
-          paginationServer
           paginationTotalRows={totalRows}
-          sortServer
-          onSort={handleSort}
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
         /> */}
+        {temp?.length > 0 && temp && ( //urutan 4
+          <DataTable
+            columns={columns}
+            data={temp}
+            progressPending={loading}
+            customStyles={customStyles}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            // paginationServer
+            paginationTotalRows={totalRows}
+            //    expandableRowsComponent={(row) => (
+            //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+            // )}
+            // expandableRowsComponent={ExpandedComponent}
+            // onChangeRowsPerPage={handlePerRowsChange}
+            // onChangePage={handlePageChange}
+            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={
+              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                <div className='d-flex flex-column'>
+                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                </div>
+              </div>
+            }
+          />
+        )}
+
       </div>
       {/* end::Body */}
     </div>
