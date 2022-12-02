@@ -279,6 +279,26 @@ export function AksesKontrol() {
     },
   ]
 
+  const custom = {
+    rows: {
+      style: {
+        minHeight: '82px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  }
+
   // START :: VIEW
   useEffect(() => {
     fetchUsers(1)
@@ -563,6 +583,7 @@ export function AksesKontrol() {
       <div className='table-responsive mt-5 ms-5 me-5 w'>
         <DataTable
           columns={columns}
+          customStyles={custom}
           data={temp}
           progressPending={loading}
           progressComponent={<LoadingAnimation />}

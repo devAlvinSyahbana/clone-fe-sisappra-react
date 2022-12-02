@@ -66,7 +66,7 @@ export function HirarkiPegawai() {
           <div className='card-body pt-9 pb-0'>
             <div className='container pb-5 pt-5'>
               <div className='row'>
-                <div className='col-md-4 col-xs-2'>
+                <div className='col-md-3 col-xs-2'>
                   <div className='d-flex justify-content-center'>
                     <img
                       src={toAbsoluteUrl('/media/logos/logo-dki-jakarta.png')}
@@ -77,8 +77,8 @@ export function HirarkiPegawai() {
                     />
                   </div>
                 </div>
-                <div className='col-md-4  col-xs-2'>
-                  <div className='col pt-6' style={{fontSize: '16px'}}>
+                <div className='col-md-6  col-xs-2'>
+                  <div className='col pt-8' style={{fontSize: '16px'}}>
                     <h1 className='text-dark fw-bold fs-2 text-center'>STRUKTUR ORGANISASI</h1>
                     <h1 className='text-dark fw-bold fs-2 text-center'>
                       SATUAN POLISI PAMONG PRAJA
@@ -86,7 +86,7 @@ export function HirarkiPegawai() {
                     <h1 className='text-dark fw-bold fs-2 text-center'>PROVINSI DKI JAKARTA</h1>
                   </div>
                 </div>
-                <div className='col-md-4 col-xs-2'>
+                <div className='col-md-3 col-xs-2'>
                   <div className='d-flex justify-content-center pt-3'>
                     <img
                       src={toAbsoluteUrl('/media/logos/logo-satpol-pp.png')}
