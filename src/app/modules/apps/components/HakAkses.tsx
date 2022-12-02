@@ -9,10 +9,8 @@ import AsyncSelect from 'react-select/async'
 import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 import Accordion from 'react-bootstrap/Accordion'
-// import {ids} from 'webpack'
-// import {SelectOptionAutoCom} from '../KepegawaianInterface'
 
-//creat
+//create
 export interface FormInput {
   wilayah_bidang?: any
   kecamatan?: any
@@ -23,26 +21,6 @@ export interface FormInput {
 export interface JumlahPengguna {
   total_data?: number
 }
-// export interface jabatan {
-//   id?: number
-//   nama?: string
-//   status?: string
-//   level?: string
-//   id_master_tempat_seksi_pelaksanaan?: number
-//   created_by?: number
-// }
-// export interface wilayah {
-//   id?: number
-//   nama?: string
-//   kategori?: string
-//   created_by?: number
-// }
-// export interface kecamtan {
-//   id?: number
-//   nama?: string
-//   kode?: string
-//   created_by?: number
-// }
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
@@ -154,7 +132,6 @@ export function HakAkses() {
       }
       try {
         const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
-        // console.log(response.data)
         fetchDT(1)
         if (response) {
           // console.log(bodyparam.nama_hak_akses)
@@ -226,16 +203,6 @@ export function HakAkses() {
     }))
   }
   //end nama_hak_akses
-
-  // const handleChangeFormik = (event: {
-  //   preventDefault: () => void
-  //   target: {value: any; name: any}
-  // }) => {
-  //   setValuesFormik((prevValues: any) => ({
-  //     ...prevValues,
-  //     [event.target.name]: event.target.value,
-  //   }))
-  // }
 
   // kecamatan
   const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
@@ -311,8 +278,6 @@ export function HakAkses() {
     setAkm(value.data.data)
     setTotalRows(value.data.total)
     // console.log('cek mapping:', akm)
-    // setLoading(false)
-    // return [temp, setTemp] as const
   }
   //end mapping
 
