@@ -1,11 +1,13 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme, ExpanderComponentProps} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Swal from 'sweetalert2'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -13,6 +15,53 @@ import {Kecamatan} from './Kecamatan'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan` //http://localhost:3000/master/kelurahan
+
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+
+const customStyles = {
+  rows: {
+    style: {
+      minHeight: '105px', // override the row height
+    },
+  },
+  headCells: {
+    style: {
+      paddingLeft: '14px', // override the cell padding for head cells
+      paddingRight: '14px',
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: '14px', // override the cell padding for data cells
+      paddingRight: '14px',
+    },
+  },
+}
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
 export function Kelurahan() {
   // STATE SECTION
@@ -24,6 +73,8 @@ export function Kelurahan() {
   const [perPage, setPerPage] = useState(10)
   const [temp, setTemp] = useState([])
   const [totalRows, setTotalRows] = useState(0)
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   // const [data, setData] = useState([])
 
   // END STATE SECTION
@@ -318,14 +369,40 @@ export function Kelurahan() {
 
       <div className='table-responsive mt-5 ms-5 me-5'>
         {/* <DataTable columns={columns} data={temp} pagination /> */}
-        <DataTable
+        {/* <DataTable
           columns={columns}
           data={temp}
           progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
           paginationTotalRows={totalRows}
-        />
+        /> */}
+        {temp?.length > 0 && temp && ( //urutan 4
+          <DataTable
+            columns={columns}
+            data={temp}
+            progressPending={loading}
+            customStyles={customStyles}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            // paginationServer
+            paginationTotalRows={totalRows}
+            //    expandableRowsComponent={(row) => (
+            //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+            // )}
+            // expandableRowsComponent={ExpandedComponent}
+            // onChangeRowsPerPage={handlePerRowsChange}
+            // onChangePage={handlePageChange}
+            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={
+              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                <div className='d-flex flex-column'>
+                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                </div>
+              </div>
+            }
+          />
+        )}
       </div>
       {/* end::Body */}
     </div>

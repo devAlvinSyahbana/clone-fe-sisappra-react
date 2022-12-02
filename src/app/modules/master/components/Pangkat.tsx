@@ -20,8 +20,7 @@ import {Row} from 'react-bootstrap'
 
 // API
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const PANGKAT_URL = `${API_URL}/master/pangkat` 
-
+export const PANGKAT_URL = `${API_URL}/master/pangkat`
 
 // Theme for dark or light interface
 createTheme(
@@ -168,7 +167,6 @@ export interface FormInput {
 }
 
 const validatorForm = Yup.object().shape({
-
   pangkat: Yup.string().required('Wajib diisi'),
 })
 
@@ -188,12 +186,13 @@ export function Pangkat() {
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
-  const handleFilter = async () => { //3
+  const handleFilter = async () => {
+    //3
     let uriParam = ''
     if (valFilterPangkat.val !== '') {
       uriParam += `${valFilterPangkat.val}`
     }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
@@ -201,11 +200,12 @@ export function Pangkat() {
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const handleChangeInputPangkat = (event: { //5
+  const handleChangeInputPangkat = (event: {
+    //5
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setFilterPangkat({ val: event.target.value })
+    setFilterPangkat({val: event.target.value})
   }
 
   // START::CRUD
@@ -223,7 +223,6 @@ export function Pangkat() {
     )
   }
 
-
   let number = 1
   // Kolom table
   const columns = [
@@ -232,7 +231,7 @@ export function Pangkat() {
       selector: (row: any) => row.serial,
       sortable: true,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{ row.serial }</div>
+        return <div className='mb-2 mt-2'>{row.serial}</div>
       },
     },
     {},
@@ -260,7 +259,7 @@ export function Pangkat() {
                     id={`dropdown-button-drop-${idx}`}
                     size='sm'
                     variant='light'
-                    menuPosition="top"
+                    menuposition='top'
                     title='Aksi'
                   >
                     <Dropdown.Item
@@ -298,31 +297,31 @@ export function Pangkat() {
       setTotalRows(response.data.total_data)
       const timeout = setTimeout(() => {
         let items = response.data.data
-      Array.from(items).forEach((item: any, index: any) => {
-        item.serial = index + 1
-      })
-      setTemp(items)
-      setLoading(false)
-      }, 100);
-      
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 100)
+
       return () => clearTimeout(timeout)
-      
     }
     fetchUsers(1)
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchUsers = async (page: any) => { //urutan 3
+  const fetchUsers = async (page: any) => {
+    //urutan 3
     setLoading(true)
     const value = await axios.get(`${PANGKAT_URL}/find`)
     const timeout = setTimeout(() => {
       let items = value.data.data
-    Array.from(items).forEach((item: any, index: any) => {
-      item.serial = index + 1
-    })
-    setTemp(items)
-    setLoading(false)
-    }, 50);
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
+      setLoading(false)
+    }, 50)
     return () => clearTimeout(timeout)
   }
   // END :: VIEW
@@ -351,7 +350,7 @@ export function Pangkat() {
       const bodyparam: FormInput = {
         pangkat: valuesFormik?.pangkat, //? valuesFormik.pangkat : '', //? valuesFormik.kategori : '',
       }
-      
+
       try {
         if (aksi === 0) {
           const response = await axios.post(`${PANGKAT_URL}/create`, bodyparam)
@@ -367,10 +366,7 @@ export function Pangkat() {
             setSubmitting(false)
           }
         } else {
-          const response = await axios.put(
-            `${PANGKAT_URL}/update/${idEditData.id}`,
-            bodyparam
-          )
+          const response = await axios.put(`${PANGKAT_URL}/update/${idEditData.id}`, bodyparam)
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -403,7 +399,7 @@ export function Pangkat() {
     })
   }
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
-  
+
   // GET ID FOR UPDATE
   const getDetail = async (idparam: any) => {
     const {data} = await axios.get(`${PANGKAT_URL}/findone/${parseInt(idparam)}`)
@@ -422,7 +418,7 @@ export function Pangkat() {
     setAksi(1)
     getDetail(id)
   }
-  
+
   // DELETE
   const konfirDel = (id: number) => {
     Swal.fire({
@@ -484,8 +480,8 @@ export function Pangkat() {
           />
         </div>
         <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-          <Link to='#' onClick={handleFilter}> 
-          {/* 1 */}
+          <Link to='#' onClick={handleFilter}>
+            {/* 1 */}
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
@@ -496,7 +492,7 @@ export function Pangkat() {
           <Link to='#i'>
             <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah 
+              Tambah
             </button>
           </Link>
         </div>
@@ -512,26 +508,26 @@ export function Pangkat() {
                 <div className='form-group'>
                   <Form.Label>Pangkat</Form.Label>
                   <Form.Control
-                      name='pangkat'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid': formik.touched.pangkat && formik.errors.pangkat,
-                        },
-                        {
-                          'is-valid': formik.touched.pangkat && !formik.errors.pangkat,
-                        }
-                      )}
-                      onChange={handleChangeFormik}
-                      value={valuesFormik?.pangkat}
-                    />
-                    {formik.touched.pangkat && formik.errors.pangkat && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.pangkat}</span>
-                        </div>
-                      </div>
+                    name='pangkat'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.pangkat && formik.errors.pangkat,
+                      },
+                      {
+                        'is-valid': formik.touched.pangkat && !formik.errors.pangkat,
+                      }
                     )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.pangkat}
+                  />
+                  {formik.touched.pangkat && formik.errors.pangkat && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.pangkat}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className='p-0 mt-6'>
                   <div className='text-center'>
@@ -558,32 +554,31 @@ export function Pangkat() {
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5 w'>
-      {temp?.length > 0 && temp && (
+        {temp?.length > 0 && temp && (
           <DataTable
-          columns={columns}
-          data={temp}
-          progressPending={loading}
-          customStyles={customStyles}
-          progressComponent={<LoadingAnimation />}
-          pagination
-          // paginationServer
-          paginationTotalRows={totalRows}
-          
-          //    expandableRowsComponent={(row) => (
-          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
-          // )}
-          // expandableRowsComponent={ExpandedComponent}
-          // onChangeRowsPerPage={handlePerRowsChange}
-          // onChangePage={handlePageChange}
-          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-          noDataComponent={
-            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-              <div className='d-flex flex-column'>
-                <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+            columns={columns}
+            data={temp}
+            progressPending={loading}
+            customStyles={customStyles}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            // paginationServer
+            paginationTotalRows={totalRows}
+            //    expandableRowsComponent={(row) => (
+            //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+            // )}
+            // expandableRowsComponent={ExpandedComponent}
+            // onChangeRowsPerPage={handlePerRowsChange}
+            // onChangePage={handlePageChange}
+            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={
+              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                <div className='d-flex flex-column'>
+                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                </div>
               </div>
-            </div>
-          }
-        />
+            }
+          />
         )}
       </div>
       {/* end::Body */}
