@@ -410,7 +410,6 @@ export function DetailHakAkses() {
     setHakAkses(response.data.data)
     formik.values.nama_hak_akses = response.data.data.nama_hak_akses
 
-    console.log(value.data.data.total_data)
     const val = await axios.get(
       `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${value.data.data.total_data}&offset=${page}${qParamFind.strparam}&hak_akses=${id}`
     )
