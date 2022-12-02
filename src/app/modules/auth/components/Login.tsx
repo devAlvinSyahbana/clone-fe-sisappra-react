@@ -21,8 +21,6 @@ const initialValues = {
   kata_sandi: 'qwerty',
 }
 
-export const SITE_KEY = `${process.env.REACT_APP_RECAPTCHA_SITE_TEST_KEY}`
-
 /*
   Formik+YUP+Typescript:
   https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
