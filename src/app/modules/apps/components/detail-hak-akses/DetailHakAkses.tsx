@@ -330,7 +330,7 @@ export function DetailHakAkses() {
     // instead of setTimeout this is where you would handle your API call.
   }
 
-  const konfirDel = (id: number, hak_akses: number) => {
+  const konfirDel = (id: number, status_pegawai: string) => {
     Swal.fire({
       text: 'Anda yakin ingin menghapus data ini',
       icon: 'warning',
@@ -344,11 +344,11 @@ export function DetailHakAkses() {
       if (result.isConfirmed) {
         const bodyParam = {
           data: {
-            hak_akses: 0,
+            status_pegawai: status_pegawai,
             deleted_by: 0,
           },
         }
-        const response = await axios.delete(`${MANAJEMEN_PENGGUNA_URL}delete/${id}`, bodyParam)
+        const response = await axios.delete(`${MANAJEMEN_PENGGUNA_URL}/delete/${id}`, bodyParam)
         if (response) {
           fetchData(1)
           Swal.fire({
