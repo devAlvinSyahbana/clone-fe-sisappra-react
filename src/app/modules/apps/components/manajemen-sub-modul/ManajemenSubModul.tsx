@@ -399,6 +399,26 @@ export function ManajemenSubModul() {
   }
   // END::CRUD
 
+  const custom = {
+    rows: {
+      style: {
+        minHeight: '100px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  }
+
   return (
     <div className={`card`}>
       {/* begin::Body */}
@@ -501,6 +521,7 @@ export function ManajemenSubModul() {
         <DataTable
           columns={columns}
           data={temp}
+          customStyles={custom}
           // progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
