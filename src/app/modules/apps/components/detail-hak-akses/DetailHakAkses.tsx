@@ -552,16 +552,6 @@ export function DetailHakAkses() {
                     variant='light'
                     title='Aksi'
                   >
-                    {/* <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate('/apps/update-hak-akses/UpdateHakAkses/' + record.id, {
-                          replace: true,
-                        })
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item> */}
                     <Dropdown.Item
                       href='#'
                       onClick={() => konfirDel(record.id, record.nama_lengkap)}
