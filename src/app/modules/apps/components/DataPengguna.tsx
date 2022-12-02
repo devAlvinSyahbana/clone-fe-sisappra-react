@@ -206,21 +206,6 @@ export function DataPengguna() {
     })
   }
 
-  // Pangkat ubah
-  const GetHakAkses = ({row}: {row: number}) => {
-    const [valData, setValData] = useState('')
-    useEffect(() => {
-      async function fetchDT(id: number) {
-        const {data} = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`)
-        const result: string = data.data.nama_hak_akses
-        setValData(result)
-      }
-      fetchDT(row)
-    }, [valData, row])
-
-    return <>{valData}</>
-  }
-
   // GET DATA
   interface SelectOptionAutoCom {
     readonly value: string
@@ -294,7 +279,6 @@ export function DataPengguna() {
       sortField: 'hak_akses',
       wrap: true,
       center: true,
-      cell: (record: any) => <GetHakAkses row={parseInt(record.hak_akses)} />,
     },
     {
       name: 'Terakhir Login',
@@ -446,18 +430,6 @@ export function DataPengguna() {
     setFilterNamaLengkap({val: event.target.value})
   }
 
-  const handleUnduh = async () => {
-    setbtnLoadingUnduh(true)
-    await axios({
-      url: `${MANAJEMEN_PENGGUNA_URL}/unduh-data-pengguna?q=1${qParamFind.strparam}`,
-      method: 'GET',
-      responseType: 'blob', // Important
-    }).then((response) => {
-      FileDownload(response.data, 'DATA PENGGUNA.xlsx')
-      setbtnLoadingUnduh(false)
-    })
-  }
-
   return (
     <>
       <div id='kt_app_content' className='app-content flex-column-fluid'>
@@ -569,30 +541,6 @@ export function DataPengguna() {
                               </button>
                               {/* end::Add user */}
                             </Link>
-                            {/* begin::Filter Button */}
-                            <button
-                              type='button'
-                              className='btn btn-light-primary'
-                              data-kt-menu-trigger='click'
-                              data-kt-menu-placement='bottom-end'
-                              onClick={handleUnduh}
-                            >
-                              {btnLoadingUnduh ? (
-                                <>
-                                  <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                  Memproses Unduh...
-                                </>
-                              ) : (
-                                <>
-                                  <KTSVG
-                                    path='/media/icons/duotune/arrows/arr078.svg'
-                                    className='svg-icon-2'
-                                  />
-                                  Unduh
-                                </>
-                              )}
-                            </button>
-                            {/* end::Filter Button */}
                           </div>
                         </div>
                       </div>
