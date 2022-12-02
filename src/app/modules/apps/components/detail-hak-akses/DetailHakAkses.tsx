@@ -195,7 +195,7 @@ export function DetailHakAkses() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(100)
+  const [perPage, setPerPage] = useState(0)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   // END STATE SECTION
 
@@ -385,6 +385,9 @@ export function DetailHakAkses() {
   // USEEFFECT + FETCH FUNCTION
   useEffect(() => {
     fetchDataAwal(1)
+  }, [])
+
+  useEffect(() => {
     fetchData(1)
     fetchAksesKontrol()
     fetchPermission()
@@ -401,14 +404,15 @@ export function DetailHakAkses() {
       `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/{id_hak_akses}?id_hak_akses=${id}`
     )
     setJumlahPengguna(value.data.data)
-    // setPerPage(value.data.data)
+    setPerPage(value.data.data.total_data)
 
     const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`)
     setHakAkses(response.data.data)
     formik.values.nama_hak_akses = response.data.data.nama_hak_akses
 
+    console.log(value.data.data.total_data)
     const val = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${value.data.data}&offset=${page}${qParamFind.strparam}&hak_akses=${id}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${value.data.data.total_data}&offset=${page}${qParamFind.strparam}&hak_akses=${id}`
     )
     setTotalRows(val.data.total_data)
     const timeout = setTimeout(() => {
@@ -460,7 +464,7 @@ export function DetailHakAkses() {
   // mapping
   const fetchMapping = async (page: number) => {
     const value = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/filter/{id_hak_akses}?limit=${perPage}&offset=${page}&id_hak_akses=${id}`
+      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/filter/{id_hak_akses}?limit=${modulPermission.length}&offset=${page}&id_hak_akses=${id}`
     )
     let items = []
     for (let i = 0; i < value.data.data.length; i++) {
@@ -480,6 +484,7 @@ export function DetailHakAkses() {
       name: 'No',
       selector: (row: any) => row.serial,
       sortable: true,
+      width: '10%',
       cell: (row: any) => {
         return <div className='mb-2 mt-2'>{row.serial}</div>
       },
@@ -750,10 +755,7 @@ export function DetailHakAkses() {
                 progressPending={loading}
                 progressComponent={<LoadingAnimation />}
                 pagination
-                // paginationServer
                 paginationTotalRows={totalRows}
-                // onChangeRowsPerPage={handlePerRowsChange}
-                // onChangePage={handlePageChange}
                 customStyles={customStyles}
                 theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                 noDataComponent={
