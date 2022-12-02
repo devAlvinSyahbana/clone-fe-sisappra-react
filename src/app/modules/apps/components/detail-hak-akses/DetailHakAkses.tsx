@@ -16,7 +16,6 @@ import Accordion from 'react-bootstrap/Accordion'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import {ADDRGETNETWORKPARAMS} from 'dns'
 
 //THEME
 createTheme(
@@ -178,7 +177,6 @@ export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
 export function DetailHakAkses() {
   // STATE SECTION
   const {id} = useParams()
-  const idnumb = id
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const [show, setShow] = useState(false)
@@ -197,7 +195,7 @@ export function DetailHakAkses() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(10)
+  const [perPage, setPerPage] = useState(100)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   // END STATE SECTION
 
@@ -307,28 +305,7 @@ export function DetailHakAkses() {
     },
   })
 
-  const handlePageChange = (page: number) => {
-    fetchData(page)
-  }
-
-  const handlePerRowsChange = async (newPerPage: number, page: number) => {
-    setLoading(true)
-    const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
-    )
-    setData(response.data.data)
-    setPerPage(newPerPage)
-    setLoading(false)
-  }
   // End Data Tabel
-
-  const handleSort = (column: any, sortDirection: any) => {
-    // simulate server sort
-    console.log(column, sortDirection)
-    setLoading(true)
-
-    // instead of setTimeout this is where you would handle your API call.
-  }
 
   const konfirDel = (id: number, status_pegawai: string) => {
     Swal.fire({
@@ -370,6 +347,7 @@ export function DetailHakAkses() {
       }
     })
   }
+
   const customStyles = {
     rows: {
       style: {
@@ -406,7 +384,7 @@ export function DetailHakAkses() {
 
   // USEEFFECT + FETCH FUNCTION
   useEffect(() => {
-    fetchDataAwal()
+    fetchDataAwal(1)
     fetchData(1)
     fetchAksesKontrol()
     fetchPermission()
@@ -414,35 +392,60 @@ export function DetailHakAkses() {
   }, [qParamFind, perPage])
 
   useEffect(() => {
-    fetchDataAwal()
+    fetchDataAwal(1)
   }, [formik.isSubmitting])
 
   //Data Tabel
-  const fetchDataAwal = async () => {
-    const jumlah_Pengguna = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/1`
+  const fetchDataAwal = async (page: number) => {
+    const value = await axios.get(
+      `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/{id_hak_akses}?id_hak_akses=${id}`
     )
+    setJumlahPengguna(value.data.data)
+    // setPerPage(value.data.data)
+
     const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`)
     setHakAkses(response.data.data)
     formik.values.nama_hak_akses = response.data.data.nama_hak_akses
-    setJumlahPengguna(jumlah_Pengguna.data.data)
+
+    const val = await axios.get(
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${value.data.data}&offset=${page}${qParamFind.strparam}&hak_akses=${id}`
+    )
+    setTotalRows(val.data.total_data)
+    const timeout = setTimeout(() => {
+      let items = val.data.data
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setData(items)
+      setLoading(false)
+    }, 50)
+
+    return () => clearTimeout(timeout)
   }
 
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${perPage}&offset=${page}${qParamFind.strparam}&hak_akses=${id}`
     )
-    setData(response.data.data)
     setTotalRows(response.data.total_data)
-    setLoading(false)
+    const timeout = setTimeout(() => {
+      let items = response.data.data
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setData(items)
+      setLoading(false)
+    }, 100)
+
+    return () => clearTimeout(timeout)
   }
 
   //akses kontrol
   const fetchAksesKontrol = async () => {
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
     setAksesKontrol(value.data.data)
-    setTotalRows(value.data.total)
+    // setTotalRows(value.data.total)
   }
   //end akses kontrol
 
@@ -450,7 +453,7 @@ export function DetailHakAkses() {
   const fetchPermission = async () => {
     const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/modul-permission/find`)
     setModulPermission(value.data.data)
-    setTotalRows(value.data.total)
+    // setTotalRows(value.data.total)
   }
   //modul permission
 
@@ -466,22 +469,19 @@ export function DetailHakAkses() {
     }
     setAksesKontrolMapping(value.data.data)
     formik.values.value_permission = items
-    setTotalRows(value.data.total)
+    // setTotalRows(value.data.total)
   }
   //end mapping
   // EMD USEEFFECT + FETCH FUNCTION
 
-  var num = 1
+  // var num = 1
   const columns = [
     {
-      name: 'ID',
+      name: 'No',
+      selector: (row: any) => row.serial,
       sortable: true,
-      sortField: 'id',
-      wrap: true,
-      center: true,
-      selector: (row: any) => (row.hak_akses !== '' ? row.id : (row.id = '')),
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{row.id !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
+        return <div className='mb-2 mt-2'>{row.serial}</div>
       },
     },
     {
@@ -576,18 +576,27 @@ export function DetailHakAkses() {
 
   return (
     <>
-      <div className='row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5 g-xl-9'>
-        <div className='col-md-2'>
+      <div className='row row-cols-1 g-5 g-xl-9'>
+        <div className='px-0'>
           <div className='card card-flush h-md-30'>
-            <div className='card-header'>
+            <div className='card-header pt-8'>
               <div className='card-title'>
                 <h2>{hakAkses?.nama_hak_akses}</h2>
               </div>
             </div>
-
             <div className='card-body pt-1'></div>
             <div className='card-footer flex-wrap pt-0'>
-              <button onClick={handleShow} className='btn btn-light btn-active-light-primary my-1'>
+              <button
+                className='float-none btn btn-secondary align-self-center'
+                onClick={() => navigate(-1)}
+              >
+                <i className='fa-solid fa-arrow-left '></i>
+                Kembali
+              </button>
+              <button
+                onClick={handleShow}
+                className='btn btn-primary btn-active-light-primary ms-4'
+              >
                 Ubah Hak Akses
               </button>
             </div>
@@ -702,135 +711,59 @@ export function DetailHakAkses() {
             </Modal.Footer>
           </form>
         </Modal>
+
         <div id='kt_app_content' className='app-content flex-column-fluid'>
           <div className='card'>
-            <label className=' m-9'>
-              <h2>
-                Pengguna Terdaftar ({/* Jumlah Pengguna */}
-                {jumlah_Pengguna?.total_data !== 0
-                  ? jumlah_Pengguna?.total_data
-                  : 'Tidak Ada Pengguna'}
-                {/* End jumlah */})
-              </h2>
-            </label>
-            <div className='col-6 mt-1'>
-              <button
-                className='float-none btn btn-secondary align-self-center m-12'
-                onClick={() => navigate(-1)}
-              >
-                <i className='fa-solid fa-arrow-left '></i>
-                Kembali
-              </button>
+            <div className='row g-8 mt-2 ms-5 me-5'>
+              <label>
+                <h2>
+                  Pengguna Terdaftar ({/* Jumlah Pengguna */}
+                  {jumlah_Pengguna?.total_data !== 0
+                    ? jumlah_Pengguna?.total_data
+                    : 'Tidak Ada Pengguna'}
+                  {/* End jumlah */})
+                </h2>
+              </label>
+              <div className='col-xxl-20 col-lg-4 col-md-20 col-sm-12'>
+                <input
+                  type='text'
+                  className='form-control form-control form-control-solid'
+                  name='nama'
+                  value={valNamaLengkap.val}
+                  onChange={handleChangeInputNamaLengkap}
+                  placeholder='Masukkan Nama'
+                />
+              </div>
+              <div className='col-xxl-20 col-lg-4 col-md-20 col-sm-12'>
+                <Link to='#' onClick={handleFilter}>
+                  <button className='btn btn-light-primary me-2'>
+                    <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
+                    Cari
+                  </button>
+                </Link>
+              </div>
             </div>
-            <div className='card card-flush h-xl-100'>
-              <div className='card-header border-1 pt-6'>
-                <div className='col-xl-12 mb-xl-12 mt-2'>
-                  <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
-                    <div className='mb-5'>
-                      <div
-                        className='accordion-header py-3 d-flex'
-                        data-bs-toggle='collapse'
-                        data-bs-target='#kt_accordion_2_item_1'
-                      >
-                        <span className='accordion-icon'>
-                          <span className='svg-icon svg-icon-4'>
-                            <svg
-                              width='24'
-                              height='24'
-                              viewBox='0 0 24 24'
-                              fill='none'
-                              xmlns='http://www.w3.org/2000/svg'
-                            >
-                              <rect
-                                opacity='0.5'
-                                x='18'
-                                y='13'
-                                width='13'
-                                height='2'
-                                rx='1'
-                                transform='rotate(-180 18 13)'
-                                fill='currentColor'
-                              />
-                              <path
-                                d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
-                                fill='currentColor'
-                              />
-                            </svg>
-                          </span>
-                        </span>
-                        <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
-                      </div>
-                      <div
-                        id='kt_accordion_2_item_1'
-                        className='fs-6 collapse show ps-10'
-                        data-bs-parent='#kt_accordion_2'
-                      >
-                        <div id='kt_advanced_search_form'>
-                          <div className='row g-2 mt-2'>
-                            <div className='col-xxl-20 col-lg-4 col-md-20 col-sm-12'>
-                              <input
-                                type='text'
-                                className='form-control form-control form-control-solid'
-                                name='nama'
-                                value={valNamaLengkap.val}
-                                onChange={handleChangeInputNamaLengkap}
-                                placeholder='Masukkan Nama'
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className='row g-8 mt-2'>
-                          <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                            <Link to='#' onClick={handleFilter}>
-                              <button className='btn btn-light-primary me-2'>
-                                <KTSVG
-                                  path='/media/icons/duotune/general/gen021.svg'
-                                  className='svg-icon-2'
-                                />
-                                Cari
-                              </button>
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
+            <div className='table-responsive mt-5 ms-5 me-5 w'>
+              <DataTable
+                columns={columns}
+                data={data}
+                progressPending={loading}
+                progressComponent={<LoadingAnimation />}
+                pagination
+                // paginationServer
+                paginationTotalRows={totalRows}
+                // onChangeRowsPerPage={handlePerRowsChange}
+                // onChangePage={handlePageChange}
+                customStyles={customStyles}
+                theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                noDataComponent={
+                  <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                    <div className='d-flex flex-column'>
+                      <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div
-                className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-100px'
-                style={{}}
-                data-theme='light'
-              ></div>
-
-              <div className='card-body mt-n20'>
-                <div className='mt-n20 position-relatve'>
-                  <div className='card border card-flush h-xl-100'>
-                    <div className='table-responsive mt-5 ms-5 me-5 w'>
-                      <DataTable
-                        columns={columns}
-                        data={data}
-                        progressPending={loading}
-                        progressComponent={<LoadingAnimation />}
-                        pagination
-                        paginationServer
-                        paginationTotalRows={totalRows}
-                        onChangeRowsPerPage={handlePerRowsChange}
-                        onChangePage={handlePageChange}
-                        customStyles={customStyles}
-                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                        noDataComponent={
-                          <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-                            <div className='d-flex flex-column'>
-                              <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
-                            </div>
-                          </div>
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                }
+              />
             </div>
           </div>
           {/* end::Body */}
