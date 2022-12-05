@@ -16,6 +16,7 @@ const PetaTitikRawan: FC = () => {
   const [checked, setChecked] = useState(false)
 
   const fetchAPI = async (kejadian : any) => {
+    console.log(kejadian)
     if(filterTempat.length > 0){
       filterTempat.splice(1)
       const response = await axios.get(`${SUM_TITIK_RAWAN_URL}`,{
@@ -32,12 +33,22 @@ const PetaTitikRawan: FC = () => {
       })
       setFilterTempat(response.data.data)
     }
-    
-  // const filterTempat = responselayak.filter(
-  //   (petaTitikRawan) => petaTitikRawan.address.country === 'Italy'
-  // )
-
-  }
+    // const filterTempat = responselayak.filter(
+      //   (petaTitikRawan) => petaTitikRawan.address.country === 'Italy'
+      // )
+      return [filterTempat,setFilterTempat] as const
+    }
+    const handler = async (kejadian : any) => {
+      // Changing the state
+      filterTempat.splice(1, filterTempat.length)
+      const response = await axios.get(`${SUM_TITIK_RAWAN_URL}`,{
+        params:{
+          kejadian : kejadian
+        }
+      })
+      setFilterTempat(response.data.data)
+      return [filterTempat,setFilterTempat] as const
+    };
   useEffect(() => {
     fetchAPI('Politik')
   }, [])
@@ -50,7 +61,7 @@ const PetaTitikRawan: FC = () => {
             <div className='row mt'>
               <div className='col-md-12 col-lg-12 col-sm-12'>
                   <ToggleButton
-                    onClick={fetchAPI.bind('Bencana')}
+                    onClick={handler.bind(this, 'Bencana')}
                     className='mb-2'
                     id='toggle-check'
                     type='checkbox'
@@ -61,7 +72,7 @@ const PetaTitikRawan: FC = () => {
                     Bencana
                   </ToggleButton>
                   <ToggleButton
-                    onClick={fetchAPI.bind('Kebakaran')}
+                    onClick={handler.bind(this, 'Kebakaran')}
                     className='mb-2'
                     id='toggle-check2'
                     type='checkbox'
@@ -72,7 +83,7 @@ const PetaTitikRawan: FC = () => {
                     Kebakaran
                   </ToggleButton>
                   <ToggleButton
-                    onClick={fetchAPI.bind('PKL')}
+                    onClick={handler.bind(this, 'PKL')}
                     className='mb-2'
                     id='toggle-check3'
                     type='checkbox'
@@ -83,7 +94,7 @@ const PetaTitikRawan: FC = () => {
                     PKL
                   </ToggleButton>
                   <ToggleButton
-                    onClick={fetchAPI.bind('PMKS')}
+                    onClick={handler.bind(this, 'PMKS')}
                     className='mb-2'
                     id='toggle-check4'
                     type='checkbox'
@@ -94,7 +105,7 @@ const PetaTitikRawan: FC = () => {
                     PMKS
                   </ToggleButton>
                   <ToggleButton
-                    onClick={fetchAPI.bind('Politik')}
+                    onClick={handler.bind(this, 'Politik')}
                     className='mb-2'
                     id='toggle-check5'
                     type='checkbox'
@@ -105,7 +116,7 @@ const PetaTitikRawan: FC = () => {
                     Politik
                   </ToggleButton>
                   <ToggleButton
-                    onClick={fetchAPI.bind('Tramtibmum')}
+                    onClick={handler.bind(this, 'Tramtibmum')}
                     className='mb-2'
                     id='toggle-check6'
                     type='checkbox'
