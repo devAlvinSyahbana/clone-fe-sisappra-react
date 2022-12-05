@@ -225,7 +225,7 @@ export function SKPD() {
   // Kolom table
   const columns = [
     {
-      name: 'No', // Urutan 2
+      name: 'No',
       selector: (row: any) => row.serial,
       sortable: true,
       cell: (row: any) => {
@@ -298,31 +298,31 @@ export function SKPD() {
       setTotalRows(response.data.total_data)
       const timeout = setTimeout(() => {
         let items = response.data.data
-      Array.from(items).forEach((item: any, index: any) => {
-        item.serial = index + 1
-      })
-      setTemp(items)
-      setLoading(false)
-      }, 100);
-      
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 100)
+
       return () => clearTimeout(timeout)
-      
     }
     fetchUsers(1)
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchUsers = async (page: any) => { //urutan 3
+  const fetchUsers = async (page: any) => {
+    //urutan 3
     setLoading(true)
     const value = await axios.get(`${SKPD_URL}/find`)
     const timeout = setTimeout(() => {
       let items = value.data.data
-    Array.from(items).forEach((item: any, index: any) => {
-      item.serial = index + 1
-    })
-    setTemp(items)
-    setLoading(false)
-    }, 50);
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
+      setLoading(false)
+    }, 50)
     return () => clearTimeout(timeout)
   }
   // END :: VIEW
@@ -554,33 +554,32 @@ export function SKPD() {
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5 w'>
-        {temp?.length > 0 && temp && ( //urutan 4
-          <DataTable
-            columns={columns}
-            data={temp}
-            progressPending={loading}
-            customStyles={customStyles}
-            progressComponent={<LoadingAnimation />}
-            pagination
-            // paginationServer
-            paginationTotalRows={totalRows}
-            //    expandableRowsComponent={(row) => (
-            //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
-            // )}
-            // expandableRowsComponent={ExpandedComponent}
-            // onChangeRowsPerPage={handlePerRowsChange}
-            // onChangePage={handlePageChange}
-            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-            noDataComponent={
-              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-                <div className='d-flex flex-column'>
-                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
-                </div>
+        <DataTable
+          columns={columns}
+          data={temp}
+          progressPending={loading}
+          customStyles={customStyles}
+          progressComponent={<LoadingAnimation />}
+          pagination
+          // paginationServer
+          paginationTotalRows={totalRows}
+          //    expandableRowsComponent={(row) => (
+          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+          // )}
+          // expandableRowsComponent={ExpandedComponent}
+          // onChangeRowsPerPage={handlePerRowsChange}
+          // onChangePage={handlePageChange}
+          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+          noDataComponent={
+            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+              <div className='d-flex flex-column'>
+                <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
               </div>
-            }
-          />
-        )}
+            </div>
+          }
+        />
       </div>
+
       {/* end::Body */}
     </div>
   )
