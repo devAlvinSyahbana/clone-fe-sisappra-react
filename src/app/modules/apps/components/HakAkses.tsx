@@ -22,13 +22,6 @@ export interface JumlahPengguna {
   total_data?: number
 }
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
-export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
-export const JABATAN_URL = `${API_URL}/master/jabatan`
-export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
-export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
-
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -46,13 +39,17 @@ export interface DataPermission {
   akses_kontrol_id: number
 }
 
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
+export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
+export const JABATAN_URL = `${API_URL}/master/jabatan`
+export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
+export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
+
 export function HakAkses() {
   const navigate = useNavigate()
   const {id} = useParams()
-  //handle ubah
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+
   //handle tambah
   const [showTambah, setTambahShow] = useState(false)
   const handleTambahClose = () => setTambahShow(false)
@@ -60,39 +57,16 @@ export function HakAkses() {
   //pelaksana & non plaksana
   const [valStatAKses, setValStatAKses] = useState({val: 'Pelaksana'})
   const arrStatAKses = ['Pelaksana', 'Non-Pelaksana']
-  const [qParamFind] = useState({strparam: ''})
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState<any[]>([])
   const [totalRows, setTotalRows] = useState(0)
   const [perPage] = useState(10)
   const [valuesFormik, setValuesFormik] = useState<FormInput>({})
-  const [jumlah_Pengguna, setJumlahPengguna] = useState<JumlahPengguna>()
 
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<DataPermission[]>([])
   const [akm, setAkm] = useState([])
   const [totalDataa, setTotalData] = useState(id)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const jumlah_Pengguna = await axios.get(
-        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/{id_hak_akses}?id_hak_akses=${totalDataa}`
-      )
-      console.log(jumlah_Pengguna)
-      setJumlahPengguna(jumlah_Pengguna.data.data)
-    }
-    fetchDT(1)
-    fetchData()
-    fetchUsers()
-    fetchPermission()
-    fetchMapping()
-  }, [qParamFind])
-
-  async function fetchDT(page: number) {
-    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
-    setData(response.data.data)
-    setTotalRows(response.data.total_data)
-  }
 
   const handleChangeStatAKses = (event: {
     preventDefault: () => void
@@ -132,7 +106,6 @@ export function HakAkses() {
       }
       try {
         const response = await axios.post(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/create`, bodyparam)
-        fetchDT(1)
         if (response) {
           // console.log(bodyparam.nama_hak_akses)
           // alert(JSON.stringify(values, null, 2))
@@ -164,7 +137,7 @@ export function HakAkses() {
           values.value_permission = []
           setTambahShow(false)
         }
-        fetchDT(1)
+        fetchDT()
         handleTambahClose()
       } catch (error) {
         Swal.fire({
@@ -254,6 +227,30 @@ export function HakAkses() {
   }
   //end jabatan
 
+  useEffect(() => {
+    fetchDT()
+    fetchUsers()
+    fetchPermission()
+    fetchMapping()
+  }, [])
+
+  const fetchDT = async () => {
+    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
+    let items = response.data.data
+    Array.from(items).forEach(async (item: any) => {
+      const value = await axios.get(
+        `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/{id_hak_akses}?id_hak_akses=${item.id}`
+      )
+      item.jumlah_pengguna = `${value.data.data.total_data}`
+    })
+    const timeout = setTimeout(() => {
+      setTotalRows(response.data.total_data)
+      setData(items)
+    }, 1500)
+
+    return () => clearTimeout(timeout)
+  }
+
   //akses kontrol
   const fetchUsers = async () => {
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
@@ -286,25 +283,20 @@ export function HakAkses() {
       <div className='row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5 g-xl-9'>
         {data &&
           data.length > 0 &&
-          data.map((d: any, i: number) => {
+          data.map((d: any) => {
             return (
               <>
-                <div className='col-md-4' key={d.kode}>
+                <div className='col-md-4' key={d.id + d.kode}>
                   <div className='card card-flush h-md-100'>
                     <div className='card-header'>
                       <div className='card-title'>
-                        <div className=''>
-                          <a>{d?.nama_hak_akses}</a>
-                        </div>
+                        <h2>{d?.nama_hak_akses}</h2>
                       </div>
                     </div>
                     <div className='card-body pt-1'>
                       <div className='fw-bold text-gray-600 mb-5'>
-                        Total Pengguna Dengan Hak Akses Ini: {/* Jumlah Pengguna */}
-                        {jumlah_Pengguna?.total_data !== 0
-                          ? jumlah_Pengguna?.total_data
-                          : 'Tidak Ada Pengguna'}
-                        {/* End jumlah */}
+                        Total Pengguna Dengan Hak Akses Ini:{' '}
+                        <span className='fw-bold text-black'>{d.jumlah_pengguna}</span>
                       </div>
                     </div>
                     <div className='ol-md-4'>
@@ -329,7 +321,7 @@ export function HakAkses() {
             )
           })}
 
-        <div className='ol-md-4'>
+        <div className='col-md-4'>
           <div className='card h-md-100'>
             <div className='card-body d-flex flex-center'>
               <button
@@ -401,7 +393,7 @@ export function HakAkses() {
                     <label htmlFor='' className='mb-5'>
                       Kecamatan
                     </label>
-
+                    <>{console.log(valMasterPelaksana)}</>
                     <AsyncSelect
                       value={
                         valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}

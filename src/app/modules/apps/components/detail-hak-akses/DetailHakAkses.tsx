@@ -211,7 +211,6 @@ export function DetailHakAkses() {
     return (
       <>
         <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
-          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
           <span className='spinner-border spinner-border-xl align-middle me-3'></span>
           <div className='d-flex flex-column'>
             <h5 className='mb-1'>Sedang mengambil data...</h5>
