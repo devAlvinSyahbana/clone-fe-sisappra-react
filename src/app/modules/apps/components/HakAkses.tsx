@@ -161,7 +161,9 @@ export function HakAkses() {
   const handleChangeInputKota = (newValue: any) => {
     setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
     setIdMasterBidangWilayah({id: newValue.value})
-    console.log('cek', newValue.value)
+    setValMasterPelaksana({value: null, label: ''})
+    setValMasterJabatan({value: null, label: ''})
+    // console.log('cek', newValue.value)
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
@@ -172,7 +174,7 @@ export function HakAkses() {
         item.value = item.id
       })
       setMasterBidangWilayah(items)
-      console.log(items)
+      // console.log(items)
     }, 100)
 
     return () => clearTimeout(timeout)
@@ -203,7 +205,8 @@ export function HakAkses() {
   const handleChangeInputKecamatan = (newValue: any) => {
     setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
     setIdMasterPelaksana({id: newValue.value})
-    console.log('cek', newValue.value)
+    setValMasterJabatan({value: null, label: ''})
+    // console.log('cek', newValue.value)
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${newValue.value}`
@@ -214,7 +217,7 @@ export function HakAkses() {
         item.value = item.id
       })
       setMasterPelaksana(items)
-      console.log(items)
+      // console.log(items)
     }, 100)
 
     return () => clearTimeout(timeout)
@@ -222,7 +225,7 @@ export function HakAkses() {
   //end kecamatan
 
   //jabatan
-  const [valMasterJabatan, setValMasterJabatan] = useState({value: '', label: ''})
+  const [valMasterJabatan, setValMasterJabatan] = useState({value: null, label: ''})
   const filterjabatan = async (inputValue: string) => {
     const response = await axios.get(
       `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(idMasterPelaksana.id)}${
@@ -246,7 +249,6 @@ export function HakAkses() {
     fetchDT()
     fetchUsers()
     fetchPermission()
-    // fetchMapping()
   }, [])
 
   const fetchDT = async () => {
