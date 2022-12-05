@@ -279,17 +279,35 @@ export function AksesKontrol() {
     },
   ]
 
+  const custom = {
+    rows: {
+      style: {
+        minHeight: '82px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+  }
+
   // START :: VIEW
   useEffect(() => {
     fetchUsers(1)
-  }, [qParamFind, perPage])
+  }, [qParamFind])
 
   // Munculin data table
   const fetchUsers = async (page: number) => {
     setLoading(true)
-    const value = await axios.get(
-      `${AKSES_KONTROL_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
-    )
+    const value = await axios.get(`${AKSES_KONTROL_URL}/find-all?${qParamFind.strparam}`)
     const Parents = value.data.data.filter((item: any) => item.level.split('-').length == 1)
     let items = Parents
     Array.from(items).forEach((item: any, index: any) => {
@@ -299,9 +317,27 @@ export function AksesKontrol() {
     // setTemp(Parents)
     setTotalRows(items.length)
     setLoading(false)
-    console.log(Parents)
+    console.log(Parents, page, perPage, items)
     return [temp, setTemp] as const
   }
+
+  // const fetchUsers = async (page: number) => {
+  //   setLoading(true)
+  //   const value = await axios.get(
+  //     `${AKSES_KONTROL_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+  //   )
+  //   const Parents = value.data.data.filter((item: any) => item.level.split('-').length == 1)
+  //   let items = Parents
+  //   Array.from(items).forEach((item: any, index: any) => {
+  //     item.serial = index + 1
+  //   })
+  //   setTemp(items)
+  //   // setTemp(Parents)
+  //   setTotalRows(items.length)
+  //   setLoading(false)
+  //   console.log(Parents, page, perPage, items)
+  //   return [temp, setTemp] as const
+  // }
 
   // END :: VIEW
 
@@ -432,6 +468,21 @@ export function AksesKontrol() {
     })
   }
   // END::CRUD
+
+  const handlePageChange = (page: number) => {
+    fetchUsers(page)
+  }
+
+  const handlePerRowsChange = async (newPerPage: number, page: number) => {
+    setLoading(true)
+    const response = await axios.get(
+      `${AKSES_KONTROL_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+    )
+    setTemp(response.data.data)
+    setPerPage(newPerPage)
+    setLoading(false)
+  }
+
   return (
     <div className={`card`}>
       {/* begin::Body */}
@@ -446,7 +497,7 @@ export function AksesKontrol() {
             name='nama'
             value={valFilterModul.val}
             onChange={handleChangeInputModul}
-            placeholder='Nama / Hak Akses'
+            placeholder='Masukkan Nama Modul'
           />
         </div>
         <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
@@ -532,11 +583,14 @@ export function AksesKontrol() {
       <div className='table-responsive mt-5 ms-5 me-5 w'>
         <DataTable
           columns={columns}
+          customStyles={custom}
           data={temp}
           progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
           paginationTotalRows={totalRows}
+          // onChangeRowsPerPage={handlePerRowsChange}
+          // onChangePage={handlePageChange}
           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
           noDataComponent={
             <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>

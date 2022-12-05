@@ -6,8 +6,7 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import * as Yup from 'yup'
-import clsx from 'clsx'
+import {number} from 'yup'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -111,14 +110,6 @@ export interface FormInput {
   created_by?: number
 }
 
-const addDUKSchema = Yup.object().shape({
-  nama: Yup.string().required('Wajib diisi'),
-  nip: Yup.string().required('Wajib diisi'),
-  nrk_nptt_npjlp: Yup.string()
-    .matches(/^[0-9]+$/, 'Isian harus berupa angka')
-    .required('Wajib diisi'),
-})
-
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -139,15 +130,15 @@ export function TambahDaftarUrutKepangkatan() {
   const [valInputNoPegawai, setValNoPegawai] = useState({val: 0})
   const [valuesFormik, setValuesFormik] = React.useState<FormInput>({})
 
-  // const handleChangeFormik = (event: {
-  //   preventDefault: () => void
-  //   target: {value: any; name: any}
-  // }) => {
-  //   setValuesFormik((prevValues: any) => ({
-  //     ...prevValues,
-  //     [event.target.name]: event.target.value,
-  //   }))
-  // }
+  const handleChangeFormik = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setValuesFormik((prevValues: any) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }))
+  }
 
   const handleChangeStatPegawai = (event: {
     preventDefault: () => void
@@ -176,8 +167,7 @@ export function TambahDaftarUrutKepangkatan() {
       nip: '',
       status_pegawai: '',
     },
-    validationSchema: addDUKSchema,
-    onSubmit: async (valuesFormik) => {
+    onSubmit: async (values) => {
       const bodyparam: FormInput = {
         nama: valuesFormik?.nama ? valuesFormik.nama : '',
         nrk_nptt_npjlp: valInputNoPegawai?.val ? valInputNoPegawai.val : 0,
@@ -220,51 +210,29 @@ export function TambahDaftarUrutKepangkatan() {
           <div className='row mt-2'>
             <div className='col-6 mb-6'>
               <div className='form-group'>
-                <Form.Label className='required'>Nama</Form.Label>
+                <Form.Label>Nama</Form.Label>
                 <Form.Control
-                  {...formik.getFieldProps('nama')}
-                  className={clsx(
-                    'form-control bg-transparent',
-                    {'is-invalid': formik.touched.nama && formik.errors.nama},
-                    {
-                      'is-valid': formik.touched.nama && !formik.errors.nama,
-                    }
-                  )}
                   type='text'
                   name='nama'
-                  // onChange={handleChangeFormik}
+                  className='form-control form-control-solid'
+                  onChange={handleChangeFormik}
                   value={valuesFormik?.nama}
                   placeholder='Masukkan nama'
-                  autoComplete='off'
                 />
-                {formik.touched.nama && formik.errors.nama && (
-                  <div className='fv-plugins-message-container mb-n7'>
-                    <div className='fv-help-block'>
-                      <span role='alert'>{formik.errors.nama}</span>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
               <div className='form-group'>
-                <label htmlFor='' className='mb-3 required'>
+                <label htmlFor='' className='mb-3'>
                   Status Kepegawaian
                 </label>
                 <select
-                  className='form-control bg-transparent'
+                  className='form-select form-select-solid'
                   aria-label='Select example'
-                  value={valStatPegawai?.val}
+                  value={valStatPegawai.val}
                   onChange={handleChangeStatPegawai}
                   name='status_pegawai'
                 >
-                  {formik.touched.status_pegawai && formik.errors.status_pegawai && (
-                    <div className='fv-plugins-message-container mb-n7'>
-                      <div className='fv-help-block'>
-                        <span role='alert'>{formik.errors.status_pegawai}</span>
-                      </div>
-                    </div>
-                  )}
                   <option value=''>Pilih</option>
                   {arrStatPegawai.map((val: string) => {
                     return <option value={val}>{val}</option>
@@ -273,66 +241,38 @@ export function TambahDaftarUrutKepangkatan() {
               </div>
             </div>
             {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 mt-2'>
-                <label htmlFor='' className='mb-3 required'>
+              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
                   NRK
                 </label>
                 <input
                   type='number'
-                  {...formik.getFieldProps('nrk_nptt_npjlp')}
-                  className={clsx(
-                    'form-control bg-transparent',
-                    {'is-invalid': formik.touched.nrk_nptt_npjlp && formik.errors.nrk_nptt_npjlp},
-                    {
-                      'is-valid': formik.touched.nrk_nptt_npjlp && !formik.errors.nrk_nptt_npjlp,
-                    }
-                  )}
+                  className='form-control form-control form-control-solid'
                   name='nrk_nptt_npjlp'
                   value={valInputNoPegawai.val}
                   onChange={handleChangeNoPegawai}
                   placeholder='Masukkan NRK'
                 />
-                {formik.touched.nrk_nptt_npjlp && formik.errors.nrk_nptt_npjlp && (
-                  <div className='fv-plugins-message-container mb-n7'>
-                    <div className='fv-help-block'>
-                      <span role='alert'>{formik.errors.nrk_nptt_npjlp}</span>
-                    </div>
-                  </div>
-                )}
               </div>
             ) : null}
             {valStatPegawai.val === 'PNS' || valStatPegawai.val === '' ? (
-              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12 mt-2'>
-                <label htmlFor='' className='mb-3 required'>
+              <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>
+                <label htmlFor='' className='mb-3'>
                   NIP
                 </label>
                 <input
                   type='text'
-                  {...formik.getFieldProps('nip')}
-                  className={clsx(
-                    'form-control bg-transparent',
-                    {'is-invalid': formik.touched.nip && formik.errors.nip},
-                    {
-                      'is-valid': formik.touched.nip && !formik.errors.nip,
-                    }
-                  )}
+                  className='form-control form-control form-control-solid'
                   name='nip'
                   value={valuesFormik.nip}
-                  // onChange={handleChangeFormik}
+                  onChange={handleChangeFormik}
                   placeholder='Masukkan NIP'
                 />
-                {formik.touched.nip && formik.errors.nip && (
-                  <div className='fv-plugins-message-container mb-n7'>
-                    <div className='fv-help-block'>
-                      <span role='alert'>{formik.errors.nip}</span>
-                    </div>
-                  </div>
-                )}
               </div>
             ) : null}
             {valStatPegawai.val !== 'PNS' && valStatPegawai.val !== '' ? (
               <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12' id='fil_nrk'>
-                <label htmlFor='' className='mb-3 required'>
+                <label htmlFor='' className='mb-3'>
                   {valStatPegawai.val === 'PTT'
                     ? 'NPTT'
                     : valStatPegawai.val === 'PJLP'
@@ -341,14 +281,7 @@ export function TambahDaftarUrutKepangkatan() {
                 </label>
                 <input
                   type='number'
-                  {...formik.getFieldProps('nrk_nptt_npjlp')}
-                  className={clsx(
-                    'form-control bg-transparent',
-                    {'is-invalid': formik.touched.nrk_nptt_npjlp && formik.errors.nrk_nptt_npjlp},
-                    {
-                      'is-valid': formik.touched.nrk_nptt_npjlp && !formik.errors.nrk_nptt_npjlp,
-                    }
-                  )}
+                  className='form-control form-control form-control-solid'
                   value={valInputNoPegawai.val}
                   onChange={handleChangeNoPegawai}
                   placeholder={
@@ -359,28 +292,17 @@ export function TambahDaftarUrutKepangkatan() {
                       : ''
                   }
                 />
-                {formik.touched.nrk_nptt_npjlp && formik.errors.nrk_nptt_npjlp && (
-                  <div className='fv-plugins-message-container mb-n7'>
-                    <div className='fv-help-block'>
-                      <span role='alert'>{formik.errors.nrk_nptt_npjlp}</span>
-                    </div>
-                  </div>
-                )}
               </div>
             ) : null}
           </div>
-          <div className='d-grid gap-2 d-md-flex justify-content-md-center mt-8'>
+          <div className='d-grid gap-2 d-md-flex justify-content-md-center mt-4'>
             <Link to='/kepegawaian/laporan-rekapitulasi-pegawai/tab-daftar-urut-kepangkatan'>
               <button className='float-none btn btn-light align-self-center m-1'>
                 {' '}
                 <i className='fa-solid fa-xmark'></i>Batal
               </button>
             </Link>
-            <button
-              className='float-none btn btn-primary align-self-center m-1'
-              type='submit'
-              disabled={formik.isSubmitting || !formik.isValid}
-            >
+            <button className='float-none btn btn-primary align-self-center m-1' type='submit'>
               <i className='fa-sharp fa-solid fa-paper-plane'></i>
               Simpan
             </button>
