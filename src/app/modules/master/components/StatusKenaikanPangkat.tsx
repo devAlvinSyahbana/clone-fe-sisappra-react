@@ -14,18 +14,16 @@ import Swal from 'sweetalert2'
 import * as Yup from 'yup'
 import {KTSVG} from '../../../../_metronic/helpers'
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JABATAN_URL = `${API_URL}/master/jabatan` //http://localhost:3000/sarana-prasarana
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const STATUS_KENAIKAN_PANGKAT_URL = `${API_URL}/master/status_kenaikan_pangkat`
 export interface FormInput {
-  nama?: string
-  status?: string
+  status_kenaikan_pangkat?: string
   created_by?: number
 }
 const validatorForm = Yup.object().shape({
-  nama: Yup.string().required('Wajib diisi'),
-  status: Yup.string().required('Wajib diisi'),
+  status_kenaikan_pangkat: Yup.string().required('Wajib diisi'),
 })
-export function Jabatan() {
+export function StatusKenaikanPangkat() {
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
@@ -39,13 +37,13 @@ export function Jabatan() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [temp, setTemp] = useState([])
   const [aksi, setAksi] = useState(0)
-  const [valFilterJabatan, setFilterJabatan] = useState({val: ''})
+  const [valFilterSKP, setFilterSKP] = useState({val: ''})
 
   useEffect(() => {
     async function fetchUsers(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${JABATAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${STATUS_KENAIKAN_PANGKAT_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -57,7 +55,7 @@ export function Jabatan() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${JABATAN_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${STATUS_KENAIKAN_PANGKAT_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -68,7 +66,7 @@ export function Jabatan() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${JABATAN_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${STATUS_KENAIKAN_PANGKAT_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -77,8 +75,8 @@ export function Jabatan() {
 
   const handleFilter = async () => {
     let uriParam = ''
-    if (valFilterJabatan.val !== '') {
-      uriParam += `&nama=${valFilterJabatan.val}`
+    if (valFilterSKP.val !== '') {
+      uriParam += `${valFilterSKP.val}`
     }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
@@ -96,12 +94,11 @@ export function Jabatan() {
     }))
   }
 
-  const handleChangeInputJabatan = (event: {
-    //5
+  const handleChangeInputSKP = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterJabatan({val: event.target.value})
+    setFilterSKP({val: event.target.value})
   }
 
   const LoadingAnimation = (props: any) => {
@@ -130,25 +127,11 @@ export function Jabatan() {
       },
     },
     {
-      name: 'Jabatan',
-      selector: (row: any) => row.jabatan,
+      name: 'Status Kenaikan Pangkat',
+      selector: (row: any) => row.status_kenaikan_pangkat,
       sortable: true,
-      sortField: 'jabatan',
+      sortField: 'status_kenaikan_pangkat',
       minWidth: '100px',
-    },
-    {
-      name: 'Status',
-      selector: (row: any) => row.status,
-      sortable: true,
-      sortField: 'status',
-      wrap: true,
-    },
-    {
-      name: 'Kode',
-      selector: (row: any) => row.kode,
-      sortable: true,
-      sortField: 'kode',
-      wrap: true,
     },
     {
       name: 'Aksi',
@@ -173,7 +156,11 @@ export function Jabatan() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/jabatan/lihat-jabatan/' + record.id, {replace: true})
+                        navigate(
+                          '/master/statuskenaikanpangkat/lihat-status-kenaikan-pangkat/' +
+                            record.id,
+                          {replace: true}
+                        )
                       }
                     >
                       Detail
@@ -201,12 +188,11 @@ export function Jabatan() {
     onSubmit: async (values, {setSubmitting}) => {
       setSubmitting(true)
       const bodyparam: FormInput = {
-        nama: valuesFormik?.nama,
-        status: valuesFormik?.status,
+        status_kenaikan_pangkat: valuesFormik?.status_kenaikan_pangkat,
       }
       try {
         if (aksi === 0) {
-          const response = await axios.post(`${JABATAN_URL}/create`, bodyparam)
+          const response = await axios.post(`${STATUS_KENAIKAN_PANGKAT_URL}/create`, bodyparam)
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -219,7 +205,10 @@ export function Jabatan() {
             setSubmitting(false)
           }
         } else {
-          const response = await axios.put(`${JABATAN_URL}/update/${idEditData.id}`, bodyparam)
+          const response = await axios.put(
+            `${STATUS_KENAIKAN_PANGKAT_URL}/update/${idEditData.id}`,
+            bodyparam
+          )
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -247,7 +236,7 @@ export function Jabatan() {
   // UPDATE
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
   const getDetail = async (idparam: any) => {
-    const {data} = await axios.get(`${JABATAN_URL}/findone/${parseInt(idparam)}`)
+    const {data} = await axios.get(`${STATUS_KENAIKAN_PANGKAT_URL}/findone/${parseInt(idparam)}`)
     setIdEditData((prevstate) => ({
       ...prevstate,
       id: parseInt(idparam),
@@ -263,8 +252,7 @@ export function Jabatan() {
     setShow(true)
     setAksi(0)
     setValuesFormik({
-      nama: '',
-      status: '',
+      status_kenaikan_pangkat: '',
     })
   }
 
@@ -292,7 +280,10 @@ export function Jabatan() {
             deleted_by: 0,
           },
         }
-        const response = await axios.delete(`${JABATAN_URL}/delete/${id}`, bodyParam)
+        const response = await axios.delete(
+          `${STATUS_KENAIKAN_PANGKAT_URL}/delete/${id}`,
+          bodyParam
+        )
         if (response) {
           Swal.fire({
             icon: 'success',
@@ -333,15 +324,15 @@ export function Jabatan() {
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
           <label htmlFor='' className='mb-3'>
-            Jabatan
+            Status Kenaikan Pangkat
           </label>
           <input
             type='text'
             className='form-control form-control form-control-solid'
-            name='nama'
-            value={valFilterJabatan.val}
-            onChange={handleChangeInputJabatan}
-            placeholder='Jabatan'
+            name='status_kenaikan_pangkat'
+            value={valFilterSKP.val}
+            onChange={handleChangeInputSKP}
+            placeholder='Status Kenaikan Pangkat'
           />
         </div>
       </div>
@@ -370,43 +361,20 @@ export function Jabatan() {
         <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
           <form onSubmit={formik.handleSubmit}>
             <Modal.Header closeButton>
-              {/* <Modal.Title {aksi === 0 ? 'Tambah' : 'Ubah'}>Tambah Jabatan</Modal.Title> */}
+              {/* <Modal.Title {aksi === 0 ? 'Tambah' : 'Ubah'}>Tambah SKP</Modal.Title> */}
             </Modal.Header>
             <Modal.Body>
               <div className='mb-3 form-control-solid'>
                 <div className='form-group'>
-                  <Form.Label>Jabatan</Form.Label>
+                  <Form.Label>Status Kenaikan Pangkat</Form.Label>
                   <Form.Control
-                    name='nama'
+                    name='q'
                     className='form-control form-control-solid'
                     onChange={handleChangeFormik}
-                    value={valuesFormik?.nama}
+                    value={valuesFormik?.status_kenaikan_pangkat}
                   />
                 </div>
               </div>
-              <Form.Group className='mb-3 form-control-solid'>
-                <label className='required fw-semibold fs-6 mb-2'>Status</label>
-                <select
-                  data-control='select2'
-                  data-placeholder='Status'
-                  name='status'
-                  className={clsx(
-                    'form-control form-control-solid mb-1',
-                    {
-                      'is-invalid': formik.touched.status && formik.errors.status,
-                    },
-                    {
-                      'is-valid': formik.touched.status && !formik.errors.status,
-                    }
-                  )}
-                  onChange={handleChangeFormik}
-                  value={valuesFormik?.status}
-                >
-                  <option value=''>Pilih</option>
-                  <option value='JFT'>JFT</option>
-                  <option value='Non JFT'>Non JFT</option>
-                </select>
-              </Form.Group>
             </Modal.Body>
             <Modal.Footer>
               <Button variant='secondary' onClick={handleClose}>

@@ -151,6 +151,11 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/master/KorbanMaterial' title='Korban Material ' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisPertolongan' title='Jenis Pertolongan' hasBullet={true} />
         <SidebarMenuItem
+          to='/master/StatusKenaikanPangkat'
+          title='Status Kenaikan Pangkat'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
           to='/master/JenisPerdaPerkada'
           title='Jenis Perda / Perkada'
           hasBullet={true}
