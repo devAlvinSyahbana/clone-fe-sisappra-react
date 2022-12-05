@@ -93,7 +93,6 @@ function Pie(props: { chartID: any; valueField?: any; categoryField: any }) {
 
     chart.set("cursor", am5xy.XYCursor.new(root, {
       behavior: "none",
-      xAxis: xAxis,
       yAxis: yAxis
     }));
 
