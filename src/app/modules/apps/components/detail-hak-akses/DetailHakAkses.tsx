@@ -161,6 +161,11 @@ export interface HakAkses {
   jabatan: number
 }
 
+export interface AksesKontrolMapping {
+  filterArr: any[]
+  data: any[]
+}
+
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -190,7 +195,10 @@ export function DetailHakAkses() {
   const [hakAkses, setHakAkses] = useState<HakAkses>()
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<any[]>([])
-  const [aksesKontrolMapping, setAksesKontrolMapping] = useState<any[]>([])
+  const [aksesKontrolMapping, setAksesKontrolMapping] = useState<AksesKontrolMapping>({
+    filterArr: [],
+    data: [],
+  })
   //
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -216,7 +224,7 @@ export function DetailHakAkses() {
   const formik = useFormik({
     initialValues: {
       nama_hak_akses: '',
-      value_permission: aksesKontrolMapping,
+      value_permission: aksesKontrolMapping.filterArr,
     },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
@@ -230,40 +238,44 @@ export function DetailHakAkses() {
         )
         // alert(JSON.stringify(values, null, 2))
         if (response) {
+          // console.log('cek akm, ', aksesKontrolMapping)
           for (let i = 0; i < modulPermission.length; i++) {
             let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
-            // console.log('cek akm, ', aksesKontrolMapping)
-            if (aksesKontrolMapping.length === modulPermission.length) {
-              // let akm: string = aksesKontrolMapping[i].id_akses_kontrol + ' ' + aksesKontrolMapping[i].id_permission
-              if (values.value_permission.includes(mp)) {
-                await axios.put(
-                  `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`,
-                  {
-                    id_hak_akses: id,
-                    id_akses_kontrol: modulPermission[i].akses_kontrol,
-                    id_permission: modulPermission[i].id,
-                    value_permission: true,
+            if (aksesKontrolMapping?.filterArr.includes(mp)) {
+              // console.log('true', mp)
+              for (let j = 0; j < aksesKontrolMapping.data.length; j++) {
+                if (
+                  aksesKontrolMapping.data[j].id_akses_kontrol ===
+                    modulPermission[i].akses_kontrol &&
+                  aksesKontrolMapping.data[j].id_permission === modulPermission[i].id
+                ) {
+                  if (values.value_permission.includes(mp)) {
+                    await axios.put(
+                      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping.data[j].id}`,
+                      {
+                        id_hak_akses: id,
+                        id_akses_kontrol: modulPermission[i].akses_kontrol,
+                        id_permission: modulPermission[i].id,
+                        value_permission: true,
+                      }
+                    )
+                    // console.log('tt', mp, aksesKontrolMapping.data[j].id)
+                  } else {
+                    await axios.put(
+                      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping.data[j].id}`,
+                      {
+                        id_hak_akses: id,
+                        id_akses_kontrol: modulPermission[i].akses_kontrol,
+                        id_permission: modulPermission[i].id,
+                        value_permission: false,
+                      }
+                    )
+                    // console.log('tf', mp, aksesKontrolMapping.data[j].id)
                   }
-                )
-                // console.log('tt')
-              } else {
-                await axios.put(
-                  `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`,
-                  {
-                    id_hak_akses: id,
-                    id_akses_kontrol: modulPermission[i].akses_kontrol,
-                    id_permission: modulPermission[i].id,
-                    value_permission: false,
-                  }
-                )
-                // console.log(id, 'tf')
+                }
               }
-            } else if (
-              aksesKontrolMapping.length < modulPermission.length &&
-              aksesKontrolMapping.length > 0
-            ) {
-              console.log(true)
             } else {
+              // console.log('false', mp)
               if (values.value_permission.includes(mp)) {
                 await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
                   id_hak_akses: id,
@@ -271,7 +283,7 @@ export function DetailHakAkses() {
                   id_permission: modulPermission[i].id,
                   value_permission: true,
                 })
-                // console.log('ft')
+                // console.log('ft', mp)
               } else {
                 await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
                   id_hak_akses: id,
@@ -279,7 +291,7 @@ export function DetailHakAkses() {
                   id_permission: modulPermission[i].id,
                   value_permission: false,
                 })
-                // console.log('ff')
+                // console.log('ff', mp)
               }
             }
           }
@@ -287,7 +299,7 @@ export function DetailHakAkses() {
             icon: 'success',
             title: 'Data berhasil disimpan',
             showConfirmButton: false,
-            timer: 1500,
+            timer: 2000,
           })
           values.value_permission = []
           fetchMapping(1)
@@ -385,13 +397,13 @@ export function DetailHakAkses() {
   // USEEFFECT + FETCH FUNCTION
   useEffect(() => {
     fetchDataAwal(1)
+    fetchAksesKontrol()
+    fetchPermission()
+    fetchMapping(1)
   }, [])
 
   useEffect(() => {
     fetchData(1)
-    fetchAksesKontrol()
-    fetchPermission()
-    fetchMapping(1)
   }, [qParamFind, perPage])
 
   useEffect(() => {
@@ -463,19 +475,25 @@ export function DetailHakAkses() {
   // mapping
   const fetchMapping = async (page: number) => {
     const value = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/filter/{id_hak_akses}?limit=${modulPermission.length}&offset=${page}&id_hak_akses=${id}`
+      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/filter/{id_hak_akses}?limit=${
+        modulPermission.length > 1 ? modulPermission.length : 100
+      }&offset=${page}&id_hak_akses=${id}`
     )
     let items = []
+    let filterArr = []
     for (let i = 0; i < value.data.data.length; i++) {
+      filterArr.push(value.data.data[i].id_akses_kontrol + ' ' + value.data.data[i].id_permission)
       if (value.data.data[i].value_permission)
         items.push(value.data.data[i].id_akses_kontrol + ' ' + value.data.data[i].id_permission)
     }
-    setAksesKontrolMapping(value.data.data)
+    setAksesKontrolMapping({filterArr: filterArr, data: value.data.data})
     formik.values.value_permission = items
+    // console.log('cek akm: ', aksesKontrolMapping)
+    // console.log('cek akm items: ', items)
     // setTotalRows(value.data.total)
   }
   //end mapping
-  // EMD USEEFFECT + FETCH FUNCTION
+  // END USEEFFECT + FETCH FUNCTION
 
   // var num = 1
   const columns = [
