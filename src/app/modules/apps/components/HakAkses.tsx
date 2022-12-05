@@ -365,7 +365,7 @@ export function HakAkses() {
                 </label>
                 <div>
                   <select
-                    className='form-select form-select-solid'
+                    className='form-select form-select-solid mb-5'
                     aria-label='Select example'
                     value={valStatAKses.val}
                     onChange={handleChangeStatAKses}
@@ -380,10 +380,11 @@ export function HakAkses() {
               {valStatAKses.val === 'Pelaksana' ? (
                 <>
                   <div>
-                    <label htmlFor='' className='mb-5'>
+                    <label htmlFor='' className='mb-3'>
                       Wilayah/Bidang
                     </label>
                     <AsyncSelect
+                      className='mb-5'
                       value={
                         valMasterBidangWilayah.value
                           ? valMasterBidangWilayah
@@ -395,10 +396,11 @@ export function HakAkses() {
                     />
                   </div>
                   <div>
-                    <label htmlFor='' className='mb-5'>
+                    <label htmlFor='' className='mb-3'>
                       Kecamatan
                     </label>
                     <AsyncSelect
+                      className='mb-5'
                       value={
                         valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}
                       }
@@ -408,7 +410,7 @@ export function HakAkses() {
                     />
                   </div>
                   <div>
-                    <label htmlFor='' className='mb-5'>
+                    <label htmlFor='' className='mb-3'>
                       Jabatan
                     </label>
                     <AsyncSelect
@@ -437,8 +439,8 @@ export function HakAkses() {
                 </div>
               ) : null}
               {/* Akses Kontrol */}
-              <div className='fv-row'>
-                <span className='fs-5 fw-bold form-label mb-2'>Akses Kontrol</span>
+              <div className='fv-row mt-5'>
+                <h5 className='fs-5 fw-bold form-label mb-3'>Akses Kontrol</h5>
                 <div className='table-responsive'>
                   <div className='table align-middle table-row-dashed fs-6 gy-5'>
                     <div className='text-gray-600 fw-semibold'>
