@@ -489,12 +489,10 @@ export function DetailHakAkses() {
     formik.values.value_permission = items
     // console.log('cek akm: ', aksesKontrolMapping)
     // console.log('cek akm items: ', items)
-    // setTotalRows(value.data.total)
   }
   //end mapping
   // END USEEFFECT + FETCH FUNCTION
 
-  // var num = 1
   const columns = [
     {
       name: 'No',

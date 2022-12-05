@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import CardGroup from 'react-bootstrap/CardGroup'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -21,7 +21,6 @@ export interface FormInput {
 export interface JumlahPengguna {
   total_data?: number
 }
-
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -29,7 +28,6 @@ export interface SelectOption {
   readonly isFixed?: boolean
   readonly isDisabled?: boolean
 }
-
 export interface DataPermission {
   id: number
   akses_kontrol: number
@@ -48,8 +46,6 @@ export const AKSES_KONTROL_URL = `${API_URL}/manajemen-pengguna/akses-kontrol`
 
 export function HakAkses() {
   const navigate = useNavigate()
-  const {id} = useParams()
-
   //handle tambah
   const [showTambah, setTambahShow] = useState(false)
   const handleTambahClose = () => setTambahShow(false)
@@ -59,14 +55,8 @@ export function HakAkses() {
   const arrStatAKses = ['Pelaksana', 'Non-Pelaksana']
 
   const [data, setData] = useState<any[]>([])
-  const [totalRows, setTotalRows] = useState(0)
-  const [perPage] = useState(10)
-  const [valuesFormik, setValuesFormik] = useState<FormInput>({})
-
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<DataPermission[]>([])
-  const [akm, setAkm] = useState([])
-  const [totalDataa, setTotalData] = useState(id)
 
   const handleChangeStatAKses = (event: {
     preventDefault: () => void
@@ -154,10 +144,10 @@ export function HakAkses() {
   //nama_hak_akses
   const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
+  const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
-
-    const json = await response.data.data
+    const json = response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsbidangwilayah = (
@@ -170,23 +160,36 @@ export function HakAkses() {
   }
   const handleChangeInputKota = (newValue: any) => {
     setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterBidangWilayah((prevstate) => ({
-      ...prevstate,
-      id: newValue.value,
-    }))
+    setIdMasterBidangWilayah({id: newValue.value})
+    console.log('cek', newValue.value)
+    const timeout = setTimeout(async () => {
+      const response = await axios.get(
+        `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
+      )
+      let items = response.data.data
+      Array.from(items).forEach(async (item: any) => {
+        item.label = item.nama
+        item.value = item.id
+      })
+      setMasterBidangWilayah(items)
+      console.log(items)
+    }, 100)
+
+    return () => clearTimeout(timeout)
   }
   //end nama_hak_akses
 
   // kecamatan
   const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
   const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
+  const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
       `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
         inputValue !== '' && `&nama=${inputValue}`
       }`
     )
-    const json = await response.data.data
+    const json = response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsKecamatan = (
@@ -195,14 +198,26 @@ export function HakAkses() {
   ) => {
     setTimeout(async () => {
       callback(await filterKecamatan(inputValue))
-    }, 1000)
+    }, 500)
   }
   const handleChangeInputKecamatan = (newValue: any) => {
     setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterPelaksana((prevstate) => ({
-      ...prevstate,
-      id: newValue.value,
-    }))
+    setIdMasterPelaksana({id: newValue.value})
+    console.log('cek', newValue.value)
+    const timeout = setTimeout(async () => {
+      const response = await axios.get(
+        `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${newValue.value}`
+      )
+      let items = response.data.data
+      Array.from(items).forEach(async (item: any) => {
+        item.label = item.jabatan
+        item.value = item.id
+      })
+      setMasterPelaksana(items)
+      console.log(items)
+    }, 100)
+
+    return () => clearTimeout(timeout)
   }
   //end kecamatan
 
@@ -214,13 +229,13 @@ export function HakAkses() {
         inputValue !== '' && `&nama=${inputValue}`
       }`
     )
-    const json = await response.data.data
+    const json = response.data.data
     return json.map((i: any) => ({label: i.jabatan, value: i.id}))
   }
   const loadOptionsJabatan = (inputValue: string, callback: (options: SelectOption[]) => void) => {
     setTimeout(async () => {
       callback(await filterjabatan(inputValue))
-    }, 1000)
+    }, 500)
   }
   const handleChangeInputJabatan = (newValue: any) => {
     setValMasterJabatan((prevstate: any) => ({...prevstate, ...newValue}))
@@ -231,7 +246,7 @@ export function HakAkses() {
     fetchDT()
     fetchUsers()
     fetchPermission()
-    fetchMapping()
+    // fetchMapping()
   }, [])
 
   const fetchDT = async () => {
@@ -244,7 +259,6 @@ export function HakAkses() {
       item.jumlah_pengguna = `${value.data.data.total_data}`
     })
     const timeout = setTimeout(() => {
-      setTotalRows(response.data.total_data)
       setData(items)
     }, 1500)
 
@@ -255,7 +269,6 @@ export function HakAkses() {
   const fetchUsers = async () => {
     const value = await axios.get(`${AKSES_KONTROL_URL}/find`)
     setAksesKontrol(value?.data?.data)
-    setTotalRows(value.data.total)
     // console.log('cek akses kontrol', aksesKontrol)
   }
   //end akses kontrol
@@ -264,19 +277,9 @@ export function HakAkses() {
   const fetchPermission = async () => {
     const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/modul-permission/find`)
     setModulPermission(value?.data?.data)
-    setTotalRows(value.data.total)
     // console.log('cek mp', modulPermission)
   }
   //modul permission
-
-  // mapping
-  const fetchMapping = async () => {
-    const value = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/find`)
-    setAkm(value.data.data)
-    setTotalRows(value.data.total)
-    // console.log('cek mapping:', akm)
-  }
-  //end mapping
 
   return (
     <CardGroup>
@@ -290,7 +293,7 @@ export function HakAkses() {
                   <div className='card card-flush h-md-100'>
                     <div className='card-header'>
                       <div className='card-title'>
-                        <h2>{d?.nama_hak_akses}</h2>
+                        <h3>{d?.nama_hak_akses}</h3>
                       </div>
                     </div>
                     <div className='card-body pt-1'>
@@ -393,12 +396,12 @@ export function HakAkses() {
                     <label htmlFor='' className='mb-5'>
                       Kecamatan
                     </label>
-                    <>{console.log(valMasterPelaksana)}</>
                     <AsyncSelect
                       value={
                         valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}
                       }
                       loadOptions={loadOptionsKecamatan}
+                      defaultOptions={masterBidangWilayah}
                       onChange={handleChangeInputKecamatan}
                     />
                   </div>
@@ -411,6 +414,7 @@ export function HakAkses() {
                         valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}
                       }
                       loadOptions={loadOptionsJabatan}
+                      defaultOptions={masterPelaksana}
                       onChange={handleChangeInputJabatan}
                     />
                   </div>
@@ -426,7 +430,7 @@ export function HakAkses() {
                     name='nama_hak_akses'
                     className='form-control form-control-solid'
                     onChange={formik.handleChange}
-                    value={valuesFormik?.nama_hak_akses}
+                    value={formik.values.nama_hak_akses}
                   />
                 </div>
               ) : null}
