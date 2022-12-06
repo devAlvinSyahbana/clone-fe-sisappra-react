@@ -116,13 +116,13 @@ const PetaTitikRawan: FC = () => {
                     Politik
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Tramtibmum')}
+                    onClick={handler.bind(this, 'Tramtibum')}
                     className='mb-2'
                     id='toggle-check6'
                     type='checkbox'
                     variant='outline-primary'
                     checked={checked}
-                    value='Tramtibmum'
+                    value='Tramtibum'
                   >
                     Tramtibum
                   </ToggleButton>
