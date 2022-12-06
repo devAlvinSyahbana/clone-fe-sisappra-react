@@ -37,13 +37,13 @@ export function StatusKenaikanPangkat() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [temp, setTemp] = useState([])
   const [aksi, setAksi] = useState(0)
-  const [valFilterSKP, setFilterSKP] = useState({val: ''})
+  const [valFilterPangkat, setFilterPangkat] = useState({val: ''})
 
   useEffect(() => {
     async function fetchUsers(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${STATUS_KENAIKAN_PANGKAT_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${STATUS_KENAIKAN_PANGKAT_URL}/filter/${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -54,9 +54,7 @@ export function StatusKenaikanPangkat() {
 
   const fetchData = async (page: number) => {
     setLoading(true)
-    const response = await axios.get(
-      `${STATUS_KENAIKAN_PANGKAT_URL}/find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
-    )
+    const response = await axios.get(`${STATUS_KENAIKAN_PANGKAT_URL}/filter/${qParamFind.strparam}`)
     setData(response.data.data)
     setTotalRows(response.data.total_data)
     setLoading(false)
@@ -65,9 +63,7 @@ export function StatusKenaikanPangkat() {
   }
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
-    const response = await axios.get(
-      `${STATUS_KENAIKAN_PANGKAT_URL}/find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
-    )
+    const response = await axios.get(`${STATUS_KENAIKAN_PANGKAT_URL}/filter/${qParamFind.strparam}`)
     setData(response.data.data)
     setPerPage(newPerPage)
     setLoading(false)
@@ -75,9 +71,10 @@ export function StatusKenaikanPangkat() {
 
   const handleFilter = async () => {
     let uriParam = ''
-    if (valFilterSKP.val !== '') {
-      uriParam += `${valFilterSKP.val}`
+    if (valFilterPangkat.val !== '') {
+      uriParam += `${valFilterPangkat.val}`
     }
+
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
@@ -94,11 +91,11 @@ export function StatusKenaikanPangkat() {
     }))
   }
 
-  const handleChangeInputSKP = (event: {
+  const handleChangeInputPangkat = (event: {
     preventDefault: () => void
     target: {value: any; name: any}
   }) => {
-    setFilterSKP({val: event.target.value})
+    setFilterPangkat({val: event.target.value})
   }
 
   const LoadingAnimation = (props: any) => {
@@ -329,9 +326,9 @@ export function StatusKenaikanPangkat() {
           <input
             type='text'
             className='form-control form-control form-control-solid'
-            name='status_kenaikan_pangkat'
-            value={valFilterSKP.val}
-            onChange={handleChangeInputSKP}
+            name='q'
+            value={valFilterPangkat.val}
+            onChange={handleChangeInputPangkat}
             placeholder='Status Kenaikan Pangkat'
           />
         </div>
@@ -339,7 +336,6 @@ export function StatusKenaikanPangkat() {
       <div className='row g-8 mt-2 ms-5 me-5'>
         <div className='col-md-6 col-lg-6 col-sm-12'>
           <Link to='#' onClick={handleFilter}>
-            {/* 1 */}
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
@@ -349,7 +345,7 @@ export function StatusKenaikanPangkat() {
 
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
           <Link to='#i'>
-            <button className='btn btn-primary me-5' onClick={handleShow}>
+            <button className='btn btn-primary me-5' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
               Tambah
             </button>
@@ -361,14 +357,14 @@ export function StatusKenaikanPangkat() {
         <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
           <form onSubmit={formik.handleSubmit}>
             <Modal.Header closeButton>
-              {/* <Modal.Title {aksi === 0 ? 'Tambah' : 'Ubah'}>Tambah SKP</Modal.Title> */}
+              {/* <Modal.Title {aksi === 0 ? 'Tambah' : 'Ubah'}>Tambah Pangkat</Modal.Title> */}
             </Modal.Header>
             <Modal.Body>
               <div className='mb-3 form-control-solid'>
                 <div className='form-group'>
                   <Form.Label>Status Kenaikan Pangkat</Form.Label>
                   <Form.Control
-                    name='q'
+                    name='status_kenaikan_pangkat'
                     className='form-control form-control-solid'
                     onChange={handleChangeFormik}
                     value={valuesFormik?.status_kenaikan_pangkat}
