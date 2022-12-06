@@ -318,9 +318,9 @@ export function DetailHakAkses() {
 
   // End Data Tabel
 
-  const konfirDel = (id: number, status_pegawai: string) => {
+  const konfirDel = (id: number) => {
     Swal.fire({
-      text: 'Anda yakin ingin menghapus data ini',
+      text: 'Anda yakin ingin menghapus pengguna dari hak akses ini?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -331,12 +331,10 @@ export function DetailHakAkses() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const bodyParam = {
-          data: {
-            status_pegawai: status_pegawai,
+            status_pengguna: 0,
             deleted_by: 0,
-          },
         }
-        const response = await axios.delete(`${MANAJEMEN_PENGGUNA_URL}/delete/${id}`, bodyParam)
+        const response = await axios.put(`${MANAJEMEN_PENGGUNA_URL}/hapus-hak-akses-pengguna/${id}`, bodyParam)
         if (response) {
           fetchData(1)
           Swal.fire({
@@ -569,7 +567,7 @@ export function DetailHakAkses() {
                   >
                     <Dropdown.Item
                       href='#'
-                      onClick={() => konfirDel(record.id, record.nama_lengkap)}
+                      onClick={() => konfirDel(record.id)}
                     >
                       Hapus
                     </Dropdown.Item>
