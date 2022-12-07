@@ -255,6 +255,7 @@ export function Jabatan() {
     setValuesFormik((prevstate) => ({
       ...prevstate,
       ...data.data,
+      nama:data.data.jabatan
     }))
   }
   //End UPDATE
@@ -358,7 +359,7 @@ export function Jabatan() {
 
         <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
           <Link to='#i'>
-            <button className='btn btn-primary me-5' onClick={handleShow}>
+            <button className='btn btn-primary me-5' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
               Tambah
             </button>
