@@ -91,14 +91,36 @@ export const AddKegiatanUmumPage: FC = () => {
             <div className='card'>
               <div className='card-body'>
                 {step}
-                <div>
+                <div className='row d-flex justify-content-end'>
                   {!isFirstStep && (
-                    <button type='button' onClick={back}>
-                      Back
-                    </button>
+                    <a
+                      href='#'
+                      className='col-5 btn btn-flex btn-secondary px-6 m-3'
+                      onClick={back}
+                    >
+                      <span className='svg-icon svg-icon-2x'>
+                        <i className='fa-solid fa-arrow-left'></i>
+                      </span>
+                      <span className='d-flex flex-column align-items-start ms-2'>
+                        <span className='fs-3 fw-bold'>Kembali</span>
+                      </span>
+                    </a>
+                    // <button type='button' onClick={back}>
+                    //   Back
+                    // </button>
                   )}
-                  <button type='submit'>{isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}</button>
+                  <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
+                    <span className='svg-icon svg-icon-2x'>
+                      <i className='fa-solid fa-paper-plane'></i>
+                    </span>
+                    <span className='d-flex flex-column align-items-start ms-2'>
+                      <span className='fs-3 fw-bold'>
+                        {isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}
+                      </span>
+                    </span>
+                  </button>
                 </div>
+                {/* <button type='submit'>{isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}</button> */}
               </div>
             </div>
 
