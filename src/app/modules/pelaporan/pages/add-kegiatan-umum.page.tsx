@@ -31,6 +31,7 @@ export const AddKegiatanUmumPage: FC = () => {
   const jenisKegiatanId = useSelector((s: RootState) =>
     Number(s.pelaporanKegiatan.kegiatan__jenis_kegiatan_selection)
   )
+  // console.log(jenisKegiatanId)
 
   const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
     <StepDetailKegiatan />,

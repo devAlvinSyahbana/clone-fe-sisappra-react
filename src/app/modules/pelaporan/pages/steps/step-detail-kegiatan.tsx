@@ -38,27 +38,27 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
-  const jenisKegiatan = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
+  const jenisKegiatan = useSelector((s: RootState) =>
+    Number(s.pelaporanKegiatan.kegiatan__jenis_kegiatan_selection)
   )
 
-  const updateJenisPasalList = () => {
+  const updateJenisPasalList = (value: any) => {
     axios
-      .get(`http://localhost:3001/jenis-perda-perkada?$filter=${jenisKegiatan}&$oderby=nama`)
+      .get(`http://localhost:3001/jenis-perda-perkada?$filter=${value}&$oderby=nama`)
       .then((res) => {
         const data = res.data.data.map((d: any) => ({label: d.judul, value: String(d.id)}))
         dispatch(changedValue(ToFieldStateBNV('list_jenis_pasal', data)))
+        // console.log('pasal', res.data.data)
       })
   }
 
-  const updateJenisPenyelesaianList = () => {
+  const updateJenisPenyelesaianList = (value: any) => {
     axios
-      .get(
-        `http://localhost:3001/jenis-penyelesaian?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`
-      )
+      .get(`http://localhost:3001/jenis-penyelesaian?$filter=${value}&$oderby=nama`)
       .then((res) => {
         const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
         dispatch(changedValue(ToFieldStateBNV('list_jenis_penyelesaian', data)))
+        // console.log('penyelesaian', res.data.data)
       })
   }
 
@@ -66,7 +66,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
-
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
           <Field
@@ -76,9 +75,10 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
+              //   console.log(ToFieldStateCE(o).target.value)
               dispatch(changedValue(ToFieldStateCE(o)))
-              updateJenisPasalList()
-              updateJenisPenyelesaianList()
+              updateJenisPasalList(ToFieldStateCE(o).target.value)
+              updateJenisPenyelesaianList(ToFieldStateCE(o).target.value)
             }}
           />
           <div className='text-danger mt-2'>
@@ -86,6 +86,44 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           </div>
         </div>
 
+        {/* slice redux belum ada */}
+        {jenisKegiatan === 1 && (
+          <div className='mb-10'>
+            <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
+              Asal Laporan
+            </label>
+            <Field
+              type='number'
+              name=''
+              className='form-control'
+              // onKeyUp={(o: ChangeEvent<any>) => {
+              //   dispatch(changedValue(ToFieldStateCE(o)))
+              // }}
+            />
+            <div className='text-danger mt-2'>
+              <ErrorMessage name='kegiatan__uraian_kegiatan' />
+            </div>
+          </div>
+        )}
+        {/* slice redux belum ada */}
+        {jenisKegiatan === 7 && (
+          <div className='mb-10'>
+            <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
+              Jenis Pengamanan
+            </label>
+            <Field
+              type='number'
+              name=''
+              className='form-control'
+              // onKeyUp={(o: ChangeEvent<any>) => {
+              //   dispatch(changedValue(ToFieldStateCE(o)))
+              // }}
+            />
+            <div className='text-danger mt-2'>
+              <ErrorMessage name='kegiatan__uraian_kegiatan' />
+            </div>
+          </div>
+        )}
         <div className='mb-10'>
           <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
             Jumlah Personil
@@ -102,7 +140,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             <ErrorMessage name='kegiatan__jumlah_personil' />
           </div>
         </div>
-
         <div className='mb-10'>
           <label className='required form-label'>Uraian Kegiatan</label>
           <Field
@@ -118,7 +155,58 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             <ErrorMessage name='kegiatan__uraian_kegiatan' />
           </div>
         </div>
-
+        {jenisKegiatan === 7 && (
+          <>
+            <div className='mb-10'>
+              <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
+                Masalah
+              </label>
+              <Field
+                type='number'
+                name=''
+                className='form-control'
+                // onKeyUp={(o: ChangeEvent<any>) => {
+                //   dispatch(changedValue(ToFieldStateCE(o)))
+                // }}
+              />
+              <div className='text-danger mt-2'>
+                <ErrorMessage name='kegiatan__uraian_kegiatan' />
+              </div>
+            </div>
+            <div className='mb-10'>
+              <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
+                Pemecahan Masalah
+              </label>
+              <Field
+                type='number'
+                name=''
+                className='form-control'
+                // onKeyUp={(o: ChangeEvent<any>) => {
+                //   dispatch(changedValue(ToFieldStateCE(o)))
+                // }}
+              />
+              <div className='text-danger mt-2'>
+                <ErrorMessage name='kegiatan__uraian_kegiatan' />
+              </div>
+            </div>
+            <div className='mb-10'>
+              <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
+                Instansi Terkait
+              </label>
+              <Field
+                type='number'
+                name=''
+                className='form-control'
+                // onKeyUp={(o: ChangeEvent<any>) => {
+                //   dispatch(changedValue(ToFieldStateCE(o)))
+                // }}
+              />
+              <div className='text-danger mt-2'>
+                <ErrorMessage name='kegiatan__uraian_kegiatan' />
+              </div>
+            </div>
+          </>
+        )}
         <div className='mb-10'>
           <label className='required form-label'>Tanggal Kegiatan</label>
           <Field
@@ -133,7 +221,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             <ErrorMessage name='kegiatan__tanggal' />
           </div>
         </div>
-
         <div className='mb-10'>
           <label className='required form-label'>Waktu Kegiatan</label>
           <div className='row'>
@@ -165,7 +252,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             </div>
           </div>
         </div>
-
         <div className='mb-10'>
           <label className='required form-label'>Lokasi Kegiatan</label>
           <Field
