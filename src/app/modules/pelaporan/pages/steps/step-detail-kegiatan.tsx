@@ -41,6 +41,9 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   const jenisKegiatan = useSelector((s: RootState) =>
     Number(s.pelaporanKegiatan.kegiatan__jenis_kegiatan_selection)
   )
+  const jenisKegiatanId = useSelector(
+    (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
+  )
 
   const updateJenisPasalList = (value: any) => {
     axios
@@ -68,6 +71,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
+          {jenisKegiatanId}
           <Field
             name='kegiatan__jenis_kegiatan_selection'
             target='kegiatan__jenis_kegiatan_id'
