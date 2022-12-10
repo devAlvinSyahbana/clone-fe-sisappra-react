@@ -65,7 +65,7 @@ export const SelectField = ({ form, field, target, onChange, options }: OptionPr
         onChange={(o)=>{
             field.onChange({target: {name: field.name, value: o }})
             form.setFieldValue(target, o?.value)
-            onChange({target:{name:field.name, value: o?.value }})
+            onChange({target:{name:target, value: o?.value }})
         }}
     />
 )
