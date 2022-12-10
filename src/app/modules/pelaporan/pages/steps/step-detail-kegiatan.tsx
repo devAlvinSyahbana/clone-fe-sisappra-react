@@ -1,8 +1,8 @@
-import React, {ChangeEvent, FC, SyntheticEvent, useEffect} from "react";
+import React, {ChangeEvent, FC, SyntheticEvent, useEffect, useState} from "react";
 import Select, {OptionProps} from 'react-select'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../redux/store";
-import {changedValue} from "../../../../redux/slices/pelaporan-kegiatan.slice";
+import {changedValue, isTipiring, updateJenisPasalList, updateJenisPenyelesaianList} from "../../../../redux/slices/pelaporan-kegiatan.slice";
 import {ErrorMessage, Field, FormikValues} from "formik";
 import {
     DatePickerField,
@@ -32,29 +32,16 @@ interface StepDetailKegiatanProps {
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ handleChange, values, handleBlur }) => {
     const dispatch = useDispatch()
     const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
+    // const [jenisKegiatanList, setJenisKegiatanList] = useState([])
     const jenisKegiatan = useSelector((s:RootState) => (s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id))
-
-    const updateJenisPasalList = () => {
-        axios.get(`http://localhost:3001/jenis-perda-perkada?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`).then(res => {
-            const data = res.data.data
-                .map((d: any) => ({label: d.text, value: String(d.value)}))
-            dispatch(changedValue(ToFieldStateBNV('list_jenis_pasal', data)))
-        })
-    }
-
-    const updateJenisPenyelesaianList = () => {
-        axios.get(`http://localhost:3001/jenis-penyelesaian?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`).then(res => {
-            const data = res.data.data
-                .map((d: any) => ({label: d.text, value: String(d.value)}))
-            dispatch(changedValue(ToFieldStateBNV('list_jenis_penyelesaian', data)))
-        })
-    }
+    const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
 
 
     return (<div className='w-50'>
         <div className='pb-10 pb-lg-15'>
             <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
-
+            {isTipiring(values) ? 'TIPIRING' : 'BUKAN'}
+            {jenisKegiatan}
             <div className="mb-10">
                 <label className="required form-label">Jenis Kegiatan</label>
                 <Field
@@ -64,13 +51,14 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({ handleChange, 
                     component={SelectField}
                     options={jenisKegiatanList}
                     onChange={(o:ChangeEvent<any>)=>{
-                        dispatch(changedValue(ToFieldStateCE(o)))
-                        updateJenisPasalList()
-                        updateJenisPenyelesaianList()
+                        dispatch(changedValue(ToFieldStateCE(o)));
+                        dispatch(updateJenisPasalList(o.target.value))
+                        dispatch(updateJenisPenyelesaianList(o.target.value))
                     }}
                 />
                 <div className='text-danger mt-2'>
                     <ErrorMessage name='kegiatan__jenis_kegiatan_id' />
+                    <ErrorMessage name='kegiatan__jenis_kegiatan_selection' />
                 </div>
             </div>
 

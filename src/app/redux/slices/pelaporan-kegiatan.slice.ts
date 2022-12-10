@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {createSlice, PayloadAction, createAsyncThunk, AsyncThunkAction, ThunkAction} from '@reduxjs/toolkit'
 import * as Yup from 'yup'
 import axios from "axios";
 
@@ -114,22 +114,42 @@ export const createSchemaPelaporanKegiatan = [
         tindak_lanjut__denda__tanggal_setor: Yup.date().required().label('Tanggal Setor Denda'),
         tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(32).required().label('Nama Bank'),
         tindak_lanjut__denda__no_validasi_bank: Yup.string().min(3).max(32).required().label('NO Validasi Bank'),
+    }),
+    Yup.object({
+
     })
 ]
 
 const excludeJenisKegiatan = ["SIDANG TIPIRING", "PENERTIBAN BANGUNAN", "KEGIATAN PPKM", "LAPORAN MASYARAKAT", "PENERTIBAN MINUMAN BERALKOHOL", "PENGAMANAN"]
 
+export const updateJenisPasalList: any = createAsyncThunk('pelaporanKegiatan/updateJenisPasalList', async (jenisKegiatan: number, thunkAPI)=>{
+    const res = await axios.get(`http://localhost:3001/jenis-perda-perkada?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`)
+    const data = res.data.data
+        .map((d: any) => ({label: d.text, value: String(d.value)}))
+
+    return data
+})
+
+export const updateJenisPenyelesaianList: any = createAsyncThunk('pelaporanKegiatan/updateJenisPenyelesaianList', async (jenisKegiatan: number, thunkAPI)=>{
+    const res = await axios.get(`http://localhost:3001/jenis-penyelesaian?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`)
+    const data = res.data.data
+        .map((d: any) => ({label: d.text, value: String(d.value)}))
+
+    return data
+})
+
 export const pelaporanKegiatanSlice = createSlice({
     name: 'pelaporanKegiatan',
     initialState,
+    extraReducers: (builder) => {
+        builder.addCase(updateJenisPasalList.fulfilled, (state, action) => {
+            state.list_jenis_pasal = action.payload
+        })
+        builder.addCase(updateJenisPenyelesaianList.fulfilled, (state, action) => {
+            state.list_jenis_penyelesaian = action.payload
+        })
+    },
     reducers: {
-        loadJenisKegiatan: (state: PelaporanKegiatanState)  => {
-            // axios.get('http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama').then(res => {
-            //     console.log(res.data.data)
-            //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-            //     state.list_jenis_kegiatan = data.filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-            // }).finally()
-        },
         changedValue: (state: PelaporanKegiatanState, action:PayloadAction<{target:{name: string, value: any}}>) => {
             if(typeof state[action.payload.target.name] === 'number') {
                 state[action.payload.target.name] = Number(action.payload.target.value);
@@ -141,6 +161,9 @@ export const pelaporanKegiatanSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { loadJenisKegiatan, changedValue } = pelaporanKegiatanSlice.actions
+
+export const isTipiring = (formikValues: any) => (formikValues.kegiatan__jenis_kegiatan_selection?.label === 'SIDANG TIPIRING')
+
+export const { changedValue } = pelaporanKegiatanSlice.actions
 
 export default pelaporanKegiatanSlice.reducer
