@@ -87,10 +87,10 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         </div>
 
         {/* slice redux belum ada */}
-        {jenisKegiatan === 1 && (
+        {[1, 7].includes(jenisKegiatan) && (
           <div className='mb-10'>
             <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
-              Asal Laporan
+              {jenisKegiatan === 1 ? 'Asal Laporan' : 'Jenis Pengamanan'}
             </label>
             <Field
               type='number'
@@ -105,25 +105,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             </div>
           </div>
         )}
-        {/* slice redux belum ada */}
-        {jenisKegiatan === 7 && (
-          <div className='mb-10'>
-            <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
-              Jenis Pengamanan
-            </label>
-            <Field
-              type='number'
-              name=''
-              className='form-control'
-              // onKeyUp={(o: ChangeEvent<any>) => {
-              //   dispatch(changedValue(ToFieldStateCE(o)))
-              // }}
-            />
-            <div className='text-danger mt-2'>
-              <ErrorMessage name='kegiatan__uraian_kegiatan' />
-            </div>
-          </div>
-        )}
+
         <div className='mb-10'>
           <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
             Jumlah Personil
@@ -140,6 +122,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             <ErrorMessage name='kegiatan__jumlah_personil' />
           </div>
         </div>
+
         <div className='mb-10'>
           <label className='required form-label'>Uraian Kegiatan</label>
           <Field
@@ -155,6 +138,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             <ErrorMessage name='kegiatan__uraian_kegiatan' />
           </div>
         </div>
+
         {jenisKegiatan === 7 && (
           <>
             <div className='mb-10'>
@@ -221,6 +205,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             <ErrorMessage name='kegiatan__tanggal' />
           </div>
         </div>
+
         <div className='mb-10'>
           <label className='required form-label'>Waktu Kegiatan</label>
           <div className='row'>
@@ -252,6 +237,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             </div>
           </div>
         </div>
+
         <div className='mb-10'>
           <label className='required form-label'>Lokasi Kegiatan</label>
           <Field
