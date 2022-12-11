@@ -32,11 +32,6 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
   const jenisKegiatanId = useSelector(
     (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
   )
-  const jenisKegiatanId2 = useSelector((s: RootState) => s.pelaporanKegiatan)
-
-  // const data = (val: PelaporanKegiatanState = initialState) => {
-  //   console.log(val) // LOGS DATA FROM CHILD (My name is Dean Winchester... &)
-  // }
 
   const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
     <StepDetailKegiatan values={values} />,
@@ -44,7 +39,6 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
       ? [<StepDokumentasi />]
       : [<StepTindaklanjut />, <StepDokumentasi />]),
   ])
-  console.log(step)
 
   const updateJenisKegiatanList = () => {
     axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
@@ -74,18 +68,27 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
     updateJenisPenindakanList()
   }, [])
 
-  function onSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (!isLastStep) return next()
-    // alert(JSON.stringify(values, null, 2))
-    // alert('Your Account Succesfully Created')
-  }
+  // function onSubmit(e: FormEvent) {
+  //   e.preventDefault()
+  //   console.log('values')
+  //   // console.log(values)
+  //   if (!isLastStep) return next()
+  //   // alert(JSON.stringify(values, null, 2))
+  //   // alert('Your Account Succesfully Created')
+  // }
 
   const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
-    setTimeout(() => {
-      alert(JSON.stringify(values, null, 2))
-      actions.setSubmitting(false)
-    }, 100)
+    // console.log(values)
+    // alert(JSON.stringify(values, null, 2))
+    if (!isLastStep) {
+      console.log('values')
+      // return next()
+    }
+    console.log('laststep', values)
+
+    // setTimeout(() => {
+    //   actions.setSubmitting(false)
+    // }, 100)
     // if (!isLastStep) return next()
     // alert('Your Account Succesfully Created')
   }
@@ -98,11 +101,7 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
         onSubmit={submitPelaporanKegiatan}
       >
         {({handleReset, handleSubmit, errors, values}) => (
-          <Form
-            onSubmit={onSubmit}
-            className='mx-auto w-100 pt-15 pb-10'
-            id='pelaporan_kegiatan_form'
-          >
+          <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
             <div className='card'>
               <div className='card-body'>
                 {/* <>{(values = {data})}</> */}
@@ -118,8 +117,7 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
                       <div className='col'>
                         <div className='row d-flex justify-content-end'>
                           {!isFirstStep && (
-                            <a
-                              href='#'
+                            <button
                               className='col-5 btn btn-flex btn-secondary px-6 m-3'
                               onClick={back}
                             >
@@ -130,21 +128,37 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
                               <span className='d-flex flex-column align-items-start ms-2'>
                                 <span className='fs-3 fw-bold'>Kembali</span>
                               </span>
-                            </a>
+                            </button>
+                          )}
+                          {!isLastStep ? (
+                            <button
+                              // type='button'
+                              className='col-5 btn btn-flex btn-secondary px-6 m-3'
+                              onClick={next}
+                            >
+                              <span className='svg-icon svg-icon-2x'>
+                                <i className='fa-solid fa-arrow-left'></i>
+                              </span>
+                              <span className='d-flex flex-column align-items-start ms-2'>
+                                <span className='fs-3 fw-bold'>Simpan dan Lanjut</span>
+                              </span>
+                            </button>
+                          ) : (
                             // <button type='button' onClick={back}>
                             //   Back
                             // </button>
-                          )}
-                          <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
-                            <span className='svg-icon svg-icon-2x'>
-                              <i className='fa-solid fa-paper-plane'></i>
-                            </span>
-                            <span className='d-flex flex-column align-items-start ms-2'>
-                              <span className='fs-3 fw-bold'>
-                                {isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}
+                            <button
+                              type='submit'
+                              className='col-5 btn btn-flex btn-primary px-6 m-3'
+                            >
+                              <span className='svg-icon svg-icon-2x'>
+                                <i className='fa-solid fa-paper-plane'></i>
                               </span>
-                            </span>
-                          </button>
+                              <span className='d-flex flex-column align-items-start ms-2'>
+                                <span className='fs-3 fw-bold'>simpan</span>
+                              </span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>

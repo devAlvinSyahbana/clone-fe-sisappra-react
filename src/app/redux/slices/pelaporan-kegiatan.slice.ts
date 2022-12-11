@@ -210,7 +210,7 @@ export const updateJenisPasalList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPasalList',
   async (jenisKegiatan: number, thunkAPI) => {
     const res = await axios.get(
-      `http://localhost:3001/jenis-perda-perkada?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`
+      `http://localhost:3001/jenis-perda-perkada/combobox?%24filter=${jenisKegiatan}&%24orderby=nama`
     )
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
@@ -222,7 +222,7 @@ export const updateJenisPenyelesaianList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPenyelesaianList',
   async (jenisKegiatan: number, thunkAPI) => {
     const res = await axios.get(
-      `http://localhost:3001/jenis-penyelesaian?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`
+      `http://localhost:3001/jenis-penyelesaian/combobox?%24filter=${jenisKegiatan}&%24orderby=nama`
     )
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
