@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction, createAsyncThunk, AsyncThunkAction, ThunkAction} from '@reduxjs/toolkit'
 import * as Yup from 'yup'
 import axios from 'axios'
 
@@ -81,114 +81,44 @@ export const createSchemaFilterPelaporanKegiatan = [
 ]
 
 export const createSchemaPelaporanKegiatan = [
-  Yup.object({
-    kegiatan__jenis_kegiatan_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Kegiatan'),
-    kegiatan__jenis_kegiatan_selection: Yup.object().required(),
-    kegiatan__jumlah_personil: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jumlah Personil'),
-    kegiatan__uraian_kegiatan: Yup.string().min(10).max(1000).required().label('Uraian Kegiatan'),
-    kegiatan__tanggal: Yup.date().required().label('Tanggal Kegiatan'),
-    kegiatan__jam_start: Yup.string().required().label('Waktu Kegiatan'),
-    kegiatan__jam_end: Yup.string().required().label('Waktu Kegiatan'),
-    kegiatan__lokasi: Yup.string().min(3).max(64).required().label('Lokasi Kegiatan'),
-    // kegiatan__asal_laporan : string,
+    Yup.object({
+        kegiatan__jenis_kegiatan_id: Yup.number().integer().moreThan(0).required().label('Jenis Kegiatan'),
+        kegiatan__jenis_kegiatan_selection: Yup.object().required(),
+        kegiatan__jumlah_personil: Yup.number().integer().moreThan(0).required().label('Jumlah Personil'),
+        kegiatan__uraian_kegiatan: Yup.string().min(10).max(1000).required().label('Uraian Kegiatan'),
+        kegiatan__tanggal: Yup.date().required().label('Tanggal Kegiatan'),
+        kegiatan__jam_start: Yup.string().required().label('Waktu Kegiatan'),
+        kegiatan__jam_end: Yup.string().required().label('Waktu Kegiatan'),
+        kegiatan__lokasi: Yup.string().min(3).max(64).required().label('Lokasi Kegiatan'),
 
-    tindak_lanjut__administrasi__jenis_pasal_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Pasal'),
-    tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().required(),
-    tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Jenis Penertiban'),
-    tindak_lanjut__administrasi__jenis_pelanggaran: Yup.string()
-      .min(3)
-      .max(256)
-      .required()
-      .label('Jenis Pelanggaran'),
-    tindak_lanjut__administrasi__perda_perkada: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Perda Perkada'),
-    tindak_lanjut__administrasi__penyelesaian_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Penyelesaian'),
-    tindak_lanjut__administrasi__penyelesaian_selection: Yup.object().required(),
+        tindak_lanjut__administrasi__jenis_pasal_id: Yup.number().integer().moreThan(0).required().label('Jenis Pasal'),
+        tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().required(),
+        tindak_lanjut__administrasi__jenis_penertiban: Yup.string().min(3).max(64).required().label('Jenis Penertiban'),
+        tindak_lanjut__administrasi__jenis_pelanggaran: Yup.string().min(3).max(256).required().label('Jenis Pelanggaran'),
+        tindak_lanjut__administrasi__perda_perkada: Yup.string().min(3).max(64).required().label('Perda Perkada'),
+        tindak_lanjut__administrasi__penyelesaian_id: Yup.number().integer().moreThan(0).required().label('Penyelesaian'),
+        tindak_lanjut__administrasi__penyelesaian_selection: Yup.object().required(),
 
-    tindak_lanjut__identitas_pelanggar__no_bap: Yup.string()
-      .min(3)
-      .max(16)
-      .required()
-      .label('NO BAP'),
-    tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Nama Penanggung Jawab'),
-    tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Nama Tempat Usaha'),
-    tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string()
-      .min(3)
-      .max(256)
-      .required()
-      .label('Alamat Tempat Usaha'),
-    tindak_lanjut__identitas_pelanggar__nik: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('NIK/Pasport Pelanggar'),
-    tindak_lanjut__identitas_pelanggar__alamat: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('Alamat Pelanggar'),
-    tindak_lanjut__identitas_pelanggar__jenis_usaha_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Usaha'),
-    tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object().required(),
+        tindak_lanjut__identitas_pelanggar__no_bap: Yup.string().min(3).max(16).required().label('NO BAP'),
+        tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string().min(3).max(64).required().label('Nama Penanggung Jawab'),
+        tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string().min(3).max(64).required().label('Nama Tempat Usaha'),
+        tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string().min(3).max(256).required().label('Alamat Tempat Usaha'),
+        tindak_lanjut__identitas_pelanggar__nik: Yup.string().min(3).max(32).required().label('NIK/Pasport Pelanggar'),
+        tindak_lanjut__identitas_pelanggar__alamat: Yup.string().min(3).max(32).required().label('Alamat Pelanggar'),
+        tindak_lanjut__identitas_pelanggar__jenis_usaha_id: Yup.number().integer().moreThan(0).required().label('Jenis Usaha'),
+        tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object().required(),
 
-    tindak_lanjut__jenis_penindakan_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Penindakan'),
-    tindak_lanjut__jenis_penindakan_selection: Yup.object().required(),
-    tindak_lanjut__jumlah_pelanggar: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jumlah Pelanggar'),
-    tindak_lanjut__denda__non_pengadilan: Yup.number()
-      .integer()
-      .moreThan(1000)
-      .required()
-      .label('Jumlah Denda Non Pengadilan'),
-    tindak_lanjut__denda__tanggal_setor: Yup.date().required().label('Tanggal Setor Denda'),
-    tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(32).required().label('Nama Bank'),
-    tindak_lanjut__denda__no_validasi_bank: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('NO Validasi Bank'),
-  }),
+        tindak_lanjut__jenis_penindakan_id: Yup.number().integer().moreThan(0).required().label('Penindakan'),
+        tindak_lanjut__jenis_penindakan_selection: Yup.object().required(),
+        tindak_lanjut__jumlah_pelanggar: Yup.number().integer().moreThan(0).required().label('Jumlah Pelanggar'),
+        tindak_lanjut__denda__non_pengadilan: Yup.number().integer().moreThan(1000).required().label('Jumlah Denda Non Pengadilan'),
+        tindak_lanjut__denda__tanggal_setor: Yup.date().required().label('Tanggal Setor Denda'),
+        tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(32).required().label('Nama Bank'),
+        tindak_lanjut__denda__no_validasi_bank: Yup.string().min(3).max(32).required().label('NO Validasi Bank'),
+    }),
+    Yup.object({
+
+    })
 ]
 
 const excludeJenisKegiatan = [
@@ -200,31 +130,49 @@ const excludeJenisKegiatan = [
   'PENGAMANAN',
 ]
 
+export const updateJenisPasalList: any = createAsyncThunk('pelaporanKegiatan/updateJenisPasalList', async (jenisKegiatan: number, thunkAPI)=>{
+    const res = await axios.get(`http://localhost:3001/jenis-perda-perkada?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`)
+    const data = res.data.data
+        .map((d: any) => ({label: d.text, value: String(d.value)}))
+
+    return data
+})
+
+export const updateJenisPenyelesaianList: any = createAsyncThunk('pelaporanKegiatan/updateJenisPenyelesaianList', async (jenisKegiatan: number, thunkAPI)=>{
+    const res = await axios.get(`http://localhost:3001/jenis-penyelesaian?$filter=jenis_kegiatan_id eq ${jenisKegiatan}&$oderby=nama`)
+    const data = res.data.data
+        .map((d: any) => ({label: d.text, value: String(d.value)}))
+
+    return data
+})
+
 export const pelaporanKegiatanSlice = createSlice({
-  name: 'pelaporanKegiatan',
-  initialState,
-  reducers: {
-    loadJenisKegiatan: (state: PelaporanKegiatanState) => {
-      // axios.get('http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama').then(res => {
-      //     console.log(res.data.data)
-      //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      //     state.list_jenis_kegiatan = data.filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      // }).finally()
+    name: 'pelaporanKegiatan',
+    initialState,
+    extraReducers: (builder) => {
+        builder.addCase(updateJenisPasalList.fulfilled, (state, action) => {
+            state.list_jenis_pasal = action.payload
+        })
+        builder.addCase(updateJenisPenyelesaianList.fulfilled, (state, action) => {
+            state.list_jenis_penyelesaian = action.payload
+        })
     },
-    changedValue: (
-      state: PelaporanKegiatanState,
-      action: PayloadAction<{target: {name: string; value: any}}>
-    ) => {
-      if (typeof state[action.payload.target.name] === 'number') {
-        state[action.payload.target.name] = Number(action.payload.target.value)
-      } else {
-        state[action.payload.target.name] = action.payload.target.value
-      }
+    reducers: {
+        changedValue: (state: PelaporanKegiatanState, action:PayloadAction<{target:{name: string, value: any}}>) => {
+            if(typeof state[action.payload.target.name] === 'number') {
+                state[action.payload.target.name] = Number(action.payload.target.value);
+            }else {
+                state[action.payload.target.name] = action.payload.target.value;
+            }
+        }
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const {loadJenisKegiatan, changedValue} = pelaporanKegiatanSlice.actions
+
+export const isTipiring = (formikValues: any) => (formikValues.kegiatan__jenis_kegiatan_selection?.label === 'SIDANG TIPIRING')
+
+export const { changedValue } = pelaporanKegiatanSlice.actions
 
 export default pelaporanKegiatanSlice.reducer
