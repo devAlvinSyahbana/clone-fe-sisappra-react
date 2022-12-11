@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState, FormEvent} from 'react'
+import React, {FC, useEffect, useState, FormEvent, useRef} from 'react'
 import {StepDetailKegiatan} from './steps/step-detail-kegiatan'
 import {StepTindaklanjut} from './steps/step-tindaklanjut'
 import {StepDokumentasi} from './steps/step-dokumentasi'
@@ -9,7 +9,7 @@ import {
   PelaporanKegiatanState,
   changedValue,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
-import {Formik, Form, FormikValues} from 'formik'
+import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
 import {ToFieldStateBNV} from '../components/fields.formikcto'
 import {RootState} from '../../../redux/store'
@@ -24,26 +24,27 @@ const excludeJenisKegiatan = [
   'PENGAMANAN',
 ]
 
-export const AddKegiatanUmumPage: FC = () => {
+export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
+  // const [data, setData] = useState<PelaporanKegiatanState>()
 
   const dispatch = useDispatch()
   const jenisKegiatanId = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_selection
-  )
-  const jenisKegiatanId2 = useSelector(
     (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
   )
+  const jenisKegiatanId2 = useSelector((s: RootState) => s.pelaporanKegiatan)
 
-  console.log('selection', jenisKegiatanId?.label)
-  console.log('id', jenisKegiatanId2)
+  // const data = (val: PelaporanKegiatanState = initialState) => {
+  //   console.log(val) // LOGS DATA FROM CHILD (My name is Dean Winchester... &)
+  // }
 
   const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-    <StepDetailKegiatan />,
+    <StepDetailKegiatan values={values} />,
     ...(jenisKegiatanId === 13 || jenisKegiatanId === 15
       ? [<StepDokumentasi />]
       : [<StepTindaklanjut />, <StepDokumentasi />]),
   ])
+  console.log(step)
 
   const updateJenisKegiatanList = () => {
     axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
@@ -76,6 +77,7 @@ export const AddKegiatanUmumPage: FC = () => {
   function onSubmit(e: FormEvent) {
     e.preventDefault()
     if (!isLastStep) return next()
+    // alert(JSON.stringify(values, null, 2))
     // alert('Your Account Succesfully Created')
   }
 
@@ -95,7 +97,7 @@ export const AddKegiatanUmumPage: FC = () => {
         initialValues={initialState}
         onSubmit={submitPelaporanKegiatan}
       >
-        {({handleReset, errors, values}) => (
+        {({handleReset, handleSubmit, errors, values}) => (
           <Form
             onSubmit={onSubmit}
             className='mx-auto w-100 pt-15 pb-10'
@@ -103,35 +105,50 @@ export const AddKegiatanUmumPage: FC = () => {
           >
             <div className='card'>
               <div className='card-body'>
-                {step}
-                <div className='row d-flex justify-content-end'>
-                  {!isFirstStep && (
-                    <a
-                      href='#'
-                      className='col-5 btn btn-flex btn-secondary px-6 m-3'
-                      onClick={back}
-                    >
-                      <span className='svg-icon svg-icon-2x'>
-                        <i className='fa-solid fa-arrow-left'></i>
-                      </span>
-                      <span className='d-flex flex-column align-items-start ms-2'>
-                        <span className='fs-3 fw-bold'>Kembali</span>
-                      </span>
-                    </a>
-                    // <button type='button' onClick={back}>
-                    //   Back
-                    // </button>
-                  )}
-                  <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
-                    <span className='svg-icon svg-icon-2x'>
-                      <i className='fa-solid fa-paper-plane'></i>
-                    </span>
-                    <span className='d-flex flex-column align-items-start ms-2'>
-                      <span className='fs-3 fw-bold'>
-                        {isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}
-                      </span>
-                    </span>
-                  </button>
+                {/* <>{(values = {data})}</> */}
+                {step.type.name === 'StepDetailKegiatan' ? (
+                  <StepDetailKegiatan values={values} />
+                ) : (
+                  step
+                )}
+                <div className='card mt-5'>
+                  <div className='card-body'>
+                    <div className='row w-100'>
+                      <div className='col'></div>
+                      <div className='col'>
+                        <div className='row d-flex justify-content-end'>
+                          {!isFirstStep && (
+                            <a
+                              href='#'
+                              className='col-5 btn btn-flex btn-secondary px-6 m-3'
+                              onClick={back}
+                            >
+                              ``
+                              <span className='svg-icon svg-icon-2x'>
+                                <i className='fa-solid fa-arrow-left'></i>
+                              </span>
+                              <span className='d-flex flex-column align-items-start ms-2'>
+                                <span className='fs-3 fw-bold'>Kembali</span>
+                              </span>
+                            </a>
+                            // <button type='button' onClick={back}>
+                            //   Back
+                            // </button>
+                          )}
+                          <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
+                            <span className='svg-icon svg-icon-2x'>
+                              <i className='fa-solid fa-paper-plane'></i>
+                            </span>
+                            <span className='d-flex flex-column align-items-start ms-2'>
+                              <span className='fs-3 fw-bold'>
+                                {isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}
+                              </span>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 {/* <button type='submit'>{isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}</button> */}
               </div>
