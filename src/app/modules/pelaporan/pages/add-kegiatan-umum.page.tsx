@@ -28,13 +28,14 @@ export const AddKegiatanUmumPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
 
   const dispatch = useDispatch()
-  const jenisKegiatanId = useSelector((s: RootState) =>
-    Number(s.pelaporanKegiatan.kegiatan__jenis_kegiatan_selection)
+  const jenisKegiatanId = useSelector(
+    (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_selection
   )
   const jenisKegiatanId2 = useSelector(
     (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
   )
-  console.log('selection', jenisKegiatanId)
+
+  console.log('selection', jenisKegiatanId?.label)
   console.log('id', jenisKegiatanId2)
 
   const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
@@ -75,10 +76,17 @@ export const AddKegiatanUmumPage: FC = () => {
   function onSubmit(e: FormEvent) {
     e.preventDefault()
     if (!isLastStep) return next()
-    alert('Your Account Succesfully Created')
+    // alert('Your Account Succesfully Created')
   }
 
-  const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {}
+  const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
+    setTimeout(() => {
+      alert(JSON.stringify(values, null, 2))
+      actions.setSubmitting(false)
+    }, 100)
+    // if (!isLastStep) return next()
+    // alert('Your Account Succesfully Created')
+  }
 
   return (
     <>

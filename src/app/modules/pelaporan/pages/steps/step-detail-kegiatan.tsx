@@ -22,7 +22,7 @@ interface StepDetailKegiatanProps {
       ? void
       : (e: string | React.ChangeEvent<any>) => void
   }
-  // values: FormikValues;
+  //   values: FormikValues
   handleBlur?: {
     /** Classic React blur handler, keyed by input name */
     (e: React.FocusEvent<any>): void
@@ -33,21 +33,18 @@ interface StepDetailKegiatanProps {
 
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   handleChange,
-  //  values,
+  //    values,
   handleBlur,
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
-  const jenisKegiatan = useSelector((s: RootState) =>
-    Number(s.pelaporanKegiatan.kegiatan__jenis_kegiatan_selection)
-  )
-  const jenisKegiatanId = useSelector(
+  const jenisKegiatan = useSelector(
     (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
   )
 
-  const updateJenisPasalList = (value: any) => {
+  const updateJenisPasalList = () => {
     axios
-      .get(`http://localhost:3001/jenis-perda-perkada?$filter=${value}&$oderby=nama`)
+      .get(`http://localhost:3001/jenis-perda-perkada?$filter=${jenisKegiatan}&$oderby=nama`)
       .then((res) => {
         const data = res.data.data.map((d: any) => ({label: d.judul, value: String(d.id)}))
         dispatch(changedValue(ToFieldStateBNV('list_jenis_pasal', data)))
@@ -55,9 +52,9 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
       })
   }
 
-  const updateJenisPenyelesaianList = (value: any) => {
+  const updateJenisPenyelesaianList = () => {
     axios
-      .get(`http://localhost:3001/jenis-penyelesaian?$filter=${value}&$oderby=nama`)
+      .get(`http://localhost:3001/jenis-penyelesaian?$filter=${jenisKegiatan}&$oderby=nama`)
       .then((res) => {
         const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
         dispatch(changedValue(ToFieldStateBNV('list_jenis_penyelesaian', data)))
@@ -65,13 +62,16 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
       })
   }
 
+  useEffect(() => {
+    updateJenisPasalList()
+  })
+
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
-          {jenisKegiatanId}
           <Field
             name='kegiatan__jenis_kegiatan_selection'
             target='kegiatan__jenis_kegiatan_id'
@@ -79,10 +79,9 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
-              //   console.log(ToFieldStateCE(o).target.value)
               dispatch(changedValue(ToFieldStateCE(o)))
-              updateJenisPasalList(ToFieldStateCE(o).target.value)
-              updateJenisPenyelesaianList(ToFieldStateCE(o).target.value)
+              updateJenisPasalList()
+              updateJenisPenyelesaianList()
             }}
           />
           <div className='text-danger mt-2'>

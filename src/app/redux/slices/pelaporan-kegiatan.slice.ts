@@ -10,7 +10,6 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   kegiatan__tanggal: string
   kegiatan__jam: string
   kegiatan__lokasi: string
-  // kegiatan__asal_laporan : string,
 
   tindak_lanjut__administrasi__jenis_pasal_id: number
   tindak_lanjut__administrasi__jenis_penertiban: string
