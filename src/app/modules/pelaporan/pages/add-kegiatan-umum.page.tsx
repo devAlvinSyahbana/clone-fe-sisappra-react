@@ -39,13 +39,13 @@ export const AddKegiatanUmumPage: FC = () => {
     ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
   ])
 
-  const updateJenisKegiatanList = () => {
-    axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))
-    })
-  }
+  // const updateJenisKegiatanList = () => {
+  //   axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
+  //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+  //     // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+  //     dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))
+  //   })
+  // }
 
   const updateJenisUsahaList = () => {
     axios.get(`http://localhost:3001/jenis-usaha/combobox?$oderby=nama`).then((res) => {
@@ -62,19 +62,10 @@ export const AddKegiatanUmumPage: FC = () => {
   }
 
   useEffect(() => {
-    updateJenisKegiatanList()
+    // updateJenisKegiatanList()
     updateJenisUsahaList()
     updateJenisPenindakanList()
-  }, [])
-
-  // function onSubmit(e: FormEvent) {
-  //   e.preventDefault()
-  //   console.log('values')
-  //   // console.log(values)
-  //   if (!isLastStep) return next()
-  //   // alert(JSON.stringify(values, null, 2))
-  //   // alert('Your Account Succesfully Created')
-  // }
+  }, [dispatch])
 
   const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
     try {

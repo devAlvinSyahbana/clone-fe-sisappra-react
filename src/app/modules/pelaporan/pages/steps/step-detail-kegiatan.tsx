@@ -4,12 +4,13 @@ import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 import {
   changedValue,
-  isApelRapat,
+  reset,
   isLaporanMasyarakat,
   isPengamanan,
   isTipiring,
   updateJenisPasalList,
   updateJenisPenyelesaianList,
+  updateJenisKegiatanList,
 } from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {
@@ -68,19 +69,23 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
-  const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
+  // const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
 
   useEffect(() => {
     setVal(values)
   }, [dispatch])
-  // console.log(values)
+
+  useEffect(() => {
+    dispatch(updateJenisKegiatanList())
+  }, [])
+  console.log(values)
 
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
         {/* {isApelRapat(values) ? 'apel / rapat' : 'BUKAN'} */}
-        {asalLaporanSelect}
+        {jenisKegiatanSelect}
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
           <Field
@@ -90,18 +95,11 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
+              dispatch(reset())
               dispatch(changedValue(ToFieldStateCE(o)))
               dispatch(updateJenisPasalList(o.target.value))
               dispatch(updateJenisPenyelesaianList(o.target.value))
-              if (!isLaporanMasyarakat(values) || !isPengamanan(values)) {
-                values.kegiatan__jenis_pengamanan_selection = null
-                values.kegiatan__jenis_pengamanan_selection = null
-                values.kegiatan__asal_laporan_selection = null
-                values.kegiatan__asal_laporan_id = null
-                values.kegiatan__pengamanan_masalah = null
-                values.kegiatan__pengamanan_pemecahan_masalah = null
-                values.kegiatan__pengamanan_instansi_terkait = null
-              }
+              dispatch(updateJenisKegiatanList())
             }}
           />
           <div className='text-danger mt-2'>
@@ -132,6 +130,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={isLaporanMasyarakat(values) ? asalLaporan : jenisPengamanan}
             onChange={(o: ChangeEvent<any>) => {
+              console.log(values)
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />

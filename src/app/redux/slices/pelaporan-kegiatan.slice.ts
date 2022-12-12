@@ -55,7 +55,15 @@ export const initialState: PelaporanKegiatanState = {
   kegiatan__tanggal: '2022-01-23',
   kegiatan__jam: '08:00:00',
   kegiatan__lokasi: '',
-  kegiatan__asal_laporan: '',
+  // kegiatan__asal_laporan: '',
+  // kegiatan__jenis_pengamanan_selection: [],
+  // kegiatan__jenis_pengamanan_id: 0,
+  // kegiatan__pengamanan_masalah: '',
+  // kegiatan__pengamanan_pemecahan_masalah: '',
+  // kegiatan__pengamanan_instansi_terkait: '',
+
+  // kegiatan__asal_laporan_selection: [],
+  // kegiatan__asal_laporan_id: 0,
 
   // tindak_lanjut__administrasi__jenis_pasal_id: 0,
   // tindak_lanjut__administrasi__jenis_penertiban: '',
@@ -245,6 +253,20 @@ const excludeJenisKegiatan = [
   'PENGAMANAN',
 ]
 
+export const updateJenisKegiatanList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateJenisKegiatanList',
+  async (thunkAPI) => {
+    const res = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+//  axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
+//    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+//    // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+//    dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))
+//  })
+
 export const updateJenisPasalList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPasalList',
   async (jenisKegiatan: number, thunkAPI) => {
@@ -273,6 +295,9 @@ export const pelaporanKegiatanSlice = createSlice({
   name: 'pelaporanKegiatan',
   initialState,
   extraReducers: (builder) => {
+    builder.addCase(updateJenisKegiatanList.fulfilled, (state, action) => {
+      state.list_jenis_kegiatan = action.payload
+    })
     builder.addCase(updateJenisPasalList.fulfilled, (state, action) => {
       state.list_jenis_pasal = action.payload
     })
@@ -291,8 +316,13 @@ export const pelaporanKegiatanSlice = createSlice({
         state[action.payload.target.name] = action.payload.target.value
       }
     },
+    reset: () => {
+      return initialState
+    },
   },
 })
+
+// export const {reset} = pelaporanKegiatanSlice.actions
 
 // Action creators are generated for each case reducer function
 
@@ -306,6 +336,6 @@ export const isApelRapat = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'APEL' ||
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'RAPAT'
 
-export const {changedValue} = pelaporanKegiatanSlice.actions
+export const {changedValue, reset} = pelaporanKegiatanSlice.actions
 
 export default pelaporanKegiatanSlice.reducer
