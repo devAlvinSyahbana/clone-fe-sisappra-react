@@ -161,6 +161,11 @@ export interface HakAkses {
   jabatan: number
 }
 
+export interface AksesKontrolMapping {
+  filterArr: any[]
+  data: any[]
+}
+
 export interface SelectOption {
   readonly value: string
   readonly label: string
@@ -190,12 +195,15 @@ export function DetailHakAkses() {
   const [hakAkses, setHakAkses] = useState<HakAkses>()
   const [aksesKontrol, setAksesKontrol] = useState<any[]>([])
   const [modulPermission, setModulPermission] = useState<any[]>([])
-  const [aksesKontrolMapping, setAksesKontrolMapping] = useState<any[]>([])
+  const [aksesKontrolMapping, setAksesKontrolMapping] = useState<AksesKontrolMapping>({
+    filterArr: [],
+    data: [],
+  })
   //
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
-  const [perPage, setPerPage] = useState(100)
+  const [perPage, setPerPage] = useState(0)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   // END STATE SECTION
 
@@ -203,7 +211,6 @@ export function DetailHakAkses() {
     return (
       <>
         <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
-          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
           <span className='spinner-border spinner-border-xl align-middle me-3'></span>
           <div className='d-flex flex-column'>
             <h5 className='mb-1'>Sedang mengambil data...</h5>
@@ -216,7 +223,7 @@ export function DetailHakAkses() {
   const formik = useFormik({
     initialValues: {
       nama_hak_akses: '',
-      value_permission: aksesKontrolMapping,
+      value_permission: aksesKontrolMapping.filterArr,
     },
     onSubmit: async (values) => {
       const bodyparam: FormInput = {
@@ -230,40 +237,44 @@ export function DetailHakAkses() {
         )
         // alert(JSON.stringify(values, null, 2))
         if (response) {
+          // console.log('cek akm, ', aksesKontrolMapping)
           for (let i = 0; i < modulPermission.length; i++) {
             let mp: string = modulPermission[i].akses_kontrol + ' ' + modulPermission[i].id
-            // console.log('cek akm, ', aksesKontrolMapping)
-            if (aksesKontrolMapping.length === modulPermission.length) {
-              // let akm: string = aksesKontrolMapping[i].id_akses_kontrol + ' ' + aksesKontrolMapping[i].id_permission
-              if (values.value_permission.includes(mp)) {
-                await axios.put(
-                  `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`,
-                  {
-                    id_hak_akses: id,
-                    id_akses_kontrol: modulPermission[i].akses_kontrol,
-                    id_permission: modulPermission[i].id,
-                    value_permission: true,
+            if (aksesKontrolMapping?.filterArr.includes(mp)) {
+              // console.log('true', mp)
+              for (let j = 0; j < aksesKontrolMapping.data.length; j++) {
+                if (
+                  aksesKontrolMapping.data[j].id_akses_kontrol ===
+                    modulPermission[i].akses_kontrol &&
+                  aksesKontrolMapping.data[j].id_permission === modulPermission[i].id
+                ) {
+                  if (values.value_permission.includes(mp)) {
+                    await axios.put(
+                      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping.data[j].id}`,
+                      {
+                        id_hak_akses: id,
+                        id_akses_kontrol: modulPermission[i].akses_kontrol,
+                        id_permission: modulPermission[i].id,
+                        value_permission: true,
+                      }
+                    )
+                    // console.log('tt', mp, aksesKontrolMapping.data[j].id)
+                  } else {
+                    await axios.put(
+                      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping.data[j].id}`,
+                      {
+                        id_hak_akses: id,
+                        id_akses_kontrol: modulPermission[i].akses_kontrol,
+                        id_permission: modulPermission[i].id,
+                        value_permission: false,
+                      }
+                    )
+                    // console.log('tf', mp, aksesKontrolMapping.data[j].id)
                   }
-                )
-                // console.log('tt')
-              } else {
-                await axios.put(
-                  `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/update/${aksesKontrolMapping[i].id}`,
-                  {
-                    id_hak_akses: id,
-                    id_akses_kontrol: modulPermission[i].akses_kontrol,
-                    id_permission: modulPermission[i].id,
-                    value_permission: false,
-                  }
-                )
-                // console.log(id, 'tf')
+                }
               }
-            } else if (
-              aksesKontrolMapping.length < modulPermission.length &&
-              aksesKontrolMapping.length > 0
-            ) {
-              console.log(true)
             } else {
+              // console.log('false', mp)
               if (values.value_permission.includes(mp)) {
                 await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
                   id_hak_akses: id,
@@ -271,7 +282,7 @@ export function DetailHakAkses() {
                   id_permission: modulPermission[i].id,
                   value_permission: true,
                 })
-                // console.log('ft')
+                // console.log('ft', mp)
               } else {
                 await axios.post(`${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/create`, {
                   id_hak_akses: id,
@@ -279,7 +290,7 @@ export function DetailHakAkses() {
                   id_permission: modulPermission[i].id,
                   value_permission: false,
                 })
-                // console.log('ff')
+                // console.log('ff', mp)
               }
             }
           }
@@ -287,7 +298,7 @@ export function DetailHakAkses() {
             icon: 'success',
             title: 'Data berhasil disimpan',
             showConfirmButton: false,
-            timer: 1500,
+            timer: 2000,
           })
           values.value_permission = []
           fetchMapping(1)
@@ -307,9 +318,9 @@ export function DetailHakAkses() {
 
   // End Data Tabel
 
-  const konfirDel = (id: number, status_pegawai: string) => {
+  const konfirDel = (id: number) => {
     Swal.fire({
-      text: 'Anda yakin ingin menghapus data ini',
+      text: 'Anda yakin ingin menghapus pengguna dari hak akses ini?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -320,12 +331,10 @@ export function DetailHakAkses() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const bodyParam = {
-          data: {
-            status_pegawai: status_pegawai,
+            status_pengguna: 0,
             deleted_by: 0,
-          },
         }
-        const response = await axios.delete(`${MANAJEMEN_PENGGUNA_URL}/delete/${id}`, bodyParam)
+        const response = await axios.put(`${MANAJEMEN_PENGGUNA_URL}/hapus-hak-akses-pengguna/${id}`, bodyParam)
         if (response) {
           fetchData(1)
           Swal.fire({
@@ -385,10 +394,13 @@ export function DetailHakAkses() {
   // USEEFFECT + FETCH FUNCTION
   useEffect(() => {
     fetchDataAwal(1)
-    fetchData(1)
     fetchAksesKontrol()
     fetchPermission()
     fetchMapping(1)
+  }, [])
+
+  useEffect(() => {
+    fetchData(1)
   }, [qParamFind, perPage])
 
   useEffect(() => {
@@ -401,14 +413,14 @@ export function DetailHakAkses() {
       `${MANAJEMEN_PENGGUNA_URL}/hak-akses/count-total-data/{id_hak_akses}?id_hak_akses=${id}`
     )
     setJumlahPengguna(value.data.data)
-    // setPerPage(value.data.data)
+    setPerPage(value.data.data.total_data)
 
     const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/findone/${id}`)
     setHakAkses(response.data.data)
     formik.values.nama_hak_akses = response.data.data.nama_hak_akses
 
     const val = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${value.data.data}&offset=${page}${qParamFind.strparam}&hak_akses=${id}`
+      `${MANAJEMEN_PENGGUNA_URL}/filter-data-pengguna?limit=${value.data.data.total_data}&offset=${page}${qParamFind.strparam}&hak_akses=${id}`
     )
     setTotalRows(val.data.total_data)
     const timeout = setTimeout(() => {
@@ -460,26 +472,31 @@ export function DetailHakAkses() {
   // mapping
   const fetchMapping = async (page: number) => {
     const value = await axios.get(
-      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/filter/{id_hak_akses}?limit=${perPage}&offset=${page}&id_hak_akses=${id}`
+      `${MANAJEMEN_PENGGUNA_URL}/akses-kontrol-mapping/filter/{id_hak_akses}?limit=${
+        modulPermission.length > 1 ? modulPermission.length : 100
+      }&offset=${page}&id_hak_akses=${id}`
     )
     let items = []
+    let filterArr = []
     for (let i = 0; i < value.data.data.length; i++) {
+      filterArr.push(value.data.data[i].id_akses_kontrol + ' ' + value.data.data[i].id_permission)
       if (value.data.data[i].value_permission)
         items.push(value.data.data[i].id_akses_kontrol + ' ' + value.data.data[i].id_permission)
     }
-    setAksesKontrolMapping(value.data.data)
+    setAksesKontrolMapping({filterArr: filterArr, data: value.data.data})
     formik.values.value_permission = items
-    // setTotalRows(value.data.total)
+    // console.log('cek akm: ', aksesKontrolMapping)
+    // console.log('cek akm items: ', items)
   }
   //end mapping
-  // EMD USEEFFECT + FETCH FUNCTION
+  // END USEEFFECT + FETCH FUNCTION
 
-  // var num = 1
   const columns = [
     {
       name: 'No',
       selector: (row: any) => row.serial,
       sortable: true,
+      width: '10%',
       cell: (row: any) => {
         return <div className='mb-2 mt-2'>{row.serial}</div>
       },
@@ -548,19 +565,9 @@ export function DetailHakAkses() {
                     variant='light'
                     title='Aksi'
                   >
-                    {/* <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate('/apps/update-hak-akses/UpdateHakAkses/' + record.id, {
-                          replace: true,
-                        })
-                      }
-                    >
-                      Detail
-                    </Dropdown.Item> */}
                     <Dropdown.Item
                       href='#'
-                      onClick={() => konfirDel(record.id, record.nama_lengkap)}
+                      onClick={() => konfirDel(record.id)}
                     >
                       Hapus
                     </Dropdown.Item>
@@ -750,10 +757,7 @@ export function DetailHakAkses() {
                 progressPending={loading}
                 progressComponent={<LoadingAnimation />}
                 pagination
-                // paginationServer
                 paginationTotalRows={totalRows}
-                // onChangeRowsPerPage={handlePerRowsChange}
-                // onChangePage={handlePageChange}
                 customStyles={customStyles}
                 theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                 noDataComponent={
