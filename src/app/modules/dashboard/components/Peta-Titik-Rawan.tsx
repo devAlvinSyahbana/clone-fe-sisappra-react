@@ -4,6 +4,7 @@ import '../Layout.css'
 import React, {FC, useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
+import * as L from "leaflet";
 import jsonpetaTitikRawan from '../maps/peta-general.json'
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
 import ToggleButton from 'react-bootstrap/ToggleButton'
@@ -15,6 +16,79 @@ export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}`
 const PetaTitikRawan: FC = () => {
   const [filterTempat, setFilterTempat] = useState([])
   const [checked, setChecked] = useState(false)
+  
+  // const LeafIcon = L.Icon.extend({
+  //   options: {}
+  // });
+
+  // const blueIcon = new LeafIcon().options({
+  //   iconUrl:
+  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF"
+  //   }),
+  //  greenIcon = new LeafIcon().options({
+  //   iconUrl:
+  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF"
+  //   }
+  // ),
+  //  yellowIcon = new LeafIcon().options({
+  //   iconUrl:
+  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FEDE00&chf=a,s,ee00FFFF"
+  //   }
+  // ),
+  //  redIcon = new LeafIcon().options({
+  //   iconUrl:
+  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|E7625F&chf=a,s,ee00FFFF"
+  //   }
+  // ),
+  //  grayIcon = new LeafIcon().options({
+  //   iconUrl:
+  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|7E7C73&chf=a,s,ee00FFFF"
+  //   }
+  // ),
+  //  brownIcon = new LeafIcon().options({
+  //   iconUrl:
+  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|AB6B51&chf=a,s,ee00FFFF"
+  //   }
+  // )
+
+  const LeafIcon = L.Icon.extend({
+    options: {}
+  });
+
+  const blueIcon = new L.Icon({
+    iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF"
+    }),
+   greenIcon = new L.Icon({
+    iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF"
+    }
+  ),
+   yellowIcon = new L.Icon({
+    iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FEDE00&chf=a,s,ee00FFFF"
+    }
+  ),
+   redIcon = new L.Icon({
+    iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|E7625F&chf=a,s,ee00FFFF"
+    }
+  ),
+   grayIcon = new L.Icon({
+    iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|7E7C73&chf=a,s,ee00FFFF"
+    }
+  ),
+   brownIcon = new L.Icon({
+    iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|AB6B51&chf=a,s,ee00FFFF"
+    }
+  )
+
+  
+
+  const [icon, setIcon] = useState(blueIcon);
+
 
   const fetchAPI = async (kejadian : any) => {
     if(filterTempat.length > 0){
@@ -32,13 +106,31 @@ const PetaTitikRawan: FC = () => {
         }
       })
       setFilterTempat(response.data.data)
+      if (kejadian === 'Kebakaran'){
+        setIcon((current : any) => current = blueIcon)
+      } 
+      else if(kejadian === 'Bencana'){
+        setIcon((current : any) => current = greenIcon)
+      }
+      else if(kejadian === 'PKL'){
+        setIcon((current : any) => current = yellowIcon)
+      }
+      else if(kejadian === 'PMKS'){
+        setIcon((current : any) => current = redIcon)
+      }
+      else if(kejadian === 'Politik'){
+        setIcon((current : any) => current = grayIcon)
+      }
+      else{
+        setIcon((current : any) => current = brownIcon)
+      }
     }
     // const filterTempat = responselayak.filter(
       //   (petaTitikRawan) => petaTitikRawan.address.country === 'Italy'
       // )
       return [filterTempat,setFilterTempat] as const
     }
-    const handler = async (kejadian : any) => {
+    const handler = async (kejadian : any, icon : any) => {
       // Changing the state
       filterTempat.splice(1, filterTempat.length)
       const response = await axios.get(`${SUM_TITIK_RAWAN_URL}`,{
@@ -47,11 +139,30 @@ const PetaTitikRawan: FC = () => {
         }
       })
       setFilterTempat(response.data.data)
-      return [filterTempat,setFilterTempat] as const
+      if (kejadian === 'Kebakaran'){
+        setIcon((current : any) => current = blueIcon)
+      } 
+      else if(kejadian === 'Bencana'){
+        setIcon((current : any) => current = greenIcon)
+      }
+      else if(kejadian === 'PKL'){
+        setIcon((current : any) => current = yellowIcon)
+      }
+      else if(kejadian === 'PMKS'){
+        setIcon((current : any) => current = redIcon)
+      }
+      else if(kejadian === 'Politik'){
+        setIcon((current : any) => current = grayIcon)
+      }
+      else{
+        setIcon((current : any) => current = brownIcon)
+      }
+      return [filterTempat,setFilterTempat, icon, setIcon] as const
     };
   useEffect(() => {
     fetchAPI('Politik')
   }, [])
+  
 
   return (
     <div className='card card-flush'>
@@ -61,7 +172,7 @@ const PetaTitikRawan: FC = () => {
             <div className='row mt'>
               <div className='col-md-12 col-lg-12 col-sm-12'>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Bencana')}
+                    onClick={handler.bind(this, 'Bencana', icon)}
                     className='mb-2'
                     id='toggle-check'
                     type='checkbox'
@@ -72,7 +183,7 @@ const PetaTitikRawan: FC = () => {
                     Bencana
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Kebakaran')}
+                    onClick={handler.bind(this, 'Kebakaran', icon)}
                     className='mb-2'
                     id='toggle-check2'
                     type='checkbox'
@@ -83,7 +194,7 @@ const PetaTitikRawan: FC = () => {
                     Kebakaran
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'PKL')}
+                    onClick={handler.bind(this, 'PKL', icon)}
                     className='mb-2'
                     id='toggle-check3'
                     type='checkbox'
@@ -94,7 +205,7 @@ const PetaTitikRawan: FC = () => {
                     PKL
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'PMKS')}
+                    onClick={handler.bind(this, 'PMKS', icon)}
                     className='mb-2'
                     id='toggle-check4'
                     type='checkbox'
@@ -105,7 +216,7 @@ const PetaTitikRawan: FC = () => {
                     PMKS
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Politik')}
+                    onClick={handler.bind(this, 'Politik', icon)}
                     className='mb-2'
                     id='toggle-check5'
                     type='checkbox'
@@ -116,7 +227,7 @@ const PetaTitikRawan: FC = () => {
                     Politik
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Tramtibum')}
+                    onClick={handler.bind(this, 'Tramtibum', icon)}
                     className='mb-2'
                     id='toggle-check6'
                     type='checkbox'
@@ -144,10 +255,13 @@ const PetaTitikRawan: FC = () => {
                   />
 
                   {filterTempat.map((petaTitikRawan) => (
+                    
                     <Marker
                       key={petaTitikRawan['id']}
                       position={[petaTitikRawan['lat'], petaTitikRawan['long']]}
+                      icon={icon}
                     >
+
                       <Popup position={[petaTitikRawan['lat'], petaTitikRawan['long']]}>
                         <div>
                           <h2>{'Lokasi : ' + petaTitikRawan['lokasi'] +', '+ petaTitikRawan['nama_kel']}</h2>
