@@ -4,6 +4,9 @@ import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 import {
   changedValue,
+  isApelRapat,
+  isLaporanMasyarakat,
+  isPengamanan,
   isTipiring,
   updateJenisPasalList,
   updateJenisPenyelesaianList,
@@ -34,31 +37,50 @@ interface StepDetailKegiatanProps {
     /** Preact-like linkState. Will return a handleBlur function. */
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
+  setVal: any
 }
+
+const asalLaporan = [
+  {label: 'CRM', value: '1'},
+  {label: '112', value: '2'},
+  {label: 'Media Sosial', value: '3'},
+  {label: 'Media Cetak', value: '4'},
+  {label: 'Pimpinan', value: '5'},
+  {label: 'Laporan Langsung', value: '6'},
+  {label: 'CRM', value: '7'},
+]
+
+const jenisPengamanan = [
+  {label: 'Rumah Dinas Pejabat', value: '1'},
+  {label: 'Sekitar Ruang Kerja Pejabat', value: '2'},
+  {label: 'Lokasi Kunjungan Pejabat', value: '3'},
+  {label: 'Tamu VIP', value: '4'},
+  {label: 'Gedung dan Aset Penting', value: '5'},
+  {label: 'Upacara dan Acara Pening', value: '6'},
+]
 
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   handleChange,
   values,
   handleBlur,
+  setVal,
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
-  // const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const jenisKegiatan = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
-  )
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
+  const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
 
   useEffect(() => {
-    updateJenisPasalList()
-  })
+    setVal(values)
+  }, [dispatch])
+  console.log(values)
 
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
-        {isTipiring(values) ? 'TIPIRING' : 'BUKAN'}
-        {jenisKegiatanSelect}
+        {/* {isApelRapat(values) ? 'apel / rapat' : 'BUKAN'} */}
+        {asalLaporanSelect}
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
           <Field
@@ -80,26 +102,56 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         </div>
       </div>
 
-      {/* slice redux belum ada */}
-      {[1, 7].includes(jenisKegiatan) && (
+      {/* Asal Laporan / Jenis Pengamanan */}
+      {(isLaporanMasyarakat(values) || isPengamanan(values)) && (
         <div className='mb-10'>
-          <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
-            {jenisKegiatan === 1 ? 'Asal Laporan' : 'Jenis Pengamanan'}
+          <label
+            htmlFor={
+              isLaporanMasyarakat(values) ? 'kegiatan__asal_laporan' : 'kegiatan__jenis_pengamanan'
+            }
+            className='required form-label'
+          >
+            {isLaporanMasyarakat(values) ? 'Asal Laporan' : 'Jenis Pengamanan'}
           </label>
           <Field
-            type='number'
-            name=''
+            // type='number'
+            name={
+              isLaporanMasyarakat(values)
+                ? 'kegiatan__asal_laporan_selection'
+                : 'kegiatan__jenis_pengamanan_selection'
+            }
+            target={
+              isLaporanMasyarakat(values)
+                ? 'kegiatan__asal_laporan_id'
+                : 'kegiatan__jenis_pengamanan_id'
+            }
             className='form-control'
-            // onKeyUp={(o: ChangeEvent<any>) => {
-            //   dispatch(changedValue(ToFieldStateCE(o)))
-            // }}
+            component={SelectField}
+            options={isLaporanMasyarakat(values) ? asalLaporan : jenisPengamanan}
+            onChange={(o: ChangeEvent<any>) => {
+              if (isLaporanMasyarakat(values)) {
+                values.kegiatan__jenis_pengamanan_selection = []
+                values.kegiatan__jenis_pengamanan_selection = 0
+              }
+              if (isPengamanan(values)) {
+                values.kegiatan__asal_laporan_selection = []
+                values.kegiatan__asal_laporan_id = 0
+              }
+              dispatch(changedValue(ToFieldStateCE(o)))
+            }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__uraian_kegiatan' />
+            {isLaporanMasyarakat(values) && (
+              <>
+                <ErrorMessage name='kegiatan__asal_laporan_id' />
+                <ErrorMessage name='kegiatan__asal_laporan_selection' />
+              </>
+            )}
           </div>
         </div>
       )}
 
+      {/* Jumlah Personil */}
       <div className='mb-10'>
         <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
           Jumlah Personil
@@ -117,6 +169,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         </div>
       </div>
 
+      {/* Uraian Kegiatan */}
       <div className='mb-10'>
         <label className='required form-label'>Uraian Kegiatan</label>
         <Field
@@ -133,7 +186,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         </div>
       </div>
 
-      {jenisKegiatan === 7 && (
+      {isPengamanan(values) && (
         <>
           <div className='mb-10'>
             <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
@@ -199,7 +252,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           <ErrorMessage name='kegiatan__tanggal' />
         </div>
       </div>
-
       <div className='mb-10'>
         <label className='required form-label'>Waktu Kegiatan</label>
         <div className='row'>
@@ -231,7 +283,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           </div>
         </div>
       </div>
-
       <div className='mb-10'>
         <label className='required form-label'>Lokasi Kegiatan</label>
         <Field

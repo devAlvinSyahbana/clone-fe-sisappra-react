@@ -55,7 +55,7 @@ export const initialState: PelaporanKegiatanState = {
   kegiatan__tanggal: '2022-01-23',
   kegiatan__jam: '08:00:00',
   kegiatan__lokasi: '',
-  //   kegiatan__asal_laporan: "",
+  kegiatan__asal_laporan: '',
 
   tindak_lanjut__administrasi__jenis_pasal_id: 0,
   tindak_lanjut__administrasi__jenis_penertiban: '',
@@ -94,16 +94,37 @@ export const createSchemaPelaporanKegiatan = [
       .required()
       .label('Jenis Kegiatan'),
     kegiatan__jenis_kegiatan_selection: Yup.object().required(),
-    kegiatan__jumlah_personil: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jumlah Personil'),
+    kegiatan__jumlah_personil: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Personil'),
+    }),
     kegiatan__uraian_kegiatan: Yup.string().min(10).max(1000).required().label('Uraian Kegiatan'),
     kegiatan__tanggal: Yup.date().required().label('Tanggal Kegiatan'),
     kegiatan__jam_start: Yup.string().required().label('Waktu Kegiatan'),
     kegiatan__jam_end: Yup.string().required().label('Waktu Kegiatan'),
     kegiatan__lokasi: Yup.string().min(3).max(64).required().label('Lokasi Kegiatan'),
+
+    kegiatan__asal_laporan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label !== 'LAPORAN MASYARAKAT',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Laporan Masyarakat'),
+    }),
+    kegiatan__asal_laporan_selection: Yup.object().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label !== 'LAPORAN MASYARAKAT',
+      then: Yup.object().notRequired(),
+      otherwise: Yup.object().required(),
+    }),
+    kegiatan__jenis_pengamanan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label !== 'PENGAMANAN',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('JenisPengamanan'),
+    }),
+    kegiatan__jenis_pengamanan_selection: Yup.object().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label !== 'PENGAMANAN',
+      then: Yup.object().notRequired(),
+      otherwise: Yup.object().required().label('JenisPengamanan'),
+    }),
 
     tindak_lanjut__administrasi__jenis_pasal_id: Yup.number()
       .integer()
@@ -259,8 +280,13 @@ export const pelaporanKegiatanSlice = createSlice({
 
 export const isTipiring = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'SIDANG TIPIRING'
-export const isApel = (formikValues: any) =>
-  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'APEL'
+export const isLaporanMasyarakat = (formikValues: any) =>
+  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'LAPORAN MASYARAKAT'
+export const isPengamanan = (formikValues: any) =>
+  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'PENGAMANAN'
+export const isApelRapat = (formikValues: any) =>
+  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'APEL' ||
+  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'RAPAT'
 
 export const {changedValue} = pelaporanKegiatanSlice.actions
 

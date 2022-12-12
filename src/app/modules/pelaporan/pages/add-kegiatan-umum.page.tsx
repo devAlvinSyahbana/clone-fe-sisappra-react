@@ -8,6 +8,7 @@ import {
   initialState,
   PelaporanKegiatanState,
   changedValue,
+  isApelRapat,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
@@ -24,9 +25,9 @@ const excludeJenisKegiatan = [
   'PENGAMANAN',
 ]
 
-export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
+export const AddKegiatanUmumPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
-  // const [data, setData] = useState<PelaporanKegiatanState>()
+  const [val, setVal] = useState<any>(initialState)
 
   const dispatch = useDispatch()
   const jenisKegiatanId = useSelector(
@@ -34,10 +35,8 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
   )
 
   const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-    <StepDetailKegiatan values={values} />,
-    ...(jenisKegiatanId === 13 || jenisKegiatanId === 15
-      ? [<StepDokumentasi />]
-      : [<StepTindaklanjut />, <StepDokumentasi />]),
+    <StepDetailKegiatan values={val} setVal={setVal} />,
+    ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
   ])
 
   const updateJenisKegiatanList = () => {
@@ -78,19 +77,17 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
   // }
 
   const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
-    // console.log(values)
-    // alert(JSON.stringify(values, null, 2))
-    if (!isLastStep) {
-      console.log('values')
-      // return next()
+    try {
+      if (!isLastStep) {
+        console.log('values')
+        return next()
+      }
+      console.log('laststep', values)
+      alert(JSON.stringify(values, null, 2))
+      actions.setSubmitting(false)
+    } catch (error) {
+      console.log(error)
     }
-    console.log('laststep', values)
-
-    // setTimeout(() => {
-    //   actions.setSubmitting(false)
-    // }, 100)
-    // if (!isLastStep) return next()
-    // alert('Your Account Succesfully Created')
   }
 
   return (
@@ -106,7 +103,7 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
               <div className='card-body'>
                 {/* <>{(values = {data})}</> */}
                 {step.type.name === 'StepDetailKegiatan' ? (
-                  <StepDetailKegiatan values={values} />
+                  <StepDetailKegiatan values={values} setVal={setVal} />
                 ) : (
                   step
                 )}
@@ -118,6 +115,7 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
                         <div className='row d-flex justify-content-end'>
                           {!isFirstStep && (
                             <button
+                              type='button'
                               className='col-5 btn btn-flex btn-secondary px-6 m-3'
                               onClick={back}
                             >
@@ -133,11 +131,11 @@ export const AddKegiatanUmumPage: FC = (values: FormikValues) => {
                           {!isLastStep ? (
                             <button
                               // type='button'
-                              className='col-5 btn btn-flex btn-secondary px-6 m-3'
+                              className='col-5 btn btn-flex btn-primary px-6 m-3'
                               onClick={next}
                             >
                               <span className='svg-icon svg-icon-2x'>
-                                <i className='fa-solid fa-arrow-left'></i>
+                                <i className='fa-solid fa-paper-plane'></i>
                               </span>
                               <span className='d-flex flex-column align-items-start ms-2'>
                                 <span className='fs-3 fw-bold'>Simpan dan Lanjut</span>
