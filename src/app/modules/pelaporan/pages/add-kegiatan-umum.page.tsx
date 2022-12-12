@@ -128,7 +128,22 @@ export const AddKegiatanUmumPage: FC = () => {
                               </span>
                             </button>
                           )}
-                          {!isLastStep ? (
+
+                          <button
+                            type='submit'
+                            className='col-5 btn btn-flex btn-primary px-6 m-3'
+                            // onClick={next}
+                          >
+                            <span className='svg-icon svg-icon-2x'>
+                              <i className='fa-solid fa-paper-plane'></i>
+                            </span>
+                            <span className='d-flex flex-column align-items-start ms-2'>
+                              <span className='fs-3 fw-bold'>
+                                {isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}
+                              </span>
+                            </span>
+                          </button>
+                          {/* {!isLastStep ? (
                             <button
                               // type='button'
                               className='col-5 btn btn-flex btn-primary px-6 m-3'
@@ -142,9 +157,6 @@ export const AddKegiatanUmumPage: FC = () => {
                               </span>
                             </button>
                           ) : (
-                            // <button type='button' onClick={back}>
-                            //   Back
-                            // </button>
                             <button
                               type='submit'
                               className='col-5 btn btn-flex btn-primary px-6 m-3'
@@ -156,7 +168,7 @@ export const AddKegiatanUmumPage: FC = () => {
                                 <span className='fs-3 fw-bold'>simpan</span>
                               </span>
                             </button>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </div>

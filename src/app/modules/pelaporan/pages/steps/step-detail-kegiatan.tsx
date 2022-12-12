@@ -73,7 +73,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   useEffect(() => {
     setVal(values)
   }, [dispatch])
-  console.log(values)
+  // console.log(values)
 
   return (
     <div className='w-50'>
@@ -93,6 +93,15 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
               dispatch(changedValue(ToFieldStateCE(o)))
               dispatch(updateJenisPasalList(o.target.value))
               dispatch(updateJenisPenyelesaianList(o.target.value))
+              if (!isLaporanMasyarakat(values) || !isPengamanan(values)) {
+                values.kegiatan__jenis_pengamanan_selection = null
+                values.kegiatan__jenis_pengamanan_selection = null
+                values.kegiatan__asal_laporan_selection = null
+                values.kegiatan__asal_laporan_id = null
+                values.kegiatan__pengamanan_masalah = null
+                values.kegiatan__pengamanan_pemecahan_masalah = null
+                values.kegiatan__pengamanan_instansi_terkait = null
+              }
             }}
           />
           <div className='text-danger mt-2'>
@@ -101,16 +110,10 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           </div>
         </div>
       </div>
-
       {/* Asal Laporan / Jenis Pengamanan */}
       {(isLaporanMasyarakat(values) || isPengamanan(values)) && (
         <div className='mb-10'>
-          <label
-            htmlFor={
-              isLaporanMasyarakat(values) ? 'kegiatan__asal_laporan' : 'kegiatan__jenis_pengamanan'
-            }
-            className='required form-label'
-          >
+          <label className='required form-label'>
             {isLaporanMasyarakat(values) ? 'Asal Laporan' : 'Jenis Pengamanan'}
           </label>
           <Field
@@ -129,14 +132,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={isLaporanMasyarakat(values) ? asalLaporan : jenisPengamanan}
             onChange={(o: ChangeEvent<any>) => {
-              if (isLaporanMasyarakat(values)) {
-                values.kegiatan__jenis_pengamanan_selection = []
-                values.kegiatan__jenis_pengamanan_selection = 0
-              }
-              if (isPengamanan(values)) {
-                values.kegiatan__asal_laporan_selection = []
-                values.kegiatan__asal_laporan_id = 0
-              }
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
@@ -150,7 +145,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           </div>
         </div>
       )}
-
       {/* Jumlah Personil */}
       <div className='mb-10'>
         <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
@@ -168,7 +162,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           <ErrorMessage name='kegiatan__jumlah_personil' />
         </div>
       </div>
-
       {/* Uraian Kegiatan */}
       <div className='mb-10'>
         <label className='required form-label'>Uraian Kegiatan</label>
@@ -185,55 +178,56 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           <ErrorMessage name='kegiatan__uraian_kegiatan' />
         </div>
       </div>
-
+      {/* Pengamanan: masalah, pemecahan masalah, instansi terkait */}
       {isPengamanan(values) && (
         <>
           <div className='mb-10'>
-            <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
+            <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
               Masalah
             </label>
             <Field
-              type='number'
-              name=''
+              type='text'
+              name='kegiatan__pengamanan_masalah'
               className='form-control'
-              // onKeyUp={(o: ChangeEvent<any>) => {
-              //   dispatch(changedValue(ToFieldStateCE(o)))
-              // }}
+              onKeyUp={(o: ChangeEvent<any>) => {
+                dispatch(changedValue(ToFieldStateCE(o)))
+              }}
             />
             <div className='text-danger mt-2'>
-              <ErrorMessage name='kegiatan__uraian_kegiatan' />
+              <ErrorMessage name='kegiatan__pengamanan_masalah' />
             </div>
           </div>
           <div className='mb-10'>
-            <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
+            <label htmlFor='kegiatan__pengamanan_pemecahan_masalah' className='required form-label'>
               Pemecahan Masalah
             </label>
             <Field
-              type='number'
-              name=''
+              as='textarea'
+              type='text'
+              name='kegiatan__pengamanan_pemecahan_masalah'
               className='form-control'
-              // onKeyUp={(o: ChangeEvent<any>) => {
-              //   dispatch(changedValue(ToFieldStateCE(o)))
-              // }}
+              onKeyUp={(o: ChangeEvent<any>) => {
+                dispatch(changedValue(ToFieldStateCE(o)))
+              }}
             />
             <div className='text-danger mt-2'>
-              <ErrorMessage name='kegiatan__uraian_kegiatan' />
+              <ErrorMessage name='kegiatan__pengamanan_pemecahan_masalah' />
             </div>
           </div>
           <div className='mb-10'>
-            <label htmlFor='kegiatan__uraian_kegiatan' className='required form-label'>
+            <label htmlFor='kegiatan__pengamanan_instansi_terkait' className='required form-label'>
               Instansi Terkait
             </label>
             <Field
-              type='number'
-              name=''
+              type='text'
+              name='kegiatan__pengamanan_instansi_terkait'
               className='form-control'
-              // onKeyUp={(o: ChangeEvent<any>) => {
-              //   dispatch(changedValue(ToFieldStateCE(o)))
-              // }}
+              onKeyUp={(o: ChangeEvent<any>) => {
+                dispatch(changedValue(ToFieldStateCE(o)))
+              }}
             />
             <div className='text-danger mt-2'>
-              <ErrorMessage name='kegiatan__uraian_kegiatan' />
+              <ErrorMessage name='kegiatan__pengamanan_instansi_terkait' />
             </div>
           </div>
         </>

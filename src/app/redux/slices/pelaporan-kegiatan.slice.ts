@@ -17,26 +17,26 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   kegiatan__jam: string
   kegiatan__lokasi: string
 
-  tindak_lanjut__administrasi__jenis_pasal_id: number
-  tindak_lanjut__administrasi__jenis_penertiban: string
-  tindak_lanjut__administrasi__jenis_pelanggaran: string
-  tindak_lanjut__administrasi__perda_perkada: string
-  tindak_lanjut__administrasi__penyelesaian_id: number
+  // tindak_lanjut__administrasi__jenis_pasal_id: number
+  // tindak_lanjut__administrasi__jenis_penertiban: string
+  // tindak_lanjut__administrasi__jenis_pelanggaran: string
+  // tindak_lanjut__administrasi__perda_perkada: string
+  // tindak_lanjut__administrasi__penyelesaian_id: number
 
-  tindak_lanjut__identitas_pelanggar__no_bap: string
-  tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: string
-  tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: string
-  tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: string
-  tindak_lanjut__identitas_pelanggar__nik: string
-  tindak_lanjut__identitas_pelanggar__alamat: string
-  tindak_lanjut__identitas_pelanggar__jenis_usaha_id: number
+  // tindak_lanjut__identitas_pelanggar__no_bap: string
+  // tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: string
+  // tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: string
+  // tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: string
+  // tindak_lanjut__identitas_pelanggar__nik: string
+  // tindak_lanjut__identitas_pelanggar__alamat: string
+  // tindak_lanjut__identitas_pelanggar__jenis_usaha_id: number
 
-  tindak_lanjut__jenis_penindakan_id: number
-  tindak_lanjut__jumlah_pelanggar: number
-  tindak_lanjut__denda__non_pengadilan: number
-  tindak_lanjut__denda__tanggal_setor: string
-  tindak_lanjut__denda__nama_bank: string
-  tindak_lanjut__denda__no_validasi_bank: string
+  // tindak_lanjut__jenis_penindakan_id: number
+  // tindak_lanjut__jumlah_pelanggar: number
+  // tindak_lanjut__denda__non_pengadilan: number
+  // tindak_lanjut__denda__tanggal_setor: string
+  // tindak_lanjut__denda__nama_bank: string
+  // tindak_lanjut__denda__no_validasi_bank: string
 }
 
 export const initialState: PelaporanKegiatanState = {
@@ -57,26 +57,26 @@ export const initialState: PelaporanKegiatanState = {
   kegiatan__lokasi: '',
   kegiatan__asal_laporan: '',
 
-  tindak_lanjut__administrasi__jenis_pasal_id: 0,
-  tindak_lanjut__administrasi__jenis_penertiban: '',
-  tindak_lanjut__administrasi__jenis_pelanggaran: '',
-  tindak_lanjut__administrasi__perda_perkada: '',
-  tindak_lanjut__administrasi__penyelesaian_id: 0,
+  // tindak_lanjut__administrasi__jenis_pasal_id: 0,
+  // tindak_lanjut__administrasi__jenis_penertiban: '',
+  // tindak_lanjut__administrasi__jenis_pelanggaran: '',
+  // tindak_lanjut__administrasi__perda_perkada: '',
+  // tindak_lanjut__administrasi__penyelesaian_id: 0,
 
-  tindak_lanjut__identitas_pelanggar__no_bap: '3232323',
-  tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: '3232323',
-  tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: '3232323',
-  tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: '3232323',
-  tindak_lanjut__identitas_pelanggar__nik: '3232323',
-  tindak_lanjut__identitas_pelanggar__alamat: '3232323',
-  tindak_lanjut__identitas_pelanggar__jenis_usaha_id: 0,
+  // tindak_lanjut__identitas_pelanggar__no_bap: '3232323',
+  // tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: '3232323',
+  // tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: '3232323',
+  // tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: '3232323',
+  // tindak_lanjut__identitas_pelanggar__nik: '3232323',
+  // tindak_lanjut__identitas_pelanggar__alamat: '3232323',
+  // tindak_lanjut__identitas_pelanggar__jenis_usaha_id: 0,
 
-  tindak_lanjut__jenis_penindakan_id: 0,
-  tindak_lanjut__jumlah_pelanggar: 0,
-  tindak_lanjut__denda__non_pengadilan: 50000,
-  tindak_lanjut__denda__tanggal_setor: '2022-11-01',
-  tindak_lanjut__denda__nama_bank: 'BCA',
-  tindak_lanjut__denda__no_validasi_bank: '23423423',
+  // tindak_lanjut__jenis_penindakan_id: 0,
+  // tindak_lanjut__jumlah_pelanggar: 0,
+  // tindak_lanjut__denda__non_pengadilan: 50000,
+  // tindak_lanjut__denda__tanggal_setor: '2022-11-01',
+  // tindak_lanjut__denda__nama_bank: 'BCA',
+  // tindak_lanjut__denda__no_validasi_bank: '23423423',
 }
 
 export const createSchemaFilterPelaporanKegiatan = [
@@ -118,102 +118,120 @@ export const createSchemaPelaporanKegiatan = [
     kegiatan__jenis_pengamanan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
       is: (val: any) => val?.label !== 'PENGAMANAN',
       then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('JenisPengamanan'),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Pengamanan'),
     }),
     kegiatan__jenis_pengamanan_selection: Yup.object().when('kegiatan__jenis_kegiatan_selection', {
       is: (val: any) => val?.label !== 'PENGAMANAN',
       then: Yup.object().notRequired(),
-      otherwise: Yup.object().required().label('JenisPengamanan'),
+      otherwise: Yup.object().required(),
+    }),
+    kegiatan__pengamanan_masalah: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label !== 'PENGAMANAN',
+      then: Yup.string().notRequired(),
+      otherwise: Yup.string().min(5).max(500).required().label('Uraian Masalah'),
+    }),
+    kegiatan__pengamanan_pemecahan_masalah: Yup.string().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label !== 'PENGAMANAN',
+        then: Yup.string().notRequired(),
+        otherwise: Yup.string().min(10).max(1000).required().label('Uraian Pemecahan Masalah'),
+      }
+    ),
+    kegiatan__pengamanan_instansi_terkait: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label !== 'PENGAMANAN',
+      then: Yup.string().notRequired(),
+      otherwise: Yup.string().min(2).max(32).required().label('Instansi Terkait'),
     }),
 
-    tindak_lanjut__administrasi__jenis_pasal_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Pasal'),
-    tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().required(),
-    tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Jenis Penertiban'),
-    tindak_lanjut__administrasi__jenis_pelanggaran: Yup.string()
-      .min(3)
-      .max(256)
-      .required()
-      .label('Jenis Pelanggaran'),
-    tindak_lanjut__administrasi__perda_perkada: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Perda Perkada'),
-    tindak_lanjut__administrasi__penyelesaian_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Penyelesaian'),
-    tindak_lanjut__administrasi__penyelesaian_selection: Yup.object().required(),
+    // tindak_lanjut__administrasi__jenis_pasal_id: Yup.number()
+    //   .integer()
+    //   .moreThan(0)
+    //   .required()
+    //   .label('Jenis Pasal'),
+    // tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().required(),
+    // tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
+    //   .min(3)
+    //   .max(64)
+    //   .required()
+    //   .label('Jenis Penertiban'),
+    // tindak_lanjut__administrasi__jenis_pelanggaran: Yup.string()
+    //   .min(3)
+    //   .max(256)
+    //   .required()
+    //   .label('Jenis Pelanggaran'),
+    // tindak_lanjut__administrasi__perda_perkada: Yup.string()
+    //   .min(3)
+    //   .max(64)
+    //   .required()
+    //   .label('Perda Perkada'),
+    // tindak_lanjut__administrasi__penyelesaian_id: Yup.number()
+    //   .integer()
+    //   .moreThan(0)
+    //   .required()
+    //   .label('Penyelesaian'),
+    // tindak_lanjut__administrasi__penyelesaian_selection: Yup.object().required(),
 
-    tindak_lanjut__identitas_pelanggar__no_bap: Yup.string()
-      .min(3)
-      .max(16)
-      .required()
-      .label('NO BAP'),
-    tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Nama Penanggung Jawab'),
-    tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Nama Tempat Usaha'),
-    tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string()
-      .min(3)
-      .max(256)
-      .required()
-      .label('Alamat Tempat Usaha'),
-    tindak_lanjut__identitas_pelanggar__nik: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('NIK/Pasport Pelanggar'),
-    tindak_lanjut__identitas_pelanggar__alamat: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('Alamat Pelanggar'),
-    tindak_lanjut__identitas_pelanggar__jenis_usaha_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Usaha'),
-    tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object().required(),
+    // tindak_lanjut__identitas_pelanggar__no_bap: Yup.string()
+    //   .min(3)
+    //   .max(16)
+    //   .required()
+    //   .label('NO BAP'),
+    // tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string()
+    //   .min(3)
+    //   .max(64)
+    //   .required()
+    //   .label('Nama Penanggung Jawab'),
+    // tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string()
+    //   .min(3)
+    //   .max(64)
+    //   .required()
+    //   .label('Nama Tempat Usaha'),
+    // tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string()
+    //   .min(3)
+    //   .max(256)
+    //   .required()
+    //   .label('Alamat Tempat Usaha'),
+    // tindak_lanjut__identitas_pelanggar__nik: Yup.string()
+    //   .min(3)
+    //   .max(32)
+    //   .required()
+    //   .label('NIK/Pasport Pelanggar'),
+    // tindak_lanjut__identitas_pelanggar__alamat: Yup.string()
+    //   .min(3)
+    //   .max(32)
+    //   .required()
+    //   .label('Alamat Pelanggar'),
+    // tindak_lanjut__identitas_pelanggar__jenis_usaha_id: Yup.number()
+    //   .integer()
+    //   .moreThan(0)
+    //   .required()
+    //   .label('Jenis Usaha'),
+    // tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object().required(),
 
-    tindak_lanjut__jenis_penindakan_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Penindakan'),
-    tindak_lanjut__jenis_penindakan_selection: Yup.object().required(),
-    tindak_lanjut__jumlah_pelanggar: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jumlah Pelanggar'),
-    tindak_lanjut__denda__non_pengadilan: Yup.number()
-      .integer()
-      .moreThan(1000)
-      .required()
-      .label('Jumlah Denda Non Pengadilan'),
-    tindak_lanjut__denda__tanggal_setor: Yup.date().required().label('Tanggal Setor Denda'),
-    tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(32).required().label('Nama Bank'),
-    tindak_lanjut__denda__no_validasi_bank: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('NO Validasi Bank'),
+    // tindak_lanjut__jenis_penindakan_id: Yup.number()
+    //   .integer()
+    //   .moreThan(0)
+    //   .required()
+    //   .label('Penindakan'),
+    // tindak_lanjut__jenis_penindakan_selection: Yup.object().required(),
+    // tindak_lanjut__jumlah_pelanggar: Yup.number()
+    //   .integer()
+    //   .moreThan(0)
+    //   .required()
+    //   .label('Jumlah Pelanggar'),
+    // tindak_lanjut__denda__non_pengadilan: Yup.number()
+    //   .integer()
+    //   .moreThan(1000)
+    //   .required()
+    //   .label('Jumlah Denda Non Pengadilan'),
+    // tindak_lanjut__denda__tanggal_setor: Yup.date().required().label('Tanggal Setor Denda'),
+    // tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(32).required().label('Nama Bank'),
+    // tindak_lanjut__denda__no_validasi_bank: Yup.string()
+    //   .min(3)
+    //   .max(32)
+    //   .required()
+    //   .label('NO Validasi Bank'),
   }),
   Yup.object({}),
 ]
