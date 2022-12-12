@@ -3,6 +3,7 @@ import React, {useState, useEffect, FC} from 'react'
 import axios from 'axios'
 import BarC from '../chart/barchart/barchart'
 import PieC from '../chart/piechart/piechart'
+import BarC2 from '../chart/barchart/barchartPPNS'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SUM_PEGAWAI_WILAYAH_URL = `${API_URL}/dashboard/sum-pegawai-wilayah`
@@ -42,7 +43,7 @@ export const Kepegawaian: FC = () => {
     setDataE(responseE.data.data)
     setDataU(responseU.data.data)
     setDataSP(responseSP.data.data)
-    // console.log('cek :', dataE)
+
     return [data, setData] as const
   }
 
@@ -100,16 +101,16 @@ export const Kepegawaian: FC = () => {
                 </div>
               </div>
             </div>
-            <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
+            <div className='col-md-6 col-lg-6 col-sm-6 mb-6'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title text-center text-white'>
-                    Jumlah Personil Satpol PP Berdasarkan Golongan
+                  <h3 className='card-title text-white'>
+                    Jumlah Personil Satpol PP Berdasarkan Usia
                   </h3>
                 </div>
                 <div className='card-body'>
-                  {dataG?.length >= 1 ? (
-                    <PieC chartID={dataG} valueField='count' categoryField='golongan' />
+                  {dataU?.length >= 1 ? (
+                    <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
                   ) : (
                     <>loading...</>
                   )}
@@ -132,6 +133,23 @@ export const Kepegawaian: FC = () => {
                 </div>
               </div>
             </div>
+
+            <div className='col-md-12 col-lg-12 col-sm-12 mb-6'>
+              <div className='card card-bordered border-primary'>
+                <div className='card-header justify-content-center bg-primary'>
+                  <h3 className='card-title text-center text-white'>
+                    Jumlah Personil Satpol PP Berdasarkan Golongan
+                  </h3>
+                </div>
+                <div className='card-body'>
+                  {dataG?.length >= 1 ? (
+                    <BarC2 chartID={dataG} valueField='count' categoryField='golongan' />
+                  ) : (
+                    <>loading...</>
+                  )}
+                </div>
+              </div>
+            </div>
             <div className='col-md-12 col-lg-12 col-sm-12 mb-12'>
               <div className='card card-bordered border-primary'>
                 <div className='card-header bg-primary justify-content-center'>
@@ -141,23 +159,7 @@ export const Kepegawaian: FC = () => {
                 </div>
                 <div className='card-body'>
                   {dataSP?.length >= 1 ? (
-                    <PieC chartID={dataSP} valueField='count' categoryField='skpd' />
-                  ) : (
-                    <>loading...</>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className='col-md-12 col-lg-12 col-sm-12 mb-12'>
-              <div className='card card-bordered border-primary'>
-                <div className='card-header justify-content-center bg-primary'>
-                  <h3 className='card-title text-white'>
-                    Jumlah Personil Satpol PP Berdasarkan Usia
-                  </h3>
-                </div>
-                <div className='card-body'>
-                  {dataU?.length >= 1 ? (
-                    <PieC chartID={dataU} valueField='jumlah' categoryField='range_umur' />
+                    <BarC2 chartID={dataSP} valueField='count' categoryField='skpd' />
                   ) : (
                     <>loading...</>
                   )}
