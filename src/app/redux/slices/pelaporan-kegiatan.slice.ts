@@ -102,11 +102,11 @@ export const createSchemaPelaporanKegiatan = [
       .required()
       .label('Jenis Kegiatan'),
     kegiatan__jenis_kegiatan_selection: Yup.object().required(),
-    kegiatan__jumlah_personil: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-      then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Personil'),
-    }),
+    kegiatan__jumlah_personil: Yup.number()
+      .integer()
+      .moreThan(0)
+      .required()
+      .label('Jumlah Personil'),
     kegiatan__uraian_kegiatan: Yup.string().min(10).max(1000).required().label('Uraian Kegiatan'),
     kegiatan__tanggal: Yup.date().required().label('Tanggal Kegiatan'),
     kegiatan__jam_start: Yup.string().required().label('Waktu Kegiatan'),
@@ -261,11 +261,6 @@ export const updateJenisKegiatanList: any = createAsyncThunk(
     return data
   }
 )
-//  axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
-//    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-//    // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-//    dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))
-//  })
 
 export const updateJenisPasalList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPasalList',

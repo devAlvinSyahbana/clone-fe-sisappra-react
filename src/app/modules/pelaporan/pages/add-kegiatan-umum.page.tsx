@@ -35,7 +35,7 @@ export const AddKegiatanUmumPage: FC = () => {
   )
 
   const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-    <StepDetailKegiatan values={val} setVal={setVal} />,
+    <StepDetailKegiatan values={val} />,
     ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
   ])
 
@@ -88,7 +88,7 @@ export const AddKegiatanUmumPage: FC = () => {
         initialValues={initialState}
         onSubmit={submitPelaporanKegiatan}
       >
-        {({handleReset, handleSubmit, errors, values, resetForm}) => (
+        {({handleReset, handleSubmit, errors, values}) => (
           <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
             <div className='card'>
               {/* <button onClick={handleReset}>test</button>

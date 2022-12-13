@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, SyntheticEvent, useEffect, useState} from 'react'
+import React, {ChangeEvent, FC, useEffect} from 'react'
 import Select, {OptionProps} from 'react-select'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
@@ -7,7 +7,6 @@ import {
   reset,
   isLaporanMasyarakat,
   isPengamanan,
-  isApelRapat,
   updateJenisPasalList,
   updateJenisPenyelesaianList,
   updateJenisKegiatanList,
@@ -38,7 +37,7 @@ interface StepDetailKegiatanProps {
     /** Preact-like linkState. Will return a handleBlur function. */
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
-  setVal: any
+  setVal?: any
   handleReset?: (e?: React.SyntheticEvent<any>) => void
 }
 
@@ -49,7 +48,6 @@ const asalLaporan = [
   {label: 'Media Cetak', value: '4'},
   {label: 'Pimpinan', value: '5'},
   {label: 'Laporan Langsung', value: '6'},
-  {label: 'CRM', value: '7'},
 ]
 
 const jenisPengamanan = [
@@ -58,7 +56,7 @@ const jenisPengamanan = [
   {label: 'Lokasi Kunjungan Pejabat', value: '3'},
   {label: 'Tamu VIP', value: '4'},
   {label: 'Gedung dan Aset Penting', value: '5'},
-  {label: 'Upacara dan Acara Pening', value: '6'},
+  {label: 'Upacara dan Acara Penting', value: '6'},
 ]
 
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
@@ -70,6 +68,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
+  const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
   const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
 
@@ -81,7 +80,8 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
     dispatch(updateJenisKegiatanList())
   }, [])
 
-  // console.log(change)
+  console.log(values)
+  console.log(allValues)
   // console.log('tes', values)
 
   return (
@@ -90,7 +90,16 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
         {/* {isApelRapat(values) ? 'apel / rapat' : 'BUKAN'} */}
         {jenisKegiatanSelect}
-        <button onClick={handleReset}>Hapus</button>
+        <button
+          type='button'
+          onClick={() => {
+            handleReset?.()
+            dispatch(reset())
+            dispatch(updateJenisKegiatanList())
+          }}
+        >
+          Hapus
+        </button>
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
           {/* <input onFocus={}={} /> */}
@@ -102,13 +111,10 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
               // handleReset?.()
-              // await timeout(1000)
-              dispatch(updateJenisKegiatanList())
+              // dispatch(updateJenisKegiatanList())
               dispatch(changedValue(ToFieldStateCE(o)))
               dispatch(updateJenisPasalList(o.target.value))
               dispatch(updateJenisPenyelesaianList(o.target.value))
-              o.preventDefault()
-              // dispatch(updateJenisKegiatanList())
             }}
           />
           <div className='text-danger mt-2'>
@@ -124,7 +130,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             {isLaporanMasyarakat(values) ? 'Asal Laporan' : 'Jenis Pengamanan'}
           </label>
           <Field
-            // type='number'
             name={
               isLaporanMasyarakat(values)
                 ? 'kegiatan__asal_laporan_selection'
@@ -154,16 +159,18 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
       )}
       {/* Jumlah Personil */}
       <div className='mb-10'>
-        <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
-          Jumlah Personil
-        </label>
+        <label className='required form-label'>Jumlah Personil</label>
         <Field
           type='number'
+          min='0'
           name='kegiatan__jumlah_personil'
           className='form-control'
-          onKeyUp={(o: ChangeEvent<any>) => {
+          onInput={(o: ChangeEvent<any>) => {
             dispatch(changedValue(ToFieldStateCE(o)))
           }}
+          // onKeyUp={(o: ChangeEvent<any>) => {
+          //   dispatch(changedValue(ToFieldStateCE(o)))
+          // }}
         />
         <div className='text-danger mt-2'>
           <ErrorMessage name='kegiatan__jumlah_personil' />
@@ -239,6 +246,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           </div>
         </>
       )}
+      {/* Tanggal Kegiatan */}
       <div className='mb-10'>
         <label className='required form-label'>Tanggal Kegiatan</label>
         <Field
@@ -253,6 +261,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           <ErrorMessage name='kegiatan__tanggal' />
         </div>
       </div>
+      {/* Waktu Kegiatan */}
       <div className='mb-10'>
         <label className='required form-label'>Waktu Kegiatan</label>
         <div className='row'>
@@ -284,6 +293,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           </div>
         </div>
       </div>
+      {/* Lokasi Kegiatan */}
       <div className='mb-10'>
         <label className='required form-label'>Lokasi Kegiatan</label>
         <Field
