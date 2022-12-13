@@ -7,7 +7,7 @@ import {
   reset,
   isLaporanMasyarakat,
   isPengamanan,
-  isTipiring,
+  isApelRapat,
   updateJenisPasalList,
   updateJenisPenyelesaianList,
   updateJenisKegiatanList,
@@ -39,6 +39,7 @@ interface StepDetailKegiatanProps {
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
   setVal: any
+  handleReset?: (e?: React.SyntheticEvent<any>) => void
 }
 
 const asalLaporan = [
@@ -62,23 +63,26 @@ const jenisPengamanan = [
 
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   handleChange,
-  values,
   handleBlur,
+  handleReset,
+  values,
   setVal,
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
-  // const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
+  const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
 
   useEffect(() => {
     setVal(values)
-  }, [dispatch])
+  })
 
   useEffect(() => {
     dispatch(updateJenisKegiatanList())
   }, [])
-  console.log(values)
+
+  // console.log(change)
+  // console.log('tes', values)
 
   return (
     <div className='w-50'>
@@ -86,8 +90,10 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
         {/* {isApelRapat(values) ? 'apel / rapat' : 'BUKAN'} */}
         {jenisKegiatanSelect}
+        <button onClick={handleReset}>Hapus</button>
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
+          {/* <input onFocus={}={} /> */}
           <Field
             name='kegiatan__jenis_kegiatan_selection'
             target='kegiatan__jenis_kegiatan_id'
@@ -95,11 +101,14 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
-              dispatch(reset())
+              // handleReset?.()
+              // await timeout(1000)
+              dispatch(updateJenisKegiatanList())
               dispatch(changedValue(ToFieldStateCE(o)))
               dispatch(updateJenisPasalList(o.target.value))
               dispatch(updateJenisPenyelesaianList(o.target.value))
-              dispatch(updateJenisKegiatanList())
+              o.preventDefault()
+              // dispatch(updateJenisKegiatanList())
             }}
           />
           <div className='text-danger mt-2'>
@@ -130,7 +139,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={isLaporanMasyarakat(values) ? asalLaporan : jenisPengamanan}
             onChange={(o: ChangeEvent<any>) => {
-              console.log(values)
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />

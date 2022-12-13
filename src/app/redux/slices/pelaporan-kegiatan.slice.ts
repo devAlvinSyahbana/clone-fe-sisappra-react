@@ -316,9 +316,7 @@ export const pelaporanKegiatanSlice = createSlice({
         state[action.payload.target.name] = action.payload.target.value
       }
     },
-    reset: () => {
-      return initialState
-    },
+    reset: () => initialState,
   },
 })
 

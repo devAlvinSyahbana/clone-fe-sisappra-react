@@ -88,13 +88,14 @@ export const AddKegiatanUmumPage: FC = () => {
         initialValues={initialState}
         onSubmit={submitPelaporanKegiatan}
       >
-        {({handleReset, handleSubmit, errors, values}) => (
+        {({handleReset, handleSubmit, errors, values, resetForm}) => (
           <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
             <div className='card'>
+              {/* <button onClick={handleReset}>test</button>
+                {isApelRapat(values) ? 'APEL/RAPAT' : 'BUKAN'} */}
               <div className='card-body'>
-                {/* <>{(values = {data})}</> */}
                 {step.type.name === 'StepDetailKegiatan' ? (
-                  <StepDetailKegiatan values={values} setVal={setVal} />
+                  <StepDetailKegiatan values={values} setVal={setVal} handleReset={handleReset} />
                 ) : (
                   step
                 )}
