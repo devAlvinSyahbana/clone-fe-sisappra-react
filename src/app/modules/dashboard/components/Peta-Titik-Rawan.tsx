@@ -8,6 +8,12 @@ import * as L from "leaflet";
 import jsonpetaTitikRawan from '../maps/peta-general.json'
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
 import ToggleButton from 'react-bootstrap/ToggleButton'
+import fireIcon from '../../../../assets/fire.svg'
+import ligtningIcon from '../../../../assets/cloud-lightning.svg'
+import cartIcon from '../../../../assets/food-stall.png'
+import homelessIcon from '../../../../assets/homeless.png'
+import politicIcon from '../../../../assets/politic.png'
+import handcuffsIcon from '../../../../assets/handcuffs.png'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SUM_TITIK_RAWAN_URL = `${API_URL}/dashboard/titik-rawan-by-kejadian`
@@ -17,77 +23,41 @@ const PetaTitikRawan: FC = () => {
   const [filterTempat, setFilterTempat] = useState([])
   const [checked, setChecked] = useState(false)
   
-  // const LeafIcon = L.Icon.extend({
-  //   options: {}
-  // });
-
-  // const blueIcon = new LeafIcon().options({
-  //   iconUrl:
-  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF"
-  //   }),
-  //  greenIcon = new LeafIcon().options({
-  //   iconUrl:
-  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF"
-  //   }
-  // ),
-  //  yellowIcon = new LeafIcon().options({
-  //   iconUrl:
-  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FEDE00&chf=a,s,ee00FFFF"
-  //   }
-  // ),
-  //  redIcon = new LeafIcon().options({
-  //   iconUrl:
-  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|E7625F&chf=a,s,ee00FFFF"
-  //   }
-  // ),
-  //  grayIcon = new LeafIcon().options({
-  //   iconUrl:
-  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|7E7C73&chf=a,s,ee00FFFF"
-  //   }
-  // ),
-  //  brownIcon = new LeafIcon().options({
-  //   iconUrl:
-  //       "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|AB6B51&chf=a,s,ee00FFFF"
-  //   }
-  // )
 
   const LeafIcon = L.Icon.extend({
     options: {}
   });
 
-  const blueIcon = new L.Icon({
+  const iconKebakaran = new L.Icon({
     iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF"
+        fireIcon,
     }),
-   greenIcon = new L.Icon({
+   iconBencana = new L.Icon({
     iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF"
+    ligtningIcon
     }
   ),
-   yellowIcon = new L.Icon({
+   iconPKL = new L.Icon({
     iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FEDE00&chf=a,s,ee00FFFF"
+        cartIcon
     }
   ),
-   redIcon = new L.Icon({
-    iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|E7625F&chf=a,s,ee00FFFF"
+   iconPMKS = new L.Icon({
+    iconUrl:homelessIcon
     }
   ),
-   grayIcon = new L.Icon({
-    iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|7E7C73&chf=a,s,ee00FFFF"
+   iconPolitik = new L.Icon({
+    iconUrl:politicIcon
     }
   ),
-   brownIcon = new L.Icon({
-    iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|AB6B51&chf=a,s,ee00FFFF"
+   iconTramtibum = new L.Icon({
+    iconUrl: handcuffsIcon
     }
   )
 
   
 
-  const [icon, setIcon] = useState(blueIcon);
+  const [icon, setIcon] = useState(iconKebakaran);
 
 
   const fetchAPI = async (kejadian : any) => {
@@ -107,22 +77,22 @@ const PetaTitikRawan: FC = () => {
       })
       setFilterTempat(response.data.data)
       if (kejadian === 'Kebakaran'){
-        setIcon((current : any) => current = blueIcon)
+        setIcon((current : any) => current = iconKebakaran)
       } 
       else if(kejadian === 'Bencana'){
-        setIcon((current : any) => current = greenIcon)
+        setIcon((current : any) => current = iconBencana)
       }
       else if(kejadian === 'PKL'){
-        setIcon((current : any) => current = yellowIcon)
+        setIcon((current : any) => current = iconPKL)
       }
       else if(kejadian === 'PMKS'){
-        setIcon((current : any) => current = redIcon)
+        setIcon((current : any) => current = iconPMKS)
       }
       else if(kejadian === 'Politik'){
-        setIcon((current : any) => current = grayIcon)
+        setIcon((current : any) => current = iconPolitik)
       }
       else{
-        setIcon((current : any) => current = brownIcon)
+        setIcon((current : any) => current = iconTramtibum)
       }
     }
     // const filterTempat = responselayak.filter(
@@ -140,22 +110,22 @@ const PetaTitikRawan: FC = () => {
       })
       setFilterTempat(response.data.data)
       if (kejadian === 'Kebakaran'){
-        setIcon((current : any) => current = blueIcon)
+        setIcon((current : any) => current = iconKebakaran)
       } 
       else if(kejadian === 'Bencana'){
-        setIcon((current : any) => current = greenIcon)
+        setIcon((current : any) => current = iconBencana)
       }
       else if(kejadian === 'PKL'){
-        setIcon((current : any) => current = yellowIcon)
+        setIcon((current : any) => current = iconPKL)
       }
       else if(kejadian === 'PMKS'){
-        setIcon((current : any) => current = redIcon)
+        setIcon((current : any) => current = iconPMKS)
       }
       else if(kejadian === 'Politik'){
-        setIcon((current : any) => current = grayIcon)
+        setIcon((current : any) => current = iconPolitik)
       }
       else{
-        setIcon((current : any) => current = brownIcon)
+        setIcon((current : any) => current = iconTramtibum)
       }
       return [filterTempat,setFilterTempat, icon, setIcon] as const
     };
