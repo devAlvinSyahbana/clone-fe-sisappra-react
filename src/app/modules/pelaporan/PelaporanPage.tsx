@@ -1,16 +1,15 @@
 import React from 'react'
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import { LaporanKegiatan } from './pages/LaporanKegiatan'
-import { LaporanKejadian } from './pages/LaporanKejadian'
-import { TambahLaporanKejadian } from './pages/TambahLaporanKejadian'
-import { LaporanPengawasan } from './pages/LaporanPengawasan'
-import { LaporanTamuDaerah } from './pages/LaporanTamuDaerah'
-import { TambahTamuDaerah } from './pages/TambahTamuDaerah'
-import { DetailLaporanKegiatan } from './pages/DetailLaporanKegiatan'
-import {AddKegiatanUmumPage} from "./pages/add-kegiatan-umum.page";
-import {ListKegiatanPage} from "./pages/list-kegiatan.page";
-
+import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
+import {PageLink, PageTitle} from '../../../_metronic/layout/core'
+import {LaporanKegiatan} from './pages/LaporanKegiatan'
+import {LaporanKejadian} from './pages/LaporanKejadian'
+import {AddKejadianPage} from './pages/add-kejadian.page'
+import {LaporanPengawasan} from './pages/LaporanPengawasan'
+import {LaporanTamuDaerah} from './pages/LaporanTamuDaerah'
+import {TambahTamuDaerah} from './pages/TambahTamuDaerah'
+import {DetailLaporanKegiatan} from './pages/DetailLaporanKegiatan'
+import {AddKegiatanUmumPage} from './pages/add-kegiatan-umum.page'
+import {ListKegiatanPage} from './pages/list-kegiatan.page'
 
 const pelaporanBreadCrumbs: Array<PageLink> = [
   {
@@ -32,7 +31,7 @@ const PelaporanPage: React.FC = () => {
     <Routes>
       <Route
         element={
-          <>          
+          <>
             <Outlet />
           </>
         }
@@ -74,11 +73,11 @@ const PelaporanPage: React.FC = () => {
           }
         />
         <Route
-          path='TambahLaporanKejadian'
+          path='tambah-laporan-kejadian'
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Kejadian</PageTitle>
-              <TambahLaporanKejadian />
+              <AddKejadianPage />
             </>
           }
         />
@@ -109,7 +108,7 @@ const PelaporanPage: React.FC = () => {
             </>
           }
         />
-        
+
         <Route index element={<Navigate to='/pelaporan' />} />
       </Route>
     </Routes>
