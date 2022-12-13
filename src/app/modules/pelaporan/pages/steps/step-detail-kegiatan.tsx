@@ -70,7 +70,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
   const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
-  const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
+  const asalLaporanSelect = values.kegiatan__jumlah_personil
 
   useEffect(() => {
     setVal(values)
@@ -80,8 +80,8 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
     dispatch(updateJenisKegiatanList())
   }, [])
 
-  console.log(values)
-  console.log(allValues)
+  // console.log(values)
+  // console.log(allValues)
   // console.log('tes', values)
 
   return (
@@ -165,12 +165,10 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           min='0'
           name='kegiatan__jumlah_personil'
           className='form-control'
+          onFocus={(e: any) => e.target.select()}
           onInput={(o: ChangeEvent<any>) => {
             dispatch(changedValue(ToFieldStateCE(o)))
           }}
-          // onKeyUp={(o: ChangeEvent<any>) => {
-          //   dispatch(changedValue(ToFieldStateCE(o)))
-          // }}
         />
         <div className='text-danger mt-2'>
           <ErrorMessage name='kegiatan__jumlah_personil' />
