@@ -73,6 +73,8 @@ export const AddKegiatanUmumPage: FC = () => {
     }
   }
 
+  // console.log(document.querySelectorAll("[role='tabpanel]"))
+
   return (
     <>
       <Formik
@@ -82,6 +84,73 @@ export const AddKegiatanUmumPage: FC = () => {
       >
         {({handleReset, handleSubmit, errors, values}) => (
           <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
+            <>
+              <div className='card'>
+                <div className='card-body'>
+                  <ul className='nav nav-tabs nav-line-tabs mb-5 fs-6'>
+                    <li className='nav-item'>
+                      <a className='nav-link active' data-bs-toggle='tab' href='#kt_tab_pane_1'>
+                        KEGIATAN
+                      </a>
+                    </li>
+                    {!isApelRapat(values) && (
+                      <li className='nav-item'>
+                        <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_2'>
+                          TINDAK LANJUT
+                        </a>
+                      </li>
+                    )}
+                    <li className='nav-item'>
+                      <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_3'>
+                        DOKUMENTASI
+                      </a>
+                    </li>
+                  </ul>
+
+                  <div className='tab-content' id='myTabContent'>
+                    <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
+                      <StepDetailKegiatan values={values} handleReset={handleReset} />
+                    </div>
+                    <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
+                      <StepTindaklanjut />
+                    </div>
+                    <div className='tab-pane fade' id='kt_tab_pane_3' role='tabpanel'>
+                      <StepDokumentasi />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='card mt-5'>
+                <div className='card-body'>
+                  <div className='row w-100'>
+                    <div className='col'></div>
+                    <div className='col'>
+                      <div className='row'>
+                        <a href='#' className='col-5 btn btn-flex btn-secondary px-6 m-3'>
+                          <span className='svg-icon svg-icon-2x'>
+                            <i className='fa-solid fa-arrow-left'></i>
+                          </span>
+                          <span className='d-flex flex-column align-items-start ms-2'>
+                            <span className='fs-3 fw-bold'>Kembali</span>
+                            <span className='fs-7'>ke Halaman Utama</span>
+                          </span>
+                        </a>
+                        <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
+                          <span className='svg-icon svg-icon-2x'>
+                            <i className='fa-solid fa-paper-plane'></i>
+                          </span>
+                          <span className='d-flex flex-column align-items-start ms-2'>
+                            <span className='fs-3 fw-bold'>Simpan</span>
+                            <span className='fs-7'>dan Selanjutnya</span>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+
             {/* <div className='card'>
               <div className='card-body'>
                 <ul className='nav nav-tabs nav-line-tabs mb-5 fs-6'>
@@ -162,73 +231,6 @@ export const AddKegiatanUmumPage: FC = () => {
                 </div>
               </div>
             </div> */}
-
-            <>
-              <div className='card'>
-                <div className='card-body'>
-                  <ul className='nav nav-tabs nav-line-tabs mb-5 fs-6'>
-                    <li className='nav-item'>
-                      <a className='nav-link active' data-bs-toggle='tab' href='#kt_tab_pane_1'>
-                        KEGIATAN
-                      </a>
-                    </li>
-                    {!isApelRapat(values) && (
-                      <li className='nav-item'>
-                        <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_2'>
-                          TINDAK LANJUT
-                        </a>
-                      </li>
-                    )}
-                    <li className='nav-item'>
-                      <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_3'>
-                        DOKUMENTASI
-                      </a>
-                    </li>
-                  </ul>
-
-                  <div className='tab-content' id='myTabContent'>
-                    <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
-                      <StepDetailKegiatan values={values} handleReset={handleReset} />
-                    </div>
-                    <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
-                      <StepTindaklanjut />
-                    </div>
-                    <div className='tab-pane fade' id='kt_tab_pane_3' role='tabpanel'>
-                      <StepDokumentasi />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className='card mt-5'>
-                <div className='card-body'>
-                  <div className='row w-100'>
-                    <div className='col'></div>
-                    <div className='col'>
-                      <div className='row'>
-                        <a href='#' className='col-5 btn btn-flex btn-secondary px-6 m-3'>
-                          <span className='svg-icon svg-icon-2x'>
-                            <i className='fa-solid fa-arrow-left'></i>
-                          </span>
-                          <span className='d-flex flex-column align-items-start ms-2'>
-                            <span className='fs-3 fw-bold'>Kembali</span>
-                            <span className='fs-7'>ke Halaman Utama</span>
-                          </span>
-                        </a>
-                        <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
-                          <span className='svg-icon svg-icon-2x'>
-                            <i className='fa-solid fa-paper-plane'></i>
-                          </span>
-                          <span className='d-flex flex-column align-items-start ms-2'>
-                            <span className='fs-3 fw-bold'>Simpan</span>
-                            <span className='fs-7'>dan Selanjutnya</span>
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
           </Form>
         )}
       </Formik>

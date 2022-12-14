@@ -42,6 +42,11 @@ export interface PelaporanKegiatanState extends Record<string, any> {
 export const initialState: PelaporanKegiatanState = {
   value: 0,
   list_jenis_kegiatan: [],
+  list_jenis_asal_laporan: [],
+  list_jenis_pengamanan: [],
+  list_detail_jenis_pasal: [],
+  list_detail_jenis_pasal_kegiatan: [],
+  list_detail_jenis_pasal_penyelesaian: [],
   list_jenis_pasal: [],
   list_jenis_penindakan: [],
   list_jenis_penyelesaian: [],
@@ -261,16 +266,64 @@ export const updateJenisKegiatanList: any = createAsyncThunk(
     return data
   }
 )
-
-export const updateJenisPasalList: any = createAsyncThunk(
-  'pelaporanKegiatan/updateJenisPasalList',
-  async (jenisKegiatan: number, thunkAPI) => {
-    const res = await axios.get(
-      `http://localhost:3001/jenis-perda-perkada/combobox?%24filter=${jenisKegiatan}&%24orderby=nama`
-    )
+export const updateJenisAsalLaporanList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateJenisAsalLaporanList',
+  async (thunkAPI) => {
+    const res = await axios.get(`http://localhost:3001/jenis-asal-laporan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+export const updateJenisPengamananList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateJenisPengamananList',
+  async (thunkAPI) => {
+    const res = await axios.get(`http://localhost:3001/jenis-pengamanan/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+
+export const updateDetailJenisPasalList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateDetailJenisPasalList',
+  async (thunkAPI) => {
+    const res = await axios.get(`http://localhost:3001/jenis-perda-perkada/?%24top=300`)
+
+    return res.data.data
+  }
+)
+export const updateDetailJenisPasalKegiatanList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateDetailJenisPasalKegiatanList',
+  async (val: any, thunkAPI) => {
+    const [objKegiatan, objState] = val
+    const jenisKegiatan = objKegiatan.target.value
+    const reduxState = objState.list_detail_jenis_pasal
+    const res = await axios.get(
+      `http://localhost:3001/map-master-perda/jenis-kegiatan?%24filter=jenis_kegiatan_id%20eq%20${jenisKegiatan}&%24top=300`
+    )
+
+    let filteredArr = reduxState.filter((obj1: any) =>
+      res.data.data.some((obj2: any) => obj2.perda_id === obj1.id)
+    )
+    const data = filteredArr.map((d: any) => ({label: d.pasal, value: String(d.id)}))
 
     return data
+  }
+)
+
+export const updateDetailJenisPasalPenyelesaianList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateDetailJenisPasalPenyelesaianList',
+  async (jenisKegiatan: number, thunkAPI) => {
+    const res = await axios.get(
+      `http://localhost:3001/map-master-perda/jenis-kegiatan?%24filter=jenis_kegiatan_id%20eq%20${jenisKegiatan}&%24top=300`
+    )
+    const val = await axios.get(`http://localhost:3001/jenis-perda-perkada/?%24top=300`)
+
+    let filteredArr = val.data.data.filter((obj1: any) =>
+      res.data.data.some((obj2: any) => obj2.perda_id === obj1.id)
+    )
+    // const data = filteredArr.map((d: any) => ({label: d.pasal, value: String(d.id)}))
+    console.log(filteredArr)
+    return filteredArr
   }
 )
 
@@ -293,8 +346,20 @@ export const pelaporanKegiatanSlice = createSlice({
     builder.addCase(updateJenisKegiatanList.fulfilled, (state, action) => {
       state.list_jenis_kegiatan = action.payload
     })
-    builder.addCase(updateJenisPasalList.fulfilled, (state, action) => {
-      state.list_jenis_pasal = action.payload
+    builder.addCase(updateJenisAsalLaporanList.fulfilled, (state, action) => {
+      state.list_jenis_asal_laporan = action.payload
+    })
+    builder.addCase(updateJenisPengamananList.fulfilled, (state, action) => {
+      state.list_jenis_pengamanan = action.payload
+    })
+    builder.addCase(updateDetailJenisPasalList.fulfilled, (state, action) => {
+      state.list_detail_jenis_pasal = action.payload
+    })
+    builder.addCase(updateDetailJenisPasalKegiatanList.fulfilled, (state, action) => {
+      state.list_detail_jenis_pasal_kegiatan = action.payload
+    })
+    builder.addCase(updateDetailJenisPasalPenyelesaianList.fulfilled, (state, action) => {
+      state.list_detail_jenis_pasal_penyelesaian = action.payload
     })
     builder.addCase(updateJenisPenyelesaianList.fulfilled, (state, action) => {
       state.list_jenis_penyelesaian = action.payload

@@ -42,23 +42,21 @@ export const StepDokumentasi: FC = () => {
           <Fragment>
             <div className='d-flex mb-2 mt-2 flex-end'>
               {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
+                <DropdownType
+                  as={ButtonGroup}
+                  key={idx}
+                  id={`dropdown-button-drop-${idx}`}
+                  size='sm'
+                  variant='light'
+                  title='Aksi'
+                >
+                  <Dropdown.Item
+                    href='#'
+                    //   onClick={() => konfirDel(record.id, record.status_pegawai)}
                   >
-                    <Dropdown.Item
-                      href='#'
-                      //   onClick={() => konfirDel(record.id, record.status_pegawai)}
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
+                    Hapus
+                  </Dropdown.Item>
+                </DropdownType>
               ))}
             </div>
           </Fragment>

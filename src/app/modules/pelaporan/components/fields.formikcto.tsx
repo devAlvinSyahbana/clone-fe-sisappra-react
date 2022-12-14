@@ -75,12 +75,12 @@ export const SelectField = ({
   options,
 }: OptionProps & SelectFieldProps & FieldProps) => (
   <Select
+    isLoading={options.length === 0}
     options={options}
     value={form.values.kegiatan__jenis_kegiatan_id === 0 ? '' : field.value}
     onChange={(o) => {
       field.onChange({target: {name: field.name, value: o}})
       form.setFieldValue(target, o?.value)
-      // console.log(form.values.kegiatan__jenis_kegiatan_selection.label)
       onChange({target: {name: target, value: o?.value}})
     }}
   />

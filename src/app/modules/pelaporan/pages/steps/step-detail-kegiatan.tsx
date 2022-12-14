@@ -7,9 +7,11 @@ import {
   reset,
   isLaporanMasyarakat,
   isPengamanan,
-  updateJenisPasalList,
-  updateJenisPenyelesaianList,
   updateJenisKegiatanList,
+  updateDetailJenisPasalList,
+  updateDetailJenisPasalKegiatanList,
+  updateJenisAsalLaporanList,
+  updateJenisPengamananList,
 } from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {
@@ -41,24 +43,6 @@ interface StepDetailKegiatanProps {
   handleReset?: (e?: React.SyntheticEvent<any>) => void
 }
 
-const asalLaporan = [
-  {label: 'CRM', value: '1'},
-  {label: '112', value: '2'},
-  {label: 'Media Sosial', value: '3'},
-  {label: 'Media Cetak', value: '4'},
-  {label: 'Pimpinan', value: '5'},
-  {label: 'Laporan Langsung', value: '6'},
-]
-
-const jenisPengamanan = [
-  {label: 'Rumah Dinas Pejabat', value: '1'},
-  {label: 'Sekitar Ruang Kerja Pejabat', value: '2'},
-  {label: 'Lokasi Kunjungan Pejabat', value: '3'},
-  {label: 'Tamu VIP', value: '4'},
-  {label: 'Gedung dan Aset Penting', value: '5'},
-  {label: 'Upacara dan Acara Penting', value: '6'},
-]
-
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   handleChange,
   handleBlur,
@@ -70,39 +54,44 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
   const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
-  const asalLaporanSelect = values.kegiatan__jumlah_personil
+  const asalLaporan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_asal_laporan)
+  const jenisPengamanan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_pengamanan)
 
-  useEffect(() => {
-    // setVal(values)
-  })
-
-  useEffect(() => {
+  const listMasterJenisValue = () => {
     dispatch(updateJenisKegiatanList())
+    dispatch(updateDetailJenisPasalList())
+  }
+
+  useEffect(() => {
+    listMasterJenisValue()
   }, [])
 
+  useEffect(() => {
+    if (isLaporanMasyarakat(values)) dispatch(updateJenisAsalLaporanList())
+    if (isPengamanan(values)) dispatch(updateJenisPengamananList())
+  }, [jenisKegiatanSelect])
+
   // console.log(values)
-  // console.log(allValues)
+  console.log(allValues)
   // console.log('tes', values)
 
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
-        {/* {isApelRapat(values) ? 'apel / rapat' : 'BUKAN'} */}
         {jenisKegiatanSelect}
         <button
           type='button'
           onClick={() => {
             handleReset?.()
             dispatch(reset())
-            dispatch(updateJenisKegiatanList())
+            listMasterJenisValue()
           }}
         >
           Hapus
         </button>
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
-          {/* <input onFocus={}={} /> */}
           <Field
             name='kegiatan__jenis_kegiatan_selection'
             target='kegiatan__jenis_kegiatan_id'
@@ -110,11 +99,9 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
-              // handleReset?.()
-              // dispatch(updateJenisKegiatanList())
+              const data = [o, allValues]
+              dispatch(updateDetailJenisPasalKegiatanList(data))
               dispatch(changedValue(ToFieldStateCE(o)))
-              dispatch(updateJenisPasalList(o.target.value))
-              dispatch(updateJenisPenyelesaianList(o.target.value))
             }}
           />
           <div className='text-danger mt-2'>

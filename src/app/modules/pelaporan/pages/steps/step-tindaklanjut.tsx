@@ -9,7 +9,9 @@ import {RootState} from '../../../../redux/store'
 export const StepTindaklanjut: FC = () => {
   const dispatch = useDispatch()
 
-  const listJenisPasal = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_pasal)
+  const listJenisPasal = useSelector(
+    (s: RootState) => s.pelaporanKegiatan.list_detail_jenis_pasal_kegiatan
+  )
   const listJenisPenindakan = useSelector(
     (s: RootState) => s.pelaporanKegiatan.list_jenis_penindakan
   )
