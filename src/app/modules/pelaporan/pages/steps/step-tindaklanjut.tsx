@@ -1,12 +1,30 @@
 import React, {ChangeEvent, FC} from 'react'
 import Select from 'react-select'
-import {ErrorMessage, Field} from 'formik'
+import {ErrorMessage, Field, FormikValues} from 'formik'
 import {DatePickerField, SelectField, ToFieldStateCE} from '../../components/fields.formikcto'
 import {changedValue} from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 
-export const StepTindaklanjut: FC = () => {
+interface StepTindakLanjutProps {
+  handleChange?: {
+    /** Classic React change handler, keyed by input name */
+    (e: React.ChangeEvent<any>): void
+    /** Preact-like linkState. Will return a handleChange function.  */
+    <T = string | React.ChangeEvent<any>>(field: T): T extends React.ChangeEvent<any>
+      ? void
+      : (e: string | React.ChangeEvent<any>) => void
+  }
+  values: FormikValues
+  handleBlur?: {
+    /** Classic React blur handler, keyed by input name */
+    (e: React.FocusEvent<any>): void
+    /** Preact-like linkState. Will return a handleBlur function. */
+    <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
+  }
+}
+
+export const StepTindaklanjut: FC<StepTindakLanjutProps> = (values) => {
   const dispatch = useDispatch()
 
   const listJenisPasal = useSelector(

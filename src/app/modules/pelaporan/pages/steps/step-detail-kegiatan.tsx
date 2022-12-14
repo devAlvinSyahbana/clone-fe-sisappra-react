@@ -39,8 +39,8 @@ interface StepDetailKegiatanProps {
     /** Preact-like linkState. Will return a handleBlur function. */
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
-  // setVal?: any
   handleReset?: (e?: React.SyntheticEvent<any>) => void
+  listMasterJenisValue: any
 }
 
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
@@ -48,7 +48,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   handleBlur,
   handleReset,
   values,
-  // setVal,
+  listMasterJenisValue,
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
@@ -56,11 +56,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
   const asalLaporan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_asal_laporan)
   const jenisPengamanan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_pengamanan)
-
-  const listMasterJenisValue = () => {
-    dispatch(updateJenisKegiatanList())
-    dispatch(updateDetailJenisPasalList())
-  }
 
   useEffect(() => {
     listMasterJenisValue()
@@ -71,15 +66,13 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
     if (isPengamanan(values)) dispatch(updateJenisPengamananList())
   }, [jenisKegiatanSelect])
 
-  // console.log(values)
-  console.log(allValues)
-  // console.log('tes', values)
+  console.log(values)
+  // console.log(allValues)
 
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
-        {jenisKegiatanSelect}
         <button
           type='button'
           onClick={() => {

@@ -9,6 +9,8 @@ import {
   PelaporanKegiatanState,
   changedValue,
   isApelRapat,
+  updateJenisKegiatanList,
+  updateDetailJenisPasalList,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
@@ -16,18 +18,17 @@ import {ToFieldStateBNV} from '../components/fields.formikcto'
 import {RootState} from '../../../redux/store'
 import useMultistepForm from './steps/useMultistepForm'
 
-const excludeJenisKegiatan = [
-  'SIDANG TIPIRING',
-  'PENERTIBAN BANGUNAN',
-  'KEGIATAN PPKM',
-  'LAPORAN MASYARAKAT',
-  'PENERTIBAN MINUMAN BERALKOHOL',
-  'PENGAMANAN',
-]
+// const excludeJenisKegiatan = [
+//   'SIDANG TIPIRING',
+//   'PENERTIBAN BANGUNAN',
+//   'KEGIATAN PPKM',
+//   'LAPORAN MASYARAKAT',
+//   'PENERTIBAN MINUMAN BERALKOHOL',
+//   'PENGAMANAN',
+// ]
 
 export const AddKegiatanUmumPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
-  // const [val, setVal] = useState<any>(initialState)
 
   const dispatch = useDispatch()
   const jenisKegiatanId = useSelector(
@@ -39,32 +40,31 @@ export const AddKegiatanUmumPage: FC = () => {
   //   ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
   // ])
 
-  const updateJenisUsahaList = () => {
-    axios.get(`http://localhost:3001/jenis-usaha/combobox?$oderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_usaha', data)))
-    })
-  }
+  // const updateJenisUsahaList = () => {
+  //   axios.get(`http://localhost:3001/jenis-usaha/combobox?$oderby=nama`).then((res) => {
+  //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+  //     dispatch(changedValue(ToFieldStateBNV('list_jenis_usaha', data)))
+  //   })
+  // }
 
-  const updateJenisPenindakanList = () => {
-    axios.get(`http://localhost:3001/jenis-penindakan/combobox?$oderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_penindakan', data)))
-    })
+  // const updateJenisPenindakanList = () => {
+  //   axios.get(`http://localhost:3001/jenis-penindakan/combobox?$oderby=nama`).then((res) => {
+  //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+  //     dispatch(changedValue(ToFieldStateBNV('list_jenis_penindakan', data)))
+  //   })
+  // }
+
+  const listMasterJenisValue = () => {
+    dispatch(updateJenisKegiatanList())
+    dispatch(updateDetailJenisPasalList())
   }
 
   useEffect(() => {
-    // updateJenisKegiatanList()
-    updateJenisUsahaList()
-    updateJenisPenindakanList()
-  }, [dispatch])
+    listMasterJenisValue()
+  }, [])
 
   const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
     try {
-      // if (!isLastStep) {
-      //   console.log('values')
-      //   return next()
-      // }
       console.log('laststep', values)
       alert(JSON.stringify(values, null, 2))
       actions.setSubmitting(false)
@@ -72,8 +72,6 @@ export const AddKegiatanUmumPage: FC = () => {
       console.log(error)
     }
   }
-
-  // console.log(document.querySelectorAll("[role='tabpanel]"))
 
   return (
     <>
@@ -109,10 +107,14 @@ export const AddKegiatanUmumPage: FC = () => {
 
                   <div className='tab-content' id='myTabContent'>
                     <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
-                      <StepDetailKegiatan values={values} handleReset={handleReset} />
+                      <StepDetailKegiatan
+                        values={values}
+                        handleReset={handleReset}
+                        listMasterJenisValue={listMasterJenisValue}
+                      />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
-                      <StepTindaklanjut />
+                      <StepTindaklanjut values={values} />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_3' role='tabpanel'>
                       <StepDokumentasi />
