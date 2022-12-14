@@ -27,17 +27,17 @@ const excludeJenisKegiatan = [
 
 export const AddTamuDaerahPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
-  const [val, setVal] = useState<any>(initialState)
+  // const [val, setVal] = useState<any>(initialState)
 
   const dispatch = useDispatch()
   const jenisKegiatanId = useSelector(
     (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
   )
 
-  const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-    <StepDetailKegiatan values={val} setVal={setVal} />,
-    ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
-  ])
+  // const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
+  //   <StepDetailKegiatan values={val} setVal={setVal} />,
+  //   ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
+  // ])
 
   const updateJenisKegiatanList = () => {
     axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
@@ -78,10 +78,10 @@ export const AddTamuDaerahPage: FC = () => {
 
   const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
     try {
-      if (!isLastStep) {
-        console.log('values')
-        return next()
-      }
+      // if (!isLastStep) {
+      //   console.log('values')
+      //   return next()
+      // }
       console.log('laststep', values)
       alert(JSON.stringify(values, null, 2))
       actions.setSubmitting(false)
@@ -102,18 +102,18 @@ export const AddTamuDaerahPage: FC = () => {
             <div className='card'>
               <div className='card-body'>
                 {/* <>{(values = {data})}</> */}
-                {step.type.name === 'StepDetailKegiatan' ? (
+                {/* {step.type.name === 'StepDetailKegiatan' ? (
                   <StepDetailKegiatan values={values} setVal={setVal} />
                 ) : (
                   step
-                )}
+                )} */}
                 <div className='card mt-5'>
                   <div className='card-body'>
                     <div className='row w-100'>
                       <div className='col'></div>
                       <div className='col'>
                         <div className='row d-flex justify-content-end'>
-                          {!isFirstStep && (
+                          {/* {!isFirstStep && (
                             <button
                               type='button'
                               className='col-5 btn btn-flex btn-secondary px-6 m-3'
@@ -142,7 +142,7 @@ export const AddTamuDaerahPage: FC = () => {
                                 {isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}
                               </span>
                             </span>
-                          </button>
+                          </button> */}
                           {/* {!isLastStep ? (
                             <button
                               // type='button'

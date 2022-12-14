@@ -37,7 +37,7 @@ interface StepDetailKegiatanProps {
     /** Preact-like linkState. Will return a handleBlur function. */
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
-  setVal?: any
+  // setVal?: any
   handleReset?: (e?: React.SyntheticEvent<any>) => void
 }
 
@@ -64,7 +64,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   handleBlur,
   handleReset,
   values,
-  setVal,
+  // setVal,
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
@@ -73,7 +73,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   const asalLaporanSelect = values.kegiatan__jumlah_personil
 
   useEffect(() => {
-    setVal(values)
+    // setVal(values)
   })
 
   useEffect(() => {

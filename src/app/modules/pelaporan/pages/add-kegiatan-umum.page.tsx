@@ -27,25 +27,17 @@ const excludeJenisKegiatan = [
 
 export const AddKegiatanUmumPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
-  const [val, setVal] = useState<any>(initialState)
+  // const [val, setVal] = useState<any>(initialState)
 
   const dispatch = useDispatch()
   const jenisKegiatanId = useSelector(
     (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
   )
 
-  const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-    <StepDetailKegiatan values={val} />,
-    ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
-  ])
-
-  // const updateJenisKegiatanList = () => {
-  //   axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
-  //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-  //     // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-  //     dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))
-  //   })
-  // }
+  // const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
+  //   <StepDetailKegiatan values={val} />,
+  //   ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
+  // ])
 
   const updateJenisUsahaList = () => {
     axios.get(`http://localhost:3001/jenis-usaha/combobox?$oderby=nama`).then((res) => {
@@ -69,10 +61,10 @@ export const AddKegiatanUmumPage: FC = () => {
 
   const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
     try {
-      if (!isLastStep) {
-        console.log('values')
-        return next()
-      }
+      // if (!isLastStep) {
+      //   console.log('values')
+      //   return next()
+      // }
       console.log('laststep', values)
       alert(JSON.stringify(values, null, 2))
       actions.setSubmitting(false)
@@ -90,15 +82,44 @@ export const AddKegiatanUmumPage: FC = () => {
       >
         {({handleReset, handleSubmit, errors, values}) => (
           <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
-            <div className='card'>
-              {/* <button onClick={handleReset}>test</button>
-                {isApelRapat(values) ? 'APEL/RAPAT' : 'BUKAN'} */}
+            {/* <div className='card'>
               <div className='card-body'>
-                {step.type.name === 'StepDetailKegiatan' ? (
-                  <StepDetailKegiatan values={values} setVal={setVal} handleReset={handleReset} />
-                ) : (
-                  step
-                )}
+                <ul className='nav nav-tabs nav-line-tabs mb-5 fs-6'>
+                  <li className='nav-item'>
+                    <a className='nav-link active' data-bs-toggle='tab' href='#kt_tab_pane_1'>
+                      KEGIATAN
+                    </a>
+                  </li>
+                  {!isApelRapat(values) && (
+                    <li className='nav-item'>
+                      <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_2'>
+                        TINDAK LANJUT
+                      </a>
+                    </li>
+                  )}
+                  <li className='nav-item'>
+                    <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_3'>
+                      DOKUMENTASI
+                    </a>
+                  </li>
+                </ul>
+                <div className='tab-content' id='myTabContent'>
+                  <div
+                    className='tab-pane fade show active'
+                    id={`kt_tab_pane_${currentStepIndex + 1}`}
+                    role='tabpanel'
+                  >
+                    {step.type.name === 'StepDetailKegiatan' ? (
+                      <StepDetailKegiatan
+                        values={values}
+                        setVal={setVal}
+                        handleReset={handleReset}
+                      />
+                    ) : (
+                      step
+                    )}
+                  </div>
+                </div>
                 <div className='card mt-5'>
                   <div className='card-body'>
                     <div className='row w-100'>
@@ -111,7 +132,6 @@ export const AddKegiatanUmumPage: FC = () => {
                               className='col-5 btn btn-flex btn-secondary px-6 m-3'
                               onClick={back}
                             >
-                              ``
                               <span className='svg-icon svg-icon-2x'>
                                 <i className='fa-solid fa-arrow-left'></i>
                               </span>
@@ -135,42 +155,15 @@ export const AddKegiatanUmumPage: FC = () => {
                               </span>
                             </span>
                           </button>
-                          {/* {!isLastStep ? (
-                            <button
-                              // type='button'
-                              className='col-5 btn btn-flex btn-primary px-6 m-3'
-                              onClick={next}
-                            >
-                              <span className='svg-icon svg-icon-2x'>
-                                <i className='fa-solid fa-paper-plane'></i>
-                              </span>
-                              <span className='d-flex flex-column align-items-start ms-2'>
-                                <span className='fs-3 fw-bold'>Simpan dan Lanjut</span>
-                              </span>
-                            </button>
-                          ) : (
-                            <button
-                              type='submit'
-                              className='col-5 btn btn-flex btn-primary px-6 m-3'
-                            >
-                              <span className='svg-icon svg-icon-2x'>
-                                <i className='fa-solid fa-paper-plane'></i>
-                              </span>
-                              <span className='d-flex flex-column align-items-start ms-2'>
-                                <span className='fs-3 fw-bold'>simpan</span>
-                              </span>
-                            </button>
-                          )} */}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                {/* <button type='submit'>{isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}</button> */}
               </div>
-            </div>
+            </div> */}
 
-            {/* <>
+            <>
               <div className='card'>
                 <div className='card-body'>
                   <ul className='nav nav-tabs nav-line-tabs mb-5 fs-6'>
@@ -179,11 +172,13 @@ export const AddKegiatanUmumPage: FC = () => {
                         KEGIATAN
                       </a>
                     </li>
-                    <li className='nav-item'>
-                      <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_2'>
-                        TINDAK LANJUT
-                      </a>
-                    </li>
+                    {!isApelRapat(values) && (
+                      <li className='nav-item'>
+                        <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_2'>
+                          TINDAK LANJUT
+                        </a>
+                      </li>
+                    )}
                     <li className='nav-item'>
                       <a className='nav-link' data-bs-toggle='tab' href='#kt_tab_pane_3'>
                         DOKUMENTASI
@@ -193,7 +188,7 @@ export const AddKegiatanUmumPage: FC = () => {
 
                   <div className='tab-content' id='myTabContent'>
                     <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
-                      <StepDetailKegiatan values={values} />
+                      <StepDetailKegiatan values={values} handleReset={handleReset} />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
                       <StepTindaklanjut />
@@ -216,7 +211,7 @@ export const AddKegiatanUmumPage: FC = () => {
                           </span>
                           <span className='d-flex flex-column align-items-start ms-2'>
                             <span className='fs-3 fw-bold'>Kembali</span>
-                            <span className='fs-7'>Some description</span>
+                            <span className='fs-7'>ke Halaman Utama</span>
                           </span>
                         </a>
                         <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
@@ -225,7 +220,7 @@ export const AddKegiatanUmumPage: FC = () => {
                           </span>
                           <span className='d-flex flex-column align-items-start ms-2'>
                             <span className='fs-3 fw-bold'>Simpan</span>
-                            <span className='fs-7'>Some description</span>
+                            <span className='fs-7'>dan Selanjutnya</span>
                           </span>
                         </button>
                       </div>
@@ -233,7 +228,7 @@ export const AddKegiatanUmumPage: FC = () => {
                   </div>
                 </div>
               </div>
-            </> */}
+            </>
           </Form>
         )}
       </Formik>
