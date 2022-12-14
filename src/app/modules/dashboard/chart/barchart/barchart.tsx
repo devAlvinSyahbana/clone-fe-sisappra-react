@@ -14,7 +14,6 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
   useLayoutEffect(() => {
     // Create root and chart
     const root = am5.Root.new(categoryField)
-    
 
     root.setThemes([am5themes_Animated.new(root)])
 
@@ -33,7 +32,7 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
 
     let xRenderer = am5xy.AxisRendererX.new(root, {minGridDistance: 30})
     xRenderer.labels.template.setAll({
-      rotation: -35,
+      rotation: -25,
       centerY: am5.p50,
       centerX: am5.p100,
       paddingRight: 15,
@@ -72,10 +71,10 @@ function Pie(props: {chartID: any; valueField?: any; categoryField: any}) {
     xAxis.data.setAll(chartID)
     series.data.setAll(chartID)
 
-    // series.columns.template.setAll({cornerRadiusTL: 5, cornerRadiusTR: 5})
-    // series.columns.template.adapters.add('fill', function (fill, target) {
-    //   return chart.get('colors').getIndex(series.columns.indexOf(target))
-    // })
+    series.columns.template.setAll({cornerRadiusTL: 5, cornerRadiusTR: 5})
+    series.columns.template.adapters.add('fill', function (fill, target) {
+      return chart.get('colors')?.getIndex(series.columns.indexOf(target))
+    })
 
     series.appear(1000)
     chart.appear(1000, 100)
