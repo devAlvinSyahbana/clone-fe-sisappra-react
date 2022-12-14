@@ -4,9 +4,10 @@ import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 import {LaporanKegiatan} from './pages/LaporanKegiatan'
 import {LaporanKejadian} from './pages/LaporanKejadian'
 import {AddKejadianPage} from './pages/add-kejadian.page'
+import {AddPengawasanPage} from './pages/add-pengawasan.page'
 import {LaporanPengawasan} from './pages/LaporanPengawasan'
 import {LaporanTamuDaerah} from './pages/LaporanTamuDaerah'
-import {TambahTamuDaerah} from './pages/TambahTamuDaerah'
+import {AddTamuDaerahPage} from './pages/add-tamu-daerah.page'
 import {DetailLaporanKegiatan} from './pages/DetailLaporanKegiatan'
 import {AddKegiatanUmumPage} from './pages/add-kegiatan-umum.page'
 import {ListKegiatanPage} from './pages/list-kegiatan.page'
@@ -91,6 +92,15 @@ const PelaporanPage: React.FC = () => {
           }
         />
         <Route
+          path='tambah-laporan-pengawasan'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Pengawasan</PageTitle>
+              <AddPengawasanPage />
+            </>
+          }
+        />
+        <Route
           path='LaporanTamuDaerah'
           element={
             <>
@@ -100,15 +110,14 @@ const PelaporanPage: React.FC = () => {
           }
         />
         <Route
-          path='TambahTamuDaerah'
+          path='tambah-laporan-tamu-daerah'
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Tamu Daerah</PageTitle>
-              <TambahTamuDaerah />
+              <AddTamuDaerahPage />
             </>
           }
         />
-
         <Route index element={<Navigate to='/pelaporan' />} />
       </Route>
     </Routes>

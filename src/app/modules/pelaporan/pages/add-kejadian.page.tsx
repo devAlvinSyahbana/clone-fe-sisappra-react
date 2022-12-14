@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState, FormEvent, useRef} from 'react'
-import {StepDetailKegiatan} from './steps/step-detail-kejadian'
-import {StepTindaklanjut} from './steps/step-tindaklanjut'
+import {StepDetailKejadian} from './steps/step-detail-kejadian'
+import {StepTindakLanjutKejadian} from './steps/step-tindaklanjut-kejadian'
 import {StepDokumentasi} from './steps/step-dokumentasi'
 import {useDispatch, useSelector} from 'react-redux'
 import {
@@ -26,8 +26,8 @@ export const AddKejadianPage: FC = () => {
   )
 
   const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-    <StepDetailKegiatan values={val} setVal={setVal} />,
-    ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
+    <StepDetailKejadian values={val} setVal={setVal} />,
+    ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindakLanjutKejadian />]),
   ])
 
   const updateJenisKegiatanList = () => {
@@ -83,9 +83,8 @@ export const AddKejadianPage: FC = () => {
           <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
             <div className='card'>
               <div className='card-body'>
-                {/* <>{(values = {data})}</> */}
-                {step.type.name === 'StepDetailKegiatan' ? (
-                  <StepDetailKegiatan values={values} setVal={setVal} />
+                {step.type.name === 'StepDetailKejadian' ? (
+                  <StepDetailKejadian values={values} setVal={setVal} />
                 ) : (
                   step
                 )}
@@ -101,7 +100,6 @@ export const AddKejadianPage: FC = () => {
                               className='col-5 btn btn-flex btn-secondary px-6 m-3'
                               onClick={back}
                             >
-                              ``
                               <span className='svg-icon svg-icon-2x'>
                                 <i className='fa-solid fa-arrow-left'></i>
                               </span>

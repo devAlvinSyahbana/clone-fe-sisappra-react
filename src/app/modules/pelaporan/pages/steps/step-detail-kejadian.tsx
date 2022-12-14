@@ -21,7 +21,7 @@ import {
 } from '../../components/fields.formikcto'
 import axios from 'axios'
 
-interface StepDetailKegiatanProps {
+interface StepDetailKejadianProps {
   handleChange?: {
     /** Classic React change handler, keyed by input name */
     (e: React.ChangeEvent<any>): void
@@ -40,7 +40,7 @@ interface StepDetailKegiatanProps {
   setVal: any
 }
 
-export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
+export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   handleChange,
   values,
   handleBlur,
@@ -215,7 +215,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             type='text'
             name='null'
             className='form-control'
-            placeholder='Masukkan Alamat Lengkap'
+            placeholder='Masukkan Uraian Kejadian'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
@@ -258,7 +258,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         </div>
 
         {/* Kejadian khusus untuk banjir */}
-        {/* Belum dimasukkan inisialisasi value jenis kejadian */}
+        {/* Belum dimasukkan inisialisasi value jenis kejadian berdasarkan banjir*/}
         {values && (
           <>
             <div className='mb-10'>
