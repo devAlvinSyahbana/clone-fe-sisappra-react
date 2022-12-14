@@ -4,9 +4,16 @@ import '../Layout.css'
 import React, {FC, useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
+import * as L from "leaflet";
 import jsonpetaTitikRawan from '../maps/peta-general.json'
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet'
 import ToggleButton from 'react-bootstrap/ToggleButton'
+import fireIcon from '../../../../assets/fire.svg'
+import ligtningIcon from '../../../../assets/cloud-lightning.svg'
+import cartIcon from '../../../../assets/food-stall.png'
+import homelessIcon from '../../../../assets/homeless.png'
+import politicIcon from '../../../../assets/politic.png'
+import handcuffsIcon from '../../../../assets/handcuffs.png'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const SUM_TITIK_RAWAN_URL = `${API_URL}/dashboard/titik-rawan-by-kejadian`
@@ -15,6 +22,43 @@ export const SUM_STATUS_KEPEGAWAIAN_URL = `${API_URL}`
 const PetaTitikRawan: FC = () => {
   const [filterTempat, setFilterTempat] = useState([])
   const [checked, setChecked] = useState(false)
+  
+
+  const LeafIcon = L.Icon.extend({
+    options: {}
+  });
+
+  const iconKebakaran = new L.Icon({
+    iconUrl:
+        fireIcon,
+    }),
+   iconBencana = new L.Icon({
+    iconUrl:
+    ligtningIcon
+    }
+  ),
+   iconPKL = new L.Icon({
+    iconUrl:
+        cartIcon
+    }
+  ),
+   iconPMKS = new L.Icon({
+    iconUrl:homelessIcon
+    }
+  ),
+   iconPolitik = new L.Icon({
+    iconUrl:politicIcon
+    }
+  ),
+   iconTramtibum = new L.Icon({
+    iconUrl: handcuffsIcon
+    }
+  )
+
+  
+
+  const [icon, setIcon] = useState(iconKebakaran);
+
 
   const fetchAPI = async (kejadian : any) => {
     if(filterTempat.length > 0){
@@ -32,13 +76,31 @@ const PetaTitikRawan: FC = () => {
         }
       })
       setFilterTempat(response.data.data)
+      if (kejadian === 'Kebakaran'){
+        setIcon((current : any) => current = iconKebakaran)
+      } 
+      else if(kejadian === 'Bencana'){
+        setIcon((current : any) => current = iconBencana)
+      }
+      else if(kejadian === 'PKL'){
+        setIcon((current : any) => current = iconPKL)
+      }
+      else if(kejadian === 'PMKS'){
+        setIcon((current : any) => current = iconPMKS)
+      }
+      else if(kejadian === 'Politik'){
+        setIcon((current : any) => current = iconPolitik)
+      }
+      else{
+        setIcon((current : any) => current = iconTramtibum)
+      }
     }
     // const filterTempat = responselayak.filter(
       //   (petaTitikRawan) => petaTitikRawan.address.country === 'Italy'
       // )
       return [filterTempat,setFilterTempat] as const
     }
-    const handler = async (kejadian : any) => {
+    const handler = async (kejadian : any, icon : any) => {
       // Changing the state
       filterTempat.splice(1, filterTempat.length)
       const response = await axios.get(`${SUM_TITIK_RAWAN_URL}`,{
@@ -47,11 +109,30 @@ const PetaTitikRawan: FC = () => {
         }
       })
       setFilterTempat(response.data.data)
-      return [filterTempat,setFilterTempat] as const
+      if (kejadian === 'Kebakaran'){
+        setIcon((current : any) => current = iconKebakaran)
+      } 
+      else if(kejadian === 'Bencana'){
+        setIcon((current : any) => current = iconBencana)
+      }
+      else if(kejadian === 'PKL'){
+        setIcon((current : any) => current = iconPKL)
+      }
+      else if(kejadian === 'PMKS'){
+        setIcon((current : any) => current = iconPMKS)
+      }
+      else if(kejadian === 'Politik'){
+        setIcon((current : any) => current = iconPolitik)
+      }
+      else{
+        setIcon((current : any) => current = iconTramtibum)
+      }
+      return [filterTempat,setFilterTempat, icon, setIcon] as const
     };
   useEffect(() => {
     fetchAPI('Politik')
   }, [])
+  
 
   return (
     <div className='card card-flush'>
@@ -61,7 +142,7 @@ const PetaTitikRawan: FC = () => {
             <div className='row mt'>
               <div className='col-md-12 col-lg-12 col-sm-12'>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Bencana')}
+                    onClick={handler.bind(this, 'Bencana', icon)}
                     className='mb-2'
                     id='toggle-check'
                     type='checkbox'
@@ -72,7 +153,7 @@ const PetaTitikRawan: FC = () => {
                     Bencana
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Kebakaran')}
+                    onClick={handler.bind(this, 'Kebakaran', icon)}
                     className='mb-2'
                     id='toggle-check2'
                     type='checkbox'
@@ -83,7 +164,7 @@ const PetaTitikRawan: FC = () => {
                     Kebakaran
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'PKL')}
+                    onClick={handler.bind(this, 'PKL', icon)}
                     className='mb-2'
                     id='toggle-check3'
                     type='checkbox'
@@ -94,7 +175,7 @@ const PetaTitikRawan: FC = () => {
                     PKL
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'PMKS')}
+                    onClick={handler.bind(this, 'PMKS', icon)}
                     className='mb-2'
                     id='toggle-check4'
                     type='checkbox'
@@ -105,7 +186,7 @@ const PetaTitikRawan: FC = () => {
                     PMKS
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Politik')}
+                    onClick={handler.bind(this, 'Politik', icon)}
                     className='mb-2'
                     id='toggle-check5'
                     type='checkbox'
@@ -116,7 +197,7 @@ const PetaTitikRawan: FC = () => {
                     Politik
                   </ToggleButton>
                   <ToggleButton
-                    onClick={handler.bind(this, 'Tramtibum')}
+                    onClick={handler.bind(this, 'Tramtibum', icon)}
                     className='mb-2'
                     id='toggle-check6'
                     type='checkbox'
@@ -144,10 +225,13 @@ const PetaTitikRawan: FC = () => {
                   />
 
                   {filterTempat.map((petaTitikRawan) => (
+                    
                     <Marker
                       key={petaTitikRawan['id']}
                       position={[petaTitikRawan['lat'], petaTitikRawan['long']]}
+                      icon={icon}
                     >
+
                       <Popup position={[petaTitikRawan['lat'], petaTitikRawan['long']]}>
                         <div>
                           <h2>{'Lokasi : ' + petaTitikRawan['lokasi'] +', '+ petaTitikRawan['nama_kel']}</h2>
