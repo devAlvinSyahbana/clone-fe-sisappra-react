@@ -49,6 +49,6 @@ function Pie(props: {chartID?: any; valueField?: any; categoryField?: any}) {
     legend.data.setAll(series.dataItems)
   }, [chartID, valueField, categoryField])
 
-  return <div id={categoryField} style={{height: 600}}></div>
+  return <div id={categoryField} style={{height: 320}}></div>
 }
 export default Pie
