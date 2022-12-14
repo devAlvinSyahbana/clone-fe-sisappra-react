@@ -70,7 +70,7 @@ export const Kepegawaian: FC = () => {
             </div>
             <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
-                <div className='card-header bg-primary'>
+                <div className='card-header bg-primary justify-content-center'>
                   <h3 className='card-title text-center text-white'>
                     Jumlah Personil Satpol PP Berdasarkan Status Kepegawaian (PNS, PTT, PJLP)
                   </h3>
@@ -86,7 +86,7 @@ export const Kepegawaian: FC = () => {
             </div>
             <div className='col-md-6 col-lg-6 col-sm-12 mb-6'>
               <div className='card card-bordered border-primary'>
-                <div className='card-header bg-primary'>
+                <div className='card-header bg-primary justify-content-center'>
                   <h3 className='card-title text-center text-white'>
                     Jumlah Personil Satpol PP Berdasarkan Tingkat Pendidikan Terakhir (SMA, S1, S2,
                     S3)
