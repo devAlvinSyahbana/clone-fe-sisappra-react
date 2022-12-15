@@ -1,7 +1,12 @@
 import React, {ChangeEvent, FC} from 'react'
 import Select from 'react-select'
 import {ErrorMessage, Field, FormikValues} from 'formik'
-import {DatePickerField, SelectField, ToFieldStateCE} from '../../components/fields.formikcto'
+import {
+  DatePickerField,
+  rupiah,
+  SelectField,
+  ToFieldStateCE,
+} from '../../components/fields.formikcto'
 import {
   changedValue,
   updateDetailJenisPasalPenyelesaianList,
@@ -328,6 +333,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                   type='number'
                   name='tindak_lanjut__denda__non_pengadilan'
                   className='form-control'
+                  component={rupiah}
                   onKeyUp={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
                   }}
