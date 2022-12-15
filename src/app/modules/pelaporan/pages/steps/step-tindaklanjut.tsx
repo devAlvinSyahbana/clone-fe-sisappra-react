@@ -1,12 +1,7 @@
 import React, {ChangeEvent, FC} from 'react'
 import Select from 'react-select'
 import {ErrorMessage, Field, FormikValues} from 'formik'
-import {
-  DatePickerField,
-  rupiah,
-  SelectField,
-  ToFieldStateCE,
-} from '../../components/fields.formikcto'
+import {DatePickerField, SelectField, ToFieldStateCE} from '../../components/fields.formikcto'
 import {
   changedValue,
   updateDetailJenisPasalPenyelesaianList,
@@ -331,10 +326,11 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 <label className='required form-label'>Non Pengadilan</label>
                 <Field
                   type='number'
+                  min='0'
                   name='tindak_lanjut__denda__non_pengadilan'
                   className='form-control'
-                  component={rupiah}
-                  onKeyUp={(o: ChangeEvent<any>) => {
+                  onFocus={(e: any) => e.target.select()}
+                  onInput={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
                   }}
                 />

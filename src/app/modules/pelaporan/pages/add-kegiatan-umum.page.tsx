@@ -13,13 +13,13 @@ import {
   updateDetailJenisPasalList,
   updateJenisPenindakanList,
   updateJenisUsahaList,
+  updateJenisPenyelesaianList,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
 import {ToFieldStateBNV} from '../components/fields.formikcto'
 import {RootState} from '../../../redux/store'
 import useMultistepForm from './steps/useMultistepForm'
-import {updateJenisPenyelesaianList} from '../../../redux/slices/pelaporan-tamu-daerah.slice'
 
 // const excludeJenisKegiatan = [
 //   'SIDANG TIPIRING',
@@ -35,25 +35,6 @@ export const AddKegiatanUmumPage: FC = () => {
 
   const dispatch = useDispatch()
   const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
-
-  // const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-  //   <StepDetailKegiatan values={val} />,
-  //   ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
-  // ])
-
-  // const updateJenisUsahaList = () => {
-  //   axios.get(`http://localhost:3001/jenis-usaha/combobox?$oderby=nama`).then((res) => {
-  //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-  //     dispatch(changedValue(ToFieldStateBNV('list_jenis_usaha', data)))
-  //   })
-  // }
-
-  // const updateJenisPenindakanList = () => {
-  //   axios.get(`http://localhost:3001/jenis-penindakan/combobox?$oderby=nama`).then((res) => {
-  //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-  //     dispatch(changedValue(ToFieldStateBNV('list_jenis_penindakan', data)))
-  //   })
-  // }
 
   const listMasterJenisValue = () => {
     dispatch(updateJenisKegiatanList())
