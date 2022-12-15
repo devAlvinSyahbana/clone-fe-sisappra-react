@@ -19,11 +19,11 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   kegiatan__jam: string
   kegiatan__lokasi: string
 
-  // tindak_lanjut__administrasi__jenis_pasal_id: number
+  tindak_lanjut__administrasi__jenis_pasal_id: number
   // tindak_lanjut__administrasi__jenis_penertiban: string
   // tindak_lanjut__administrasi__jenis_pelanggaran: string
   // tindak_lanjut__administrasi__perda_perkada: string
-  // tindak_lanjut__administrasi__penyelesaian_id: number
+  tindak_lanjut__administrasi__penyelesaian_id: number
 
   // tindak_lanjut__identitas_pelanggar__no_bap: string
   // tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: string
@@ -31,10 +31,10 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   // tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: string
   // tindak_lanjut__identitas_pelanggar__nik: string
   // tindak_lanjut__identitas_pelanggar__alamat: string
-  // tindak_lanjut__identitas_pelanggar__jenis_usaha_id: number
+  tindak_lanjut__identitas_pelanggar__jenis_usaha_id: number
 
-  // tindak_lanjut__jenis_penindakan_id: number
-  // tindak_lanjut__jumlah_pelanggar: number
+  tindak_lanjut__jenis_penindakan_id: number
+  tindak_lanjut__jumlah_pelanggar: number
   // tindak_lanjut__denda__non_pengadilan: number
   // tindak_lanjut__denda__tanggal_setor: string
   // tindak_lanjut__denda__nama_bank: string
@@ -76,16 +76,16 @@ export const initialState: PelaporanKegiatanState = {
   tindak_lanjut__administrasi__perda_perkada: '',
   tindak_lanjut__administrasi__penyelesaian_id: 0,
 
-  // tindak_lanjut__identitas_pelanggar__no_bap: '3232323',
-  // tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: '3232323',
-  // tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: '3232323',
-  // tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: '3232323',
-  // tindak_lanjut__identitas_pelanggar__nik: '3232323',
-  // tindak_lanjut__identitas_pelanggar__alamat: '3232323',
-  // tindak_lanjut__identitas_pelanggar__jenis_usaha_id: 0,
+  tindak_lanjut__identitas_pelanggar__no_bap: '',
+  tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: '',
+  tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: '',
+  tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: '',
+  tindak_lanjut__identitas_pelanggar__nik: '',
+  tindak_lanjut__identitas_pelanggar__alamat: '',
+  tindak_lanjut__identitas_pelanggar__jenis_usaha_id: 0,
 
-  // tindak_lanjut__jenis_penindakan_id: 0,
-  // tindak_lanjut__jumlah_pelanggar: 0,
+  tindak_lanjut__jenis_penindakan_id: 0,
+  tindak_lanjut__jumlah_pelanggar: 0,
   // tindak_lanjut__denda__non_pengadilan: 50000,
   // tindak_lanjut__denda__tanggal_setor: '2022-11-01',
   // tindak_lanjut__denda__nama_bank: 'BCA',
@@ -185,61 +185,92 @@ export const createSchemaPelaporanKegiatan = [
     //   .max(64)
     //   .required()
     //   .label('Perda Perkada'),
-    // tindak_lanjut__administrasi__penyelesaian_id: Yup.number()
-    //   .integer()
-    //   .moreThan(0)
-    //   .required()
-    //   .label('Penyelesaian'),
-    // tindak_lanjut__administrasi__penyelesaian_selection: Yup.object().required(),
+
+    tindak_lanjut__administrasi__penyelesaian_id: Yup.number().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.number().notRequired(),
+        otherwise: Yup.number().integer().moreThan(0).required().label('Penyelesaian'),
+      }
+    ),
+    tindak_lanjut__administrasi__penyelesaian_selection: Yup.object(),
 
     // tindak_lanjut__identitas_pelanggar__no_bap: Yup.string()
     //   .min(3)
     //   .max(16)
     //   .required()
     //   .label('NO BAP'),
-    // tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string()
-    //   .min(3)
-    //   .max(64)
-    //   .required()
-    //   .label('Nama Penanggung Jawab'),
-    // tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string()
-    //   .min(3)
-    //   .max(64)
-    //   .required()
-    //   .label('Nama Tempat Usaha'),
-    // tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string()
-    //   .min(3)
-    //   .max(256)
-    //   .required()
-    //   .label('Alamat Tempat Usaha'),
-    // tindak_lanjut__identitas_pelanggar__nik: Yup.string()
-    //   .min(3)
-    //   .max(32)
-    //   .required()
-    //   .label('NIK/Pasport Pelanggar'),
-    // tindak_lanjut__identitas_pelanggar__alamat: Yup.string()
-    //   .min(3)
-    //   .max(32)
-    //   .required()
-    //   .label('Alamat Pelanggar'),
-    // tindak_lanjut__identitas_pelanggar__jenis_usaha_id: Yup.number()
-    //   .integer()
-    //   .moreThan(0)
-    //   .required()
-    //   .label('Jenis Usaha'),
-    // tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object().required(),
+    tindak_lanjut__identitas_pelanggar__no_bap: Yup.string().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.string().notRequired(),
+        otherwise: Yup.string().min(3).max(32).required().label('NO BAP'),
+      }
+    ),
+    tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.string().notRequired(),
+        otherwise: Yup.string().min(3).max(64).required().label('Nama Penanggung Jawab'),
+      }
+    ),
+    tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.string().notRequired(),
+        otherwise: Yup.string().min(3).max(64).required().label('Nama Tempat Usaha'),
+      }
+    ),
+    tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.string().notRequired(),
+        otherwise: Yup.string().min(3).max(256).required().label('Alamat Tempat Usaha'),
+      }
+    ),
+    tindak_lanjut__identitas_pelanggar__nik: Yup.string().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.string().notRequired(),
+        otherwise: Yup.string().min(3).max(32).required().label('NIK/Pasport Pelanggar'),
+      }
+    ),
+    tindak_lanjut__identitas_pelanggar__alamat: Yup.string().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.string().notRequired(),
+        otherwise: Yup.string().min(3).max(32).required().label('Alamat Pelanggar'),
+      }
+    ),
+    tindak_lanjut__identitas_pelanggar__jenis_usaha_id: Yup.number().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.number().notRequired(),
+        otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Usaha'),
+      }
+    ),
+    tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object(),
 
-    // tindak_lanjut__jenis_penindakan_id: Yup.number()
-    //   .integer()
-    //   .moreThan(0)
-    //   .required()
-    //   .label('Penindakan'),
-    // tindak_lanjut__jenis_penindakan_selection: Yup.object().required(),
-    // tindak_lanjut__jumlah_pelanggar: Yup.number()
-    //   .integer()
-    //   .moreThan(0)
-    //   .required()
-    //   .label('Jumlah Pelanggar'),
+    tindak_lanjut__jenis_penindakan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Penindakan'),
+    }),
+    tindak_lanjut__jenis_penindakan_selection: Yup.object(),
+
+    tindak_lanjut__jumlah_pelanggar: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Personil'),
+    }),
     // tindak_lanjut__denda__non_pengadilan: Yup.number()
     //   .integer()
     //   .moreThan(1000)
@@ -356,6 +387,16 @@ export const updateJenisPenindakanList: any = createAsyncThunk(
     return data
   }
 )
+export const updateJenisUsahaList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateJenisUsahaList',
+  async (thunkAPI) => {
+    const res = await axios.get(`${API_URL}/jenis-usaha/combobox?%24orderby=nama
+`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+
+    return data
+  }
+)
 
 export const pelaporanKegiatanSlice = createSlice({
   name: 'pelaporanKegiatan',
@@ -385,6 +426,9 @@ export const pelaporanKegiatanSlice = createSlice({
     builder.addCase(updateJenisPenindakanList.fulfilled, (state, action) => {
       state.list_jenis_penindakan = action.payload
     })
+    builder.addCase(updateJenisUsahaList.fulfilled, (state, action) => {
+      state.list_jenis_usaha = action.payload
+    })
   },
   reducers: {
     changedValue: (
@@ -405,12 +449,17 @@ export const pelaporanKegiatanSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 
+// BANGUNAN, TIPIRING no penindakan
+// lAPORAN MASYARAKAT bukan jumlah pelanggar tapi jumlah penindakan
+
 export const isTipiring = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'SIDANG TIPIRING'
 export const isLaporanMasyarakat = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'LAPORAN MASYARAKAT'
 export const isPengamanan = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'PENGAMANAN'
+export const isPenertibanBangunan = (formikValues: any) =>
+  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'PENERTIBAN BANGUNAN'
 export const isApelRapat = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'APEL' ||
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'RAPAT'

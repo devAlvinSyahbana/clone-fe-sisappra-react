@@ -112,6 +112,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               name='tindak_lanjut__administrasi__jenis_penertiban'
               className='form-control'
               placeholder='Pilih Jenis Pasal di Dropdown diatas'
+              disabled
             />
             <div className='text-danger mt-2'>
               <ErrorMessage name='tindak_lanjut__administrasi__jenis_penertiban' />
@@ -126,6 +127,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               name='tindak_lanjut__administrasi__jenis_pelanggaran'
               className='form-control text-wrap'
               placeholder='Pilih Jenis Pasal di Dropdown diatas'
+              disabled
             />
             <div className='text-danger mt-2'>
               <ErrorMessage name='tindak_lanjut__administrasi__jenis_pelanggaran' />
@@ -139,6 +141,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               name='tindak_lanjut__administrasi__perda_perkada'
               className='form-control text-wrap'
               placeholder='Pilih Jenis Pasal di Dropdown diatas'
+              disabled
             />
             <div className='text-danger mt-2'>
               <ErrorMessage name='tindak_lanjut__administrasi__perda_perkada' />
@@ -146,236 +149,241 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
           </div>
         </>
 
-        <div className='row'>
-          <div className='col form-group'>
-            <label className='required form-label'>Penyelesaian</label>
-            <Field
-              name='tindak_lanjut__administrasi__penyelesaian_selection'
-              target='tindak_lanjut__administrasi__penyelesaian_id'
-              className='form-control'
-              component={SelectField}
-              options={listJenisPenyelesaian}
-              onChange={(o: ChangeEvent<any>) => {
-                dispatch(changedValue(ToFieldStateCE(o)))
-              }}
-            />
-            <div className='text-danger mt-2'>
-              <ErrorMessage name='tindak_lanjut__administrasi__penyelesaian_id' />
-            </div>
-          </div>
-          <div className='col form-group'>
-            <label className='required form-label'>Penindakan</label>
-            <Field
-              name='tindak_lanjut__jenis_penindakan_selection'
-              target='tindak_lanjut__jenis_penindakan_id'
-              className='form-control'
-              component={SelectField}
-              options={listJenisPenindakan}
-              onChange={(o: ChangeEvent<any>) => {
-                dispatch(changedValue(ToFieldStateCE(o)))
-              }}
-            />
-            <div className='text-danger mt-2'>
-              <ErrorMessage name='tindak_lanjut__jenis_penindakan_id' />
-            </div>
-          </div>
-        </div>
-
-        <div className='row mt-5'>
-          <div className='col'>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <h3 className='fw-bolder text-dark'>IDENTITAS NAMA / USAHA</h3>
-            <div className='form-group'>
-              <label className='required form-label'>Nomor BAP</label>
-              <Field
-                type='text'
-                name='tindak_lanjut__identitas_pelanggar__no_bap'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__identitas_pelanggar__no_bap' />
-              </div>
-            </div>
-            <div className='form-group mb-10'>
-              <label className='required form-label'>Nama/Penanggungjawab</label>
-              <Field
-                type='text'
-                name='tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab' />
-              </div>
-            </div>
-            <div className='form-group mb-10'>
-              <label className='required form-label'>Nama Usaha/Tempat</label>
-              <Field
-                type='text'
-                name='tindak_lanjut__identitas_pelanggar__nama_tempat_usaha'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__identitas_pelanggar__nama_tempat_usaha' />
-              </div>
-            </div>
-            <div className='form-group mb-10'>
-              <label className='required form-label'>Alamat Usaha/Tempat</label>
-              <Field
-                as='textarea'
-                type='text'
-                name='tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha' />
+        {/* Baris: penyelesaian dan Penindakan */}
+        <>
+          <div className='row'>
+            <div className='col'>
+              <div className='mb-10 form-group'>
+                <label className='required form-label'>Penyelesaian</label>
+                <Field
+                  name='tindak_lanjut__administrasi__penyelesaian_selection'
+                  target='tindak_lanjut__administrasi__penyelesaian_id'
+                  className='form-control'
+                  component={SelectField}
+                  options={listJenisPenyelesaian}
+                  onChange={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__administrasi__penyelesaian_id' />
+                </div>
               </div>
             </div>
 
-            <div className='form-group mb-10'>
-              <label className='required form-label'>Alamat Pelanggar</label>
-              <Field
-                as='textarea'
-                type='text'
-                name='tindak_lanjut__identitas_pelanggar__alamat'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__identitas_pelanggar__alamat' />
+            <div className='col'>
+              <div className='mb-10 form-group'>
+                <label className='required form-label'>Penindakan</label>
+                <Field
+                  name='tindak_lanjut__jenis_penindakan_selection'
+                  target='tindak_lanjut__jenis_penindakan_id'
+                  className='form-control'
+                  component={SelectField}
+                  options={listJenisPenindakan}
+                  onChange={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__jenis_penindakan_id' />
+                </div>
               </div>
-            </div>
-            <div className='form-group mb-10'>
-              <label className='required form-label'>NIK/Paspport</label>
-              <Field
-                type='text'
-                name='tindak_lanjut__identitas_pelanggar__nik'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__identitas_pelanggar__nik' />
-              </div>
-            </div>
-            <div className='form-group mb-10'>
-              <label className='required form-label'>Jenis Usaha/Tempat</label>
-              <Field
-                name='tindak_lanjut__identitas_pelanggar__jenis_usaha_selection'
-                target='tindak_lanjut__identitas_pelanggar__jenis_usaha_id'
-                className='form-control'
-                component={SelectField}
-                options={listJenisUsaha}
-                onChange={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__identitas_pelanggar__jenis_usaha_id' />
+              <div className='mb-10 form-group'>
+                <label className='required form-label'>Jumlah Pelanggar</label>
+                <Field
+                  type='number'
+                  min='0'
+                  name='tindak_lanjut__jumlah_pelanggar'
+                  className='form-control'
+                  onFocus={(e: any) => e.target.select()}
+                  onInput={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__jumlah_pelanggar' />
+                </div>
               </div>
             </div>
           </div>
+        </>
 
-          <div className='col'>
-            <div className='form-group'>
-              <label className='required form-label'>Jumlah Pelanggar</label>
-              <Field
-                type='number'
-                name='tindak_lanjut__jumlah_pelanggar'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__jumlah_pelanggar' />
+        {/* Baris: Identitas Nama Usaha dan Denda / dll */}
+        <>
+          <div className='row mt-5'>
+            <div className='col'>
+              <h3 className='fw-bolder text-dark'>IDENTITAS NAMA / USAHA</h3>
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Nomor BAP</label>
+                <Field
+                  type='text'
+                  name='tindak_lanjut__identitas_pelanggar__no_bap'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__identitas_pelanggar__no_bap' />
+                </div>
+              </div>
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Nama / Penanggungjawab</label>
+                <Field
+                  type='text'
+                  name='tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab' />
+                </div>
+              </div>
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Nama Usaha / Tempat</label>
+                <Field
+                  type='text'
+                  name='tindak_lanjut__identitas_pelanggar__nama_tempat_usaha'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__identitas_pelanggar__nama_tempat_usaha' />
+                </div>
+              </div>
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Alamat Usaha / Tempat</label>
+                <Field
+                  as='textarea'
+                  type='text'
+                  name='tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha' />
+                </div>
+              </div>
+              <div className='form-group mb-10'>
+                <label className='required form-label'>NIK / Paspport</label>
+                <Field
+                  type='text'
+                  name='tindak_lanjut__identitas_pelanggar__nik'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__identitas_pelanggar__nik' />
+                </div>
+              </div>
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Alamat Pelanggar</label>
+                <Field
+                  as='textarea'
+                  type='text'
+                  name='tindak_lanjut__identitas_pelanggar__alamat'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__identitas_pelanggar__alamat' />
+                </div>
+              </div>
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Jenis Usaha / Tempat</label>
+                <Field
+                  name='tindak_lanjut__identitas_pelanggar__jenis_usaha_selection'
+                  target='tindak_lanjut__identitas_pelanggar__jenis_usaha_id'
+                  className='form-control'
+                  component={SelectField}
+                  options={listJenisUsaha}
+                  onChange={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__identitas_pelanggar__jenis_usaha_id' />
+                </div>
               </div>
             </div>
 
-            <div className='form-group'>
-              <h3 className='fw-bolder text-dark mt-12'>JUMLAH DENDA</h3>
-            </div>
-
-            <div className='form-group mb-10'>
-              <label className='required form-label'>Non Pengadilan</label>
-              <Field
-                type='number'
-                name='tindak_lanjut__denda__non_pengadilan'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__denda__non_pengadilan' />
+            <div className='col'>
+              <div className='form-group'>
+                <h3 className='fw-bolder text-dark'>JUMLAH DENDA</h3>
               </div>
-            </div>
 
-            <div className='form-group mb-10'>
-              <label className='required form-label'>Tanggal Setor</label>
-              <Field
-                name='tindak_lanjut__denda__tanggal_setor'
-                className='form-control'
-                component={DatePickerField}
-                onChange={(o: any) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__denda__tanggal_setor' />
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Non Pengadilan</label>
+                <Field
+                  type='number'
+                  name='tindak_lanjut__denda__non_pengadilan'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__denda__non_pengadilan' />
+                </div>
               </div>
-            </div>
 
-            <div className='form-group mb-10'>
-              <label className='required form-label'>Nama Bank</label>
-              <Field
-                type='text'
-                name='tindak_lanjut__denda__nama_bank'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__denda__nama_bank' />
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Tanggal Setor</label>
+                <Field
+                  name='tindak_lanjut__denda__tanggal_setor'
+                  className='form-control'
+                  component={DatePickerField}
+                  onChange={(o: any) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__denda__tanggal_setor' />
+                </div>
               </div>
-            </div>
 
-            <div className='form-group mb-10'>
-              <label className='required form-label'>No Validasi Bank</label>
-              <Field
-                type='text'
-                name='tindak_lanjut__denda__no_validasi_bank'
-                className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__denda__no_validasi_bank' />
+              <div className='form-group mb-10'>
+                <label className='required form-label'>Nama Bank</label>
+                <Field
+                  type='text'
+                  name='tindak_lanjut__denda__nama_bank'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__denda__nama_bank' />
+                </div>
+              </div>
+
+              <div className='form-group mb-10'>
+                <label className='required form-label'>No Validasi Bank</label>
+                <Field
+                  type='text'
+                  name='tindak_lanjut__denda__no_validasi_bank'
+                  className='form-control'
+                  onKeyUp={(o: ChangeEvent<any>) => {
+                    dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                />
+                <div className='text-danger mt-2'>
+                  <ErrorMessage name='tindak_lanjut__denda__no_validasi_bank' />
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </>
       </div>
     </div>
   )
