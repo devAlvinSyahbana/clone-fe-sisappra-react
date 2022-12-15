@@ -6,7 +6,7 @@ import {changedValue} from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 
-export const StepTindaklanjutKejadian: FC = () => {
+export const StepTindakLanjutKejadian: FC = () => {
   const dispatch = useDispatch()
 
   const listJenisPasal = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_pasal)
