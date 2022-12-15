@@ -60,20 +60,18 @@ export const initialState: PelaporanKegiatanState = {
   kegiatan__tanggal: '2022-01-23',
   kegiatan__jam: '08:00:00',
   kegiatan__lokasi: '',
-  // kegiatan__asal_laporan: '',
+  // kegiatan__asal_laporan_selection: [],
+  kegiatan__asal_laporan_id: 0,
   // kegiatan__jenis_pengamanan_selection: [],
-  // kegiatan__jenis_pengamanan_id: 0,
+  kegiatan__jenis_pengamanan_id: 0,
   // kegiatan__pengamanan_masalah: '',
   // kegiatan__pengamanan_pemecahan_masalah: '',
   // kegiatan__pengamanan_instansi_terkait: '',
 
-  // kegiatan__asal_laporan_selection: [],
-  // kegiatan__asal_laporan_id: 0,
-
-  // tindak_lanjut__administrasi__jenis_pasal_id: 0,
-  // tindak_lanjut__administrasi__jenis_penertiban: '',
-  // tindak_lanjut__administrasi__jenis_pelanggaran: '',
-  // tindak_lanjut__administrasi__perda_perkada: '',
+  tindak_lanjut__administrasi__jenis_pasal_id: 0,
+  tindak_lanjut__administrasi__jenis_penertiban: '',
+  tindak_lanjut__administrasi__jenis_pelanggaran: '',
+  tindak_lanjut__administrasi__perda_perkada: '',
   // tindak_lanjut__administrasi__penyelesaian_id: 0,
 
   // tindak_lanjut__identitas_pelanggar__no_bap: '3232323',
@@ -162,7 +160,23 @@ export const createSchemaPelaporanKegiatan = [
     //   .moreThan(0)
     //   .required()
     //   .label('Jenis Pasal'),
+    tindak_lanjut__administrasi__jenis_pasal_id: Yup.number().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.number().notRequired(),
+        otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Pasal'),
+      }
+    ),
     // tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().required(),
+    tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        then: Yup.object().notRequired(),
+        otherwise: Yup.object().required(),
+      }
+    ),
     // tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
     //   .min(3)
     //   .max(64)
@@ -304,8 +318,14 @@ export const updateDetailJenisPasalKegiatanList: any = createAsyncThunk(
     let filteredArr = reduxState.filter((obj1: any) =>
       res.data.data.some((obj2: any) => obj2.perda_id === obj1.id)
     )
-    const data = filteredArr.map((d: any) => ({label: d.pasal, value: String(d.id)}))
-
+    const data = filteredArr.map((d: any) => ({
+      label: d.pasal,
+      value: String(d.id),
+      penertiban: d.jenis_penertiban,
+      pelanggaran: d.jenis_pelanggaran,
+      perda: d.judul,
+    }))
+    // console.log(filteredArr)
     return data
   }
 )

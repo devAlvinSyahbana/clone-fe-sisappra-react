@@ -64,9 +64,9 @@ export const AddKegiatanUmumPage: FC = () => {
   }, [])
 
   const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
+    alert(JSON.stringify(values, null, 2))
     try {
       console.log('laststep', values)
-      alert(JSON.stringify(values, null, 2))
       actions.setSubmitting(false)
     } catch (error) {
       console.log(error)
@@ -80,7 +80,7 @@ export const AddKegiatanUmumPage: FC = () => {
         initialValues={initialState}
         onSubmit={submitPelaporanKegiatan}
       >
-        {({handleReset, handleSubmit, errors, values}) => (
+        {({handleReset, handleSubmit, errors, values, setFieldValue}) => (
           <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
             <>
               <div className='card'>
@@ -114,7 +114,7 @@ export const AddKegiatanUmumPage: FC = () => {
                       />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
-                      <StepTindaklanjut values={values} />
+                      <StepTindaklanjut values={values} setFieldValue={setFieldValue} />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_3' role='tabpanel'>
                       <StepDokumentasi />

@@ -67,12 +67,12 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   }, [jenisKegiatanSelect])
 
   console.log(values)
-  // console.log(allValues)
+  console.log(allValues)
 
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
-        <h2 className='fw-bolder text-dark mb-10'>Kegiatan</h2>
+        <h1 className='fw-bolder text-dark mb-10'>Kegiatan</h1>
         <button
           type='button'
           onClick={() => {
