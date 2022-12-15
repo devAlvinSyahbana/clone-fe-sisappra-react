@@ -52,20 +52,74 @@ export const AddKegiatanUmumPage: FC = () => {
   }, [])
 
   const submitPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
+    const bodyparam: PelaporanKegiatanState = {
+      kegiatan__jenis_kegiatan_id: allValues.kegiatan__jenis_kegiatan_id,
+      kegiatan__jumlah_personil: allValues.kegiatan__jumlah_personil,
+      kegiatan__uraian_kegiatan: allValues.kegiatan__uraian_kegiatan,
+      kegiatan__tanggal: allValues.kegiatan__tanggal,
+      kegiatan__jam: allValues.kegiatan__jam,
+      kegiatan__lokasi: allValues.kegiatan__lokasi,
+      tindak_lanjut__administrasi__jenis_pasal_id:
+        allValues.tindak_lanjut__administrasi__jenis_pasal_id,
+      tindak_lanjut__administrasi__jenis_penertiban:
+        allValues.tindak_lanjut__administrasi__jenis_penertiban,
+      tindak_lanjut__administrasi__jenis_pelanggaran:
+        allValues.tindak_lanjut__administrasi__jenis_pelanggaran,
+      tindak_lanjut__administrasi__perda_perkada:
+        allValues.tindak_lanjut__administrasi__perda_perkada,
+      tindak_lanjut__administrasi__penyelesaian_id:
+        allValues.tindak_lanjut__administrasi__penyelesaian_id,
+      tindak_lanjut__identitas_pelanggar__no_bap:
+        allValues.tindak_lanjut__identitas_pelanggar__no_bap,
+      tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab:
+        allValues.tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab,
+      tindak_lanjut__identitas_pelanggar__nama_tempat_usaha:
+        allValues.tindak_lanjut__identitas_pelanggar__nama_tempat_usaha,
+      tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha:
+        allValues.tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha,
+      tindak_lanjut__identitas_pelanggar__nik: allValues.tindak_lanjut__identitas_pelanggar__nik,
+      tindak_lanjut__identitas_pelanggar__alamat:
+        allValues.tindak_lanjut__identitas_pelanggar__alamat,
+      tindak_lanjut__identitas_pelanggar__jenis_usaha_id:
+        allValues.tindak_lanjut__identitas_pelanggar__jenis_usaha_id,
+      tindak_lanjut__jenis_penindakan_id: allValues.tindak_lanjut__jenis_penindakan_id,
+      tindak_lanjut__jumlah_pelanggar: allValues.tindak_lanjut__jumlah_pelanggar,
+      tindak_lanjut__denda__non_pengadilan: allValues.tindak_lanjut__denda__non_pengadilan,
+      tindak_lanjut__denda__tanggal_setor: allValues.tindak_lanjut__denda__tanggal_setor,
+      tindak_lanjut__denda__nama_bank: allValues.tindak_lanjut__denda__nama_bank,
+      tindak_lanjut__denda__no_validasi_bank: allValues.tindak_lanjut__denda__no_validasi_bank,
+      dokumentasi: [
+        {
+          file: null,
+          keterangan: null,
+        },
+      ],
+    }
+
+    // }
     // const res = await axios.post(`http://127.0.0.1:3002/kegiatan-umum/`)
     try {
-      console.log('laststep', values)
-      actions.setSubmitting(false)
+      const res = await axios.post(`http://localhost:3002/kegiatan-umum`, bodyparam)
+      if (res) {
+        console.log('laststep', values)
+        actions.setSubmitting(false)
+        Swal.fire({
+          icon: 'success',
+          text: 'Data berhasil disubmit',
+          showConfirmButton: false,
+          timer: 1500,
+          color: '#000000',
+        })
+      }
+      // alert(JSON.stringify(values, null, 2))
+    } catch (error) {
       Swal.fire({
-        icon: 'success',
-        text: 'Data berhasil disubmit',
+        icon: 'error',
+        title: 'Data gagal disimpan, harap mencoba lagi',
         showConfirmButton: false,
         timer: 1500,
-        color: '#000000',
       })
-      alert(JSON.stringify(values, null, 2))
-    } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

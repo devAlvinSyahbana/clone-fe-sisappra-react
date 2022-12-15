@@ -11,7 +11,7 @@ import axios from 'axios'
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanKegiatanState extends Record<string, any> {
-  value: number
+  // value: number
   kegiatan__jenis_kegiatan_id: number
   kegiatan__jumlah_personil: number
   kegiatan__uraian_kegiatan: string
@@ -42,7 +42,7 @@ export interface PelaporanKegiatanState extends Record<string, any> {
 }
 
 export const initialState: PelaporanKegiatanState = {
-  value: 0,
+  // value: 0,
   list_jenis_kegiatan: [],
   list_jenis_asal_laporan: [],
   list_jenis_pengamanan: [],
@@ -86,7 +86,7 @@ export const initialState: PelaporanKegiatanState = {
 
   tindak_lanjut__jenis_penindakan_id: 0,
   tindak_lanjut__jumlah_pelanggar: 0,
-  tindak_lanjut__denda__non_pengadilan: 50000,
+  tindak_lanjut__denda__non_pengadilan: 0,
   tindak_lanjut__denda__tanggal_setor: '2022-11-01',
   tindak_lanjut__denda__nama_bank: '',
   tindak_lanjut__denda__no_validasi_bank: '',
@@ -378,10 +378,11 @@ export const updateDetailJenisPasalPenyelesaianList: any = createAsyncThunk(
     )
 
     let filteredArr = reduxState.filter((obj1: any) =>
-      res.data.data.some((obj2: any) => obj2.jenis_penyelesaian_id === Number(obj1.value))
+      res.data.data.some((obj2: any) => obj2.jenis_penyelesaian_id === obj1.id)
     )
-    // console.log(data)
-    return filteredArr
+    const data = filteredArr.map((d: any) => ({label: d.nama, value: String(d.id)}))
+
+    return data
   }
 )
 
