@@ -2,14 +2,7 @@ import React, {ChangeEvent, FC, SyntheticEvent, useEffect, useState} from 'react
 import Select, {OptionProps} from 'react-select'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
-import {
-  changedValue,
-  isApelRapat,
-  isLaporanMasyarakat,
-  isPengamanan,
-  isTipiring,
-  updateJenisPenyelesaianList,
-} from '../../../../redux/slices/pelaporan-kegiatan.slice'
+import {changedValue, reset} from '../../../../redux/slices/pelaporan-tamu-daerah.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {
   DatePickerField,
@@ -20,7 +13,7 @@ import {
 } from '../../components/fields.formikcto'
 import axios from 'axios'
 
-interface StepDetailKegiatanProps {
+interface StepDetailKejadianProps {
   handleChange?: {
     /** Classic React change handler, keyed by input name */
     (e: React.ChangeEvent<any>): void
@@ -36,22 +29,22 @@ interface StepDetailKegiatanProps {
     /** Preact-like linkState. Will return a handleBlur function. */
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
-  setVal: any
+  handleReset?: (e?: React.SyntheticEvent<any>) => void
 }
 
-export const StepDetailTamuDaerah: FC<StepDetailKegiatanProps> = ({
+export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
   handleChange,
   values,
   handleBlur,
-  setVal,
+  handleReset,
 }) => {
   const dispatch = useDispatch()
-  const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
-  const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
+  const jenisKejadianList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kejadian)
+  const jenisKejadianSelect = values.kegiatan__jenis_kejadian_selection?.label
   const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
 
   useEffect(() => {
-    setVal(values)
+    // setVal(values)
   }, [dispatch])
 
   return (
@@ -74,68 +67,76 @@ export const StepDetailTamuDaerah: FC<StepDetailKegiatanProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Waktu Mulai Kunjungan</label>
-          <Field
-            name='kegiatan__jam_start'
-            className='form-control'
-            component={TimePickerField}
-            onChange={(o: any) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
-          <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__jam_start' />
+          <div className='row'>
+            <div className='col'>
+              <Field
+                name='kegiatan__jam_start'
+                className='form-control'
+                component={TimePickerField}
+                onChange={(o: any) => {
+                  dispatch(changedValue(ToFieldStateCE(o)))
+                }}
+              />
+              <div className='text-danger mt-2'>
+                <ErrorMessage name='kegiatan__jam_start' />
+              </div>
+            </div>
+            <div className='col'>
+              <Field
+                name='kegiatan__jam_end'
+                className='form-control'
+                component={TimePickerField}
+                onChange={(o: any) => {
+                  dispatch(changedValue(ToFieldStateCE(o)))
+                }}
+              />
+              <div className='text-danger mt-2'>
+                <ErrorMessage name='kegiatan__jam_end' />
+              </div>
+            </div>
           </div>
         </div>
         <div className='mb-10'>
-          <label className='required form-label'>Waktu Selesai Kunjungan</label>
-          <Field
-            name='kegiatan__jam_end'
-            className='form-control'
-            component={TimePickerField}
-            onChange={(o: any) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
-          <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__jam_end' />
-          </div>
-        </div>
-        <div className='mb-10'>
-          <label className='required form-label'>Asal Instansi</label>
+          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
+            Asal Instansi
+          </label>
           <Field
             type='text'
-            name='null'
+            name='kegiatan__pengamanan_masalah'
             className='form-control'
-            placeholder='Masukkan Asal Instansi'
+            placeholder='Masukkan asal instansi'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='keterangan' />
+            <ErrorMessage name='kegiatan__pengamanan_masalah' />
           </div>
         </div>
         <div className='mb-10'>
-          <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
             Jumlah Pengunjung
           </label>
           <Field
             type='number'
-            name='kegiatan__jumlah_personil'
+            name='kegiatan__pengamanan_masalah'
             className='form-control'
+            placeholder='Masukkan Jumlah Pengunjung'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__jumlah_personil' />
+            <ErrorMessage name='kegiatan__pengamanan_masalah' />
           </div>
         </div>
         <div className='mb-10'>
-          <label className='required form-label'>Maksud dan Tujuan</label>
+          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
+            Maksud dan Tujuan
+          </label>
           <Field
             type='text'
-            name='null'
+            name='kegiatan__pengamanan_masalah'
             className='form-control'
             placeholder='Masukkan Maksud dan Tujuan'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -143,14 +144,16 @@ export const StepDetailTamuDaerah: FC<StepDetailKegiatanProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='keterangan' />
+            <ErrorMessage name='kegiatan__pengamanan_masalah' />
           </div>
         </div>
         <div className='mb-10'>
-          <label className='required form-label'>Pejabat Penerima Kunjungan</label>
+          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
+            Pejabat Penerima Kunjungan
+          </label>
           <Field
             type='text'
-            name='null'
+            name='kegiatan__pengamanan_masalah'
             className='form-control'
             placeholder='Masukkan Pejabat Penerima Kunjungan'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -158,14 +161,16 @@ export const StepDetailTamuDaerah: FC<StepDetailKegiatanProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='keterangan' />
+            <ErrorMessage name='kegiatan__pengamanan_masalah' />
           </div>
         </div>
         <div className='mb-10'>
-          <label className='required form-label'>Tempat Kunjungan</label>
+          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
+            Tempat Kunjungan
+          </label>
           <Field
             type='text'
-            name='null'
+            name='kegiatan__pengamanan_masalah'
             className='form-control'
             placeholder='Masukkan Tempat Kunjungan'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -173,7 +178,7 @@ export const StepDetailTamuDaerah: FC<StepDetailKegiatanProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='keterangan' />
+            <ErrorMessage name='kegiatan__pengamanan_masalah' />
           </div>
         </div>
       </div>

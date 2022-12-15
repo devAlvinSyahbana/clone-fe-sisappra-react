@@ -1,40 +1,35 @@
 import React, {FC, useEffect, useState, FormEvent, useRef} from 'react'
 import {StepDetailTamuDaerah} from './steps/step-detail-tamu-daerah'
-import {StepTindaklanjut} from './steps/step-tindaklanjut'
-import {StepDokumentasi} from './steps/step-dokumentasi'
 import {useDispatch, useSelector} from 'react-redux'
 import {
-  createSchemaPelaporanKegiatan,
+  createSchemaPelaporanPengawasan,
   initialState,
-  PelaporanKegiatanState,
+  PelaporanPengawasanState,
   changedValue,
-  isApelRapat,
-} from '../../../redux/slices/pelaporan-kegiatan.slice'
+} from '../../../redux/slices/pelaporan-pengawasan-reklame.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
 import {ToFieldStateBNV} from '../components/fields.formikcto'
 import {RootState} from '../../../redux/store'
-import useMultistepForm from './steps/useMultistepForm'
 
 export const AddTamuDaerahPage: FC = () => {
-  const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
-  // const [val, setVal] = useState<any>(initialState)
+  const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanPengawasan[0])
+  const [val, setVal] = useState<any>(initialState)
 
   const dispatch = useDispatch()
   const jenisKegiatanId = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
+    (s: RootState) => s.pelaporanPengawasan.kejadian__jenis_pengawasan_id
   )
 
   // const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-  //   <StepDetailKegiatan values={val} setVal={setVal} />,
-  //   ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindaklanjut />, <StepDokumentasi />]),
+  //   <StepDetailKejadian values={val} setVal={setVal} />,
+  //   ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindakLanjutKejadian />]),
   // ])
 
-  const updateJenisKegiatanList = () => {
-    axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
+  const updateJenisKejadianList = () => {
+    axios.get(`http://localhost:3001/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
       const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))
+      dispatch(changedValue(ToFieldStateBNV('list_jenis_kejadian', data)))
     })
   }
 
@@ -53,12 +48,12 @@ export const AddTamuDaerahPage: FC = () => {
   }
 
   useEffect(() => {
-    updateJenisKegiatanList()
+    updateJenisKejadianList()
     updateJenisUsahaList()
     updateJenisPenindakanList()
   }, [])
 
-  const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
+  const submitPelaporanPengawasan = (values: PelaporanPengawasanState, actions: FormikValues) => {
     try {
       // if (!isLastStep) {
       //   console.log('values')
@@ -77,87 +72,58 @@ export const AddTamuDaerahPage: FC = () => {
       <Formik
         validationSchema={currentSchema}
         initialValues={initialState}
-        onSubmit={submitPelaporanKegiatan}
+        onSubmit={submitPelaporanPengawasan}
       >
         {({handleReset, handleSubmit, errors, values}) => (
-          <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_kegiatan_form'>
-            <div className='card'>
-              <div className='card-body'>
-                {/* <>{(values = {data})}</> */}
-                {/* {step.type.name === 'StepDetailKegiatan' ? (
-                  <StepDetailKegiatan values={values} setVal={setVal} />
-                ) : (
-                  step
-                )} */}
-                <div className='card mt-5'>
-                  <div className='card-body'>
-                    <div className='row w-100'>
-                      <div className='col'></div>
-                      <div className='col'>
-                        <div className='row d-flex justify-content-end'>
-                          {/* {!isFirstStep && (
-                            <button
-                              type='button'
-                              className='col-5 btn btn-flex btn-secondary px-6 m-3'
-                              onClick={back}
-                            >
-                              ``
-                              <span className='svg-icon svg-icon-2x'>
-                                <i className='fa-solid fa-arrow-left'></i>
-                              </span>
-                              <span className='d-flex flex-column align-items-start ms-2'>
-                                <span className='fs-3 fw-bold'>Kembali</span>
-                              </span>
-                            </button>
-                          )}
+          <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_pengawasan_form'>
+            <>
+              <div className='card'>
+                <div className='card-body'>
+                  <ul className='nav nav-tabs nav-line-tabs mb-5 fs-6'>
+                    <li className='nav-item'>
+                      <a className='nav-link active' data-bs-toggle='tab' href='#kt_tab_pane_1'>
+                        TAMU DAERAH
+                      </a>
+                    </li>
+                  </ul>
 
-                          <button
-                            type='submit'
-                            className='col-5 btn btn-flex btn-primary px-6 m-3'
-                            // onClick={next}
-                          >
-                            <span className='svg-icon svg-icon-2x'>
-                              <i className='fa-solid fa-paper-plane'></i>
-                            </span>
-                            <span className='d-flex flex-column align-items-start ms-2'>
-                              <span className='fs-3 fw-bold'>
-                                {isLastStep ? 'Simpan' : 'Simpan dan Lanjut'}
-                              </span>
-                            </span>
-                          </button> */}
-                          {/* {!isLastStep ? (
-                            <button
-                              // type='button'
-                              className='col-5 btn btn-flex btn-primary px-6 m-3'
-                              onClick={next}
-                            >
-                              <span className='svg-icon svg-icon-2x'>
-                                <i className='fa-solid fa-paper-plane'></i>
-                              </span>
-                              <span className='d-flex flex-column align-items-start ms-2'>
-                                <span className='fs-3 fw-bold'>Simpan dan Lanjut</span>
-                              </span>
-                            </button>
-                          ) : (
-                            <button
-                              type='submit'
-                              className='col-5 btn btn-flex btn-primary px-6 m-3'
-                            >
-                              <span className='svg-icon svg-icon-2x'>
-                                <i className='fa-solid fa-paper-plane'></i>
-                              </span>
-                              <span className='d-flex flex-column align-items-start ms-2'>
-                                <span className='fs-3 fw-bold'>simpan</span>
-                              </span>
-                            </button>
-                          )} */}
-                        </div>
+                  <div className='tab-content' id='myTabContent'>
+                    <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
+                      <StepDetailTamuDaerah values={values} handleReset={handleReset} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='card mt-5'>
+                <div className='card-body'>
+                  <div className='row w-100'>
+                    <div className='col'></div>
+                    <div className='col'>
+                      <div className='row'>
+                        <a href='#' className='col-5 btn btn-flex btn-secondary px-6 m-3'>
+                          <span className='svg-icon svg-icon-2x'>
+                            <i className='fa-solid fa-arrow-left'></i>
+                          </span>
+                          <span className='d-flex flex-column align-items-start ms-2'>
+                            <span className='fs-3 fw-bold'>Kembali</span>
+                            <span className='fs-7'>ke Halaman Utama</span>
+                          </span>
+                        </a>
+                        <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
+                          <span className='svg-icon svg-icon-2x'>
+                            <i className='fa-solid fa-paper-plane'></i>
+                          </span>
+                          <span className='d-flex flex-column align-items-start ms-2'>
+                            <span className='fs-3 fw-bold'>Simpan</span>
+                            <span className='fs-7'>dan Selanjutnya</span>
+                          </span>
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </>
           </Form>
         )}
       </Formik>

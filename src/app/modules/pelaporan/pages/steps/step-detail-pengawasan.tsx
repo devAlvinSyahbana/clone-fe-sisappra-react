@@ -4,12 +4,12 @@ import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 import {
   changedValue,
-  isApelRapat,
-  isLaporanMasyarakat,
-  isPengamanan,
-  isTipiring,
+  isBanjir,
+  isPendampinganKekerasanPadaPerempuan,
+  isUnjukRasa,
+  reset,
   updateJenisPenyelesaianList,
-} from '../../../../redux/slices/pelaporan-kegiatan.slice'
+} from '../../../../redux/slices/pelaporan-kejadian.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {
   DatePickerField,
@@ -20,7 +20,7 @@ import {
 } from '../../components/fields.formikcto'
 import axios from 'axios'
 
-interface StepDetailKegiatanProps {
+interface StepDetailKejadianProps {
   handleChange?: {
     /** Classic React change handler, keyed by input name */
     (e: React.ChangeEvent<any>): void
@@ -36,28 +36,38 @@ interface StepDetailKegiatanProps {
     /** Preact-like linkState. Will return a handleBlur function. */
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
-  setVal: any
+  handleReset?: (e?: React.SyntheticEvent<any>) => void
 }
 
-export const StepDetailPengawasan: FC<StepDetailKegiatanProps> = ({
+export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
   handleChange,
   values,
   handleBlur,
-  setVal,
+  handleReset,
 }) => {
   const dispatch = useDispatch()
-  const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
-  const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
+  const jenisKejadianList = useSelector((s: RootState) => s.pelaporanKejadian.list_jenis_kejadian)
+  const jenisKejadianSelect = values.kegiatan__jenis_kejadian_selection?.label
   const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
 
   useEffect(() => {
-    setVal(values)
+    // setVal(values)
   }, [dispatch])
 
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Reklame</h2>
+        <button
+          type='button'
+          onClick={() => {
+            handleReset?.()
+            dispatch(reset())
+            // dispatch(updateJenisKegiatanList())
+          }}
+        >
+          Hapus
+        </button>
         <div className='mb-10'>
           <label className='required form-label'>Tanggal Pengawasan</label>
           <Field
@@ -74,16 +84,33 @@ export const StepDetailPengawasan: FC<StepDetailKegiatanProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Waktu Pengawasan</label>
-          <Field
-            name='kegiatan__jam_end'
-            className='form-control'
-            component={TimePickerField}
-            onChange={(o: any) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
-          <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__jam_end' />
+          <div className='row'>
+            <div className='col'>
+              <Field
+                name='kegiatan__jam_start'
+                className='form-control'
+                component={TimePickerField}
+                onChange={(o: any) => {
+                  dispatch(changedValue(ToFieldStateCE(o)))
+                }}
+              />
+              <div className='text-danger mt-2'>
+                <ErrorMessage name='kegiatan__jam_start' />
+              </div>
+            </div>
+            <div className='col'>
+              <Field
+                name='kegiatan__jam_end'
+                className='form-control'
+                component={TimePickerField}
+                onChange={(o: any) => {
+                  dispatch(changedValue(ToFieldStateCE(o)))
+                }}
+              />
+              <div className='text-danger mt-2'>
+                <ErrorMessage name='kegiatan__jam_end' />
+              </div>
+            </div>
           </div>
         </div>
         <div className='mb-10'>
@@ -93,13 +120,9 @@ export const StepDetailPengawasan: FC<StepDetailKegiatanProps> = ({
             target='kegiatan__jenis_kegiatan_id'
             className='form-control'
             component={SelectField}
-            options={jenisKegiatanList}
-            onChange={(o: ChangeEvent<any>) => {
+            options={jenisKejadianList}
+            onKeyUp={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
-              dispatch(updateJenisPenyelesaianList(o.target.value))
-              if (!isLaporanMasyarakat(values) || !isPengamanan(values)) {
-                values.kegiatan__jenis_pengamanan_selection = null
-              }
             }}
           />
           <div className='text-danger mt-2'>
@@ -114,13 +137,9 @@ export const StepDetailPengawasan: FC<StepDetailKegiatanProps> = ({
             target='kegiatan__jenis_kegiatan_id'
             className='form-control'
             component={SelectField}
-            options={jenisKegiatanList}
-            onChange={(o: ChangeEvent<any>) => {
+            options={jenisKejadianList}
+            onKeyUp={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
-              dispatch(updateJenisPenyelesaianList(o.target.value))
-              if (!isLaporanMasyarakat(values) || !isPengamanan(values)) {
-                values.kegiatan__jenis_pengamanan_selection = null
-              }
             }}
           />
           <div className='text-danger mt-2'>
@@ -135,13 +154,9 @@ export const StepDetailPengawasan: FC<StepDetailKegiatanProps> = ({
             target='kegiatan__jenis_kegiatan_id'
             className='form-control'
             component={SelectField}
-            options={jenisKegiatanList}
-            onChange={(o: ChangeEvent<any>) => {
+            options={jenisKejadianList}
+            onKeyUp={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
-              dispatch(updateJenisPenyelesaianList(o.target.value))
-              if (!isLaporanMasyarakat(values) || !isPengamanan(values)) {
-                values.kegiatan__jenis_pengamanan_selection = null
-              }
             }}
           />
           <div className='text-danger mt-2'>
