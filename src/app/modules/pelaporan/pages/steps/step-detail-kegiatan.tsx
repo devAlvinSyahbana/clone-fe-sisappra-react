@@ -41,6 +41,7 @@ interface StepDetailKegiatanProps {
   }
   handleReset?: (e?: React.SyntheticEvent<any>) => void
   listMasterJenisValue: any
+  allValues: any
 }
 
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
@@ -49,10 +50,10 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   handleReset,
   values,
   listMasterJenisValue,
+  allValues,
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
-  const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
   const asalLaporan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_asal_laporan)
   const jenisPengamanan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_pengamanan)
@@ -67,7 +68,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   }, [jenisKegiatanSelect])
 
   console.log(values)
-  console.log(allValues)
 
   return (
     <div className='w-50'>

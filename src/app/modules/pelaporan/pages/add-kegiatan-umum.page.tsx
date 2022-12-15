@@ -17,6 +17,7 @@ import axios from 'axios'
 import {ToFieldStateBNV} from '../components/fields.formikcto'
 import {RootState} from '../../../redux/store'
 import useMultistepForm from './steps/useMultistepForm'
+import {updateJenisPenyelesaianList} from '../../../redux/slices/pelaporan-tamu-daerah.slice'
 
 // const excludeJenisKegiatan = [
 //   'SIDANG TIPIRING',
@@ -31,9 +32,7 @@ export const AddKegiatanUmumPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
 
   const dispatch = useDispatch()
-  const jenisKegiatanId = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
-  )
+  const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
 
   // const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
   //   <StepDetailKegiatan values={val} />,
@@ -57,6 +56,7 @@ export const AddKegiatanUmumPage: FC = () => {
   const listMasterJenisValue = () => {
     dispatch(updateJenisKegiatanList())
     dispatch(updateDetailJenisPasalList())
+    dispatch(updateJenisPenyelesaianList())
   }
 
   useEffect(() => {
@@ -72,6 +72,8 @@ export const AddKegiatanUmumPage: FC = () => {
       console.log(error)
     }
   }
+
+  console.log(allValues)
 
   return (
     <>
@@ -111,10 +113,15 @@ export const AddKegiatanUmumPage: FC = () => {
                         values={values}
                         handleReset={handleReset}
                         listMasterJenisValue={listMasterJenisValue}
+                        allValues={allValues}
                       />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
-                      <StepTindaklanjut values={values} setFieldValue={setFieldValue} />
+                      <StepTindaklanjut
+                        values={values}
+                        setFieldValue={setFieldValue}
+                        allValues={allValues}
+                      />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_3' role='tabpanel'>
                       <StepDokumentasi />

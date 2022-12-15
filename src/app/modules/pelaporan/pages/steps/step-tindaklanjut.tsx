@@ -2,7 +2,10 @@ import React, {ChangeEvent, FC} from 'react'
 import Select from 'react-select'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {DatePickerField, SelectField, ToFieldStateCE} from '../../components/fields.formikcto'
-import {changedValue} from '../../../../redux/slices/pelaporan-kegiatan.slice'
+import {
+  changedValue,
+  updateDetailJenisPasalPenyelesaianList,
+} from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 
@@ -23,19 +26,20 @@ interface StepTindakLanjutProps {
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  allValues: any
 }
 
-export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldValue}) => {
+export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldValue, allValues}) => {
   const dispatch = useDispatch()
 
   const listJenisPasal = useSelector(
     (s: RootState) => s.pelaporanKegiatan.list_detail_jenis_pasal_kegiatan
   )
+  const listJenisPenyelesaian = useSelector(
+    (s: RootState) => s.pelaporanKegiatan.list_detail_jenis_pasal_penyelesaian
+  )
   const listJenisPenindakan = useSelector(
     (s: RootState) => s.pelaporanKegiatan.list_jenis_penindakan
-  )
-  const listJenisPenyelesaian = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.list_jenis_penyelesaian
   )
   const listJenisUsaha = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_usaha)
 
@@ -56,8 +60,10 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               component={SelectField}
               options={listJenisPasal}
               onChange={(o: ChangeEvent<any>) => {
-                dispatch(changedValue(ToFieldStateCE(o)))
+                const data = [o.target.value, allValues]
                 let filterPasal = listJenisPasal.filter((obj: any) => obj.value === o.target.value)
+                dispatch(updateDetailJenisPasalPenyelesaianList(data))
+                dispatch(changedValue(ToFieldStateCE(o)))
                 setFieldValue(
                   'tindak_lanjut__administrasi__jenis_penertiban',
                   filterPasal[0].penertiban
