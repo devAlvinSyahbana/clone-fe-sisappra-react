@@ -64,15 +64,15 @@ export const initialState: PelaporanKegiatanState = {
   kegiatan__asal_laporan_id: 0,
   // kegiatan__jenis_pengamanan_selection: [],
   kegiatan__jenis_pengamanan_id: 0,
-  // kegiatan__pengamanan_masalah: '',
-  // kegiatan__pengamanan_pemecahan_masalah: '',
-  // kegiatan__pengamanan_instansi_terkait: '',
+  // kegiatan__masalah: '',
+  // kegiatan__pemecahan_masalah: '',
+  // kegiatan__instansi_terkait: '',
 
   tindak_lanjut__administrasi__jenis_pasal_id: 0,
   tindak_lanjut__administrasi__jenis_penertiban: '',
   tindak_lanjut__administrasi__jenis_pelanggaran: '',
   tindak_lanjut__administrasi__perda_perkada: '',
-  // tindak_lanjut__administrasi__penyelesaian_id: 0,
+  tindak_lanjut__administrasi__penyelesaian_id: 0,
 
   // tindak_lanjut__identitas_pelanggar__no_bap: '3232323',
   // tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: '3232323',
@@ -136,30 +136,22 @@ export const createSchemaPelaporanKegiatan = [
       then: Yup.object().notRequired(),
       otherwise: Yup.object().required(),
     }),
-    kegiatan__pengamanan_masalah: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
+    kegiatan__masalah: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
       is: (val: any) => val?.label !== 'PENGAMANAN',
       then: Yup.string().notRequired(),
       otherwise: Yup.string().min(5).max(500).required().label('Uraian Masalah'),
     }),
-    kegiatan__pengamanan_pemecahan_masalah: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label !== 'PENGAMANAN',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(10).max(1000).required().label('Uraian Pemecahan Masalah'),
-      }
-    ),
-    kegiatan__pengamanan_instansi_terkait: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
+    kegiatan__pemecahan_masalah: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label !== 'PENGAMANAN',
+      then: Yup.string().notRequired(),
+      otherwise: Yup.string().min(10).max(1000).required().label('Uraian Pemecahan Masalah'),
+    }),
+    kegiatan__instansi_terkait: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
       is: (val: any) => val?.label !== 'PENGAMANAN',
       then: Yup.string().notRequired(),
       otherwise: Yup.string().min(2).max(32).required().label('Instansi Terkait'),
     }),
 
-    // tindak_lanjut__administrasi__jenis_pasal_id: Yup.number()
-    //   .integer()
-    //   .moreThan(0)
-    //   .required()
-    //   .label('Jenis Pasal'),
     tindak_lanjut__administrasi__jenis_pasal_id: Yup.number().when(
       'kegiatan__jenis_kegiatan_selection',
       {
@@ -168,7 +160,6 @@ export const createSchemaPelaporanKegiatan = [
         otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Pasal'),
       }
     ),
-    // tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().required(),
     tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().when(
       'kegiatan__jenis_kegiatan_selection',
       {

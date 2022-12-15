@@ -45,112 +45,100 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
     <div className='w-100'>
       <div className='pb-10 pb-lg-15'>
         <h1 className='fw-bolder text-dark mb-10'>Tindak Lanjut</h1>
-
         <h3 className='fw-bolder text-dark'>ADMINISTRASI</h3>
-
-        <div className='mb-10 form-group'>
-          <label className='required form-label'>Jenis Pasal</label>
-          <Field
-            name='tindak_lanjut__administrasi__jenis_pasal_selection'
-            target='tindak_lanjut__administrasi__jenis_pasal_id'
-            className='form-control'
-            component={SelectField}
-            options={listJenisPasal}
-            onChange={(o: ChangeEvent<any>) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
-              let filterPasal = listJenisPasal.filter((obj: any) => obj.value === o.target.value)
-              setFieldValue(
-                'tindak_lanjut__administrasi__jenis_penertiban',
-                filterPasal[0].penertiban
-              )
-              setFieldValue(
-                'tindak_lanjut__administrasi__jenis_pelanggaran',
-                filterPasal[0].pelanggaran
-              )
-              setFieldValue('tindak_lanjut__administrasi__perda_perkada', filterPasal[0].perda)
-              dispatch(
-                changedValue({
-                  target: {
-                    name: 'tindak_lanjut__administrasi__jenis_penertiban',
-                    value: filterPasal[0].penertiban,
-                  },
-                })
-              )
-              dispatch(
-                changedValue({
-                  target: {
-                    name: 'tindak_lanjut__administrasi__jenis_pelanggaran',
-                    value: filterPasal[0].pelanggaran,
-                  },
-                })
-              )
-              dispatch(
-                changedValue({
-                  target: {
-                    name: 'tindak_lanjut__administrasi__perda_perkada',
-                    value: filterPasal[0].perda,
-                  },
-                })
-              )
-            }}
-          />
-          <div className='text-danger mt-2'>
-            <ErrorMessage name='tindak_lanjut__administrasi__jenis_pasal_id' />
+        <>
+          <div className='mb-10 form-group'>
+            <label className='required form-label'>Jenis Pasal</label>
+            <Field
+              name='tindak_lanjut__administrasi__jenis_pasal_selection'
+              target='tindak_lanjut__administrasi__jenis_pasal_id'
+              className='form-control'
+              component={SelectField}
+              options={listJenisPasal}
+              onChange={(o: ChangeEvent<any>) => {
+                dispatch(changedValue(ToFieldStateCE(o)))
+                let filterPasal = listJenisPasal.filter((obj: any) => obj.value === o.target.value)
+                setFieldValue(
+                  'tindak_lanjut__administrasi__jenis_penertiban',
+                  filterPasal[0].penertiban
+                )
+                setFieldValue(
+                  'tindak_lanjut__administrasi__jenis_pelanggaran',
+                  filterPasal[0].pelanggaran
+                )
+                setFieldValue('tindak_lanjut__administrasi__perda_perkada', filterPasal[0].perda)
+                dispatch(
+                  changedValue({
+                    target: {
+                      name: 'tindak_lanjut__administrasi__jenis_penertiban',
+                      value: filterPasal[0].penertiban,
+                    },
+                  })
+                )
+                dispatch(
+                  changedValue({
+                    target: {
+                      name: 'tindak_lanjut__administrasi__jenis_pelanggaran',
+                      value: filterPasal[0].pelanggaran,
+                    },
+                  })
+                )
+                dispatch(
+                  changedValue({
+                    target: {
+                      name: 'tindak_lanjut__administrasi__perda_perkada',
+                      value: filterPasal[0].perda,
+                    },
+                  })
+                )
+              }}
+            />
+            <div className='text-danger mt-2'>
+              <ErrorMessage name='tindak_lanjut__administrasi__jenis_pasal_id' />
+            </div>
           </div>
-        </div>
 
-        <div className='mb-10 form-group'>
-          <label className='required form-label'>Jenis Penertiban</label>
-          <Field
-            type='text'
-            name='tindak_lanjut__administrasi__jenis_penertiban'
-            className='form-control'
-            placeholder='Pilih Jenis Pasal di Dropdown diatas'
-            // value={pasalSelect?.penertiban ? pasalSelect?.penertiban : ''}
-            // onChange={(o: ChangeEvent<any>) => {
-            //   console.log(o.target.value)
-            //   setFieldValue('tindak_lanjut__administrasi__jenis_penertiban', o.target.value)
-            //   dispatch(changedValue(ToFieldStateCE(o)))
-            // }}
-          />
-          <div className='text-danger mt-2'>
-            <ErrorMessage name='tindak_lanjut__administrasi__jenis_penertiban' />
+          <div className='mb-10 form-group'>
+            <label className='required form-label'>Jenis Penertiban</label>
+            <Field
+              as='textarea'
+              type='text'
+              name='tindak_lanjut__administrasi__jenis_penertiban'
+              className='form-control'
+              placeholder='Pilih Jenis Pasal di Dropdown diatas'
+            />
+            <div className='text-danger mt-2'>
+              <ErrorMessage name='tindak_lanjut__administrasi__jenis_penertiban' />
+            </div>
           </div>
-        </div>
 
-        <div className='mb-10 form-group'>
-          <label className='required form-label'>Jenis Pelanggaran</label>
-          <Field
-            type='text'
-            name='tindak_lanjut__administrasi__jenis_pelanggaran'
-            className='form-control'
-            placeholder='Pilih Jenis Pasal di Dropdown diatas'
-            // value={pasalSelect?.pelanggaran ? pasalSelect?.pelanggaran : ''}
-            // onKeyUp={(o: ChangeEvent<any>) => {
-            //   dispatch(changedValue(ToFieldStateCE(o)))
-            // }}
-          />
-          <div className='text-danger mt-2'>
-            <ErrorMessage name='tindak_lanjut__administrasi__jenis_pelanggaran' />
+          <div className='mb-10 form-group'>
+            <label className='required form-label'>Jenis Pelanggaran</label>
+            <Field
+              as='textarea'
+              type='text'
+              name='tindak_lanjut__administrasi__jenis_pelanggaran'
+              className='form-control text-wrap'
+              placeholder='Pilih Jenis Pasal di Dropdown diatas'
+            />
+            <div className='text-danger mt-2'>
+              <ErrorMessage name='tindak_lanjut__administrasi__jenis_pelanggaran' />
+            </div>
           </div>
-        </div>
 
-        <div className='mb-10 form-group'>
-          <label className='required form-label'>PERDA / PERKADA yang dilanggar</label>
-          <Field
-            type='text'
-            name='tindak_lanjut__administrasi__perda_perkada'
-            className='form-control'
-            placeholder='Pilih Jenis Pasal di Dropdown diatas'
-            // value={pasalSelect?.perda ? pasalSelect?.perda : ''}
-            // onKeyUp={(o: ChangeEvent<any>) => {
-            //   dispatch(changedValue(ToFieldStateCE(o)))
-            // }}
-          />
-          <div className='text-danger mt-2'>
-            <ErrorMessage name='tindak_lanjut__administrasi__perda_perkada' />
+          <div className='mb-10 form-group'>
+            <label className='required form-label'>PERDA / PERKADA yang dilanggar</label>
+            <Field
+              type='text'
+              name='tindak_lanjut__administrasi__perda_perkada'
+              className='form-control text-wrap'
+              placeholder='Pilih Jenis Pasal di Dropdown diatas'
+            />
+            <div className='text-danger mt-2'>
+              <ErrorMessage name='tindak_lanjut__administrasi__perda_perkada' />
+            </div>
           </div>
-        </div>
+        </>
 
         <div className='row'>
           <div className='col form-group'>

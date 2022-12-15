@@ -174,52 +174,52 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
       {isPengamanan(values) && (
         <>
           <div className='mb-10'>
-            <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
+            <label htmlFor='kegiatan__masalah' className='required form-label'>
               Masalah
             </label>
             <Field
               type='text'
-              name='kegiatan__pengamanan_masalah'
+              name='kegiatan__masalah'
               className='form-control'
               onKeyUp={(o: ChangeEvent<any>) => {
                 dispatch(changedValue(ToFieldStateCE(o)))
               }}
             />
             <div className='text-danger mt-2'>
-              <ErrorMessage name='kegiatan__pengamanan_masalah' />
+              <ErrorMessage name='kegiatan__masalah' />
             </div>
           </div>
           <div className='mb-10'>
-            <label htmlFor='kegiatan__pengamanan_pemecahan_masalah' className='required form-label'>
+            <label htmlFor='kegiatan__pemecahan_masalah' className='required form-label'>
               Pemecahan Masalah
             </label>
             <Field
               as='textarea'
               type='text'
-              name='kegiatan__pengamanan_pemecahan_masalah'
+              name='kegiatan__pemecahan_masalah'
               className='form-control'
               onKeyUp={(o: ChangeEvent<any>) => {
                 dispatch(changedValue(ToFieldStateCE(o)))
               }}
             />
             <div className='text-danger mt-2'>
-              <ErrorMessage name='kegiatan__pengamanan_pemecahan_masalah' />
+              <ErrorMessage name='kegiatan__pemecahan_masalah' />
             </div>
           </div>
           <div className='mb-10'>
-            <label htmlFor='kegiatan__pengamanan_instansi_terkait' className='required form-label'>
+            <label htmlFor='kegiatan__instansi_terkait' className='required form-label'>
               Instansi Terkait
             </label>
             <Field
               type='text'
-              name='kegiatan__pengamanan_instansi_terkait'
+              name='kegiatan__instansi_terkait'
               className='form-control'
               onKeyUp={(o: ChangeEvent<any>) => {
                 dispatch(changedValue(ToFieldStateCE(o)))
               }}
             />
             <div className='text-danger mt-2'>
-              <ErrorMessage name='kegiatan__pengamanan_instansi_terkait' />
+              <ErrorMessage name='kegiatan__instansi_terkait' />
             </div>
           </div>
         </>
