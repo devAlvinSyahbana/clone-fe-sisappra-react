@@ -8,7 +8,6 @@ import {
   isLaporanMasyarakat,
   isPengamanan,
   isTipiring,
-  updateJenisPasalList,
   updateJenisPenyelesaianList,
 } from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
@@ -97,7 +96,6 @@ export const StepDetailPengawasan: FC<StepDetailKegiatanProps> = ({
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
-              dispatch(updateJenisPasalList(o.target.value))
               dispatch(updateJenisPenyelesaianList(o.target.value))
               if (!isLaporanMasyarakat(values) || !isPengamanan(values)) {
                 values.kegiatan__jenis_pengamanan_selection = null
@@ -119,7 +117,6 @@ export const StepDetailPengawasan: FC<StepDetailKegiatanProps> = ({
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
-              dispatch(updateJenisPasalList(o.target.value))
               dispatch(updateJenisPenyelesaianList(o.target.value))
               if (!isLaporanMasyarakat(values) || !isPengamanan(values)) {
                 values.kegiatan__jenis_pengamanan_selection = null
@@ -141,7 +138,6 @@ export const StepDetailPengawasan: FC<StepDetailKegiatanProps> = ({
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
-              dispatch(updateJenisPasalList(o.target.value))
               dispatch(updateJenisPenyelesaianList(o.target.value))
               if (!isLaporanMasyarakat(values) || !isPengamanan(values)) {
                 values.kegiatan__jenis_pengamanan_selection = null

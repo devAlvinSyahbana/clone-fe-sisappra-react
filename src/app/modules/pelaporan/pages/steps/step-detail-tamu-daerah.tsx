@@ -8,7 +8,6 @@ import {
   isLaporanMasyarakat,
   isPengamanan,
   isTipiring,
-  updateJenisPasalList,
   updateJenisPenyelesaianList,
 } from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'

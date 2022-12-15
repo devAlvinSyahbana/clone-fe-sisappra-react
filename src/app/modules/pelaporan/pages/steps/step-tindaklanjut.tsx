@@ -38,7 +38,6 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
     (s: RootState) => s.pelaporanKegiatan.list_jenis_penyelesaian
   )
   const listJenisUsaha = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_usaha)
-  const pasalSelect = values.tindak_lanjut__administrasi__jenis_pasal_selection
 
   // console.log(pasalSelect)
 
