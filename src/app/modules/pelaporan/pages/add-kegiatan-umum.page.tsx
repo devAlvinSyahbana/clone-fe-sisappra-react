@@ -20,6 +20,8 @@ import axios from 'axios'
 import {ToFieldStateBNV} from '../components/fields.formikcto'
 import {RootState} from '../../../redux/store'
 import useMultistepForm from './steps/useMultistepForm'
+import Swal from 'sweetalert2'
+import {useNavigate} from 'react-router-dom'
 
 // const excludeJenisKegiatan = [
 //   'SIDANG TIPIRING',
@@ -33,6 +35,7 @@ import useMultistepForm from './steps/useMultistepForm'
 export const AddKegiatanUmumPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
 
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
 
@@ -48,11 +51,19 @@ export const AddKegiatanUmumPage: FC = () => {
     listMasterJenisValue()
   }, [])
 
-  const submitPelaporanKegiatan = (values: PelaporanKegiatanState, actions: FormikValues) => {
-    alert(JSON.stringify(values, null, 2))
+  const submitPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
+    // const res = await axios.post(`http://127.0.0.1:3002/kegiatan-umum/`)
     try {
       console.log('laststep', values)
       actions.setSubmitting(false)
+      Swal.fire({
+        icon: 'success',
+        text: 'Data berhasil disubmit',
+        showConfirmButton: false,
+        timer: 1500,
+        color: '#000000',
+      })
+      alert(JSON.stringify(values, null, 2))
     } catch (error) {
       console.log(error)
     }
@@ -120,7 +131,11 @@ export const AddKegiatanUmumPage: FC = () => {
                     <div className='col'></div>
                     <div className='col'>
                       <div className='row'>
-                        <a href='#' className='col-5 btn btn-flex btn-secondary px-6 m-3'>
+                        <button
+                          type='button'
+                          onClick={() => navigate(-1)}
+                          className='col-5 btn btn-flex btn-secondary px-6 m-3'
+                        >
                           <span className='svg-icon svg-icon-2x'>
                             <i className='fa-solid fa-arrow-left'></i>
                           </span>
@@ -128,7 +143,7 @@ export const AddKegiatanUmumPage: FC = () => {
                             <span className='fs-3 fw-bold'>Kembali</span>
                             <span className='fs-7'>ke Halaman Utama</span>
                           </span>
-                        </a>
+                        </button>
                         <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
                           <span className='svg-icon svg-icon-2x'>
                             <i className='fa-solid fa-paper-plane'></i>

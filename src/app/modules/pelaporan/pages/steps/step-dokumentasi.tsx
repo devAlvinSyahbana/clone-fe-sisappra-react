@@ -11,7 +11,6 @@ import DataTable, {createTheme} from 'react-data-table-component'
 
 export const StepDokumentasi: FC = () => {
   const dispatch = useDispatch()
-  //   const [data, setData] = useState([])
 
   let no = 1
 
