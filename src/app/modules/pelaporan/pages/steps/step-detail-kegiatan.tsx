@@ -83,6 +83,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         >
           Hapus
         </button>
+        {/* Jenis Kegiatan */}
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
           <Field

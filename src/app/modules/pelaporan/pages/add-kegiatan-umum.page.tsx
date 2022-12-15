@@ -11,6 +11,7 @@ import {
   isApelRapat,
   updateJenisKegiatanList,
   updateDetailJenisPasalList,
+  updateJenisPenindakanList,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
@@ -57,6 +58,7 @@ export const AddKegiatanUmumPage: FC = () => {
     dispatch(updateJenisKegiatanList())
     dispatch(updateDetailJenisPasalList())
     dispatch(updateJenisPenyelesaianList())
+    dispatch(updateJenisPenindakanList())
   }
 
   useEffect(() => {

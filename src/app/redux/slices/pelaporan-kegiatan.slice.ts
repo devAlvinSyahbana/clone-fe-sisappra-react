@@ -8,6 +8,8 @@ import {
 import * as Yup from 'yup'
 import axios from 'axios'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+
 export interface PelaporanKegiatanState extends Record<string, any> {
   value: number
   kegiatan__jenis_kegiatan_id: number
@@ -266,7 +268,7 @@ const excludeJenisKegiatan = [
 export const updateJenisKegiatanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisKegiatanList',
   async (thunkAPI) => {
-    const res = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`)
+    const res = await axios.get(`${API_URL}/jenis-kegiatan/combobox?$orderby=nama`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
@@ -274,7 +276,7 @@ export const updateJenisKegiatanList: any = createAsyncThunk(
 export const updateJenisAsalLaporanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisAsalLaporanList',
   async (thunkAPI) => {
-    const res = await axios.get(`http://localhost:3001/jenis-asal-laporan/combobox`)
+    const res = await axios.get(`${API_URL}/jenis-asal-laporan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
@@ -282,7 +284,7 @@ export const updateJenisAsalLaporanList: any = createAsyncThunk(
 export const updateJenisPengamananList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPengamananList',
   async (thunkAPI) => {
-    const res = await axios.get(`http://localhost:3001/jenis-pengamanan/combobox`)
+    const res = await axios.get(`${API_URL}/jenis-pengamanan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
@@ -290,7 +292,7 @@ export const updateJenisPengamananList: any = createAsyncThunk(
 export const updateDetailJenisPasalList: any = createAsyncThunk(
   'pelaporanKegiatan/updateDetailJenisPasalList',
   async (thunkAPI) => {
-    const res = await axios.get(`http://localhost:3001/jenis-perda-perkada/?%24top=300`)
+    const res = await axios.get(`${API_URL}/jenis-perda-perkada/?%24top=300`)
 
     return res.data.data
   }
@@ -302,7 +304,7 @@ export const updateDetailJenisPasalKegiatanList: any = createAsyncThunk(
     const jenisKegiatan = objKegiatan.target.value
     const reduxState = objState.list_detail_jenis_pasal
     const res = await axios.get(
-      `http://localhost:3001/map-master-perda/jenis-kegiatan?%24filter=jenis_kegiatan_id%20eq%20${jenisKegiatan}&%24top=300`
+      `${API_URL}/map-master-perda/jenis-kegiatan?%24filter=jenis_kegiatan_id%20eq%20${jenisKegiatan}&%24top=300`
     )
 
     let filteredArr = reduxState.filter((obj1: any) =>
@@ -323,17 +325,15 @@ export const updateDetailJenisPasalKegiatanList: any = createAsyncThunk(
 export const updateDetailJenisPasalPenyelesaianList: any = createAsyncThunk(
   'pelaporanKegiatan/updateDetailJenisPasalPenyelesaianList',
   async (val: any, thunkAPI) => {
-    console.log(val)
     const [jenisPasal, objState] = val
     const reduxState = objState.list_jenis_penyelesaian
     const res = await axios.get(
-      `http://localhost:3001/map-master-perda/jenis-penyelesaian?%24filter=perda_id%20eq%20${jenisPasal}&%24top=100`
+      `${API_URL}/map-master-perda/jenis-penyelesaian?%24filter=perda_id%20eq%20${jenisPasal}&%24top=100`
     )
 
     let filteredArr = reduxState.filter((obj1: any) =>
       res.data.data.some((obj2: any) => obj2.jenis_penyelesaian_id === Number(obj1.value))
     )
-    // const data = filteredArr.map((d: any) => ({label: d.label, value: String(d.value)}))
     // console.log(data)
     return filteredArr
   }
@@ -342,9 +342,7 @@ export const updateDetailJenisPasalPenyelesaianList: any = createAsyncThunk(
 export const updateJenisPenyelesaianList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPenyelesaianList',
   async (thunkAPI) => {
-    const res = await axios.get(
-      `http://localhost:3001/jenis-penyelesaian/?%24top=40&%24select=nama%2C%20id`
-    )
+    const res = await axios.get(`${API_URL}/jenis-penyelesaian/?%24top=40&%24select=nama%2C%20id`)
 
     return res.data.data
   }
@@ -352,9 +350,10 @@ export const updateJenisPenyelesaianList: any = createAsyncThunk(
 export const updateJenisPenindakanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPenindakanList',
   async (thunkAPI) => {
-    const res = await axios.get(`http://localhost:3001/jenis-penindakan/combobox`)
+    const res = await axios.get(`${API_URL}/jenis-penindakan/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
-    return res.data.data
+    return data
   }
 )
 
@@ -384,7 +383,7 @@ export const pelaporanKegiatanSlice = createSlice({
       state.list_jenis_penyelesaian = action.payload
     })
     builder.addCase(updateJenisPenindakanList.fulfilled, (state, action) => {
-      state.list_jenis_penyelesaian = action.payload
+      state.list_jenis_penindakan = action.payload
     })
   },
   reducers: {
