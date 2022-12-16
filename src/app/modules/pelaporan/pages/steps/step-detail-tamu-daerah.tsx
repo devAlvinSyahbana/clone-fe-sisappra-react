@@ -2,7 +2,7 @@ import React, {ChangeEvent, FC, SyntheticEvent, useEffect, useState} from 'react
 import Select, {OptionProps} from 'react-select'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
-import {changedValue, reset} from '../../../../redux/slices/pelaporan-tamu-daerah.slice'
+import {changedValue} from '../../../../redux/slices/pelaporan-tamu-daerah.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {
   DatePickerField,
@@ -13,7 +13,7 @@ import {
 } from '../../components/fields.formikcto'
 import axios from 'axios'
 
-interface StepDetailKejadianProps {
+interface StepDetailTamuDaeraehProps {
   handleChange?: {
     /** Classic React change handler, keyed by input name */
     (e: React.ChangeEvent<any>): void
@@ -32,29 +32,27 @@ interface StepDetailKejadianProps {
   handleReset?: (e?: React.SyntheticEvent<any>) => void
 }
 
-export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
+export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
   handleChange,
   values,
   handleBlur,
   handleReset,
 }) => {
   const dispatch = useDispatch()
-  const jenisKejadianList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kejadian)
-  const jenisKejadianSelect = values.kegiatan__jenis_kejadian_selection?.label
-  const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
 
-  useEffect(() => {
-    // setVal(values)
-  }, [dispatch])
+  // useEffect(() => {
+  //   // setVal(values)
+  // }, [dispatch])
 
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Tamu Daerah</h2>
+        {/* Tanggal Kunjungan */}
         <div className='mb-10'>
           <label className='required form-label'>Tanggal Kunjungan</label>
           <Field
-            name='kegiatan__tanggal'
+            name='tanggal_kunjungan'
             className='form-control'
             component={DatePickerField}
             onChange={(o: any) => {
@@ -62,15 +60,16 @@ export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__tanggal' />
+            <ErrorMessage name='tanggal_kunjungan' />
           </div>
         </div>
+        {/* Waktu Mulai Kunjungan */}
         <div className='mb-10'>
           <label className='required form-label'>Waktu Mulai Kunjungan</label>
           <div className='row'>
             <div className='col'>
               <Field
-                name='kegiatan__jam_start'
+                name='waktu_mulai_kunjungan'
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -78,12 +77,12 @@ export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jam_start' />
+                <ErrorMessage name='waktu_mulai_kunjungan' />
               </div>
             </div>
             <div className='col'>
               <Field
-                name='kegiatan__jam_end'
+                name='waktu_selesai_kunjungan'
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -91,18 +90,17 @@ export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jam_end' />
+                <ErrorMessage name='waktu_selesai_kunjungan' />
               </div>
             </div>
           </div>
         </div>
+        {/* Asal Instansi */}
         <div className='mb-10'>
-          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
-            Asal Instansi
-          </label>
+          <label className='required form-label'>Asal Instansi</label>
           <Field
             type='text'
-            name='kegiatan__pengamanan_masalah'
+            name='asal_instansi'
             className='form-control'
             placeholder='Masukkan asal instansi'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -110,16 +108,16 @@ export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__pengamanan_masalah' />
+            <ErrorMessage name='asal_instansi' />
           </div>
         </div>
+        {/* Jumlah Pengunjung */}
         <div className='mb-10'>
-          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
-            Jumlah Pengunjung
-          </label>
+          <label className='required form-label'>Jumlah Pengunjung</label>
           <Field
             type='number'
-            name='kegiatan__pengamanan_masalah'
+            min=''
+            name='jml_pengunjung'
             className='form-control'
             placeholder='Masukkan Jumlah Pengunjung'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -127,16 +125,15 @@ export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__pengamanan_masalah' />
+            <ErrorMessage name='jml_pengunjung' />
           </div>
         </div>
+        {/* Maksud dan Tujuan */}
         <div className='mb-10'>
-          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
-            Maksud dan Tujuan
-          </label>
+          <label className='required form-label'>Maksud dan Tujuan</label>
           <Field
             type='text'
-            name='kegiatan__pengamanan_masalah'
+            name='maksud_dan_tujuan'
             className='form-control'
             placeholder='Masukkan Maksud dan Tujuan'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -144,16 +141,15 @@ export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__pengamanan_masalah' />
+            <ErrorMessage name='maksud_dan_tujuan' />
           </div>
         </div>
+        {/* Pejabat Penerima Kunjungan */}
         <div className='mb-10'>
-          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
-            Pejabat Penerima Kunjungan
-          </label>
+          <label className='required form-label'>Pejabat Penerima Kunjungan</label>
           <Field
             type='text'
-            name='kegiatan__pengamanan_masalah'
+            name='pejabat_penerima_kunjungan'
             className='form-control'
             placeholder='Masukkan Pejabat Penerima Kunjungan'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -161,16 +157,15 @@ export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__pengamanan_masalah' />
+            <ErrorMessage name='pejabat_penerima_kunjungan' />
           </div>
         </div>
+        {/* Tempat Kunjungan */}
         <div className='mb-10'>
-          <label htmlFor='kegiatan__pengamanan_masalah' className='required form-label'>
-            Tempat Kunjungan
-          </label>
+          <label className='required form-label'>Tempat Kunjungan</label>
           <Field
             type='text'
-            name='kegiatan__pengamanan_masalah'
+            name='tempat_kunjungan'
             className='form-control'
             placeholder='Masukkan Tempat Kunjungan'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -178,7 +173,7 @@ export const StepDetailTamuDaerah: FC<StepDetailKejadianProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__pengamanan_masalah' />
+            <ErrorMessage name='tempat_kunjungan' />
           </div>
         </div>
       </div>

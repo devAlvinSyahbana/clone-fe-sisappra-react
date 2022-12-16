@@ -2,13 +2,14 @@ import {configureStore} from '@reduxjs/toolkit'
 import pelaporanKegiatanReducer from './slices/pelaporan-kegiatan.slice'
 import pelaporanKejadianReducer from './slices/pelaporan-kejadian.slice'
 import pelaporanPengawasanReklameReducer from './slices/pelaporan-pengawasan-reklame.slice'
+import pelaporanTamuDaerahReducer from './slices/pelaporan-tamu-daerah.slice'
 
 export const store = configureStore({
   reducer: {
     pelaporanKegiatan: pelaporanKegiatanReducer,
     pelaporanKejadian: pelaporanKejadianReducer,
     pelaporanPengawasan: pelaporanPengawasanReklameReducer,
-    pelaporanTamuDaerah: pelaporanKegiatanReducer,
+    pelaporanTamuDaerah: pelaporanTamuDaerahReducer,
   },
 })
 
