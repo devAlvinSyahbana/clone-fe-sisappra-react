@@ -8,6 +8,8 @@ import {
 import * as Yup from 'yup'
 import axios from 'axios'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+
 export interface PelaporanKejadianState extends Record<string, any> {
   value: number
 
@@ -32,20 +34,14 @@ export interface PelaporanKejadianState extends Record<string, any> {
 export const initialState: PelaporanKejadianState = {
   value: 0,
   list_jenis_kejadian: [],
-  list_jenis_pasal: [],
-  list_jenis_penindakan: [],
-  list_jenis_penyelesaian: [],
-  list_jenis_usaha: [],
-
-  filter_jenis_kegiatan_id: 0,
+  list_kota: [],
+  list_kecamatan: [],
+  list_kelurahan: [],
 
   kejadian__jenis_kejadian_id: 0,
   kejadian__tanggal: '2022-01-23',
   kejadian__waktu_start: '08:00:00',
   kejadian__waktu_end: '08:00:00',
-  kejadian__kota_id: 0,
-  kejadian__kecamatan_id: 0,
-  kejadian__kelurahan_id: 0,
   kejadian__alamat: '',
   kejadian__uraian_kejadian: '',
   kejadian__jml_personil_satpolpp: 0,
@@ -55,102 +51,66 @@ export const initialState: PelaporanKejadianState = {
   kejadian__pengungsi_kk: 0,
   kejadian__lokasi_penampungan: '',
   kejadian__lokasi_dapur_umum: '',
-}
 
-// export const createSchemaFilterPelaporanKegiatan = [
-//   Yup.object({
-//     filter_jenis_kegiatan_id: Yup.number().integer().moreThan(0).label('Jenis Kegiatan'),
-//     filter_jenis_kegiatan_id_selection: Yup.object(),
-//   }),
-// ]
+  kota_selection: [],
+  kejadian__kota_id: 0,
+  kecamatan_selection: [],
+  kejadian__kecamatan_id: 0,
+  kelurahan_selection: [],
+  kejadian__kelurahan_id: 0,
+}
 
 export const createSchemaPelaporanKejadian = [
   Yup.object({
-    kegiatan__jenis_kejadian_id: Yup.number()
+    kejadian__jenis_kejadian_id: Yup.number()
       .integer()
       .moreThan(0)
       .required()
-      .label('Jenis Kegiatan'),
-    kegiatan__jenis_kejadian_selection: Yup.object().required(),
-    kejadian__kota_id: Yup.number().integer().moreThan(0).required().label('Kota'),
+      .label('Pelaporan Pengawasan'),
 
-    kegiatan__lokasi: Yup.string().min(3).max(64).required().label('Lokasi Kegiatan'),
-    kegiatan__uraian_kegiatan: Yup.string().min(10).max(1000).required().label('Uraian Kegiatan'),
-    kegiatan__tanggal: Yup.date().required().label('Tanggal Kegiatan'),
-    kegiatan__jam_start: Yup.string().required().label('Waktu Kegiatan'),
-    kegiatan__jam_end: Yup.string().required().label('Waktu Kegiatan'),
+    kota_selection: Yup.object().required(),
+    kecamatan_selection: Yup.object().required(),
+    kelurahan_selection: Yup.object().required(),
 
-    kegiatan__asal_laporan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'LAPORAN MASYARAKAT',
-      then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Laporan Masyarakat'),
-    }),
-    kegiatan__asal_laporan_selection: Yup.object().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'LAPORAN MASYARAKAT',
-      then: Yup.object().notRequired(),
-      otherwise: Yup.object().required(),
-    }),
-    kegiatan__jenis_pengamanan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'PENGAMANAN',
-      then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Pengamanan'),
-    }),
-    kegiatan__jenis_pengamanan_selection: Yup.object().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'PENGAMANAN',
-      then: Yup.object().notRequired(),
-      otherwise: Yup.object().required(),
-    }),
-    kegiatan__pengamanan_masalah: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'PENGAMANAN',
-      then: Yup.string().notRequired(),
-      otherwise: Yup.string().min(5).max(500).required().label('Uraian Masalah'),
-    }),
-    kegiatan__pengamanan_pemecahan_masalah: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label !== 'PENGAMANAN',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(10).max(1000).required().label('Uraian Pemecahan Masalah'),
-      }
-    ),
-    kegiatan__pengamanan_instansi_terkait: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'PENGAMANAN',
-      then: Yup.string().notRequired(),
-      otherwise: Yup.string().min(2).max(32).required().label('Instansi Terkait'),
-    }),
+    kejadian__tanggal: Yup.date().required().label('Tanggal Kejadian'),
+    kejadian__waktu_start: Yup.string().required().label('Waktu Kejadian'),
+    kejadian__waktu_end: Yup.string().required().label('Waktu Kejadian'),
+    kejadian__alamat: Yup.string().min(10).max(1000).required().label('Alamat Kejadian'),
+    kejadian__uraian_kejadian: Yup.string().min(10).max(1000).required().label('Uraian Kejadian'),
+    kejadian__lokasi_penampungan: Yup.string()
+      .min(10)
+      .max(1000)
+      .required()
+      .label('Lokasi Penampungan'),
+    kejadian__lokasi_dapur_umum: Yup.string()
+      .min(10)
+      .max(1000)
+      .required()
+      .label('Lokasi Dapur Umum'),
   }),
   Yup.object({}),
 ]
-
-export const updateJenisKegiatanList: any = createAsyncThunk(
-  'pelaporanKegiatan/updateJenisKegiatanList',
+export const updateKotaList: any = createAsyncThunk(
+  'pelaporanKejadian/updateKotaList',
   async (thunkAPI) => {
-    const res = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`)
+    const res = await axios.get(`${API_URL}/kota/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
 )
-
-export const updateJenisPasalList: any = createAsyncThunk(
-  'pelaporanKegiatan/updateJenisPasalList',
-  async (jenisKegiatan: number, thunkAPI) => {
-    const res = await axios.get(
-      `http://localhost:3001/jenis-perda-perkada/combobox?%24filter=${jenisKegiatan}&%24orderby=nama`
-    )
+export const updateKecamatanList: any = createAsyncThunk(
+  'pelaporanKejadian/updateKecamatanList',
+  async (thunkAPI) => {
+    const res = await axios.get(`${API_URL}/kecamatan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-
     return data
   }
 )
-
-export const updateJenisPenyelesaianList: any = createAsyncThunk(
-  'pelaporanKegiatan/updateJenisPenyelesaianList',
-  async (jenisKegiatan: number, thunkAPI) => {
-    const res = await axios.get(
-      `http://localhost:3001/jenis-penyelesaian/combobox?%24filter=${jenisKegiatan}&%24orderby=nama`
-    )
+export const updateKelurahanList: any = createAsyncThunk(
+  'pelaporanKejadian/updateKelurahanList',
+  async () => {
+    const res = await axios.get(`${API_URL}/kelurahan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-
     return data
   }
 )
@@ -159,14 +119,14 @@ export const pelaporanKejadianSlice = createSlice({
   name: 'pelaporanKejadian',
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(updateJenisKegiatanList.fulfilled, (state, action) => {
-      state.list_jenis_kegiatan = action.payload
+    builder.addCase(updateKotaList.fulfilled, (state, action) => {
+      state.list_kota = action.payload
     })
-    builder.addCase(updateJenisPasalList.fulfilled, (state, action) => {
-      state.list_jenis_pasal = action.payload
+    builder.addCase(updateKecamatanList.fulfilled, (state, action) => {
+      state.list_kecaamatan = action.payload
     })
-    builder.addCase(updateJenisPenyelesaianList.fulfilled, (state, action) => {
-      state.list_jenis_penyelesaian = action.payload
+    builder.addCase(updateKelurahanList.fulfilled, (state, action) => {
+      state.list_kelurahan = action.payload
     })
   },
   reducers: {
@@ -180,20 +140,20 @@ export const pelaporanKejadianSlice = createSlice({
         state[action.payload.target.name] = action.payload.target.value
       }
     },
-    reset: () => initialState,
+    reset: () => {
+      return initialState
+    },
   },
 })
-
-// export const {reset} = pelaporanKegiatanSlice.actions
 
 // Action creators are generated for each case reducer function
 
 export const isBanjir = (formikValues: any) =>
-  formikValues.kegiatan__jenis_kejadian_selection?.label === 'BANJIR'
+  formikValues.kejadian__jenis_kejadian_selection?.label === 'BANJIR'
 export const isPendampinganKekerasanPadaPerempuan = (formikValues: any) =>
-  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN'
+  formikValues.kejadian__jenis_kejadian_selection?.label === 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN'
 export const isUnjukRasa = (formikValues: any) =>
-  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'UNJUK RASA'
+  formikValues.kejadian__jenis_kejadian_selection?.label === 'UNJUK RASA'
 
 export const {changedValue, reset} = pelaporanKejadianSlice.actions
 
