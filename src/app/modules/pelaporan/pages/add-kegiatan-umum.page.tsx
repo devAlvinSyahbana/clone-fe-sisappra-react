@@ -32,6 +32,8 @@ import {useNavigate} from 'react-router-dom'
 //   'PENGAMANAN',
 // ]
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
 export const AddKegiatanUmumPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
 
@@ -99,7 +101,7 @@ export const AddKegiatanUmumPage: FC = () => {
     // }
     // const res = await axios.post(`http://127.0.0.1:3002/kegiatan-umum/`)
     try {
-      const res = await axios.post(`http://localhost:3002/kegiatan-umum`, bodyparam)
+      const res = await axios.post(`${API_URL}/kegiatan-umum`, bodyparam)
       if (res) {
         console.log('laststep', values)
         actions.setSubmitting(false)
