@@ -11,6 +11,9 @@ import {AddTamuDaerahPage} from './pages/add-tamu-daerah.page'
 import {DetailLaporanKegiatan} from './pages/DetailLaporanKegiatan'
 import {AddKegiatanUmumPage} from './pages/add-kegiatan-umum.page'
 import {ListKegiatanPage} from './pages/list-kegiatan.page'
+import {ListKejadianPage} from './pages/list-kejadian.page'
+import {ListPengawasPage} from './pages/list-pengawas.page'
+import {ListTamuDaerahPage} from './pages/list-tamu-daerah.page'
 
 const pelaporanBreadCrumbs: Array<PageLink> = [
   {
@@ -69,7 +72,7 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Kejadian</PageTitle>
-              <LaporanKejadian />
+              <ListKejadianPage />
             </>
           }
         />
@@ -87,7 +90,7 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Pengawasan</PageTitle>
-              <LaporanPengawasan />
+              <ListPengawasPage />
             </>
           }
         />
@@ -105,7 +108,7 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Tamu Daerah</PageTitle>
-              <LaporanTamuDaerah />
+              <ListTamuDaerahPage />
             </>
           }
         />

@@ -24,7 +24,7 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
-export const ListKegiatanPage: FC = () => {
+export const ListKejadianPage: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
@@ -139,31 +139,8 @@ export const ListKegiatanPage: FC = () => {
                               <div className='mb-10'>
                                 <div className='row'>
                                   <div className='col-4 pt-2'>
-                                    <label className='form-label'>Pelaksana Kegiatan</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <Field
-                                      name='filter_jenis_kegiatan_id_selection'
-                                      target='filter_jenis_kegiatan_id'
-                                      className='form-control'
-                                      component={SelectField}
-                                      options={jenisKegiatanList}
-                                      onChange={(o: ChangeEvent<any>) => {
-                                        // dispatch(changedValue(ToFieldStateCE(o)))
-                                        // updateJenisPasalList()
-                                        // updateJenisPenyelesaianList()
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
                                     <label className='form-label align-middle'>
-                                      Jenis Kegiatan
+                                      Jenis Kejadian
                                     </label>
                                   </div>
                                   <div className='col-8'>

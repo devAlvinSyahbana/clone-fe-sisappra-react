@@ -72,26 +72,41 @@ export function DtAdmin(props: any) {
     },
     {
       name: 'Pelaksana',
+      wrap: true,
+      width: '200px',
       selector: (row: any) => row.pelaksana,
     },
     {
       name: 'Tanggal Kegiatan',
+      width: '140px',
       selector: (row: any) => row.tanggal_kegiatan,
     },
     {
       name: 'Waktu Kegiatan',
+      width: '140px',
       selector: (row: any) => row.waktu_kegiatan,
     },
     {
+      name: 'Jenis Kegiatan',
+      width: '140px',
+      selector: (row: any) => row.jenis_kegiatan,
+    },
+    {
       name: 'Uraian Kegiatan',
+      width: '200px',
+      wrap: true,
       selector: (row: any) => row.uraian_kegiatan,
     },
     {
       name: 'Wilayah',
+      width: '140px',
+      wrap: true,
       selector: (row: any) => row.wilayah,
     },
     {
       name: 'Lokasi',
+      width: '140px',
+      wrap: true,
       selector: (row: any) => row.lokasi,
     },
     {
@@ -139,7 +154,9 @@ export function DtAdmin(props: any) {
       pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
       tanggal_kegiatan: '01/11/2022',
       waktu_kegiatan: '08:00 - 12:00',
-      uraian_kegiatan: 'PATROLI',
+      jenis_kegiatan: 'PATROLI',
+      uraian_kegiatan:
+        'Melaksanakan Patroli wilayah, penjagaan dan menghimbau pedagang kaki lima agar tidak berjualan',
       wilayah: 'Kota Administrasi Jakarta Pusat',
       lokasi: 'RW.3, Petojo Sel.Kecamatan Gambir, Kota Jakarta Pusat',
     },
