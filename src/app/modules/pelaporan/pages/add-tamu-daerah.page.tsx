@@ -31,11 +31,9 @@ export const AddTamuDaerahPage: FC = () => {
       maksud_dan_tujuan: allValues.maksud_dan_tujuan,
       pejabat_penerima_kunjungan: allValues.pejabat_penerima_kunjungan,
       tempat_kunjungan: allValues.tempat_kunjungan,
-      value: 0,
-      id: 0,
     }
     try {
-      const res = await axios.post(`http://localhost:3002/laporan-tamudaerah`, bodyParam)
+      const res = await axios.post(`http://localhost:3002/tamu-daerah`, bodyParam)
       // alert(JSON.stringify(values, null, 2))
 
       if (res) {
