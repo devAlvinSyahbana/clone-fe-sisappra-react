@@ -47,6 +47,23 @@ export const DatePickerField = ({
   />
 )
 
+export const DatePickerFieldRange = ({
+  className,
+  field,
+  onChange,
+}: FieldProps & DatePickerFieldProps) => (
+  <DatePicker
+    containerClassName={className}
+    inputClass='form-control'
+    range
+    value={field.value}
+    onChange={(o: DateObject) => {
+      field.onChange({target: {name: field.name, value: o?.toString()}})
+      onChange({target: {name: field.name, value: o?.toString()}})
+    }}
+  />
+)
+
 export const TimePickerField = ({
   field,
   range,

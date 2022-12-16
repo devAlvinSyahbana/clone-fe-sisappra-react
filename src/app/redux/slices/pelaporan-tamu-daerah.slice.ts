@@ -6,308 +6,66 @@ import {
   ThunkAction,
 } from '@reduxjs/toolkit'
 import * as Yup from 'yup'
-import axios from 'axios'
 
-export interface PelaporanKegiatanState extends Record<string, any> {
-  value: number
-  kegiatan__jenis_kegiatan_id: number
-  kegiatan__jumlah_personil: number
-  kegiatan__uraian_kegiatan: string
-  kegiatan__tanggal: string
-  kegiatan__jam: string
-  kegiatan__lokasi: string
+export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
-  tindak_lanjut__administrasi__jenis_pasal_id: number
-  tindak_lanjut__administrasi__jenis_penertiban: string
-  tindak_lanjut__administrasi__jenis_pelanggaran: string
-  tindak_lanjut__administrasi__perda_perkada: string
-  tindak_lanjut__administrasi__penyelesaian_id: number
-
-  tindak_lanjut__identitas_pelanggar__no_bap: string
-  tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: string
-  tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: string
-  tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: string
-  tindak_lanjut__identitas_pelanggar__nik: string
-  tindak_lanjut__identitas_pelanggar__alamat: string
-  tindak_lanjut__identitas_pelanggar__jenis_usaha_id: number
-
-  tindak_lanjut__jenis_penindakan_id: number
-  tindak_lanjut__jumlah_pelanggar: number
-  tindak_lanjut__denda__non_pengadilan: number
-  tindak_lanjut__denda__tanggal_setor: string
-  tindak_lanjut__denda__nama_bank: string
-  tindak_lanjut__denda__no_validasi_bank: string
+export interface PelaporanTamuDaerahState extends Record<string, any> {
+  tanggal_kunjungan: string
+  waktu_mulai_kunjungan: string
+  waktu_selesai_kunjungan: string
+  asal_instansi: string
+  jml_pengunjung: string
+  maksud_dan_tujuan: string
+  pejabat_penerima_kunjungan: string
+  tempat_kunjungan: string
 }
 
-export const initialState: PelaporanKegiatanState = {
-  value: 0,
-  list_jenis_kegiatan: [],
-  list_jenis_pasal: [],
-  list_jenis_penindakan: [],
-  list_jenis_penyelesaian: [],
-  list_jenis_usaha: [],
-
-  filter_jenis_kegiatan_id: 0,
-
-  kegiatan__jenis_kegiatan_id: 0,
-  kegiatan__jumlah_personil: 0,
-  kegiatan__uraian_kegiatan: '',
-  kegiatan__tanggal: '2022-01-23',
-  kegiatan__jam: '08:00:00',
-  kegiatan__lokasi: '',
-  kegiatan__asal_laporan: '',
-  kegiatan__jenis_pengamanan_selection: [],
-  kegiatan__jenis_pengamanan_id: 0,
-  kegiatan__pengamanan_masalah: '',
-  kegiatan__pengamanan_pemecahan_masalah: '',
-  kegiatan__pengamanan_instansi_terkait: '',
-
-  kegiatan__asal_laporan_selection: [],
-  kegiatan__asal_laporan_id: 0,
-
-  tindak_lanjut__administrasi__jenis_pasal_id: 0,
-  tindak_lanjut__administrasi__jenis_penertiban: '',
-  tindak_lanjut__administrasi__jenis_pelanggaran: '',
-  tindak_lanjut__administrasi__perda_perkada: '',
-  tindak_lanjut__administrasi__penyelesaian_id: 0,
-
-  tindak_lanjut__identitas_pelanggar__no_bap: '3232323',
-  tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: '3232323',
-  tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: '3232323',
-  tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: '3232323',
-  tindak_lanjut__identitas_pelanggar__nik: '3232323',
-  tindak_lanjut__identitas_pelanggar__alamat: '3232323',
-  tindak_lanjut__identitas_pelanggar__jenis_usaha_id: 0,
-
-  tindak_lanjut__jenis_penindakan_id: 0,
-  tindak_lanjut__jumlah_pelanggar: 0,
-  tindak_lanjut__denda__non_pengadilan: 50000,
-  tindak_lanjut__denda__tanggal_setor: '2022-11-01',
-  tindak_lanjut__denda__nama_bank: 'BCA',
-  tindak_lanjut__denda__no_validasi_bank: '23423423',
+export const initialState: PelaporanTamuDaerahState = {
+  tanggal_kunjungan: '2022-01-23',
+  waktu_mulai_kunjungan: '08:00:00',
+  waktu_selesai_kunjungan: '08:00:00',
+  asal_instansi: '',
+  jml_pengunjung: '',
+  maksud_dan_tujuan: '',
+  pejabat_penerima_kunjungan: '',
+  tempat_kunjungan: '',
 }
 
-export const createSchemaFilterPelaporanKegiatan = [
+export const createSchemaPelaporanTamuDaerah = [
   Yup.object({
-    filter_jenis_kegiatan_id: Yup.number().integer().moreThan(0).label('Jenis Kegiatan'),
-    filter_jenis_kegiatan_id_selection: Yup.object(),
-  }),
-]
-
-export const createSchemaPelaporanKegiatan = [
-  Yup.object({
-    kegiatan__jenis_kegiatan_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Kegiatan'),
-    kegiatan__jenis_kegiatan_selection: Yup.object().required(),
-    kegiatan__jumlah_personil: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-      then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Personil'),
-    }),
-    kegiatan__uraian_kegiatan: Yup.string().min(10).max(1000).required().label('Uraian Kegiatan'),
-    kegiatan__tanggal: Yup.date().required().label('Tanggal Kegiatan'),
-    kegiatan__jam_start: Yup.string().required().label('Waktu Kegiatan'),
-    kegiatan__jam_end: Yup.string().required().label('Waktu Kegiatan'),
-    kegiatan__lokasi: Yup.string().min(3).max(64).required().label('Lokasi Kegiatan'),
-
-    kegiatan__asal_laporan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'LAPORAN MASYARAKAT',
-      then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Laporan Masyarakat'),
-    }),
-    kegiatan__asal_laporan_selection: Yup.object().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'LAPORAN MASYARAKAT',
-      then: Yup.object().notRequired(),
-      otherwise: Yup.object().required(),
-    }),
-    kegiatan__jenis_pengamanan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'PENGAMANAN',
-      then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Pengamanan'),
-    }),
-    kegiatan__jenis_pengamanan_selection: Yup.object().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'PENGAMANAN',
-      then: Yup.object().notRequired(),
-      otherwise: Yup.object().required(),
-    }),
-    kegiatan__pengamanan_masalah: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'PENGAMANAN',
-      then: Yup.string().notRequired(),
-      otherwise: Yup.string().min(5).max(500).required().label('Uraian Masalah'),
-    }),
-    kegiatan__pengamanan_pemecahan_masalah: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label !== 'PENGAMANAN',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(10).max(1000).required().label('Uraian Pemecahan Masalah'),
-      }
-    ),
-    kegiatan__pengamanan_instansi_terkait: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label !== 'PENGAMANAN',
-      then: Yup.string().notRequired(),
-      otherwise: Yup.string().min(2).max(32).required().label('Instansi Terkait'),
-    }),
-
-    tindak_lanjut__administrasi__jenis_pasal_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Pasal'),
-    tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().required(),
-    tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Jenis Penertiban'),
-    tindak_lanjut__administrasi__jenis_pelanggaran: Yup.string()
-      .min(3)
-      .max(256)
-      .required()
-      .label('Jenis Pelanggaran'),
-    tindak_lanjut__administrasi__perda_perkada: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Perda Perkada'),
-    tindak_lanjut__administrasi__penyelesaian_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Penyelesaian'),
-    tindak_lanjut__administrasi__penyelesaian_selection: Yup.object().required(),
-
-    tindak_lanjut__identitas_pelanggar__no_bap: Yup.string()
-      .min(3)
-      .max(16)
-      .required()
-      .label('NO BAP'),
-    tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Nama Penanggung Jawab'),
-    tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Nama Tempat Usaha'),
-    tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string()
-      .min(3)
-      .max(256)
-      .required()
-      .label('Alamat Tempat Usaha'),
-    tindak_lanjut__identitas_pelanggar__nik: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('NIK/Pasport Pelanggar'),
-    tindak_lanjut__identitas_pelanggar__alamat: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('Alamat Pelanggar'),
-    tindak_lanjut__identitas_pelanggar__jenis_usaha_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Usaha'),
-    tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object().required(),
-
-    tindak_lanjut__jenis_penindakan_id: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Penindakan'),
-    tindak_lanjut__jenis_penindakan_selection: Yup.object().required(),
-    tindak_lanjut__jumlah_pelanggar: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jumlah Pelanggar'),
-    tindak_lanjut__denda__non_pengadilan: Yup.number()
-      .integer()
-      .moreThan(1000)
-      .required()
-      .label('Jumlah Denda Non Pengadilan'),
-    tindak_lanjut__denda__tanggal_setor: Yup.date().required().label('Tanggal Setor Denda'),
-    tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(32).required().label('Nama Bank'),
-    tindak_lanjut__denda__no_validasi_bank: Yup.string()
-      .min(3)
-      .max(32)
-      .required()
-      .label('NO Validasi Bank'),
+    tanggal_kunjungan: Yup.date().required().label('Tanggal Kunjungan'),
+    waktu_mulai_kunjungan: Yup.string().required().label('Waktu Kunjungan'),
+    waktu_selesai_kunjungan: Yup.string().required().label('Waktu Kunjungan'),
+    asal_instansi: Yup.string().required().label('Asal Instansi'),
+    jml_pengunjung: Yup.string().required().label('Jumlah Pengunjung'),
+    maksud_dan_tujuan: Yup.string().required().label('Maksud dan Tujuan'),
+    pejabat_penerima_kunjungan: Yup.string().required().label('Pejabat Penerima Kunjungan'),
+    tempat_kunjungan: Yup.string().required().label('Tempat Kunjungan'),
   }),
   Yup.object({}),
 ]
 
-const excludeJenisKegiatan = [
-  'SIDANG TIPIRING',
-  'PENERTIBAN BANGUNAN',
-  'KEGIATAN PPKM',
-  'LAPORAN MASYARAKAT',
-  'PENERTIBAN MINUMAN BERALKOHOL',
-  'PENGAMANAN',
-]
-
-export const updateJenisKegiatanList: any = createAsyncThunk(
-  'pelaporanKegiatan/updateJenisKegiatanList',
-  async (thunkAPI) => {
-    const res = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`)
-    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-    return data
-  }
-)
+// export const updateJenisKegiatanList: any = createAsyncThunk(
+//   'pelaporanKegiatan/updateJenisKegiatanList',
+//   async (thunkAPI) => {
+//     const res = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`)
+//     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+//     return data
+//   }
+// )
 //  axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
 //    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 //    // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
 //    dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))
 //  })
 
-export const updateJenisPasalList: any = createAsyncThunk(
-  'pelaporanKegiatan/updateJenisPasalList',
-  async (jenisKegiatan: number, thunkAPI) => {
-    const res = await axios.get(
-      `http://localhost:3001/jenis-perda-perkada/combobox?%24filter=${jenisKegiatan}&%24orderby=nama`
-    )
-    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-
-    return data
-  }
-)
-
-export const updateJenisPenyelesaianList: any = createAsyncThunk(
-  'pelaporanKegiatan/updateJenisPenyelesaianList',
-  async (jenisKegiatan: number, thunkAPI) => {
-    const res = await axios.get(
-      `http://localhost:3001/jenis-penyelesaian/combobox?%24filter=${jenisKegiatan}&%24orderby=nama`
-    )
-    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-
-    return data
-  }
-)
-
-export const pelaporanKegiatanSlice = createSlice({
-  name: 'pelaporanKegiatan',
+export const pelaporanTamuDaerahSlice = createSlice({
+  name: 'pelaporanTamuDaerah',
   initialState,
-  extraReducers: (builder) => {
-    builder.addCase(updateJenisKegiatanList.fulfilled, (state, action) => {
-      state.list_jenis_kegiatan = action.payload
-    })
-    builder.addCase(updateJenisPasalList.fulfilled, (state, action) => {
-      state.list_jenis_pasal = action.payload
-    })
-    builder.addCase(updateJenisPenyelesaianList.fulfilled, (state, action) => {
-      state.list_jenis_penyelesaian = action.payload
-    })
-  },
+
   reducers: {
     changedValue: (
-      state: PelaporanKegiatanState,
+      state: PelaporanTamuDaerahState,
       action: PayloadAction<{target: {name: string; value: any}}>
     ) => {
       if (typeof state[action.payload.target.name] === 'number') {
@@ -322,20 +80,8 @@ export const pelaporanKegiatanSlice = createSlice({
   },
 })
 
-// export const {reset} = pelaporanKegiatanSlice.actions
-
 // Action creators are generated for each case reducer function
 
-export const isTipiring = (formikValues: any) =>
-  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'SIDANG TIPIRING'
-export const isLaporanMasyarakat = (formikValues: any) =>
-  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'LAPORAN MASYARAKAT'
-export const isPengamanan = (formikValues: any) =>
-  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'PENGAMANAN'
-export const isApelRapat = (formikValues: any) =>
-  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'APEL' ||
-  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'RAPAT'
+export const {changedValue} = pelaporanTamuDaerahSlice.actions
 
-export const {changedValue, reset} = pelaporanKegiatanSlice.actions
-
-export default pelaporanKegiatanSlice.reducer
+export default pelaporanTamuDaerahSlice.reducer

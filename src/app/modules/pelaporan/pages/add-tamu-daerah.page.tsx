@@ -2,80 +2,74 @@ import React, {FC, useEffect, useState, FormEvent, useRef} from 'react'
 import {StepDetailTamuDaerah} from './steps/step-detail-tamu-daerah'
 import {useDispatch, useSelector} from 'react-redux'
 import {
-  createSchemaPelaporanPengawasan,
+  createSchemaPelaporanTamuDaerah,
   initialState,
-  PelaporanPengawasanState,
-  changedValue,
-} from '../../../redux/slices/pelaporan-pengawasan-reklame.slice'
-import {Formik, Form, FormikValues, FormikContext} from 'formik'
-import axios from 'axios'
-import {ToFieldStateBNV} from '../components/fields.formikcto'
+  PelaporanTamuDaerahState,
+} from '../../../redux/slices/pelaporan-tamu-daerah.slice'
+import {Formik, Form, FormikValues} from 'formik'
 import {RootState} from '../../../redux/store'
+import {useNavigate} from 'react-router-dom'
+import Swal from 'sweetalert2'
+import axios from 'axios'
 
 export const AddTamuDaerahPage: FC = () => {
-  const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanPengawasan[0])
-  const [val, setVal] = useState<any>(initialState)
+  const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanTamuDaerah[0])
 
-  const dispatch = useDispatch()
-  const jenisKegiatanId = useSelector(
-    (s: RootState) => s.pelaporanPengawasan.kejadian__jenis_pengawasan_id
-  )
+  const navigate = useNavigate()
+  const allValues = useSelector((s: RootState) => s.pelaporanTamuDaerah)
 
-  // const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-  //   <StepDetailKejadian values={val} setVal={setVal} />,
-  //   ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindakLanjutKejadian />]),
-  // ])
-
-  const updateJenisKejadianList = () => {
-    axios.get(`http://localhost:3001/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_kejadian', data)))
-    })
-  }
-
-  const updateJenisUsahaList = () => {
-    axios.get(`http://localhost:3001/jenis-usaha/combobox?$oderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_usaha', data)))
-    })
-  }
-
-  const updateJenisPenindakanList = () => {
-    axios.get(`http://localhost:3001/jenis-penindakan/combobox?$oderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_penindakan', data)))
-    })
-  }
-
-  useEffect(() => {
-    updateJenisKejadianList()
-    updateJenisUsahaList()
-    updateJenisPenindakanList()
-  }, [])
-
-  const submitPelaporanPengawasan = (values: PelaporanPengawasanState, actions: FormikValues) => {
+  const submitPelaporanTamuDaerah = async (
+    values: PelaporanTamuDaerahState,
+    actions: FormikValues
+  ) => {
+    const bodyParam: PelaporanTamuDaerahState = {
+      tanggal_kunjungan: allValues.tanggal_kunjungan,
+      waktu_mulai_kunjungan: allValues.waktu_mulai_kunjungan,
+      waktu_selesai_kunjungan: allValues.waktu_selesai_kunjungan,
+      asal_instansi: allValues.asal_instansi,
+      jml_pengunjung: allValues.jml_pengunjung,
+      maksud_dan_tujuan: allValues.maksud_dan_tujuan,
+      pejabat_penerima_kunjungan: allValues.pejabat_penerima_kunjungan,
+      tempat_kunjungan: allValues.tempat_kunjungan,
+      value: 0,
+      id: 0,
+    }
     try {
-      // if (!isLastStep) {
-      //   console.log('values')
-      //   return next()
-      // }
-      console.log('laststep', values)
-      alert(JSON.stringify(values, null, 2))
-      actions.setSubmitting(false)
+      const res = await axios.post(`http://localhost:3002/laporan-tamudaerah`, bodyParam)
+      // alert(JSON.stringify(values, null, 2))
+
+      if (res) {
+        actions.setSubmitting(false)
+        Swal.fire({
+          icon: 'success',
+          text: 'Data berhasil disubmit',
+          showConfirmButton: false,
+          timer: 1500,
+          color: '#000000',
+        })
+      }
     } catch (error) {
-      console.log(error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Data gagal disimpan, harap mencoba lagi',
+        showConfirmButton: false,
+        timer: 1500,
+      })
+      console.error(error)
     }
   }
+
+  console.log('Ini values', allValues)
 
   return (
     <>
       <Formik
         validationSchema={currentSchema}
         initialValues={initialState}
-        onSubmit={submitPelaporanPengawasan}
+        onSubmit={submitPelaporanTamuDaerah}
       >
-        {({handleReset, handleSubmit, errors, values}) => (
-          <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_pengawasan_form'>
+        {({handleReset, handleSubmit, errors, values, setFieldValue}) => (
+          <Form className='mx-auto w-100 pt-15 pb-10' id='pelaporan_tamu_daerah_form'>
             <>
               <div className='card'>
                 <div className='card-body'>
@@ -89,7 +83,11 @@ export const AddTamuDaerahPage: FC = () => {
 
                   <div className='tab-content' id='myTabContent'>
                     <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
-                      <StepDetailTamuDaerah values={values} handleReset={handleReset} />
+                      <StepDetailTamuDaerah
+                        values={values}
+                        handleReset={handleReset}
+                        allValues={allValues}
+                      />
                     </div>
                   </div>
                 </div>
@@ -100,22 +98,24 @@ export const AddTamuDaerahPage: FC = () => {
                     <div className='col'></div>
                     <div className='col'>
                       <div className='row'>
-                        <a href='#' className='col-5 btn btn-flex btn-secondary px-6 m-3'>
+                        <button
+                          type='button'
+                          onClick={() => navigate(-1)}
+                          className='col-5 btn btn-flex btn-secondary px-6 m-3'
+                        >
                           <span className='svg-icon svg-icon-2x'>
                             <i className='fa-solid fa-arrow-left'></i>
                           </span>
                           <span className='d-flex flex-column align-items-start ms-2'>
                             <span className='fs-3 fw-bold'>Kembali</span>
-                            <span className='fs-7'>ke Halaman Utama</span>
                           </span>
-                        </a>
+                        </button>
                         <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
                           <span className='svg-icon svg-icon-2x'>
                             <i className='fa-solid fa-paper-plane'></i>
                           </span>
                           <span className='d-flex flex-column align-items-start ms-2'>
                             <span className='fs-3 fw-bold'>Simpan</span>
-                            <span className='fs-7'>dan Selanjutnya</span>
                           </span>
                         </button>
                       </div>

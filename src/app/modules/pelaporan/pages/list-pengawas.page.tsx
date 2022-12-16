@@ -19,12 +19,12 @@ import {
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
 import axios from 'axios'
-import DtKabid, {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-kegiatan'
+import DtKabid, {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-pengawasan'
 import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
-export const ListKegiatanPage: FC = () => {
+export const ListPengawasPage: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
@@ -79,7 +79,7 @@ export const ListKegiatanPage: FC = () => {
           >
             <div className='page-title d-flex flex-column justify-content-center flex-wrap me-3'>
               <h1 className='page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0'>
-                Daftar Laporan Kegiatan
+                Daftar Laporan Pengawasan Reklame
               </h1>
             </div>
           </div>
@@ -139,44 +139,14 @@ export const ListKegiatanPage: FC = () => {
                               <div className='mb-10'>
                                 <div className='row'>
                                   <div className='col-4 pt-2'>
-                                    <label className='form-label'>Pelaksana Kegiatan</label>
+                                    <label className='form-label align-middle'>Tanggal Awal</label>
                                   </div>
                                   <div className='col-8'>
                                     <Field
-                                      name='filter_jenis_kegiatan_id_selection'
-                                      target='filter_jenis_kegiatan_id'
-                                      className='form-control'
-                                      component={SelectField}
-                                      options={jenisKegiatanList}
-                                      onChange={(o: ChangeEvent<any>) => {
-                                        // dispatch(changedValue(ToFieldStateCE(o)))
-                                        // updateJenisPasalList()
-                                        // updateJenisPenyelesaianList()
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label align-middle'>
-                                      Jenis Kegiatan
-                                    </label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <Field
-                                      name='filter_jenis_kegiatan_id_selection'
-                                      target='filter_jenis_kegiatan_id'
-                                      className='form-control'
-                                      component={SelectField}
-                                      options={jenisKegiatanList}
-                                      onChange={(o: ChangeEvent<any>) => {
-                                        // dispatch(changedValue(ToFieldStateCE(o)))
-                                        // updateJenisPasalList()
-                                        // updateJenisPenyelesaianList()
+                                      name='kegiatan__tanggal'
+                                      component={DatePickerField}
+                                      onChange={(o: any) => {
+                                        dispatch(changedValue(ToFieldStateCE(o)))
                                       }}
                                     />
                                   </div>
@@ -187,12 +157,12 @@ export const ListKegiatanPage: FC = () => {
                               <div className='mb-10'>
                                 <div className='row'>
                                   <div className='col-2 pt-2'>
-                                    <label className='form-label align-middle'>Tanggal</label>
+                                    <label className='form-label align-middle'>Tanggal Akhir</label>
                                   </div>
                                   <div className='col-4 mx-10'>
                                     <Field
                                       name='kegiatan__tanggal'
-                                      component={DatePickerFieldRange}
+                                      component={DatePickerField}
                                       onChange={(o: any) => {
                                         dispatch(changedValue(ToFieldStateCE(o)))
                                       }}
