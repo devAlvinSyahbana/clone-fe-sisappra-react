@@ -10,8 +10,6 @@ import * as Yup from 'yup'
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanTamuDaerahState extends Record<string, any> {
-  value: number
-  id: number
   tanggal_kunjungan: string
   waktu_mulai_kunjungan: string
   waktu_selesai_kunjungan: string
@@ -23,9 +21,6 @@ export interface PelaporanTamuDaerahState extends Record<string, any> {
 }
 
 export const initialState: PelaporanTamuDaerahState = {
-  value: 0,
-
-  id: 0,
   tanggal_kunjungan: '2022-01-23',
   waktu_mulai_kunjungan: '08:00:00',
   waktu_selesai_kunjungan: '08:00:00',
@@ -38,7 +33,6 @@ export const initialState: PelaporanTamuDaerahState = {
 
 export const createSchemaPelaporanTamuDaerah = [
   Yup.object({
-    id: Yup.number().integer().moreThan(0).required().label('Tamu Daerah'),
     tanggal_kunjungan: Yup.date().required().label('Tanggal Kunjungan'),
     waktu_mulai_kunjungan: Yup.string().required().label('Waktu Kunjungan'),
     waktu_selesai_kunjungan: Yup.string().required().label('Waktu Kunjungan'),

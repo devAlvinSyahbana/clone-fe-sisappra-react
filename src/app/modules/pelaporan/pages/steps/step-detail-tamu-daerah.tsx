@@ -30,6 +30,7 @@ interface StepDetailTamuDaeraehProps {
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
   handleReset?: (e?: React.SyntheticEvent<any>) => void
+  allValues: any
 }
 
 export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
@@ -37,12 +38,9 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
   values,
   handleBlur,
   handleReset,
+  allValues,
 }) => {
   const dispatch = useDispatch()
-
-  // useEffect(() => {
-  //   // setVal(values)
-  // }, [dispatch])
 
   return (
     <div className='w-50'>
