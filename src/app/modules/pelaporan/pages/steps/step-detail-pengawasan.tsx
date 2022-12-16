@@ -4,12 +4,11 @@ import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 import {
   changedValue,
-  isBanjir,
-  isPendampinganKekerasanPadaPerempuan,
-  isUnjukRasa,
   reset,
-  updateJenisPenyelesaianList,
-} from '../../../../redux/slices/pelaporan-kejadian.slice'
+  updateKotaList,
+  updateKecamatanList,
+  updateKelurahanList,
+} from '../../../../redux/slices/pelaporan-pengawasan-reklame.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {
   DatePickerField,
@@ -37,6 +36,7 @@ interface StepDetailKejadianProps {
     <T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
   handleReset?: (e?: React.SyntheticEvent<any>) => void
+  listMasterPengawasanValue: any
 }
 
 export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
@@ -44,15 +44,16 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
   values,
   handleBlur,
   handleReset,
+  listMasterPengawasanValue,
 }) => {
   const dispatch = useDispatch()
-  const jenisKejadianList = useSelector((s: RootState) => s.pelaporanKejadian.list_jenis_kejadian)
-  const jenisKejadianSelect = values.kegiatan__jenis_kejadian_selection?.label
-  const asalLaporanSelect = values.kegiatan__asal_laporan_selection?.label
+  const kotaList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kota)
+  const kecamatanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kecamatan)
+  const kelurahanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kelurahan)
 
   useEffect(() => {
-    // setVal(values)
-  }, [dispatch])
+    listMasterPengawasanValue()
+  }, [])
 
   return (
     <div className='w-50'>
@@ -63,7 +64,6 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
           onClick={() => {
             handleReset?.()
             dispatch(reset())
-            // dispatch(updateJenisKegiatanList())
           }}
         >
           Hapus
@@ -71,7 +71,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         <div className='mb-10'>
           <label className='required form-label'>Tanggal Pengawasan</label>
           <Field
-            name='kegiatan__tanggal'
+            name='pengawasan__tanggal'
             className='form-control'
             component={DatePickerField}
             onChange={(o: any) => {
@@ -79,7 +79,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__tanggal' />
+            <ErrorMessage name='pengawasan__tanggal' />
           </div>
         </div>
         <div className='mb-10'>
@@ -87,7 +87,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
           <div className='row'>
             <div className='col'>
               <Field
-                name='kegiatan__jam_start'
+                name='pengawasan__jam_start'
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -95,12 +95,12 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jam_start' />
+                <ErrorMessage name='pengawasan__jam_start' />
               </div>
             </div>
             <div className='col'>
               <Field
-                name='kegiatan__jam_end'
+                name='pengawasan__jam_end'
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -108,7 +108,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jam_end' />
+                <ErrorMessage name='pengawasan__jam_end' />
               </div>
             </div>
           </div>
@@ -116,52 +116,52 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         <div className='mb-10'>
           <label className='required form-label'>Kota</label>
           <Field
-            name='kegiatan__jenis_kegiatan_selection'
-            target='kegiatan__jenis_kegiatan_id'
+            name='kota_selection'
+            target='kota_id'
             className='form-control'
             component={SelectField}
-            options={jenisKejadianList}
+            options={kotaList}
             onKeyUp={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__jenis_kegiatan_id' />
-            <ErrorMessage name='kegiatan__jenis_kegiatan_selection' />
+            <ErrorMessage name='kota_id' />
+            <ErrorMessage name='kota_selection' />
           </div>
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kecamatan</label>
           <Field
-            name='kegiatan__jenis_kegiatan_selection'
-            target='kegiatan__jenis_kegiatan_id'
+            name='kecamatan_selection'
+            target='kecamatan_id'
             className='form-control'
             component={SelectField}
-            options={jenisKejadianList}
+            options={kecamatanList}
             onKeyUp={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__jenis_kegiatan_id' />
-            <ErrorMessage name='kegiatan__jenis_kegiatan_selection' />
+            <ErrorMessage name='kecamatan_id' />
+            <ErrorMessage name='kecamatan_selection' />
           </div>
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kelurahan</label>
           <Field
-            name='kegiatan__jenis_kegiatan_selection'
-            target='kegiatan__jenis_kegiatan_id'
+            name='kelurahan_selection'
+            target='kelurahan_id'
             className='form-control'
             component={SelectField}
-            options={jenisKejadianList}
+            options={kelurahanList}
             onKeyUp={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kegiatan__jenis_kegiatan_id' />
-            <ErrorMessage name='kegiatan__jenis_kegiatan_selection' />
+            <ErrorMessage name='kelurahan_id' />
+            <ErrorMessage name='kelurahan_selection' />
           </div>
         </div>
         <div className='mb-10 form-group'>

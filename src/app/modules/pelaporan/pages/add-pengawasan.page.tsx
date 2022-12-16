@@ -1,70 +1,35 @@
 import React, {FC, useEffect, useState, FormEvent, useRef} from 'react'
-import {StepDetailKejadian} from './steps/step-detail-kejadian'
-import {StepTindakLanjutKejadian} from './steps/step-tindaklanjut-kejadian'
-import {StepDokumentasi} from './steps/step-dokumentasi'
-import {useDispatch, useSelector} from 'react-redux'
+import {StepDetailPengawasan} from './steps/step-detail-pengawasan'
+import {StepTindakLanjutPengawasan} from './steps/step-tindaklanjut-pengawasan'
+import {useDispatch} from 'react-redux'
 import {
   createSchemaPelaporanPengawasan,
   initialState,
   PelaporanPengawasanState,
   changedValue,
+  updateKecamatanList,
+  updateKotaList,
+  updateKelurahanList,
 } from '../../../redux/slices/pelaporan-pengawasan-reklame.slice'
-import {Formik, Form, FormikValues, FormikContext} from 'formik'
-import axios from 'axios'
-import {ToFieldStateBNV} from '../components/fields.formikcto'
-import {RootState} from '../../../redux/store'
-import useMultistepForm from './steps/useMultistepForm'
-import {StepDetailPengawasan} from './steps/step-detail-pengawasan'
-import {StepTindakLanjutPengawasan} from './steps/step-tindaklanjut-pengawasan'
+import {Formik, Form, FormikValues} from 'formik'
 
 export const AddPengawasanPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanPengawasan[0])
-  const [val, setVal] = useState<any>(initialState)
 
   const dispatch = useDispatch()
-  const jenisKegiatanId = useSelector(
-    (s: RootState) => s.pelaporanPengawasan.kejadian__jenis_pengawasan_id
-  )
 
-  // const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultistepForm([
-  //   <StepDetailKejadian values={val} setVal={setVal} />,
-  //   ...(isApelRapat(val) ? [<StepDokumentasi />] : [<StepTindakLanjutKejadian />]),
-  // ])
-
-  const updateJenisKejadianList = () => {
-    axios.get(`http://localhost:3001/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_kejadian', data)))
-    })
-  }
-
-  const updateJenisUsahaList = () => {
-    axios.get(`http://localhost:3001/jenis-usaha/combobox?$oderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_usaha', data)))
-    })
-  }
-
-  const updateJenisPenindakanList = () => {
-    axios.get(`http://localhost:3001/jenis-penindakan/combobox?$oderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      dispatch(changedValue(ToFieldStateBNV('list_jenis_penindakan', data)))
-    })
+  const listMasterPengawasanValue = () => {
+    dispatch(updateKecamatanList())
+    dispatch(updateKotaList())
+    dispatch(updateKelurahanList())
   }
 
   useEffect(() => {
-    updateJenisKejadianList()
-    updateJenisUsahaList()
-    updateJenisPenindakanList()
+    listMasterPengawasanValue()
   }, [])
 
   const submitPelaporanPengawasan = (values: PelaporanPengawasanState, actions: FormikValues) => {
     try {
-      // if (!isLastStep) {
-      //   console.log('values')
-      //   return next()
-      // }
-      console.log('laststep', values)
       alert(JSON.stringify(values, null, 2))
       actions.setSubmitting(false)
     } catch (error) {
@@ -99,7 +64,11 @@ export const AddPengawasanPage: FC = () => {
 
                   <div className='tab-content' id='myTabContent'>
                     <div className='tab-pane fade show active' id='kt_tab_pane_1' role='tabpanel'>
-                      <StepDetailPengawasan values={values} handleReset={handleReset} />
+                      <StepDetailPengawasan
+                        values={values}
+                        handleReset={handleReset}
+                        listMasterPengawasanValue={listMasterPengawasanValue}
+                      />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
                       <StepTindakLanjutPengawasan />
