@@ -2,7 +2,7 @@ import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {useFormik, FormikHelpers} from 'formik'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme} from 'react-data-table-component'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -11,8 +11,150 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import clsx from 'clsx'
 import Swal from 'sweetalert2'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import * as Yup from 'yup'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {KTSVG} from '../../../../_metronic/helpers'
+
+// Theme for dark or light interface
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
+
+const customStyles = {
+  rows: {
+    style: {
+      minHeight: '105px', // override the row height
+    },
+  },
+  headCells: {
+    style: {
+      paddingLeft: '14px', // override the cell padding for head cells
+      paddingRight: '14px',
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: '14px', // override the cell padding for data cells
+      paddingRight: '14px',
+    },
+  },
+}
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
 export const JABATAN_URL = `${API_URL}/master/jabatan` //http://localhost:3000/sarana-prasarana
@@ -26,6 +168,8 @@ const validatorForm = Yup.object().shape({
   status: Yup.string().required('Wajib diisi'),
 })
 export function Jabatan() {
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
@@ -255,7 +399,7 @@ export function Jabatan() {
     setValuesFormik((prevstate) => ({
       ...prevstate,
       ...data.data,
-      nama:data.data.jabatan
+      nama: data.data.jabatan,
     }))
   }
   //End UPDATE
@@ -332,41 +476,39 @@ export function Jabatan() {
     <div className={`card`}>
       {/* begin::Body */}
       <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-xxl-6 col-lg-6 col-md-3 col-sm-10'>
-          <label htmlFor='' className='mb-3'>
-            Jabatan
+        <div className='row g-8 mt-2 ms-5 me-5'>
+          <label>
+            <h3>Jabatan</h3>
           </label>
-          <input
-            type='text'
-            className='form-control form-control form-control-solid'
-            name='nama'
-            value={valFilterJabatan.val}
-            onChange={handleChangeInputJabatan}
-            placeholder='Jabatan'
-          />
+          <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
+            <input
+              type='text'
+              className='form-control form-control form-control-solid'
+              name='nama'
+              value={valFilterJabatan.val}
+              onChange={handleChangeInputJabatan}
+              placeholder='Jabatan'
+            />
+          </div>
+          <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
+            <Link to='#' onClick={handleFilter}>
+              {/* 1 */}
+              <button className='btn btn-light-primary me-2'>
+                <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
+                Cari
+              </button>
+            </Link>
+          </div>
+          <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+            <Link to='#i'>
+              <button className='btn btn-primary me-2' onClick={doAdd}>
+                <i className='fa-solid fa-plus'></i>
+                Tambah
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
-      <div className='row g-8 mt-2 ms-5 me-5'>
-        <div className='col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#' onClick={handleFilter}>
-            {/* 1 */}
-            <button className='btn btn-light-primary me-2'>
-              <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
-              Cari
-            </button>
-          </Link>
-        </div>
-
-        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-          <Link to='#i'>
-            <button className='btn btn-primary me-5' onClick={doAdd}>
-              <i className='fa-solid fa-plus'></i>
-              Tambah
-            </button>
-          </Link>
-        </div>
-      </div>
-
       <>
         <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
           <form onSubmit={formik.handleSubmit}>
@@ -382,6 +524,7 @@ export function Jabatan() {
                     className='form-control form-control-solid'
                     onChange={handleChangeFormik}
                     value={valuesFormik?.nama}
+                    placeholder='Jabatan'
                   />
                 </div>
               </div>
@@ -429,9 +572,11 @@ export function Jabatan() {
           progressPending={loading}
           progressComponent={<LoadingAnimation />}
           pagination
+          customStyles={customStyles}
           paginationServer
           paginationTotalRows={totalRows}
           sortServer
+          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
           onSort={handleSort}
           onChangeRowsPerPage={handlePerRowsChange}
           onChangePage={handlePageChange}

@@ -2,18 +2,13 @@ import {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import Dropdown from 'react-bootstrap/Dropdown'
-import DropdownButton from 'react-bootstrap/DropdownButton'
 import {LaporanRekapHeader} from './LaporanRekapHeader'
 import AsyncSelect from 'react-select/async'
-import {SelectOptionAutoCom} from '../KepegawaianInterface'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import ReactToPrint from 'react-to-print'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -277,34 +272,16 @@ export function TabDataPegawaiYangNaikPangkat() {
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='mb-2 mt-2'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item
-                      href='#'
-                      onClick={() =>
-                        navigate(
-                          `/kepegawaian/update-naik-pangkat/UpdateNaikPangkat/${record?.id}`,
-                          {
-                            replace: true,
-                          }
-                        )
-                      }
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
+            <button
+              className='btn btn-light-primary btn-sm me-2'
+              onClick={() =>
+                navigate(`/kepegawaian/update-naik-pangkat/UpdateNaikPangkat/${record?.id}`, {
+                  replace: true,
+                })
+              }
+            >
+              Ubah
+            </button>
           </Fragment>
         )
       },
@@ -412,9 +389,9 @@ export function TabDataPegawaiYangNaikPangkat() {
     setFilterNoPegawai({val: ''})
     setFilterNip({val: ''})
     setValMasterBidangWilayah({label: '', value: null})
-    setValMasterPelaksana({label: '', value: ''})
+    setValMasterPelaksana({label: '', value: null})
     setDataPangkat({label: '', value: null})
-    setValMasterJabatan({label: '', value: ''})
+    setValMasterJabatan({label: '', value: null})
     setDataStPa({label: '', value: null})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
@@ -451,18 +428,17 @@ export function TabDataPegawaiYangNaikPangkat() {
     })
   }
   //end unduh
-
-  //kota
   const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
+  const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
-    const json = await response.data.data
+    const json = response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
+    callback: (options: SelectOption[]) => void
   ) => {
     setTimeout(async () => {
       callback(await filterbidangwilayah(inputValue))
@@ -470,59 +446,85 @@ export function TabDataPegawaiYangNaikPangkat() {
   }
   const handleChangeInputKota = (newValue: any) => {
     setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterBidangWilayah((prevstate) => ({
-      ...prevstate,
-      id: newValue.value,
-    }))
-  }
-  //end kota
+    setIdMasterBidangWilayah({id: newValue.value})
+    setValMasterPelaksana({value: null, label: ''})
+    setValMasterJabatan({value: null, label: ''})
+    // console.log('cek', newValue.value)
+    const timeout = setTimeout(async () => {
+      const response = await axios.get(
+        `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
+      )
+      let items = response.data.data
+      Array.from(items).forEach(async (item: any) => {
+        item.label = item.nama
+        item.value = item.id
+      })
+      setMasterBidangWilayah(items)
+      // console.log(items)
+    }, 100)
 
+    return () => clearTimeout(timeout)
+  }
+  //end nama_hak_akses
+
+  // kecamatan
   const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: '', label: ''})
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
+  const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${parseInt(idMasterBidangWilayah.id)}${
+      `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
         inputValue !== '' && `&nama=${inputValue}`
       }`
     )
-    const json = await response.data.data
+    const json = response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsKecamatan = (
     inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
+    callback: (options: SelectOption[]) => void
   ) => {
     setTimeout(async () => {
       callback(await filterKecamatan(inputValue))
-    }, 1000)
+    }, 500)
   }
   const handleChangeInputKecamatan = (newValue: any) => {
     setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterPelaksana((prevstate) => ({
-      ...prevstate,
-      id: newValue.value,
-    }))
+    setIdMasterPelaksana({id: newValue.value})
+    setValMasterJabatan({value: null, label: ''})
+    // console.log('cek', newValue.value)
+    const timeout = setTimeout(async () => {
+      const response = await axios.get(
+        `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${newValue.value}`
+      )
+      let items = response.data.data
+      Array.from(items).forEach(async (item: any) => {
+        item.label = item.jabatan
+        item.value = item.id
+      })
+      setMasterPelaksana(items)
+      // console.log(items)
+    }, 100)
+
+    return () => clearTimeout(timeout)
   }
-  //end kecamtan
+  //end kecamatan
 
   //jabatan
-  const [valMasterJabatan, setValMasterJabatan] = useState({value: '', label: ''})
+  const [valMasterJabatan, setValMasterJabatan] = useState({value: null, label: ''})
   const filterjabatan = async (inputValue: string) => {
     const response = await axios.get(
       `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(idMasterPelaksana.id)}${
         inputValue !== '' && `&nama=${inputValue}`
       }`
     )
-    const json = await response.data.data
+    const json = response.data.data
     return json.map((i: any) => ({label: i.jabatan, value: i.id}))
   }
-  const loadOptionsJabatan = (
-    inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
-  ) => {
+  const loadOptionsJabatan = (inputValue: string, callback: (options: SelectOption[]) => void) => {
     setTimeout(async () => {
       callback(await filterjabatan(inputValue))
-    }, 1000)
+    }, 500)
   }
   const handleChangeInputJabatan = (newValue: any) => {
     setValMasterJabatan((prevstate: any) => ({...prevstate, ...newValue}))
@@ -587,6 +589,8 @@ export function TabDataPegawaiYangNaikPangkat() {
                   Wilayah / Bidang
                 </label>
                 <AsyncSelect
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                  className='mb-5'
                   value={
                     valMasterBidangWilayah.value
                       ? valMasterBidangWilayah
@@ -595,7 +599,6 @@ export function TabDataPegawaiYangNaikPangkat() {
                   loadOptions={loadOptionsbidangwilayah}
                   defaultOptions
                   onChange={handleChangeInputKota}
-                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
                 />
               </div>
             </div>
@@ -620,12 +623,14 @@ export function TabDataPegawaiYangNaikPangkat() {
                   Kecamatan / Seksi
                 </label>
                 <AsyncSelect
+                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+                  className='mb-5'
                   value={
                     valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}
                   }
                   loadOptions={loadOptionsKecamatan}
+                  defaultOptions={masterBidangWilayah}
                   onChange={handleChangeInputKecamatan}
-                  styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
                 />
               </div>
             </div>
@@ -660,10 +665,11 @@ export function TabDataPegawaiYangNaikPangkat() {
                 Jabatan / Kelurahan
               </label>
               <AsyncSelect
+                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
                 value={valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}}
                 loadOptions={loadOptionsJabatan}
+                defaultOptions={masterPelaksana}
                 onChange={handleChangeInputJabatan}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
               />
             </div>
             <div className='col-xxl-6 col-lg-6 col-md-6 col-sm-12'>

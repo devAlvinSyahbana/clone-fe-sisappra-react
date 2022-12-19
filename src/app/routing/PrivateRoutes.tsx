@@ -14,10 +14,11 @@ const PrivateRoutes = () => {
   const KepegawaianPage = lazy(() => import('../modules/kepegawaian/KepegawaianPage'))
   const MasterPage = lazy(() => import('../modules/master/MasterPage'))
   const PelaporanPage = lazy(() => import('../modules/pelaporan/PelaporanPage'))
-
+  const ManajemenDataPage = lazy(() => import('../modules/manajemen_data/ManajemenDataPage'))
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
   const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
   const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
+  const PerdaPerkadaPage = lazy(() => import('../modules/perda_perkada/PerdaPerkadaPage'))
   const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
   const ManajemenPenggunaPage = lazy(() => import('../modules/apps/ManajemenPenggunaPage'))
   const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
@@ -53,6 +54,22 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <KepegawaianPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='manajemendata/*'
+          element={
+            <SuspensedView>
+              <ManajemenDataPage />
+            </SuspensedView>
+          }
+        />
+         <Route
+          path='perdaperkada/*'
+          element={
+            <SuspensedView>
+              <PerdaPerkadaPage />
             </SuspensedView>
           }
         />
