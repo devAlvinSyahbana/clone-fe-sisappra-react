@@ -23,15 +23,6 @@ import useMultistepForm from './steps/useMultistepForm'
 import Swal from 'sweetalert2'
 import {useNavigate} from 'react-router-dom'
 
-// const excludeJenisKegiatan = [
-//   'SIDANG TIPIRING',
-//   'PENERTIBAN BANGUNAN',
-//   'KEGIATAN PPKM',
-//   'LAPORAN MASYARAKAT',
-//   'PENERTIBAN MINUMAN BERALKOHOL',
-//   'PENGAMANAN',
-// ]
-
 export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
 export const AddKegiatanUmumPage: FC = () => {
@@ -59,7 +50,8 @@ export const AddKegiatanUmumPage: FC = () => {
       kegiatan__jumlah_personil: allValues.kegiatan__jumlah_personil,
       kegiatan__uraian_kegiatan: allValues.kegiatan__uraian_kegiatan,
       kegiatan__tanggal: allValues.kegiatan__tanggal,
-      kegiatan__jam: allValues.kegiatan__jam,
+      kegiatan__jam_start: allValues.kegiatan__jam_start + ':00',
+      kegiatan__jam_end: allValues.kegiatan__jam_end + ':00',
       kegiatan__lokasi: allValues.kegiatan__lokasi,
       tindak_lanjut__administrasi__jenis_pasal_id:
         allValues.tindak_lanjut__administrasi__jenis_pasal_id,
@@ -101,6 +93,7 @@ export const AddKegiatanUmumPage: FC = () => {
     // }
     // const res = await axios.post(`http://127.0.0.1:3002/kegiatan-umum/`)
     try {
+      console.log(bodyparam.kegiatan__jam_start)
       const res = await axios.post(`${API_URL}/kegiatan-umum`, bodyparam)
       if (res) {
         console.log('laststep', values)
@@ -132,6 +125,7 @@ export const AddKegiatanUmumPage: FC = () => {
       <Formik
         validationSchema={currentSchema}
         initialValues={initialState}
+        enableReinitialize={true}
         onSubmit={submitPelaporanKegiatan}
       >
         {({handleReset, handleSubmit, errors, values, setFieldValue}) => (
