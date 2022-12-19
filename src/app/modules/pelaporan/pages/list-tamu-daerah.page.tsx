@@ -194,7 +194,7 @@ export const ListTamuDaerahPage: FC = () => {
                               <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                                 {/* begin::Filter Button */}
                                 <Button
-                                  onClick={() => navigate('/pelaporan/TambahLaporanKegiatan')}
+                                  onClick={() => navigate('/pelaporan/tambah-laporan-tamu-daerah')}
                                   className='btn btn-primary me-2'
                                 >
                                   {/* begin::Add user */}

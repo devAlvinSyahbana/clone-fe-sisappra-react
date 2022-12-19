@@ -60,9 +60,9 @@ export default function DtKabid(props: any) {
 
 export function DtAdmin(props: any) {
   const dispatch = useDispatch()
-  const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
+  const res = axios.get(`http://localhost:3002/tamu-daerah`)
 
-  console.log(jenisKegiatanList)
+  console.log(res)
 
   const columns2 = [
     {
