@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {Fragment} from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
@@ -60,9 +60,29 @@ export default function DtKabid(props: any) {
 
 export function DtAdmin(props: any) {
   const dispatch = useDispatch()
-  const res = axios.get(`http://localhost:3002/tamu-daerah`)
+  const [data, setData] = useState([])
 
-  console.log(res)
+  const dataTamuDaerah = () => {
+    axios.get(`http://localhost:3002/tamu-daerah/`).then((res) => {
+      const data = res.data.data.map((d: any) => ({
+        no: d.id,
+        tanggal_kunjungan: d.tanggal_kunjungan,
+        waktu_mulai_kunjungan: d.waktu_mulai_kunjungan,
+        waktu_selesai_kunjungan: d.waktu_selesai_kunjungan,
+        asal_instansi: d.asal_instansi,
+        jumlah: d.jml_pengunjung,
+        maksud_dan_tujuan: d.maksud_dan_tujuan,
+        pejabat_penerima_kunjungan: d.pejabat_penerima_kunjungan,
+        tempat_kunjungan: d.tempat_kunjungan,
+      }))
+      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+      setData(data)
+    })
+  }
+
+  useEffect(() => {
+    dataTamuDaerah()
+  }, [])
 
   const columns2 = [
     {
@@ -78,12 +98,12 @@ export function DtAdmin(props: any) {
     {
       name: 'Waktu Mulai',
       width: '140px',
-      selector: (row: any) => row.waktu_mulai,
+      selector: (row: any) => row.waktu_mulai_kunjungan,
     },
     {
       name: 'Waktu Selesai',
       width: '140px',
-      selector: (row: any) => row.waktu_selesai,
+      selector: (row: any) => row.waktu_selesai_kunjungan,
     },
     {
       name: 'Asal Instansi',
@@ -101,7 +121,7 @@ export function DtAdmin(props: any) {
       name: 'Maksud Tujuan',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.maksud_tujuan,
+      selector: (row: any) => row.maksud_dan_tujuan,
     },
     {
       name: 'Pejabat Penerima Kunjungan',
@@ -153,20 +173,20 @@ export function DtAdmin(props: any) {
     },
   ]
 
-  const data = [
-    {
-      id: 1,
-      no: '1',
-      tanggal_kunjungan: '01/11/2022',
-      waktu_mulai: '08:00:00',
-      waktu_selesai: '12:00:00',
-      asal_instansi: 'Dinas Perhubungan',
-      jumlah: '10',
-      maksud_tujuan: 'Rapat',
-      pejabat_penerima_kunjungan: 'Irwanto',
-      tempat_kunjungan: 'Lantai 21',
-    },
-  ]
+  // const data = [
+  //   {
+  //     id: 1,
+  //     no: '1',
+  //     tanggal_kunjungan: '01/11/2022',
+  //     waktu_mulai: '08:00:00',
+  //     waktu_selesai: '12:00:00',
+  //     asal_instansi: 'Dinas Perhubungan',
+  //     jumlah: '10',
+  //     maksud_tujuan: 'Rapat',
+  //     pejabat_penerima_kunjungan: 'Irwanto',
+  //     tempat_kunjungan: 'Lantai 21',
+  //   },
+  // ]
 
   return (
     <div>

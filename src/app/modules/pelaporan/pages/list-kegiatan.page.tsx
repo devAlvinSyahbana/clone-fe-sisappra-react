@@ -134,7 +134,11 @@ export const ListKegiatanPage: FC = () => {
                         onSubmit={filterPelaporanKegiatan}
                       >
                         <Form id='list_pelaporan_kegiatan_filter'>
+                          {/* <Button onClick={vKabid}>Kepala Bidang</Button>
+                          <Button onClick={vAdmin}>Admin</Button>
+                          <Button onClick={vPimpinan}>Pimpinan</Button> */}
                           <div className='row w-100 mt-10 mb-10'>
+                            {/* START :: Filter Form */}
                             <div className='col-md-6 col-lg-6 col-sm-12'>
                               <div className='mb-10'>
                                 <div className='row'>
@@ -201,7 +205,9 @@ export const ListKegiatanPage: FC = () => {
                                 </div>
                               </div>
                             </div>
+                            {/* END :: Filter Form */}
 
+                            {/* BUTTON */}
                             <div className='row g-8 mt-2'>
                               <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
                                 <Button className='btn btn-light-primary me-2'>
@@ -294,6 +300,7 @@ export const ListKegiatanPage: FC = () => {
                                 {/* end::SubMenu */}
                               </div>
                             </div>
+                            {/* END :: Button */}
                           </div>
                         </Form>
                       </Formik>
