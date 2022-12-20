@@ -54,7 +54,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
   useEffect(() => {
     listMasterPengawasanValue()
   }, [])
-
+  console.log(values)
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
@@ -71,7 +71,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         <div className='mb-10'>
           <label className='required form-label'>Tanggal Pengawasan</label>
           <Field
-            name='pengawasan__tanggal'
+            name='tgl_pengecekan'
             className='form-control'
             component={DatePickerField}
             onChange={(o: any) => {
@@ -79,7 +79,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='pengawasan__tanggal' />
+            <ErrorMessage name='tgl_pengecekan' />
           </div>
         </div>
         <div className='mb-10'>
@@ -87,7 +87,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
           <div className='row'>
             <div className='col'>
               <Field
-                name='pengawasan__jam_start'
+                name='waktu_pengawasan_start'
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -95,12 +95,12 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='pengawasan__jam_start' />
+                <ErrorMessage name='waktu_pengawasan_start' />
               </div>
             </div>
             <div className='col'>
               <Field
-                name='pengawasan__jam_end'
+                name='waktu_pengawasan_end'
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -108,7 +108,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='pengawasan__jam_end' />
+                <ErrorMessage name='waktu_pengawasan_end' />
               </div>
             </div>
           </div>
@@ -116,51 +116,51 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         <div className='mb-10'>
           <label className='required form-label'>Kota</label>
           <Field
-            name='kota_selection'
-            target='kota_id'
+            name='kota'
+            target='kota_selection'
             className='form-control'
             component={SelectField}
             options={kotaList}
-            onKeyUp={(o: any) => {
+            onchange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kota_id' />
+            <ErrorMessage name='kota' />
             <ErrorMessage name='kota_selection' />
           </div>
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kecamatan</label>
           <Field
-            name='kecamatan_selection'
-            target='kecamatan_id'
+            name='kecamatan'
+            target='kecamatan_selection'
             className='form-control'
             component={SelectField}
             options={kecamatanList}
-            onKeyUp={(o: any) => {
+            onchange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kecamatan_id' />
+            <ErrorMessage name='kecamatan' />
             <ErrorMessage name='kecamatan_selection' />
           </div>
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kelurahan</label>
           <Field
-            name='kelurahan_selection'
-            target='kelurahan_id'
+            name='kelurahan'
+            target='kelurahan_selection'
             className='form-control'
             component={SelectField}
             options={kelurahanList}
-            onKeyUp={(o: any) => {
+            onchange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kelurahan_id' />
+            <ErrorMessage name='kelurahan' />
             <ErrorMessage name='kelurahan_selection' />
           </div>
         </div>
@@ -169,7 +169,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
           <Field
             as='textarea'
             type='text'
-            name='null'
+            name='alamat'
             className='form-control'
             placeholder='Masukkan Alamat Lengkap'
             onKeyUp={(o: ChangeEvent<any>) => {
