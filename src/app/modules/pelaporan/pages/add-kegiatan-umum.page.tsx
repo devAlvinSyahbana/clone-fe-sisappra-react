@@ -14,6 +14,7 @@ import {
   updateJenisPenindakanList,
   updateJenisUsahaList,
   updateJenisPenyelesaianList,
+  isPengamanan,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
@@ -57,6 +58,9 @@ export const AddKegiatanUmumPage: FC = () => {
 
   const submitPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
     try {
+      if (isPengamanan(values)) {
+        const res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
+      }
       const res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
       if (res) {
         console.log('laststep', values)

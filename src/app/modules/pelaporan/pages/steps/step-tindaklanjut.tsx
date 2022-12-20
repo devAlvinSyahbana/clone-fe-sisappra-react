@@ -192,7 +192,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 </div>
               </div>
               <div className='mb-10 form-group'>
-                <label className='required form-label'>Jumlah Pelanggar</label>
+                <label className='required form-label'>Jumlah Pelanggar / Penindakan</label>
                 <Field
                   type='number'
                   min='0'
@@ -217,7 +217,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
             <div className='col'>
               <h3 className='fw-bolder text-dark'>IDENTITAS NAMA / USAHA</h3>
               <div className='form-group mb-10'>
-                <label className=' form-label'>Nomor BAP</label>
+                <label className='required form-label'>Nomor BAP</label>
                 <Field
                   type='text'
                   name='tindak_lanjut__identitas_pelanggar__no_bap'
