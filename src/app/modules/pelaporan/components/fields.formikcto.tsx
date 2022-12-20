@@ -78,7 +78,7 @@ export const TimePickerField = ({
     disableDayPicker
     containerClassName={className}
     inputClass='form-control'
-    format='HH:mm'
+    format='HH:mm:00'
     plugins={[<TimePicker hideSeconds />]}
     onChange={(o: DateObject) => {
       field.onChange({target: {name: field.name, value: o?.toString()}})

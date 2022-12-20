@@ -35,11 +35,12 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   tindak_lanjut__identitas_pelanggar__jenis_usaha_id: number
 
   tindak_lanjut__jenis_penindakan_id: number
-  tindak_lanjut__jumlah_pelanggar: number
-  tindak_lanjut__denda__non_pengadilan: number
-  tindak_lanjut__denda__tanggal_setor: string
-  tindak_lanjut__denda__nama_bank: string
-  tindak_lanjut__denda__no_validasi_bank: string
+  // tindak_lanjut__jumlah_pelanggar: number
+  // tindak_lanjut__jumlah_penindakan: number
+  // tindak_lanjut__denda__non_pengadilan: number
+  // tindak_lanjut__denda__tanggal_setor: string
+  // tindak_lanjut__denda__nama_bank: string
+  // tindak_lanjut__denda__no_validasi_bank: string
 }
 
 export const initialState: PelaporanKegiatanState = {
@@ -88,10 +89,17 @@ export const initialState: PelaporanKegiatanState = {
 
   tindak_lanjut__jenis_penindakan_id: 0,
   tindak_lanjut__jumlah_pelanggar: 0,
+  // tindak_lanjut__jumlah_penindakan: 0,
   tindak_lanjut__denda__non_pengadilan: 0,
-  tindak_lanjut__denda__tanggal_setor: '',
+  tindak_lanjut__denda__tanggal_setor: '2023-01-01',
   tindak_lanjut__denda__nama_bank: '',
   tindak_lanjut__denda__no_validasi_bank: '',
+  dokumentasi: [
+    {
+      file: null,
+      keterangan: null,
+    },
+  ],
 }
 
 export const createSchemaFilterPelaporanKegiatan = [
@@ -198,19 +206,7 @@ export const createSchemaPelaporanKegiatan = [
     ),
     tindak_lanjut__administrasi__penyelesaian_selection: Yup.object(),
 
-    // tindak_lanjut__identitas_pelanggar__no_bap: Yup.string()
-    //   .min(3)
-    //   .max(16)
-    //   .required()
-    //   .label('NO BAP'),
-    tindak_lanjut__identitas_pelanggar__no_bap: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(3).max(32).required().label('NO BAP'),
-      }
-    ),
+    tindak_lanjut__identitas_pelanggar__no_bap: Yup.string().max(32).notRequired().label('NO BAP'),
     tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string()
       .max(64)
       .notRequired()
@@ -253,6 +249,11 @@ export const createSchemaPelaporanKegiatan = [
       then: Yup.number().notRequired(),
       otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Pelanggar'),
     }),
+    // tindak_lanjut__jumlah_penindakan: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
+    //   is: (val: any) => val?.label !== 'PENGAMANAN',
+    //   then: Yup.number().notRequired(),
+    //   otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Penindakan'),
+    // }),
     tindak_lanjut__denda__non_pengadilan: Yup.number()
       .integer()
       .notRequired()
@@ -431,13 +432,16 @@ export const pelaporanKegiatanSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 
-// BANGUNAN, TIPIRING no penindakan
 // lAPORAN MASYARAKAT bukan jumlah pelanggar tapi jumlah penindakan
 
+//  !== jenis usaha
+// PENERTIBAN MINUMAN BERALKOHOL
+//  !== penindakan
+// PENERTIBAN BANGUNAN, SIDANG TIPIRING
 //  !== pasal id
-// APEL, RAPAT PENGATURAN LALU LINTAS, PENGAWALAN, SOSIALISASI P4GN (NARKOBA), SOSIALISASI PERDA/PERKADA
+// APEL, RAPAT, PENGATURAN LALU LINTAS, PENGAWALAN, SOSIALISASI P4GN (NARKOBA), SOSIALISASI PERDA/PERKADA
 //  !== penyelesaian
-// APEL, RAPAT PENGATURAN LALU LINTAS, PENGAWALAN, SOSIALISASI P4GN (NARKOBA), SOSIALISASI PERDA/PERKADA
+// APEL, RAPAT, PENGATURAN LALU LINTAS, PENGAWALAN, SOSIALISASI P4GN (NARKOBA), SOSIALISASI PERDA/PERKADA
 
 export const isTipiring = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'SIDANG TIPIRING'

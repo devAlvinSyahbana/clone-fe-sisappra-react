@@ -217,7 +217,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
             <div className='col'>
               <h3 className='fw-bolder text-dark'>IDENTITAS NAMA / USAHA</h3>
               <div className='form-group mb-10'>
-                <label className='required form-label'>Nomor BAP</label>
+                <label className=' form-label'>Nomor BAP</label>
                 <Field
                   type='text'
                   name='tindak_lanjut__identitas_pelanggar__no_bap'
