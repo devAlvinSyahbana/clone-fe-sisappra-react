@@ -3,6 +3,8 @@ import {FieldProps} from 'formik'
 import DatePicker, {DateObject} from 'react-multi-date-picker'
 import TimePicker from 'react-multi-date-picker/plugins/time_picker'
 import Select, {OptionProps} from 'react-select'
+import {useSelector} from 'react-redux'
+import {RootState} from '../../../redux/store'
 
 export type FieldState = {target: {name: string; value: any}}
 
@@ -39,6 +41,7 @@ export const DatePickerField = ({
   <DatePicker
     containerClassName={className}
     inputClass='form-control'
+    format='YYYY-MM-DD'
     value={field.value}
     onChange={(o: DateObject) => {
       field.onChange({target: {name: field.name, value: o?.toString()}})
@@ -75,8 +78,8 @@ export const TimePickerField = ({
     disableDayPicker
     containerClassName={className}
     inputClass='form-control'
-    format='HH:mm:ss'
-    plugins={[<TimePicker />]}
+    format='HH:mm:00'
+    plugins={[<TimePicker hideSeconds />]}
     onChange={(o: DateObject) => {
       field.onChange({target: {name: field.name, value: o?.toString()}})
       onChange({target: {name: field.name, value: o?.toString()}})
@@ -90,15 +93,18 @@ export const SelectField = ({
   target,
   onChange,
   options,
-}: OptionProps & SelectFieldProps & FieldProps) => (
-  <Select
-    isLoading={options.length === 0}
-    options={options}
-    value={form.values.kegiatan__jenis_kegiatan_id === 0 ? '' : field.value}
-    onChange={(o) => {
-      field.onChange({target: {name: field.name, value: o}})
-      form.setFieldValue(target, o?.value)
-      onChange({target: {name: target, value: o?.value}})
-    }}
-  />
-)
+}: OptionProps & SelectFieldProps & FieldProps & any) => {
+  const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
+  return (
+    <Select
+      isLoading={typeof options === 'object' && options.length === 0}
+      options={typeof options === 'string' ? [] : options}
+      value={Number(field.value?.value) !== allValues[target] ? '' : field.value}
+      onChange={(o) => {
+        field.onChange({target: {name: field.name, value: o}})
+        form.setFieldValue(target, o?.value)
+        onChange({target: {name: target, value: o?.value}})
+      }}
+    />
+  )
+}

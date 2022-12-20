@@ -12,10 +12,10 @@ import {
 } from '../components/fields.formikcto'
 import {
   changedValue,
-  createSchemaFilterPelaporanKegiatan,
+  createSchemaPelaporanKejadian,
   initialState,
-  PelaporanKegiatanState,
-} from '../../../redux/slices/pelaporan-kegiatan.slice'
+  PelaporanKejadianState,
+} from '../../../redux/slices/pelaporan-kejadian.slice'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
 import axios from 'axios'
@@ -27,19 +27,19 @@ import {Button} from 'react-bootstrap'
 export const ListKejadianPage: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
-  const [jenisKegiatanList, setJenisKegiatanList] = useState([])
+  const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKejadian[0])
+  const [jenisKejadianList, setJenisKejadianList] = useState([])
 
-  const updateJenisKegiatanList = () => {
-    axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
+  const updateJenisKejadianList = () => {
+    axios.get(`http://localhost:3001/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
       const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      setJenisKegiatanList(data)
+      // .filter((v: any) => !excludeJenisKejadian.includes(v.label))
+      setJenisKejadianList(data)
     })
   }
 
   useEffect(() => {
-    updateJenisKegiatanList()
+    updateJenisKejadianList()
     // updateJenisUsahaList()
     // updateJenisPenindakanList()
   }, [])
@@ -50,10 +50,10 @@ export const ListKejadianPage: FC = () => {
 
   const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
 
-  const filterPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
-    const res = await axios.get(`http://localhost:3002/kegiatan-umum`)
+  const filterPelaporanKejadian = async (values: PelaporanKejadianState, actions: FormikValues) => {
+    const res = await axios.get(`http://localhost:3002/Kejadian-umum`)
     const data = res.data.data
-    // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+    // .filter((v: any) => !excludeJenisKejadian.includes(v.label))
     setCurrentSchema(data)
     console.log(res)
   }
@@ -79,7 +79,7 @@ export const ListKejadianPage: FC = () => {
           >
             <div className='page-title d-flex flex-column justify-content-center flex-wrap me-3'>
               <h1 className='page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0'>
-                Daftar Laporan Kegiatan
+                Daftar Laporan Kejadian
               </h1>
             </div>
           </div>
@@ -131,9 +131,9 @@ export const ListKejadianPage: FC = () => {
                       <Formik
                         validationSchema={currentSchema}
                         initialValues={initialState}
-                        onSubmit={filterPelaporanKegiatan}
+                        onSubmit={filterPelaporanKejadian}
                       >
-                        <Form id='list_pelaporan_kegiatan_filter'>
+                        <Form id='list_pelaporan_Kejadian_filter'>
                           <div className='row w-100 mt-10 mb-10'>
                             <div className='col-md-6 col-lg-6 col-sm-12'>
                               <div className='mb-10'>
@@ -145,11 +145,11 @@ export const ListKejadianPage: FC = () => {
                                   </div>
                                   <div className='col-8'>
                                     <Field
-                                      name='filter_jenis_kegiatan_id_selection'
-                                      target='filter_jenis_kegiatan_id'
+                                      name='filter_jenis_Kejadian_id_selection'
+                                      target='filter_jenis_Kejadian_id'
                                       className='form-control'
                                       component={SelectField}
-                                      options={jenisKegiatanList}
+                                      options={jenisKejadianList}
                                       onChange={(o: ChangeEvent<any>) => {
                                         // dispatch(changedValue(ToFieldStateCE(o)))
                                         // updateJenisPasalList()
@@ -168,7 +168,7 @@ export const ListKejadianPage: FC = () => {
                                   </div>
                                   <div className='col-4 mx-10'>
                                     <Field
-                                      name='kegiatan__tanggal'
+                                      name='Kejadian__tanggal'
                                       component={DatePickerFieldRange}
                                       onChange={(o: any) => {
                                         dispatch(changedValue(ToFieldStateCE(o)))
@@ -281,7 +281,7 @@ export const ListKejadianPage: FC = () => {
               <div className='card-body py-4'>
                 {/* <div className='row'>
                   <div className='col fs-4 mb-2 fw-semibold text-center'>
-                    LAPORAN HASIL KEGIATAN
+                    LAPORAN HASIL Kejadian
                   </div>
                 </div>
                 <div className='row'>
