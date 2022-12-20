@@ -94,12 +94,17 @@ export const SelectField = ({
   onChange,
   options,
 }: OptionProps & SelectFieldProps & FieldProps & any) => {
-  const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
+  const kegiatanVal = useSelector((s: RootState) => s.pelaporanKegiatan)
+  const kejadianVal = useSelector((s: RootState) => s.pelaporanKejadian)
+  const pengawasanVal = useSelector((s: RootState) => s.pelaporanPengawasan)
+  const tamudaerahVal = useSelector((s: RootState) => s.pelaporanTamuDaerah)
+  const allValues = {...tamudaerahVal, ...pengawasanVal, ...kejadianVal, ...kegiatanVal}
+  const fieldVal = Number(field.value?.value)
   return (
     <Select
       isLoading={typeof options === 'object' && options.length === 0}
       options={typeof options === 'string' ? [] : options}
-      value={Number(field.value?.value) !== allValues[target] ? '' : field.value}
+      value={fieldVal !== allValues[target] ? '' : field.value}
       onChange={(o) => {
         field.onChange({target: {name: field.name, value: o}})
         form.setFieldValue(target, o?.value)
