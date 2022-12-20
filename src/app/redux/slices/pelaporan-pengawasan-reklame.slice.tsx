@@ -11,8 +11,6 @@ import axios from 'axios'
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanPengawasanState extends Record<string, any> {
-  value: number
-  id: number
   nrk: number
   nama: string
   share_location: string
@@ -24,15 +22,18 @@ export interface PelaporanPengawasanState extends Record<string, any> {
   pemilik_reklame: string
   konstruksi_reklame: string
   konten_iklan: string
+  tgl_pengecekan: string
+  waktu_pengawasan: string
+  kota: string
+  kecamatan: string
+  kelurahan: string
 }
 
 export const initialState: PelaporanPengawasanState = {
-  value: 0,
   list_kota: [],
   list_kecamatan: [],
   list_kelurahan: [],
 
-  id: 0,
   nrk: 0,
   nama: '',
   share_location: '',
@@ -44,13 +45,14 @@ export const initialState: PelaporanPengawasanState = {
   pemilik_reklame: '',
   konstruksi_reklame: '',
   konten_iklan: '',
-
+  tgl_pengecekan: '',
+  waktu_pengawasan: '',
   kota_selection: [],
-  kota_id: 0,
+  kota: '',
   kecamatan_selection: [],
-  kecamatan_id: 0,
+  kecamatan: '',
   kelurahan_selection: [],
-  kelurahan_id: 0,
+  kelurahan: '',
 }
 
 export const createSchemaFilterPelaporaPengawasan = [
@@ -66,23 +68,20 @@ export const createSchemaFilterPelaporaPengawasan = [
 
 export const createSchemaPelaporanPengawasan = [
   Yup.object({
-    id: Yup.number().integer().moreThan(0).required().label('Pengawasan'),
-    nrk: Yup.number().integer().moreThan(0).required().label('Pengawasan'),
-
-    kota_selection: Yup.object().required(),
-    kecamatan_selection: Yup.object().required(),
-    kelurahan_selection: Yup.object().required(),
-
-    nama: Yup.string().min(10).max(1000).required().label('Nama'),
+    nrk: Yup.number().integer().moreThan(0).required().label('NRK'),
+    nama: Yup.string().required().label('Nama'),
     share_location: Yup.string().min(10).max(1000).required().label('Share Location'),
-    alamat: Yup.string().min(10).max(1000).required().label('Alamat'),
-    lokasi_tiang: Yup.string().min(10).max(1000).required().label('Lokasi Tiang'),
-    kawasan_kendali: Yup.string().min(10).max(1000).required().label('Kawasan Kendali'),
-    status: Yup.string().min(10).max(1000).required().label('Status'),
-    ukuran: Yup.string().min(10).max(1000).required().label('Ukuran'),
-    pemilik_reklame: Yup.string().min(10).max(1000).required().label('Pemilik Reklame'),
-    konstruksi_reklame: Yup.string().min(10).max(1000).required().label('Konstruksi Reklame'),
-    konten_iklan: Yup.string().min(10).max(1000).required().label('Konten Iklan'),
+    alamat: Yup.string().required().label('Alamat'),
+    lokasi_tiang: Yup.string().required().label('Lokasi Tiang'),
+    kawasan_kendali: Yup.string().required().label('Kawasan Kendali'),
+    status: Yup.string().required().label('Status'),
+    ukuran: Yup.string().required().label('Ukuran'),
+    pemilik_reklame: Yup.string().required().label('Pemilik Reklame'),
+    konstruksi_reklame: Yup.string().required().label('Konstruksi Reklame'),
+    konten_iklan: Yup.string().required().label('Konten Iklan'),
+    tgl_pengecekan: Yup.string().required().label('Tanggal Pengecekan'),
+    waktu_pengawasan_start: Yup.string().required().label('Waktu Pengawasan'),
+    waktu_pengawasan_end: Yup.string().required().label('Waktu Pengawasan'),
   }),
   Yup.object({}),
 ]
@@ -111,7 +110,6 @@ export const updateKelurahanList: any = createAsyncThunk(
     return data
   }
 )
-
 export const pelaporanPengawasanSlice = createSlice({
   name: 'pelaporanPengawasan',
   initialState,
