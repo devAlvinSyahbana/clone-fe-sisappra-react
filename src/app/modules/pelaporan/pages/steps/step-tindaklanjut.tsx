@@ -42,6 +42,9 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
     (s: RootState) => s.pelaporanKegiatan.list_jenis_penindakan
   )
   const listJenisUsaha = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_usaha)
+  const denda = useSelector(
+    (s: RootState) => s.pelaporanKegiatan.tindak_lanjut__denda__non_pengadilan
+  )
 
   // console.log(pasalSelect)
 
@@ -58,7 +61,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               target='tindak_lanjut__administrasi__jenis_pasal_id'
               className='form-control'
               component={SelectField}
-              options={listJenisPasal}
+              options={listJenisPasal.length > 0 ? listJenisPasal : ''}
               onChange={(o: ChangeEvent<any>) => {
                 const data = [o.target.value, allValues]
                 let filterPasal = listJenisPasal.filter((obj: any) => obj.value === o.target.value)
@@ -160,7 +163,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                   target='tindak_lanjut__administrasi__penyelesaian_id'
                   className='form-control'
                   component={SelectField}
-                  options={listJenisPenyelesaian}
+                  options={listJenisPenyelesaian.length > 0 ? listJenisPenyelesaian : ''}
                   onChange={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
                   }}
@@ -189,7 +192,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 </div>
               </div>
               <div className='mb-10 form-group'>
-                <label className='required form-label'>Jumlah Pelanggar</label>
+                <label className='required form-label'>Jumlah Pelanggar / Penindakan</label>
                 <Field
                   type='number'
                   min='0'
@@ -228,7 +231,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 </div>
               </div>
               <div className='form-group mb-10'>
-                <label className='required form-label'>Nama / Penanggungjawab</label>
+                <label className=' form-label'>Nama / Penanggungjawab</label>
                 <Field
                   type='text'
                   name='tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab'
@@ -242,7 +245,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 </div>
               </div>
               <div className='form-group mb-10'>
-                <label className='required form-label'>Nama Usaha / Tempat</label>
+                <label className=' form-label'>Nama Usaha / Tempat</label>
                 <Field
                   type='text'
                   name='tindak_lanjut__identitas_pelanggar__nama_tempat_usaha'
@@ -256,7 +259,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 </div>
               </div>
               <div className='form-group mb-10'>
-                <label className='required form-label'>Alamat Usaha / Tempat</label>
+                <label className=' form-label'>Alamat Usaha / Tempat</label>
                 <Field
                   as='textarea'
                   type='text'
@@ -271,7 +274,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 </div>
               </div>
               <div className='form-group mb-10'>
-                <label className='required form-label'>NIK / Paspport</label>
+                <label className=' form-label'>NIK / Paspport</label>
                 <Field
                   type='text'
                   name='tindak_lanjut__identitas_pelanggar__nik'
@@ -285,7 +288,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 </div>
               </div>
               <div className='form-group mb-10'>
-                <label className='required form-label'>Alamat Pelanggar</label>
+                <label className=' form-label'>Alamat Pelanggar</label>
                 <Field
                   as='textarea'
                   type='text'
@@ -300,7 +303,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                 </div>
               </div>
               <div className='form-group mb-10'>
-                <label className='required form-label'>Jenis Usaha / Tempat</label>
+                <label className=' form-label'>Jenis Usaha / Tempat</label>
                 <Field
                   name='tindak_lanjut__identitas_pelanggar__jenis_usaha_selection'
                   target='tindak_lanjut__identitas_pelanggar__jenis_usaha_id'
@@ -323,24 +326,29 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               </div>
 
               <div className='form-group mb-10'>
-                <label className='required form-label'>Non Pengadilan</label>
-                <Field
-                  type='number'
-                  min='0'
-                  name='tindak_lanjut__denda__non_pengadilan'
-                  className='form-control'
-                  onFocus={(e: any) => e.target.select()}
-                  onInput={(o: ChangeEvent<any>) => {
-                    dispatch(changedValue(ToFieldStateCE(o)))
-                  }}
-                />
+                <label className='form-label'>Non Pengadilan</label>
+                <div className='input-group'>
+                  <span className='input-group-text w-50'>
+                    {denda.toLocaleString('id-ID', {style: 'currency', currency: 'IDR'})}
+                  </span>
+                  <Field
+                    type='number'
+                    name='tindak_lanjut__denda__non_pengadilan'
+                    className='form-control w-50'
+                    step='500'
+                    onFocus={(e: any) => e.target.select()}
+                    onInput={(o: ChangeEvent<any>) => {
+                      dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
+                  />
+                </div>
                 <div className='text-danger mt-2'>
                   <ErrorMessage name='tindak_lanjut__denda__non_pengadilan' />
                 </div>
               </div>
 
               <div className='form-group mb-10'>
-                <label className='required form-label'>Tanggal Setor</label>
+                <label className=' form-label'>Tanggal Setor</label>
                 <Field
                   name='tindak_lanjut__denda__tanggal_setor'
                   className='form-control'
@@ -355,13 +363,17 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               </div>
 
               <div className='form-group mb-10'>
-                <label className='required form-label'>Nama Bank</label>
+                <label className=' form-label'>Nama Bank</label>
                 <Field
                   type='text'
                   name='tindak_lanjut__denda__nama_bank'
                   className='form-control'
-                  onKeyUp={(o: ChangeEvent<any>) => {
+                  onBlur={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
+                  }}
+                  onChange={(o: ChangeEvent<any>) => {
+                    // dispatch(changedValue(ToFieldStateCE(o)))
+                    setFieldValue('tindak_lanjut__denda__nama_bank', o.target.value.toUpperCase())
                   }}
                 />
                 <div className='text-danger mt-2'>
@@ -370,7 +382,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               </div>
 
               <div className='form-group mb-10'>
-                <label className='required form-label'>No Validasi Bank</label>
+                <label className=' form-label'>No Validasi Bank</label>
                 <Field
                   type='text'
                   name='tindak_lanjut__denda__no_validasi_bank'

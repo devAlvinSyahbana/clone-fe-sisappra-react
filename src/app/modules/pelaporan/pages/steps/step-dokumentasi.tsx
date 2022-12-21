@@ -11,6 +11,7 @@ import DataTable, {createTheme} from 'react-data-table-component'
 
 export const StepDokumentasi: FC = () => {
   const dispatch = useDispatch()
+  const [image, setImage] = useState()
 
   let no = 1
 

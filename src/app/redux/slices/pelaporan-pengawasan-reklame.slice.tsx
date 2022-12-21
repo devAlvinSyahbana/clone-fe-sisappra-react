@@ -11,46 +11,49 @@ import axios from 'axios'
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanPengawasanState extends Record<string, any> {
-  value: number
-  id: number
-  nrk: number
-  nama: string
-  share_location: string
+  // nrk: number
+  // nama: string
+  // share_location: string
   alamat: string
-  lokasi_tiang: string
-  kawasan_kendali: string
-  status: string
-  ukuran: string
-  pemilik_reklame: string
-  konstruksi_reklame: string
-  konten_iklan: string
+  // lokasi_tiang: string
+  // kawasan_kendali: string
+  // status: string
+  // ukuran: string
+  // pemilik_reklame: string
+  // konstruksi_reklame: string
+  // konten_iklan: string
+  tgl_pengecekan: string
+  waktu_pengawasan: string
+  kota: number
+  kecamatan: number
+  kelurahan: number
 }
 
 export const initialState: PelaporanPengawasanState = {
-  value: 0,
   list_kota: [],
   list_kecamatan: [],
   list_kelurahan: [],
-
-  id: 0,
-  nrk: 0,
-  nama: '',
-  share_location: '',
+  tgl_pengecekan: '',
+  waktu_pengawasan: '',
+  kecamatan: 0,
+  kelurahan: 0,
+  kota: 0,
   alamat: '',
-  lokasi_tiang: '',
-  kawasan_kendali: '',
-  status: '',
-  ukuran: '',
-  pemilik_reklame: '',
-  konstruksi_reklame: '',
-  konten_iklan: '',
+  // nrk: 0,
+  // nama: '',
+  // share_location: '',
 
-  kota_selection: [],
-  kota_id: 0,
-  kecamatan_selection: [],
-  kecamatan_id: 0,
-  kelurahan_selection: [],
-  kelurahan_id: 0,
+  // lokasi_tiang: '',
+  // kawasan_kendali: '',
+  // status: '',
+  // ukuran: '',
+  // pemilik_reklame: '',
+  // konstruksi_reklame: '',
+  // konten_iklan: '',
+
+  // kecamatan_selection: [],
+  // kota_selection: [],
+  // kelurahan_selection: [],
 }
 
 export const createSchemaFilterPelaporaPengawasan = [
@@ -66,23 +69,19 @@ export const createSchemaFilterPelaporaPengawasan = [
 
 export const createSchemaPelaporanPengawasan = [
   Yup.object({
-    id: Yup.number().integer().moreThan(0).required().label('Pengawasan'),
-    nrk: Yup.number().integer().moreThan(0).required().label('Pengawasan'),
-
-    kota_selection: Yup.object().required(),
-    kecamatan_selection: Yup.object().required(),
-    kelurahan_selection: Yup.object().required(),
-
-    nama: Yup.string().min(10).max(1000).required().label('Nama'),
-    share_location: Yup.string().min(10).max(1000).required().label('Share Location'),
-    alamat: Yup.string().min(10).max(1000).required().label('Alamat'),
-    lokasi_tiang: Yup.string().min(10).max(1000).required().label('Lokasi Tiang'),
-    kawasan_kendali: Yup.string().min(10).max(1000).required().label('Kawasan Kendali'),
-    status: Yup.string().min(10).max(1000).required().label('Status'),
-    ukuran: Yup.string().min(10).max(1000).required().label('Ukuran'),
-    pemilik_reklame: Yup.string().min(10).max(1000).required().label('Pemilik Reklame'),
-    konstruksi_reklame: Yup.string().min(10).max(1000).required().label('Konstruksi Reklame'),
-    konten_iklan: Yup.string().min(10).max(1000).required().label('Konten Iklan'),
+    alamat: Yup.string().required().label('Alamat'),
+    tgl_pengecekan: Yup.string().required().label('Tanggal Pengecekan'),
+    waktu_pengawasan: Yup.string().required().label('Waktu Pengawasan'),
+    // lokasi_tiang: Yup.string().required().label('Lokasi Tiang'),
+    // kawasan_kendali: Yup.string().required().label('Kawasan Kendali'),
+    // status: Yup.string().required().label('Status'),
+    // ukuran: Yup.string().required().label('Ukuran'),
+    // pemilik_reklame: Yup.string().required().label('Pemilik Reklame'),
+    // konstruksi_reklame: Yup.string().required().label('Konstruksi Reklame'),
+    // konten_iklan: Yup.string().required().label('Konten Iklan'),
+    // nrk: Yup.number().integer().moreThan(0).required().label('NRK'),
+    // nama: Yup.string().required().label('Nama'),
+    // share_location: Yup.string().min(10).max(1000).required().label('Share Location'),
   }),
   Yup.object({}),
 ]
@@ -111,7 +110,6 @@ export const updateKelurahanList: any = createAsyncThunk(
     return data
   }
 )
-
 export const pelaporanPengawasanSlice = createSlice({
   name: 'pelaporanPengawasan',
   initialState,

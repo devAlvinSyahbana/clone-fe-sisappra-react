@@ -16,7 +16,8 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   kegiatan__jumlah_personil: number
   kegiatan__uraian_kegiatan: string
   kegiatan__tanggal: string
-  kegiatan__jam: string
+  kegiatan__jam_start: string
+  kegiatan__jam_end: string
   kegiatan__lokasi: string
 
   tindak_lanjut__administrasi__jenis_pasal_id: number
@@ -34,11 +35,12 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   tindak_lanjut__identitas_pelanggar__jenis_usaha_id: number
 
   tindak_lanjut__jenis_penindakan_id: number
-  tindak_lanjut__jumlah_pelanggar: number
-  tindak_lanjut__denda__non_pengadilan: number
-  tindak_lanjut__denda__tanggal_setor: string
-  tindak_lanjut__denda__nama_bank: string
-  tindak_lanjut__denda__no_validasi_bank: string
+  // tindak_lanjut__jumlah_pelanggar: number
+  // tindak_lanjut__jumlah_penindakan: number
+  // tindak_lanjut__denda__non_pengadilan: number
+  // tindak_lanjut__denda__tanggal_setor: string
+  // tindak_lanjut__denda__nama_bank: string
+  // tindak_lanjut__denda__no_validasi_bank: string
 }
 
 export const initialState: PelaporanKegiatanState = {
@@ -59,8 +61,9 @@ export const initialState: PelaporanKegiatanState = {
   kegiatan__jenis_kegiatan_id: 0,
   kegiatan__jumlah_personil: 0,
   kegiatan__uraian_kegiatan: '',
-  kegiatan__tanggal: '2022-01-23',
-  kegiatan__jam: '08:00:00',
+  kegiatan__tanggal: '',
+  kegiatan__jam_start: '',
+  kegiatan__jam_end: '',
   kegiatan__lokasi: '',
   // kegiatan__asal_laporan_selection: [],
   kegiatan__asal_laporan_id: 0,
@@ -86,10 +89,17 @@ export const initialState: PelaporanKegiatanState = {
 
   tindak_lanjut__jenis_penindakan_id: 0,
   tindak_lanjut__jumlah_pelanggar: 0,
+  // tindak_lanjut__jumlah_penindakan: 0,
   tindak_lanjut__denda__non_pengadilan: 0,
-  tindak_lanjut__denda__tanggal_setor: '2022-11-01',
+  tindak_lanjut__denda__tanggal_setor: '2023-01-01',
   tindak_lanjut__denda__nama_bank: '',
   tindak_lanjut__denda__no_validasi_bank: '',
+  dokumentasi: [
+    {
+      file: null,
+      keterangan: null,
+    },
+  ],
 }
 
 export const createSchemaFilterPelaporanKegiatan = [
@@ -196,59 +206,27 @@ export const createSchemaPelaporanKegiatan = [
     ),
     tindak_lanjut__administrasi__penyelesaian_selection: Yup.object(),
 
-    // tindak_lanjut__identitas_pelanggar__no_bap: Yup.string()
-    //   .min(3)
-    //   .max(16)
-    //   .required()
-    //   .label('NO BAP'),
-    tindak_lanjut__identitas_pelanggar__no_bap: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(3).max(32).required().label('NO BAP'),
-      }
-    ),
-    tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(3).max(64).required().label('Nama Penanggung Jawab'),
-      }
-    ),
-    tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(3).max(64).required().label('Nama Tempat Usaha'),
-      }
-    ),
-    tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(3).max(256).required().label('Alamat Tempat Usaha'),
-      }
-    ),
-    tindak_lanjut__identitas_pelanggar__nik: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(3).max(32).required().label('NIK/Pasport Pelanggar'),
-      }
-    ),
-    tindak_lanjut__identitas_pelanggar__alamat: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(3).max(32).required().label('Alamat Pelanggar'),
-      }
-    ),
+    tindak_lanjut__identitas_pelanggar__no_bap: Yup.string().max(32).notRequired().label('NO BAP'),
+    tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string()
+      .max(64)
+      .notRequired()
+      .label('Nama Penanggung Jawab'),
+    tindak_lanjut__identitas_pelanggar__nama_tempat_usaha: Yup.string()
+      .max(64)
+      .notRequired()
+      .label('Nama Tempat Usaha'),
+    tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha: Yup.string()
+      .max(256)
+      .notRequired()
+      .label('Alamat Tempat Usaha'),
+    tindak_lanjut__identitas_pelanggar__nik: Yup.string()
+      .max(32)
+      .notRequired()
+      .label('NIK/Pasport Pelanggar'),
+    tindak_lanjut__identitas_pelanggar__alamat: Yup.string()
+      .max(128)
+      .notRequired()
+      .label('Alamat Pelanggar'),
     tindak_lanjut__identitas_pelanggar__jenis_usaha_id: Yup.number().when(
       'kegiatan__jenis_kegiatan_selection',
       {
@@ -271,33 +249,22 @@ export const createSchemaPelaporanKegiatan = [
       then: Yup.number().notRequired(),
       otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Pelanggar'),
     }),
-    tindak_lanjut__denda__non_pengadilan: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-      then: Yup.number().notRequired(),
-      otherwise: Yup.number()
-        .integer()
-        .moreThan(1000)
-        .required()
-        .label('Jumlah Denda Non Pengadilan'),
-    }),
-    tindak_lanjut__denda__tanggal_setor: Yup.date().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-      then: Yup.date().notRequired(),
-      otherwise: Yup.date().required().label('Tanggal Setor Denda'),
-    }),
-    tindak_lanjut__denda__nama_bank: Yup.string().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-      then: Yup.string().notRequired(),
-      otherwise: Yup.string().min(3).max(32).required().label('Nama Bank'),
-    }),
-    tindak_lanjut__denda__no_validasi_bank: Yup.string().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
-        then: Yup.string().notRequired(),
-        otherwise: Yup.string().min(3).max(32).required().label('No Validasi Bank'),
-      }
-    ),
+    // tindak_lanjut__jumlah_penindakan: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
+    //   is: (val: any) => val?.label !== 'PENGAMANAN',
+    //   then: Yup.number().notRequired(),
+    //   otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Penindakan'),
+    // }),
+    tindak_lanjut__denda__non_pengadilan: Yup.number()
+      .integer()
+      .notRequired()
+      .label('Jumlah Denda Non Pengadilan'),
+    tindak_lanjut__denda__tanggal_setor: Yup.date().notRequired().label('Tanggal Setor Denda'),
+    tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(32).notRequired().label('Nama Bank'),
+    tindak_lanjut__denda__no_validasi_bank: Yup.string()
+      .min(3)
+      .max(32)
+      .notRequired()
+      .label('No Validasi Bank'),
   }),
   Yup.object({}),
 ]
@@ -465,8 +432,16 @@ export const pelaporanKegiatanSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 
-// BANGUNAN, TIPIRING no penindakan
 // lAPORAN MASYARAKAT bukan jumlah pelanggar tapi jumlah penindakan
+
+//  !== jenis usaha
+// PENERTIBAN MINUMAN BERALKOHOL
+//  !== penindakan
+// PENERTIBAN BANGUNAN, SIDANG TIPIRING
+//  !== pasal id
+// APEL, RAPAT, PENGATURAN LALU LINTAS, PENGAWALAN, SOSIALISASI P4GN (NARKOBA), SOSIALISASI PERDA/PERKADA
+//  !== penyelesaian
+// APEL, RAPAT, PENGATURAN LALU LINTAS, PENGAWALAN, SOSIALISASI P4GN (NARKOBA), SOSIALISASI PERDA/PERKADA
 
 export const isTipiring = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'SIDANG TIPIRING'

@@ -63,10 +63,6 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   const jenisPengamanan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_pengamanan)
 
   useEffect(() => {
-    listMasterJenisValue()
-  }, [])
-
-  useEffect(() => {
     if (isLaporanMasyarakat(values)) dispatch(updateJenisAsalLaporanList())
     if (isPengamanan(values)) dispatch(updateJenisPengamananList())
   }, [jenisKegiatanSelect])
