@@ -191,60 +191,57 @@ export function DtPimpinan(props: any) {
   const columns = [
     {
       name: 'No',
+      width: '60px',
       selector: (row: {no: any}) => row.no,
     },
     {
-      name: 'NRK',
-      selector: (row: {nrk: any}) => row.nrk,
-    },
-    {
-      name: 'Nama',
-      selector: (row: {nama: any}) => row.nama,
+      name: 'Pelaksana',
+      selector: (row: any) => row.pelaksana,
     },
     {
       name: 'Tanggal Pengecekan',
-      selector: (row: {tanggalpengecekan: any}) => row.tanggalpengecekan,
+      selector: (row: any) => row.tanggalpengecekan,
     },
     {
       name: 'Share Location',
-      selector: (row: {shareloc: any}) => row.shareloc,
+      selector: (row: any) => row.shareloc,
     },
     {
       name: 'Alamat',
-      selector: (row: {alamat: any}) => row.alamat,
+      selector: (row: any) => row.alamat,
     },
     {
       name: 'Lokasi Tiang',
-      selector: (row: {lokasitiang: any}) => row.lokasitiang,
+      selector: (row: any) => row.lokasitiang,
     },
     {
       name: 'Kawasan Kendali',
-      selector: (row: {kawasankendali: any}) => row.kawasankendali,
+      selector: (row: any) => row.kawasankendali,
     },
     {
       name: 'Status',
-      selector: (row: {status: any}) => row.status,
+      selector: (row: any) => row.status,
     },
     {
       name: 'Ukuran',
-      selector: (row: {ukuran: any}) => row.ukuran,
+      selector: (row: any) => row.ukuran,
     },
     {
       name: 'Pemilik Reklame',
-      selector: (row: {pemilikreklame: any}) => row.pemilikreklame,
+      selector: (row: any) => row.pemilikreklame,
     },
     {
       name: 'Konstruksi Reklame',
-      selector: (row: {konstruksireklame: any}) => row.konstruksireklame,
+      selector: (row: any) => row.konstruksireklame,
     },
     {
       name: 'Konten Iklan',
-      selector: (row: {konteniklan: any}) => row.konteniklan,
+      selector: (row: any) => row.konteniklan,
     },
-    {
-      name: 'Dokumentasi',
-      selector: (row: {docs: any}) => row.docs,
-    },
+    // {
+    //   name: 'Dokumentasi',
+    //   selector: (row: {docs: any}) => row.docs,
+    // },
     {
       name: 'Aksi',
       sortable: false,
@@ -255,22 +252,7 @@ export function DtPimpinan(props: any) {
         return (
           <Fragment>
             <div className='mb-2'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item href='/#/action-2'>Detail</Dropdown.Item>
-                    <Dropdown.Item href='/#/action-2'>Ubah</Dropdown.Item>
-                    <Dropdown.Item href='/#/action-2'>Hapus</Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
+              <button>Detail</button>
             </div>
           </Fragment>
         )
@@ -282,8 +264,9 @@ export function DtPimpinan(props: any) {
     {
       id: 1,
       no: '1',
-      nrk: '166665',
-      nama: 'Irwan Novyanto',
+      // nrk: '166665',
+      // nama: 'Irwan Novyanto',
+      pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
       tanggalpengecekan: '08-01-2021',
       shareloc: 'Lat: -6.1821440999999995, Long: 106.8284776',
       alamat:
@@ -300,8 +283,9 @@ export function DtPimpinan(props: any) {
     {
       id: 2,
       no: '2',
-      nrk: '166721',
-      nama: 'Udi Hartono',
+      // nrk: '166721',
+      // nama: 'Udi Hartono',
+      pelaksana: 'SEKSI PERLINDUNGAN MASYARAKAT',
       tanggalpengecekan: '28-05-2021',
       shareloc: 'Lat: -6.1833066, Long: 106.8282431',
       alamat:
@@ -318,8 +302,9 @@ export function DtPimpinan(props: any) {
     {
       id: 3,
       no: '3',
-      nrk: '166665',
-      nama: 'Irwan Novyanto',
+      // nrk: '166665',
+      // nama: 'Irwan Novyanto',
+      pelaksana: 'SEKSI PPNS DAN PENINDAKAN',
       tanggalpengecekan: '24-09-2021',
       shareloc: 'Lat: -6.346061, Long: 106.89405099999999',
       alamat:
@@ -336,8 +321,9 @@ export function DtPimpinan(props: any) {
     {
       id: 4,
       no: '4',
-      nrk: '166665',
-      nama: 'Irwan Novyanto',
+      // nrk: '166665',
+      // nama: 'Irwan Novyanto',
+      pelaksana: 'PENGELOLA KEAMANAN DAN KETERTIBAN SATPOL PP KECAMATAN SENEN',
       tanggalpengecekan: '24-01-2022',
       shareloc: 'Lat: -6.1820642, Long: 106.8284563',
       alamat:
@@ -354,8 +340,9 @@ export function DtPimpinan(props: any) {
     {
       id: 5,
       no: '5',
-      nrk: '166665',
-      nama: 'Irwan Novyanto',
+      // nrk: '166665',
+      // nama: 'Irwan Novyanto',
+      pelaksana: 'PETUGAS KEAMANAN SATPOL PP KECAMATAN TANAH ABANG',
       tanggalpengecekan: '15-03-2022',
       shareloc: 'Lat: -6.1820642, Long: 106.8284563',
       alamat:
