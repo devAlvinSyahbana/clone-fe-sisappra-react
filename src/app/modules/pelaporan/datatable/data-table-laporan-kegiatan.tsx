@@ -7,7 +7,31 @@ import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 
 export default function DtKabid(props: any) {
-  const columns1 = [
+  const [data, setData] = useState([])
+
+  const dataKegiatan = () => {
+    axios.get(`http://localhost:3002/kegiatan-umum/`).then((res) => {
+      const data = res.data.data.map((d: any) => ({
+        no: d.id,
+        pelaksana: d.created_by,
+        tanggal_kegiatan: d.kegiatan__tanggal,
+        waktu_mulai: d.kegiatan__jam_start,
+        waktu_selesai: d.kegiatan__jam_end,
+        jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+        uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+        // wilayah: d.kegiatan__wilayah,
+        lokasi: d.kegiatan__lokasi,
+      }))
+      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+      setData(data)
+    })
+  }
+
+  useEffect(() => {
+    dataKegiatan()
+  }, [])
+
+  const columns2 = [
     {
       name: 'No',
       width: '60px',
@@ -15,46 +39,66 @@ export default function DtKabid(props: any) {
     },
     {
       name: 'Pelaksana',
+      wrap: true,
+      width: '200px',
       selector: (row: any) => row.pelaksana,
     },
     {
       name: 'Tanggal Kegiatan',
+      width: '140px',
       selector: (row: any) => row.tanggal_kegiatan,
     },
     {
-      name: 'Waktu Kegiatan',
-      selector: (row: any) => row.waktu_kegiatan,
+      name: 'Waktu Mulai',
+      width: '140px',
+      selector: (row: any) => row.waktu_mulai,
+    },
+    {
+      name: 'Waktu Selesai',
+      width: '140px',
+      selector: (row: any) => row.waktu_selesai,
+    },
+    {
+      name: 'Jenis Kegiatan',
+      width: '140px',
+      selector: (row: any) => row.jenis_kegiatan,
     },
     {
       name: 'Uraian Kegiatan',
+      width: '200px',
+      wrap: true,
       selector: (row: any) => row.uraian_kegiatan,
     },
     {
       name: 'Wilayah',
+      width: '140px',
+      wrap: true,
       selector: (row: any) => row.wilayah,
     },
     {
       name: 'Lokasi',
+      width: '140px',
+      wrap: true,
       selector: (row: any) => row.lokasi,
     },
   ]
 
-  const data = [
-    {
-      id: 1,
-      no: '1',
-      pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
-      tanggal_kegiatan: '01/11/2022',
-      waktu_kegiatan: '08:00 - 12:00',
-      uraian_kegiatan: 'PATROLI',
-      wilayah: 'Kota Administrasi Jakarta Pusat',
-      lokasi: 'RW.3, Petojo Sel.Kecamatan Gambir, Kota Jakarta Pusat',
-    },
-  ]
+  // const data = [
+  //   {
+  //     id: 1,
+  //     no: '1',
+  //     pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
+  //     tanggal_kegiatan: '01/11/2022',
+  //     waktu_kegiatan: '08:00 - 12:00',
+  //     uraian_kegiatan: 'PATROLI',
+  //     wilayah: 'Kota Administrasi Jakarta Pusat',
+  //     lokasi: 'RW.3, Petojo Sel.Kecamatan Gambir, Kota Jakarta Pusat',
+  //   },
+  // ]
 
   return (
     <div>
-      <DataTable columns={columns1} data={data} pagination />
+      <DataTable columns={columns2} data={data} pagination />
     </div>
   )
 }
@@ -207,7 +251,8 @@ export function DtPimpinan(props: any) {
       selector: (row: any) => row.no,
     },
     {
-      name: 'Pelaksana',
+      name: 'Pelaksana Bidang/Wilayah',
+      wrap: true,
       selector: (row: any) => row.pelaksana,
     },
     {
@@ -336,12 +381,62 @@ export function DtPimpinan(props: any) {
     {
       id: 1,
       no: '1',
-      pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
-      tanggal_kegiatan: '01/11/2022',
-      waktu_kegiatan: '08:00 - 12:00',
-      uraian_kegiatan: 'PATROLI',
-      wilayah: 'Kota Administrasi Jakarta Pusat',
-      lokasi: 'RW.3, Petojo Sel.Kecamatan Gambir, Kota Jakarta Pusat',
+      pelaksana: 'Kota Administrasi Jakarta Pusat',
+      tanggal_kegiatan: '1',
+      waktu_kegiatan: '1',
+      uraian_kegiatan: '1',
+      wilayah: '1',
+      lokasi: '1',
+    },
+    {
+      id: 2,
+      no: '2',
+      pelaksana: 'Kota Administrasi Jakarta Utara',
+      tanggal_kegiatan: '1',
+      waktu_kegiatan: '1',
+      uraian_kegiatan: '1',
+      wilayah: '1',
+      lokasi: '1',
+    },
+    {
+      id: 3,
+      no: '3',
+      pelaksana: 'Kota Administrasi Jakarta Barat',
+      tanggal_kegiatan: '1',
+      waktu_kegiatan: '1',
+      uraian_kegiatan: '1',
+      wilayah: '1',
+      lokasi: '1',
+    },
+    {
+      id: 4,
+      no: '4',
+      pelaksana: 'Kota Administrasi Jakarta Selatan',
+      tanggal_kegiatan: '1',
+      waktu_kegiatan: '1',
+      uraian_kegiatan: '1',
+      wilayah: '1',
+      lokasi: '1',
+    },
+    {
+      id: 5,
+      no: '5',
+      pelaksana: 'Kota Administrasi Jakarta Timur',
+      tanggal_kegiatan: '1',
+      waktu_kegiatan: '1',
+      uraian_kegiatan: '1',
+      wilayah: '1',
+      lokasi: '1',
+    },
+    {
+      id: 6,
+      no: '6',
+      pelaksana: 'Kabupaten Administrasi Kepulauan Seribu',
+      tanggal_kegiatan: '1',
+      waktu_kegiatan: '1',
+      uraian_kegiatan: '1',
+      wilayah: '1',
+      lokasi: '1',
     },
   ]
 
