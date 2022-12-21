@@ -87,7 +87,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
           <div className='row'>
             <div className='col'>
               <Field
-                name='waktu_pengawasan_start'
+                name='waktu_pengawasan'
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -95,20 +95,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='waktu_pengawasan_start' />
-              </div>
-            </div>
-            <div className='col'>
-              <Field
-                name='waktu_pengawasan_end'
-                className='form-control'
-                component={TimePickerField}
-                onChange={(o: any) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='waktu_pengawasan_end' />
+                <ErrorMessage name='waktu_pengawasan' />
               </div>
             </div>
           </div>
@@ -116,12 +103,12 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         <div className='mb-10'>
           <label className='required form-label'>Kota</label>
           <Field
-            name='kota'
-            target='kota_selection'
+            name='kota_selection'
+            target='kota'
             className='form-control'
             component={SelectField}
             options={kotaList}
-            onchange={(o: ChangeEvent<any>) => {
+            onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
@@ -133,12 +120,12 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         <div className='mb-10'>
           <label className='required form-label'>Kecamatan</label>
           <Field
-            name='kecamatan'
-            target='kecamatan_selection'
+            name='kecamatan_selection'
+            target='kecamatan'
             className='form-control'
             component={SelectField}
             options={kecamatanList}
-            onchange={(o: ChangeEvent<any>) => {
+            onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
@@ -150,12 +137,13 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         <div className='mb-10'>
           <label className='required form-label'>Kelurahan</label>
           <Field
-            name='kelurahan'
-            target='kelurahan_selection'
+            name='kelurahan_selection'
+            target='kelurahan'
             className='form-control'
             component={SelectField}
             options={kelurahanList}
-            onchange={(o: ChangeEvent<any>) => {
+            onChange={(o: ChangeEvent<any>) => {
+              console.log(o)
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
