@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {Fragment} from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
@@ -60,9 +60,27 @@ export default function DtKabid(props: any) {
 
 export function DtAdmin(props: any) {
   const dispatch = useDispatch()
-  const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
+  const [data, setData] = useState([])
 
-  console.log(jenisKegiatanList)
+  const dataPengawasReklame = () => {
+    axios.get(`http://localhost:3002/reklame/`).then((res) => {
+      const data = res.data.data.map((d: any) => ({
+        no: d.id,
+        pelaksana: d.id,
+        tanggal: d.tanggal_kunjungan,
+        waktu_mulai: d.waktu_mulai_kunjungan,
+        waktu_selesai: d.waktu_selesai_kunjungan,
+        wilayah: d.asal_instansi,
+        status: d.jml_pengunjung,
+        pemilik_reklame: d.maksud_dan_tujuan,
+      }))
+      setData(data)
+    })
+  }
+
+  useEffect(() => {
+    dataPengawasReklame()
+  }, [])
 
   const columns2 = [
     {
@@ -148,19 +166,19 @@ export function DtAdmin(props: any) {
     },
   ]
 
-  const data = [
-    {
-      id: 1,
-      no: '1',
-      pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
-      tanggal_kegiatan: '01/11/2022',
-      waktu_kegiatan: '08:00 - 12:00',
-      wilayah: 'Kota Administrasi Jakarta Pusat',
-      lokasi: 'RW.3, Petojo Sel.Kecamatan Gambir, Kota Jakarta Pusat',
-      status: 'Aktif',
-      pemilik_reklame: 'PT. Nestle Makanan Bayi',
-    },
-  ]
+  // const data = [
+  //   {
+  //     id: 1,
+  //     no: '1',
+  //     pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
+  //     tanggal_kegiatan: '01/11/2022',
+  //     waktu_kegiatan: '08:00 - 12:00',
+  //     wilayah: 'Kota Administrasi Jakarta Pusat',
+  //     lokasi: 'RW.3, Petojo Sel.Kecamatan Gambir, Kota Jakarta Pusat',
+  //     status: 'Aktif',
+  //     pemilik_reklame: 'PT. Nestle Makanan Bayi',
+  //   },
+  // ]
 
   return (
     <div>
