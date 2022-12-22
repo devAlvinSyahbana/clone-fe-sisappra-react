@@ -11,48 +11,49 @@ import axios from 'axios'
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanPengawasanState extends Record<string, any> {
-  nrk: number
-  nama: string
-  share_location: string
+  // nrk: number
+  // nama: string
+  // share_location: string
   alamat: string
-  lokasi_tiang: string
-  kawasan_kendali: string
-  status: string
-  ukuran: string
-  pemilik_reklame: string
-  konstruksi_reklame: string
-  konten_iklan: string
+  // lokasi_tiang: string
+  // kawasan_kendali: string
+  // status: string
+  // ukuran: string
+  // pemilik_reklame: string
+  // konstruksi_reklame: string
+  // konten_iklan: string
   tgl_pengecekan: string
   waktu_pengawasan: string
-  kota: string
-  kecamatan: string
-  kelurahan: string
+  kota: number
+  kecamatan: number
+  kelurahan: number
 }
 
 export const initialState: PelaporanPengawasanState = {
   list_kota: [],
   list_kecamatan: [],
   list_kelurahan: [],
-
-  nrk: 0,
-  nama: '',
-  share_location: '',
-  alamat: '',
-  lokasi_tiang: '',
-  kawasan_kendali: '',
-  status: '',
-  ukuran: '',
-  pemilik_reklame: '',
-  konstruksi_reklame: '',
-  konten_iklan: '',
   tgl_pengecekan: '',
   waktu_pengawasan: '',
-  kota_selection: [],
-  kota: '',
-  kecamatan_selection: [],
-  kecamatan: '',
-  kelurahan_selection: [],
-  kelurahan: '',
+  kecamatan: 0,
+  kelurahan: 0,
+  kota: 0,
+  alamat: '',
+  // nrk: 0,
+  // nama: '',
+  // share_location: '',
+
+  // lokasi_tiang: '',
+  // kawasan_kendali: '',
+  // status: '',
+  // ukuran: '',
+  // pemilik_reklame: '',
+  // konstruksi_reklame: '',
+  // konten_iklan: '',
+
+  // kecamatan_selection: [],
+  // kota_selection: [],
+  // kelurahan_selection: [],
 }
 
 export const createSchemaFilterPelaporaPengawasan = [
@@ -68,20 +69,19 @@ export const createSchemaFilterPelaporaPengawasan = [
 
 export const createSchemaPelaporanPengawasan = [
   Yup.object({
-    nrk: Yup.number().integer().moreThan(0).required().label('NRK'),
-    nama: Yup.string().required().label('Nama'),
-    share_location: Yup.string().min(10).max(1000).required().label('Share Location'),
     alamat: Yup.string().required().label('Alamat'),
-    lokasi_tiang: Yup.string().required().label('Lokasi Tiang'),
-    kawasan_kendali: Yup.string().required().label('Kawasan Kendali'),
-    status: Yup.string().required().label('Status'),
-    ukuran: Yup.string().required().label('Ukuran'),
-    pemilik_reklame: Yup.string().required().label('Pemilik Reklame'),
-    konstruksi_reklame: Yup.string().required().label('Konstruksi Reklame'),
-    konten_iklan: Yup.string().required().label('Konten Iklan'),
     tgl_pengecekan: Yup.string().required().label('Tanggal Pengecekan'),
-    waktu_pengawasan_start: Yup.string().required().label('Waktu Pengawasan'),
-    waktu_pengawasan_end: Yup.string().required().label('Waktu Pengawasan'),
+    waktu_pengawasan: Yup.string().required().label('Waktu Pengawasan'),
+    // lokasi_tiang: Yup.string().required().label('Lokasi Tiang'),
+    // kawasan_kendali: Yup.string().required().label('Kawasan Kendali'),
+    // status: Yup.string().required().label('Status'),
+    // ukuran: Yup.string().required().label('Ukuran'),
+    // pemilik_reklame: Yup.string().required().label('Pemilik Reklame'),
+    // konstruksi_reklame: Yup.string().required().label('Konstruksi Reklame'),
+    // konten_iklan: Yup.string().required().label('Konten Iklan'),
+    // nrk: Yup.number().integer().moreThan(0).required().label('NRK'),
+    // nama: Yup.string().required().label('Nama'),
+    // share_location: Yup.string().min(10).max(1000).required().label('Share Location'),
   }),
   Yup.object({}),
 ]

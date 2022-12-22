@@ -48,23 +48,22 @@ export const AddPengawasanPage: FC = () => {
     actions: FormikValues
   ) => {
     const bodyParam: PelaporanPengawasanState = {
-      nrk: allValues.nrk,
-      nama: allValues.nama,
-      share_location: allValues.share_location,
+      // nrk: allValues.nrk,
+      // nama: allValues.nama,
+      // share_location: allValues.share_location,
       alamat: allValues.alamat,
-      lokasi_tiang: allValues.lokasi_tiang,
-      kawasan_kendali: allValues.kawasan_kendali,
-      status: allValues.status,
-      ukuran: allValues.ukuran,
-      pemilik_reklame: allValues.pemilik_reklame,
-      konstruksi_reklame: allValues.konstruksi_reklame,
-      konten_iklan: allValues.konten_iklan,
+      // lokasi_tiang: allValues.lokasi_tiang,
+      // kawasan_kendali: allValues.kawasan_kendali,
+      // status: allValues.status,
+      // ukuran: allValues.ukuran,
+      // pemilik_reklame: allValues.pemilik_reklame,
+      // konstruksi_reklame: allValues.konstruksi_reklame,
+      // konten_iklan: allValues.konten_iklan,
       tgl_pengecekan: allValues.tgl_pengecekan,
       waktu_pengawasan: allValues.waktu_pengawasan,
       kota: allValues.kota,
       kecamatan: allValues.kecamatan,
       kelurahan: allValues.kelurahan,
-      waktu_pengesahan: allValues.waktu_pengesahan,
     }
 
     // }

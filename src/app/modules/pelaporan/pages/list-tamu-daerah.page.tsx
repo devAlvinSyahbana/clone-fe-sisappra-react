@@ -19,7 +19,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
 import axios from 'axios'
-import DtKabid, {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-tamu-daerah'
+import {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-tamu-daerah'
 import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
@@ -58,10 +58,7 @@ export const ListTamuDaerahPage: FC = () => {
     console.log(res)
   }
 
-  const [aksi, setAksi] = useState(0)
-  const vKabid = () => {
-    setAksi(0)
-  }
+  const [aksi, setAksi] = useState(1)
   const vAdmin = () => {
     setAksi(1)
   }
@@ -128,186 +125,352 @@ export const ListTamuDaerahPage: FC = () => {
                       className='fs-6 collapse show ps-10'
                       data-bs-parent='#kt_accordion_2'
                     >
-                      <Formik
-                        validationSchema={currentSchema}
-                        initialValues={initialState}
-                        onSubmit={filterPelaporanKegiatan}
-                      >
-                        <Form id='list_pelaporan_kegiatan_filter'>
-                          <div className='row w-100 mt-10 mb-10'>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label align-middle'>Tanggal Awal</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <Field
-                                      name='kegiatan__tanggal'
-                                      component={DatePickerField}
-                                      onChange={(o: any) => {
-                                        dispatch(changedValue(ToFieldStateCE(o)))
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-10 col-lg-10 col-sm-24'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-2 pt-2'>
-                                    <label className='form-label align-middle'>Tanggal Akhir</label>
-                                  </div>
-                                  <div className='col-4 mx-10'>
-                                    <Field
-                                      name='kegiatan__tanggal'
-                                      component={DatePickerField}
-                                      onChange={(o: any) => {
-                                        dispatch(changedValue(ToFieldStateCE(o)))
-                                      }}
-                                    />
+                      <Button onClick={vAdmin}>Admin</Button>
+                      <Button onClick={vPimpinan}>Pimpinan</Button>
+                      {aksi === 1 ? (
+                        <Formik
+                          validationSchema={currentSchema}
+                          initialValues={initialState}
+                          onSubmit={filterPelaporanKegiatan}
+                        >
+                          <Form id='list_pelaporan_kegiatan_filter'>
+                            <div className='row w-100 mt-10 mb-10'>
+                              <div className='col-md-6 col-lg-6 col-sm-12'>
+                                <div className='mb-10'>
+                                  <div className='row'>
+                                    <div className='col-4 pt-2'>
+                                      <label className='form-label align-middle'>
+                                        Tanggal Awal
+                                      </label>
+                                    </div>
+                                    <div className='col-8'>
+                                      <Field
+                                        name='kegiatan__tanggal'
+                                        component={DatePickerField}
+                                        onChange={(o: any) => {
+                                          dispatch(changedValue(ToFieldStateCE(o)))
+                                        }}
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                              <div className='col-md-10 col-lg-10 col-sm-24'>
+                                <div className='mb-10'>
+                                  <div className='row'>
+                                    <div className='col-2 pt-2'>
+                                      <label className='form-label align-middle'>
+                                        Tanggal Akhir
+                                      </label>
+                                    </div>
+                                    <div className='col-4 mx-10'>
+                                      <Field
+                                        name='kegiatan__tanggal'
+                                        component={DatePickerField}
+                                        onChange={(o: any) => {
+                                          dispatch(changedValue(ToFieldStateCE(o)))
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
 
-                            <div className='row g-8 mt-2'>
-                              <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                <Button className='btn btn-light-primary me-2'>
-                                  <KTSVG
-                                    path='/media/icons/duotune/general/gen021.svg'
-                                    className='svg-icon-2'
-                                  />
-                                  Cari
-                                </Button>
-                                <Link
-                                  to='#'
-                                  // onClick={handleFilterReset}
-                                >
-                                  <button className='btn btn-light-primary'>
-                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                    Reset
-                                  </button>
-                                </Link>
-                              </div>
-                              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                {/* begin::Filter Button */}
-                                <Button
-                                  onClick={() => navigate('/pelaporan/tambah-laporan-tamu-daerah')}
-                                  className='btn btn-primary me-2'
-                                >
-                                  {/* begin::Add user */}
-                                  <KTSVG
-                                    path='/media/icons/duotune/arrows/arr075.svg'
-                                    className='svg-icon-2'
-                                  />
-                                  Tambah
-                                  {/* end::Add user */}
-                                </Button>
-                                <button
-                                  type='button'
-                                  className='btn btn-light-primary'
-                                  data-kt-menu-trigger='click'
-                                  data-kt-menu-placement='bottom-end'
-                                >
-                                  {/* {btnLoadingUnduh ? (
+                              <div className='row g-8 mt-2'>
+                                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                  <Button className='btn btn-light-primary me-2'>
+                                    <KTSVG
+                                      path='/media/icons/duotune/general/gen021.svg'
+                                      className='svg-icon-2'
+                                    />
+                                    Cari
+                                  </Button>
+                                  <Link
+                                    to='#'
+                                    // onClick={handleFilterReset}
+                                  >
+                                    <button className='btn btn-light-primary'>
+                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                      Reset
+                                    </button>
+                                  </Link>
+                                </div>
+                                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                  {/* begin::Filter Button */}
+                                  <Button
+                                    onClick={() =>
+                                      navigate('/pelaporan/tambah-laporan-tamu-daerah')
+                                    }
+                                    className='btn btn-primary me-2'
+                                  >
+                                    {/* begin::Add user */}
+                                    <KTSVG
+                                      path='/media/icons/duotune/arrows/arr075.svg'
+                                      className='svg-icon-2'
+                                    />
+                                    Tambah
+                                    {/* end::Add user */}
+                                  </Button>
+                                  <button
+                                    type='button'
+                                    className='btn btn-light-primary'
+                                    data-kt-menu-trigger='click'
+                                    data-kt-menu-placement='bottom-end'
+                                  >
+                                    {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                  <>
-                                    <KTSVG
-                                      path='/media/icons/duotune/arrows/arr078.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Unduh
-                                  </>
-                                  {/* )} */}
-                                </button>
-                                {/* end::Filter Button */}
-                                {/* begin::SubMenu */}
-                                <div
-                                  className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                  data-kt-menu='true'
-                                >
-                                  {/* begin::Header */}
-                                  <div className='px-7 py-5'>
-                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                  </div>
-                                  {/* end::Header */}
+                                    <>
+                                      <KTSVG
+                                        path='/media/icons/duotune/arrows/arr078.svg'
+                                        className='svg-icon-2'
+                                      />
+                                      Unduh
+                                    </>
+                                    {/* )} */}
+                                  </button>
+                                  {/* end::Filter Button */}
+                                  {/* begin::SubMenu */}
+                                  <div
+                                    className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                    data-kt-menu='true'
+                                  >
+                                    {/* begin::Header */}
+                                    <div className='px-7 py-5'>
+                                      <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                                    </div>
+                                    {/* end::Header */}
 
-                                  {/* begin::Separator */}
-                                  <div className='separator border-gray-200'></div>
-                                  {/* end::Separator */}
+                                    {/* begin::Separator */}
+                                    <div className='separator border-gray-200'></div>
+                                    {/* end::Separator */}
 
-                                  {/* begin::Content */}
-                                  <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                    <button
-                                      //   onClick={handleUnduh}
-                                      className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                    >
-                                      Excel
-                                    </button>
-                                  </div>
-                                  {/* end::Content */}
+                                    {/* begin::Content */}
+                                    <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                      <button
+                                        //   onClick={handleUnduh}
+                                        className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                      >
+                                        Excel
+                                      </button>
+                                    </div>
+                                    {/* end::Content */}
 
-                                  {/* begin::Content */}
-                                  <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                    <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                      PDF
-                                    </button>
+                                    {/* begin::Content */}
+                                    <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                      <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                        PDF
+                                      </button>
+                                    </div>
+                                    {/* end::Content */}
                                   </div>
-                                  {/* end::Content */}
+                                  {/* end::SubMenu */}
                                 </div>
-                                {/* end::SubMenu */}
                               </div>
                             </div>
-                          </div>
-                        </Form>
-                      </Formik>
+                          </Form>
+                        </Formik>
+                      ) : (
+                        // View Pimpinan
+                        <Formik
+                          validationSchema={currentSchema}
+                          initialValues={initialState}
+                          onSubmit={filterPelaporanKegiatan}
+                        >
+                          <Form id='list_pelaporan_kegiatan_filter'>
+                            <div className='row w-100 mt-10 mb-10'>
+                              <div className='col-md-6 col-lg-6 col-sm-12'>
+                                <div className='mb-10'>
+                                  <div className='row'>
+                                    <div className='col-4 pt-2'>
+                                      <label className='form-label align-middle'>Instansi</label>
+                                    </div>
+                                    <div className='col-8'>
+                                      <Field
+                                        type='text'
+                                        name='asal_instansi'
+                                        className='form-control'
+                                        placeholder='Masukkan asal instansi'
+                                        onKeyUp={(o: ChangeEvent<any>) => {
+                                          dispatch(changedValue(ToFieldStateCE(o)))
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='col-md-6 col-lg-6 col-sm-12'>
+                                <div className='mb-10'>
+                                  <div className='row'>
+                                    <div className='col-4 pt-2'>
+                                      <label className='form-label align-middle'>
+                                        Tanggal Awal
+                                      </label>
+                                    </div>
+                                    <div className='col-8'>
+                                      <Field
+                                        name='kegiatan__tanggal'
+                                        component={DatePickerField}
+                                        onChange={(o: any) => {
+                                          dispatch(changedValue(ToFieldStateCE(o)))
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='col-md-10 col-lg-10 col-sm-24'>
+                                <div className='mb-10'>
+                                  <div className='row'>
+                                    <div className='col-2 pt-2'>
+                                      <label className='form-label align-middle'>
+                                        Tanggal Akhir
+                                      </label>
+                                    </div>
+                                    <div className='col-4 mx-10'>
+                                      <Field
+                                        name='kegiatan__tanggal'
+                                        component={DatePickerField}
+                                        onChange={(o: any) => {
+                                          dispatch(changedValue(ToFieldStateCE(o)))
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className='row g-8 mt-2'>
+                                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                  <Button className='btn btn-light-primary me-2'>
+                                    <KTSVG
+                                      path='/media/icons/duotune/general/gen021.svg'
+                                      className='svg-icon-2'
+                                    />
+                                    Cari
+                                  </Button>
+                                  <Link
+                                    to='#'
+                                    // onClick={handleFilterReset}
+                                  >
+                                    <button className='btn btn-light-primary'>
+                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                      Reset
+                                    </button>
+                                  </Link>
+                                </div>
+                                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                  {/* begin::Filter Button */}
+                                  <button
+                                    type='button'
+                                    className='btn btn-light-primary'
+                                    data-kt-menu-trigger='click'
+                                    data-kt-menu-placement='bottom-end'
+                                  >
+                                    {/* {btnLoadingUnduh ? (
+                                    <>
+                                      <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                      Memproses Unduh...
+                                    </>
+                                  ) : ( */}
+                                    <>
+                                      <KTSVG
+                                        path='/media/icons/duotune/arrows/arr078.svg'
+                                        className='svg-icon-2'
+                                      />
+                                      Unduh
+                                    </>
+                                    {/* )} */}
+                                  </button>
+                                  {/* end::Filter Button */}
+                                  {/* begin::SubMenu */}
+                                  <div
+                                    className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                    data-kt-menu='true'
+                                  >
+                                    {/* begin::Header */}
+                                    <div className='px-7 py-5'>
+                                      <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                                    </div>
+                                    {/* end::Header */}
+
+                                    {/* begin::Separator */}
+                                    <div className='separator border-gray-200'></div>
+                                    {/* end::Separator */}
+
+                                    {/* begin::Content */}
+                                    <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                      <button
+                                        //   onClick={handleUnduh}
+                                        className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                      >
+                                        Excel
+                                      </button>
+                                    </div>
+                                    {/* end::Content */}
+
+                                    {/* begin::Content */}
+                                    <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                      <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                        PDF
+                                      </button>
+                                    </div>
+                                    {/* end::Content */}
+                                  </div>
+                                  {/* end::SubMenu */}
+                                </div>
+                              </div>
+                            </div>
+                          </Form>
+                        </Formik>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
-              <div className='card-body py-4'>
-                {/* <div className='row'>
-                  <div className='col fs-4 mb-2 fw-semibold text-center'>
-                    LAPORAN HASIL KEGIATAN
-                  </div>
+              {aksi === 1 ? (
+                <div className='card-body py-4'>
+                  <DtAdmin />
                 </div>
-                <div className='row'>
-                  <div className='col fs-4 mb-2 fw-semibold text-center'>
-                    PADA SATPOL PP......................................
+              ) : (
+                <>
+                  <div className='card-body py-4'>
+                    <div className='row'>
+                      <div className='col fs-4 mb-2 fw-semibold text-center'>
+                        REKAPITULASI TAMU DAERAH
+                      </div>
+                    </div>
+                    <div className='row'>
+                      <div className='col fs-4 mb-2 fw-semibold text-center'>
+                        PADA SATPOL PP......................................
+                      </div>
+                    </div>
+                    <div className='row'>
+                      <div className='col fs-4 mb-6 fw-semibold text-center'>
+                        PERIODE .................... s/d .......................
+                      </div>
+                    </div>
+                    <DtPimpinan />
                   </div>
-                </div>
-                <div className='row'>
-                  <div className='col fs-4 mb-6 fw-semibold text-center'>
-                    PERIODE .................... s/d .......................
+                  <div className='row'>
+                    <div className='col-8'></div>
+                    <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
+                      Jakarta, ..............................20...
+                      <div className='col fs-6 mb-15 fw-semibold text-center'>
+                        KEPALA SATUAN POLISI PAMONG PRAJA
+                        ...............................................................
+                      </div>
+                      <div className='col fs-6 mb-2 fw-semibold text-center'>NAMA</div>
+                      <div className='col fs-6 mb-2 fw-semibold text-center'>
+                        NIP. ......................
+                      </div>
+                    </div>
                   </div>
-                </div> */}
-                <DtAdmin />
-                {/*<DataTable*/}
-                {/*    columns={columns}*/}
-                {/*    data={data}*/}
-                {/*    pagination*/}
-                {/*/>*/}
-              </div>
-              {/* <div className='row'>
-                <div className='col-8'></div>
-                <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
-                  Jakarta, ..............................20...
-                  <div className='col fs-6 mb-15 fw-semibold text-center'>
-                    KEPALA SATUAN POLISI PAMONG PRAJA
-                    ...............................................................
-                  </div>
-                  <div className='col fs-6 mb-2 fw-semibold text-center'>NAMA</div>
-                  <div className='col fs-6 mb-2 fw-semibold text-center'>
-                    NIP. ......................
-                  </div>
-                </div>
-              </div> */}
+                </>
+              )}
             </div>
           </div>
         </div>
