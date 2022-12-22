@@ -59,7 +59,9 @@ export const AddKegiatanUmumPage: FC = () => {
   const submitPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
     try {
       if (isPengamanan(values)) {
-        const res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
+        // const res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
+        alert(JSON.stringify(values, null, 2))
+        const res = await axios.post(`${API_URL}/kegiatan-pengamanan`, allValues)
       }
       const res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
       if (res) {
@@ -73,7 +75,7 @@ export const AddKegiatanUmumPage: FC = () => {
           color: '#000000',
         })
       }
-      // alert(JSON.stringify(values, null, 2))
+      alert(JSON.stringify(values, null, 2))
     } catch (error) {
       Swal.fire({
         icon: 'error',
