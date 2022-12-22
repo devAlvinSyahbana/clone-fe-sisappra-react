@@ -34,7 +34,6 @@ export const AddTamuDaerahPage: FC = () => {
     }
     try {
       const res = await axios.post(`http://localhost:3002/tamu-daerah`, bodyParam)
-      // alert(JSON.stringify(values, null, 2))
 
       if (res) {
         actions.setSubmitting(false)
@@ -56,8 +55,6 @@ export const AddTamuDaerahPage: FC = () => {
       console.error(error)
     }
   }
-
-  console.log('Ini values', allValues)
 
   return (
     <>
