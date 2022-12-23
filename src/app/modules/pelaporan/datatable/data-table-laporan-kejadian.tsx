@@ -9,17 +9,17 @@ import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.sli
 export default function DtKabid(props: any) {
   const [data, setData] = useState([])
 
-  const dataKegiatan = () => {
-    axios.get(`http://localhost:3002/kegiatan-umum/`).then((res) => {
+  const dataKejadian = () => {
+    axios.get(`http://localhost:3002/kejadian-umum/`).then((res) => {
       const data = res.data.data.map((d: any) => ({
         no: d.id,
         pelaksana: d.created_by,
-        tanggal_kegiatan: d.kegiatan__tanggal,
-        waktu_mulai: d.kegiatan__jam_start,
-        waktu_selesai: d.kegiatan__jam_end,
-        jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-        uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-        // wilayah: d.kegiatan__wilayah,
+        tanggal_kejadian: d.kejadian__tanggal,
+        waktu_mulai: d.kejadian__waktu_start,
+        waktu_selesai: d.kejadian__waktu_end,
+        jenis_kejadian: d.kejadian__jenis_kegiatan_id,
+        uraian_kejadian: d.kejadian__uraian_kejadian,
+        wilayah: d.kegiatan__wilayah,
         lokasi: d.kegiatan__lokasi,
       }))
       // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
@@ -28,10 +28,10 @@ export default function DtKabid(props: any) {
   }
 
   useEffect(() => {
-    dataKegiatan()
+    dataKejadian()
   }, [])
 
-  const columns2 = [
+  const columns1 = [
     {
       name: 'No',
       width: '60px',
@@ -44,9 +44,9 @@ export default function DtKabid(props: any) {
       selector: (row: any) => row.pelaksana,
     },
     {
-      name: 'Tanggal Kegiatan',
+      name: 'Tanggal Kejadian',
       width: '140px',
-      selector: (row: any) => row.tanggal_kegiatan,
+      selector: (row: any) => row.tanggal_kejadian,
     },
     {
       name: 'Waktu Mulai',
@@ -59,15 +59,15 @@ export default function DtKabid(props: any) {
       selector: (row: any) => row.waktu_selesai,
     },
     {
-      name: 'Jenis Kegiatan',
+      name: 'Jenis Kejadian',
       width: '140px',
-      selector: (row: any) => row.jenis_kegiatan,
+      selector: (row: any) => row.jenis_kejadian,
     },
     {
-      name: 'Uraian Kegiatan',
+      name: 'Uraian Kejadian',
       width: '200px',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.uraian_kejadian,
     },
     {
       name: 'Wilayah',
@@ -83,44 +83,28 @@ export default function DtKabid(props: any) {
     },
   ]
 
-  // const data = [
-  //   {
-  //     id: 1,
-  //     no: '1',
-  //     pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
-  //     tanggal_kegiatan: '01/11/2022',
-  //     waktu_kegiatan: '08:00 - 12:00',
-  //     uraian_kegiatan: 'PATROLI',
-  //     wilayah: 'Kota Administrasi Jakarta Pusat',
-  //     lokasi: 'RW.3, Petojo Sel.Kecamatan Gambir, Kota Jakarta Pusat',
-  //   },
-  // ]
-
   return (
     <div>
-      <DataTable columns={columns2} data={data} pagination />
+      <DataTable columns={columns1} data={data} pagination />
     </div>
   )
 }
 
 export function DtAdmin(props: any) {
   const dispatch = useDispatch()
-  const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
   const [data, setData] = useState([])
 
-  console.log(jenisKegiatanList)
-
-  const dataKegiatan = () => {
-    axios.get(`http://localhost:3002/kegiatan-umum/`).then((res) => {
+  const dataKejadian = () => {
+    axios.get(`http://localhost:3002/kejadian-umum/`).then((res) => {
       const data = res.data.data.map((d: any) => ({
         no: d.id,
         pelaksana: d.created_by,
-        tanggal_kegiatan: d.kegiatan__tanggal,
-        waktu_mulai: d.kegiatan__jam_start,
-        waktu_selesai: d.kegiatan__jam_end,
-        jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-        uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-        // wilayah: d.kegiatan__wilayah,
+        tanggal_kejadian: d.kejadian__tanggal,
+        waktu_mulai: d.kejadian__waktu_start,
+        waktu_selesai: d.kejadian__waktu_end,
+        jenis_kejadian: d.kejadian__jenis_kegiatan_id,
+        uraian_kejadian: d.kejadian__uraian_kejadian,
+        wilayah: d.kegiatan__wilayah,
         lokasi: d.kegiatan__lokasi,
       }))
       // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
@@ -129,7 +113,7 @@ export function DtAdmin(props: any) {
   }
 
   useEffect(() => {
-    dataKegiatan()
+    dataKejadian()
   }, [])
 
   const columns2 = [
@@ -145,9 +129,9 @@ export function DtAdmin(props: any) {
       selector: (row: any) => row.pelaksana,
     },
     {
-      name: 'Tanggal Kegiatan',
+      name: 'Tanggal Kejadian',
       width: '140px',
-      selector: (row: any) => row.tanggal_kegiatan,
+      selector: (row: any) => row.tanggal_kejadian,
     },
     {
       name: 'Waktu Mulai',
@@ -160,15 +144,15 @@ export function DtAdmin(props: any) {
       selector: (row: any) => row.waktu_selesai,
     },
     {
-      name: 'Jenis Kegiatan',
+      name: 'Jenis Kejadian',
       width: '140px',
-      selector: (row: any) => row.jenis_kegiatan,
+      selector: (row: any) => row.jenis_kejadian,
     },
     {
-      name: 'Uraian Kegiatan',
+      name: 'Uraian Kejadian',
       width: '200px',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.uraian_kejadian,
     },
     {
       name: 'Wilayah',
@@ -251,129 +235,82 @@ export function DtPimpinan(props: any) {
       selector: (row: any) => row.no,
     },
     {
-      name: 'Pelaksana Bidang/Wilayah',
+      name: 'Bidang/Wilayah',
       wrap: true,
-      selector: (row: any) => row.pelaksana,
+      selector: (row: any) => row.bidang_wilayah,
     },
     {
-      name: 'Peringatan',
+      name: 'Jumlah Kejadian',
       selector: (row: any) => row.tanggal_kegiatan,
     },
     {
-      name: 'Penghalauan',
+      name: 'Banjir',
       selector: (row: any) => row.waktu_kegiatan,
     },
     {
-      name: 'Teguran Tertulis',
+      name: 'Hewan Buas dan Berbisa',
+      wrap: true,
       selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Penyegelan',
-      selector: (row: any) => row.wilayah,
+      name: 'Kebakaran',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Pembongkaran',
-      selector: (row: any) => row.lokasi,
+      name: 'Kecelakaan',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Ditertibkan',
-      selector: (row: any) => row.lokasi,
+      name: 'Pendampingan Kekerasan Pada Perempuan',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Pemusnahan',
-      selector: (row: any) => row.lokasi,
+      name: 'Kerusakan Konstruksi',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Penghentian Kegiatan Sementara 1x24jam',
-      selector: (row: any) => row.lokasi,
+      name: 'Kriminalitas',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Penghentian Kegiatan Sementara 3x24jam',
-      selector: (row: any) => row.lokasi,
+      name: 'Pembunuhan',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Penghentian Kegiatan Sementara 7x24jam',
-      selector: (row: any) => row.lokasi,
+      name: 'Penemuan Mayat',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Pencabutan Izin',
-      selector: (row: any) => row.lokasi,
+      name: 'Penyelamatan Orang',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Pembekuan Sementara Izin',
-      selector: (row: any) => row.lokasi,
+      name: 'Pohon Tumbang',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Pembubaran',
-      selector: (row: any) => row.lokasi,
+      name: 'Tawuran',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Pengusiran',
-      selector: (row: any) => row.lokasi,
+      name: 'Terorisme',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
     {
-      name: 'Razia',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Penjemputan',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Penangkapan',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Penyitaan',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Pembersihan',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Pencopotan/Pelepasan/Pencabutan',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Penyidikan',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Kerja Sosial',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Denda Administratif',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Terbit Izin',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Dikembalikan',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Belum Ditertibkan',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Lain-lain',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Tidak Ditemukan Pelanggaran',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Pengadilan (Yustitusi)',
-      selector: (row: any) => row.lokasi,
-    },
-    {
-      name: 'Non Pengadilan (PPKM)',
-      selector: (row: any) => row.lokasi,
+      name: 'Unjuk Rasa',
+      wrap: true,
+      selector: (row: any) => row.uraian_kegiatan,
     },
   ]
 
@@ -381,62 +318,50 @@ export function DtPimpinan(props: any) {
     {
       id: 1,
       no: '1',
-      pelaksana: 'Kota Administrasi Jakarta Pusat',
-      tanggal_kegiatan: '1',
+      bidang_wilayah: 'Kota Administrasi Jakarta Pusat',
+      tanggal_kegiatan: '12',
       waktu_kegiatan: '1',
       uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
     },
     {
       id: 2,
       no: '2',
-      pelaksana: 'Kota Administrasi Jakarta Utara',
-      tanggal_kegiatan: '1',
+      bidang_wilayah: 'Kota Administrasi Jakarta Utara',
+      tanggal_kegiatan: '12',
       waktu_kegiatan: '1',
       uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
     },
     {
       id: 3,
       no: '3',
-      pelaksana: 'Kota Administrasi Jakarta Barat',
-      tanggal_kegiatan: '1',
+      bidang_wilayah: 'Kota Administrasi Jakarta Barat',
+      tanggal_kegiatan: '12',
       waktu_kegiatan: '1',
       uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
     },
     {
       id: 4,
       no: '4',
-      pelaksana: 'Kota Administrasi Jakarta Selatan',
-      tanggal_kegiatan: '1',
+      bidang_wilayah: 'Kota Administrasi Jakarta Selatan',
+      tanggal_kegiatan: '12',
       waktu_kegiatan: '1',
       uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
     },
     {
       id: 5,
       no: '5',
-      pelaksana: 'Kota Administrasi Jakarta Timur',
-      tanggal_kegiatan: '1',
+      bidang_wilayah: 'Kota Administrasi Jakarta Timur',
+      tanggal_kegiatan: '12',
       waktu_kegiatan: '1',
       uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
     },
     {
       id: 6,
       no: '6',
-      pelaksana: 'Kabupaten Administrasi Kepulauan Seribu',
-      tanggal_kegiatan: '1',
+      bidang_wilayah: 'Kabupaten Administrasi Kepulauan Seribu',
+      tanggal_kegiatan: '12',
       waktu_kegiatan: '1',
       uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
     },
   ]
 

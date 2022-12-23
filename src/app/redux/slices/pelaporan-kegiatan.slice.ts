@@ -167,7 +167,7 @@ export const createSchemaPelaporanKegiatan = [
     tindak_lanjut__administrasi__jenis_pasal_id: Yup.number().when(
       'kegiatan__jenis_kegiatan_selection',
       {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        is: (val: any) => NoPasalPenyelesaian.includes(val?.label),
         then: Yup.number().notRequired(),
         otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Pasal'),
       }
@@ -175,7 +175,7 @@ export const createSchemaPelaporanKegiatan = [
     tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().when(
       'kegiatan__jenis_kegiatan_selection',
       {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        is: (val: any) => NoPasalPenyelesaian.includes(val?.label),
         then: Yup.object().notRequired(),
         otherwise: Yup.object().required(),
       }
@@ -199,7 +199,7 @@ export const createSchemaPelaporanKegiatan = [
     tindak_lanjut__administrasi__penyelesaian_id: Yup.number().when(
       'kegiatan__jenis_kegiatan_selection',
       {
-        is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+        is: (val: any) => NoPasalPenyelesaian.includes(val?.label),
         then: Yup.number().notRequired(),
         otherwise: Yup.number().integer().moreThan(0).required().label('Penyelesaian'),
       }
@@ -238,7 +238,7 @@ export const createSchemaPelaporanKegiatan = [
     tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object(),
 
     tindak_lanjut__jenis_penindakan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+      is: (val: any) => NoPenindakan.includes(val?.label),
       then: Yup.number().notRequired(),
       otherwise: Yup.number().integer().moreThan(0).required().label('Penindakan'),
     }),
@@ -269,14 +269,16 @@ export const createSchemaPelaporanKegiatan = [
   Yup.object({}),
 ]
 
-const excludeJenisKegiatan = [
-  'SIDANG TIPIRING',
-  'PENERTIBAN BANGUNAN',
-  'KEGIATAN PPKM',
-  'LAPORAN MASYARAKAT',
-  'PENERTIBAN MINUMAN BERALKOHOL',
-  'PENGAMANAN',
+const NoPasalPenyelesaian = [
+  'APEL',
+  'RAPAT',
+  'PENGATURAN LALU LINTAS',
+  'PENGAWALAN',
+  'SOSIALISASI P4GN(NARKOBA)',
+  'SOSIALISASI PERDA / PERKADA',
 ]
+
+const NoPenindakan = ['PENERTIBAN BANGUNAN', 'SIDANG TIPIRING', 'APEL', 'RAPAT']
 
 export const updateJenisKegiatanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisKegiatanList',
