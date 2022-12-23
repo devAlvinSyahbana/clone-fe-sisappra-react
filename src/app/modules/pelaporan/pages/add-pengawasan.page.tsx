@@ -51,19 +51,25 @@ export const AddPengawasanPage: FC = () => {
       // nrk: allValues.nrk,
       // nama: allValues.nama,
       // share_location: allValues.share_location,
-      alamat: allValues.alamat,
       // lokasi_tiang: allValues.lokasi_tiang,
-      // kawasan_kendali: allValues.kawasan_kendali,
       // status: allValues.status,
-      // ukuran: allValues.ukuran,
       // pemilik_reklame: allValues.pemilik_reklame,
-      // konstruksi_reklame: allValues.konstruksi_reklame,
-      // konten_iklan: allValues.konten_iklan,
-      tgl_pengecekan: allValues.tgl_pengecekan,
-      waktu_pengawasan: allValues.waktu_pengawasan,
+      // konstruksi_reklame: allValues.konstruksi_reklame, konten_iklan: allValues.konten_iklan,
+
       kota: allValues.kota,
       kecamatan: allValues.kecamatan,
       kelurahan: allValues.kelurahan,
+      alamat: allValues.alamat,
+      tgl_pengecekan: allValues.tgl_pengecekan,
+      waktu_pengawasan: allValues.waktu_pengawasan,
+
+      status_reklame: allValues.status_reklame,
+      jenis_reklame: allValues.jenis_reklame,
+      posisi_reklame: allValues.posisi_reklame,
+      latitude: allValues.latitude,
+      longtitude: allValues.longtitude,
+      ukuran: allValues.ukuran,
+      kawasan_kendali: allValues.kawasan_kendali,
     }
 
     // }
@@ -143,7 +149,6 @@ export const AddPengawasanPage: FC = () => {
                           </span>
                           <span className='d-flex flex-column align-items-start ms-2'>
                             <span className='fs-3 fw-bold'>Kembali</span>
-                            <span className='fs-7'>ke Halaman Utama</span>
                           </span>
                         </a>
                         <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
@@ -152,7 +157,6 @@ export const AddPengawasanPage: FC = () => {
                           </span>
                           <span className='d-flex flex-column align-items-start ms-2'>
                             <span className='fs-3 fw-bold'>Simpan</span>
-                            <span className='fs-7'>dan Selanjutnya</span>
                           </span>
                         </button>
                       </div>

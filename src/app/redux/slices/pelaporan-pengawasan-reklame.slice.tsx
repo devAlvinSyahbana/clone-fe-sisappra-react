@@ -11,46 +11,55 @@ import axios from 'axios'
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanPengawasanState extends Record<string, any> {
-  // nrk: number
-  // nama: string
   // share_location: string
-  alamat: string
   // lokasi_tiang: string
-  // kawasan_kendali: string
-  // status: string
-  // ukuran: string
   // pemilik_reklame: string
   // konstruksi_reklame: string
   // konten_iklan: string
-  tgl_pengecekan: string
-  waktu_pengawasan: string
+  // status: string
   kota: number
   kecamatan: number
   kelurahan: number
+  alamat: string
+  tgl_pengecekan: string
+  waktu_pengawasan: string
+
+  ukuran: string
+  status_reklame: number
+  jenis_reklame: number
+  posisi_reklame: string
+  latitude: number
+  longtitude: number
+  kawasan_kendali: number
 }
 
 export const initialState: PelaporanPengawasanState = {
   list_kota: [],
   list_kecamatan: [],
   list_kelurahan: [],
+  list_kawasan_kendali: [],
+  list_status_reklame: [],
+  list_jenis_reklame: [],
+  latitude: 0,
+  longtitude: 0,
   tgl_pengecekan: '',
   waktu_pengawasan: '',
   kecamatan: 0,
   kelurahan: 0,
   kota: 0,
   alamat: '',
-  // nrk: 0,
-  // nama: '',
+
   // share_location: '',
-
   // lokasi_tiang: '',
-  // kawasan_kendali: '',
-  // status: '',
-  // ukuran: '',
-  // pemilik_reklame: '',
-  // konstruksi_reklame: '',
-  // konten_iklan: '',
-
+  kawasan_kendali: 0,
+  status: '',
+  ukuran: '',
+  pemilik_reklame: '',
+  konstruksi_reklame: '',
+  konten_iklan: '',
+  status_reklame: 0,
+  jenis_reklame: 0,
+  posisi_reklame: '',
   // kecamatan_selection: [],
   // kota_selection: [],
   // kelurahan_selection: [],
@@ -58,20 +67,20 @@ export const initialState: PelaporanPengawasanState = {
 
 export const createSchemaFilterPelaporaPengawasan = [
   Yup.object({
-    filter_kota_id: Yup.number().integer().moreThan(0).label('Kota'),
-    filter_kota_id_selection: Yup.object(),
-    filter_kecamatan_id: Yup.number().integer().moreThan(0).label('kecamatan'),
-    filter_kecamatan_id_selection: Yup.object(),
-    filter_kelurahan_id: Yup.number().integer().moreThan(0).label('kelurahan'),
-    filter_kelurahan_id_selection: Yup.object(),
+    filter_kota: Yup.number().integer().moreThan(0).label('Kota'),
+    filter_kota_selection: Yup.object(),
+    filter_kecamatan: Yup.number().integer().moreThan(0).label('kecamatan'),
+    filter_kecamatan_selection: Yup.object(),
+    filter_kelurahan: Yup.number().integer().moreThan(0).label('kelurahan'),
+    filter_kelurahan_selection: Yup.object(),
   }),
 ]
 
 export const createSchemaPelaporanPengawasan = [
   Yup.object({
-    alamat: Yup.string().required().label('Alamat'),
-    tgl_pengecekan: Yup.string().required().label('Tanggal Pengecekan'),
-    waktu_pengawasan: Yup.string().required().label('Waktu Pengawasan'),
+    // alamat: Yup.string().required().label('Alamat'),
+    // tgl_pengecekan: Yup.string().required().label('Tanggal Pengecekan'),
+    // waktu_pengawasan: Yup.string().required().label('Waktu Pengawasan'),
     // lokasi_tiang: Yup.string().required().label('Lokasi Tiang'),
     // kawasan_kendali: Yup.string().required().label('Kawasan Kendali'),
     // status: Yup.string().required().label('Status'),
@@ -104,12 +113,39 @@ export const updateKecamatanList: any = createAsyncThunk(
 )
 export const updateKelurahanList: any = createAsyncThunk(
   'pelaporanPengawasan/updateKelurahanList',
-  async () => {
+  async (thunkAPI) => {
     const res = await axios.get(`${API_URL}/kelurahan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
 )
+export const updateKawasanKendaliList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateKawasanKendaliList',
+  async () => {
+    const res = await axios.get(`${API_URL}/jenis-kawasan-kendali/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+
+    return data
+  }
+)
+export const updateJenisReklameList: any = createAsyncThunk(
+  'pelaporanPengawasan/updateJenisReklameList',
+  async (thunkAPI) => {
+    const res = await axios.get(`${API_URL}/jenis-reklame/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+
+export const updateStatusReklameList: any = createAsyncThunk(
+  'pelaporanPengawasan/updateStatusReklameList',
+  async (thunkAPI) => {
+    const res = await axios.get(`${API_URL}/status-reklame/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+
 export const pelaporanPengawasanSlice = createSlice({
   name: 'pelaporanPengawasan',
   initialState,
@@ -122,6 +158,15 @@ export const pelaporanPengawasanSlice = createSlice({
     })
     builder.addCase(updateKelurahanList.fulfilled, (state, action) => {
       state.list_kelurahan = action.payload
+    })
+    builder.addCase(updateKawasanKendaliList.fulfilled, (state, action) => {
+      state.list_kawasan_kendali = action.payload
+    })
+    builder.addCase(updateJenisReklameList.fulfilled, (state, action) => {
+      state.list_jenis_reklame = action.payload
+    })
+    builder.addCase(updateStatusReklameList.fulfilled, (state, action) => {
+      state.list_status_reklame = action.payload
     })
   },
   reducers: {

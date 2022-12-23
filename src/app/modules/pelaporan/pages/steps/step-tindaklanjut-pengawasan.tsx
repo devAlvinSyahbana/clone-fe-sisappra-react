@@ -1,22 +1,37 @@
-import React, {ChangeEvent, FC} from 'react'
+import React, {ChangeEvent, FC, useEffect} from 'react'
 import Select from 'react-select'
 import {ErrorMessage, Field} from 'formik'
 import {DatePickerField, SelectField, ToFieldStateCE} from '../../components/fields.formikcto'
-import {changedValue} from '../../../../redux/slices/pelaporan-kegiatan.slice'
+import {
+  createSchemaPelaporanPengawasan,
+  initialState,
+  PelaporanPengawasanState,
+  changedValue,
+  updateKawasanKendaliList,
+  updateJenisReklameList,
+  updateStatusReklameList,
+} from '../../../../redux/slices/pelaporan-pengawasan-reklame.slice'
+
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 
-export const StepTindakLanjutPengawasan: FC = () => {
+export const StepTindakLanjutPengawasan: FC = ({}) => {
   const dispatch = useDispatch()
+  const KawasanKendaliList = useSelector(
+    (s: RootState) => s.pelaporanPengawasan.list_kawasan_kendali
+  )
+  const JenisReklameList = useSelector((s: RootState) => s.pelaporanPengawasan.list_jenis_reklame)
+  const StatusReklameList = useSelector((s: RootState) => s.pelaporanPengawasan.list_status_reklame)
 
-  const listJenisPasal = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_pasal)
-  const listJenisPenindakan = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.list_jenis_penindakan
-  )
-  const listJenisPenyelesaian = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.list_jenis_penyelesaian
-  )
-  const listJenisUsaha = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_usaha)
+  const listMasterPengawasanValue = () => {
+    dispatch(updateKawasanKendaliList())
+    dispatch(updateStatusReklameList())
+    dispatch(updateJenisReklameList())
+  }
+
+  useEffect(() => {
+    listMasterPengawasanValue()
+  }, [])
 
   return (
     <div className='w-100'>
@@ -32,14 +47,14 @@ export const StepTindakLanjutPengawasan: FC = () => {
                 </label>
                 <Field
                   type='text'
-                  name='kegiatan__jumlah_personil'
+                  name='posisi_reklame'
                   className='form-control'
                   onKeyUp={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
                   }}
                 />
                 <div className='text-danger mt-2'>
-                  <ErrorMessage name='kegiatan__jumlah_personil' />
+                  <ErrorMessage name='posisi_reklame' />
                 </div>
               </div>
             </div>
@@ -51,14 +66,14 @@ export const StepTindakLanjutPengawasan: FC = () => {
               </label>
               <Field
                 type='number'
-                name='kegiatan__jumlah_personil'
+                name='latitude'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jumlah_personil' />
+                <ErrorMessage name='latitude' />
               </div>
             </div>
           </div>
@@ -69,14 +84,14 @@ export const StepTindakLanjutPengawasan: FC = () => {
               </label>
               <Field
                 type='number'
-                name='kegiatan__jumlah_personil'
+                name='longtitude'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jumlah_personil' />
+                <ErrorMessage name='longtitude' />
               </div>
             </div>
           </div>
@@ -86,17 +101,18 @@ export const StepTindakLanjutPengawasan: FC = () => {
           <div className='col-6 mb-10 form-group'>
             <label className='required form-label'>Kawasan Kendali</label>
             <Field
-              name='tindak_lanjut__administrasi__jenis_pasal_selection'
-              target='tindak_lanjut__administrasi__jenis_pasal_id'
+              name='kawasan_kendali_selection'
+              target='kawasan_kendali'
               className='form-control'
               component={SelectField}
-              options={listJenisPasal}
+              options={KawasanKendaliList}
               onChange={(o: ChangeEvent<any>) => {
+                console.log(o)
                 dispatch(changedValue(ToFieldStateCE(o)))
               }}
             />
             <div className='text-danger mt-2'>
-              <ErrorMessage name='tindak_lanjut__administrasi__jenis_pasal_id' />
+              <ErrorMessage name='kawasan_kendali_selection' />
             </div>
           </div>
         </div>
@@ -105,17 +121,17 @@ export const StepTindakLanjutPengawasan: FC = () => {
           <div className='col-6 mb-10 form-group'>
             <label className='required form-label'>Jenis Reklame</label>
             <Field
-              name='tindak_lanjut__administrasi__jenis_pasal_selection'
-              target='tindak_lanjut__administrasi__jenis_pasal_id'
+              name='jenis_reklame_selection'
+              target='jenis_reklame'
               className='form-control'
               component={SelectField}
-              options={listJenisPasal}
+              options={JenisReklameList}
               onChange={(o: ChangeEvent<any>) => {
                 dispatch(changedValue(ToFieldStateCE(o)))
               }}
             />
             <div className='text-danger mt-2'>
-              <ErrorMessage name='tindak_lanjut__administrasi__jenis_pasal_id' />
+              <ErrorMessage name='jenis_reklame_selection' />
             </div>
           </div>
         </div>
@@ -125,17 +141,17 @@ export const StepTindakLanjutPengawasan: FC = () => {
             <div className='mb-10 form-group'>
               <label className='required form-label'>Status Reklame</label>
               <Field
-                name='tindak_lanjut__administrasi__jenis_pasal_selection'
-                target='tindak_lanjut__administrasi__jenis_pasal_id'
+                name='status_reklame_selection'
+                target='status_reklame'
                 className='form-control'
                 component={SelectField}
-                options={listJenisPasal}
+                options={StatusReklameList}
                 onChange={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak_lanjut__administrasi__jenis_pasal_id' />
+                <ErrorMessage name='status_reklame_selection' />
               </div>
             </div>
           </div>
@@ -146,14 +162,14 @@ export const StepTindakLanjutPengawasan: FC = () => {
               </label>
               <Field
                 type='text'
-                name='kegiatan__jumlah_personil'
+                name='pemilik_reklame'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jumlah_personil' />
+                <ErrorMessage name='pemilik_reklame' />
               </div>
             </div>
           </div>
@@ -164,7 +180,7 @@ export const StepTindakLanjutPengawasan: FC = () => {
               </label>
               <Field
                 type='text'
-                name='kegiatan__jumlah_personil'
+                name='konstruksi_reklame'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
@@ -185,14 +201,14 @@ export const StepTindakLanjutPengawasan: FC = () => {
               </label>
               <Field
                 type='text'
-                name='kegiatan__jumlah_personil'
+                name='konten_iklan'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jumlah_personil' />
+                <ErrorMessage name='konten_iklan' />
               </div>
             </div>
           </div>
@@ -202,15 +218,15 @@ export const StepTindakLanjutPengawasan: FC = () => {
                 Ukuran
               </label>
               <Field
-                type='text'
-                name='kegiatan__jumlah_personil'
+                type='number'
+                name='ukuran'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='kegiatan__jumlah_personil' />
+                <ErrorMessage name='ukuran' />
               </div>
             </div>
           </div>
@@ -219,19 +235,19 @@ export const StepTindakLanjutPengawasan: FC = () => {
         <div className='row'>
           <label className='required form-label'>Dokumentasi</label>
           <div className='col-3'>
-            <img src='https://fakeimg.pl/195x100/' alt='' />
+            {/* <img src='https://fakeimg.pl/195x100/' alt='' /> */}
             <input type='file' className='form-control' id='formFile' accept='image/*' />
           </div>
           <div className='col-3'>
-            <img src='https://fakeimg.pl/195x100/' alt='' />
+            {/* <img src='https://fakeimg.pl/195x100/' alt='' /> */}
             <input type='file' className='form-control' id='formFile' accept='image/*' />
           </div>
           <div className='col-3'>
-            <img src='https://fakeimg.pl/195x100/' alt='' />
+            {/* <img src='https://fakeimg.pl/195x100/' alt='' /> */}
             <input type='file' className='form-control' id='formFile' accept='image/*' />
           </div>
           <div className='col-3'>
-            <img src='https://fakeimg.pl/195x100/' alt='' />
+            {/* <img src='https://fakeimg.pl/195x100/' alt='' /> */}
             <input type='file' className='form-control' id='formFile' accept='image/*' />
           </div>
         </div>
