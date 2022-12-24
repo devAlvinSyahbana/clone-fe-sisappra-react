@@ -7,6 +7,9 @@ import type {UploadChangeParam} from 'antd/es/upload'
 import {message, Upload, Image} from 'antd'
 import './imgUploader.css'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_UPLOAD_URL
+export const UPLOAD_TOKEN = process.env.REACT_APP_SISAPPRA_PELAPORAN_UPLOAD_TOKEN
+
 const {Dragger} = Upload
 
 const generateUid = () => {
@@ -37,22 +40,36 @@ const props: UploadProps = {
   },
 }
 
-const DragDropImageUploader: FC<any> = ({maxFile, postEndpoint, change}) => {
+const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice}) => {
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
 
   const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
     const {status} = info.file
-    if (status !== 'uploading') {
-      // console.log(info.file, info.fileList)
+    const formData = new FormData()
+    formData.append('bucket', 'pelaporan')
+    formData.append('path', path)
+    formData.append('file', info.file.originFileObj as RcFile)
+    const allFilesDone = info.fileList.every((file) => file.status === 'done')
+    if (allFilesDone) {
+      let files = slice
+      files = []
+      if (info.fileList.length > 0) {
+        for (let i = 0; i < info.fileList.length; i++) {
+          files.push({bucket: 'pelaporan', key: info.fileList[i].response.Key})
+        }
+      } else {
+        files = [{bucket: 'pelaporan', key: ''}]
+      }
+      change([{file_uploadResult: files, keterangan: slice.keterangan}])
+      console.log(info.fileList)
     }
     if (status === 'done') {
       message.success(`${info.file.name} file uploaded successfully.`)
     } else if (status === 'error') {
       message.error(`${info.file.name} file upload failed.`)
     }
-    change(info)
   }
 
   const handlePreview = async (file: UploadFile) => {
@@ -67,13 +84,61 @@ const DragDropImageUploader: FC<any> = ({maxFile, postEndpoint, change}) => {
     setPreviewVisible(!previewVisible)
   }
 
+  const handleUpload = ({file, onSuccess, onError}: any) => {
+    file.status = 'uploading'
+
+    const formData = new FormData()
+    formData.append('bucket', 'pelaporan')
+    formData.append('path', path)
+    formData.append('file', file as RcFile)
+
+    fetch(`${API_URL}/upload`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${UPLOAD_TOKEN}`,
+      },
+    })
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 250) {
+          file.status = 'done'
+          return res.json()
+        }
+        file.status = 'error'
+        const newRes = new Response(res.body, {
+          statusText: 'Upload error, coba kembali',
+        })
+        onError(newRes)
+      })
+      .then((data) => {
+        onSuccess(data.minioResult)
+      })
+      .catch((error) => {
+        console.error(error)
+        onError(error)
+      })
+
+    return false // Prevent the default upload behavior
+  }
+
+  const handleDelete = (file: any) => {
+    console.log(file)
+    fetch(`${API_URL}/pelaporan/${file.response.Key}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${UPLOAD_TOKEN}`,
+      },
+    })
+  }
+
   return (
     <div className='parent mb-8'>
       <Dragger
         {...props}
         onPreview={handlePreview}
         onChange={handleChange}
-        action={postEndpoint}
+        onRemove={handleDelete}
+        customRequest={handleUpload}
         maxCount={maxFile}
       >
         <p className='ant-upload-drag-icon'>
