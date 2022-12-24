@@ -143,7 +143,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
             component={SelectField}
             options={kelurahanList}
             onChange={(o: ChangeEvent<any>) => {
-              console.log(o)
+              // console.log(o)
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
