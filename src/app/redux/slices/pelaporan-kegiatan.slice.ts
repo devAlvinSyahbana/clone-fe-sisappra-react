@@ -96,8 +96,13 @@ export const initialState: PelaporanKegiatanState = {
   tindak_lanjut__denda__no_validasi_bank: '',
   dokumentasi: [
     {
-      file: null,
-      keterangan: null,
+      file_uploadResult: [
+        {
+          bucket: 'pelaporan',
+          key: '',
+        },
+      ],
+      keterangan: '',
     },
   ],
 }
