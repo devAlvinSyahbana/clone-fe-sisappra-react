@@ -1,5 +1,4 @@
 import React, {ChangeEvent, FC, useEffect} from 'react'
-import Select from 'react-select'
 import {ErrorMessage, Field} from 'formik'
 import {DatePickerField, SelectField, ToFieldStateCE} from '../../components/fields.formikcto'
 import {
@@ -11,7 +10,6 @@ import {
   updateJenisReklameList,
   updateStatusReklameList,
 } from '../../../../redux/slices/pelaporan-pengawasan-reklame.slice'
-
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 import DragDropImageUploader from '../../components/DragDropImageUploader'
@@ -23,7 +21,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
   )
   const JenisReklameList = useSelector((s: RootState) => s.pelaporanPengawasan.list_jenis_reklame)
   const StatusReklameList = useSelector((s: RootState) => s.pelaporanPengawasan.list_status_reklame)
-
+  const dokumentasi = useSelector((s: RootState) => s.pelaporanPengawasan.tindak_dokumentasi[0])
   const listMasterPengawasanValue = () => {
     dispatch(updateKawasanKendaliList())
     dispatch(updateStatusReklameList())
@@ -48,14 +46,14 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 </label>
                 <Field
                   type='text'
-                  name='posisi_reklame'
+                  name='lokasi_tiang'
                   className='form-control'
                   onKeyUp={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
                   }}
                 />
                 <div className='text-danger mt-2'>
-                  <ErrorMessage name='posisi_reklame' />
+                  <ErrorMessage name='lokasi_tiang' />
                 </div>
               </div>
             </div>
@@ -67,14 +65,14 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               </label>
               <Field
                 type='number'
-                name='latitude'
+                name='share_location'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='latitude' />
+                <ErrorMessage name='share_location' />
               </div>
             </div>
           </div>
@@ -85,14 +83,14 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               </label>
               <Field
                 type='number'
-                name='longtitude'
+                name='share_location'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='longtitude' />
+                <ErrorMessage name='share_location' />
               </div>
             </div>
           </div>
@@ -234,12 +232,56 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
         </div>
 
         <div className='row'>
-          <label className='required form-label'>Dokumentasi</label>
-          <DragDropImageUploader
-            maxFile={4}
-            postEndpoint={`https://run.mocky.io/v3/b5b74b60-e7d5-44b8-8f53-1c1ccb9a20b3`}
-            change={(e: any) => console.log(e.file)}
-          />
+          <div className='pb-10 pb-lg-15'>
+            <h2 className='fw-bolder text-dark mb-10'>Dokumentasi</h2>
+            <DragDropImageUploader
+              maxFile={4}
+              path='pengawasan' // GANTI path ini dengan path laporan (kegiatan, kejadian, pengawasan, tamu daerah)
+              slice={dokumentasi} // cek di inisiasi file ini, slice dari redux pelaporan
+              change={(e: any) => {
+                // console.log(e)
+                dispatch(
+                  changedValue({
+                    target: {
+                      name: 'tindak_dokumentasi',
+                      value: e,
+                    },
+                  })
+                )
+                // gunakan dispatch dokumentasi disini
+              }}
+            />
+
+            <div className='mb-10 form-group'>
+              <label className='required form-label'>Keterangan</label>
+              <Field
+                as='textarea'
+                type='text'
+                name='tindak_dokumentasi[0].keterangan'
+                className='form-control'
+                placeholder='Masukkan Keterangan'
+                onKeyUp={(o: ChangeEvent<any>) => {
+                  ToFieldStateCE(o)
+                  dispatch(
+                    changedValue({
+                      target: {
+                        name: 'tindak_dokumentasi',
+                        value: [
+                          {
+                            file_uploadResult: dokumentasi.file_uploadResult,
+                            keterangan: o.target.value,
+                          },
+                        ],
+                      },
+                    })
+                  )
+                }}
+              />
+              <div className='text-danger mt-2'>
+                <ErrorMessage name='keterangan' />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
