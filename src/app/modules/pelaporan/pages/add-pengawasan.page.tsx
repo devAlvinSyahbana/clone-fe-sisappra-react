@@ -47,47 +47,45 @@ export const AddPengawasanPage: FC = () => {
     values: PelaporanPengawasanState,
     actions: FormikValues
   ) => {
-    const bodyParam: PelaporanPengawasanState = {
-      // nrk: allValues.nrk,
-      // nama: allValues.nama,
-      // share_location: allValues.share_location,
-      // lokasi_tiang: allValues.lokasi_tiang,
-      // status: allValues.status,
-      // pemilik_reklame: allValues.pemilik_reklame,
-      // konstruksi_reklame: allValues.konstruksi_reklame, konten_iklan: allValues.konten_iklan,
+    // const bodyParam: PelaporanPengawasanState = {
+    //   // nrk: allValues.nrk,
+    //   // nama: allValues.nama,
+    //   share_location: allValues.share_location,
+    //   lokasi_tiang: allValues.lokasi_tiang,
+    //   // status: allValues.status,
+    //   pemilik_reklame: allValues.pemilik_reklame,
+    //   konstruksi_reklame: allValues.konstruksi_reklame,
+    //   konten_iklan: allValues.konten_iklan,
 
-      kota: allValues.kota,
-      kecamatan: allValues.kecamatan,
-      kelurahan: allValues.kelurahan,
-      alamat: allValues.alamat,
-      tgl_pengecekan: allValues.tgl_pengecekan,
-      waktu_pengawasan: allValues.waktu_pengawasan,
-
-      status_reklame: allValues.status_reklame,
-      jenis_reklame: allValues.jenis_reklame,
-      posisi_reklame: allValues.posisi_reklame,
-      latitude: allValues.latitude,
-      longtitude: allValues.longtitude,
-      ukuran: allValues.ukuran,
-      kawasan_kendali: allValues.kawasan_kendali,
-    }
+    //   kota: allValues.kota,
+    //   kecamatan: allValues.kecamatan,
+    //   kelurahan: allValues.kelurahan,
+    //   alamat: allValues.alamat,
+    //   tgl_pengecekan: allValues.tgl_pengecekan,
+    //   waktu_pengawasan: allValues.waktu_pengawasan,
+    //   tindak_dokumentasi: allValues.tindak_dokumentasi,
+    //   status_reklame: allValues.status_reklame,
+    //   jenis_reklame: allValues.jenis_reklame,
+    //   ukuran: allValues.ukuran,
+    //   kawasan_kendali: allValues.kawasan_kendali,
+    // }
 
     // }
     // const res = await axios.post(`http://127.0.0.1:3002/kegiatan-umum/`)
     try {
-      // const res = await axios.post(`http://localhost:3002/reklame`, bodyParam)
-      // if (res) {
-      //   console.log('laststep', values)
-      //   actions.setSubmitting(false)
-      //   Swal.fire({
-      //     icon: 'success',
-      //     text: 'Data berhasil disubmit',
-      //     showConfirmButton: false,
-      //     timer: 1500,
-      //     color: '#000000',
-      //   })
-      // }
-      alert(JSON.stringify(values, null, 2))
+      const res = await axios.post(`http://localhost:3002/reklame`, allValues)
+      if (res) {
+        console.log('laststep', values)
+        actions.setSubmitting(false)
+        Swal.fire({
+          icon: 'success',
+          text: 'Data berhasil disubmit',
+          showConfirmButton: false,
+          timer: 1500,
+          color: '#000000',
+        })
+      }
+      // alert(JSON.stringify(values, null, 2))
     } catch (error) {
       Swal.fire({
         icon: 'error',
