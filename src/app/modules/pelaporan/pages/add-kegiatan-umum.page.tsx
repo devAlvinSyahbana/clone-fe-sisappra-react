@@ -15,6 +15,7 @@ import {
   updateJenisUsahaList,
   updateJenisPenyelesaianList,
   isPengamanan,
+  isTipiring,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
@@ -62,6 +63,8 @@ export const AddKegiatanUmumPage: FC = () => {
       if (isPengamanan(values)) {
         // alert(JSON.stringify(values, null, 2))
         res = await axios.post(`${API_URL}/kegiatan-pengamanan`, allValues)
+      } else if (isTipiring(values)) {
+        alert('INI SIDANG TIPIRING')
       } else {
         res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
       }
