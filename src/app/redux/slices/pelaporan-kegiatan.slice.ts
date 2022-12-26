@@ -454,6 +454,8 @@ export const isTipiring = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'SIDANG TIPIRING'
 export const isLaporanMasyarakat = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'LAPORAN MASYARAKAT'
+export const isPPKM = (formikValues: any) =>
+  formikValues.kegiatan__jenis_kegiatan_selection?.label === 'KEGIATAN PPKM'
 export const isPengamanan = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'PENGAMANAN'
 export const isPenertibanBangunan = (formikValues: any) =>
