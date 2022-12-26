@@ -4,9 +4,11 @@ import {ToFieldStateCE} from '../../components/fields.formikcto'
 import {changedValue} from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {useDispatch, useSelector} from 'react-redux'
 import DragDropImageUploader from '../../components/DragDropImageUploader'
+import {RootState} from '../../../../redux/store'
 
 export const StepDokumentasi: FC = () => {
   const dispatch = useDispatch()
+  const dokumentasi = useSelector((s: RootState) => s.pelaporanKegiatan.dokumentasi[0])
 
   return (
     <div className='w-100'>
@@ -15,8 +17,20 @@ export const StepDokumentasi: FC = () => {
 
         <DragDropImageUploader
           maxFile={4}
-          postEndpoint={`https://run.mocky.io/v3/b5b74b60-e7d5-44b8-8f53-1c1ccb9a20b3`}
-          change={(e: any) => console.log(e.file)}
+          path='kegiatan' // GANTI path ini dengan path laporan (kegiatan, kejadian, pengawasan, tamu daerah)
+          slice={dokumentasi} // cek di inisiasi file ini, slice dari redux pelaporan
+          change={(e: any) => {
+            // console.log(e)
+            dispatch(
+              changedValue({
+                target: {
+                  name: 'dokumentasi',
+                  value: e,
+                },
+              })
+            )
+            // gunakan dispatch dokumentasi disini
+          }}
         />
 
         <div className='mb-10 form-group'>
@@ -24,11 +38,24 @@ export const StepDokumentasi: FC = () => {
           <Field
             as='textarea'
             type='text'
-            name='null'
+            name='dokumentasi[0].keterangan'
             className='form-control'
             placeholder='Masukkan Keterangan'
             onKeyUp={(o: ChangeEvent<any>) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
+              ToFieldStateCE(o)
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'dokumentasi',
+                    value: [
+                      {
+                        file_uploadResult: dokumentasi.file_uploadResult,
+                        keterangan: o.target.value,
+                      },
+                    ],
+                  },
+                })
+              )
             }}
           />
           <div className='text-danger mt-2'>

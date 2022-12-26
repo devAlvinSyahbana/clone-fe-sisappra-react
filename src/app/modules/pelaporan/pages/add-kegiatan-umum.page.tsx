@@ -75,7 +75,6 @@ export const AddKegiatanUmumPage: FC = () => {
           color: '#000000',
         })
       }
-      alert(JSON.stringify(values, null, 2))
     } catch (error) {
       Swal.fire({
         icon: 'error',
