@@ -14,7 +14,6 @@ export const StepDokumentasi: FC = () => {
     <div className='w-100'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Dokumentasi</h2>
-
         <DragDropImageUploader
           maxFile={4}
           path='kegiatan' // GANTI path ini dengan path laporan (kegiatan, kejadian, pengawasan, tamu daerah)
