@@ -78,28 +78,41 @@ export const createSchemaFilterPelaporaPengawasan = [
 
 export const createSchemaPelaporanPengawasan = [
   Yup.object({
-    // alamat: Yup.string().required().label('Alamat'),
-    // tgl_pengecekan: Yup.string().required().label('Tanggal Pengecekan'),
-    // waktu_pengawasan: Yup.string().required().label('Waktu Pengawasan'),
-    // lokasi_tiang: Yup.string().required().label('Lokasi Tiang'),
-    // kawasan_kendali: Yup.string().required().label('Kawasan Kendali'),
-    // status: Yup.string().required().label('Status'),
-    // ukuran: Yup.string().required().label('Ukuran'),
-    // pemilik_reklame: Yup.string().required().label('Pemilik Reklame'),
-    // konstruksi_reklame: Yup.string().required().label('Konstruksi Reklame'),
-    // konten_iklan: Yup.string().required().label('Konten Iklan'),
-    // nrk: Yup.number().integer().moreThan(0).required().label('NRK'),
-    // nama: Yup.string().required().label('Nama'),
-    // share_location: Yup.string().min(10).max(1000).required().label('Share Location'),
+    alamat: Yup.string().required().label('Alamat'),
+    tgl_pengecekan: Yup.string().required().label('Tanggal Pengecekan'),
+    waktu_pengawasan: Yup.string().required().label('Waktu Pengawasan'),
+    lokasi_tiang: Yup.string().required().label('Lokasi Tiang'),
+    kawasan_kendali: Yup.string().required().label('Kawasan Kendali'),
+    status: Yup.string().required().label('Status'),
+    ukuran: Yup.string().required().label('Ukuran'),
+    pemilik_reklame: Yup.string().required().label('Pemilik Reklame'),
+    konstruksi_reklame: Yup.string().required().label('Konstruksi Reklame'),
+    konten_iklan: Yup.string().required().label('Konten Iklan'),
+    nrk: Yup.number().integer().moreThan(0).required().label('NRK'),
+    nama: Yup.string().required().label('Nama'),
+    share_location: Yup.string().min(10).max(1000).required().label('Share Location'),
   }),
   Yup.object({}),
 ]
 
 export const updateKotaList: any = createAsyncThunk(
   'pelaporanPengawasan/updateKotaList',
-  async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/kota/combobox`)
-    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+  async (val: any, thunkAPI) => {
+    const [objKota, objState] = val
+    const kota = objKota.target.value
+    const reduxState = objState.list_kota
+    const res = await axios.get(`${API_URL}/kota/?%24filter=nama&%24eq%20${kota}top=100`)
+
+    let filteredArr = reduxState.filter((obj1: any) =>
+      res.data.data.some((obj2: any) => obj2.kecamatan === obj1.id)
+    )
+    const data = filteredArr.map((d: any) => ({
+      label: d.kota,
+      value: String(d.id),
+      nama: d.nama,
+      kode: d.kode,
+    }))
+
     return data
   }
 )

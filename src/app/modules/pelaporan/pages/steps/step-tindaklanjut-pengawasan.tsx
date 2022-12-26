@@ -14,6 +14,7 @@ import {
 
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
+import DragDropImageUploader from '../../components/DragDropImageUploader'
 
 export const StepTindakLanjutPengawasan: FC = ({}) => {
   const dispatch = useDispatch()
@@ -234,22 +235,11 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
 
         <div className='row'>
           <label className='required form-label'>Dokumentasi</label>
-          <div className='col-3'>
-            {/* <img src='https://fakeimg.pl/195x100/' alt='' /> */}
-            <input type='file' className='form-control' id='formFile' accept='image/*' />
-          </div>
-          <div className='col-3'>
-            {/* <img src='https://fakeimg.pl/195x100/' alt='' /> */}
-            <input type='file' className='form-control' id='formFile' accept='image/*' />
-          </div>
-          <div className='col-3'>
-            {/* <img src='https://fakeimg.pl/195x100/' alt='' /> */}
-            <input type='file' className='form-control' id='formFile' accept='image/*' />
-          </div>
-          <div className='col-3'>
-            {/* <img src='https://fakeimg.pl/195x100/' alt='' /> */}
-            <input type='file' className='form-control' id='formFile' accept='image/*' />
-          </div>
+          <DragDropImageUploader
+            maxFile={4}
+            postEndpoint={`https://run.mocky.io/v3/b5b74b60-e7d5-44b8-8f53-1c1ccb9a20b3`}
+            change={(e: any) => console.log(e.file)}
+          />
         </div>
       </div>
     </div>
