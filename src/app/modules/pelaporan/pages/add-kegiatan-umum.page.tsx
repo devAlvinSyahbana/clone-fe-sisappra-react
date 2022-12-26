@@ -57,13 +57,14 @@ export const AddKegiatanUmumPage: FC = () => {
   }, [])
 
   const submitPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
+    let res
     try {
       if (isPengamanan(values)) {
-        // const res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
-        alert(JSON.stringify(values, null, 2))
-        const res = await axios.post(`${API_URL}/kegiatan-pengamanan`, allValues)
+        // alert(JSON.stringify(values, null, 2))
+        res = await axios.post(`${API_URL}/kegiatan-pengamanan`, allValues)
+      } else {
+        res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
       }
-      const res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
       if (res) {
         console.log('laststep', values)
         actions.setSubmitting(false)
