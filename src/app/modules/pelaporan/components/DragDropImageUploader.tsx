@@ -35,6 +35,13 @@ const props: UploadProps = {
   multiple: true,
   accept: 'image/*',
   listType: 'picture',
+  beforeUpload: (file) => {
+    const isPNG = file.type !== 'image/gif'
+    if (!isPNG) {
+      message.error(`${file.name} is not a png / jpg file`)
+    }
+    return isPNG || Upload.LIST_IGNORE
+  },
   onDrop(e) {
     console.log('Dropped files', e.dataTransfer.files)
   },
@@ -68,6 +75,7 @@ const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice}) => {
     if (status === 'done') {
       message.success(`${info.file.name} file uploaded successfully.`)
     } else if (status === 'error') {
+      console.log(info.fileList)
       message.error(`${info.file.name} file upload failed.`)
     }
   }
@@ -122,13 +130,16 @@ const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice}) => {
   }
 
   const handleDelete = (file: any) => {
-    console.log(file)
-    fetch(`${API_URL}/pelaporan/${file.response.Key}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${UPLOAD_TOKEN}`,
-      },
-    })
+    if (file.status === 'done') {
+      fetch(`${API_URL}/pelaporan/${file.response.Key}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${UPLOAD_TOKEN}`,
+        },
+      })
+    } else {
+      console.log(file.uid, 'file is deleted')
+    }
   }
 
   return (
