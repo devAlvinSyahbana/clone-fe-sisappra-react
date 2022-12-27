@@ -55,6 +55,7 @@ export const initialState: PelaporanKegiatanState = {
   list_jenis_penindakan: [],
   list_jenis_penyelesaian: [],
   list_jenis_usaha: [],
+  list_jenis_proses_khusus: [],
 
   filter_jenis_kegiatan_id: 0,
 
@@ -78,6 +79,7 @@ export const initialState: PelaporanKegiatanState = {
   tindak_lanjut__administrasi__jenis_pelanggaran: '',
   tindak_lanjut__administrasi__perda_perkada: '',
   tindak_lanjut__administrasi__penyelesaian_id: 0,
+  tindak_lanjut__administrasi__penyelesaian_khusus_id: 0,
 
   tindak_lanjut__identitas_pelanggar__no_bap: '',
   tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: '',
@@ -89,7 +91,12 @@ export const initialState: PelaporanKegiatanState = {
 
   tindak_lanjut__jenis_penindakan_id: 0,
   tindak_lanjut__jumlah_pelanggar: 0,
+  tindak_lanjut__sidang__tanggal: '',
+  tindak_lanjut__sidang__jumlah_pelanggar_hadir: 0,
+  tindak_lanjut__sidang__jumlah_pelanggar_tidak_hadir: 0,
+  tindak_lanjut__sidang__jumlah_pelanggar_verstek: 0,
   // tindak_lanjut__jumlah_penindakan: 0,
+  tindak_lanjut__denda__pengadilan: 0,
   tindak_lanjut__denda__non_pengadilan: 0,
   tindak_lanjut__denda__tanggal_setor: '2023-01-01',
   tindak_lanjut__denda__nama_bank: '',
@@ -210,6 +217,15 @@ export const createSchemaPelaporanKegiatan = [
       }
     ),
     tindak_lanjut__administrasi__penyelesaian_selection: Yup.object(),
+    tindak_lanjut__administrasi__penyelesaian_khusus_id: Yup.number().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label !== 'SIDANG TIPIRING',
+        then: Yup.number().notRequired(),
+        otherwise: Yup.number().integer().moreThan(0).required().label('Proses Khusus'),
+      }
+    ),
+    tindak_lanjut__administrasi__penyelesaian_khusus_selection: Yup.object(),
 
     tindak_lanjut__identitas_pelanggar__no_bap: Yup.string().max(32).notRequired().label('NO BAP'),
     tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab: Yup.string()
@@ -250,15 +266,46 @@ export const createSchemaPelaporanKegiatan = [
     tindak_lanjut__jenis_penindakan_selection: Yup.object(),
 
     tindak_lanjut__jumlah_pelanggar: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-      is: (val: any) => val?.label === 'APEL' || val?.label === 'RAPAT',
+      is: (val: any) =>
+        NoPenindakan.includes(val?.label) || val?.label === 'PENERTIBAN MINUMAN BERALKOHOL',
       then: Yup.number().notRequired(),
       otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Pelanggar'),
     }),
-    // tindak_lanjut__jumlah_penindakan: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
-    //   is: (val: any) => val?.label !== 'PENGAMANAN',
-    //   then: Yup.number().notRequired(),
-    //   otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Penindakan'),
-    // }),
+
+    tindak_lanjut__sidang__tanggal: Yup.date().when('kegiatan__jenis_kegiatan_selection', {
+      is: (val: any) => val?.label !== 'SIDANG TIPIRING',
+      then: Yup.date().notRequired(),
+      otherwise: Yup.date().required().label('Tanggal Sidang'),
+    }),
+    tindak_lanjut__sidang__jumlah_pelanggar_hadir: Yup.number().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label !== 'SIDANG TIPIRING',
+        then: Yup.number().notRequired(),
+        otherwise: Yup.number().integer().required().label('Jumlah Pelanggar Hadir'),
+      }
+    ),
+    tindak_lanjut__sidang__jumlah_pelanggar_tidak_hadir: Yup.number().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label !== 'SIDANG TIPIRING',
+        then: Yup.number().notRequired(),
+        otherwise: Yup.number().integer().required().label('Jumlah Pelanggar Tidak Hadir'),
+      }
+    ),
+    tindak_lanjut__sidang__jumlah_pelanggar_verstek: Yup.number().when(
+      'kegiatan__jenis_kegiatan_selection',
+      {
+        is: (val: any) => val?.label !== 'SIDANG TIPIRING',
+        then: Yup.number().notRequired(),
+        otherwise: Yup.number().integer().required().label('Jumlah Pelanggar Verstek'),
+      }
+    ),
+
+    tindak_lanjut__denda__pengadilan: Yup.number()
+      .integer()
+      .notRequired()
+      .label('Jumlah Denda Pengadilan'),
     tindak_lanjut__denda__non_pengadilan: Yup.number()
       .integer()
       .notRequired()
@@ -387,6 +434,16 @@ export const updateJenisUsahaList: any = createAsyncThunk(
     return data
   }
 )
+export const updateJenisProsesKhusus: any = createAsyncThunk(
+  'pelaporanKegiatan/updateJenisProsesKhusus',
+  async (thunkAPI) => {
+    const res = await axios.get(`${API_URL}/jenis-proses-khusus/combobox?%24orderby=nama
+`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+
+    return data
+  }
+)
 
 export const pelaporanKegiatanSlice = createSlice({
   name: 'pelaporanKegiatan',
@@ -418,6 +475,9 @@ export const pelaporanKegiatanSlice = createSlice({
     })
     builder.addCase(updateJenisUsahaList.fulfilled, (state, action) => {
       state.list_jenis_usaha = action.payload
+    })
+    builder.addCase(updateJenisProsesKhusus.fulfilled, (state, action) => {
+      state.list_jenis_proses_khusus = action.payload
     })
   },
   reducers: {

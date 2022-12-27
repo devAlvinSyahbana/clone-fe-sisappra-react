@@ -72,8 +72,9 @@ export const AddKegiatanUmumPage: FC = () => {
         // res = true
         res = await axios.post(`${API_URL}/kegiatan-ppkm`, allValues)
       } else if (isTipiring(values)) {
-        alert('INI SIDANG TIPIRING')
-        res = true
+        // alert('INI SIDANG TIPIRING')
+        // res = true
+        res = await axios.post(`${API_URL}/kegiatan-sidang-tipiring`, allValues)
       } else {
         res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
       }

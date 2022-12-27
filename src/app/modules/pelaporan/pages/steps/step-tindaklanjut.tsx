@@ -4,6 +4,7 @@ import {ErrorMessage, Field, FormikValues} from 'formik'
 import {DatePickerField, SelectField, ToFieldStateCE} from '../../components/fields.formikcto'
 import {
   changedValue,
+  isTipiring,
   updateDetailJenisPasalPenyelesaianList,
 } from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {useDispatch, useSelector} from 'react-redux'
@@ -41,10 +42,17 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
   const listJenisPenindakan = useSelector(
     (s: RootState) => s.pelaporanKegiatan.list_jenis_penindakan
   )
-  const listJenisUsaha = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_usaha)
-  const denda = useSelector(
-    (s: RootState) => s.pelaporanKegiatan.tindak_lanjut__denda__non_pengadilan
+  const listJenisProsesKhusus = useSelector(
+    (s: RootState) => s.pelaporanKegiatan.list_jenis_proses_khusus
   )
+  const listJenisUsaha = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_usaha)
+  const jenisPenindakan = useSelector(
+    (s: RootState) => s.pelaporanKegiatan.tindak_lanjut__jenis_penindakan_id
+  )
+  const denda = useSelector((s: RootState) => {
+    if (isTipiring(values)) return s.pelaporanKegiatan.tindak_lanjut__denda__pengadilan
+    return s.pelaporanKegiatan.tindak_lanjut__denda__non_pengadilan
+  })
 
   // console.log(pasalSelect)
 
@@ -172,41 +180,132 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                   <ErrorMessage name='tindak_lanjut__administrasi__penyelesaian_id' />
                 </div>
               </div>
+              {isTipiring(values) && (
+                <div className='mb-10 form-group'>
+                  <label className='required form-label'>Proses Khusus</label>
+                  <Field
+                    name='tindak_lanjut__administrasi__penyelesaian_khusus_selection'
+                    target='tindak_lanjut__administrasi__penyelesaian_khusus_id'
+                    className='form-control'
+                    component={SelectField}
+                    options={listJenisProsesKhusus.length > 0 ? listJenisProsesKhusus : ''}
+                    onChange={(o: ChangeEvent<any>) => {
+                      dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
+                  />
+                  <div className='text-danger mt-2'>
+                    <ErrorMessage name='tindak_lanjut__administrasi__penyelesaian_khusus_id' />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className='col'>
-              <div className='mb-10 form-group'>
-                <label className='required form-label'>Penindakan</label>
-                <Field
-                  name='tindak_lanjut__jenis_penindakan_selection'
-                  target='tindak_lanjut__jenis_penindakan_id'
-                  className='form-control'
-                  component={SelectField}
-                  options={listJenisPenindakan}
-                  onChange={(o: ChangeEvent<any>) => {
-                    dispatch(changedValue(ToFieldStateCE(o)))
-                  }}
-                />
-                <div className='text-danger mt-2'>
-                  <ErrorMessage name='tindak_lanjut__jenis_penindakan_id' />
+              {isTipiring(values) ? (
+                <div className='mb-10 form-group'>
+                  <label className='required form-label'>Tanggal Sidang</label>
+                  <Field
+                    name='tindak_lanjut__sidang__tanggal'
+                    className='form-control'
+                    component={DatePickerField}
+                    onChange={(o: any) => {
+                      dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
+                  />
+                  <div className='text-danger mt-2'>
+                    <ErrorMessage name='tindak_lanjut__sidang__tanggal' />
+                  </div>
                 </div>
-              </div>
-              <div className='mb-10 form-group'>
-                <label className='required form-label'>Jumlah Pelanggar / Penindakan</label>
-                <Field
-                  type='number'
-                  min='0'
-                  name='tindak_lanjut__jumlah_pelanggar'
-                  className='form-control'
-                  onFocus={(e: any) => e.target.select()}
-                  onInput={(o: ChangeEvent<any>) => {
-                    dispatch(changedValue(ToFieldStateCE(o)))
-                  }}
-                />
-                <div className='text-danger mt-2'>
-                  <ErrorMessage name='tindak_lanjut__jumlah_pelanggar' />
+              ) : (
+                <div className='mb-10 form-group'>
+                  <label className='required form-label'>Penindakan</label>
+                  <Field
+                    name='tindak_lanjut__jenis_penindakan_selection'
+                    target='tindak_lanjut__jenis_penindakan_id'
+                    className='form-control'
+                    component={SelectField}
+                    options={listJenisPenindakan}
+                    onChange={(o: ChangeEvent<any>) => {
+                      dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
+                  />
+                  <div className='text-danger mt-2'>
+                    <ErrorMessage name='tindak_lanjut__jenis_penindakan_id' />
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {isTipiring(values) ? (
+                <>
+                  <div className='mb-10 form-group'>
+                    <label className='required form-label'>Jumlah Pelanggar Hadir Sidang</label>
+                    <Field
+                      type='number'
+                      min='0'
+                      name='tindak_lanjut__sidang__jumlah_pelanggar_hadir'
+                      className='form-control'
+                      onFocus={(e: any) => e.target.select()}
+                      onInput={(o: ChangeEvent<any>) => {
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                      }}
+                    />
+                    <div className='text-danger mt-2'>
+                      <ErrorMessage name='tindak_lanjut__sidang__jumlah_pelanggar_hadir' />
+                    </div>
+                  </div>
+                  <div className='mb-10 form-group'>
+                    <label className='required form-label'>
+                      Jumlah Pelanggar Tidak Hadir Sidang
+                    </label>
+                    <Field
+                      type='number'
+                      min='0'
+                      name='tindak_lanjut__sidang__jumlah_pelanggar_tidak_hadir'
+                      className='form-control'
+                      onFocus={(e: any) => e.target.select()}
+                      onInput={(o: ChangeEvent<any>) => {
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                      }}
+                    />
+                    <div className='text-danger mt-2'>
+                      <ErrorMessage name='tindak_lanjut__sidang__jumlah_pelanggar_tidak_hadir' />
+                    </div>
+                  </div>
+                  <div className='mb-10 form-group'>
+                    <label className='required form-label'>Jumlah Pelanggar Verstek</label>
+                    <Field
+                      type='number'
+                      min='0'
+                      name='tindak_lanjut__sidang__jumlah_pelanggar_verstek'
+                      className='form-control'
+                      onFocus={(e: any) => e.target.select()}
+                      onInput={(o: ChangeEvent<any>) => {
+                        dispatch(changedValue(ToFieldStateCE(o)))
+                      }}
+                    />
+                    <div className='text-danger mt-2'>
+                      <ErrorMessage name='tindak_lanjut__sidang__jumlah_pelanggar_verstek' />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className='mb-10 form-group'>
+                  <label className='required form-label'>Jumlah Pelanggar / Penindakan</label>
+                  <Field
+                    type='number'
+                    min='0'
+                    name='tindak_lanjut__jumlah_pelanggar'
+                    className='form-control'
+                    onFocus={(e: any) => e.target.select()}
+                    onInput={(o: ChangeEvent<any>) => {
+                      dispatch(changedValue(ToFieldStateCE(o)))
+                    }}
+                  />
+                  <div className='text-danger mt-2'>
+                    <ErrorMessage name='tindak_lanjut__jumlah_pelanggar' />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </>
@@ -326,14 +425,22 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               </div>
 
               <div className='form-group mb-10'>
-                <label className='form-label'>Non Pengadilan</label>
+                <label className='form-label'>
+                  {isTipiring(values) || jenisPenindakan === 1
+                    ? 'Denda Pengadilan'
+                    : 'Denda Non Pengadilan'}
+                </label>
                 <div className='input-group'>
                   <span className='input-group-text w-50'>
                     {denda.toLocaleString('id-ID', {style: 'currency', currency: 'IDR'})}
                   </span>
                   <Field
                     type='number'
-                    name='tindak_lanjut__denda__non_pengadilan'
+                    name={
+                      isTipiring(values) || jenisPenindakan === 1
+                        ? 'tindak_lanjut__denda__pengadilan'
+                        : 'tindak_lanjut__denda__non_pengadilan'
+                    }
                     className='form-control w-50'
                     step='500'
                     onFocus={(e: any) => e.target.select()}
@@ -343,7 +450,13 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                   />
                 </div>
                 <div className='text-danger mt-2'>
-                  <ErrorMessage name='tindak_lanjut__denda__non_pengadilan' />
+                  <ErrorMessage
+                    name={
+                      isTipiring(values) || jenisPenindakan === 1
+                        ? 'tindak_lanjut__denda__pengadilan'
+                        : 'tindak_lanjut__denda__non_pengadilan'
+                    }
+                  />
                 </div>
               </div>
 
