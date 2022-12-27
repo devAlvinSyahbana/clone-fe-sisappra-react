@@ -12,6 +12,8 @@ import {
   updateDetailJenisPasalKegiatanList,
   updateJenisAsalLaporanList,
   updateJenisPengamananList,
+  isTipiring,
+  updateJenisProsesKhusus,
 } from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {
@@ -65,6 +67,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   useEffect(() => {
     if (isLaporanMasyarakat(values)) dispatch(updateJenisAsalLaporanList())
     if (isPengamanan(values)) dispatch(updateJenisPengamananList())
+    if (isTipiring(values)) dispatch(updateJenisProsesKhusus())
   }, [jenisKegiatanSelect])
 
   console.log(values)
@@ -137,10 +140,15 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
               }}
             />
             <div className='text-danger mt-2'>
-              {isLaporanMasyarakat(values) && (
+              {isLaporanMasyarakat(values) ? (
                 <>
                   <ErrorMessage name='kegiatan__asal_laporan_id' />
                   <ErrorMessage name='kegiatan__asal_laporan_selection' />
+                </>
+              ) : (
+                <>
+                  <ErrorMessage name='kegiatan__jenis_pengamanan_id' />
+                  <ErrorMessage name='kegiatan__jenis_pengamanan_selection' />
                 </>
               )}
             </div>
