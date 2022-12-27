@@ -14,6 +14,8 @@ import {
   updateJenisPengamananList,
   isTipiring,
   updateJenisProsesKhusus,
+  isPenertibanBangunan,
+  updateJenisPelanggaranBangunan,
 } from '../../../../redux/slices/pelaporan-kegiatan.slice'
 import {ErrorMessage, Field, FormikValues} from 'formik'
 import {
@@ -68,6 +70,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
     if (isLaporanMasyarakat(values)) dispatch(updateJenisAsalLaporanList())
     if (isPengamanan(values)) dispatch(updateJenisPengamananList())
     if (isTipiring(values)) dispatch(updateJenisProsesKhusus())
+    if (isPenertibanBangunan(values)) dispatch(updateJenisPelanggaranBangunan())
   }, [jenisKegiatanSelect])
 
   console.log(values)
