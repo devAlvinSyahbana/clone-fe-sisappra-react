@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 import {
   changedValue,
+  reset,
   isBanjir,
   updateKotaList,
   updateKecamatanList,
@@ -14,10 +15,9 @@ import {
   DatePickerField,
   SelectField,
   TimePickerField,
-  ToFieldStateBNV,
   ToFieldStateCE,
 } from '../../components/fields.formikcto'
-import axios from 'axios'
+import Swal from 'sweetalert2'
 
 interface StepDetailKejadianProps {
   handleChange?: {
@@ -37,24 +37,32 @@ interface StepDetailKejadianProps {
   }
   handleReset?: (e?: React.SyntheticEvent<any>) => void
   listMasterKejadianValue: any
+  allValues: any
 }
 
 export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   handleChange,
-  values,
   handleBlur,
   handleReset,
+  values,
   listMasterKejadianValue,
 }) => {
   const dispatch = useDispatch()
   const jenisKejadianList = useSelector((s: RootState) => s.pelaporanKejadian.list_jenis_kejadian)
+  const jenisKejadianId = useSelector(
+    (s: RootState) => s.pelaporanKejadian.kejadian__jenis_kejadian_id
+  )
+  const jenisKejadianSelect = values.kejadian__jenis_kejadian_selection?.label
   const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
   const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
   const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
-
   useEffect(() => {
-    listMasterKejadianValue()
-  }, [])
+    dispatch(updateKotaList())
+    dispatch(updateKecamatanList())
+    dispatch(updateKelurahanList())
+  }, [jenisKejadianSelect])
+
+  console.log(values)
 
   return (
     <div className='w-50'>
@@ -69,6 +77,25 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             component={SelectField}
             options={jenisKejadianList}
             onChange={(o: ChangeEvent<any>) => {
+              if (jenisKejadianId !== 0) {
+                Swal.fire({
+                  title: 'Apakah anda yakin?',
+                  text: 'Anda akan mereset seluruh form yang telah anda isi di halaman ini!',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  cancelButtonText: 'Tidak, kembali',
+                  confirmButtonColor: '#d33',
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonText: 'Ya, lanjut!',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    handleReset?.()
+                    dispatch(reset())
+                    listMasterKejadianValue()
+                    Swal.fire('Silahkan mengisi kembali!')
+                  }
+                })
+              }
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
@@ -147,7 +174,9 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             className='form-control'
             component={SelectField}
             options={kecamatanList}
-            onChange={(o: ChangeEvent<any>) => {}}
+            onChange={(o: ChangeEvent<any>) => {
+              dispatch(changedValue(ToFieldStateCE(o)))
+            }}
           />
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__kecamatan_id' />
@@ -175,10 +204,9 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           <label className='required form-label'>Alamat Lengkap</label>
           <Field
             as='textarea'
-            type='text'
             name='kejadian__alamat'
             className='form-control'
-            placeholder='Masukkan Alamat Lengkap'
+            placeholder='Masukkan Alamat Kejadian'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
@@ -187,7 +215,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             <ErrorMessage name='kejadian__alamat' />
           </div>
         </div>
-        <div className='mb-10 form-group'>
+        <div className='form-group mb-10'>
           <label className='required form-label'>Uraian Kejadian</label>
           <Field
             as='textarea'
@@ -207,9 +235,11 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           <label className='required form-label'>Jumlah Personil Satpol PP</label>
           <Field
             type='number'
+            min='0'
             name='kejadian__jml_personil_satpolpp'
             className='form-control'
-            onKeyUp={(o: ChangeEvent<any>) => {
+            onFocus={(e: any) => e.target.select()}
+            onInput={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
@@ -221,9 +251,11 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           <label className='required form-label'>Jumlah Personil Instansi Lain</label>
           <Field
             type='number'
+            min='0'
             name='kejadian__jml_personil_instansilain'
             className='form-control'
-            onKeyUp={(o: ChangeEvent<any>) => {
+            onFocus={(e: any) => e.target.select()}
+            onInput={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
@@ -233,16 +265,19 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         </div>
 
         {/* Kejadian khusus untuk banjir */}
-        {/* Belum dimasukkan inisialisasi value jenis kejadian berdasarkan banjir*/}
         {isBanjir(values) && (
           <>
             <div className='mb-10'>
-              <label className='required form-label'>Ketinggian Air</label>
+              <label htmlFor='kejadian__ketinggian_air' className='required form-label'>
+                Ketinggian Air
+              </label>
               <Field
                 type='number'
+                min='0'
                 name='kejadian__ketinggian_air'
                 className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
+                onFocus={(e: any) => e.target.select()}
+                onInput={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
@@ -251,12 +286,16 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
               </div>
             </div>
             <div className='mb-10'>
-              <label className='required form-label'>Jumlah Pengungsi</label>
+              <label htmlFor='kejadian__pengungsi' className='required form-label'>
+                Jumlah Pengungsi
+              </label>
               <Field
                 type='number'
+                min='0'
                 name='kejadian__pengungsi'
                 className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
+                onFocus={(e: any) => e.target.select()}
+                onInput={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
@@ -268,9 +307,11 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
               <label className='required form-label'>Jumlah Pengungsi Per KK</label>
               <Field
                 type='number'
+                min='0'
                 name='kejadian__pengungsi_kk'
                 className='form-control'
-                onKeyUp={(o: ChangeEvent<any>) => {
+                onFocus={(e: any) => e.target.select()}
+                onInput={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
@@ -299,7 +340,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
                 type='text'
                 name='kejadian__lokasi_dapur_umum'
                 className='form-control'
-                placeholder='Masukkan Lokasi Penampungan'
+                placeholder='Masukkan Lokasi Dapur Umum'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}

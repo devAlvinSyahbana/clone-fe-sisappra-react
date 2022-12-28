@@ -15,6 +15,11 @@ import {
   updateJenisUsahaList,
   updateJenisPenyelesaianList,
   isPengamanan,
+  isTipiring,
+  isLaporanMasyarakat,
+  isPPKM,
+  isPenertibanBangunan,
+  isPenertibanMinol,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
@@ -62,6 +67,16 @@ export const AddKegiatanUmumPage: FC = () => {
       if (isPengamanan(values)) {
         // alert(JSON.stringify(values, null, 2))
         res = await axios.post(`${API_URL}/kegiatan-pengamanan`, allValues)
+      } else if (isLaporanMasyarakat(values)) {
+        res = await axios.post(`${API_URL}/kegiatan-masyarakat`, allValues)
+      } else if (isPPKM(values)) {
+        res = await axios.post(`${API_URL}/kegiatan-ppkm`, allValues)
+      } else if (isTipiring(values)) {
+        res = await axios.post(`${API_URL}/kegiatan-sidang-tipiring`, allValues)
+      } else if (isPenertibanBangunan(values)) {
+        res = await axios.post(`${API_URL}/kegiatan-penertiban-bangunan`, allValues)
+      } else if (isPenertibanMinol(values)) {
+        res = await axios.post(`${API_URL}/kegiatan-penertiban-minol`, allValues)
       } else {
         res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
       }

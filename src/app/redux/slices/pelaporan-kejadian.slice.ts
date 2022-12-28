@@ -11,15 +11,10 @@ import axios from 'axios'
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanKejadianState extends Record<string, any> {
-  value: number
-
   kejadian__jenis_kejadian_id: number
   kejadian__tanggal: string
   kejadian__waktu_start: string
   kejadian__waktu_end: string
-  kejadian__kota_id: number
-  kejadian__kecamatan_id: number
-  kejadian__kelurahan_id: number
   kejadian__alamat: string
   kejadian__uraian_kejadian: string
   kejadian__jml_personil_satpolpp: number
@@ -29,14 +24,39 @@ export interface PelaporanKejadianState extends Record<string, any> {
   kejadian__pengungsi_kk: number
   kejadian__lokasi_penampungan: string
   kejadian__lokasi_dapur_umum: string
+  
+  // Tindakan
+  kejadian__kota_id: number
+  kejadian__kecamatan_id: number
+  kejadian__kelurahan_id: number
+  kejadian__jml_korban_pria: number
+  kejadian__jml_korban_wanita: number
+  tindak__jenis_bantuan_satpolpp: number
+  tindak__jenis_bantuan_instansiterkait: number
+  tindak__korban_jiwa: number
+  tindak__korban_material: number
+  
+  // Kekerasan pada anak
+  kejadian__sumber_informasi_id: number
+  kejadian__jenis_kekerasan_id: number
+
+  // Unjuk Rasa
+  kejadian__jumlah_massa: number
+  kejadian__tuntutan: string
+  kejadian__penanggung_jawab_unras: string
 }
 
 export const initialState: PelaporanKejadianState = {
-  value: 0,
   list_jenis_kejadian: [],
   list_kota: [],
   list_kecamatan: [],
   list_kelurahan: [],
+  list_sumber_informasi: [],
+  list_jenis_kekerasan: [],
+  list_jenis_bantuan_satpol_pp: [],
+  list_jenis_bantuan_instansi_terkait: [],
+  list_korban_jiwa: [],
+  list_korban_material: [],
 
   kejadian__jenis_kejadian_id: 0,
   kejadian__tanggal: '2022-01-23',
@@ -52,12 +72,35 @@ export const initialState: PelaporanKejadianState = {
   kejadian__lokasi_penampungan: '',
   kejadian__lokasi_dapur_umum: '',
 
-  kota_selection: [],
+  // Tindak Lanjut
   kejadian__kota_id: 0,
-  kecamatan_selection: [],
   kejadian__kecamatan_id: 0,
-  kelurahan_selection: [],
   kejadian__kelurahan_id: 0,
+  kejadian__jml_korban_pria: 0,
+  kejadian__jml_korban_wanita: 0,
+  tindak__jenis_bantuan_satpolpp: 0,
+  tindak__jenis_bantuan_instansiterkait: 0,
+  tindak__korban_jiwa: 0,
+  tindak__korban_material: 0,
+
+  // Kekerasan pada anak
+  kejadian__sumber_informasi_id: 0,
+  kejadian__jenis_kekerasan_id: 0,
+
+  // Unjuk Rasa
+  kejadian__jumlah_massa: 0,
+  kejadian__tuntutan: '',
+  kejadian__penanggung_jawab_unras: '',
+  tindak__dokumentasi: [
+    {
+      file_uploadResult: [
+        {
+          bucket: 'pelaporan',
+          key: '',
+        },
+      ],
+    },
+  ],
 }
 
 export const createSchemaPelaporanKejadian = [
@@ -67,29 +110,133 @@ export const createSchemaPelaporanKejadian = [
       .moreThan(0)
       .required()
       .label('Pelaporan Pengawasan'),
-
+    kejadian__jenis_kejadian_selection: Yup.object().required(),
+    kejadian__kota_id: Yup.number().integer().moreThan(0).required().label('Kota'),
     kota_selection: Yup.object().required(),
+    kejadian__kecamatan_id: Yup.number().integer().moreThan(0).required().label('Kecamatan'),
     kecamatan_selection: Yup.object().required(),
+    kejadian__kelurahan_id: Yup.number().integer().moreThan(0).required().label('Kelurahan'),
     kelurahan_selection: Yup.object().required(),
-
+    tindak__jenis_bantuan_satpolpp: Yup.number()
+      .integer()
+      .moreThan(0)
+      .required()
+      .label('Jenis Bantuan Satpol PP'),
+    kejadian__jenis_bantuan_satpolpp_selection: Yup.object().required(),
+    tindak__jenis_bantuan_instansiterkait: Yup.number()
+      .integer()
+      .moreThan(0)
+      .required()
+      .label('Jenis Bantuan Instansi Terkait'),
+    kejadian__jenis_bantuan_instansi_terkait_selection: Yup.object().required(),
+    tindak__korban_jiwa: Yup.number().integer().moreThan(0).required().label('Korban Jiwa'),
+    kejadian__korban_jiwa_selection: Yup.object().required(),
+    tindak__korban_material: Yup.number().integer().moreThan(0).required().label('Korban Material'),
+    kejadian__korban_material_selection: Yup.object().required(),
     kejadian__tanggal: Yup.date().required().label('Tanggal Kejadian'),
-    kejadian__waktu_start: Yup.string().required().label('Waktu Kejadian'),
-    kejadian__waktu_end: Yup.string().required().label('Waktu Kejadian'),
+    kejadian__waktu_start: Yup.string().required().label('Waktu Start'),
+    kejadian__waktu_end: Yup.string().required().label('Waktu End'),
     kejadian__alamat: Yup.string().min(10).max(1000).required().label('Alamat Kejadian'),
     kejadian__uraian_kejadian: Yup.string().min(10).max(1000).required().label('Uraian Kejadian'),
-    kejadian__lokasi_penampungan: Yup.string()
-      .min(10)
-      .max(1000)
+    kejadian__jml_korban_pria: Yup.number()
+      .integer()
+      .moreThan(0)
       .required()
-      .label('Lokasi Penampungan'),
-    kejadian__lokasi_dapur_umum: Yup.string()
-      .min(10)
-      .max(1000)
+      .label('Jumlah Korban Pria'),
+    kejadian__jml_korban_wanita: Yup.number()
+      .integer()
+      .moreThan(0)
       .required()
-      .label('Lokasi Dapur Umum'),
+      .label('Jumlah Korban Wanita'),
+    kejadian__jml_personil_satpolpp: Yup.number()
+      .integer()
+      .moreThan(0)
+      .required()
+      .label('Jumlah Personil Satpol PP'),
+    kejadian__jml_personil_instansilain: Yup.number()
+      .integer()
+      .moreThan(0)
+      .required()
+      .label('Jumlah Personil Instansi Lain'),
+
+    // Banjir
+    kejadian__ketinggian_air: Yup.number().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'BANJIR',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Ketinggian Air'),
+    }),
+    kejadian__pengungsi: Yup.number().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'BANJIR',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Pengungsi'),
+    }),
+    kejadian__pengungsi_kk: Yup.number().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'BANJIR',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Pengungsi KK'),
+    }),
+    kejadian__lokasi_penampungan: Yup.string().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'BANJIR',
+      then: Yup.string().notRequired(),
+      otherwise: Yup.string().required().label('Lokasi Penampungan'),
+    }),
+    kejadian__lokasi_dapur_umum: Yup.string().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'BANJIR',
+      then: Yup.string().notRequired(),
+      otherwise: Yup.string().required().label('Lokasi Dapur Umum'),
+    }),
+
+    // Tindak Lanjut - Kekerasan Pada Anak
+    kejadian__sumber_informasi_selection: Yup.object().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN',
+      then: Yup.object().notRequired(),
+      otherwise: Yup.object().required(),
+    }),
+    kejadian__sumber_informasi_id: Yup.number().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Sumber Informasi'),
+    }),
+    kejadian__jenis_kekerasan_selection: Yup.object().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN',
+      then: Yup.object().notRequired(),
+      otherwise: Yup.object().required(),
+    }),
+    kejadian__jenis_kekerasan_id: Yup.number().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Kekerasan '),
+    }),
+
+    // Tindak Lanjut - Unjuk Rasa
+    kejadian__jumlah_massa: Yup.number().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'UNJUK RASA',
+      then: Yup.number().notRequired(),
+      otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Massa'),
+    }),
+    kejadian__tuntutan: Yup.string().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'UNJUK RASA',
+      then: Yup.string().notRequired(),
+      otherwise: Yup.string().min(5).max(500).required().label('Tuntutan'),
+    }),
+    kejadian__penanggung_jawab_unras: Yup.string().when('kejadian__jenis_kejadian_selection', {
+      is: (val: any) => val?.label !== 'UNJUK RASA',
+      then: Yup.string().notRequired(),
+      otherwise: Yup.string().min(5).max(500).required().label('Penanggung Jawab Unjuk Rasa'),
+    }),
   }),
   Yup.object({}),
 ]
+
+export const jenisKejadianList: any = createAsyncThunk(
+  'pelaporanKejadian/jenisKejadianList',
+  async (thunkAPI) => {
+    const res = await axios.get(`${API_URL}/jenis-kejadian/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+
 export const updateKotaList: any = createAsyncThunk(
   'pelaporanKejadian/updateKotaList',
   async (thunkAPI) => {
@@ -114,19 +261,88 @@ export const updateKelurahanList: any = createAsyncThunk(
     return data
   }
 )
+export const updateSumberInformasiList: any = createAsyncThunk(
+  'pelaporanKejadian/updateSumberInformasiList',
+  async () => {
+    const res = await axios.get(`${API_URL}/sumber-informasi/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+export const updateJenisKekerasan: any = createAsyncThunk(
+  'pelaporanKejadian/updateJenisKekerasan',
+  async () => {
+    const res = await axios.get(`${API_URL}/jenis-kekerasan/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+export const updateJenisBantuanSatpolPP: any = createAsyncThunk(
+  'pelaporanKejadian/updateJenisBantuanSatpolPP',
+  async () => {
+    const res = await axios.get(`${API_URL}/jenis-bantuan/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+export const updateJenisBantuanInstansiTerkait: any = createAsyncThunk(
+  'pelaporanKejadian/updateJenisBantuanInstansiTerkait',
+  async () => {
+    const res = await axios.get(`${API_URL}/jenis-bantuan/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+export const updateKorbanJiwa: any = createAsyncThunk(
+  'pelaporanKejadian/updateKorbanJiwa',
+  async () => {
+    const res = await axios.get(`${API_URL}/jenis-korban-jiwa/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+export const updateKorbanMaterial: any = createAsyncThunk(
+  'pelaporanKejadian/updateKorbanMaterial',
+  async () => {
+    const res = await axios.get(`${API_URL}/jenis-korban-material/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
 
 export const pelaporanKejadianSlice = createSlice({
   name: 'pelaporanKejadian',
   initialState,
   extraReducers: (builder) => {
+    builder.addCase(jenisKejadianList.fulfilled, (state, action) => {
+      state.list_jenis_kejadian = action.payload
+    })
     builder.addCase(updateKotaList.fulfilled, (state, action) => {
       state.list_kota = action.payload
     })
     builder.addCase(updateKecamatanList.fulfilled, (state, action) => {
-      state.list_kecaamatan = action.payload
+      state.list_kecamatan = action.payload
     })
     builder.addCase(updateKelurahanList.fulfilled, (state, action) => {
       state.list_kelurahan = action.payload
+    })
+    builder.addCase(updateSumberInformasiList.fulfilled, (state, action) => {
+      state.list_sumber_informasi = action.payload
+    })
+    builder.addCase(updateJenisKekerasan.fulfilled, (state, action) => {
+      state.list_jenis_kekerasan = action.payload
+    })
+    builder.addCase(updateJenisBantuanSatpolPP.fulfilled, (state, action) => {
+      state.list_jenis_bantuan_satpol_pp = action.payload
+    })
+    builder.addCase(updateJenisBantuanInstansiTerkait.fulfilled, (state, action) => {
+      state.list_jenis_bantuan_instansi_terkait = action.payload
+    })
+    builder.addCase(updateKorbanJiwa.fulfilled, (state, action) => {
+      state.list_korban_jiwa = action.payload
+    })
+    builder.addCase(updateKorbanMaterial.fulfilled, (state, action) => {
+      state.list_korban_material = action.payload
     })
   },
   reducers: {
@@ -147,7 +363,6 @@ export const pelaporanKejadianSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-
 export const isBanjir = (formikValues: any) =>
   formikValues.kejadian__jenis_kejadian_selection?.label === 'BANJIR'
 export const isPendampinganKekerasanPadaPerempuan = (formikValues: any) =>
