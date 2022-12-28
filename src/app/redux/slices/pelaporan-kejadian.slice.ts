@@ -24,18 +24,12 @@ export interface PelaporanKejadianState extends Record<string, any> {
   kejadian__pengungsi_kk: number
   kejadian__lokasi_penampungan: string
   kejadian__lokasi_dapur_umum: string
-  
+
   // Tindakan
   kejadian__kota_id: number
   kejadian__kecamatan_id: number
   kejadian__kelurahan_id: number
-  kejadian__jml_korban_pria: number
-  kejadian__jml_korban_wanita: number
-  tindak__jenis_bantuan_satpolpp: number
-  tindak__jenis_bantuan_instansiterkait: number
-  tindak__korban_jiwa: number
-  tindak__korban_material: number
-  
+
   // Kekerasan pada anak
   kejadian__sumber_informasi_id: number
   kejadian__jenis_kekerasan_id: number
@@ -76,12 +70,10 @@ export const initialState: PelaporanKejadianState = {
   kejadian__kota_id: 0,
   kejadian__kecamatan_id: 0,
   kejadian__kelurahan_id: 0,
-  kejadian__jml_korban_pria: 0,
-  kejadian__jml_korban_wanita: 0,
-  tindak__jenis_bantuan_satpolpp: 0,
-  tindak__jenis_bantuan_instansiterkait: 0,
-  tindak__korban_jiwa: 0,
-  tindak__korban_material: 0,
+  tindak__jenis_bantuan_satpolpp: [],
+  tindak__jenis_bantuan_instansiterkait: [],
+  tindak__korban_jiwa: [],
+  tindak__korban_material: [],
 
   // Kekerasan pada anak
   kejadian__sumber_informasi_id: 0,
@@ -117,37 +109,23 @@ export const createSchemaPelaporanKejadian = [
     kecamatan_selection: Yup.object().required(),
     kejadian__kelurahan_id: Yup.number().integer().moreThan(0).required().label('Kelurahan'),
     kelurahan_selection: Yup.object().required(),
-    tindak__jenis_bantuan_satpolpp: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Bantuan Satpol PP'),
+    // tindak__jenis_bantuan_satpolpp: Yup.number()
+    //   .integer()
+    //   .moreThan(0)
+    //   .required()
+    //   .label('Jenis Bantuan Satpol PP'),
     kejadian__jenis_bantuan_satpolpp_selection: Yup.object().required(),
-    tindak__jenis_bantuan_instansiterkait: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jenis Bantuan Instansi Terkait'),
+    // tindak__jenis_bantuan_instansiterkait: Yup.number()
+    //   .integer()
+    //   .moreThan(0)
+    //   .required()
+    //   .label('Jenis Bantuan Instansi Terkait'),
     kejadian__jenis_bantuan_instansi_terkait_selection: Yup.object().required(),
-    tindak__korban_jiwa: Yup.number().integer().moreThan(0).required().label('Korban Jiwa'),
-    kejadian__korban_jiwa_selection: Yup.object().required(),
-    tindak__korban_material: Yup.number().integer().moreThan(0).required().label('Korban Material'),
-    kejadian__korban_material_selection: Yup.object().required(),
     kejadian__tanggal: Yup.date().required().label('Tanggal Kejadian'),
     kejadian__waktu_start: Yup.string().required().label('Waktu Start'),
     kejadian__waktu_end: Yup.string().required().label('Waktu End'),
     kejadian__alamat: Yup.string().min(10).max(1000).required().label('Alamat Kejadian'),
     kejadian__uraian_kejadian: Yup.string().min(10).max(1000).required().label('Uraian Kejadian'),
-    kejadian__jml_korban_pria: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jumlah Korban Pria'),
-    kejadian__jml_korban_wanita: Yup.number()
-      .integer()
-      .moreThan(0)
-      .required()
-      .label('Jumlah Korban Wanita'),
     kejadian__jml_personil_satpolpp: Yup.number()
       .integer()
       .moreThan(0)
