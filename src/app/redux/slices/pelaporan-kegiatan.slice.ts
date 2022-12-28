@@ -116,6 +116,8 @@ export const initialState: PelaporanKegiatanState = {
   // tindak_lanjut__rekom_citata__tanggal_rekomtek: '',
   // tindak_lanjut__rekom_citata__tanggal_peninjauan_lapangan: '',
 
+  tindak_lanjut__jumlah_minol_merk: [],
+
   dokumentasi: [
     {
       file_uploadResult: [
@@ -364,6 +366,7 @@ const NoPasalPenyelesaian = [
   'PENGAWALAN',
   'SOSIALISASI P4GN(NARKOBA)',
   'SOSIALISASI PERDA / PERKADA',
+  'PENERTIBAN MINUMAN BERALKOHOL',
 ]
 
 const NoPenindakan = ['PENERTIBAN BANGUNAN', 'SIDANG TIPIRING', 'APEL', 'RAPAT']

@@ -74,13 +74,9 @@ export const AddKegiatanUmumPage: FC = () => {
       } else if (isTipiring(values)) {
         res = await axios.post(`${API_URL}/kegiatan-sidang-tipiring`, allValues)
       } else if (isPenertibanBangunan(values)) {
-        // alert('INI PENERTIBAN BANGUNAN')
-        // res = true
         res = await axios.post(`${API_URL}/kegiatan-penertiban-bangunan`, allValues)
       } else if (isPenertibanMinol(values)) {
-        alert('INI PENERTIBAN BANGUNAN')
-        res = true
-        // res = await axios.post(`${API_URL}/kegiatan-penertiban-bangunan`, allValues)
+        res = await axios.post(`${API_URL}/kegiatan-penertiban-minol`, allValues)
       } else {
         res = await axios.post(`${API_URL}/kegiatan-umum`, allValues)
       }
