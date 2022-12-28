@@ -1,17 +1,60 @@
 import axios from 'axios'
-import {Fragment, useEffect, useState} from 'react'
-import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
+import {FC, Fragment, useEffect, useState} from 'react'
+import {ButtonGroup, Dropdown, DropdownButton, Table} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
+import {Link, useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
 
-export function DtAdmin(props: any) {
+export const DtAdmin: FC<any> = ({filterData}) => {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const [data, setData] = useState([])
+  const [process, setProcess] = useState({val: ''})
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+
+  const penampung = filterData
+  const dateStart = penampung[0].tanggalAwal
+  const dateEnd = penampung[0].tanggalAkhir
+
+  // console.log('ini date start', dateStart)
+
+  const handleFilter = async () => {
+    let uriParam = ''
+    // if (dateStart && dateEnd) {
+    //   // uriParam += `tanggal_kunjungan%20ge%20%27${dateStart}%27%20and%20tanggal_kunjungan%20le%20%27${dateEnd}%27`
+    //   console.log('hi')
+    // } else if (dateStart !== '') {
+    //   uriParam += `tanggal_kunjungan%20eq%20%27${dateStart}%27`
+    // } else if (dateEnd !== '') {
+    //   uriParam += `tanggal_kunjungan%20eq%20%27${dateEnd}%27`
+    // }
+    if (dateStart && dateEnd) {
+      uriParam += `tanggal_kunjungan%20ge%20%27${dateStart}%27%20and%20tanggal_kunjungan%20le%20%27${dateEnd}%27`
+      // console.log('2 on')
+    } else if (dateStart !== '') {
+      // console.log('start on')
+      uriParam += `tanggal_kunjungan%20eq%20%27${dateStart}%27`
+    } else if (dateEnd !== '') {
+      uriParam += `tanggal_kunjungan%20eq%20%27${dateEnd}%27`
+      // console.log('end on')
+    }
+    // if (dateEnd.val !== '') {
+    //   uriParam += `tanggal_kunjungan%20ge%20%272022-12-22%27%20and%20tanggal_kunjungan%20le%20%272022-12-27%27`
+    // }
+    // tanggal_kunjungan ge '2022-12-16' and tanggal_kunjungan le '2022-12-27'
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterReset = () => {
+    dateStart('')
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
 
   const dataTamuDaerah = () => {
-    axios.get(`http://localhost:3002/tamu-daerah/`).then((res) => {
+    axios.get(`http://localhost:3002/tamu-daerah/?%24filter=${qParamFind.strparam}`).then((res) => {
       const data = res.data.data.map((d: any) => ({
+        id: d.id,
         no: d.id,
         tanggal_kunjungan: d.tanggal_kunjungan,
         waktu_mulai_kunjungan: d.waktu_mulai_kunjungan,
@@ -24,12 +67,15 @@ export function DtAdmin(props: any) {
       }))
       // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
       setData(data)
+      // console.log('ini data', data)
+      return [data, setData] as const
     })
+    // console.log(data)
   }
 
   useEffect(() => {
     dataTamuDaerah()
-  }, [])
+  }, [qParamFind])
 
   const columns2 = [
     {
@@ -103,7 +149,11 @@ export function DtAdmin(props: any) {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#'>Ubah</Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => navigate('/pelaporan/ubah-laporan-tamu-daerah/' + record.id)}
+                    >
+                      Ubah
+                    </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
                       // onClick={() => konfirDel(record.id, record.status_pegawai)}
@@ -137,6 +187,12 @@ export function DtAdmin(props: any) {
 
   return (
     <div>
+      <Link to='#' onClick={handleFilter}>
+        <button className='btn btn-light-primary me-2'>Cari</button>
+      </Link>
+      <Link to='#' onClick={handleFilterReset}>
+        <button className='btn btn-light-primary me-2'>Reset</button>
+      </Link>
       <DataTable columns={columns2} data={data} pagination />
     </div>
   )
