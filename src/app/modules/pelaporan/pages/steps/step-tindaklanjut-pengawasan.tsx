@@ -46,7 +46,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 </label>
                 <Field
                   type='text'
-                  name='lokasi_tiang'
+                  name='share_location'
                   className='form-control'
                   onKeyUp={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
@@ -65,14 +65,14 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               </label>
               <Field
                 type='number'
-                name='share_location'
+                name='lokasi_tiang'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='share_location' />
+                <ErrorMessage name='lokasi_tiang' />
               </div>
             </div>
           </div>
@@ -83,14 +83,14 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               </label>
               <Field
                 type='number'
-                name='share_location'
+                name='lokasi_tiang'
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
               />
               <div className='text-danger mt-2'>
-                <ErrorMessage name='share_location' />
+                <ErrorMessage name='lokasi_tiang' />
               </div>
             </div>
           </div>
@@ -251,36 +251,6 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 // gunakan dispatch dokumentasi disini
               }}
             />
-
-            <div className='mb-10 form-group'>
-              <label className='required form-label'>Keterangan</label>
-              <Field
-                as='textarea'
-                type='text'
-                name='tindak_dokumentasi[0].keterangan'
-                className='form-control'
-                placeholder='Masukkan Keterangan'
-                onKeyUp={(o: ChangeEvent<any>) => {
-                  ToFieldStateCE(o)
-                  dispatch(
-                    changedValue({
-                      target: {
-                        name: 'tindak_dokumentasi',
-                        value: [
-                          {
-                            file_uploadResult: dokumentasi.file_uploadResult,
-                            keterangan: o.target.value,
-                          },
-                        ],
-                      },
-                    })
-                  )
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='keterangan' />
-              </div>
-            </div>
           </div>
         </div>
       </div>

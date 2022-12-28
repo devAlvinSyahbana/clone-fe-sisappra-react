@@ -34,46 +34,18 @@ export const AddPengawasanPage: FC = () => {
   useEffect(() => {
     listMasterPengawasanValue()
   }, [])
-  console.log(allValues)
-  // const submitPelaporanPengawasan = (values: PelaporanPengawasanState, actions: FormikValues) => {
-  //   try {
-  //     alert(JSON.stringify(values, null, 2))
-  //     actions.setSubmitting(false)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
   const submitPelaporanPengawasan = async (
     values: PelaporanPengawasanState,
     actions: FormikValues
   ) => {
-    // const bodyParam: PelaporanPengawasanState = {
-    //   // nrk: allValues.nrk,
-    //   // nama: allValues.nama,
-    //   share_location: allValues.share_location,
-    //   lokasi_tiang: allValues.lokasi_tiang,
-    //   // status: allValues.status,
-    //   pemilik_reklame: allValues.pemilik_reklame,
-    //   konstruksi_reklame: allValues.konstruksi_reklame,
-    //   konten_iklan: allValues.konten_iklan,
-
-    //   kota: allValues.kota,
-    //   kecamatan: allValues.kecamatan,
-    //   kelurahan: allValues.kelurahan,
-    //   alamat: allValues.alamat,
-    //   tgl_pengecekan: allValues.tgl_pengecekan,
-    //   waktu_pengawasan: allValues.waktu_pengawasan,
-    //   tindak_dokumentasi: allValues.tindak_dokumentasi,
-    //   status_reklame: allValues.status_reklame,
-    //   jenis_reklame: allValues.jenis_reklame,
-    //   ukuran: allValues.ukuran,
-    //   kawasan_kendali: allValues.kawasan_kendali,
-    // }
-
-    // }
-    // const res = await axios.post(`http://127.0.0.1:3002/kegiatan-umum/`)
+    let res
     try {
-      const res = await axios.post(`http://localhost:3002/reklame`, allValues)
+      // if (isPengamanan(values)) {
+      //   // alert(JSON.stringify(values, null, 2))
+      //   res = await axios.post(`${API_URL}/kegiatan-pengamanan`, allValues)
+      // } else {
+      res = await axios.post(`${API_URL}/reklame/`, allValues)
+      // }
       if (res) {
         console.log('laststep', values)
         actions.setSubmitting(false)
@@ -85,7 +57,6 @@ export const AddPengawasanPage: FC = () => {
           color: '#000000',
         })
       }
-      // alert(JSON.stringify(values, null, 2))
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -96,6 +67,7 @@ export const AddPengawasanPage: FC = () => {
       console.error(error)
     }
   }
+
   return (
     <>
       <Formik

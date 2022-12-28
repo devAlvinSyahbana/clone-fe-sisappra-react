@@ -188,173 +188,124 @@ export function DtAdmin(props: any) {
 }
 
 export function DtPimpinan(props: any) {
+  const dispatch = useDispatch()
+  const [data, setData] = useState([])
+
+  const dataPengawasReklame = () => {
+    axios.get(`http://localhost:3002/reklame/`).then((res) => {
+      const data = res.data.data.map((d: any) => ({
+        no: d.id,
+        pelaksana: d.id,
+        status_reklame: d.status_reklame,
+        pemilik_reklame: d.pemilik_reklame,
+        alamat: d.alamat,
+        tgl_pengecekan: d.tgl_pengecekan,
+        lokasi_tiang: d.lokasi_tiang,
+        share_location: d.share_location,
+        ukuran: d.ukuran,
+        konstruksi_reklame: d.konstruksi_reklame,
+        konten_iklan: d.konten_iklan,
+      }))
+      setData(data)
+    })
+  }
+
+  useEffect(() => {
+    dataPengawasReklame()
+  }, [])
+
   const columns = [
     {
       name: 'No',
       width: '60px',
-      selector: (row: {no: any}) => row.no,
+      selector: (row: any) => row.no,
     },
     {
       name: 'Pelaksana',
-      selector: (row: any) => row.pelaksana,
+      width: '140px',
+      selector: (row: any) => row.id,
     },
     {
-      name: 'Tanggal Pengecekan',
-      selector: (row: any) => row.tanggalpengecekan,
+      name: 'Tanggal',
+      width: '140px',
+      selector: (row: any) => row.tgl_pengecekan,
     },
     {
       name: 'Share Location',
-      selector: (row: any) => row.shareloc,
+      width: '140px',
+      selector: (row: any) => row.share_location,
     },
     {
       name: 'Alamat',
+      width: '140px',
+      wrap: true,
       selector: (row: any) => row.alamat,
     },
     {
-      name: 'Lokasi Tiang',
-      selector: (row: any) => row.lokasitiang,
-    },
-    {
-      name: 'Kawasan Kendali',
-      selector: (row: any) => row.kawasankendali,
-    },
-    {
       name: 'Status',
-      selector: (row: any) => row.status,
+      width: '140px',
+      wrap: true,
+      selector: (row: any) => row.status_reklame,
     },
     {
       name: 'Ukuran',
+      width: '140px',
+      wrap: true,
       selector: (row: any) => row.ukuran,
     },
     {
       name: 'Pemilik Reklame',
-      selector: (row: any) => row.pemilikreklame,
+      width: '200px',
+      wrap: true,
+      selector: (row: any) => row.pemilik_reklame,
     },
     {
       name: 'Konstruksi Reklame',
-      selector: (row: any) => row.konstruksireklame,
+      width: '200px',
+      wrap: true,
+      selector: (row: any) => row.konstruksi_reklame,
     },
     {
       name: 'Konten Iklan',
-      selector: (row: any) => row.konteniklan,
+      width: '200px',
+      wrap: true,
+      selector: (row: any) => row.konten_iklan,
     },
-    // {
-    //   name: 'Dokumentasi',
-    //   selector: (row: {docs: any}) => row.docs,
-    // },
     {
       name: 'Aksi',
       sortable: false,
-      text: 'Action',
       className: 'action',
-      align: 'left',
+      center: true,
+      allowOverflow: true,
+      fixed: true,
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='mb-2'>
-              <button>Detail</button>
+            <div className='d-flex mb-2 mt-2 flex-end'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <>
+                  <DropdownType
+                    as={ButtonGroup}
+                    key={idx}
+                    id={`dropdown-button-drop-${idx}`}
+                    size='sm'
+                    variant='light'
+                    title='Aksi'
+                  >
+                    <Dropdown.Item href='#'>Detail</Dropdown.Item>
+                    <Dropdown.Item
+                      href='#'
+                      // onClick={() => konfirDel(record.id, record.status_pegawai)}
+                    >
+                      Ubah
+                    </Dropdown.Item>
+                  </DropdownType>
+                </>
+              ))}
             </div>
           </Fragment>
         )
       },
-    },
-  ]
-
-  const data = [
-    {
-      id: 1,
-      no: '1',
-      // nrk: '166665',
-      // nama: 'Irwan Novyanto',
-      pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
-      tanggalpengecekan: '08-01-2021',
-      shareloc: 'Lat: -6.1821440999999995, Long: 106.8284776',
-      alamat:
-        'Jalan Kebon Sirih 22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
-      lokasitiang: 'testibg',
-      kawasankendali: 'Kendali Ketat',
-      status: 'Aktif',
-      ukuran: '6x10',
-      pemilikreklame: 'a',
-      konstruksireklame: 'a',
-      konteniklan: 'a',
-      docs: '',
-    },
-    {
-      id: 2,
-      no: '2',
-      // nrk: '166721',
-      // nama: 'Udi Hartono',
-      pelaksana: 'SEKSI PERLINDUNGAN MASYARAKAT',
-      tanggalpengecekan: '28-05-2021',
-      shareloc: 'Lat: -6.1833066, Long: 106.8282431',
-      alamat:
-        'Jalan Kebon Sirih 77A, Kebon Sirih, Kecamatan Menteng, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
-      lokasitiang: 'Balkot',
-      kawasankendali: 'Ketat',
-      status: 'Tidak',
-      ukuran: '10x10',
-      pemilikreklame: 'PT.a',
-      konstruksireklame: 'PT.b',
-      konteniklan: 'Sampo',
-      docs: '',
-    },
-    {
-      id: 3,
-      no: '3',
-      // nrk: '166665',
-      // nama: 'Irwan Novyanto',
-      pelaksana: 'SEKSI PPNS DAN PENINDAKAN',
-      tanggalpengecekan: '24-09-2021',
-      shareloc: 'Lat: -6.346061, Long: 106.89405099999999',
-      alamat:
-        'Jalan Hankam Munjul 73, Munjul, Kecamatan Cipayung, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta',
-      lokasitiang: 'Menempel Gedung',
-      kawasankendali: 'Sedang',
-      status: 'Aktif',
-      ukuran: '2x5',
-      pemilikreklame: 'aaa',
-      konstruksireklame: 'ads',
-      konteniklan: 'Rokok',
-      docs: '',
-    },
-    {
-      id: 4,
-      no: '4',
-      // nrk: '166665',
-      // nama: 'Irwan Novyanto',
-      pelaksana: 'PENGELOLA KEAMANAN DAN KETERTIBAN SATPOL PP KECAMATAN SENEN',
-      tanggalpengecekan: '24-01-2022',
-      shareloc: 'Lat: -6.1820642, Long: 106.8284563',
-      alamat:
-        'Jalan Kebon Sirih No.22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
-      lokasitiang: 'Berdiri Sendiri',
-      kawasankendali: 'Kendali Ketat',
-      status: 'Aktif',
-      ukuran: '4x6',
-      pemilikreklame: 'aa',
-      konstruksireklame: 'abc',
-      konteniklan: 'Elektronik',
-      docs: '',
-    },
-    {
-      id: 5,
-      no: '5',
-      // nrk: '166665',
-      // nama: 'Irwan Novyanto',
-      pelaksana: 'PETUGAS KEAMANAN SATPOL PP KECAMATAN TANAH ABANG',
-      tanggalpengecekan: '15-03-2022',
-      shareloc: 'Lat: -6.1820642, Long: 106.8284563',
-      alamat:
-        'Jalan Kebon Sirih No.22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
-      lokasitiang: 'Berdiri Sendiri',
-      kawasankendali: 'Ketat',
-      status: 'Aktif',
-      ukuran: '4x6',
-      pemilikreklame: 'asik',
-      konstruksireklame: 'PT.xxx',
-      konteniklan: 'Sampo',
-      docs: '',
     },
   ]
 
@@ -364,3 +315,180 @@ export function DtPimpinan(props: any) {
     </div>
   )
 }
+// export function DtPimpinan(props: any) {
+//   const columns = [
+//     {
+//       name: 'No',
+//       width: '60px',
+//       selector: (row: {no: any}) => row.no,
+//     },
+//     {
+//       name: 'Pelaksana',
+//       selector: (row: any) => row.pelaksana,
+//     },
+//     {
+//       name: 'Tanggal Pengecekan',
+//       selector: (row: any) => row.tanggalpengecekan,
+//     },
+//     {
+//       name: 'Share Location',
+//       selector: (row: any) => row.shareloc,
+//     },
+//     {
+//       name: 'Alamat',
+//       selector: (row: any) => row.alamat,
+//     },
+//     {
+//       name: 'Lokasi Tiang',
+//       selector: (row: any) => row.lokasitiang,
+//     },
+//     {
+//       name: 'Kawasan Kendali',
+//       selector: (row: any) => row.kawasankendali,
+//     },
+//     {
+//       name: 'Status',
+//       selector: (row: any) => row.status,
+//     },
+//     {
+//       name: 'Ukuran',
+//       selector: (row: any) => row.ukuran,
+//     },
+//     {
+//       name: 'Pemilik Reklame',
+//       selector: (row: any) => row.pemilikreklame,
+//     },
+//     {
+//       name: 'Konstruksi Reklame',
+//       selector: (row: any) => row.konstruksireklame,
+//     },
+//     {
+//       name: 'Konten Iklan',
+//       selector: (row: any) => row.konteniklan,
+//     },
+//     // {
+//     //   name: 'Dokumentasi',
+//     //   selector: (row: {docs: any}) => row.docs,
+//     // },
+//     {
+//       name: 'Aksi',
+//       sortable: false,
+//       text: 'Action',
+//       className: 'action',
+//       align: 'left',
+//       cell: (record: any) => {
+//         return (
+//           <Fragment>
+//             <div className='mb-2'>
+//               <button>Detail</button>
+//             </div>
+//           </Fragment>
+//         )
+//       },
+//     },
+//   ]
+
+//   const data = [
+//     // {
+//     //   id: 1,
+//     //   no: '1',
+//     //   // nrk: '166665',
+//     //   // nama: 'Irwan Novyanto',
+//     //   pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
+//     //   tanggalpengecekan: '08-01-2021',
+//     //   shareloc: 'Lat: -6.1821440999999995, Long: 106.8284776',
+//     //   alamat:
+//     //     'Jalan Kebon Sirih 22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
+//     //   lokasitiang: 'testibg',
+//     //   kawasankendali: 'Kendali Ketat',
+//     //   status: 'Aktif',
+//     //   ukuran: '6x10',
+//     //   pemilikreklame: 'a',
+//     //   konstruksireklame: 'a',
+//     //   konteniklan: 'a',
+//     //   docs: '',
+//     // },
+//     {
+//       id: 2,
+//       no: '2',
+//       // nrk: '166721',
+//       // nama: 'Udi Hartono',
+//       pelaksana: 'SEKSI PERLINDUNGAN MASYARAKAT',
+//       tanggalpengecekan: '28-05-2021',
+//       shareloc: 'Lat: -6.1833066, Long: 106.8282431',
+//       alamat:
+//         'Jalan Kebon Sirih 77A, Kebon Sirih, Kecamatan Menteng, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
+//       lokasitiang: 'Balkot',
+//       kawasankendali: 'Ketat',
+//       status: 'Tidak',
+//       ukuran: '10x10',
+//       pemilikreklame: 'PT.a',
+//       konstruksireklame: 'PT.b',
+//       konteniklan: 'Sampo',
+//       docs: '',
+//     },
+//     {
+//       id: 3,
+//       no: '3',
+//       // nrk: '166665',
+//       // nama: 'Irwan Novyanto',
+//       pelaksana: 'SEKSI PPNS DAN PENINDAKAN',
+//       tanggalpengecekan: '24-09-2021',
+//       shareloc: 'Lat: -6.346061, Long: 106.89405099999999',
+//       alamat:
+//         'Jalan Hankam Munjul 73, Munjul, Kecamatan Cipayung, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta',
+//       lokasitiang: 'Menempel Gedung',
+//       kawasankendali: 'Sedang',
+//       status: 'Aktif',
+//       ukuran: '2x5',
+//       pemilikreklame: 'aaa',
+//       konstruksireklame: 'ads',
+//       konteniklan: 'Rokok',
+//       docs: '',
+//     },
+//     {
+//       id: 4,
+//       no: '4',
+//       // nrk: '166665',
+//       // nama: 'Irwan Novyanto',
+//       pelaksana: 'PENGELOLA KEAMANAN DAN KETERTIBAN SATPOL PP KECAMATAN SENEN',
+//       tanggalpengecekan: '24-01-2022',
+//       shareloc: 'Lat: -6.1820642, Long: 106.8284563',
+//       alamat:
+//         'Jalan Kebon Sirih No.22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
+//       lokasitiang: 'Berdiri Sendiri',
+//       kawasankendali: 'Kendali Ketat',
+//       status: 'Aktif',
+//       ukuran: '4x6',
+//       pemilikreklame: 'aa',
+//       konstruksireklame: 'abc',
+//       konteniklan: 'Elektronik',
+//       docs: '',
+//     },
+//     {
+//       id: 5,
+//       no: '5',
+//       // nrk: '166665',
+//       // nama: 'Irwan Novyanto',
+//       pelaksana: 'PETUGAS KEAMANAN SATPOL PP KECAMATAN TANAH ABANG',
+//       tanggalpengecekan: '15-03-2022',
+//       shareloc: 'Lat: -6.1820642, Long: 106.8284563',
+//       alamat:
+//         'Jalan Kebon Sirih No.22, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta',
+//       lokasitiang: 'Berdiri Sendiri',
+//       kawasankendali: 'Ketat',
+//       status: 'Aktif',
+//       ukuran: '4x6',
+//       pemilikreklame: 'asik',
+//       konstruksireklame: 'PT.xxx',
+//       konteniklan: 'Sampo',
+//       docs: '',
+//     },
+//   ]
+
+//   return (
+//     <div>
+//       <DataTable columns={columns} data={data} pagination />
+//     </div>
+//   )
+// }

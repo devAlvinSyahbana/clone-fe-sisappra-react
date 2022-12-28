@@ -13,20 +13,16 @@ export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export interface PelaporanPengawasanState extends Record<string, any> {
   share_location: string
   lokasi_tiang: string
-
-  // status: string
   kota: number
   kecamatan: number
   kelurahan: number
   alamat: string
   tgl_pengecekan: string
   waktu_pengawasan: string
-
   konten_iklan: string
-  ukuran: string
+  ukuran: number
   status_reklame: number
   jenis_reklame: number
-
   kawasan_kendali: number
   pemilik_reklame: string
   konstruksi_reklame: string
@@ -46,21 +42,15 @@ export const initialState: PelaporanPengawasanState = {
   kelurahan: 0,
   kota: 0,
   alamat: '',
-
-  // status: '',
   share_location: '',
   lokasi_tiang: '',
   kawasan_kendali: 0,
-  ukuran: '',
+  ukuran: 0,
   pemilik_reklame: '',
   konstruksi_reklame: '',
   konten_iklan: '',
   status_reklame: 0,
   jenis_reklame: 0,
-
-  // kecamatan_selection: [],
-  // kota_selection: [],
-  // kelurahan_selection: [],
   tindak_dokumentasi: [
     {
       file_uploadResult: [
@@ -130,7 +120,7 @@ export const updateKelurahanList: any = createAsyncThunk(
 export const updateKawasanKendaliList: any = createAsyncThunk(
   'pelaporanKegiatan/updateKawasanKendaliList',
   async () => {
-    const res = await axios.get(`${API_URL}/jenis-kawasan-kendali/combobox`)
+    const res = await axios.get(`${API_URL}/jenis-kendali/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
     return data
