@@ -265,7 +265,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                   )}
 
                   {/* Baris: Sidang Tipiring */}
-                  {isTipiring(values) && (
+                  {isTipiring(values) ? (
                     <>
                       <div className='mb-10 form-group'>
                         <label className='required form-label'>Jumlah Pelanggar Hadir Sidang</label>
@@ -318,24 +318,25 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                         </div>
                       </div>
                     </>
-                  )}
-                  {!isPenertibanMinol(values) ? (
-                    <div className='mb-10 form-group'>
-                      <label className='required form-label'>Jumlah Pelanggar / Penindakan</label>
-                      <Field
-                        type='number'
-                        min='0'
-                        name='tindak_lanjut__jumlah_pelanggar'
-                        className='form-control'
-                        onFocus={(e: any) => e.target.select()}
-                        onInput={(o: ChangeEvent<any>) => {
-                          dispatch(changedValue(ToFieldStateCE(o)))
-                        }}
-                      />
-                      <div className='text-danger mt-2'>
-                        <ErrorMessage name='tindak_lanjut__jumlah_pelanggar' />
+                  ) : !isPenertibanMinol(values) ? (
+                    <>
+                      <div className='mb-10 form-group'>
+                        <label className='required form-label'>Jumlah Pelanggar / Penindakan</label>
+                        <Field
+                          type='number'
+                          min='0'
+                          name='tindak_lanjut__jumlah_pelanggar'
+                          className='form-control'
+                          onFocus={(e: any) => e.target.select()}
+                          onInput={(o: ChangeEvent<any>) => {
+                            dispatch(changedValue(ToFieldStateCE(o)))
+                          }}
+                        />
+                        <div className='text-danger mt-2'>
+                          <ErrorMessage name='tindak_lanjut__jumlah_pelanggar' />
+                        </div>
                       </div>
-                    </div>
+                    </>
                   ) : (
                     <div className='mb-10 form-group'>
                       <label className='form-label'>Volume Minol</label>

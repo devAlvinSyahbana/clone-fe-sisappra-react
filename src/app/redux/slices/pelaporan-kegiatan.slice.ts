@@ -225,14 +225,7 @@ export const createSchemaPelaporanKegiatan = [
     //   .required()
     //   .label('Perda Perkada'),
 
-    tindak_lanjut__administrasi__penyelesaian_id: Yup.number().when(
-      'kegiatan__jenis_kegiatan_selection',
-      {
-        is: (val: any) => NoPasalPenyelesaian.includes(val?.label),
-        then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().moreThan(0).required().label('Penyelesaian'),
-      }
-    ),
+    tindak_lanjut__administrasi__penyelesaian_id: Yup.number().notRequired(),
     tindak_lanjut__administrasi__penyelesaian_selection: Yup.object(),
     tindak_lanjut__administrasi__penyelesaian_khusus_id: Yup.number().when(
       'kegiatan__jenis_kegiatan_selection',
