@@ -20,6 +20,7 @@ import {
   isPPKM,
   isPenertibanBangunan,
   isPenertibanMinol,
+  reset,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
@@ -90,6 +91,9 @@ export const AddKegiatanUmumPage: FC = () => {
           timer: 1500,
           color: '#000000',
         })
+        actions.resetForm(initialState)
+        dispatch(reset())
+        listMasterJenisValue()
       }
     } catch (error) {
       Swal.fire({

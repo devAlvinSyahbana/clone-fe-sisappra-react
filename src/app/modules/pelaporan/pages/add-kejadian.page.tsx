@@ -35,7 +35,7 @@ export const AddKejadianPage: FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  let value : any = localStorage.getItem('kt-auth-react-v')
+  let value: any = localStorage.getItem('kt-auth-react-v')
   let createdbyHakAkses = JSON.parse(value)
 
   const listMasterKejadianValue = () => {
@@ -53,8 +53,8 @@ export const AddKejadianPage: FC = () => {
       changedValue({
         target: {
           name: 'created_by',
-          value: createdbyHakAkses.data.hak_akses
-        }
+          value: createdbyHakAkses.data.hak_akses,
+        },
       })
     )
   }
@@ -64,12 +64,19 @@ export const AddKejadianPage: FC = () => {
   }, [])
 
   const submitPelaporanKejadian = async (values: PelaporanKejadianState, actions: FormikValues) => {
+    let res
     try {
       if (isBanjir(values)) {
         alert(JSON.stringify(values, null, 2))
-        const res = await axios.post(`${API_URL}/kejadian-banjir`, allValues)
+        res = await axios.post(`${API_URL}/kejadian-banjir`, allValues)
+      } else if (isPendampinganKekerasanPadaPerempuan(values)) {
+        res = await axios.post(`${API_URL}/kejadian-kekerasan-perak`, allValues)
+      } else if (isUnjukRasa(values)) {
+        res = await axios.post(`${API_URL}/kejadian-unjuk-rasa`, allValues)
+      } else {
+        res = await axios.post(`${API_URL}/kejadian-umum`, allValues)
       }
-      const res = await axios.post(`${API_URL}/kejadian-umum`, allValues)
+
       if (res) {
         console.log('laststep', values)
         actions.setSubmitting(false)
@@ -130,7 +137,7 @@ export const AddKejadianPage: FC = () => {
                       />
                     </div>
                     <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
-                      <StepTindakLanjutKejadian values={values} allValues={allValues} />
+                      <StepTindakLanjutKejadian values={values} setFieldValue={setFieldValue} />
                     </div>
                   </div>
                 </div>

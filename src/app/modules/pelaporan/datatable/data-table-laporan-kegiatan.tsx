@@ -1,10 +1,11 @@
 import axios from 'axios'
 import {Fragment, useEffect, useState} from 'react'
-import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
+import {ButtonGroup, Dropdown, DropdownButton, Table} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
+import {useNavigate} from 'react-router-dom'
 
 export default function DtKabid(props: any) {
   const [data, setData] = useState([])
@@ -104,15 +105,15 @@ export default function DtKabid(props: any) {
 }
 
 export function DtAdmin(props: any) {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
   const [data, setData] = useState([])
 
-  console.log(jenisKegiatanList)
-
   const dataKegiatan = () => {
     axios.get(`http://localhost:3002/kegiatan-umum/`).then((res) => {
       const data = res.data.data.map((d: any) => ({
+        id: d.id,
         no: d.id,
         pelaksana: d.created_by,
         tanggal_kegiatan: d.kegiatan__tanggal,
@@ -203,8 +204,16 @@ export function DtAdmin(props: any) {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#'>Detail</Dropdown.Item>
-                    <Dropdown.Item href='#'>Ubah</Dropdown.Item>
+                    {/* <Dropdown.Item
+                      onClick={() => navigate('/pelaporan/DetailLaporanKegiatan/' + record.id)}
+                    >
+                      Detail
+                    </Dropdown.Item> */}
+                    <Dropdown.Item
+                      onClick={() => navigate('/pelaporan/UbahLaporanKegiatan/' + record.id)}
+                    >
+                      Ubah
+                    </Dropdown.Item>
                     <Dropdown.Item
                       href='#'
                       // onClick={() => konfirDel(record.id, record.status_pegawai)}
@@ -246,13 +255,14 @@ export function DtAdmin(props: any) {
 export function DtPimpinan(props: any) {
   const columns3 = [
     {
-      name: 'No',
+      name: '',
       width: '60px',
       selector: (row: any) => row.no,
     },
     {
-      name: 'Pelaksana Bidang/Wilayah',
+      name: '',
       wrap: true,
+      width: '200px',
       selector: (row: any) => row.pelaksana,
     },
     {
@@ -440,9 +450,5 @@ export function DtPimpinan(props: any) {
     },
   ]
 
-  return (
-    <div>
-      <DataTable columns={columns3} data={data} pagination />
-    </div>
-  )
+  return <DataTable columns={columns3} data={data} pagination />
 }

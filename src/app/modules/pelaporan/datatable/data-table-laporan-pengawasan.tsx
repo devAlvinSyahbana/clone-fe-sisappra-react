@@ -3,6 +3,7 @@ import {Fragment, useEffect, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
 
 export default function DtKabid(props: any) {
@@ -12,6 +13,7 @@ export default function DtKabid(props: any) {
   const dataPengawasReklame = () => {
     axios.get(`http://localhost:3002/reklame/`).then((res) => {
       const data = res.data.data.map((d: any) => ({
+        id: d.id,
         no: d.id,
         pelaksana: d.id,
         waktu_pengawasan: d.waktu_pengawasan,
@@ -226,6 +228,7 @@ export function DtAdmin(props: any) {
 }
 
 export function DtPimpinan(props: any) {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const [data, setData] = useState([])
 
@@ -333,7 +336,7 @@ export function DtPimpinan(props: any) {
                   >
                     <Dropdown.Item href='#'>Detail</Dropdown.Item>
                     <Dropdown.Item
-                      href='#'
+                      onClick={() => navigate('/pelaporan/ubah-laporan-pengawasan/' + record.id)}
                       // onClick={() => konfirDel(record.id, record.status_pegawai)}
                     >
                       Ubah

@@ -32,6 +32,7 @@ export const ListKegiatanPage: FC = () => {
   const dispatch = useDispatch()
   const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
+  const [jenisKegiatan, setJenisKegiatan] = useState([])
 
   const updateJenisKegiatanList = () => {
     axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
@@ -369,11 +370,7 @@ export const ListKegiatanPage: FC = () => {
                                         className='form-control'
                                         component={SelectField}
                                         options={jenisKegiatanList}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
+                                        onChange={setJenisKegiatan}
                                       />
                                     </div>
                                   </div>
@@ -395,7 +392,7 @@ export const ListKegiatanPage: FC = () => {
                                         component={SelectField}
                                         options={jenisKegiatanList}
                                         onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
+                                          dispatch(changedValue(ToFieldStateCE(o)))
                                           // updateJenisPasalList()
                                           // updateJenisPenyelesaianList()
                                         }}
