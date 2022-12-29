@@ -1,23 +1,5 @@
-import React, {ChangeEvent, FC, useEffect, useState} from 'react'
-import DatePicker from 'react-multi-date-picker'
-import AsyncSelect from 'react-select/async'
+import {FC, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom'
-import {Formik, Field, Form, FormikValues} from 'formik'
-import {
-  DatePickerField,
-  DatePickerFieldRange,
-  SelectField,
-  ToFieldStateBNV,
-  ToFieldStateCE,
-} from '../components/fields.formikcto'
-import {
-  changedValue,
-  createSchemaFilterPelaporanKegiatan,
-  initialState,
-  PelaporanKegiatanState,
-} from '../../../redux/slices/pelaporan-kegiatan.slice'
-import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../../../redux/store'
 import axios from 'axios'
 import {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-tamu-daerah'
 import {KTSVG} from '../../../../_metronic/helpers'
@@ -28,13 +10,15 @@ export const ListTamuDaerahPage: FC = () => {
   const navigate = useNavigate()
   const [tanggalAwal, setTanggalAwal] = useState({val: ''})
   const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
-  const [instansi, setInstansi] = useState()
-  const tanggal = [
-    {
-      tanggalAwal: tanggalAwal.val,
-      tanggalAkhir: tanggalAkhir.val,
-    },
-  ]
+  const [instansi, setInstansi] = useState({val: ''})
+  const [data, setData] = useState([])
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+  // const tanggal = [
+  //   {
+  //     tanggalAwal: tanggalAwal.val,
+  //     tanggalAkhir: tanggalAkhir.val,
+  //   },
+  // ]
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
@@ -50,13 +34,68 @@ export const ListTamuDaerahPage: FC = () => {
     setTanggalAkhir({val: event.target.value})
   }
 
-  const handlefilter = () => {
-    // tanggalAwal
+  const handleChangeInputInstansi = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setInstansi({val: event.target.value})
   }
-  // useEffect(() => {
-  //   updateJenisKegiatanList()
-  // }, [])
 
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (tanggalAwal.val && tanggalAkhir.val) {
+      uriParam += `tanggal_kunjungan%20ge%20%27${tanggalAwal.val}%27%20and%20tanggal_kunjungan%20le%20%27${tanggalAkhir.val}%27`
+      // console.log('2 on')
+    } else if (tanggalAwal.val !== '') {
+      // console.log('start on')
+      uriParam += `tanggal_kunjungan%20eq%20%27${tanggalAwal.val}%27`
+    } else if (tanggalAkhir.val !== '') {
+      uriParam += `tanggal_kunjungan%20eq%20%27${tanggalAkhir.val}%27`
+    }
+    if (instansi.val !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
+      uriParam += `%20and%20asal_instansi%20eq%20%27${instansi.val}%27`
+      // console.log('2 on')
+    } else if (instansi.val !== '') {
+      uriParam += `asal_instansi%20eq%20%27${instansi.val}%27`
+    }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterReset = () => {
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    setInstansi({val: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+
+  // GET DATA FOR DATA TABLE
+  const dataTamuDaerah = () => {
+    axios.get(`http://localhost:3002/tamu-daerah/?%24filter=${qParamFind.strparam}`).then((res) => {
+      const data = res.data.data.map((d: any) => ({
+        id: d.id,
+        no: d.id,
+        tanggal_kunjungan: d.tanggal_kunjungan,
+        waktu_mulai_kunjungan: d.waktu_mulai_kunjungan,
+        waktu_selesai_kunjungan: d.waktu_selesai_kunjungan,
+        asal_instansi: d.asal_instansi,
+        jumlah: d.jml_pengunjung,
+        maksud_dan_tujuan: d.maksud_dan_tujuan,
+        pejabat_penerima_kunjungan: d.pejabat_penerima_kunjungan,
+        tempat_kunjungan: d.tempat_kunjungan,
+      }))
+      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+      setData(data)
+      // console.log('ini data', data)
+      return [data, setData] as const
+    })
+    // console.log(data)
+  }
+
+  useEffect(() => {
+    dataTamuDaerah()
+  }, [qParamFind])
+
+  //ACTION FOR SWITCH USER
   const [aksi, setAksi] = useState(1)
   const vAdmin = () => {
     setAksi(1)
@@ -177,7 +216,7 @@ export const ListTamuDaerahPage: FC = () => {
 
                           <div className='row g-8 mt-2'>
                             <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                              <Button className='btn btn-light-primary me-2' onClick={handlefilter}>
+                              <Button className='btn btn-light-primary me-2' onClick={handleFilter}>
                                 <KTSVG
                                   path='/media/icons/duotune/general/gen021.svg'
                                   className='svg-icon-2'
@@ -188,10 +227,13 @@ export const ListTamuDaerahPage: FC = () => {
                                 to='#'
                                 // onClick={handleFilterReset}
                               >
-                                <button className='btn btn-light-primary'>
+                                <Button
+                                  className='btn btn-light-primary me-2'
+                                  onClick={handleFilterReset}
+                                >
                                   <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                                   Reset
-                                </button>
+                                </Button>
                               </Link>
                             </div>
                             <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
@@ -283,11 +325,9 @@ export const ListTamuDaerahPage: FC = () => {
                                     name='asal_instansi'
                                     className='form-control'
                                     placeholder='Masukkan asal instansi'
-                                    onKeyUp={(o: ChangeEvent<any>) => {
-                                      setInstansi(o.target.value)
-                                    }}
+                                    onChange={handleChangeInputInstansi}
                                   />
-                                  {instansi}
+                                  {instansi.val}
                                 </div>
                               </div>
                             </div>
@@ -304,9 +344,7 @@ export const ListTamuDaerahPage: FC = () => {
                                     type='date'
                                     className='form-control'
                                     value={tanggalAwal.val}
-                                    onChange={(o: any) => {
-                                      setTanggalAwal(o.target.value)
-                                    }}
+                                    onChange={handleChangeInputTanggalAwal}
                                   />
                                   {tanggalAwal.val}
                                 </div>
@@ -325,9 +363,7 @@ export const ListTamuDaerahPage: FC = () => {
                                     type='date'
                                     className='form-control'
                                     value={tanggalAkhir.val}
-                                    onChange={(o: any) => {
-                                      setTanggalAkhir(o.target.value)
-                                    }}
+                                    onChange={handleChangeInputTanggalAkhir}
                                   />
                                   {tanggalAkhir.val}
                                 </div>
@@ -337,7 +373,7 @@ export const ListTamuDaerahPage: FC = () => {
 
                           <div className='row g-8 mt-2'>
                             <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                              <Button className='btn btn-light-primary me-2'>
+                              <Button className='btn btn-light-primary me-2' onClick={handleFilter}>
                                 <KTSVG
                                   path='/media/icons/duotune/general/gen021.svg'
                                   className='svg-icon-2'
@@ -348,10 +384,13 @@ export const ListTamuDaerahPage: FC = () => {
                                 to='#'
                                 // onClick={handleFilterReset}
                               >
-                                <button className='btn btn-light-primary'>
+                                <Button
+                                  className='btn btn-light-primary me-2'
+                                  onClick={handleFilterReset}
+                                >
                                   <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                                   Reset
-                                </button>
+                                </Button>
                               </Link>
                             </div>
                             <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
@@ -423,7 +462,7 @@ export const ListTamuDaerahPage: FC = () => {
               </div>
               {aksi === 1 ? (
                 <div className='card-body py-4'>
-                  <DtAdmin filterData={tanggal} />
+                  <DtAdmin data={data} />
                 </div>
               ) : (
                 <>
@@ -446,7 +485,7 @@ export const ListTamuDaerahPage: FC = () => {
                         {tanggalAkhir.val !== undefined ? tanggalAkhir.val : '....................'}
                       </div>
                     </div>
-                    <DtPimpinan />
+                    <DtPimpinan data={data} />
                   </div>
                   <div className='row'>
                     <div className='col-8'></div>
