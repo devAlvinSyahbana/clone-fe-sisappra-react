@@ -73,19 +73,30 @@ export const TimePickerField = ({
   form,
   className,
   onChange,
-}: FieldProps & TimePickerFieldProps) => (
-  <DatePicker
-    disableDayPicker
-    containerClassName={className}
-    inputClass='form-control'
-    format='HH:mm:00'
-    plugins={[<TimePicker hideSeconds />]}
-    onChange={(o: DateObject) => {
-      field.onChange({target: {name: field.name, value: o?.toString()}})
-      onChange({target: {name: field.name, value: o?.toString()}})
-    }}
-  />
-)
+}: FieldProps & TimePickerFieldProps) => {
+  const timeString = form.values[field.name]
+  const [hour, minute] = timeString.split(':')
+  const hourInt = parseInt(hour, 10)
+  const minuteInt = parseInt(minute, 10)
+  const fieldVal = new DateObject().set({
+    hour: hourInt,
+    minute: minuteInt,
+  })
+  return (
+    <DatePicker
+      disableDayPicker
+      containerClassName={className}
+      inputClass='form-control'
+      format='HH:mm:00'
+      plugins={[<TimePicker hideSeconds />]}
+      value={form.values[field.name] ? fieldVal : ''}
+      onChange={(o: DateObject) => {
+        field.onChange({target: {name: field.name, value: o?.toString()}})
+        onChange({target: {name: field.name, value: o?.toString()}})
+      }}
+    />
+  )
+}
 
 export const SelectField = ({
   form,
@@ -100,6 +111,11 @@ export const SelectField = ({
   const tamudaerahVal = useSelector((s: RootState) => s.pelaporanTamuDaerah)
   const allValues = {...tamudaerahVal, ...pengawasanVal, ...kejadianVal, ...kegiatanVal}
   const fieldVal = Number(field.value?.value)
+  let putFieldVal
+  if (allValues[target] > 0 && options.length > 0 && !form.values[field.name]) {
+    putFieldVal = options.find((item: any) => Number(item.value) === allValues[target])
+    form.setFieldValue(field.name, putFieldVal)
+  }
   return (
     <Select
       isLoading={typeof options === 'object' && options.length === 0}
