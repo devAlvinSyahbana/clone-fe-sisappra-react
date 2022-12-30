@@ -104,6 +104,7 @@ export const SelectField = ({
   target,
   onChange,
   options,
+  disabled,
 }: OptionProps & SelectFieldProps & FieldProps & any) => {
   const kegiatanVal = useSelector((s: RootState) => s.pelaporanKegiatan)
   const kejadianVal = useSelector((s: RootState) => s.pelaporanKejadian)
@@ -119,6 +120,7 @@ export const SelectField = ({
   return (
     <Select
       isLoading={typeof options === 'object' && options.length === 0}
+      isDisabled={disabled}
       options={typeof options === 'string' ? [] : options}
       value={fieldVal !== allValues[target] ? '' : field.value}
       onChange={(o) => {

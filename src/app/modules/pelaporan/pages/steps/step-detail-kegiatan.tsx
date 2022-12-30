@@ -85,6 +85,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             name='kegiatan__jenis_kegiatan_selection'
             target='kegiatan__jenis_kegiatan_id'
             className='form-control'
+            disabled={values.id}
             component={SelectField}
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
