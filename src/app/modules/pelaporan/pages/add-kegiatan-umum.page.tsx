@@ -21,20 +21,24 @@ import {
   isPenertibanBangunan,
   isPenertibanMinol,
   reset,
+  editInitialState,
+  updateDetailJenisPasalKegiatanList,
+  updateDetailJenisPasalPenyelesaianList,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import axios from 'axios'
 import {ToFieldStateBNV, ToFieldStateCE} from '../components/fields.formikcto'
 import {RootState} from '../../../redux/store'
-import useMultistepForm from './steps/useMultistepForm'
 import Swal from 'sweetalert2'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
 export const AddKegiatanUmumPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKegiatan[0])
+  const [currentIntialState, setCurrentIntialState] = useState(initialState)
 
+  const {id} = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
@@ -58,7 +62,24 @@ export const AddKegiatanUmumPage: FC = () => {
   let value: any = localStorage.getItem('kt-auth-react-v')
   let createdByHakAkses = JSON.parse(value)
 
+  const editPelaporanKegiatan = async () => {
+    const res = await axios.get(`${API_URL}/kegiatan-umum/?%24filter=id%20eq%20${id}`)
+    const data = res.data.data[0]
+    setCurrentIntialState({...initialState, ...data})
+    dispatch(editInitialState({...initialState, ...data}))
+    dispatch(updateDetailJenisPasalKegiatanList([allValues.kegiatan__jenis_kegiatan_id, allValues]))
+    dispatch(
+      updateDetailJenisPasalPenyelesaianList([
+        allValues.tindak_lanjut__administrasi__jenis_pasal_id,
+        allValues,
+      ])
+    )
+  }
+
   useEffect(() => {
+    if (id) {
+      editPelaporanKegiatan()
+    }
     listMasterJenisValue()
   }, [])
 
@@ -112,7 +133,7 @@ export const AddKegiatanUmumPage: FC = () => {
     <>
       <Formik
         validationSchema={currentSchema}
-        initialValues={initialState}
+        initialValues={currentIntialState}
         enableReinitialize={true}
         onSubmit={submitPelaporanKegiatan}
       >

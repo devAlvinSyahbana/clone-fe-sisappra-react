@@ -400,7 +400,7 @@ export const updateDetailJenisPasalKegiatanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateDetailJenisPasalKegiatanList',
   async (val: any, thunkAPI) => {
     const [objKegiatan, objState] = val
-    const jenisKegiatan = objKegiatan.target.value
+    const jenisKegiatan = objKegiatan
     const reduxState = objState.list_detail_jenis_pasal
     const res = await axios.get(
       `${API_URL}/map-master-perda/jenis-kegiatan?%24filter=jenis_kegiatan_id%20eq%20${jenisKegiatan}&%24top=300`
@@ -537,6 +537,8 @@ export const pelaporanKegiatanSlice = createSlice({
       }
     },
     reset: () => initialState,
+    editInitialState: (state: PelaporanKegiatanState, action: PayloadAction<any>) =>
+      (state = action.payload),
   },
 })
 
@@ -571,6 +573,6 @@ export const isApelRapat = (formikValues: any) =>
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'APEL' ||
   formikValues.kegiatan__jenis_kegiatan_selection?.label === 'RAPAT'
 
-export const {changedValue, reset} = pelaporanKegiatanSlice.actions
+export const {changedValue, reset, editInitialState} = pelaporanKegiatanSlice.actions
 
 export default pelaporanKegiatanSlice.reducer

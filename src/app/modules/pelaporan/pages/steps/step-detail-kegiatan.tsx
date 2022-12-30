@@ -88,7 +88,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             component={SelectField}
             options={jenisKegiatanList}
             onChange={(o: ChangeEvent<any>) => {
-              const data = [o, allValues]
+              const data = [o.target.value, allValues]
               if (jenisKegiatanId !== 0) {
                 Swal.fire({
                   title: 'Apakah anda yakin?',
