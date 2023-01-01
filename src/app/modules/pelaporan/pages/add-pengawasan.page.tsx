@@ -3,6 +3,7 @@ import {StepDetailPengawasan} from './steps/step-detail-pengawasan'
 import {StepTindakLanjutPengawasan} from './steps/step-tindaklanjut-pengawasan'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
+import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import {
   createSchemaPelaporanPengawasan,
@@ -21,7 +22,7 @@ export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
 export const AddPengawasanPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanPengawasan[0])
-
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const allValues = useSelector((s: RootState) => s.pelaporanPengawasan)
 
@@ -56,6 +57,7 @@ export const AddPengawasanPage: FC = () => {
           timer: 1500,
           color: '#000000',
         })
+        navigate('/pelaporan/LaporanPengawasan', {replace: true})
       }
     } catch (error) {
       Swal.fire({

@@ -654,18 +654,6 @@ export const ListPengawasPage: FC = () => {
                                 </div>
                                 <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                                   {/* begin::Filter Button */}
-                                  <Button
-                                    onClick={() => navigate('/pelaporan/tambah-laporan-pengawasan')}
-                                    className='btn btn-primary me-2'
-                                  >
-                                    {/* begin::Add user */}
-                                    <KTSVG
-                                      path='/media/icons/duotune/arrows/arr075.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Tambah
-                                    {/* end::Add user */}
-                                  </Button>
                                   <button
                                     type='button'
                                     className='btn btn-light-primary'
