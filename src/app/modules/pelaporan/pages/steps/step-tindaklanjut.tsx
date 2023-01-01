@@ -829,6 +829,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       />
                       <button
                         className='btn btn-secondary fw-bold'
+                        disabled={value === 0 || !name}
                         type='button'
                         onClick={(e) => {
                           e.preventDefault()

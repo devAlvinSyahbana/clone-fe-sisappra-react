@@ -18,6 +18,7 @@ export const StepDokumentasi: FC = () => {
           maxFile={4}
           path='kegiatan' // GANTI path ini dengan path laporan (kegiatan, kejadian, pengawasan, tamu daerah)
           slice={dokumentasi} // cek di inisiasi file ini, slice dari redux pelaporan
+          sourceFile={dokumentasi.file_uploadResult}
           change={(e: any) => {
             // console.log(e)
             dispatch(

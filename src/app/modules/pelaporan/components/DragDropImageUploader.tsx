@@ -1,4 +1,4 @@
-import {useState, FC} from 'react'
+import {useState, FC, useEffect} from 'react'
 import 'antd/dist/antd.css'
 import {InboxOutlined} from '@ant-design/icons'
 import type {RcFile, UploadProps} from 'antd/es/upload'
@@ -36,7 +36,7 @@ const props: UploadProps = {
   accept: 'image/*',
   listType: 'picture',
   beforeUpload: (file) => {
-    const isPNG = file.type !== 'image/gif'
+    const isPNG = file.type === 'image/png' || file.type === 'image/jpeg'
     if (!isPNG) {
       message.error(`${file.name} is not a png / jpg file`)
     }
@@ -47,10 +47,19 @@ const props: UploadProps = {
   },
 }
 
-const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice}) => {
+const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice, sourceFile}) => {
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
+
+  const uploadedFiles = sourceFile.map((d: any) => {
+    return {
+      uid: generateUid(),
+      Key: d.key,
+      url: `${API_URL}/${d.bucket}/${d.key}`,
+      status: 'stored',
+    }
+  })
 
   const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
     const {status} = info.file
@@ -130,8 +139,16 @@ const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice}) => {
   }
 
   const handleDelete = (file: any) => {
+    console.log(file)
     if (file.status === 'done') {
       fetch(`${API_URL}/pelaporan/${file.response.Key}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${UPLOAD_TOKEN}`,
+        },
+      })
+    } else if (file.status === 'stored') {
+      fetch(`${API_URL}/pelaporan/${file?.Key}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${UPLOAD_TOKEN}`,
@@ -151,6 +168,7 @@ const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice}) => {
         onRemove={handleDelete}
         customRequest={handleUpload}
         maxCount={maxFile}
+        defaultFileList={uploadedFiles}
       >
         <p className='ant-upload-drag-icon'>
           <InboxOutlined />
