@@ -30,37 +30,36 @@ export const MASTER_URL = `${API_URL}/master`
 export const ListKegiatanPage: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
-  const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [jenisKegiatan, setJenisKegiatan] = useState([])
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+  // const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
+  // const [jenisKegiatanList, setJenisKegiatanList] = useState([])
+  // const [jenisKegiatan, setJenisKegiatan] = useState([])
 
-  const updateJenisKegiatanList = () => {
-    axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      setJenisKegiatanList(data)
-    })
-  }
+  // const updateJenisKegiatanList = () => {
+  //   axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
+  //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+  //     // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+  //     setJenisKegiatanList(data)
+  //   })
+  // }
 
-  useEffect(() => {
-    updateJenisKegiatanList()
-    // updateJenisUsahaList()
-    // updateJenisPenindakanList()
-  }, [])
+  // useEffect(() => {
+  //   updateJenisKegiatanList()
+  // }, [])
 
-  function loadOptionsKota() {
-    return []
-  }
+  // function loadOptionsKota() {
+  //   return []
+  // }
 
-  const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
+  // const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
 
-  const filterPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
-    const res = await axios.get(`http://localhost:3002/kegiatan-umum`)
-    const data = res.data.data
-    // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-    setCurrentSchema(data)
-    console.log(res)
-  }
+  // const filterPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
+  //   const res = await axios.get(`http://localhost:3002/kegiatan-umum`)
+  //   const data = res.data.data
+  //   // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+  //   setCurrentSchema(data)
+  //   console.log(res)
+  // }
 
   const [aksi, setAksi] = useState(0)
   const vKabid = () => {
@@ -117,9 +116,115 @@ export const ListKegiatanPage: FC = () => {
 
   useEffect(() => {
     filterList()
-    // updateJenisUsahaList()
-    // updateJenisPenindakanList()
   }, [])
+
+  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
+  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
+
+  const handleChangeInputTanggalAwal = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setTanggalAwal({val: event.target.value})
+  }
+
+  const handleChangeInputTanggalAkhir = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setTanggalAkhir({val: event.target.value})
+  }
+
+  interface SelectOption {
+    readonly value: string
+    readonly label: string
+  }
+
+  const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
+  const filterJenisKegiatan = async (inputValue: string) => {
+    const response = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.text, value: i.value}))
+  }
+  const loadOptionsJenisKegiatan = (
+    inputValue: string,
+    callback: (options: SelectOption[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterJenisKegiatan(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputJenisKegiatan = (newValue: any) => {
+    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (tanggalAwal.val && tanggalAkhir.val) {
+      uriParam += `kegiatan__tanggal%20ge%20%27${tanggalAwal.val}%27%20and%20kegiatan__tanggal%20le%20%27${tanggalAkhir.val}%27`
+      // console.log('2 on')
+    } else if (tanggalAwal.val !== '') {
+      // console.log('start on')
+      uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAwal.val}%27`
+    } else if (tanggalAkhir.val !== '') {
+      uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAkhir.val}%27`
+    }
+    if (valJenisKegiatan.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
+      uriParam += `%20and%20kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
+      // console.log('2 on')
+    } else if (valJenisKegiatan.value !== '') {
+      uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
+    }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterReset = () => {
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    setValJenisKegiatan({value: '', label: ''})
+    // setInstansi({val: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+
+  // const handleChangePelaksanaKegiatan = (event: {
+  //   preventDefault: () => void
+  //   target: {value: any; name: any}
+  // }) => {
+  //   setJenisKegiatan({val: event.target.value})
+  // }
+  // const handleChangeInputJenisKegiatan = (event: {
+  //   preventDefault: () => void
+  //   target: {value: any; name: any}
+  // }) => {
+  //   setJenisKegiatan({val: event.target.value})
+  // }
+
+  const [data, setData] = useState([])
+
+  const dataKegiatan = () => {
+    axios
+      .get(`http://localhost:3002/kegiatan-umum/?%24filter=${qParamFind.strparam}`)
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kegiatan: d.kegiatan__tanggal,
+          waktu_mulai: d.kegiatan__jam_start,
+          waktu_selesai: d.kegiatan__jam_end,
+          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+          // wilayah: d.kegiatan__wilayah,
+          lokasi: d.kegiatan__lokasi,
+        }))
+        // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+        setData(data)
+      })
+  }
+
+  useEffect(() => {
+    dataKegiatan()
+  }, [qParamFind])
 
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
@@ -184,617 +289,604 @@ export const ListKegiatanPage: FC = () => {
                       <Button onClick={vAdmin}>Admin</Button>
                       <Button onClick={vPimpinan}>Pimpinan</Button>
                       {aksi === 0 ? (
-                        <Formik
-                          validationSchema={currentSchema}
-                          initialValues={initialState}
-                          onSubmit={filterPelaporanKegiatan}
-                        >
-                          <Form id='list_pelaporan_kegiatan_filter'>
-                            <div className='row w-100 mt-10 mb-10'>
-                              {/* START :: Filter Form */}
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Seksi/Kecamatan</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='filter_jenis_kegiatan_id_selection'
-                                        target='filter_jenis_kegiatan_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={inputValKec}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                        <div className='row w-100 mt-10 mb-10'>
+                          {/* START :: Filter Form */}
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Seksi/Kecamatan</label>
+                                </div>
+                                <div className='col-8'>
+                                  {/* <Field
+                                    name='filter_jenis_kegiatan_id_selection'
+                                    target='filter_jenis_kegiatan_id'
+                                    className='form-control'
+                                    component={SelectField}
+                                    options={inputValKec}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  /> */}
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label align-middle'>
-                                        Jenis Kegiatan
-                                      </label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='filter_jenis_kegiatan_id_selection'
-                                        target='filter_jenis_kegiatan_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={jenisKegiatanList}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label align-middle'>Jenis Kegiatan</label>
+                                </div>
+                                <div className='col-8'>
+                                  {/* <Field
+                                    name='filter_jenis_kegiatan_id_selection'
+                                    target='filter_jenis_kegiatan_id'
+                                    className='form-control'
+                                    component={SelectField}
+                                    // options={jenisKegiatanList}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  /> */}
                                 </div>
                               </div>
-                              <div className='col-md-10 col-lg-10 col-sm-24'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-2 pt-2'>
-                                      <label className='form-label align-middle'>Tanggal</label>
-                                    </div>
-                                    <div className='col-4 mx-10'>
-                                      <Field
-                                        name='kegiatan__tanggal'
-                                        component={DatePickerFieldRange}
-                                        onChange={(o: any) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-10 col-lg-10 col-sm-24'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-2 pt-2'>
+                                  <label className='form-label align-middle'>Tanggal</label>
+                                </div>
+                                <div className='col-4 mx-10'>
+                                  {/* <Field
+                                    name='kegiatan__tanggal'
+                                    component={DatePickerFieldRange}
+                                    onChange={(o: any) => {
+                                      dispatch(changedValue(ToFieldStateCE(o)))
+                                    }}
+                                  /> */}
                                 </div>
                               </div>
-                              {/* END :: Filter Form */}
+                            </div>
+                          </div>
+                          {/* END :: Filter Form */}
 
-                              {/* BUTTON */}
-                              <div className='row g-8 mt-2'>
-                                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                  <Button className='btn btn-light-primary me-2'>
-                                    <KTSVG
-                                      path='/media/icons/duotune/general/gen021.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Cari
-                                  </Button>
-                                  <Link
-                                    to='#'
-                                    // onClick={handleFilterReset}
-                                  >
-                                    <button className='btn btn-light-primary'>
-                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                      Reset
-                                    </button>
-                                  </Link>
-                                </div>
-                                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                  {/* begin::Filter Button */}
-                                  <button
-                                    type='button'
-                                    className='btn btn-light-primary'
-                                    data-kt-menu-trigger='click'
-                                    data-kt-menu-placement='bottom-end'
-                                  >
-                                    {/* {btnLoadingUnduh ? (
+                          {/* BUTTON */}
+                          <div className='row g-8 mt-2'>
+                            <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                              <Button className='btn btn-light-primary me-2'>
+                                <KTSVG
+                                  path='/media/icons/duotune/general/gen021.svg'
+                                  className='svg-icon-2'
+                                />
+                                Cari
+                              </Button>
+                              <Link
+                                to='#'
+                                // onClick={handleFilterReset}
+                              >
+                                <button className='btn btn-light-primary'>
+                                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                  Reset
+                                </button>
+                              </Link>
+                            </div>
+                            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                              {/* begin::Filter Button */}
+                              <button
+                                type='button'
+                                className='btn btn-light-primary'
+                                data-kt-menu-trigger='click'
+                                data-kt-menu-placement='bottom-end'
+                              >
+                                {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                    <>
-                                      <KTSVG
-                                        path='/media/icons/duotune/arrows/arr078.svg'
-                                        className='svg-icon-2'
-                                      />
-                                      Unduh
-                                    </>
-                                    {/* )} */}
-                                  </button>
-                                  {/* end::Filter Button */}
-                                  {/* begin::SubMenu */}
-                                  <div
-                                    className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                    data-kt-menu='true'
-                                  >
-                                    {/* begin::Header */}
-                                    <div className='px-7 py-5'>
-                                      <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                    </div>
-                                    {/* end::Header */}
-
-                                    {/* begin::Separator */}
-                                    <div className='separator border-gray-200'></div>
-                                    {/* end::Separator */}
-
-                                    {/* begin::Content */}
-                                    <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                      <button
-                                        //   onClick={handleUnduh}
-                                        className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                      >
-                                        Excel
-                                      </button>
-                                    </div>
-                                    {/* end::Content */}
-
-                                    {/* begin::Content */}
-                                    <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                      <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                        PDF
-                                      </button>
-                                    </div>
-                                    {/* end::Content */}
-                                  </div>
-                                  {/* end::SubMenu */}
+                                <>
+                                  <KTSVG
+                                    path='/media/icons/duotune/arrows/arr078.svg'
+                                    className='svg-icon-2'
+                                  />
+                                  Unduh
+                                </>
+                                {/* )} */}
+                              </button>
+                              {/* end::Filter Button */}
+                              {/* begin::SubMenu */}
+                              <div
+                                className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                data-kt-menu='true'
+                              >
+                                {/* begin::Header */}
+                                <div className='px-7 py-5'>
+                                  <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
                                 </div>
+                                {/* end::Header */}
+
+                                {/* begin::Separator */}
+                                <div className='separator border-gray-200'></div>
+                                {/* end::Separator */}
+
+                                {/* begin::Content */}
+                                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                  <button
+                                    //   onClick={handleUnduh}
+                                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                  >
+                                    Excel
+                                  </button>
+                                </div>
+                                {/* end::Content */}
+
+                                {/* begin::Content */}
+                                <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                  <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                    PDF
+                                  </button>
+                                </div>
+                                {/* end::Content */}
                               </div>
-                              {/* END :: Button */}
+                              {/* end::SubMenu */}
                             </div>
-                          </Form>
-                        </Formik>
+                          </div>
+                          {/* END :: Button */}
+                        </div>
                       ) : aksi === 1 ? (
-                        <Formik
-                          validationSchema={currentSchema}
-                          initialValues={initialState}
-                          onSubmit={filterPelaporanKegiatan}
-                        >
-                          <Form id='list_pelaporan_kegiatan_filter'>
-                            {/* <Button onClick={vKabid}>Kepala Bidang</Button>
-                          <Button onClick={vAdmin}>Admin</Button>
-                          <Button onClick={vPimpinan}>Pimpinan</Button> */}
-                            <div className='row w-100 mt-10 mb-10'>
-                              {/* START :: Filter Form */}
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Pelaksana Kegiatan</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='filter_jenis_kegiatan_id_selection'
-                                        target='filter_jenis_kegiatan_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={jenisKegiatanList}
-                                        onChange={setJenisKegiatan}
-                                      />
-                                    </div>
-                                  </div>
+                        //Admin
+                        <div className='row w-100 mt-10 mb-10'>
+                          {/* START :: Filter Form */}
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Pelaksana Kegiatan</label>
+                                </div>
+                                <div className='col-8'>
+                                  <AsyncSelect
+                                    name='filter_jenis_kegiatan_id_selection'
+                                    value={valJenisKegiatan}
+                                    defaultOptions
+                                    loadOptions={loadOptionsJenisKegiatan}
+                                    onChange={handleChangeInputJenisKegiatan}
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label align-middle'>
-                                        Jenis Kegiatan
-                                      </label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='filter_jenis_kegiatan_id_selection'
-                                        target='filter_jenis_kegiatan_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={jenisKegiatanList}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label align-middle'>Jenis Kegiatan</label>
+                                </div>
+                                <div className='col-8'>
+                                  <AsyncSelect
+                                    name='filter_jenis_kegiatan_id_selection'
+                                    defaultOptions
+                                    value={valJenisKegiatan}
+                                    loadOptions={loadOptionsJenisKegiatan}
+                                    onChange={handleChangeInputJenisKegiatan}
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-10 col-lg-10 col-sm-24'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-2 pt-2'>
-                                      <label className='form-label align-middle'>Tanggal</label>
-                                    </div>
-                                    <div className='col-4 mx-10'>
-                                      <Field
-                                        name='kegiatan__tanggal'
-                                        component={DatePickerFieldRange}
-                                        onChange={(o: any) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Tanggal Awal</label>
+                                </div>
+                                <div className='col-8'>
+                                  <input
+                                    type='date'
+                                    name='tanggal_kunjungan'
+                                    className='form-control'
+                                    value={tanggalAwal.val}
+                                    onChange={handleChangeInputTanggalAwal}
+                                    // onChange={(o: any) => {
+                                    //   setTanggalAwal(o.target.value)
+                                    // }}
+                                  />
                                 </div>
                               </div>
-                              {/* END :: Filter Form */}
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label align-middle'>Tanggal Akhir</label>
+                                </div>
+                                <div className='col-8'>
+                                  <input
+                                    name='tanggal_kunjungan'
+                                    type='date'
+                                    className='form-control'
+                                    value={tanggalAkhir.val}
+                                    onChange={handleChangeInputTanggalAkhir}
+                                    // onChange={(o: any) => {
+                                    //   setTanggalAkhir(o.target.value)
+                                    // }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* END :: Filter Form */}
 
-                              {/* BUTTON */}
-                              <div className='row g-8 mt-2'>
-                                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                  <Button className='btn btn-light-primary me-2'>
-                                    <KTSVG
-                                      path='/media/icons/duotune/general/gen021.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Cari
-                                  </Button>
-                                  <Link
-                                    to='#'
-                                    // onClick={handleFilterReset}
-                                  >
-                                    <button className='btn btn-light-primary'>
-                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                      Reset
-                                    </button>
-                                  </Link>
-                                </div>
-                                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                  {/* begin::Filter Button */}
-                                  <Button
-                                    onClick={() => navigate('/pelaporan/TambahLaporanKegiatan')}
-                                    className='btn btn-primary me-2'
-                                  >
-                                    {/* begin::Add user */}
-                                    <KTSVG
-                                      path='/media/icons/duotune/arrows/arr075.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Tambah
-                                    {/* end::Add user */}
-                                  </Button>
-                                  <button
-                                    type='button'
-                                    className='btn btn-light-primary'
-                                    data-kt-menu-trigger='click'
-                                    data-kt-menu-placement='bottom-end'
-                                  >
-                                    {/* {btnLoadingUnduh ? (
+                          {/* BUTTON */}
+                          <div className='row g-8 mt-2'>
+                            <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                              <Button className='btn btn-light-primary me-2' onClick={handleFilter}>
+                                <KTSVG
+                                  path='/media/icons/duotune/general/gen021.svg'
+                                  className='svg-icon-2'
+                                />
+                                Cari
+                              </Button>
+                              <Button
+                                className='btn btn-light-primary me-2'
+                                onClick={handleFilterReset}
+                              >
+                                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                Reset
+                              </Button>
+                            </div>
+                            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                              {/* begin::Filter Button */}
+                              <Button
+                                onClick={() => navigate('/pelaporan/TambahLaporanKegiatan')}
+                                className='btn btn-primary me-2'
+                              >
+                                {/* begin::Add user */}
+                                <KTSVG
+                                  path='/media/icons/duotune/arrows/arr075.svg'
+                                  className='svg-icon-2'
+                                />
+                                Tambah
+                                {/* end::Add user */}
+                              </Button>
+                              <button
+                                type='button'
+                                className='btn btn-light-primary'
+                                data-kt-menu-trigger='click'
+                                data-kt-menu-placement='bottom-end'
+                              >
+                                {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                    <>
-                                      <KTSVG
-                                        path='/media/icons/duotune/arrows/arr078.svg'
-                                        className='svg-icon-2'
-                                      />
-                                      Unduh
-                                    </>
-                                    {/* )} */}
-                                  </button>
-                                  {/* end::Filter Button */}
-                                  {/* begin::SubMenu */}
-                                  <div
-                                    className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                    data-kt-menu='true'
-                                  >
-                                    {/* begin::Header */}
-                                    <div className='px-7 py-5'>
-                                      <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                    </div>
-                                    {/* end::Header */}
-
-                                    {/* begin::Separator */}
-                                    <div className='separator border-gray-200'></div>
-                                    {/* end::Separator */}
-
-                                    {/* begin::Content */}
-                                    <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                      <button
-                                        //   onClick={handleUnduh}
-                                        className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                      >
-                                        Excel
-                                      </button>
-                                    </div>
-                                    {/* end::Content */}
-
-                                    {/* begin::Content */}
-                                    <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                      <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                        PDF
-                                      </button>
-                                    </div>
-                                    {/* end::Content */}
-                                  </div>
-                                  {/* end::SubMenu */}
+                                <>
+                                  <KTSVG
+                                    path='/media/icons/duotune/arrows/arr078.svg'
+                                    className='svg-icon-2'
+                                  />
+                                  Unduh
+                                </>
+                                {/* )} */}
+                              </button>
+                              {/* end::Filter Button */}
+                              {/* begin::SubMenu */}
+                              <div
+                                className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                data-kt-menu='true'
+                              >
+                                {/* begin::Header */}
+                                <div className='px-7 py-5'>
+                                  <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
                                 </div>
+                                {/* end::Header */}
+
+                                {/* begin::Separator */}
+                                <div className='separator border-gray-200'></div>
+                                {/* end::Separator */}
+
+                                {/* begin::Content */}
+                                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                  <button
+                                    //   onClick={handleUnduh}
+                                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                  >
+                                    Excel
+                                  </button>
+                                </div>
+                                {/* end::Content */}
+
+                                {/* begin::Content */}
+                                <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                  <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                    PDF
+                                  </button>
+                                </div>
+                                {/* end::Content */}
                               </div>
-                              {/* END :: Button */}
+                              {/* end::SubMenu */}
                             </div>
-                          </Form>
-                        </Formik>
+                          </div>
+                          {/* END :: Button */}
+                        </div>
                       ) : (
-                        <Formik
-                          validationSchema={currentSchema}
-                          initialValues={initialState}
-                          onSubmit={filterPelaporanKegiatan}
-                        >
-                          <Form id='list_pelaporan_kegiatan_filter'>
-                            <div className='row w-100 mt-10 mb-10'>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Pelaksana Kegiatan</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='kecamatan'
-                                        target='kecamatan'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={jenisKegiatanList}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                        //Pimpinan
+                        <div className='row w-100 mt-10 mb-10'>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Pelaksana Kegiatan</label>
+                                </div>
+                                <div className='col-8'>
+                                  <Field
+                                    name='kecamatan'
+                                    target='kecamatan'
+                                    className='form-control'
+                                    component={SelectField}
+                                    // options={jenisKegiatanList}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Tanggal</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='kegiatan__tanggal'
-                                        component={DatePickerField}
-                                        onChange={(o: any) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                        }}
-                                        placeholder='Masukkan Tanggal'
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Tanggal</label>
+                                </div>
+                                <div className='col-8'>
+                                  <Field
+                                    name='kegiatan__tanggal'
+                                    component={DatePickerField}
+                                    onChange={(o: any) => {
+                                      dispatch(changedValue(ToFieldStateCE(o)))
+                                    }}
+                                    placeholder='Masukkan Tanggal'
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Kota</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='kecamatan'
-                                        target='kecamatan'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={inputValKota}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Kota</label>
+                                </div>
+                                <div className='col-8'>
+                                  <Field
+                                    name='kecamatan'
+                                    target='kecamatan'
+                                    className='form-control'
+                                    component={SelectField}
+                                    options={inputValKota}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Kecamatan</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='filter_jenis_kegiatan_id_selection'
-                                        target='filter_jenis_kegiatan_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={inputValKec}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Kecamatan</label>
+                                </div>
+                                <div className='col-8'>
+                                  <Field
+                                    name='filter_jenis_kegiatan_id_selection'
+                                    target='filter_jenis_kegiatan_id'
+                                    className='form-control'
+                                    component={SelectField}
+                                    options={inputValKec}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Kelurahan</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='kecamatan'
-                                        target='kecamatan'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={inputValKel}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Kelurahan</label>
+                                </div>
+                                <div className='col-8'>
+                                  <Field
+                                    name='kecamatan'
+                                    target='kecamatan'
+                                    className='form-control'
+                                    component={SelectField}
+                                    options={inputValKel}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Jenis Kegiatan</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='filter_jenis_kegiatan_id_selection'
-                                        target='filter_jenis_kegiatan_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={jenisKegiatanList}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Jenis Kegiatan</label>
+                                </div>
+                                <div className='col-8'>
+                                  <Field
+                                    name='filter_jenis_kegiatan_id_selection'
+                                    target='filter_jenis_kegiatan_id'
+                                    className='form-control'
+                                    component={SelectField}
+                                    // options={jenisKegiatanList}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Jenis Penertiban</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='kecamatan'
-                                        target='kecamatan'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={inputValJpen}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Jenis Penertiban</label>
+                                </div>
+                                <div className='col-8'>
+                                  <Field
+                                    name='kecamatan'
+                                    target='kecamatan'
+                                    className='form-control'
+                                    component={SelectField}
+                                    options={inputValJpen}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  />
                                 </div>
                               </div>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
-                                <div className='mb-10'>
-                                  <div className='row'>
-                                    <div className='col-4 pt-2'>
-                                      <label className='form-label'>Jenis Perda</label>
-                                    </div>
-                                    <div className='col-8'>
-                                      <Field
-                                        name='filter_jenis_kegiatan_id_selection'
-                                        target='filter_jenis_kegiatan_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={inputValJper}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Jenis Perda</label>
+                                </div>
+                                <div className='col-8'>
+                                  <Field
+                                    name='filter_jenis_kegiatan_id_selection'
+                                    target='filter_jenis_kegiatan_id'
+                                    className='form-control'
+                                    component={SelectField}
+                                    options={inputValJper}
+                                    onChange={(o: ChangeEvent<any>) => {
+                                      // dispatch(changedValue(ToFieldStateCE(o)))
+                                      // updateJenisPasalList()
+                                      // updateJenisPenyelesaianList()
+                                    }}
+                                  />
                                 </div>
                               </div>
-                              {/* Search */}
-                              <div className='row g-8 mt-2'>
-                                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                  <Link
-                                    to='#'
-                                    // onClick={handleFilter}
-                                  >
-                                    <button className='btn btn-light-primary me-2'>
-                                      <KTSVG
-                                        path='/media/icons/duotune/general/gen021.svg'
-                                        className='svg-icon-2'
-                                      />
-                                      Cari
-                                    </button>
-                                  </Link>
-                                  <Link
-                                    to='#'
-                                    // onClick={handleFilterReset}
-                                  >
-                                    <button className='btn btn-light-primary'>
-                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                      Reset
-                                    </button>
-                                  </Link>
-                                </div>
-                                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                  {/* begin::Filter Button */}
-                                  <button
-                                    type='button'
-                                    className='btn btn-light-primary'
-                                    data-kt-menu-trigger='click'
-                                    data-kt-menu-placement='bottom-end'
-                                  >
-                                    {/* {btnLoadingUnduh ? (
+                            </div>
+                          </div>
+                          {/* Search */}
+                          <div className='row g-8 mt-2'>
+                            <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                              <Link
+                                to='#'
+                                // onClick={handleFilter}
+                              >
+                                <button className='btn btn-light-primary me-2'>
+                                  <KTSVG
+                                    path='/media/icons/duotune/general/gen021.svg'
+                                    className='svg-icon-2'
+                                  />
+                                  Cari
+                                </button>
+                              </Link>
+                              <Link
+                                to='#'
+                                // onClick={handleFilterReset}
+                              >
+                                <button className='btn btn-light-primary'>
+                                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                  Reset
+                                </button>
+                              </Link>
+                            </div>
+                            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                              {/* begin::Filter Button */}
+                              <button
+                                type='button'
+                                className='btn btn-light-primary'
+                                data-kt-menu-trigger='click'
+                                data-kt-menu-placement='bottom-end'
+                              >
+                                {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                    <>
-                                      <KTSVG
-                                        path='/media/icons/duotune/arrows/arr078.svg'
-                                        className='svg-icon-2'
-                                      />
-                                      Unduh
-                                    </>
-                                    {/* )} */}
-                                  </button>
-                                  {/* end::Filter Button */}
-                                  {/* begin::SubMenu */}
-                                  <div
-                                    className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                    data-kt-menu='true'
-                                  >
-                                    {/* begin::Header */}
-                                    <div className='px-7 py-5'>
-                                      <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                    </div>
-                                    {/* end::Header */}
-
-                                    {/* begin::Separator */}
-                                    <div className='separator border-gray-200'></div>
-                                    {/* end::Separator */}
-
-                                    {/* begin::Content */}
-                                    <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                      <button
-                                        //   onClick={handleUnduh}
-                                        className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                      >
-                                        Excel
-                                      </button>
-                                    </div>
-                                    {/* end::Content */}
-
-                                    {/* begin::Content */}
-                                    <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                      <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                        PDF
-                                      </button>
-                                    </div>
-                                    {/* end::Content */}
-                                  </div>
-                                  {/* end::SubMenu */}
+                                <>
+                                  <KTSVG
+                                    path='/media/icons/duotune/arrows/arr078.svg'
+                                    className='svg-icon-2'
+                                  />
+                                  Unduh
+                                </>
+                                {/* )} */}
+                              </button>
+                              {/* end::Filter Button */}
+                              {/* begin::SubMenu */}
+                              <div
+                                className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                data-kt-menu='true'
+                              >
+                                {/* begin::Header */}
+                                <div className='px-7 py-5'>
+                                  <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
                                 </div>
+                                {/* end::Header */}
+
+                                {/* begin::Separator */}
+                                <div className='separator border-gray-200'></div>
+                                {/* end::Separator */}
+
+                                {/* begin::Content */}
+                                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                  <button
+                                    //   onClick={handleUnduh}
+                                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                  >
+                                    Excel
+                                  </button>
+                                </div>
+                                {/* end::Content */}
+
+                                {/* begin::Content */}
+                                <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                  <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                    PDF
+                                  </button>
+                                </div>
+                                {/* end::Content */}
                               </div>
+                              {/* end::SubMenu */}
                             </div>
-                          </Form>
-                        </Formik>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -804,7 +896,7 @@ export const ListKegiatanPage: FC = () => {
                 {aksi === 0 ? (
                   <DtKabid />
                 ) : aksi === 1 ? (
-                  <DtAdmin />
+                  <DtAdmin data={data} />
                 ) : (
                   <>
                     <div className='row'>

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {Fragment, useEffect, useState} from 'react'
+import {FC, Fragment, useEffect, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton, Table} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
@@ -104,34 +104,24 @@ export default function DtKabid(props: any) {
   )
 }
 
-export function DtAdmin(props: any) {
+export const DtAdmin: FC<any> = ({data}) => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
-  const [data, setData] = useState([])
+  const GetJenisKegiatan = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
+        )
+        const result: string = data.data[0].nama
+        setValData(result)
+        console.log(data)
+      }
+      fetchDT(row)
+    }, [valData, row])
 
-  const dataKegiatan = () => {
-    axios.get(`http://localhost:3002/kegiatan-umum/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        id: d.id,
-        no: d.id,
-        pelaksana: d.created_by,
-        tanggal_kegiatan: d.kegiatan__tanggal,
-        waktu_mulai: d.kegiatan__jam_start,
-        waktu_selesai: d.kegiatan__jam_end,
-        jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-        uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-        // wilayah: d.kegiatan__wilayah,
-        lokasi: d.kegiatan__lokasi,
-      }))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      setData(data)
-    })
+    return <>{valData}</>
   }
-
-  useEffect(() => {
-    dataKegiatan()
-  }, [])
 
   const columns2 = [
     {
@@ -164,6 +154,7 @@ export function DtAdmin(props: any) {
       name: 'Jenis Kegiatan',
       width: '140px',
       selector: (row: any) => row.jenis_kegiatan,
+      cell: (record: any) => <GetJenisKegiatan row={parseInt(record.jenis_kegiatan)} />,
     },
     {
       name: 'Uraian Kegiatan',
@@ -229,21 +220,6 @@ export function DtAdmin(props: any) {
       },
     },
   ]
-
-  // const data = [
-  //   {
-  //     id: 1,
-  //     no: '1',
-  //     pelaksana: 'SEKSI KETENTERAMAN DAN KETERTIBAN UMUM DAN OPERASI',
-  //     tanggal_kegiatan: '01/11/2022',
-  //     waktu_kegiatan: '08:00 - 12:00',
-  //     jenis_kegiatan: 'PATROLI',
-  //     uraian_kegiatan:
-  //       'Melaksanakan Patroli wilayah, penjagaan dan menghimbau pedagang kaki lima agar tidak berjualan',
-  //     wilayah: 'Kota Administrasi Jakarta Pusat',
-  //     lokasi: 'RW.3, Petojo Sel.Kecamatan Gambir, Kota Jakarta Pusat',
-  //   },
-  // ]
 
   return (
     <div>

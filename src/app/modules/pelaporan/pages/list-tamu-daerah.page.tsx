@@ -1,4 +1,4 @@
-import {FC, useEffect, useState} from 'react'
+import {FC, SetStateAction, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 import {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-tamu-daerah'
@@ -11,14 +11,17 @@ export const ListTamuDaerahPage: FC = () => {
   const [tanggalAwal, setTanggalAwal] = useState({val: ''})
   const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
   const [instansi, setInstansi] = useState({val: ''})
+  const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
+  const [perPage, setPerPage] = useState(10)
+  const [totalRows, setTotalRows] = useState(0)
   const [qParamFind, setUriFind] = useState({strparam: ''})
-  // const tanggal = [
-  //   {
-  //     tanggalAwal: tanggalAwal.val,
-  //     tanggalAkhir: tanggalAkhir.val,
-  //   },
-  // ]
+  const tanggal = [
+    {
+      tanggalAwal: tanggalAwal.val,
+      tanggalAkhir: tanggalAkhir.val,
+    },
+  ]
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
@@ -69,31 +72,66 @@ export const ListTamuDaerahPage: FC = () => {
   }
 
   // GET DATA FOR DATA TABLE
-  const dataTamuDaerah = () => {
-    axios.get(`http://localhost:3002/tamu-daerah/?%24filter=${qParamFind.strparam}`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        id: d.id,
-        no: d.id,
-        tanggal_kunjungan: d.tanggal_kunjungan,
-        waktu_mulai_kunjungan: d.waktu_mulai_kunjungan,
-        waktu_selesai_kunjungan: d.waktu_selesai_kunjungan,
-        asal_instansi: d.asal_instansi,
-        jumlah: d.jml_pengunjung,
-        maksud_dan_tujuan: d.maksud_dan_tujuan,
-        pejabat_penerima_kunjungan: d.pejabat_penerima_kunjungan,
-        tempat_kunjungan: d.tempat_kunjungan,
-      }))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      setData(data)
-      // console.log('ini data', data)
-      return [data, setData] as const
-    })
-    // console.log(data)
+  async function dataTamuDaerah(page: number) {
+    setLoading(true)
+    axios
+      .get(
+        `http://localhost:3002/tamu-daerah/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
+      )
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          tanggal_kunjungan: d.tanggal_kunjungan,
+          waktu_mulai_kunjungan: d.waktu_mulai_kunjungan,
+          waktu_selesai_kunjungan: d.waktu_selesai_kunjungan,
+          asal_instansi: d.asal_instansi,
+          jumlah: d.jml_pengunjung,
+          maksud_dan_tujuan: d.maksud_dan_tujuan,
+          pejabat_penerima_kunjungan: d.pejabat_penerima_kunjungan,
+          tempat_kunjungan: d.tempat_kunjungan,
+          total_items: d.total_items,
+        }))
+        setData(data)
+        setTotalRows(res.data.total_items)
+        setLoading(false)
+
+        return [data, setData] as const
+      })
+  }
+  useEffect(() => {
+    dataTamuDaerah(0)
+  }, [qParamFind, perPage])
+
+  const handlePageChange = (page: number) => {
+    dataTamuDaerah(page++)
   }
 
-  useEffect(() => {
-    dataTamuDaerah()
-  }, [qParamFind])
+  const handlePerRowsChange = async (newPerPage: number, page: number) => {
+    setLoading(true)
+    axios
+      .get(
+        `http://localhost:3002/tamu-daerah/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+      )
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          tanggal_kunjungan: d.tanggal_kunjungan,
+          waktu_mulai_kunjungan: d.waktu_mulai_kunjungan,
+          waktu_selesai_kunjungan: d.waktu_selesai_kunjungan,
+          asal_instansi: d.asal_instansi,
+          jumlah: d.jml_pengunjung,
+          maksud_dan_tujuan: d.maksud_dan_tujuan,
+          pejabat_penerima_kunjungan: d.pejabat_penerima_kunjungan,
+          tempat_kunjungan: d.tempat_kunjungan,
+          total_items: d.total_items,
+        }))
+        setData(data)
+        setPerPage(newPerPage)
+        setLoading(false)
+      })
+  }
 
   //ACTION FOR SWITCH USER
   const [aksi, setAksi] = useState(1)
@@ -103,8 +141,6 @@ export const ListTamuDaerahPage: FC = () => {
   const vPimpinan = () => {
     setAksi(2)
   }
-
-  // console.log(tanggalAwal.val)
 
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
@@ -186,7 +222,7 @@ export const ListTamuDaerahPage: FC = () => {
                                     //   setTanggalAwal(o.target.value)
                                     // }}
                                   />
-                                  {tanggalAwal.val}
+                                  {/* {tanggalAwal.val} */}
                                 </div>
                               </div>
                             </div>
@@ -208,7 +244,7 @@ export const ListTamuDaerahPage: FC = () => {
                                     //   setTanggalAkhir(o.target.value)
                                     // }}
                                   />
-                                  {tanggalAkhir.val}
+                                  {/* {tanggalAkhir.val} */}
                                 </div>
                               </div>
                             </div>
@@ -325,9 +361,10 @@ export const ListTamuDaerahPage: FC = () => {
                                     name='asal_instansi'
                                     className='form-control'
                                     placeholder='Masukkan asal instansi'
+                                    value={instansi.val}
                                     onChange={handleChangeInputInstansi}
                                   />
-                                  {instansi.val}
+                                  {/* {instansi.val} */}
                                 </div>
                               </div>
                             </div>
@@ -346,7 +383,7 @@ export const ListTamuDaerahPage: FC = () => {
                                     value={tanggalAwal.val}
                                     onChange={handleChangeInputTanggalAwal}
                                   />
-                                  {tanggalAwal.val}
+                                  {/* {tanggalAwal.val} */}
                                 </div>
                               </div>
                             </div>
@@ -365,7 +402,7 @@ export const ListTamuDaerahPage: FC = () => {
                                     value={tanggalAkhir.val}
                                     onChange={handleChangeInputTanggalAkhir}
                                   />
-                                  {tanggalAkhir.val}
+                                  {/* {tanggalAkhir.val} */}
                                 </div>
                               </div>
                             </div>
@@ -462,7 +499,13 @@ export const ListTamuDaerahPage: FC = () => {
               </div>
               {aksi === 1 ? (
                 <div className='card-body py-4'>
-                  <DtAdmin data={data} />
+                  <DtAdmin
+                    data={data}
+                    totalRows={totalRows}
+                    handlePerRowsChange={handlePerRowsChange}
+                    handlePageChange={handlePageChange}
+                    loading={loading}
+                  />
                 </div>
               ) : (
                 <>
@@ -485,7 +528,13 @@ export const ListTamuDaerahPage: FC = () => {
                         {tanggalAkhir.val !== undefined ? tanggalAkhir.val : '....................'}
                       </div>
                     </div>
-                    <DtPimpinan data={data} />
+                    <DtPimpinan
+                      data={data}
+                      totalRows={totalRows}
+                      handlePerRowsChange={handlePerRowsChange}
+                      handlePageChange={handlePageChange}
+                      loading={loading}
+                    />
                   </div>
                   <div className='row'>
                     <div className='col-8'></div>
