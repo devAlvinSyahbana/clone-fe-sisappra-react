@@ -1,4 +1,4 @@
-import {useState, FC, useEffect} from 'react'
+import {useState, FC} from 'react'
 import 'antd/dist/antd.css'
 import {InboxOutlined} from '@ant-design/icons'
 import type {RcFile, UploadProps} from 'antd/es/upload'
@@ -168,7 +168,7 @@ const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice, sourceFil
         onRemove={handleDelete}
         customRequest={handleUpload}
         maxCount={maxFile}
-        defaultFileList={uploadedFiles}
+        defaultFileList={sourceFile.length === 1 && sourceFile[0].key === '' ? '' : uploadedFiles}
       >
         <p className='ant-upload-drag-icon'>
           <InboxOutlined />
