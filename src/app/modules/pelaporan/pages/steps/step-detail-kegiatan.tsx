@@ -73,7 +73,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
     if (isPenertibanBangunan(values)) dispatch(updateJenisPelanggaranBangunan())
   }, [jenisKegiatanSelect])
 
-  console.log(values)
+  // console.log(values)
 
   return (
     <div className='w-50'>

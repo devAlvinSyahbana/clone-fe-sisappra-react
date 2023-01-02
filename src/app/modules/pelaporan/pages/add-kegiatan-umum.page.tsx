@@ -76,12 +76,12 @@ export const AddKegiatanUmumPage: FC = () => {
     )
     // setFilteredObject({...initialState, ...filter})
     // const filteredObject = {...initialState, ...filter}
-    console.log(filteredData)
+    // console.log(filteredData)
 
     dispatch(editInitialState({...allValues, ...filteredData}))
     setCurrentIntialState({...allValues, ...filteredData})
-    const currentDate = new Date()
-    const formattedCurrentDate = currentDate.toISOString()
+    // const currentDate = new Date()
+    // const formattedCurrentDate = currentDate.toISOString()
 
     dispatch(
       changedValue({
@@ -91,14 +91,7 @@ export const AddKegiatanUmumPage: FC = () => {
         },
       })
     )
-    dispatch(
-      changedValue({
-        target: {
-          name: 'updated_at',
-          value: formattedCurrentDate,
-        },
-      })
-    )
+
     setLoading(false)
   }
 
@@ -207,7 +200,7 @@ export const AddKegiatanUmumPage: FC = () => {
     }
   }
 
-  console.log(allValues)
+  // console.log(allValues)
 
   return (
     <>

@@ -81,7 +81,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
         },
       })
     )
-  }, [minolItems.length])
+  }, [minolItems])
 
   return (
     <div className='w-100'>
