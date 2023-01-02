@@ -131,6 +131,7 @@ export function DtAdmin(props: any) {
         status_reklame: d.status_reklame,
         pemilik_reklame: d.pemilik_reklame,
         alamat: d.alamat,
+        tgl_pengecekan: d.tgl_pengecekan,
       }))
       setData(data)
     })
@@ -151,6 +152,11 @@ export function DtAdmin(props: any) {
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+    },
+    {
+      name: 'Tanggal',
+      width: '140px',
+      selector: (row: any) => row.tgl_pengecekan,
     },
     {
       name: 'Waktu',
@@ -234,7 +240,6 @@ export function DtPimpinan(props: any) {
 
   const dataPengawasReklame = () => {
     axios.get(`http://localhost:3002/reklame/`).then((res) => {
-      
       const data = res.data.data.map((d: any) => ({
         no: d.id,
         pelaksana: d.id,
