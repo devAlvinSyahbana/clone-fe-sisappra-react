@@ -100,8 +100,6 @@ export const AddKejadianPage: FC = () => {
     }
   }
 
-  console.log('Redux all values', allValues)
-
   return (
     <>
       <Formik

@@ -66,12 +66,10 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
 
   const handleChange = (e: any) => {
     let array = []
-    console.log(e)
     if (e.length > 0) {
       for (let index = 0; index < e.length; index++) {
         array.push(Number(e[index].value))
       }
-      console.log(array)
       setValueJBI(array)
       dispatch(
         changedValue({
@@ -85,12 +83,10 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
   }
   const handleChangeJBS = (e: any) => {
     let array = []
-    console.log(e)
     if (e.length > 0) {
       for (let index = 0; index < e.length; index++) {
         array.push(Number(e[index].value))
       }
-      console.log(array)
       setValueJBS(array)
       dispatch(
         changedValue({
@@ -282,7 +278,6 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                 onChange={(e: any) => {
                   setValueKJ(e.value)
                   setvaluekjlabel(e.label)
-                  console.log('cek jklabel', setvaluekjlabel)
                 }}
               />
               <div className='text-danger mt-2'>
@@ -379,7 +374,6 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                   onFocus={(e: any) => e.target.select()}
                   onInput={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
-                    console.log('ini korban pria', tindakKorbanJiwaItems[i].id)
                   }}
                 />
               </div>
@@ -443,7 +437,6 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                     onChange={(e: any) => {
                       setValueM(e.value)
                       setvaluemlabel(e.label)
-                      console.log('cek jklabel', setvaluemlabel)
                     }}
                   />
                 </div>
