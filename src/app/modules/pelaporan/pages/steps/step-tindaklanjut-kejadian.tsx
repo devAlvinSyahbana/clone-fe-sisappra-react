@@ -11,6 +11,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 import DragDropImageUploader from '../../components/DragDropImageUploader'
+import {number} from 'yup'
 
 interface StepDetailKejadianProps {
   handleChange?: {
@@ -35,13 +36,15 @@ interface StepDetailKejadianProps {
 export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, setFieldValue}) => {
   const dispatch = useDispatch()
   const dokumentasi = useSelector((s: RootState) => s.pelaporanKejadian.tindak__dokumentasi[0])
-  const [valueKJ, setValueKJ] = useState(0)
+  const [valueKJ, setValueKJ] = useState<any>()
   const [valueP, setValueP] = useState(0)
   const [valueW, setValueW] = useState(0)
-  const [valueM, setValueM] = useState(0)
+  const [valueM, setValueM] = useState<any>()
   const [valueKM, setValueKM] = useState(0)
-  const [valueJBS, setValueJBS] = useState(0)
-  const [valueJBI, setValueJBI] = useState(0)
+  const [valueJBS, setValueJBS] = useState<any>()
+  const [valueJBI, setValueJBI] = useState<any>()
+  const [valuekjlabel, setvaluekjlabel] = useState('')
+  const [valuemlabel, setvaluemlabel] = useState('')
 
   const listSumberInformasi = useSelector(
     (s: RootState) => s.pelaporanKejadian.list_sumber_informasi
@@ -61,6 +64,45 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
   const jenisBantuanSatpolItems = values?.tindak__jenis_bantuan_satpolpp
   const jenisBantuanInstansiItems = values?.tindak__jenis_bantuan_instansiterkait
 
+  const handleChange = (e: any) => {
+    let array = []
+    console.log(e)
+    if (e.length > 0) {
+      for (let index = 0; index < e.length; index++) {
+        array.push(Number(e[index].value))
+      }
+      console.log(array)
+      setValueJBI(array)
+      dispatch(
+        changedValue({
+          target: {
+            name: 'tindak__jenis_bantuan_instansiterkait',
+            value: array,
+          },
+        })
+      )
+    }
+  }
+  const handleChangeJBS = (e: any) => {
+    let array = []
+    console.log(e)
+    if (e.length > 0) {
+      for (let index = 0; index < e.length; index++) {
+        array.push(Number(e[index].value))
+      }
+      console.log(array)
+      setValueJBS(array)
+      dispatch(
+        changedValue({
+          target: {
+            name: 'tindak__jenis_bantuan_satpolpp',
+            value: array,
+          },
+        })
+      )
+    }
+  }
+
   useEffect(() => {
     dispatch(
       changedValue({
@@ -75,22 +117,6 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
         target: {
           name: 'tindak__korban_material',
           value: tindakKorbanMaterialItems,
-        },
-      })
-    )
-    dispatch(
-      changedValue({
-        target: {
-          name: 'tindak__jenis_bantuan_satpolpp',
-          value: jenisBantuanSatpolItems,
-        },
-      })
-    )
-    dispatch(
-      changedValue({
-        target: {
-          name: 'tindak__jenis_bantuan_instansiterkait',
-          value: jenisBantuanInstansiItems,
         },
       })
     )
@@ -213,205 +239,50 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
         <div className='row'>
           <div className='col-5 mb-10 form-group'>
             <label className='required form-label'>Jenis Bantuan Satpol PP</label>
-            <Field
-              name='kejadian__jenis_bantuan_satpolpp_selection'
-              target='tindak__jenis_bantuan_satpolpp'
-              className='form-control'
-              component={SelectField}
+            <Select
+              name='tindak__jenis_bantuan_satpolpp'
+              isMulti
+              className='basic-multi-select'
               options={listJenisBantuanSatpolPP}
-              onChange={(o: ChangeEvent<any>) => {
-                dispatch(changedValue(ToFieldStateCE(o)))
+              classNamePrefix='select'
+              onChange={(e) => {
+                handleChangeJBS(e)
               }}
             />
           </div>
-          <div className='col-1 mt-8'>
-            <button
-              className='btn btn-secondary fw-bold'
-              type='button'
-              onClick={(e) => {
-                e.preventDefault()
-                setFieldValue(
-                  `tindak__jenis_bantuan_satpolpp[${jenisBantuanSatpolItems.length}].id`,
-                  valueJBS
-                )
-                setValueJBS(0)
-              }}
-            >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width={24}
-                height={24}
-                viewBox='0 0 24 24'
-                fill='none'
-                stroke='currentColor'
-                strokeWidth={2}
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                className='feather feather-plus'
-              >
-                <line x1={12} y1={5} x2={12} y2={19} />
-                <line x1={5} y1={12} x2={19} y2={12} />
-              </svg>
-            </button>
-          </div>
         </div>
-
-        {jenisBantuanSatpolItems.map((d: any, i: any) => (
-          <div className='row' key={i}>
-            <div className='col-5 mb-10 form-group'>
-              <label className='required form-label'>Jenis Bantuan Satpol PP</label>
-              <Field
-                name='kejadian__jenis_bantuan_satpolpp_selection'
-                target={`tindak__jenis_bantuan_satpolpp[${i}]`}
-                className='form-control'
-                disabled
-                component={SelectField}
-                options={listJenisBantuanSatpolPP}
-                onChange={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak__jenis_bantuan_satpolpp' />
-              </div>
-            </div>
-            <div className='col-1 mt-8'>
-              <button
-                className='btn btn-danger fw-bold'
-                type='button'
-                onClick={() => {
-                  const updatedItems = [...jenisBantuanSatpolItems]
-                  updatedItems.splice(i, 1)
-                  setFieldValue('tindak__jenis_bantuan_satpolpp', updatedItems)
-                }}
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width={24}
-                  height={24}
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth={2}
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  className='feather feather-minus'
-                >
-                  <line x1={5} y1={12} x2={19} y2={12} />
-                </svg>
-              </button>
-            </div>
-          </div>
-        ))}
 
         <div className='row'>
           <div className='col-5 mb-10 form-group'>
             <label className='required form-label'>Jenis Bantuan Instansi Terkait</label>
-            <Field
-              name='kejadian__jenis_bantuan_instansi_terkait_selection'
-              target='tindak__jenis_bantuan_instansiterkait'
-              className='form-control'
-              component={SelectField}
+            <Select
+              name='tindak__jenis_bantuan_instansiterkait'
+              isMulti
+              className='basic-multi-select'
               options={listJenisBantuanInstansiTerkait}
-              onChange={(o: ChangeEvent<any>) => {
-                dispatch(changedValue(ToFieldStateCE(o)))
+              onChange={(e) => {
+                handleChange(e)
               }}
             />
-            <div className='text-danger mt-2'>
-              <ErrorMessage name='tindak__jenis_bantuan_instansiterkait' />
-            </div>
-          </div>
-          <div className='col-1 mt-8'>
-            <button
-              className='btn btn-secondary fw-bold'
-              type='button'
-              onClick={(e) => {
-                e.preventDefault()
-                setFieldValue(
-                  `tindak__jenis_bantuan_instansiterkait[${jenisBantuanInstansiItems.length}].id`,
-                  valueJBI
-                )
-                setValueJBI(0)
-              }}
-            >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width={24}
-                height={24}
-                viewBox='0 0 24 24'
-                fill='none'
-                stroke='currentColor'
-                strokeWidth={2}
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                className='feather feather-plus'
-              >
-                <line x1={12} y1={5} x2={12} y2={19} />
-                <line x1={5} y1={12} x2={19} y2={12} />
-              </svg>
-            </button>
           </div>
         </div>
-
-        {jenisBantuanInstansiItems.map((d: any, i: any) => (
-          <div className='row' key={i}>
-            <div className='col-5 mb-10 form-group'>
-              <label className='required form-label'>Jenis Bantuan Instansi Terkait</label>
-              <Field
-                name='kejadian__jenis_bantuan_instansi_terkait_selection'
-                target={`tindak__jenis_bantuan_instansiterkait[${i}]`}
-                className='form-control'
-                component={SelectField}
-                options={listJenisBantuanInstansiTerkait}
-                onChange={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
-                }}
-              />
-              <div className='text-danger mt-2'>
-                <ErrorMessage name='tindak__jenis_bantuan_instansiterkait' />
-              </div>
-            </div>
-            <div className='col-1 mt-8'>
-              <button
-                className='btn btn-danger fw-bold'
-                type='button'
-                onClick={() => {
-                  const updatedItems = [...jenisBantuanInstansiItems]
-                  updatedItems.splice(i, 1)
-                  setFieldValue('tindak__jenis_bantuan_instansiterkait', updatedItems)
-                }}
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width={24}
-                  height={24}
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth={2}
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  className='feather feather-minus'
-                >
-                  <line x1={5} y1={12} x2={19} y2={12} />
-                </svg>
-              </button>
-            </div>
-          </div>
-        ))}
 
         <div className='row'>
           <div className='col-5 form-group'>
             <div className='mb-10 form-group'>
               <label className='required form-label'>Korban Jiwa</label>
-              <Field
-                name='kejadian__korban_jiwa_selection'
-                target='tindak__korban_jiwa'
-                className='form-control'
-                component={SelectField}
-                options={listKorbanJiwa}
-                onChange={(o: ChangeEvent<any>) => {
-                  dispatch(changedValue(ToFieldStateCE(o)))
+              <Select
+                // name='tindak__korban_jiwa'
+                defaultValue={valuekjlabel}
+                className='basic-single'
+                classNamePrefix='select'
+                options={listKorbanJiwa.filter(
+                  (d: any) => !tindakKorbanJiwaItems.some((item: any) => item.id === d.value)
+                )}
+                onChange={(e: any) => {
+                  setValueKJ(e.value)
+                  setvaluekjlabel(e.label)
+                  console.log('cek jklabel', setvaluekjlabel)
                 }}
               />
               <div className='text-danger mt-2'>
@@ -448,13 +319,15 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
           <div className='col-1 mt-8'>
             <button
               className='btn btn-secondary fw-bold'
+              disabled={valueW === 0 || valueP === 0 || !valuekjlabel}
               type='button'
               onClick={(e) => {
                 e.preventDefault()
                 setFieldValue(`tindak__korban_jiwa[${tindakKorbanJiwaItems.length}].id`, valueKJ)
                 setFieldValue(`tindak__korban_jiwa[${tindakKorbanJiwaItems.length}].pria`, valueP)
                 setFieldValue(`tindak__korban_jiwa[${tindakKorbanJiwaItems.length}].wanita`, valueW)
-                setValueKJ(0)
+                setValueKJ(null)
+                setvaluekjlabel('')
                 setValueP(0)
                 setValueW(0)
               }}
@@ -486,15 +359,12 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               <div className='mb-10 form-group'>
                 <label className='required form-label'>Korban Jiwa</label>
                 <Field
-                  name={`kejadian__korban_jiwa_selection[${i}].id`}
-                  target='tindak__korban_jiwa'
+                  name={`tindak__korban_jiwa[${i}].id`}
                   className='form-control'
                   disabled
-                  component={SelectField}
-                  options={listKorbanJiwa}
-                  onChange={(o: ChangeEvent<any>) => {
-                    dispatch(changedValue(ToFieldStateCE(o)))
-                  }}
+                  value={
+                    listKorbanJiwa.find((d: any) => d.value === tindakKorbanJiwaItems[i].id).label
+                  }
                 />
               </div>
             </div>
@@ -509,6 +379,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                   onFocus={(e: any) => e.target.select()}
                   onInput={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
+                    console.log('ini korban pria', tindakKorbanJiwaItems[i].id)
                   }}
                 />
               </div>
@@ -561,16 +432,18 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               <div className='col-5 form-group'>
                 <div className='mb-10 form-group'>
                   <label className='required form-label'>Korban Material</label>
-                  <Field
-                    type='number'
-                    name='kejadian__korban_material_selection'
-                    target='tindak__korban_material'
-                    min='0'
-                    className='form-control'
-                    component={SelectField}
-                    options={listKorbanmaterial}
-                    onChange={(o: ChangeEvent<any>) => {
-                      dispatch(changedValue(ToFieldStateCE(o)))
+                  <Select
+                    defaultValue={valuemlabel}
+                    className='basic-single'
+                    classNamePrefix='select'
+                    options={listKorbanmaterial.filter(
+                      (d: any) =>
+                        !tindakKorbanMaterialItems.some((item: any) => item.id === d.value)
+                    )}
+                    onChange={(e: any) => {
+                      setValueM(e.value)
+                      setvaluemlabel(e.label)
+                      console.log('cek jklabel', setvaluemlabel)
                     }}
                   />
                 </div>
@@ -591,6 +464,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               <div className='col-1 mt-8'>
                 <button
                   className='btn btn-secondary fw-bold'
+                  disabled={valueKM === 0 || !valuemlabel}
                   type='button'
                   onClick={(e) => {
                     e.preventDefault()
@@ -602,7 +476,8 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                       `tindak__korban_material[${tindakKorbanMaterialItems.length}].jml`,
                       valueKM
                     )
-                    setValueM(0)
+                    setValueM(null)
+                    setvaluemlabel('')
                     setValueKM(0)
                   }}
                 >
@@ -634,17 +509,14 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                   <div className='mb-10 form-group'>
                     <label className='required form-label'>Korban Material</label>
                     <Field
-                      type='number'
-                      name={`kejadian__korban_material_selection[${i}].id`}
-                      target='tindak__korban_material'
-                      min='0'
-                      disabled
+                      name={`tindak__korban_material[${i}].id`}
                       className='form-control'
-                      component={SelectField}
-                      options={listKorbanmaterial}
-                      onChange={(o: ChangeEvent<any>) => {
-                        dispatch(changedValue(ToFieldStateCE(o)))
-                      }}
+                      disabled
+                      value={
+                        listKorbanmaterial.find(
+                          (d: any) => d.value === tindakKorbanMaterialItems[i].id
+                        ).label
+                      }
                     />
                     <div className='text-danger mt-2'>
                       <ErrorMessage name='tindak__korban_material' />
@@ -708,6 +580,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               maxFile={4}
               path='kejadian'
               slice={dokumentasi}
+              sourceFile={dokumentasi.file_uploadResult}
               change={(e: any) => {
                 dispatch(
                   changedValue({

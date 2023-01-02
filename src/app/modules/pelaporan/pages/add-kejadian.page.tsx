@@ -67,7 +67,6 @@ export const AddKejadianPage: FC = () => {
     let res
     try {
       if (isBanjir(values)) {
-        alert(JSON.stringify(values, null, 2))
         res = await axios.post(`${API_URL}/kejadian-banjir`, allValues)
       } else if (isPendampinganKekerasanPadaPerempuan(values)) {
         res = await axios.post(`${API_URL}/kejadian-kekerasan-perak`, allValues)
@@ -78,7 +77,6 @@ export const AddKejadianPage: FC = () => {
       }
 
       if (res) {
-        console.log('laststep', values)
         actions.setSubmitting(false)
         Swal.fire({
           icon: 'success',
@@ -87,8 +85,10 @@ export const AddKejadianPage: FC = () => {
           timer: 1500,
           color: '#000000',
         })
+        listMasterKejadianValue()
+        navigate(-1)
       }
-      alert(JSON.stringify(values, null, 2))
+      // alert(JSON.stringify(values, null, 2))
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -99,6 +99,8 @@ export const AddKejadianPage: FC = () => {
       console.error(error)
     }
   }
+
+  console.log('Redux all values', allValues)
 
   return (
     <>

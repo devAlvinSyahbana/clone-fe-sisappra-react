@@ -62,7 +62,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
     dispatch(updateKelurahanList())
   }, [jenisKejadianSelect])
 
-  console.log(values)
+  // console.log(values)
 
   return (
     <div className='w-50'>

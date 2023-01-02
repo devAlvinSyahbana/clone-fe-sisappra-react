@@ -114,13 +114,13 @@ export const createSchemaPelaporanKejadian = [
     //   .moreThan(0)
     //   .required()
     //   .label('Jenis Bantuan Satpol PP'),
-    kejadian__jenis_bantuan_satpolpp_selection: Yup.object().required(),
+    // kejadian__jenis_bantuan_satpolpp_selection: Yup.object().required(),
     // tindak__jenis_bantuan_instansiterkait: Yup.number()
     //   .integer()
     //   .moreThan(0)
     //   .required()
     //   .label('Jenis Bantuan Instansi Terkait'),
-    kejadian__jenis_bantuan_instansi_terkait_selection: Yup.object().required(),
+    // kejadian__jenis_bantuan_instansi_terkait_selection: Yup.object().required(),
     kejadian__tanggal: Yup.date().required().label('Tanggal Kejadian'),
     kejadian__waktu_start: Yup.string().required().label('Waktu Start'),
     kejadian__waktu_end: Yup.string().required().label('Waktu End'),
