@@ -79,7 +79,7 @@ export const AddTamuDaerahPage: FC = () => {
     }
   }, [allValues.created_by])
 
-  console.log(allValues)
+  // console.log(allValues)
 
   const submitPelaporanTamuDaerah = async (
     values: PelaporanTamuDaerahState,
