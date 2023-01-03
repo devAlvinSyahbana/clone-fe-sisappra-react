@@ -7,30 +7,44 @@ import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {useNavigate} from 'react-router-dom'
 
-export default function DtKabid(props: any) {
-  const [data, setData] = useState([])
+const LoadingAnimation = (props: any) => {
+  return (
+    <>
+      <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+        {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+        <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+        <div className='d-flex flex-column'>
+          <h5 className='mb-1'>Sedang mengambil data...</h5>
+        </div>
+      </div>
+    </>
+  )
+}
 
-  const dataKegiatan = () => {
-    axios.get(`http://localhost:3002/kegiatan-umum/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        no: d.id,
-        pelaksana: d.created_by,
-        tanggal_kegiatan: d.kegiatan__tanggal,
-        waktu_mulai: d.kegiatan__jam_start,
-        waktu_selesai: d.kegiatan__jam_end,
-        jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-        uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-        // wilayah: d.kegiatan__wilayah,
-        lokasi: d.kegiatan__lokasi,
-      }))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      setData(data)
-    })
+export const DtKabid: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+}) => {
+  const navigate = useNavigate()
+  const GetJenisKegiatan = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
+        )
+        const result: string = data.data[0].nama
+        setValData(result)
+        // console.log(data)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
   }
-
-  useEffect(() => {
-    dataKegiatan()
-  }, [])
 
   const columns2 = [
     {
@@ -63,6 +77,7 @@ export default function DtKabid(props: any) {
       name: 'Jenis Kegiatan',
       width: '140px',
       selector: (row: any) => row.jenis_kegiatan,
+      cell: (record: any) => <GetJenisKegiatan row={parseInt(record.jenis_kegiatan)} />,
     },
     {
       name: 'Uraian Kegiatan',
@@ -104,7 +119,13 @@ export default function DtKabid(props: any) {
   )
 }
 
-export const DtAdmin: FC<any> = ({data}) => {
+export const DtAdmin: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+}) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
     const [valData, setValData] = useState('')
@@ -115,7 +136,7 @@ export const DtAdmin: FC<any> = ({data}) => {
         )
         const result: string = data.data[0].nama
         setValData(result)
-        console.log(data)
+        // console.log(data)
       }
       fetchDT(row)
     }, [valData, row])
@@ -223,7 +244,17 @@ export const DtAdmin: FC<any> = ({data}) => {
 
   return (
     <div>
-      <DataTable columns={columns2} data={data} pagination />
+      <DataTable
+        columns={columns2}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }

@@ -19,7 +19,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
 import axios from 'axios'
-import DtKabid, {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-kegiatan'
+import {DtKabid, DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-kegiatan'
 import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
@@ -199,11 +199,16 @@ export const ListKegiatanPage: FC = () => {
   //   setJenisKegiatan({val: event.target.value})
   // }
 
+  const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
+  const [perPage, setPerPage] = useState(10)
+  const [totalRows, setTotalRows] = useState(0)
 
-  const dataKegiatan = () => {
+  const dataKegiatan = (page: number) => {
     axios
-      .get(`http://localhost:3002/kegiatan-umum/?%24filter=${qParamFind.strparam}`)
+      .get(
+        `http://localhost:3002/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
+      )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
           id: d.id,
@@ -219,12 +224,48 @@ export const ListKegiatanPage: FC = () => {
         }))
         // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
         setData(data)
+        setTotalRows(res.data.total_items)
+        setLoading(false)
+
+        return [data, setData] as const
       })
   }
 
   useEffect(() => {
-    dataKegiatan()
-  }, [qParamFind])
+    dataKegiatan(0)
+  }, [qParamFind, perPage])
+
+  const handlePageChange = (page: number) => {
+    const page1 = page++
+    dataKegiatan(page1)
+    console.log('ini page', page1, '&', page)
+  }
+
+  const handlePerRowsChange = async (newPerPage: number, page: number) => {
+    setLoading(true)
+    axios
+      .get(
+        `http://localhost:3002/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+      )
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kegiatan: d.kegiatan__tanggal,
+          waktu_mulai: d.kegiatan__jam_start,
+          waktu_selesai: d.kegiatan__jam_end,
+          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+          // wilayah: d.kegiatan__wilayah,
+          lokasi: d.kegiatan__lokasi,
+        }))
+        // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+        setData(data)
+        setPerPage(newPerPage)
+        setLoading(false)
+      })
+  }
 
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
@@ -291,29 +332,17 @@ export const ListKegiatanPage: FC = () => {
                       {aksi === 0 ? (
                         <div className='row w-100 mt-10 mb-10'>
                           {/* START :: Filter Form */}
-                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                          {/* <div className='col-md-6 col-lg-6 col-sm-12'>
                             <div className='mb-10'>
                               <div className='row'>
                                 <div className='col-4 pt-2'>
                                   <label className='form-label'>Seksi/Kecamatan</label>
                                 </div>
                                 <div className='col-8'>
-                                  {/* <Field
-                                    name='filter_jenis_kegiatan_id_selection'
-                                    target='filter_jenis_kegiatan_id'
-                                    className='form-control'
-                                    component={SelectField}
-                                    options={inputValKec}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div> */}
                           <div className='col-md-6 col-lg-6 col-sm-12'>
                             <div className='mb-10'>
                               <div className='row'>
@@ -321,6 +350,13 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label align-middle'>Jenis Kegiatan</label>
                                 </div>
                                 <div className='col-8'>
+                                  <AsyncSelect
+                                    name='filter_jenis_kegiatan_id_selection'
+                                    defaultOptions
+                                    value={valJenisKegiatan}
+                                    loadOptions={loadOptionsJenisKegiatan}
+                                    onChange={handleChangeInputJenisKegiatan}
+                                  />
                                   {/* <Field
                                     name='filter_jenis_kegiatan_id_selection'
                                     target='filter_jenis_kegiatan_id'
@@ -337,20 +373,44 @@ export const ListKegiatanPage: FC = () => {
                               </div>
                             </div>
                           </div>
-                          <div className='col-md-10 col-lg-10 col-sm-24'>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
                             <div className='mb-10'>
                               <div className='row'>
-                                <div className='col-2 pt-2'>
-                                  <label className='form-label align-middle'>Tanggal</label>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label'>Tanggal Awal</label>
                                 </div>
-                                <div className='col-4 mx-10'>
-                                  {/* <Field
-                                    name='kegiatan__tanggal'
-                                    component={DatePickerFieldRange}
-                                    onChange={(o: any) => {
-                                      dispatch(changedValue(ToFieldStateCE(o)))
-                                    }}
-                                  /> */}
+                                <div className='col-8'>
+                                  <input
+                                    type='date'
+                                    name='tanggal_kunjungan'
+                                    className='form-control'
+                                    value={tanggalAwal.val}
+                                    onChange={handleChangeInputTanggalAwal}
+                                    // onChange={(o: any) => {
+                                    //   setTanggalAwal(o.target.value)
+                                    // }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col-4 pt-2'>
+                                  <label className='form-label align-middle'>Tanggal Akhir</label>
+                                </div>
+                                <div className='col-8'>
+                                  <input
+                                    name='tanggal_kunjungan'
+                                    type='date'
+                                    className='form-control'
+                                    value={tanggalAkhir.val}
+                                    onChange={handleChangeInputTanggalAkhir}
+                                    // onChange={(o: any) => {
+                                    //   setTanggalAkhir(o.target.value)
+                                    // }}
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -360,22 +420,20 @@ export const ListKegiatanPage: FC = () => {
                           {/* BUTTON */}
                           <div className='row g-8 mt-2'>
                             <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                              <Button className='btn btn-light-primary me-2'>
+                              <Button className='btn btn-light-primary me-2' onClick={handleFilter}>
                                 <KTSVG
                                   path='/media/icons/duotune/general/gen021.svg'
                                   className='svg-icon-2'
                                 />
                                 Cari
                               </Button>
-                              <Link
-                                to='#'
-                                // onClick={handleFilterReset}
+                              <Button
+                                className='btn btn-light-primary me-2'
+                                onClick={handleFilterReset}
                               >
-                                <button className='btn btn-light-primary'>
-                                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                  Reset
-                                </button>
-                              </Link>
+                                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                Reset
+                              </Button>
                             </div>
                             <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                               {/* begin::Filter Button */}
@@ -894,9 +952,21 @@ export const ListKegiatanPage: FC = () => {
               </div>
               <div className='card-body py-4'>
                 {aksi === 0 ? (
-                  <DtKabid />
+                  <DtKabid
+                    data={data}
+                    totalRows={totalRows}
+                    handlePerRowsChange={handlePerRowsChange}
+                    handlePageChange={handlePageChange}
+                    loading={loading}
+                  />
                 ) : aksi === 1 ? (
-                  <DtAdmin data={data} />
+                  <DtAdmin
+                    data={data}
+                    totalRows={totalRows}
+                    handlePerRowsChange={handlePerRowsChange}
+                    handlePageChange={handlePageChange}
+                    loading={loading}
+                  />
                 ) : (
                   <>
                     <div className='row'>
