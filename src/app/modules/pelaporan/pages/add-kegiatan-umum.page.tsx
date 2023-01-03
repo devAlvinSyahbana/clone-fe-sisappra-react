@@ -185,9 +185,11 @@ export const AddKegiatanUmumPage: FC = () => {
           timer: 1500,
           color: '#000000',
         })
-        actions.resetForm(initialState)
-        dispatch(reset())
-        listMasterJenisValue()
+        if (!id) {
+          actions.resetForm(initialState)
+          dispatch(reset())
+          listMasterJenisValue()
+        }
       }
     } catch (error) {
       Swal.fire({
