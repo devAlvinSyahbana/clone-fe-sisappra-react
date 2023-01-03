@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {Fragment, useEffect, useState} from 'react'
+import {FC, Fragment, useEffect, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
@@ -7,31 +7,44 @@ import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {useNavigate} from 'react-router-dom'
 
-export default function DtKabid(props: any) {
-  const [data, setData] = useState([])
+const LoadingAnimation = (props: any) => {
+  return (
+    <>
+      <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+        {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+        <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+        <div className='d-flex flex-column'>
+          <h5 className='mb-1'>Sedang mengambil data...</h5>
+        </div>
+      </div>
+    </>
+  )
+}
 
-  const dataKejadian = () => {
-    axios.get(`http://localhost:3002/kejadian-umum/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        no: d.id,
-        pelaksana: d.created_by,
-        tanggal_kejadian: d.kejadian__tanggal,
-        waktu_mulai: d.kejadian__waktu_start,
-        waktu_selesai: d.kejadian__waktu_end,
-        jenis_kejadian: d.kejadian__jenis_kegiatan_id,
-        uraian_kejadian: d.kejadian__uraian_kejadian,
-        wilayah: d.kegiatan__wilayah,
-        lokasi: d.kegiatan__lokasi,
-      }))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      setData(data)
-    })
-  }
-
+const GetJenisKejadian = ({row}: {row: number}) => {
+  const [valData, setValData] = useState('')
   useEffect(() => {
-    dataKejadian()
-  }, [])
+    async function fetchDT(id: number) {
+      const {data} = await axios.get(
+        `http://127.0.0.1:3001/jenis-kejadian/?%24filter=id%20eq%20${id}`
+      )
+      const result: string = data.data[0].nama
+      setValData(result)
+      // console.log(data)
+    }
+    fetchDT(row)
+  }, [valData, row])
 
+  return <>{valData}</>
+}
+
+export const DtKabid: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+}) => {
   const columns1 = [
     {
       name: 'No',
@@ -63,6 +76,7 @@ export default function DtKabid(props: any) {
       name: 'Jenis Kejadian',
       width: '140px',
       selector: (row: any) => row.jenis_kejadian,
+      cell: (record: any) => <GetJenisKejadian row={parseInt(record.jenis_kejadian)} />,
     },
     {
       name: 'Uraian Kejadian',
@@ -91,33 +105,40 @@ export default function DtKabid(props: any) {
   )
 }
 
-export function DtAdmin(props: any) {
+export const DtAdmin: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+}) => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const [data, setData] = useState([])
 
-  const dataKejadian = () => {
-    axios.get(`http://localhost:3002/kejadian-umum/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        id: d.id,
-        no: d.id,
-        pelaksana: d.created_by,
-        tanggal_kejadian: d.kejadian__tanggal,
-        waktu_mulai: d.kejadian__waktu_start,
-        waktu_selesai: d.kejadian__waktu_end,
-        jenis_kejadian: d.kejadian__jenis_kegiatan_id,
-        uraian_kejadian: d.kejadian__uraian_kejadian,
-        wilayah: d.kegiatan__wilayah,
-        lokasi: d.kegiatan__lokasi,
-      }))
-      // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-      setData(data)
-    })
-  }
+  // const dispatch = useDispatch()
+  // const [data, setData] = useState([])
 
-  useEffect(() => {
-    dataKejadian()
-  }, [])
+  // const dataKejadian = () => {
+  //   axios.get(`http://localhost:3002/kejadian-umum/`).then((res) => {
+  //     const data = res.data.data.map((d: any) => ({
+  //       id: d.id,
+  //       no: d.id,
+  //       pelaksana: d.created_by,
+  //       tanggal_kejadian: d.kejadian__tanggal,
+  //       waktu_mulai: d.kejadian__waktu_start,
+  //       waktu_selesai: d.kejadian__waktu_end,
+  //       jenis_kejadian: d.kejadian__jenis_kegiatan_id,
+  //       uraian_kejadian: d.kejadian__uraian_kejadian,
+  //       wilayah: d.kegiatan__wilayah,
+  //       lokasi: d.kegiatan__lokasi,
+  //     }))
+  //     // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
+  //     setData(data)
+  //   })
+  // }
+
+  // useEffect(() => {
+  //   dataKejadian()
+  // }, [])
 
   const columns2 = [
     {
@@ -150,6 +171,7 @@ export function DtAdmin(props: any) {
       name: 'Jenis Kejadian',
       width: '140px',
       selector: (row: any) => row.jenis_kejadian,
+      cell: (record: any) => <GetJenisKejadian row={parseInt(record.jenis_kejadian)} />,
     },
     {
       name: 'Uraian Kejadian',
@@ -229,7 +251,17 @@ export function DtAdmin(props: any) {
 
   return (
     <div>
-      <DataTable columns={columns2} data={data} pagination />
+      <DataTable
+        columns={columns2}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }
