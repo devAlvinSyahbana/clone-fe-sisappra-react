@@ -15,7 +15,7 @@ export default function DtKabid(props: any) {
       const data = res.data.data.map((d: any) => ({
         id: d.id,
         no: d.id,
-        pelaksana: d.id,
+        pelaksana: d.pelaksana,
         waktu_pengawasan: d.waktu_pengawasan,
         kota: d.kota,
         status_reklame: d.status_reklame,
@@ -72,42 +72,6 @@ export default function DtKabid(props: any) {
       wrap: true,
       selector: (row: any) => row.pemilik_reklame,
     },
-    {
-      name: 'Aksi',
-      sortable: false,
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      fixed: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='d-flex mb-2 mt-2 flex-end'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item href='#'>Detail</Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      // onClick={() => konfirDel(record.id, record.status_pegawai)}
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
-    },
   ]
 
   return (
@@ -119,13 +83,15 @@ export default function DtKabid(props: any) {
 
 export function DtAdmin(props: any) {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [data, setData] = useState([])
 
   const dataPengawasReklame = () => {
     axios.get(`http://localhost:3002/reklame/`).then((res) => {
       const data = res.data.data.map((d: any) => ({
         no: d.id,
-        pelaksana: d.id,
+        id: d.id,
+        pelaksana: d.pelaksana,
         waktu_pengawasan: d.waktu_pengawasan,
         kota: d.kota,
         status_reklame: d.status_reklame,
@@ -209,10 +175,13 @@ export function DtAdmin(props: any) {
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#'>Detail</Dropdown.Item>
                     <Dropdown.Item
-                      href='#'
-                      // onClick={() => konfirDel(record.id, record.status_pegawai)}
+                      onClick={() => navigate('/pelaporan/detail-laporan-pengawasan/' + record.id)}
+                    >
+                      Detail
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => navigate('/pelaporan/ubah-laporan-pengawasan/' + record.id)}
                     >
                       Ubah
                     </Dropdown.Item>
@@ -242,7 +211,8 @@ export function DtPimpinan(props: any) {
     axios.get(`http://localhost:3002/reklame/`).then((res) => {
       const data = res.data.data.map((d: any) => ({
         no: d.id,
-        pelaksana: d.id,
+        id: d.id,
+        pelaksana: d.pelaksana,
         status_reklame: d.status_reklame,
         pemilik_reklame: d.pemilik_reklame,
         alamat: d.alamat,
@@ -321,35 +291,17 @@ export function DtPimpinan(props: any) {
     {
       name: 'Aksi',
       sortable: false,
+      text: 'Action',
       className: 'action',
-      center: true,
-      allowOverflow: true,
-      fixed: true,
       cell: (record: any) => {
         return (
           <Fragment>
-            <div className='d-flex mb-2 mt-2 flex-end'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
-                  >
-                    <Dropdown.Item href='#'>Detail</Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() => navigate('/pelaporan/ubah-laporan-pengawasan/' + record.id)}
-                      // onClick={() => konfirDel(record.id, record.status_pegawai)}
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
-              ))}
-            </div>
+            <button
+              className='btn btn-primary btn-sm me-30'
+              onClick={() => navigate('/pelaporan/detail-laporan-pengawasan/' + record.id)}
+            >
+              Detail
+            </button>
           </Fragment>
         )
       },

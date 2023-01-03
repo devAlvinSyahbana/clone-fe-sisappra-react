@@ -178,14 +178,14 @@ export const pelaporanPengawasanSlice = createSlice({
         state[action.payload.target.name] = action.payload.target.value
       }
     },
-    reset: () => {
-      return initialState
-    },
+    reset: () => initialState,
+    editInitialState: (state: PelaporanPengawasanState, action: PayloadAction<any>) =>
+      (state = action.payload),
   },
 })
 
 // Action creators are generated for each case reducer function
 
-export const {changedValue, reset} = pelaporanPengawasanSlice.actions
+export const {changedValue,editInitialState, reset} = pelaporanPengawasanSlice.actions
 
 export default pelaporanPengawasanSlice.reducer
