@@ -14,18 +14,18 @@ export interface PelaporanTamuDaerahState extends Record<string, any> {
   waktu_mulai_kunjungan: string
   waktu_selesai_kunjungan: string
   asal_instansi: string
-  jml_pengunjung: string
+  jml_pengunjung: number
   maksud_dan_tujuan: string
   pejabat_penerima_kunjungan: string
   tempat_kunjungan: string
 }
 
 export const initialState: PelaporanTamuDaerahState = {
-  tanggal_kunjungan: '2022-01-23',
-  waktu_mulai_kunjungan: '08:00:00',
-  waktu_selesai_kunjungan: '08:00:00',
+  tanggal_kunjungan: '',
+  waktu_mulai_kunjungan: '',
+  waktu_selesai_kunjungan: '',
   asal_instansi: '',
-  jml_pengunjung: '',
+  jml_pengunjung: 0,
   maksud_dan_tujuan: '',
   pejabat_penerima_kunjungan: '',
   tempat_kunjungan: '',
@@ -37,7 +37,7 @@ export const createSchemaPelaporanTamuDaerah = [
     waktu_mulai_kunjungan: Yup.string().required().label('Waktu Kunjungan'),
     waktu_selesai_kunjungan: Yup.string().required().label('Waktu Kunjungan'),
     asal_instansi: Yup.string().required().label('Asal Instansi'),
-    jml_pengunjung: Yup.string().required().label('Jumlah Pengunjung'),
+    jml_pengunjung: Yup.number().integer().moreThan(0).required().label('Jumlah Pengunjung'),
     maksud_dan_tujuan: Yup.string().required().label('Maksud dan Tujuan'),
     pejabat_penerima_kunjungan: Yup.string().required().label('Pejabat Penerima Kunjungan'),
     tempat_kunjungan: Yup.string().required().label('Tempat Kunjungan'),
@@ -77,11 +77,13 @@ export const pelaporanTamuDaerahSlice = createSlice({
     reset: () => {
       return initialState
     },
+    editInitialState: (state: PelaporanTamuDaerahState, action: PayloadAction<any>) =>
+      (state = action.payload),
   },
 })
 
 // Action creators are generated for each case reducer function
 
-export const {changedValue} = pelaporanTamuDaerahSlice.actions
+export const {changedValue, reset, editInitialState} = pelaporanTamuDaerahSlice.actions
 
 export default pelaporanTamuDaerahSlice.reducer

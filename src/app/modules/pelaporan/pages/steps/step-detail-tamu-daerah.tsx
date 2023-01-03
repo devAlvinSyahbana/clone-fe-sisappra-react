@@ -63,7 +63,7 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
         </div>
         {/* Waktu Mulai Kunjungan */}
         <div className='mb-10'>
-          <label className='required form-label'>Waktu Mulai Kunjungan</label>
+          <label className='required form-label'>Waktu Kunjungan</label>
           <div className='row'>
             <div className='col'>
               <Field
@@ -114,11 +114,12 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
           <label className='required form-label'>Jumlah Pengunjung</label>
           <Field
             type='number'
-            min=''
+            min='0'
             name='jml_pengunjung'
             className='form-control'
             placeholder='Masukkan Jumlah Pengunjung'
-            onKeyUp={(o: ChangeEvent<any>) => {
+            onFocus={(e: any) => e.target.select()}
+            onInput={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
