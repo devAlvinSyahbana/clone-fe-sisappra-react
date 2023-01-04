@@ -72,6 +72,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             name='kejadian__jenis_kejadian_selection'
             target='kejadian__jenis_kejadian_id'
             className='form-control'
+            disabled={values.id}
             component={SelectField}
             options={jenisKejadianList}
             onChange={(o: ChangeEvent<any>) => {
