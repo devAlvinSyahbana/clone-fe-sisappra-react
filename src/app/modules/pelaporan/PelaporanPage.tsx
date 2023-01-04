@@ -72,7 +72,8 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Detail Laporan Kegiatan</PageTitle>
-              <DetailLaporanKegiatan />
+              <AddKegiatanUmumPage />
+              {/* <DetailLaporanKegiatan /> */}
             </>
           }
         />

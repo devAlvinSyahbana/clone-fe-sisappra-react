@@ -47,7 +47,7 @@ const props: UploadProps = {
   },
 }
 
-const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice, sourceFile}) => {
+const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice, sourceFile, disabled}) => {
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
@@ -169,6 +169,7 @@ const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice, sourceFil
         customRequest={handleUpload}
         maxCount={maxFile}
         defaultFileList={sourceFile.length === 1 && sourceFile[0].key === '' ? '' : uploadedFiles}
+        disabled={disabled}
       >
         <p className='ant-upload-drag-icon'>
           <InboxOutlined />

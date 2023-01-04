@@ -5,6 +5,7 @@ import TimePicker from 'react-multi-date-picker/plugins/time_picker'
 import Select, {OptionProps} from 'react-select'
 import {useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
+import {useLocation} from 'react-router-dom'
 
 export type FieldState = {target: {name: string; value: any}}
 
@@ -12,6 +13,11 @@ export const ToFieldStateCE = ({target}: ChangeEvent<any>): FieldState => ({
   target: {name: target.name, value: target.value},
 })
 export const ToFieldStateBNV = (name: string, value: any): FieldState => ({target: {name, value}})
+
+const usePathname = () => {
+  const location = useLocation()
+  return location.pathname
+}
 
 export interface DefaultCTOField {
   className: string
@@ -42,6 +48,7 @@ export const DatePickerField = ({
     containerClassName={className}
     inputClass='form-control'
     format='YYYY-MM-DD'
+    disabled={usePathname().indexOf('Detail') !== -1}
     value={field.value}
     onChange={(o: DateObject) => {
       field.onChange({target: {name: field.name, value: o?.toString()}})
@@ -88,6 +95,7 @@ export const TimePickerField = ({
       containerClassName={className}
       inputClass='form-control'
       format='HH:mm:00'
+      disabled={usePathname().indexOf('Detail') !== -1}
       plugins={[<TimePicker hideSeconds />]}
       value={form.values[field.name] ? fieldVal : ''}
       onChange={(o: DateObject) => {

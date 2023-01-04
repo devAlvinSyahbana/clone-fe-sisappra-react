@@ -30,7 +30,7 @@ import axios from 'axios'
 import {ToFieldStateBNV, ToFieldStateCE} from '../components/fields.formikcto'
 import {RootState} from '../../../redux/store'
 import Swal from 'sweetalert2'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useLocation, useNavigate, useParams} from 'react-router-dom'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
@@ -39,8 +39,15 @@ export const AddKegiatanUmumPage: FC = () => {
   const [currentIntialState, setCurrentIntialState] = useState(initialState)
   // const [filteredObject, setFilteredObject] = useState({})
   const [loading, setLoading] = useState(true)
+  const [detailState, setDetailState] = useState(false)
 
   const {id} = useParams()
+  const usePathname = () => {
+    const location = useLocation()
+    return location.pathname
+  }
+  const currentLocation = usePathname()
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const allValues = useSelector((s: RootState) => s.pelaporanKegiatan)
@@ -104,6 +111,13 @@ export const AddKegiatanUmumPage: FC = () => {
 
   useEffect(() => {
     listMasterJenisValue()
+    if (currentLocation.indexOf('Detail') !== -1) {
+      //  console.log('The string was found!')
+      setDetailState(true)
+    } else {
+      // console.log('The string was not found.')
+      setDetailState(false)
+    }
     if (!id) setLoading(false)
   }, [])
 
@@ -246,6 +260,7 @@ export const AddKegiatanUmumPage: FC = () => {
                           handleReset={handleReset}
                           listMasterJenisValue={listMasterJenisValue}
                           allValues={allValues}
+                          detailState={detailState}
                         />
                       </div>
                       <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
@@ -253,10 +268,11 @@ export const AddKegiatanUmumPage: FC = () => {
                           values={values}
                           setFieldValue={setFieldValue}
                           allValues={allValues}
+                          detailState={detailState}
                         />
                       </div>
                       <div className='tab-pane fade' id='kt_tab_pane_3' role='tabpanel'>
-                        <StepDokumentasi />
+                        <StepDokumentasi detailState={detailState} />
                       </div>
                     </div>
                   </div>
@@ -280,7 +296,11 @@ export const AddKegiatanUmumPage: FC = () => {
                               <span className='fs-7'>ke Halaman Utama</span>
                             </span>
                           </button>
-                          <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
+                          <button
+                            type='submit'
+                            className='col-5 btn btn-flex btn-primary px-6 m-3'
+                            disabled={detailState}
+                          >
                             <span className='svg-icon svg-icon-2x'>
                               <i className='fa-solid fa-paper-plane'></i>
                             </span>

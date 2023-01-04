@@ -47,6 +47,7 @@ interface StepDetailKegiatanProps {
   handleReset?: (e?: React.SyntheticEvent<any>) => void
   listMasterJenisValue: any
   allValues: any
+  detailState: boolean
 }
 
 export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
@@ -56,6 +57,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   values,
   listMasterJenisValue,
   allValues,
+  detailState,
 }) => {
   const dispatch = useDispatch()
   const jenisKegiatanList = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_kegiatan)
@@ -138,6 +140,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
               }
               className='form-control'
               component={SelectField}
+              disabled={detailState}
               options={isLaporanMasyarakat(values) ? asalLaporan : jenisPengamanan}
               onChange={(o: ChangeEvent<any>) => {
                 dispatch(changedValue(ToFieldStateCE(o)))
@@ -166,6 +169,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             min='0'
             name='kegiatan__jumlah_personil'
             className='form-control'
+            disabled={detailState}
             onFocus={(e: any) => e.target.select()}
             onInput={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -183,6 +187,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             type='text'
             name='kegiatan__uraian_kegiatan'
             className='form-control'
+            disabled={detailState}
             onKeyUp={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
@@ -202,6 +207,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
                 type='text'
                 name='kegiatan__masalah'
                 className='form-control'
+                disabled={detailState}
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
@@ -219,6 +225,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
                 type='text'
                 name='kegiatan__pemecahan_masalah'
                 className='form-control'
+                disabled={detailState}
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
@@ -235,6 +242,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
                 type='text'
                 name='kegiatan__instansi_terkait'
                 className='form-control'
+                disabled={detailState}
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
@@ -251,6 +259,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           <Field
             name='kegiatan__tanggal'
             className='form-control'
+            disabled={detailState}
             component={DatePickerField}
             onChange={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -268,6 +277,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
               <Field
                 name='kegiatan__jam_start'
                 className='form-control'
+                disabled={detailState}
                 component={TimePickerField}
                 onChange={(o: any) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
@@ -281,6 +291,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
               <Field
                 name='kegiatan__jam_end'
                 className='form-control'
+                disabled={detailState}
                 component={TimePickerField}
                 onChange={(o: any) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
@@ -299,6 +310,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             type='text'
             name='kegiatan__lokasi'
             className='form-control'
+            disabled={detailState}
             onKeyUp={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}

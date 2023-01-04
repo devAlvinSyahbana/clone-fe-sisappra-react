@@ -6,7 +6,11 @@ import {useDispatch, useSelector} from 'react-redux'
 import DragDropImageUploader from '../../components/DragDropImageUploader'
 import {RootState} from '../../../../redux/store'
 
-export const StepDokumentasi: FC = () => {
+interface StepDokumentasiProps {
+  detailState: boolean
+}
+
+export const StepDokumentasi: FC<StepDokumentasiProps> = ({detailState}) => {
   const dispatch = useDispatch()
   const dokumentasi = useSelector((s: RootState) => s.pelaporanKegiatan.dokumentasi[0])
 
@@ -18,6 +22,7 @@ export const StepDokumentasi: FC = () => {
           maxFile={4}
           path='kegiatan' // GANTI path ini dengan path laporan (kegiatan, kejadian, pengawasan, tamu daerah)
           slice={dokumentasi} // cek di inisiasi file ini, slice dari redux pelaporan
+          disabled={detailState}
           sourceFile={dokumentasi.file_uploadResult}
           change={(e: any) => {
             // console.log(e)
@@ -40,6 +45,7 @@ export const StepDokumentasi: FC = () => {
             type='text'
             name='dokumentasi[0].keterangan'
             className='form-control'
+            disabled={detailState}
             placeholder='Masukkan Keterangan'
             onKeyUp={(o: ChangeEvent<any>) => {
               ToFieldStateCE(o)

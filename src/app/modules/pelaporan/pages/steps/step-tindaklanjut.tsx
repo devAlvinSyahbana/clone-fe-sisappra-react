@@ -30,9 +30,15 @@ interface StepTindakLanjutProps {
   }
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
   allValues: any
+  detailState: boolean
 }
 
-export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldValue, allValues}) => {
+export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
+  values,
+  setFieldValue,
+  allValues,
+  detailState,
+}) => {
   const dispatch = useDispatch()
   const [name, setName] = useState('')
   const [value, setValue] = useState(0)
@@ -95,6 +101,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
               name='tindak_lanjut__administrasi__jenis_pasal_selection'
               target='tindak_lanjut__administrasi__jenis_pasal_id'
               className='form-control'
+              disabled={detailState}
               component={SelectField}
               options={listJenisPasal.length > 0 ? listJenisPasal : ''}
               onChange={(o: ChangeEvent<any>) => {
@@ -197,6 +204,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                   name='tindak_lanjut__administrasi__penyelesaian_selection'
                   target='tindak_lanjut__administrasi__penyelesaian_id'
                   className='form-control'
+                  disabled={detailState}
                   component={SelectField}
                   options={listJenisPenyelesaian.length > 0 ? listJenisPenyelesaian : ''}
                   onChange={(o: ChangeEvent<any>) => {
@@ -214,6 +222,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                     name='tindak_lanjut__administrasi__penyelesaian_khusus_selection'
                     target='tindak_lanjut__administrasi__penyelesaian_khusus_id'
                     className='form-control'
+                    disabled={detailState}
                     component={SelectField}
                     options={listJenisProsesKhusus.length > 0 ? listJenisProsesKhusus : ''}
                     onChange={(o: ChangeEvent<any>) => {
@@ -236,6 +245,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       <Field
                         name='tindak_lanjut__sidang__tanggal'
                         className='form-control'
+                        disabled={detailState}
                         component={DatePickerField}
                         onChange={(o: any) => {
                           dispatch(changedValue(ToFieldStateCE(o)))
@@ -252,6 +262,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                         name='tindak_lanjut__jenis_penindakan_selection'
                         target='tindak_lanjut__jenis_penindakan_id'
                         className='form-control'
+                        disabled={detailState}
                         component={SelectField}
                         options={listJenisPenindakan}
                         onChange={(o: ChangeEvent<any>) => {
@@ -274,6 +285,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                           min='0'
                           name='tindak_lanjut__sidang__jumlah_pelanggar_hadir'
                           className='form-control'
+                          disabled={detailState}
                           onFocus={(e: any) => e.target.select()}
                           onInput={(o: ChangeEvent<any>) => {
                             dispatch(changedValue(ToFieldStateCE(o)))
@@ -292,6 +304,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                           min='0'
                           name='tindak_lanjut__sidang__jumlah_pelanggar_tidak_hadir'
                           className='form-control'
+                          disabled={detailState}
                           onFocus={(e: any) => e.target.select()}
                           onInput={(o: ChangeEvent<any>) => {
                             dispatch(changedValue(ToFieldStateCE(o)))
@@ -308,6 +321,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                           min='0'
                           name='tindak_lanjut__sidang__jumlah_pelanggar_verstek'
                           className='form-control'
+                          disabled={detailState}
                           onFocus={(e: any) => e.target.select()}
                           onInput={(o: ChangeEvent<any>) => {
                             dispatch(changedValue(ToFieldStateCE(o)))
@@ -327,6 +341,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                           min='0'
                           name='tindak_lanjut__jumlah_pelanggar'
                           className='form-control'
+                          disabled={detailState}
                           onFocus={(e: any) => e.target.select()}
                           onInput={(o: ChangeEvent<any>) => {
                             dispatch(changedValue(ToFieldStateCE(o)))
@@ -364,6 +379,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__no_bap'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -378,6 +394,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__nama_penanggung_jawab'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -392,6 +409,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__nama_tempat_usaha'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -407,6 +425,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -421,6 +440,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__nik'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -436,6 +456,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__alamat'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -451,6 +472,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                         name='tindak_lanjut__identitas_pelanggar__jenis_usaha_selection'
                         target='tindak_lanjut__identitas_pelanggar__jenis_usaha_id'
                         className='form-control'
+                        disabled={detailState}
                         component={SelectField}
                         options={listJenisUsaha}
                         onChange={(o: ChangeEvent<any>) => {
@@ -471,6 +493,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__nama_pemilik'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -485,6 +508,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__nik'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -500,6 +524,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__alamat'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -516,6 +541,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                         min='0'
                         name='tindak_lanjut__identitas_pelanggar__luas_bongkaran'
                         className='form-control'
+                        disabled={detailState}
                         onFocus={(e: any) => e.target.select()}
                         onInput={(o: ChangeEvent<any>) => {
                           dispatch(changedValue(ToFieldStateCE(o)))
@@ -534,6 +560,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       name='tindak_lanjut__identitas_pelanggar__jenis_usaha_selection'
                       target='tindak_lanjut__identitas_pelanggar__jenis_usaha_id'
                       className='form-control'
+                      disabled={detailState}
                       component={SelectField}
                       options={listJenisUsaha}
                       onChange={(o: ChangeEvent<any>) => {
@@ -551,6 +578,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__alamat_tempat_usaha'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -587,6 +615,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                             : 'tindak_lanjut__denda__non_pengadilan'
                         }
                         className='form-control w-50'
+                        disabled={detailState}
                         step='500'
                         onFocus={(e: any) => e.target.select()}
                         onInput={(o: ChangeEvent<any>) => {
@@ -610,6 +639,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                     <Field
                       name='tindak_lanjut__denda__tanggal_setor'
                       className='form-control'
+                      disabled={detailState}
                       component={DatePickerField}
                       onChange={(o: any) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
@@ -626,6 +656,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__denda__nama_bank'
                       className='form-control'
+                      disabled={detailState}
                       onBlur={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -648,6 +679,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__denda__no_validasi_bank'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -669,6 +701,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       name='tindak_lanjut__rekom_citata__jenis_pelanggaran_selection'
                       target='tindak_lanjut__rekom_citata__jenis_pelanggaran_id'
                       className='form-control'
+                      disabled={detailState}
                       component={SelectField}
                       options={listJenisPelanggaranBangunan}
                       onChange={(o: ChangeEvent<any>) => {
@@ -685,6 +718,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__rekom_citata__no_sp'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -698,6 +732,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                     <Field
                       name='tindak_lanjut__rekom_citata__tanggal_no_sp'
                       className='form-control'
+                      disabled={detailState}
                       component={DatePickerField}
                       onChange={(o: any) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
@@ -713,6 +748,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__rekom_citata__no_segel'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -726,6 +762,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                     <Field
                       name='tindak_lanjut__rekom_citata__tanggal_segel'
                       className='form-control'
+                      disabled={detailState}
                       component={DatePickerField}
                       onChange={(o: any) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
@@ -741,6 +778,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__rekom_citata__no_spb'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -754,6 +792,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                     <Field
                       name='tindak_lanjut__rekom_citata__tanggal_spb'
                       className='form-control'
+                      disabled={detailState}
                       component={DatePickerField}
                       onChange={(o: any) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
@@ -769,6 +808,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                       type='text'
                       name='tindak_lanjut__rekom_citata__no_rekomtek'
                       className='form-control'
+                      disabled={detailState}
                       onKeyUp={(o: ChangeEvent<any>) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
                       }}
@@ -782,6 +822,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                     <Field
                       name='tindak_lanjut__rekom_citata__tanggal_rekomtek'
                       className='form-control'
+                      disabled={detailState}
                       component={DatePickerField}
                       onChange={(o: any) => {
                         dispatch(changedValue(ToFieldStateCE(o)))
@@ -796,6 +837,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({values, setFieldVal
                     <Field
                       name='tindak_lanjut__rekom_citata__tanggal_peninjauan_lapangan'
                       className='form-control'
+                      disabled={detailState}
                       component={DatePickerField}
                       onChange={(o: any) => {
                         dispatch(changedValue(ToFieldStateCE(o)))

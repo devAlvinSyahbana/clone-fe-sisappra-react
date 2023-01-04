@@ -226,11 +226,11 @@ export const DtAdmin: FC<any> = ({
                     variant='light'
                     title='Aksi'
                   >
-                    {/* <Dropdown.Item
+                    <Dropdown.Item
                       onClick={() => navigate('/pelaporan/DetailLaporanKegiatan/' + record.id)}
                     >
                       Detail
-                    </Dropdown.Item> */}
+                    </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => navigate('/pelaporan/UbahLaporanKegiatan/' + record.id)}
                     >
