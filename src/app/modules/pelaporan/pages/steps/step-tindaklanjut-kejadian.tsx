@@ -252,7 +252,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
             <Select
               name='tindak__jenis_bantuan_satpolpp'
               isMulti
-              isDisabled
+              isDisabled={detailState}
               options={listJenisBantuanSatpolPP}
               value={listJenisBantuanSatpolPP.filter((d: any) =>
                 jenisBantuanSatpolItems.some((item: any) => item === Number(d.value))
@@ -271,7 +271,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
             <Select
               name='tindak__jenis_bantuan_instansiterkait'
               isMulti
-              isDisabled
+              isDisabled={detailState}
               className='basic-multi-select'
               value={listJenisBantuanInstansiTerkait.filter((d: any) =>
                 jenisBantuanInstansiItems.some((item: any) => item === Number(d.value))
@@ -291,7 +291,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
               <Select
                 // name='tindak__korban_jiwa'
                 defaultValue={valuekjlabel}
-                isDisabled
+                isDisabled={detailState}
                 className='basic-single'
                 classNamePrefix='select'
                 options={listKorbanJiwa.filter(
@@ -460,7 +460,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
                     defaultValue={valuemlabel}
                     className='basic-single'
                     classNamePrefix='select'
-                    isDisabled
+                    isDisabled={detailState}
                     options={listKorbanmaterial.filter(
                       (d: any) =>
                         !tindakKorbanMaterialItems.some((item: any) => item.id === d.value)
