@@ -114,7 +114,17 @@ export const DtKabid: FC<any> = ({
 
   return (
     <div>
-      <DataTable columns={columns2} data={data} pagination />
+      <DataTable
+        columns={columns2}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }
