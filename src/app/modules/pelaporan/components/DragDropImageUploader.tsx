@@ -79,7 +79,7 @@ const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice, sourceFil
         files = [{bucket: 'pelaporan', key: ''}]
       }
       change([{file_uploadResult: files, keterangan: slice.keterangan}])
-      console.log(info.fileList)
+      // console.log(info.fileList)
     }
     if (status === 'done') {
       message.success(`${info.file.name} file uploaded successfully.`)
@@ -139,7 +139,7 @@ const DragDropImageUploader: FC<any> = ({maxFile, path, change, slice, sourceFil
   }
 
   const handleDelete = (file: any) => {
-    console.log(file)
+    // console.log(file)
     if (file.status === 'done') {
       fetch(`${API_URL}/pelaporan/${file.response.Key}`, {
         method: 'DELETE',

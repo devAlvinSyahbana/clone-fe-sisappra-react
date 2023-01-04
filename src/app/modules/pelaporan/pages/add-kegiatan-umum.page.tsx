@@ -176,7 +176,6 @@ export const AddKegiatanUmumPage: FC = () => {
         }
       }
       if (res) {
-        console.log('laststep', values)
         actions.setSubmitting(false)
         Swal.fire({
           icon: 'success',
