@@ -25,7 +25,7 @@ import {
 } from '../../../redux/slices/pelaporan-kejadian.slice'
 import {Formik, Form, FormikValues, FormikContext} from 'formik'
 import {RootState} from '../../../redux/store'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useNavigate, useParams, useLocation} from 'react-router-dom'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 
@@ -40,6 +40,13 @@ export const AddKejadianPage: FC = () => {
   const allValues = useSelector((s: RootState) => s.pelaporanKejadian)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [detailState, setDetailState] = useState(false)
+
+  const usePathname = () => {
+    const location = useLocation()
+    return location.pathname
+  }
+  const currentLocation = usePathname()
 
   let value: any = localStorage.getItem('kt-auth-react-v')
   let createdbyHakAkses = JSON.parse(value)
@@ -90,6 +97,7 @@ export const AddKejadianPage: FC = () => {
 
   useEffect(() => {
     listMasterKejadianValue()
+    if (currentLocation.indexOf('Detail') !== -1) setDetailState(true)
     if (id) {
       editPelaporanKejadian()
     }
@@ -196,10 +204,15 @@ export const AddKejadianPage: FC = () => {
                           handleReset={handleReset}
                           listMasterKejadianValue={listMasterKejadianValue}
                           allValues={allValues}
+                          detailState={detailState}
                         />
                       </div>
                       <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
-                        <StepTindakLanjutKejadian values={values} setFieldValue={setFieldValue} />
+                        <StepTindakLanjutKejadian
+                          values={values}
+                          setFieldValue={setFieldValue}
+                          detailState={detailState}
+                        />
                       </div>
                     </div>
                   </div>
@@ -223,21 +236,26 @@ export const AddKejadianPage: FC = () => {
                               <span className='fs-7'>ke Halaman Utama</span>
                             </span>
                           </button>
-                          <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
-                            <span className='svg-icon svg-icon-2x'>
-                              <i className='fa-solid fa-paper-plane'></i>
-                            </span>
-                            <span className='d-flex flex-column align-items-start ms-2'>
-                              {!id ? (
-                                <span className='fs-3 fw-bold'>Kirim Laporan</span>
-                              ) : (
-                                <>
-                                  <span className='fs-3 fw-bold'>Simpan</span>
-                                  <span className='fs-7'>dan Selanjutnya</span>
-                                </>
-                              )}
-                            </span>
-                          </button>
+                          {!detailState && (
+                            <button
+                              type='submit'
+                              className='col-5 btn btn-flex btn-primary px-6 m-3'
+                            >
+                              <span className='svg-icon svg-icon-2x'>
+                                <i className='fa-solid fa-paper-plane'></i>
+                              </span>
+                              <span className='d-flex flex-column align-items-start ms-2'>
+                                {!id ? (
+                                  <span className='fs-3 fw-bold'>Kirim Laporan</span>
+                                ) : (
+                                  <>
+                                    <span className='fs-3 fw-bold'>Simpan</span>
+                                    <span className='fs-7'>Perubahan</span>
+                                  </>
+                                )}
+                              </span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>

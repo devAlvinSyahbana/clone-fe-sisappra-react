@@ -105,6 +105,16 @@ const PelaporanPage: React.FC = () => {
           }
         />
         <Route
+          path='DetailLaporanKejadian/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Detail Laporan Kejadian</PageTitle>
+              <AddKejadianPage />
+              {/* <DetailLaporanKegiatan /> */}
+            </>
+          }
+        />
+        <Route
           path='LaporanPengawasan'
           element={
             <>

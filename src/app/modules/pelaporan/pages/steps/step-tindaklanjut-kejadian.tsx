@@ -31,9 +31,14 @@ interface StepDetailKejadianProps {
   }
   handleReset?: (e?: React.SyntheticEvent<any>) => void
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  detailState: boolean
 }
 
-export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, setFieldValue}) => {
+export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
+  values,
+  setFieldValue,
+  detailState,
+}) => {
   const dispatch = useDispatch()
   const dokumentasi = useSelector((s: RootState) => s.pelaporanKejadian.tindak__dokumentasi[0])
   const [valueKJ, setValueKJ] = useState<any>()
@@ -143,6 +148,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                   target='kejadian__sumber_informasi_id'
                   className='form-control'
                   component={SelectField}
+                  disabled={detailState}
                   options={listSumberInformasi}
                   onChange={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
@@ -161,6 +167,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                   name='kejadian__jenis_kekerasan_selection'
                   target='kejadian__jenis_kekerasan_id'
                   className='form-control'
+                  disabled={detailState}
                   component={SelectField}
                   options={listJenisKekerasan}
                   onChange={(o: ChangeEvent<any>) => {
@@ -185,6 +192,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                 <Field
                   type='number'
                   min='0'
+                  disabled={detailState}
                   name='kejadian__jumlah_massa'
                   className='form-control'
                   onKeyUp={(o: ChangeEvent<any>) => {
@@ -204,6 +212,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                 <Field
                   type='text'
                   name='kejadian__tuntutan'
+                  disabled={detailState}
                   className='form-control'
                   onKeyUp={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
@@ -222,6 +231,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                 <Field
                   type='text'
                   name='kejadian__penanggung_jawab_unras'
+                  disabled={detailState}
                   className='form-control'
                   onKeyUp={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
@@ -242,6 +252,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
             <Select
               name='tindak__jenis_bantuan_satpolpp'
               isMulti
+              isDisabled
               options={listJenisBantuanSatpolPP}
               value={listJenisBantuanSatpolPP.filter((d: any) =>
                 jenisBantuanSatpolItems.some((item: any) => item === Number(d.value))
@@ -260,6 +271,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
             <Select
               name='tindak__jenis_bantuan_instansiterkait'
               isMulti
+              isDisabled
               className='basic-multi-select'
               value={listJenisBantuanInstansiTerkait.filter((d: any) =>
                 jenisBantuanInstansiItems.some((item: any) => item === Number(d.value))
@@ -279,6 +291,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               <Select
                 // name='tindak__korban_jiwa'
                 defaultValue={valuekjlabel}
+                isDisabled
                 className='basic-single'
                 classNamePrefix='select'
                 options={listKorbanJiwa.filter(
@@ -301,6 +314,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               <input
                 type='number'
                 min='0'
+                disabled={detailState}
                 value={valueP}
                 className='form-control'
                 onFocus={(e: any) => e.target.select()}
@@ -314,6 +328,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               <input
                 type='number'
                 min='0'
+                disabled={detailState}
                 value={valueW}
                 className='form-control'
                 onFocus={(e: any) => e.target.select()}
@@ -366,7 +381,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                 <Field
                   name={`tindak__korban_jiwa[${i}].id`}
                   className='form-control'
-                  disabled
+                  disabled={detailState}
                   value={
                     listKorbanJiwa?.find(
                       (d: any) => Number(d.value) === Number(tindakKorbanJiwaItems[i].id)
@@ -381,6 +396,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                 <Field
                   type='number'
                   min='0'
+                  disabled={detailState}
                   name={`tindak__korban_jiwa[${i}].pria`}
                   className='form-control'
                   onFocus={(e: any) => e.target.select()}
@@ -396,6 +412,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                 <Field
                   type='number'
                   min='0'
+                  disabled={detailState}
                   name={`tindak__korban_jiwa[${i}].wanita`}
                   className='form-control'
                   onInput={(o: ChangeEvent<any>) => {
@@ -408,6 +425,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               <button
                 className='btn btn-danger fw-bold'
                 type='button'
+                disabled={detailState}
                 onClick={() => {
                   const updatedItems = [...tindakKorbanJiwaItems]
                   updatedItems.splice(i, 1)
@@ -442,6 +460,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                     defaultValue={valuemlabel}
                     className='basic-single'
                     classNamePrefix='select'
+                    isDisabled
                     options={listKorbanmaterial.filter(
                       (d: any) =>
                         !tindakKorbanMaterialItems.some((item: any) => item.id === d.value)
@@ -459,6 +478,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                   <input
                     type='number'
                     min='0'
+                    disabled={detailState}
                     value={valueKM}
                     className='form-control'
                     onFocus={(e: any) => e.target.select()}
@@ -516,7 +536,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                     <Field
                       name={`tindak__korban_material[${i}].id`}
                       className='form-control'
-                      disabled
+                      disabled={detailState}
                       value={
                         listKorbanmaterial?.find(
                           (d: any) => Number(d.value) === Number(tindakKorbanMaterialItems[i].id)
@@ -536,6 +556,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                     <Field
                       type='number'
                       min='0'
+                      disabled={detailState}
                       name={`tindak__korban_material[${i}].jml`}
                       className='form-control'
                       onFocus={(e: any) => e.target.select()}
@@ -552,6 +573,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                   <button
                     className='btn btn-danger fw-bold'
                     type='button'
+                    disabled={detailState}
                     onClick={() => {
                       const updatedItems = [...tindakKorbanMaterialItems]
                       updatedItems.splice(i, 1)
