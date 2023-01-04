@@ -111,13 +111,7 @@ export const AddKegiatanUmumPage: FC = () => {
 
   useEffect(() => {
     listMasterJenisValue()
-    if (currentLocation.indexOf('Detail') !== -1) {
-      //  console.log('The string was found!')
-      setDetailState(true)
-    } else {
-      // console.log('The string was not found.')
-      setDetailState(false)
-    }
+    if (currentLocation.indexOf('Detail') !== -1) setDetailState(true)
     if (!id) setLoading(false)
   }, [])
 
@@ -296,25 +290,26 @@ export const AddKegiatanUmumPage: FC = () => {
                               <span className='fs-7'>ke Halaman Utama</span>
                             </span>
                           </button>
-                          <button
-                            type='submit'
-                            className='col-5 btn btn-flex btn-primary px-6 m-3'
-                            disabled={detailState}
-                          >
-                            <span className='svg-icon svg-icon-2x'>
-                              <i className='fa-solid fa-paper-plane'></i>
-                            </span>
-                            <span className='d-flex flex-column align-items-start ms-2'>
-                              {!id ? (
-                                <span className='fs-3 fw-bold'>Kirim Laporan</span>
-                              ) : (
-                                <>
-                                  <span className='fs-3 fw-bold'>Simpan</span>
-                                  <span className='fs-7'>Perubahan</span>
-                                </>
-                              )}
-                            </span>
-                          </button>
+                          {!detailState && (
+                            <button
+                              type='submit'
+                              className='col-5 btn btn-flex btn-primary px-6 m-3'
+                            >
+                              <span className='svg-icon svg-icon-2x'>
+                                <i className='fa-solid fa-paper-plane'></i>
+                              </span>
+                              <span className='d-flex flex-column align-items-start ms-2'>
+                                {!id ? (
+                                  <span className='fs-3 fw-bold'>Kirim Laporan</span>
+                                ) : (
+                                  <>
+                                    <span className='fs-3 fw-bold'>Simpan</span>
+                                    <span className='fs-7'>Perubahan</span>
+                                  </>
+                                )}
+                              </span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
