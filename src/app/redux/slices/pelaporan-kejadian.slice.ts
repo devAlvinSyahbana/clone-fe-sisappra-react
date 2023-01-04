@@ -337,6 +337,8 @@ export const pelaporanKejadianSlice = createSlice({
     reset: () => {
       return initialState
     },
+    editInitialState: (state: PelaporanKejadianState, action: PayloadAction<any>) =>
+      (state = action.payload),
   },
 })
 
@@ -348,6 +350,6 @@ export const isPendampinganKekerasanPadaPerempuan = (formikValues: any) =>
 export const isUnjukRasa = (formikValues: any) =>
   formikValues.kejadian__jenis_kejadian_selection?.label === 'UNJUK RASA'
 
-export const {changedValue, reset} = pelaporanKejadianSlice.actions
+export const {changedValue, reset, editInitialState} = pelaporanKejadianSlice.actions
 
 export default pelaporanKejadianSlice.reducer
