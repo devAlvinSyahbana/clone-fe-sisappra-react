@@ -13,9 +13,7 @@ import {DetailDataPengguna} from './components/detail-data-pengguna/DetailDataPe
 
 import {HakAkses} from './components/HakAkses'
 import {DetailHakAkses} from './components/detail-hak-akses/DetailHakAkses'
-import {DetailPengguna} from './components/detail-hak-akses/DetailPengguna'
 import {UpdateHakAkses} from './components/update-hak-akses/UpdateHakAkses'
-import {TambahHakAkses} from './components/tambah-hak-akses/TambahHakAkses'
 
 const dataPenggunaBreadcrumbs: Array<PageLink> = [
   {
@@ -131,29 +129,11 @@ const ManajemenPenggunaPage = () => {
           }
         />
         <Route
-          path='tambah-hak-akses/TambahHakAkses'
-          element={
-            <>
-              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Tambah Hak Akses</PageTitle>
-              <TambahHakAkses />
-            </>
-          }
-        />
-        <Route
           path='update-hak-akses/UpdateHakAkses/:id'
           element={
             <>
               <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Detail Hak Akses</PageTitle>
               <UpdateHakAkses />
-            </>
-          }
-        />
-        <Route
-          path='detail-hak-akses/DetailPengguna/:id'
-          element={
-            <>
-              <PageTitle breadcrumbs={dataPenggunaBreadcrumbs}>Lihat Hak Akses Pengguna</PageTitle>
-              <DetailPengguna />
             </>
           }
         />
