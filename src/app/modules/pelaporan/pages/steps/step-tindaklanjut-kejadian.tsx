@@ -61,8 +61,12 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
 
   const tindakKorbanJiwaItems = values?.tindak__korban_jiwa
   const tindakKorbanMaterialItems = values?.tindak__korban_material
-  const jenisBantuanSatpolItems = values?.tindak__jenis_bantuan_satpolpp
-  const jenisBantuanInstansiItems = values?.tindak__jenis_bantuan_instansiterkait
+  const jenisBantuanSatpolItems = useSelector(
+    (s: RootState) => s.pelaporanKejadian.tindak__jenis_bantuan_satpolpp
+  )
+  const jenisBantuanInstansiItems = useSelector(
+    (s: RootState) => s.pelaporanKejadian.tindak__jenis_bantuan_instansiterkait
+  )
 
   const handleChange = (e: any) => {
     let array = []
@@ -238,9 +242,11 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
             <Select
               name='tindak__jenis_bantuan_satpolpp'
               isMulti
-              className='basic-multi-select'
               options={listJenisBantuanSatpolPP}
-              classNamePrefix='select'
+              value={listJenisBantuanSatpolPP.filter((d: any) =>
+                jenisBantuanSatpolItems.some((item: any) => item === Number(d.value))
+              )}
+              className='basic-multi-select'
               onChange={(e) => {
                 handleChangeJBS(e)
               }}
@@ -255,6 +261,9 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               name='tindak__jenis_bantuan_instansiterkait'
               isMulti
               className='basic-multi-select'
+              value={listJenisBantuanInstansiTerkait.filter((d: any) =>
+                jenisBantuanInstansiItems.some((item: any) => item === Number(d.value))
+              )}
               options={listJenisBantuanInstansiTerkait}
               onChange={(e) => {
                 handleChange(e)
@@ -273,7 +282,8 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                 className='basic-single'
                 classNamePrefix='select'
                 options={listKorbanJiwa.filter(
-                  (d: any) => !tindakKorbanJiwaItems.some((item: any) => item.id === d.value)
+                  (d: any) =>
+                    !tindakKorbanJiwaItems.some((item: any) => Number(item.id) === Number(d.value))
                 )}
                 onChange={(e: any) => {
                   setValueKJ(e.value)
@@ -314,7 +324,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
           <div className='col-1 mt-8'>
             <button
               className='btn btn-secondary fw-bold'
-              disabled={valueW === 0 || valueP === 0 || !valuekjlabel}
+              disabled={!valuekjlabel}
               type='button'
               onClick={(e) => {
                 e.preventDefault()
@@ -358,7 +368,9 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                   className='form-control'
                   disabled
                   value={
-                    listKorbanJiwa.find((d: any) => d.value === tindakKorbanJiwaItems[i].id).label
+                    listKorbanJiwa?.find(
+                      (d: any) => Number(d.value) === Number(tindakKorbanJiwaItems[i].id)
+                    )?.label
                   }
                 />
               </div>
@@ -457,7 +469,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
               <div className='col-1 mt-8'>
                 <button
                   className='btn btn-secondary fw-bold'
-                  disabled={valueKM === 0 || !valuemlabel}
+                  disabled={!valuemlabel}
                   type='button'
                   onClick={(e) => {
                     e.preventDefault()
@@ -506,9 +518,9 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({values, s
                       className='form-control'
                       disabled
                       value={
-                        listKorbanmaterial.find(
-                          (d: any) => d.value === tindakKorbanMaterialItems[i].id
-                        ).label
+                        listKorbanmaterial?.find(
+                          (d: any) => Number(d.value) === Number(tindakKorbanMaterialItems[i].id)
+                        )?.label
                       }
                     />
                     <div className='text-danger mt-2'>
