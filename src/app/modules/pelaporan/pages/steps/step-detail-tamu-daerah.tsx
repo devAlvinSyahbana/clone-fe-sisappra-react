@@ -31,6 +31,7 @@ interface StepDetailTamuDaeraehProps {
   }
   handleReset?: (e?: React.SyntheticEvent<any>) => void
   allValues: any
+  detailState: boolean
 }
 
 export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
@@ -39,6 +40,7 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
   handleBlur,
   handleReset,
   allValues,
+  detailState,
 }) => {
   const dispatch = useDispatch()
 
@@ -100,6 +102,7 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
             type='text'
             name='asal_instansi'
             className='form-control'
+            disabled={detailState}
             placeholder='Masukkan asal instansi'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -117,6 +120,7 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
             min='0'
             name='jml_pengunjung'
             className='form-control'
+            disabled={detailState}
             placeholder='Masukkan Jumlah Pengunjung'
             onFocus={(e: any) => e.target.select()}
             onInput={(o: ChangeEvent<any>) => {
@@ -134,6 +138,7 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
             type='text'
             name='maksud_dan_tujuan'
             className='form-control'
+            disabled={detailState}
             placeholder='Masukkan Maksud dan Tujuan'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -150,6 +155,7 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
             type='text'
             name='pejabat_penerima_kunjungan'
             className='form-control'
+            disabled={detailState}
             placeholder='Masukkan Pejabat Penerima Kunjungan'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -166,6 +172,7 @@ export const StepDetailTamuDaerah: FC<StepDetailTamuDaeraehProps> = ({
             type='text'
             name='tempat_kunjungan'
             className='form-control'
+            disabled={detailState}
             placeholder='Masukkan Tempat Kunjungan'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))

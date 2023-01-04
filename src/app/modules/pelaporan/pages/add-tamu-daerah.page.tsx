@@ -11,7 +11,7 @@ import {
 } from '../../../redux/slices/pelaporan-tamu-daerah.slice'
 import {Formik, Form, FormikValues} from 'formik'
 import {RootState} from '../../../redux/store'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useLocation, useNavigate, useParams} from 'react-router-dom'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 
@@ -22,8 +22,14 @@ export const AddTamuDaerahPage: FC = () => {
   const [currentIntialState, setCurrentIntialState] = useState(initialState)
   // const [filteredObject, setFilteredObject] = useState({})
   const [loading, setLoading] = useState(true)
+  const [detailState, setDetailState] = useState(false)
 
   const {id} = useParams()
+  const usePathname = () => {
+    const location = useLocation()
+    return location.pathname
+  }
+  const currentLocation = usePathname()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const allValues = useSelector((s: RootState) => s.pelaporanTamuDaerah)
@@ -77,6 +83,7 @@ export const AddTamuDaerahPage: FC = () => {
       )
       setLoading(false)
     }
+    if (currentLocation.indexOf('Detail') !== -1) setDetailState(true)
   }, [allValues.created_by])
 
   // console.log(allValues)
@@ -146,6 +153,7 @@ export const AddTamuDaerahPage: FC = () => {
                           values={values}
                           handleReset={handleReset}
                           allValues={allValues}
+                          detailState={detailState}
                         />
                       </div>
                     </div>
@@ -169,14 +177,19 @@ export const AddTamuDaerahPage: FC = () => {
                               <span className='fs-3 fw-bold'>Kembali</span>
                             </span>
                           </button>
-                          <button type='submit' className='col-5 btn btn-flex btn-primary px-6 m-3'>
-                            <span className='svg-icon svg-icon-2x'>
-                              <i className='fa-solid fa-paper-plane'></i>
-                            </span>
-                            <span className='d-flex flex-column align-items-start ms-2'>
-                              <span className='fs-3 fw-bold'>Simpan</span>
-                            </span>
-                          </button>
+                          {!detailState && (
+                            <button
+                              type='submit'
+                              className='col-5 btn btn-flex btn-primary px-6 m-3'
+                            >
+                              <span className='svg-icon svg-icon-2x'>
+                                <i className='fa-solid fa-paper-plane'></i>
+                              </span>
+                              <span className='d-flex flex-column align-items-start ms-2'>
+                                <span className='fs-3 fw-bold'>Simpan</span>
+                              </span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>

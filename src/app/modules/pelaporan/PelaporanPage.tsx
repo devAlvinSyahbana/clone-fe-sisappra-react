@@ -158,6 +158,15 @@ const PelaporanPage: React.FC = () => {
             </>
           }
         />
+        <Route
+          path='DetailLaporanTamuDaerah/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Detail Tamu Daerah</PageTitle>
+              <AddTamuDaerahPage />
+            </>
+          }
+        />
         <Route index element={<Navigate to='/pelaporan' />} />
       </Route>
     </Routes>
