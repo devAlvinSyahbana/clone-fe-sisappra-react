@@ -1,20 +1,21 @@
 import React, {ChangeEvent, FC, useEffect} from 'react'
-import {ErrorMessage, Field} from 'formik'
+import {ErrorMessage, Field, FormikValues} from 'formik'
 import {DatePickerField, SelectField, ToFieldStateCE} from '../../components/fields.formikcto'
 import {
   createSchemaPelaporanPengawasan,
   initialState,
   PelaporanPengawasanState,
   changedValue,
-  updateKawasanKendaliList,
-  updateJenisReklameList,
-  updateStatusReklameList,
 } from '../../../../redux/slices/pelaporan-pengawasan-reklame.slice'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../redux/store'
 import DragDropImageUploader from '../../components/DragDropImageUploader'
+interface StepTindakLanjutPengawasanProps {
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  detailState: boolean
+}
 
-export const StepTindakLanjutPengawasan: FC = ({}) => {
+export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = ({detailState}) => {
   const dispatch = useDispatch()
   const KawasanKendaliList = useSelector(
     (s: RootState) => s.pelaporanPengawasan.list_kawasan_kendali
@@ -22,15 +23,6 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
   const JenisReklameList = useSelector((s: RootState) => s.pelaporanPengawasan.list_jenis_reklame)
   const StatusReklameList = useSelector((s: RootState) => s.pelaporanPengawasan.list_status_reklame)
   const dokumentasi = useSelector((s: RootState) => s.pelaporanPengawasan.tindak_dokumentasi[0])
-  const listMasterPengawasanValue = () => {
-    dispatch(updateKawasanKendaliList())
-    dispatch(updateStatusReklameList())
-    dispatch(updateJenisReklameList())
-  }
-
-  useEffect(() => {
-    listMasterPengawasanValue()
-  }, [])
 
   return (
     <div className='w-100'>
@@ -47,6 +39,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 <Field
                   type='text'
                   name='share_location'
+                  disabled={detailState}
                   className='form-control'
                   onKeyUp={(o: ChangeEvent<any>) => {
                     dispatch(changedValue(ToFieldStateCE(o)))
@@ -67,6 +60,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 type='number'
                 name='lokasi_tiang'
                 className='form-control'
+                disabled={detailState}
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
@@ -83,7 +77,8 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               </label>
               <Field
                 type='number'
-                name='lokasi_tiang'
+                name='longtitude'
+                disabled={detailState}
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
@@ -103,6 +98,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               name='kawasan_kendali_selection'
               target='kawasan_kendali'
               className='form-control'
+              disabled={detailState}
               component={SelectField}
               options={KawasanKendaliList}
               onChange={(o: ChangeEvent<any>) => {
@@ -124,6 +120,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               target='jenis_reklame'
               className='form-control'
               component={SelectField}
+              disabled={detailState}
               options={JenisReklameList}
               onChange={(o: ChangeEvent<any>) => {
                 dispatch(changedValue(ToFieldStateCE(o)))
@@ -143,6 +140,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 name='status_reklame_selection'
                 target='status_reklame'
                 className='form-control'
+                disabled={detailState}
                 component={SelectField}
                 options={StatusReklameList}
                 onChange={(o: ChangeEvent<any>) => {
@@ -163,6 +161,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 type='text'
                 name='pemilik_reklame'
                 className='form-control'
+                disabled={detailState}
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
@@ -180,6 +179,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               <Field
                 type='text'
                 name='konstruksi_reklame'
+                disabled={detailState}
                 className='form-control'
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
@@ -202,6 +202,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 type='text'
                 name='konten_iklan'
                 className='form-control'
+                disabled={detailState}
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
@@ -220,6 +221,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
                 type='number'
                 name='ukuran'
                 className='form-control'
+                disabled={detailState}
                 onKeyUp={(o: ChangeEvent<any>) => {
                   dispatch(changedValue(ToFieldStateCE(o)))
                 }}
@@ -239,6 +241,7 @@ export const StepTindakLanjutPengawasan: FC = ({}) => {
               path='pengawasan' // GANTI path ini dengan path laporan (kegiatan, kejadian, pengawasan, tamu daerah)
               slice={dokumentasi} // cek di inisiasi file ini, slice dari redux pelaporan
               sourceFile={dokumentasi.file_uploadResult}
+              disabled={detailState}
               change={(e: any) => {
                 // console.log(e)
                 dispatch(

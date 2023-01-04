@@ -26,6 +26,7 @@ export interface PelaporanPengawasanState extends Record<string, any> {
   kawasan_kendali: number
   pemilik_reklame: string
   konstruksi_reklame: string
+  longtitude: string
 }
 
 export const initialState: PelaporanPengawasanState = {
@@ -49,6 +50,7 @@ export const initialState: PelaporanPengawasanState = {
   pemilik_reklame: '',
   konstruksi_reklame: '',
   konten_iklan: '',
+  longtitude: '',
   status_reklame: 0,
   jenis_reklame: 0,
   tindak_dokumentasi: [
@@ -186,6 +188,6 @@ export const pelaporanPengawasanSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 
-export const {changedValue,editInitialState, reset} = pelaporanPengawasanSlice.actions
+export const {changedValue, editInitialState, reset} = pelaporanPengawasanSlice.actions
 
 export default pelaporanPengawasanSlice.reducer

@@ -37,6 +37,7 @@ interface StepDetailKejadianProps {
   }
   handleReset?: (e?: React.SyntheticEvent<any>) => void
   listMasterPengawasanValue: any
+  detailState: boolean
 }
 
 export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
@@ -45,6 +46,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
   handleBlur,
   handleReset,
   listMasterPengawasanValue,
+  detailState,
 }) => {
   const dispatch = useDispatch()
   const kotaList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kota)
@@ -59,20 +61,12 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
         <h2 className='fw-bolder text-dark mb-10'>Reklame</h2>
-        <button
-          type='button'
-          onClick={() => {
-            handleReset?.()
-            dispatch(reset())
-          }}
-        >
-          Hapus
-        </button>
         <div className='mb-10'>
           <label className='required form-label'>Tanggal Pengawasan</label>
           <Field
             name='tgl_pengecekan'
             className='form-control'
+            disabled={detailState}
             component={DatePickerField}
             onChange={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -88,6 +82,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
             <div className='col'>
               <Field
                 name='waktu_pengawasan'
+                disabled={detailState}
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -105,6 +100,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
           <Field
             name='kota_selection'
             target='kota'
+            disabled={detailState}
             className='form-control'
             component={SelectField}
             options={kotaList}
@@ -121,6 +117,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
           <label className='required form-label'>Kecamatan</label>
           <Field
             name='kecamatan_selection'
+            disabled={detailState}
             target='kecamatan'
             className='form-control'
             component={SelectField}
@@ -138,12 +135,12 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
           <label className='required form-label'>Kelurahan</label>
           <Field
             name='kelurahan_selection'
+            disabled={detailState}
             target='kelurahan'
             className='form-control'
             component={SelectField}
             options={kelurahanList}
             onChange={(o: ChangeEvent<any>) => {
-              // console.log(o)
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
           />
@@ -159,6 +156,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
             type='text'
             name='alamat'
             className='form-control'
+            disabled={detailState}
             placeholder='Masukkan Alamat Lengkap'
             onKeyUp={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
