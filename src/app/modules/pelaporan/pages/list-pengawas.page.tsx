@@ -31,6 +31,11 @@ export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const ListPengawasPage: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState([])
+  const [perPage, setPerPage] = useState(10)
+  const [totalRows, setTotalRows] = useState(0)
   const [qParamFind, setUriFind] = useState({strparam: ''})
 
   const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
@@ -57,21 +62,6 @@ export const ListPengawasPage: FC = () => {
       // .filter((v: any) => !excludeJenisKejadian.includes(v.label))
       setStatusReklameList(data)
     })
-  }
-
-  const handleFilter = async () => {
-    let uriParam = ''
-    if (tanggalAwal.val && tanggalAkhir.val) {
-      uriParam += `tgl_pengecekan%20ge%20%27${tanggalAwal.val}%27%20and%20tgl_pengecekan%20le%20%27${tanggalAkhir.val}%27`
-    } else if (tanggalAwal.val !== '') {
-      uriParam += `tgl_pengecekan%20eq%20%27${tanggalAwal.val}%27`
-    }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
-  }
-
-  const handleFilterReset = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
   }
 
   useEffect(() => {
@@ -132,6 +122,96 @@ export const ListPengawasPage: FC = () => {
   }
   const vPimpinan = () => {
     setAksi(2)
+  }
+
+  async function dataPengawasReklame(page: number) {
+    setLoading(true)
+    axios
+      .get(
+        `http://localhost:3002/reklame/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
+      )
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          waktu_pengawasan: d.waktu_pengawasan,
+          kota: d.kota,
+          status_reklame: d.status_reklame,
+          pemilik_reklame: d.pemilik_reklame,
+          alamat: d.alamat,
+          tgl_pengecekan: d.tgl_pengecekan,
+          lokasi_tiang: d.lokasi_tiang,
+          share_location: d.share_location,
+          ukuran: d.ukuran,
+          konstruksi_reklame: d.konstruksi_reklame,
+          konten_iklan: d.konten_iklan,
+          longtitude: d.longtitude,
+        }))
+        setData(data)
+        setTotalRows(res.data.total_items)
+        setLoading(false)
+
+        return [data, setData] as const
+      })
+  }
+  useEffect(() => {
+    dataPengawasReklame(0)
+  }, [qParamFind, perPage])
+
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (tanggalAwal.val && tanggalAkhir.val) {
+      uriParam += `tgl_pengecekan%20ge%20%27${tanggalAwal.val}%27%20and%20tgl_pengecekan%20le%20%27${tanggalAkhir.val}%27`
+      // console.log('2 on')
+    } else if (tanggalAwal.val !== '') {
+      // console.log('start on')
+      uriParam += `tgl_pengecekan%20eq%20%27${tanggalAwal.val}%27`
+    } else if (tanggalAkhir.val !== '') {
+      uriParam += `tgl_pengecekan%20eq%20%27${tanggalAkhir.val}%27`
+    }
+    // if (instansi.val !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
+    //   uriParam += `%20and%20asal_instansi%20eq%20%27${instansi.val}%27`
+    //   // console.log('2 on')
+    // } else if (instansi.val !== '') {
+    //   uriParam += `asal_instansi%20eq%20%27${instansi.val}%27`
+    // }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterReset = () => {
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    // setInstansi({val: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+
+  const handlePageChange = (page: number) => {
+    dataPengawasReklame(page - 1)
+  }
+
+  const handlePerRowsChange = async (newPerPage: number, page: number) => {
+    setLoading(true)
+    axios
+      .get(
+        `http://localhost:3002/reklame/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+      )
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          waktu_pengawasan: d.waktu_pengawasan,
+          kota: d.kota,
+          status_reklame: d.status_reklame,
+          pemilik_reklame: d.pemilik_reklame,
+          alamat: d.alamat,
+          tgl_pengecekan: d.tgl_pengecekan,
+        }))
+        setData(data)
+        setPerPage(newPerPage)
+        setLoading(false)
+      })
   }
 
   return (
@@ -204,7 +284,7 @@ export const ListPengawasPage: FC = () => {
                         >
                           <Form id='list_pelaporan_kegiatan_filter'>
                             <div className='row w-100 mt-10 mb-10'>
-                              <div className='col-md-6 col-lg-6 col-sm-12'>
+                              {/* <div className='col-md-6 col-lg-6 col-sm-12'>
                                 <div className='mb-10'>
                                   <div className='row'>
                                     <div className='col-4 pt-2'>
@@ -226,7 +306,7 @@ export const ListPengawasPage: FC = () => {
                                     </div>
                                   </div>
                                 </div>
-                              </div>
+                              </div> */}
                               <div className='col-md-6 col-lg-6 col-sm-12'>
                                 <div className='mb-10'>
                                   <div className='row'>
@@ -777,9 +857,25 @@ export const ListPengawasPage: FC = () => {
               {/* DATA TABLE */}
               <div className='card-body py-4'>
                 {aksi === 0 ? (
-                  <DtKabid hakAkses={hakAkses} wilayahBidang={wilayahBidang} />
+                  <DtKabid
+                    data={data}
+                    totalRows={totalRows}
+                    handlePerRowsChange={handlePerRowsChange}
+                    handlePageChange={handlePageChange}
+                    loading={loading}
+                    hakAkses={hakAkses}
+                    wilayahBidang={wilayahBidang}
+                  />
                 ) : aksi === 1 ? (
-                  <DtAdmin hakAkses={hakAkses} wilayahBidang={wilayahBidang} />
+                  <DtAdmin
+                    data={data}
+                    totalRows={totalRows}
+                    handlePerRowsChange={handlePerRowsChange}
+                    handlePageChange={handlePageChange}
+                    loading={loading}
+                    hakAkses={hakAkses}
+                    wilayahBidang={wilayahBidang}
+                  />
                 ) : (
                   <>
                     <div className='row'>
@@ -797,7 +893,14 @@ export const ListPengawasPage: FC = () => {
                         PERIODE .................... s/d .......................
                       </div>
                     </div>
-                    <DtPimpinan />
+                    <DtPimpinan
+                      data={data}
+                      totalRows={totalRows}
+                      handlePerRowsChange={handlePerRowsChange}
+                      handlePageChange={handlePageChange}
+                      loading={loading}
+                      hakAkses={hakAkses}
+                    />
                     <div className='row mt-10'>
                       <div className='col-8'></div>
                       <div className='col-4 fs-6 mb-2 fw-semibold text-center'>

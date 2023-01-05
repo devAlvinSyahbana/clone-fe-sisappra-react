@@ -7,35 +7,32 @@ import {useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
+const LoadingAnimation = (props: any) => {
+  return (
+    <>
+      <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+        {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+        <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+        <div className='d-flex flex-column'>
+          <h5 className='mb-1'>Sedang mengambil data...</h5>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export const DtKabid: FC<any> = ({
-  // data,
-  // totalRows,
-  // handlePerRowsChange,
-  // handlePageChange,
-  // loading,
-  // jenisKegiatanList,
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
   hakAkses,
   wilayahBidang,
 }) => {
   const dispatch = useDispatch()
-  const [data, setData] = useState([])
 
-  const dataPengawasReklame = () => {
-    axios.get(`http://localhost:3002/reklame/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        id: d.id,
-        no: d.id,
-        pelaksana: d.pelaksana,
-        waktu_pengawasan: d.waktu_pengawasan,
-        kota: d.kota,
-        status_reklame: d.status_reklame,
-        pemilik_reklame: d.pemilik_reklame,
-        alamat: d.alamat,
-        tgl_pengecekan: d.tgl_pengecekan,
-      }))
-      setData(data)
-    })
-  }
   const GetHakAkses = ({row}: {row: number}) => {
     const handleHakAkses = hakAkses.find((i: any) => i.id === row)
 
@@ -65,10 +62,6 @@ export const DtKabid: FC<any> = ({
 
     return <>{valData}</>
   }
-
-  useEffect(() => {
-    dataPengawasReklame()
-  }, [])
 
   const columns1 = [
     {
@@ -125,24 +118,32 @@ export const DtKabid: FC<any> = ({
 
   return (
     <div>
-      <DataTable columns={columns1} data={data} pagination />
+      <DataTable
+        columns={columns1}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }
 
 export const DtAdmin: FC<any> = ({
-  // data,
-  // totalRows,
-  // handlePerRowsChange,
-  // handlePageChange,
-  // loading,
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
   // jenisKegiatanList,
   hakAkses,
   wilayahBidang,
 }) => {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [data, setData] = useState([])
 
   const GetHakAkses = ({row}: {row: number}) => {
     const handleHakAkses = hakAkses.find((i: any) => i.id === row)
@@ -157,22 +158,6 @@ export const DtAdmin: FC<any> = ({
     return <>{handleBidang?.nama}</>
   }
 
-  const dataPengawasReklame = () => {
-    axios.get(`http://localhost:3002/reklame/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        no: d.id,
-        id: d.id,
-        pelaksana: d.pelaksana,
-        waktu_pengawasan: d.waktu_pengawasan,
-        kota: d.kota,
-        status_reklame: d.status_reklame,
-        pemilik_reklame: d.pemilik_reklame,
-        alamat: d.alamat,
-        tgl_pengecekan: d.tgl_pengecekan,
-      }))
-      setData(data)
-    })
-  }
   const GetStatusReklame = ({row}: {row: number}) => {
     const [valData, setValData] = useState('')
     useEffect(() => {
@@ -189,10 +174,6 @@ export const DtAdmin: FC<any> = ({
 
     return <>{valData}</>
   }
-
-  useEffect(() => {
-    dataPengawasReklame()
-  }, [])
 
   const columns2 = [
     {
@@ -287,36 +268,32 @@ export const DtAdmin: FC<any> = ({
 
   return (
     <div>
-      <DataTable columns={columns2} data={data} pagination />
+      <DataTable
+        columns={columns2}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }
 
-export function DtPimpinan(props: any) {
+export const DtPimpinan: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+  // jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
+}) => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const [data, setData] = useState([])
-
-  const dataPengawasReklame = () => {
-    axios.get(`http://localhost:3002/reklame/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        no: d.id,
-        id: d.id,
-        pelaksana: d.pelaksana,
-        status_reklame: d.status_reklame,
-        pemilik_reklame: d.pemilik_reklame,
-        alamat: d.alamat,
-        tgl_pengecekan: d.tgl_pengecekan,
-        lokasi_tiang: d.lokasi_tiang,
-        share_location: d.share_location,
-        ukuran: d.ukuran,
-        konstruksi_reklame: d.konstruksi_reklame,
-        konten_iklan: d.konten_iklan,
-        longtitude: d.longtitude,
-      }))
-      setData(data)
-    })
-  }
 
   const GetStatusReklame = ({row}: {row: number}) => {
     const [valData, setValData] = useState('')
@@ -334,10 +311,6 @@ export function DtPimpinan(props: any) {
 
     return <>{valData}</>
   }
-
-  useEffect(() => {
-    dataPengawasReklame()
-  }, [])
 
   const columns = [
     {
@@ -431,7 +404,17 @@ export function DtPimpinan(props: any) {
 
   return (
     <div>
-      <DataTable columns={columns} data={data} pagination />
+      <DataTable
+        columns={columns}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }
