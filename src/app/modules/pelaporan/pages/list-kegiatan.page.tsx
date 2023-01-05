@@ -26,6 +26,7 @@ import {Button} from 'react-bootstrap'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTER_URL = `${API_URL}/master`
+export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 
 export const ListKegiatanPage: FC = () => {
   const navigate = useNavigate()
@@ -116,6 +117,8 @@ export const ListKegiatanPage: FC = () => {
 
   useEffect(() => {
     filterList()
+    handleHakAkses()
+    handleWilayahBidang()
   }, [])
 
   const [tanggalAwal, setTanggalAwal] = useState({val: ''})
@@ -238,9 +241,9 @@ export const ListKegiatanPage: FC = () => {
   }, [qParamFind, perPage])
 
   const handlePageChange = (page: number) => {
-    const page1 = page++
-    dataKegiatan(page1)
-    console.log('ini page', page1, '&', page)
+    dataKegiatan(page - 1)
+    // const page1 = page++
+    console.log('ini page', page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -259,7 +262,7 @@ export const ListKegiatanPage: FC = () => {
           waktu_selesai: d.kegiatan__jam_end,
           jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
           uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-          // wilayah: d.kegiatan__wilayah,
+          wilayah: d.created_by,
           lokasi: d.kegiatan__lokasi,
         }))
         // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
@@ -267,6 +270,22 @@ export const ListKegiatanPage: FC = () => {
         setPerPage(newPerPage)
         setLoading(false)
       })
+  }
+
+  const [hakAkses, setHakAkses] = useState([])
+
+  const handleHakAkses = async () => {
+    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
+    setHakAkses(response.data.data)
+    // console.log(response.data.data)
+  }
+
+  const [wilayahBidang, setWilayahBidang] = useState([])
+
+  const handleWilayahBidang = async () => {
+    const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
+    setWilayahBidang(response.data.data)
+    // console.log(response.data.data)
   }
 
   return (
@@ -687,7 +706,7 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label'>Pelaksana Kegiatan</label>
                                 </div>
                                 <div className='col-8'>
-                                  <Field
+                                  {/* <Field
                                     name='kecamatan'
                                     target='kecamatan'
                                     className='form-control'
@@ -698,7 +717,7 @@ export const ListKegiatanPage: FC = () => {
                                       // updateJenisPasalList()
                                       // updateJenisPenyelesaianList()
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </div>
@@ -710,14 +729,14 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label'>Tanggal</label>
                                 </div>
                                 <div className='col-8'>
-                                  <Field
+                                  {/* <Field
                                     name='kegiatan__tanggal'
                                     component={DatePickerField}
                                     onChange={(o: any) => {
                                       dispatch(changedValue(ToFieldStateCE(o)))
                                     }}
                                     placeholder='Masukkan Tanggal'
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </div>
@@ -729,7 +748,7 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label'>Kota</label>
                                 </div>
                                 <div className='col-8'>
-                                  <Field
+                                  {/* <Field
                                     name='kecamatan'
                                     target='kecamatan'
                                     className='form-control'
@@ -740,7 +759,7 @@ export const ListKegiatanPage: FC = () => {
                                       // updateJenisPasalList()
                                       // updateJenisPenyelesaianList()
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </div>
@@ -752,7 +771,7 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label'>Kecamatan</label>
                                 </div>
                                 <div className='col-8'>
-                                  <Field
+                                  {/* <Field
                                     name='filter_jenis_kegiatan_id_selection'
                                     target='filter_jenis_kegiatan_id'
                                     className='form-control'
@@ -763,7 +782,7 @@ export const ListKegiatanPage: FC = () => {
                                       // updateJenisPasalList()
                                       // updateJenisPenyelesaianList()
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </div>
@@ -775,7 +794,7 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label'>Kelurahan</label>
                                 </div>
                                 <div className='col-8'>
-                                  <Field
+                                  {/* <Field
                                     name='kecamatan'
                                     target='kecamatan'
                                     className='form-control'
@@ -786,7 +805,7 @@ export const ListKegiatanPage: FC = () => {
                                       // updateJenisPasalList()
                                       // updateJenisPenyelesaianList()
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </div>
@@ -798,7 +817,7 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label'>Jenis Kegiatan</label>
                                 </div>
                                 <div className='col-8'>
-                                  <Field
+                                  {/* <Field
                                     name='filter_jenis_kegiatan_id_selection'
                                     target='filter_jenis_kegiatan_id'
                                     className='form-control'
@@ -809,7 +828,7 @@ export const ListKegiatanPage: FC = () => {
                                       // updateJenisPasalList()
                                       // updateJenisPenyelesaianList()
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </div>
@@ -821,7 +840,7 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label'>Jenis Penertiban</label>
                                 </div>
                                 <div className='col-8'>
-                                  <Field
+                                  {/* <Field
                                     name='kecamatan'
                                     target='kecamatan'
                                     className='form-control'
@@ -832,7 +851,7 @@ export const ListKegiatanPage: FC = () => {
                                       // updateJenisPasalList()
                                       // updateJenisPenyelesaianList()
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </div>
@@ -844,7 +863,7 @@ export const ListKegiatanPage: FC = () => {
                                   <label className='form-label'>Jenis Perda</label>
                                 </div>
                                 <div className='col-8'>
-                                  <Field
+                                  {/* <Field
                                     name='filter_jenis_kegiatan_id_selection'
                                     target='filter_jenis_kegiatan_id'
                                     className='form-control'
@@ -855,7 +874,7 @@ export const ListKegiatanPage: FC = () => {
                                       // updateJenisPasalList()
                                       // updateJenisPenyelesaianList()
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </div>
@@ -953,6 +972,7 @@ export const ListKegiatanPage: FC = () => {
                 </div>
               </div>
               <div className='card-body py-4'>
+                {/* Kabid */}
                 {aksi === 0 ? (
                   <DtKabid
                     data={data}
@@ -961,8 +981,11 @@ export const ListKegiatanPage: FC = () => {
                     handlePageChange={handlePageChange}
                     loading={loading}
                     jenisKegiatanList={jenisKegiatanList}
+                    hakAkses={hakAkses}
+                    wilayahBidang={wilayahBidang}
                   />
-                ) : aksi === 1 ? (
+                ) : // Admin
+                aksi === 1 ? (
                   <DtAdmin
                     data={data}
                     totalRows={totalRows}
@@ -970,8 +993,11 @@ export const ListKegiatanPage: FC = () => {
                     handlePageChange={handlePageChange}
                     loading={loading}
                     jenisKegiatanList={jenisKegiatanList}
+                    hakAkses={hakAkses}
+                    wilayahBidang={wilayahBidang}
                   />
                 ) : (
+                  // Pimpinan
                   <>
                     <div className='row'>
                       <div className='col fs-4 mb-2 fw-semibold text-center'>
@@ -988,6 +1014,7 @@ export const ListKegiatanPage: FC = () => {
                         PERIODE .................... s/d .......................
                       </div>
                     </div>
+
                     <DtPimpinan />
 
                     <div className='row'>

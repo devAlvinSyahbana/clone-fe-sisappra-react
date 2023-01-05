@@ -24,6 +24,10 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MASTER_URL = `${API_URL}/master`
+export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
+
 export const ListKejadianPage: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -174,9 +178,9 @@ export const ListKejadianPage: FC = () => {
   }, [qParamFind, perPage])
 
   const handlePageChange = (page: number) => {
-    const page1 = page++
-    dataKejadian(page1)
-    console.log('ini page', page1, '&', page)
+    // const page1 = page++
+    dataKejadian(page - 1)
+    // console.log('ini page', page1, '&', page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -204,6 +208,26 @@ export const ListKejadianPage: FC = () => {
         setLoading(false)
       })
   }
+
+  const [hakAkses, setHakAkses] = useState([])
+
+  const handleHakAkses = async () => {
+    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
+    setHakAkses(response.data.data)
+    // console.log(response.data.data)
+  }
+
+  const [wilayahBidang, setWilayahBidang] = useState([])
+
+  const handleWilayahBidang = async () => {
+    const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
+    setWilayahBidang(response.data.data)
+    // console.log(response.data.data)
+  }
+  useEffect(() => {
+    handleHakAkses()
+    handleWilayahBidang()
+  }, [])
 
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
@@ -885,6 +909,8 @@ export const ListKejadianPage: FC = () => {
                     handlePerRowsChange={handlePerRowsChange}
                     handlePageChange={handlePageChange}
                     loading={loading}
+                    hakAkses={hakAkses}
+                    wilayahBidang={wilayahBidang}
                   />
                 ) : aksi === 1 ? (
                   <DtAdmin
@@ -893,6 +919,8 @@ export const ListKejadianPage: FC = () => {
                     handlePerRowsChange={handlePerRowsChange}
                     handlePageChange={handlePageChange}
                     loading={loading}
+                    hakAkses={hakAkses}
+                    wilayahBidang={wilayahBidang}
                   />
                 ) : (
                   <>

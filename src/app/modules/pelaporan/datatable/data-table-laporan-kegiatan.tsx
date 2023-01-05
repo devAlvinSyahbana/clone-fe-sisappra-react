@@ -21,7 +21,7 @@ const LoadingAnimation = (props: any) => {
   )
 }
 
-export const jenisKegiatanList = async () => {}
+// export const jenisKegiatanList = async () => {}
 
 export const DtKabid: FC<any> = ({
   data,
@@ -30,24 +30,26 @@ export const DtKabid: FC<any> = ({
   handlePageChange,
   loading,
   jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
-    // const [valData, setValData] = useState('')
-    // useEffect(() => {
-    //   async function fetchDT(id: number) {
-    //     const {data} = await axios.get(
-    //       `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
-    //     )
-    //     const result: string = data.data[0].nama
-    //     setValData(result)
-    //     // console.log(data)
-    //   }
-    //   fetchDT(row)
-    // }, [valData, row])
     const jenisKegiatanLabel = jenisKegiatanList.find((i: any) => i.value === row)
 
     return <>{jenisKegiatanLabel?.text}</>
+  }
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
   }
 
   const columns2 = [
@@ -61,6 +63,7 @@ export const DtKabid: FC<any> = ({
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal Kegiatan',
@@ -93,7 +96,8 @@ export const DtKabid: FC<any> = ({
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.wilayah,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Lokasi',
@@ -140,6 +144,8 @@ export const DtAdmin: FC<any> = ({
   handlePageChange,
   loading,
   jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
@@ -160,6 +166,19 @@ export const DtAdmin: FC<any> = ({
     return <>{jenisKegiatanLabel?.text}</>
   }
 
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
+  }
+
   const columns2 = [
     {
       name: 'No',
@@ -171,6 +190,7 @@ export const DtAdmin: FC<any> = ({
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal Kegiatan',
@@ -203,7 +223,8 @@ export const DtAdmin: FC<any> = ({
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.wilayah,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Lokasi',
@@ -258,6 +279,7 @@ export const DtAdmin: FC<any> = ({
     },
   ]
 
+  console.log(data)
   return (
     <div>
       <DataTable

@@ -104,7 +104,7 @@ export const ListTamuDaerahPage: FC = () => {
   }, [qParamFind, perPage])
 
   const handlePageChange = (page: number) => {
-    dataTamuDaerah(page++)
+    dataTamuDaerah(page - 1)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {

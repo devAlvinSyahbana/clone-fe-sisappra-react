@@ -44,7 +44,22 @@ export const DtKabid: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  hakAkses,
+  wilayahBidang,
 }) => {
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
+  }
+
   const columns1 = [
     {
       name: 'No',
@@ -56,6 +71,7 @@ export const DtKabid: FC<any> = ({
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal Kejadian',
@@ -88,7 +104,8 @@ export const DtKabid: FC<any> = ({
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.wilayah,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Lokasi',
@@ -111,34 +128,23 @@ export const DtAdmin: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  hakAkses,
+  wilayahBidang,
 }) => {
   const navigate = useNavigate()
 
-  // const dispatch = useDispatch()
-  // const [data, setData] = useState([])
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
 
-  // const dataKejadian = () => {
-  //   axios.get(`http://localhost:3002/kejadian-umum/`).then((res) => {
-  //     const data = res.data.data.map((d: any) => ({
-  //       id: d.id,
-  //       no: d.id,
-  //       pelaksana: d.created_by,
-  //       tanggal_kejadian: d.kejadian__tanggal,
-  //       waktu_mulai: d.kejadian__waktu_start,
-  //       waktu_selesai: d.kejadian__waktu_end,
-  //       jenis_kejadian: d.kejadian__jenis_kegiatan_id,
-  //       uraian_kejadian: d.kejadian__uraian_kejadian,
-  //       wilayah: d.kegiatan__wilayah,
-  //       lokasi: d.kegiatan__lokasi,
-  //     }))
-  //     // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-  //     setData(data)
-  //   })
-  // }
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
 
-  // useEffect(() => {
-  //   dataKejadian()
-  // }, [])
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
+  }
 
   const columns2 = [
     {
@@ -151,6 +157,7 @@ export const DtAdmin: FC<any> = ({
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal Kejadian',
@@ -183,7 +190,8 @@ export const DtAdmin: FC<any> = ({
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.wilayah,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Lokasi',
