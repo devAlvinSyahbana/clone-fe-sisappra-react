@@ -38,6 +38,7 @@ interface StepDetailKejadianProps {
   handleReset?: (e?: React.SyntheticEvent<any>) => void
   listMasterKejadianValue: any
   allValues: any
+  detailState: boolean
 }
 
 export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
@@ -45,6 +46,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   handleBlur,
   handleReset,
   values,
+  detailState,
   listMasterKejadianValue,
 }) => {
   const dispatch = useDispatch()
@@ -72,6 +74,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             name='kejadian__jenis_kejadian_selection'
             target='kejadian__jenis_kejadian_id'
             className='form-control'
+            disabled={values.id}
             component={SelectField}
             options={jenisKejadianList}
             onChange={(o: ChangeEvent<any>) => {
@@ -107,6 +110,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           <Field
             name='kejadian__tanggal'
             className='form-control'
+            disabled={detailState}
             component={DatePickerField}
             onChange={(o: any) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -122,6 +126,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             <div className='col'>
               <Field
                 name='kejadian__waktu_start'
+                disabled={detailState}
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -135,6 +140,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             <div className='col'>
               <Field
                 name='kejadian__waktu_end'
+                disabled={detailState}
                 className='form-control'
                 component={TimePickerField}
                 onChange={(o: any) => {
@@ -153,6 +159,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             name='kota_selection'
             target='kejadian__kota_id'
             className='form-control'
+            disabled={detailState}
             component={SelectField}
             options={kotaList}
             onChange={(o: ChangeEvent<any>) => {
@@ -171,6 +178,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             target='kejadian__kecamatan_id'
             className='form-control'
             component={SelectField}
+            disabled={detailState}
             options={kecamatanList}
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -188,6 +196,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             target='kejadian__kelurahan_id'
             className='form-control'
             component={SelectField}
+            disabled={detailState}
             options={kelurahanList}
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
@@ -203,6 +212,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           <Field
             as='textarea'
             name='kejadian__alamat'
+            disabled={detailState}
             className='form-control'
             placeholder='Masukkan Alamat Kejadian'
             onKeyUp={(o: ChangeEvent<any>) => {
@@ -218,6 +228,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           <Field
             as='textarea'
             type='text'
+            disabled={detailState}
             name='kejadian__uraian_kejadian'
             className='form-control'
             placeholder='Masukkan Uraian Kejadian'
@@ -234,6 +245,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           <Field
             type='number'
             min='0'
+            disabled={detailState}
             name='kejadian__jml_personil_satpolpp'
             className='form-control'
             onFocus={(e: any) => e.target.select()}
@@ -250,6 +262,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           <Field
             type='number'
             min='0'
+            disabled={detailState}
             name='kejadian__jml_personil_instansilain'
             className='form-control'
             onFocus={(e: any) => e.target.select()}
@@ -271,6 +284,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
               </label>
               <Field
                 type='number'
+                disabled={detailState}
                 min='0'
                 name='kejadian__ketinggian_air'
                 className='form-control'
@@ -290,6 +304,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
               <Field
                 type='number'
                 min='0'
+                disabled={detailState}
                 name='kejadian__pengungsi'
                 className='form-control'
                 onFocus={(e: any) => e.target.select()}
@@ -306,6 +321,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
               <Field
                 type='number'
                 min='0'
+                disabled={detailState}
                 name='kejadian__pengungsi_kk'
                 className='form-control'
                 onFocus={(e: any) => e.target.select()}
@@ -322,6 +338,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
               <Field
                 type='text'
                 name='kejadian__lokasi_penampungan'
+                disabled={detailState}
                 className='form-control'
                 placeholder='Masukkan Lokasi Penampungan'
                 onKeyUp={(o: ChangeEvent<any>) => {
@@ -337,6 +354,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
               <Field
                 type='text'
                 name='kejadian__lokasi_dapur_umum'
+                disabled={detailState}
                 className='form-control'
                 placeholder='Masukkan Lokasi Dapur Umum'
                 onKeyUp={(o: ChangeEvent<any>) => {

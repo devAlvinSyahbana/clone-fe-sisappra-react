@@ -176,7 +176,7 @@ export function DtAdmin(props: any) {
                     title='Aksi'
                   >
                     <Dropdown.Item
-                      onClick={() => navigate('/pelaporan/detail-laporan-pengawasan/' + record.id)}
+                      onClick={() => navigate('/pelaporan/DetailLaporanPengawasan/' + record.id)}
                     >
                       Detail
                     </Dropdown.Item>
@@ -222,6 +222,7 @@ export function DtPimpinan(props: any) {
         ukuran: d.ukuran,
         konstruksi_reklame: d.konstruksi_reklame,
         konten_iklan: d.konten_iklan,
+        longtitude: d.longtitude,
       }))
       setData(data)
     })
@@ -277,6 +278,18 @@ export function DtPimpinan(props: any) {
       selector: (row: any) => row.pemilik_reklame,
     },
     {
+      name: 'Latitude',
+      width: '200px',
+      wrap: true,
+      selector: (row: any) => row.lokasi_tiang,
+    },
+    {
+      name: 'Longtitude',
+      width: '200px',
+      wrap: true,
+      selector: (row: any) => row.longtitude,
+    },
+    {
       name: 'Konstruksi Reklame',
       width: '200px',
       wrap: true,
@@ -298,7 +311,7 @@ export function DtPimpinan(props: any) {
           <Fragment>
             <button
               className='btn btn-primary btn-sm me-30'
-              onClick={() => navigate('/pelaporan/detail-laporan-pengawasan/' + record.id)}
+              onClick={() => navigate('/pelaporan/DetailLaporanPengawasan/' + record.id)}
             >
               Detail
             </button>

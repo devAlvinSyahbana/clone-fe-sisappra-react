@@ -212,7 +212,11 @@ export const DtAdmin: FC<any> = ({
                     variant='light'
                     title='Aksi'
                   >
-                    <Dropdown.Item href='#'>Detail</Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => navigate('/pelaporan/DetailLaporanKejadian/' + record.id)}
+                    >
+                      Detail
+                    </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => navigate('/pelaporan/ubah-laporan-kejadian/' + record.id)}
                     >
