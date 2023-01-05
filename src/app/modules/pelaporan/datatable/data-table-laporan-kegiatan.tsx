@@ -21,29 +21,33 @@ const LoadingAnimation = (props: any) => {
   )
 }
 
+export const jenisKegiatanList = async () => {}
+
 export const DtKabid: FC<any> = ({
   data,
   totalRows,
   handlePerRowsChange,
   handlePageChange,
   loading,
+  jenisKegiatanList,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
-    const [valData, setValData] = useState('')
-    useEffect(() => {
-      async function fetchDT(id: number) {
-        const {data} = await axios.get(
-          `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
-        )
-        const result: string = data.data[0].nama
-        setValData(result)
-        // console.log(data)
-      }
-      fetchDT(row)
-    }, [valData, row])
+    // const [valData, setValData] = useState('')
+    // useEffect(() => {
+    //   async function fetchDT(id: number) {
+    //     const {data} = await axios.get(
+    //       `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
+    //     )
+    //     const result: string = data.data[0].nama
+    //     setValData(result)
+    //     // console.log(data)
+    //   }
+    //   fetchDT(row)
+    // }, [valData, row])
+    const jenisKegiatanLabel = jenisKegiatanList.find((i: any) => i.value === row)
 
-    return <>{valData}</>
+    return <>{jenisKegiatanLabel?.text}</>
   }
 
   const columns2 = [
@@ -135,23 +139,25 @@ export const DtAdmin: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  jenisKegiatanList,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
-    const [valData, setValData] = useState('')
-    useEffect(() => {
-      async function fetchDT(id: number) {
-        const {data} = await axios.get(
-          `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
-        )
-        const result: string = data.data[0].nama
-        setValData(result)
-        // console.log(data)
-      }
-      fetchDT(row)
-    }, [valData, row])
+    // const [valData, setValData] = useState('')
+    const jenisKegiatanLabel = jenisKegiatanList.find((i: any) => i.value === row)
+    // useEffect(() => {
+    //   async function fetchDT(id: number) {
+    //     const {data} = await axios.get(
+    //       `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
+    //     )
+    //     const result: string = data.data[0].nama
+    //     setValData(result)
+    //     // console.log(data)
+    //   }
+    //   fetchDT(row)
+    // }, [valData, row])
 
-    return <>{valData}</>
+    return <>{jenisKegiatanLabel?.text}</>
   }
 
   const columns2 = [

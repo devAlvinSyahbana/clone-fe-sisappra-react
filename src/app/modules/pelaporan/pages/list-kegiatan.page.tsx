@@ -140,10 +140,12 @@ export const ListKegiatanPage: FC = () => {
     readonly label: string
   }
 
+  const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
   const filterJenisKegiatan = async (inputValue: string) => {
     const response = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox`)
     const json = await response.data.data
+    setJenisKegiatanList(json)
     return json.map((i: any) => ({label: i.text, value: i.value}))
   }
   const loadOptionsJenisKegiatan = (
@@ -958,6 +960,7 @@ export const ListKegiatanPage: FC = () => {
                     handlePerRowsChange={handlePerRowsChange}
                     handlePageChange={handlePageChange}
                     loading={loading}
+                    jenisKegiatanList={jenisKegiatanList}
                   />
                 ) : aksi === 1 ? (
                   <DtAdmin
@@ -966,6 +969,7 @@ export const ListKegiatanPage: FC = () => {
                     handlePerRowsChange={handlePerRowsChange}
                     handlePageChange={handlePageChange}
                     loading={loading}
+                    jenisKegiatanList={jenisKegiatanList}
                   />
                 ) : (
                   <>
