@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 export const DtKabid: FC<any> = ({
   // data,
   // totalRows,
@@ -30,6 +31,7 @@ export const DtKabid: FC<any> = ({
         status_reklame: d.status_reklame,
         pemilik_reklame: d.pemilik_reklame,
         alamat: d.alamat,
+        tgl_pengecekan: d.tgl_pengecekan,
       }))
       setData(data)
     })
@@ -45,6 +47,23 @@ export const DtKabid: FC<any> = ({
 
     // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
     return <>{handleBidang?.nama}</>
+  }
+
+  const GetStatusReklame = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+        )
+        const result: string = data.data[0].nama
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
   }
 
   useEffect(() => {
@@ -63,6 +82,12 @@ export const DtKabid: FC<any> = ({
       width: '200px',
       selector: (row: any) => row.pelaksana,
       cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
+    },
+    {
+      name: 'Tanggal',
+      width: '140px',
+      wrap: true,
+      selector: (row: any) => row.tgl_pengecekan,
     },
     {
       name: 'Waktu',
@@ -88,6 +113,7 @@ export const DtKabid: FC<any> = ({
       width: '140px',
       wrap: true,
       selector: (row: any) => row.status_reklame,
+      cell: (record: any) => <GetStatusReklame row={parseInt(record.status_reklame)} />,
     },
     {
       name: 'Pemilik Reklame Konten Iklan',
@@ -147,6 +173,22 @@ export const DtAdmin: FC<any> = ({
       setData(data)
     })
   }
+  const GetStatusReklame = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+        )
+        const result: string = data.data[0].nama
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
 
   useEffect(() => {
     dataPengawasReklame()
@@ -194,6 +236,7 @@ export const DtAdmin: FC<any> = ({
       width: '140px',
       wrap: true,
       selector: (row: any) => row.status_reklame,
+      cell: (record: any) => <GetStatusReklame row={parseInt(record.status_reklame)} />,
     },
     {
       name: 'Pemilik Reklame Konten Iklan',
@@ -275,6 +318,23 @@ export function DtPimpinan(props: any) {
     })
   }
 
+  const GetStatusReklame = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+        )
+        const result: string = data.data[0].nama
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
   useEffect(() => {
     dataPengawasReklame()
   }, [])
@@ -311,6 +371,7 @@ export function DtPimpinan(props: any) {
       width: '140px',
       wrap: true,
       selector: (row: any) => row.status_reklame,
+      cell: (record: any) => <GetStatusReklame row={parseInt(record.status_reklame)} />,
     },
     {
       name: 'Ukuran',
