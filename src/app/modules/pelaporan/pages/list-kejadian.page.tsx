@@ -23,6 +23,7 @@ import {DtKabid, DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-keja
 import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
+import Swal from 'sweetalert2'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTER_URL = `${API_URL}/master`
@@ -214,7 +215,7 @@ export const ListKejadianPage: FC = () => {
   const handleHakAkses = async () => {
     const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
     setHakAkses(response.data.data)
-    // console.log(response.data.data)
+    console.log(response.data.data)
   }
 
   const [wilayahBidang, setWilayahBidang] = useState([])
@@ -222,12 +223,52 @@ export const ListKejadianPage: FC = () => {
   const handleWilayahBidang = async () => {
     const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
     setWilayahBidang(response.data.data)
-    // console.log(response.data.data)
+    console.log(response.data.data)
   }
   useEffect(() => {
     handleHakAkses()
     handleWilayahBidang()
   }, [])
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      text: 'Anda yakin ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+      color: '#000000',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const bodyParam = {
+          data: {
+            deleted_by: 'string',
+          },
+        }
+        const response = await axios.delete(`http://localhost:3002/kejadian-umum/${id}`, bodyParam)
+        if (response) {
+          dataKejadian(0)
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        }
+      }
+    })
+  }
 
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
@@ -921,6 +962,7 @@ export const ListKejadianPage: FC = () => {
                     loading={loading}
                     hakAkses={hakAkses}
                     wilayahBidang={wilayahBidang}
+                    konfirDel={konfirDel}
                   />
                 ) : (
                   <>

@@ -130,6 +130,7 @@ export const DtAdmin: FC<any> = ({
   loading,
   hakAkses,
   wilayahBidang,
+  konfirDel,
 }) => {
   const navigate = useNavigate()
 
@@ -138,6 +139,7 @@ export const DtAdmin: FC<any> = ({
 
     return <>{handleHakAkses?.nama_hak_akses}</>
   }
+
   const GetBidang = ({row}: {row: number}) => {
     const handleHakAkses = hakAkses.find((i: any) => i.id === row)
     const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
@@ -145,6 +147,7 @@ export const DtAdmin: FC<any> = ({
     // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
     return <>{handleBidang?.nama}</>
   }
+  // console.log(GetHakAkses, GetBidang)
 
   const columns2 = [
     {
@@ -211,33 +214,28 @@ export const DtAdmin: FC<any> = ({
           <Fragment>
             <div className='d-flex mb-2 mt-2 flex-end'>
               {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
+                <DropdownType
+                  as={ButtonGroup}
+                  key={idx}
+                  id={`dropdown-button-drop-${idx}`}
+                  size='sm'
+                  variant='light'
+                  title='Aksi'
+                >
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/DetailLaporanKejadian/' + record.id)}
                   >
-                    <Dropdown.Item
-                      onClick={() => navigate('/pelaporan/DetailLaporanKejadian/' + record.id)}
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() => navigate('/pelaporan/ubah-laporan-kejadian/' + record.id)}
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      // onClick={() => konfirDel(record.id, record.status_pegawai)}
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
+                    Detail
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/ubah-laporan-kejadian/' + record.id)}
+                  >
+                    Ubah
+                  </Dropdown.Item>
+                  <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                    Hapus
+                  </Dropdown.Item>
+                </DropdownType>
               ))}
             </div>
           </Fragment>
@@ -292,76 +290,76 @@ export function DtPimpinan(props: any) {
     },
     {
       name: 'Jumlah Kejadian',
-      selector: (row: any) => row.tanggal_kegiatan,
+      selector: (row: any) => row.jumlah_kejadian,
     },
     {
       name: 'Banjir',
-      selector: (row: any) => row.waktu_kegiatan,
+      selector: (row: any) => row.banjir,
     },
     {
       name: 'Hewan Buas dan Berbisa',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.hewan,
     },
     {
       name: 'Kebakaran',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.kebakaran,
     },
     {
       name: 'Kecelakaan',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.kecelakaan,
     },
     {
       name: 'Pendampingan Kekerasan Pada Perempuan',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.pendampingan_perempuan,
     },
     {
       name: 'Kerusakan Konstruksi',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.kerusakan_konstruksi,
     },
     {
       name: 'Kriminalitas',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.kriminalitas,
     },
     {
       name: 'Pembunuhan',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.pembunuhan,
     },
     {
       name: 'Penemuan Mayat',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.penemuan,
     },
     {
       name: 'Penyelamatan Orang',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.penyelamatan,
     },
     {
       name: 'Pohon Tumbang',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.pohon,
     },
     {
       name: 'Tawuran',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.tawuran,
     },
     {
       name: 'Terorisme',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.terorisme,
     },
     {
       name: 'Unjuk Rasa',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.unjuk_rasa,
     },
   ]
 
@@ -370,9 +368,10 @@ export function DtPimpinan(props: any) {
       id: 1,
       no: '1',
       bidang_wilayah: 'Kota Administrasi Jakarta Pusat',
-      tanggal_kegiatan: '12',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
+      jumlah_kejadian: '',
+      banjir: '12',
+      hewan_buas: '1',
+      kebakaran: '1',
     },
     {
       id: 2,

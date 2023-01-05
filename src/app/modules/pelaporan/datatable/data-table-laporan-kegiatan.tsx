@@ -146,6 +146,7 @@ export const DtAdmin: FC<any> = ({
   jenisKegiatanList,
   hakAkses,
   wilayahBidang,
+  konfirDel,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
@@ -244,33 +245,28 @@ export const DtAdmin: FC<any> = ({
           <Fragment>
             <div className='d-flex mb-2 mt-2 flex-end'>
               {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
+                <DropdownType
+                  as={ButtonGroup}
+                  key={idx}
+                  id={`dropdown-button-drop-${idx}`}
+                  size='sm'
+                  variant='light'
+                  title='Aksi'
+                >
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/DetailLaporanKegiatan/' + record.id)}
                   >
-                    <Dropdown.Item
-                      onClick={() => navigate('/pelaporan/DetailLaporanKegiatan/' + record.id)}
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() => navigate('/pelaporan/UbahLaporanKegiatan/' + record.id)}
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      // onClick={() => konfirDel(record.id, record.status_pegawai)}
-                    >
-                      Hapus
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
+                    Detail
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/UbahLaporanKegiatan/' + record.id)}
+                  >
+                    Ubah
+                  </Dropdown.Item>
+                  <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                    Hapus
+                  </Dropdown.Item>
+                </DropdownType>
               ))}
             </div>
           </Fragment>

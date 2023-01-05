@@ -24,9 +24,9 @@ export const DtAdmin: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  konfirDel,
 }) => {
   const navigate = useNavigate()
-  console.log(handlePageChange)
 
   const columns2 = [
     {
@@ -111,10 +111,7 @@ export const DtAdmin: FC<any> = ({
                     >
                       Ubah
                     </Dropdown.Item>
-                    <Dropdown.Item
-                      href='#'
-                      // onClick={() => konfirDel(record.id, record.status_pegawai)}
-                    >
+                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
                       Hapus
                     </Dropdown.Item>
                   </DropdownType>

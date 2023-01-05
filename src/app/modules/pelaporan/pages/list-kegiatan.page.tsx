@@ -23,6 +23,7 @@ import {DtKabid, DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-kegi
 import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
+import Swal from 'sweetalert2'
 
 const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTER_URL = `${API_URL}/master`
@@ -61,6 +62,11 @@ export const ListKegiatanPage: FC = () => {
   //   setCurrentSchema(data)
   //   console.log(res)
   // }
+
+  let value: any = localStorage.getItem('kt-auth-react-v')
+  let createdByHakAkses = JSON.parse(value)
+
+  console.log(createdByHakAkses.data.hak_akses)
 
   const [aksi, setAksi] = useState(0)
   const vKabid = () => {
@@ -286,6 +292,46 @@ export const ListKegiatanPage: FC = () => {
     const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
     setWilayahBidang(response.data.data)
     // console.log(response.data.data)
+  }
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      text: 'Anda yakin ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+      color: '#000000',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const bodyParam = {
+          data: {
+            deleted_by: 'string',
+          },
+        }
+        const response = await axios.delete(`http://127.0.0.1:3002/kegiatan-umum/${id}`, bodyParam)
+        if (response) {
+          dataKegiatan(0)
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        }
+      }
+    })
   }
 
   return (
@@ -995,6 +1041,7 @@ export const ListKegiatanPage: FC = () => {
                     jenisKegiatanList={jenisKegiatanList}
                     hakAkses={hakAkses}
                     wilayahBidang={wilayahBidang}
+                    konfirDel={konfirDel}
                   />
                 ) : (
                   // Pimpinan
