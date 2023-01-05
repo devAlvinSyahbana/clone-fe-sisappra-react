@@ -1,12 +1,21 @@
 import axios from 'axios'
-import {Fragment, useEffect, useState} from 'react'
+import {FC, Fragment, useEffect, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
 
-export default function DtKabid(props: any) {
+export const DtKabid: FC<any> = ({
+  // data,
+  // totalRows,
+  // handlePerRowsChange,
+  // handlePageChange,
+  // loading,
+  // jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
+}) => {
   const dispatch = useDispatch()
   const [data, setData] = useState([])
 
@@ -25,6 +34,18 @@ export default function DtKabid(props: any) {
       setData(data)
     })
   }
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
+  }
 
   useEffect(() => {
     dataPengawasReklame()
@@ -41,6 +62,7 @@ export default function DtKabid(props: any) {
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Waktu',
@@ -52,7 +74,8 @@ export default function DtKabid(props: any) {
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.kota,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Alamat',
@@ -81,10 +104,32 @@ export default function DtKabid(props: any) {
   )
 }
 
-export function DtAdmin(props: any) {
+export const DtAdmin: FC<any> = ({
+  // data,
+  // totalRows,
+  // handlePerRowsChange,
+  // handlePageChange,
+  // loading,
+  // jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
+}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [data, setData] = useState([])
+
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
+  }
 
   const dataPengawasReklame = () => {
     axios.get(`http://localhost:3002/reklame/`).then((res) => {
@@ -118,6 +163,7 @@ export function DtAdmin(props: any) {
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal',
@@ -134,7 +180,8 @@ export function DtAdmin(props: any) {
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.kota,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Alamat',
@@ -241,7 +288,7 @@ export function DtPimpinan(props: any) {
     {
       name: 'Pelaksana',
       width: '140px',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.pelaksana,
     },
     {
       name: 'Tanggal',

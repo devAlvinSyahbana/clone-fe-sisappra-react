@@ -19,14 +19,20 @@ import {
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
 import axios from 'axios'
-import DtKabid, {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-pengawasan'
+import {DtAdmin, DtPimpinan, DtKabid} from '../datatable/data-table-laporan-pengawasan'
 import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MASTER_URL = `${API_URL}/master`
+export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
+
 export const ListPengawasPage: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [qParamFind, setUriFind] = useState({strparam: ''})
+
   const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
   const [jenisreklameList, setJenisReklameList] = useState([])
   const [jeniskendaliList, setJenisKendaliList] = useState([])
@@ -53,14 +59,59 @@ export const ListPengawasPage: FC = () => {
     })
   }
 
+  const handleFilter = async () => {
+    let uriParam = ''
+    if (tanggalAwal.val && tanggalAkhir.val) {
+      uriParam += `tgl_pengecekan%20ge%20%27${tanggalAwal.val}%27%20and%20tgl_pengecekan%20le%20%27${tanggalAkhir.val}%27`
+    } else if (tanggalAwal.val !== '') {
+      uriParam += `tgl_pengecekan%20eq%20%27${tanggalAwal.val}%27`
+    }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterReset = () => {
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+  }
+
   useEffect(() => {
+    handleHakAkses()
+    handleWilayahBidang()
     updateList()
-    // updateJenisUsahaList()
-    // updateJenisPenindakanList()
   }, [])
+
+  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
+  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
+
+  const handleChangeInputTanggalAwal = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setTanggalAwal({val: event.target.value})
+  }
+
+  const handleChangeInputTanggalAkhir = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setTanggalAkhir({val: event.target.value})
+  }
 
   function loadOptionsKota() {
     return []
+  }
+  const [hakAkses, setHakAkses] = useState([])
+
+  const handleHakAkses = async () => {
+    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
+    setHakAkses(response.data.data)
+  }
+
+  const [wilayahBidang, setWilayahBidang] = useState([])
+
+  const handleWilayahBidang = async () => {
+    const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
+    setWilayahBidang(response.data.data)
   }
 
   const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
@@ -68,7 +119,6 @@ export const ListPengawasPage: FC = () => {
   const filterPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
     const res = await axios.get(`http://localhost:3002/kegiatan-umum`)
     const data = res.data.data
-    // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
     setCurrentSchema(data)
     console.log(res)
   }
@@ -186,12 +236,12 @@ export const ListPengawasPage: FC = () => {
                                       </label>
                                     </div>
                                     <div className='col-8'>
-                                      <Field
-                                        name='kegiatan__tanggal'
-                                        component={DatePickerField}
-                                        onChange={(o: any) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                        }}
+                                      <input
+                                        type='date'
+                                        name='tgl_pengecekan'
+                                        className='form-control'
+                                        value={tanggalAwal.val}
+                                        onChange={handleChangeInputTanggalAwal}
                                       />
                                     </div>
                                   </div>
@@ -206,12 +256,12 @@ export const ListPengawasPage: FC = () => {
                                       </label>
                                     </div>
                                     <div className='col-4 mx-10'>
-                                      <Field
-                                        name='kegiatan__tanggal'
-                                        component={DatePickerField}
-                                        onChange={(o: any) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                        }}
+                                      <input
+                                        name='tgl_pengecekan'
+                                        type='date'
+                                        className='form-control'
+                                        value={tanggalAkhir.val}
+                                        onChange={handleChangeInputTanggalAkhir}
                                       />
                                     </div>
                                   </div>
@@ -220,22 +270,23 @@ export const ListPengawasPage: FC = () => {
 
                               <div className='row g-8 mt-2'>
                                 <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                  <Button className='btn btn-light-primary me-2'>
+                                  <Button
+                                    className='btn btn-light-primary me-2'
+                                    onClick={handleFilter}
+                                  >
                                     <KTSVG
                                       path='/media/icons/duotune/general/gen021.svg'
                                       className='svg-icon-2'
                                     />
                                     Cari
                                   </Button>
-                                  <Link
-                                    to='#'
-                                    // onClick={handleFilterReset}
+                                  <Button
+                                    className='btn btn-light-primary me-2'
+                                    onClick={handleFilterReset}
                                   >
-                                    <button className='btn btn-light-primary'>
-                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                      Reset
-                                    </button>
-                                  </Link>
+                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                    Reset
+                                  </Button>
                                 </div>
                                 <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                                   {/* begin::Filter Button */}
@@ -318,32 +369,32 @@ export const ListPengawasPage: FC = () => {
                                       </label>
                                     </div>
                                     <div className='col-8'>
-                                      <Field
-                                        name='kegiatan__tanggal'
-                                        component={DatePickerField}
-                                        onChange={(o: any) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                        }}
+                                      <input
+                                        type='date'
+                                        name='tgl_pengecekan'
+                                        className='form-control'
+                                        value={tanggalAwal.val}
+                                        onChange={handleChangeInputTanggalAwal}
                                       />
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className='col-md-10 col-lg-10 col-sm-24'>
+                              <div className='col-md-6 col-lg-6 col-sm-12'>
                                 <div className='mb-10'>
                                   <div className='row'>
-                                    <div className='col-2 pt-2'>
+                                    <div className='col-4 pt-2'>
                                       <label className='form-label align-middle'>
                                         Tanggal Akhir
                                       </label>
                                     </div>
-                                    <div className='col-4 mx-10'>
-                                      <Field
-                                        name='kegiatan__tanggal'
-                                        component={DatePickerField}
-                                        onChange={(o: any) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                        }}
+                                    <div className='col-8'>
+                                      <input
+                                        name='tgl_pengecekan'
+                                        type='date'
+                                        className='form-control'
+                                        value={tanggalAkhir.val}
+                                        onChange={handleChangeInputTanggalAkhir}
                                       />
                                     </div>
                                   </div>
@@ -352,22 +403,23 @@ export const ListPengawasPage: FC = () => {
 
                               <div className='row g-8 mt-2'>
                                 <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                  <Button className='btn btn-light-primary me-2'>
+                                  <Button
+                                    className='btn btn-light-primary me-2'
+                                    onClick={handleFilter}
+                                  >
                                     <KTSVG
                                       path='/media/icons/duotune/general/gen021.svg'
                                       className='svg-icon-2'
                                     />
                                     Cari
                                   </Button>
-                                  <Link
-                                    to='#'
-                                    // onClick={handleFilterReset}
+                                  <Button
+                                    className='btn btn-light-primary me-2'
+                                    onClick={handleFilterReset}
                                   >
-                                    <button className='btn btn-light-primary'>
-                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                      Reset
-                                    </button>
-                                  </Link>
+                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                    Reset
+                                  </Button>
                                 </div>
                                 <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                                   {/* begin::Filter Button */}
@@ -485,12 +537,12 @@ export const ListPengawasPage: FC = () => {
                                       <label className='form-label align-middle'>Tanggal</label>
                                     </div>
                                     <div className='col-8'>
-                                      <Field
-                                        name='kegiatan__tanggal'
-                                        component={DatePickerFieldRange}
-                                        onChange={(o: any) => {
-                                          dispatch(changedValue(ToFieldStateCE(o)))
-                                        }}
+                                      <input
+                                        type='date'
+                                        name='tgl_pengecekan'
+                                        className='form-control'
+                                        value={tanggalAwal.val}
+                                        onChange={handleChangeInputTanggalAwal}
                                       />
                                     </div>
                                   </div>
@@ -635,22 +687,23 @@ export const ListPengawasPage: FC = () => {
 
                               <div className='row g-8 mt-2'>
                                 <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                  <Button className='btn btn-light-primary me-2'>
+                                  <Button
+                                    className='btn btn-light-primary me-2'
+                                    onClick={handleFilter}
+                                  >
                                     <KTSVG
                                       path='/media/icons/duotune/general/gen021.svg'
                                       className='svg-icon-2'
                                     />
                                     Cari
                                   </Button>
-                                  <Link
-                                    to='#'
-                                    // onClick={handleFilterReset}
+                                  <Button
+                                    className='btn btn-light-primary me-2'
+                                    onClick={handleFilterReset}
                                   >
-                                    <button className='btn btn-light-primary'>
-                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                      Reset
-                                    </button>
-                                  </Link>
+                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                    Reset
+                                  </Button>
                                 </div>
                                 <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                                   {/* begin::Filter Button */}
@@ -724,9 +777,9 @@ export const ListPengawasPage: FC = () => {
               {/* DATA TABLE */}
               <div className='card-body py-4'>
                 {aksi === 0 ? (
-                  <DtKabid />
+                  <DtKabid hakAkses={hakAkses} wilayahBidang={wilayahBidang} />
                 ) : aksi === 1 ? (
-                  <DtAdmin />
+                  <DtAdmin hakAkses={hakAkses} wilayahBidang={wilayahBidang} />
                 ) : (
                   <>
                     <div className='row'>
