@@ -215,7 +215,7 @@ export const ListKejadianPage: FC = () => {
   const handleHakAkses = async () => {
     const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
     setHakAkses(response.data.data)
-    console.log(response.data.data)
+    // console.log(response.data.data)
   }
 
   const [wilayahBidang, setWilayahBidang] = useState([])
@@ -223,7 +223,7 @@ export const ListKejadianPage: FC = () => {
   const handleWilayahBidang = async () => {
     const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
     setWilayahBidang(response.data.data)
-    console.log(response.data.data)
+    // console.log(response.data.data)
   }
   useEffect(() => {
     handleHakAkses()
