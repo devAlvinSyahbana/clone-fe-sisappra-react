@@ -119,6 +119,7 @@ const SidebarMenuMain = () => {
         />
         <SidebarMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} />
       </SidebarMenuItemWithSub>
+
       <SidebarMenuItemWithSub
         to='/sarana-prasarana'
         title='Sarana & Prasarana'
@@ -196,6 +197,79 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/master/SumberInformasi' title='Sumber Informasi' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisPenertiban' title='Jenis Penertiban' hasBullet={true} />
+      </SidebarMenuItemWithSub>
+      <SidebarMenuItemWithSub
+        to='/manajemendata'
+        title='Manajemen Data'
+        fontIcon='bi-archive'
+        icon='/media/icons/duotune/abstract/abs027.svg'
+      >
+        <SidebarMenuItem
+          to='/manajemendata/DataTitikRawanPKL'
+          title='Data Titik Rawan PKL'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/manajemendata/DataTitikPlotingAnggota'
+          title='Data Titik Ploting Anggota'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/manajemendata/DataTempatIbadah'
+          title='Data Tempat Ibadah'
+          hasBullet={true}
+        />
+        <SidebarMenuItem to='/manajemendata/DataPolitik' title='Data Politik' hasBullet={true} />
+        <SidebarMenuItem
+          to='/manajemendata/DataTitikRawanKebakaran'
+          title='Data Titik Rawan Kebakaran'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/manajemendata/DataTitikRawanTramtibum'
+          title='Data Titik Rawan Tramtibum'
+          hasBullet={true}
+        />
+        <SidebarMenuItem to='/manajemendata/DataHalte' title='Data Halte' hasBullet={true} />
+        <SidebarMenuItem to='/manajemendata/DataTrotoar' title='Data Trotoar' hasBullet={true} />
+        <SidebarMenuItem to='/manajemendata/DataJPO' title='Data JPO' hasBullet={true} />
+        <SidebarMenuItem
+          to='/manajemendata/DataTitikRawanPMKS'
+          title='Data Titik Rawan PMKS'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/manajemendata/DataTitikRawanBencanaBanjir'
+          title='Data Titik Rawan Bencana/Banjir'
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+      <SidebarMenuItemWithSub
+        to='/perdaperkada'
+        title='Penegakan Perda dan Perkada'
+        fontIcon='bi-archive'
+        icon='/media/icons/duotune/abstract/abs019.svg'
+      >
+        <SidebarMenuItem
+          to='/perdaperkada/LaporanSidangTipiring'
+          title='Laporan Sidang Tipiring'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/perdaperkada/LaporanPenerbitanMinumBeralkohol'
+          title='Laporan Penerbitan Minum Beralkohol'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/perdaperkada/RegisterPenegakanPerkaraPerdaPerda'
+          title='Register Penegakan Perkara Perda / Perda'
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to='/perdaperkada/LaporanPenegakanPerdaPerkada'
+          title='Laporan Penegakan Perda dan Perkada'
+          hasBullet={true}
+        />
       </SidebarMenuItemWithSub>
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
