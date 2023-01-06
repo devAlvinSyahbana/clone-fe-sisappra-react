@@ -98,7 +98,7 @@ export const AddKejadianPage: FC = () => {
   useEffect(() => {
     listMasterKejadianValue()
     if (currentLocation.indexOf('Detail') !== -1) setDetailState(true)
-    if (id) {
+    if (id && allValues.list_jenis_kejadian.length > 0) {
       editPelaporanKejadian()
     }
     if (!id) {

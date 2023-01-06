@@ -381,7 +381,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
                 <Field
                   name={`tindak__korban_jiwa[${i}].id`}
                   className='form-control'
-                  disabled={detailState}
+                  disabled
                   value={
                     listKorbanJiwa?.find(
                       (d: any) => Number(d.value) === Number(tindakKorbanJiwaItems[i].id)
@@ -536,7 +536,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
                     <Field
                       name={`tindak__korban_material[${i}].id`}
                       className='form-control'
-                      disabled={detailState}
+                      disabled
                       value={
                         listKorbanmaterial?.find(
                           (d: any) => Number(d.value) === Number(tindakKorbanMaterialItems[i].id)
