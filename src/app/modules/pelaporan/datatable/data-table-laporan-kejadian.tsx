@@ -44,7 +44,22 @@ export const DtKabid: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  hakAkses,
+  wilayahBidang,
 }) => {
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
+  }
+
   const columns1 = [
     {
       name: 'No',
@@ -56,6 +71,7 @@ export const DtKabid: FC<any> = ({
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal Kejadian',
@@ -88,7 +104,8 @@ export const DtKabid: FC<any> = ({
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.wilayah,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Lokasi',
@@ -111,34 +128,26 @@ export const DtAdmin: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  hakAkses,
+  wilayahBidang,
+  konfirDel,
 }) => {
   const navigate = useNavigate()
 
-  // const dispatch = useDispatch()
-  // const [data, setData] = useState([])
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
 
-  // const dataKejadian = () => {
-  //   axios.get(`http://localhost:3002/kejadian-umum/`).then((res) => {
-  //     const data = res.data.data.map((d: any) => ({
-  //       id: d.id,
-  //       no: d.id,
-  //       pelaksana: d.created_by,
-  //       tanggal_kejadian: d.kejadian__tanggal,
-  //       waktu_mulai: d.kejadian__waktu_start,
-  //       waktu_selesai: d.kejadian__waktu_end,
-  //       jenis_kejadian: d.kejadian__jenis_kegiatan_id,
-  //       uraian_kejadian: d.kejadian__uraian_kejadian,
-  //       wilayah: d.kegiatan__wilayah,
-  //       lokasi: d.kegiatan__lokasi,
-  //     }))
-  //     // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
-  //     setData(data)
-  //   })
-  // }
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
 
-  // useEffect(() => {
-  //   dataKejadian()
-  // }, [])
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
+  }
+  // console.log(GetHakAkses, GetBidang)
 
   const columns2 = [
     {
@@ -151,6 +160,7 @@ export const DtAdmin: FC<any> = ({
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal Kejadian',
@@ -183,7 +193,8 @@ export const DtAdmin: FC<any> = ({
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.wilayah,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Lokasi',
@@ -203,7 +214,6 @@ export const DtAdmin: FC<any> = ({
           <Fragment>
             <div className='d-flex mb-2 mt-2 flex-end'>
               {[DropdownButton].map((DropdownType, idx) => (
-                // <>
                 <DropdownType
                   as={ButtonGroup}
                   key={idx}
@@ -222,14 +232,10 @@ export const DtAdmin: FC<any> = ({
                   >
                     Ubah
                   </Dropdown.Item>
-                  <Dropdown.Item
-                    href='#'
-                    // onClick={() => konfirDel(record.id, record.status_pegawai)}
-                  >
+                  <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
                     Hapus
                   </Dropdown.Item>
                 </DropdownType>
-                // </>
               ))}
             </div>
           </Fragment>
@@ -284,76 +290,76 @@ export function DtPimpinan(props: any) {
     },
     {
       name: 'Jumlah Kejadian',
-      selector: (row: any) => row.tanggal_kegiatan,
+      selector: (row: any) => row.jumlah_kejadian,
     },
     {
       name: 'Banjir',
-      selector: (row: any) => row.waktu_kegiatan,
+      selector: (row: any) => row.banjir,
     },
     {
       name: 'Hewan Buas dan Berbisa',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.hewan,
     },
     {
       name: 'Kebakaran',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.kebakaran,
     },
     {
       name: 'Kecelakaan',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.kecelakaan,
     },
     {
       name: 'Pendampingan Kekerasan Pada Perempuan',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.pendampingan_perempuan,
     },
     {
       name: 'Kerusakan Konstruksi',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.kerusakan_konstruksi,
     },
     {
       name: 'Kriminalitas',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.kriminalitas,
     },
     {
       name: 'Pembunuhan',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.pembunuhan,
     },
     {
       name: 'Penemuan Mayat',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.penemuan,
     },
     {
       name: 'Penyelamatan Orang',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.penyelamatan,
     },
     {
       name: 'Pohon Tumbang',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.pohon,
     },
     {
       name: 'Tawuran',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.tawuran,
     },
     {
       name: 'Terorisme',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.terorisme,
     },
     {
       name: 'Unjuk Rasa',
       wrap: true,
-      selector: (row: any) => row.uraian_kegiatan,
+      selector: (row: any) => row.unjuk_rasa,
     },
   ]
 
@@ -362,9 +368,10 @@ export function DtPimpinan(props: any) {
       id: 1,
       no: '1',
       bidang_wilayah: 'Kota Administrasi Jakarta Pusat',
-      tanggal_kegiatan: '12',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
+      jumlah_kejadian: '',
+      banjir: '12',
+      hewan_buas: '1',
+      kebakaran: '1',
     },
     {
       id: 2,

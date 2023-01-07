@@ -5,6 +5,7 @@ import {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-tamu-daerah'
 import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
+import Swal from 'sweetalert2'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -108,7 +109,7 @@ export const ListTamuDaerahPage: FC = () => {
   }, [qParamFind, perPage])
 
   const handlePageChange = (page: number) => {
-    dataTamuDaerah(page++)
+    dataTamuDaerah(page - 1)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -170,6 +171,46 @@ export const ListTamuDaerahPage: FC = () => {
   }
   const vPimpinan = () => {
     setAksi(2)
+  }
+
+  const konfirDel = (id: number) => {
+    Swal.fire({
+      text: 'Anda yakin ingin menghapus data ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak!',
+      color: '#000000',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const bodyParam = {
+          data: {
+            deleted_by: 'string',
+          },
+        }
+        const response = await axios.delete(`http://127.0.0.1:3002/tamu-daerah/${id}`, bodyParam)
+        if (response) {
+          dataTamuDaerah(0)
+          Swal.fire({
+            icon: 'success',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Data gagal dihapus, harap mencoba lagi',
+            showConfirmButton: false,
+            timer: 1500,
+            color: '#000000',
+          })
+        }
+      }
+    })
   }
 
   return (
@@ -548,6 +589,7 @@ export const ListTamuDaerahPage: FC = () => {
                       handlePerRowsChange={handlePerRowsChange}
                       handlePageChange={handlePageChange}
                       loading={loading}
+                      konfirDel={konfirDel}
                     />
                   </div>
                 ) : (

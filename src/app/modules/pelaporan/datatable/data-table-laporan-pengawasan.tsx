@@ -1,34 +1,67 @@
 import axios from 'axios'
-import {Fragment, useEffect, useState} from 'react'
+import {FC, Fragment, useEffect, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
 
-export default function DtKabid(props: any) {
-  const dispatch = useDispatch()
-  const [data, setData] = useState([])
+export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
-  const dataPengawasReklame = () => {
-    axios.get(`http://localhost:3002/reklame/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        id: d.id,
-        no: d.id,
-        pelaksana: d.pelaksana,
-        waktu_pengawasan: d.waktu_pengawasan,
-        kota: d.kota,
-        status_reklame: d.status_reklame,
-        pemilik_reklame: d.pemilik_reklame,
-        alamat: d.alamat,
-      }))
-      setData(data)
-    })
+const LoadingAnimation = (props: any) => {
+  return (
+    <>
+      <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+        {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+        <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+        <div className='d-flex flex-column'>
+          <h5 className='mb-1'>Sedang mengambil data...</h5>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export const DtKabid: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+  hakAkses,
+  wilayahBidang,
+}) => {
+  const dispatch = useDispatch()
+
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
   }
 
-  useEffect(() => {
-    dataPengawasReklame()
-  }, [])
+  const GetStatusReklame = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+        )
+        const result: string = data.data[0].nama
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
 
   const columns1 = [
     {
@@ -41,6 +74,13 @@ export default function DtKabid(props: any) {
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
+    },
+    {
+      name: 'Tanggal',
+      width: '140px',
+      wrap: true,
+      selector: (row: any) => row.tgl_pengecekan,
     },
     {
       name: 'Waktu',
@@ -52,7 +92,8 @@ export default function DtKabid(props: any) {
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.kota,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Alamat',
@@ -65,6 +106,7 @@ export default function DtKabid(props: any) {
       width: '140px',
       wrap: true,
       selector: (row: any) => row.status_reklame,
+      cell: (record: any) => <GetStatusReklame row={parseInt(record.status_reklame)} />,
     },
     {
       name: 'Pemilik Reklame Konten Iklan',
@@ -76,36 +118,62 @@ export default function DtKabid(props: any) {
 
   return (
     <div>
-      <DataTable columns={columns1} data={data} pagination />
+      <DataTable
+        columns={columns1}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }
 
-export function DtAdmin(props: any) {
-  const dispatch = useDispatch()
+export const DtAdmin: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+  // jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
+}) => {
   const navigate = useNavigate()
-  const [data, setData] = useState([])
 
-  const dataPengawasReklame = () => {
-    axios.get(`http://localhost:3002/reklame/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        no: d.id,
-        id: d.id,
-        pelaksana: d.pelaksana,
-        waktu_pengawasan: d.waktu_pengawasan,
-        kota: d.kota,
-        status_reklame: d.status_reklame,
-        pemilik_reklame: d.pemilik_reklame,
-        alamat: d.alamat,
-        tgl_pengecekan: d.tgl_pengecekan,
-      }))
-      setData(data)
-    })
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+  const GetBidang = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+
+    // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
+    return <>{handleBidang?.nama}</>
   }
 
-  useEffect(() => {
-    dataPengawasReklame()
-  }, [])
+  const GetStatusReklame = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+        )
+        const result: string = data.data[0].nama
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
 
   const columns2 = [
     {
@@ -118,6 +186,7 @@ export function DtAdmin(props: any) {
       wrap: true,
       width: '200px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal',
@@ -134,7 +203,8 @@ export function DtAdmin(props: any) {
       name: 'Wilayah',
       width: '140px',
       wrap: true,
-      selector: (row: any) => row.kota,
+      selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetBidang row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Alamat',
@@ -147,6 +217,7 @@ export function DtAdmin(props: any) {
       width: '140px',
       wrap: true,
       selector: (row: any) => row.status_reklame,
+      cell: (record: any) => <GetStatusReklame row={parseInt(record.status_reklame)} />,
     },
     {
       name: 'Pemilik Reklame Konten Iklan',
@@ -197,40 +268,49 @@ export function DtAdmin(props: any) {
 
   return (
     <div>
-      <DataTable columns={columns2} data={data} pagination />
+      <DataTable
+        columns={columns2}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }
 
-export function DtPimpinan(props: any) {
+export const DtPimpinan: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+  // jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
+}) => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const [data, setData] = useState([])
 
-  const dataPengawasReklame = () => {
-    axios.get(`http://localhost:3002/reklame/`).then((res) => {
-      const data = res.data.data.map((d: any) => ({
-        no: d.id,
-        id: d.id,
-        pelaksana: d.pelaksana,
-        status_reklame: d.status_reklame,
-        pemilik_reklame: d.pemilik_reklame,
-        alamat: d.alamat,
-        tgl_pengecekan: d.tgl_pengecekan,
-        lokasi_tiang: d.lokasi_tiang,
-        share_location: d.share_location,
-        ukuran: d.ukuran,
-        konstruksi_reklame: d.konstruksi_reklame,
-        konten_iklan: d.konten_iklan,
-        longtitude: d.longtitude,
-      }))
-      setData(data)
-    })
+  const GetStatusReklame = ({row}: {row: number}) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+        )
+        const result: string = data.data[0].nama
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
   }
-
-  useEffect(() => {
-    dataPengawasReklame()
-  }, [])
 
   const columns = [
     {
@@ -241,7 +321,7 @@ export function DtPimpinan(props: any) {
     {
       name: 'Pelaksana',
       width: '140px',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.pelaksana,
     },
     {
       name: 'Tanggal',
@@ -264,6 +344,7 @@ export function DtPimpinan(props: any) {
       width: '140px',
       wrap: true,
       selector: (row: any) => row.status_reklame,
+      cell: (record: any) => <GetStatusReklame row={parseInt(record.status_reklame)} />,
     },
     {
       name: 'Ukuran',
@@ -323,7 +404,17 @@ export function DtPimpinan(props: any) {
 
   return (
     <div>
-      <DataTable columns={columns} data={data} pagination />
+      <DataTable
+        columns={columns}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }

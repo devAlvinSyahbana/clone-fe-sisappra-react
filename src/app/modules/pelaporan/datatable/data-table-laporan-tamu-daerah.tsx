@@ -24,9 +24,9 @@ export const DtAdmin: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  konfirDel,
 }) => {
   const navigate = useNavigate()
-  console.log(handlePageChange)
 
   const columns2 = [
     {
@@ -92,7 +92,6 @@ export const DtAdmin: FC<any> = ({
           <Fragment>
             <div className='d-flex mb-2 mt-2 flex-end'>
               {[DropdownButton].map((DropdownType, idx) => (
-                // <>
                 <DropdownType
                   as={ButtonGroup}
                   key={idx}
@@ -111,14 +110,10 @@ export const DtAdmin: FC<any> = ({
                   >
                     Ubah
                   </Dropdown.Item>
-                  <Dropdown.Item
-                    href='#'
-                    // onClick={() => konfirDel(record.id, record.status_pegawai)}
-                  >
+                  <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
                     Hapus
                   </Dropdown.Item>
                 </DropdownType>
-                // </>
               ))}
             </div>
           </Fragment>
