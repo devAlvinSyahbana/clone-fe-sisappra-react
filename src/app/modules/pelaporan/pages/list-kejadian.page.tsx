@@ -72,14 +72,8 @@ export const ListKejadianPage: FC = () => {
 
   const findHakAksesData = async () => {
     const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
-    console.log(res.data.data)
+    // console.log(res.data.data)
     setHakAkses(res.data.data)
-    // if (hakAkses?.nama_hak_akses?.toLowerCase().includes('admin')) return setAksi(1)
-  }
-
-  const findJabatan = async () => {
-    const res = await axios.get(`${API_URL}/master/jabatan/findone/${hakAkses?.jabatan}`)
-    console.log(res.data.data)
   }
 
   useEffect(() => {

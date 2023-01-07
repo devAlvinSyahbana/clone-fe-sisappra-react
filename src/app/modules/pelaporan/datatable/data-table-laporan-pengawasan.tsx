@@ -166,27 +166,27 @@ export function DtAdmin(props: any) {
           <Fragment>
             <div className='d-flex mb-2 mt-2 flex-end'>
               {[DropdownButton].map((DropdownType, idx) => (
-                <>
-                  <DropdownType
-                    as={ButtonGroup}
-                    key={idx}
-                    id={`dropdown-button-drop-${idx}`}
-                    size='sm'
-                    variant='light'
-                    title='Aksi'
+                // <>
+                <DropdownType
+                  as={ButtonGroup}
+                  key={idx}
+                  id={`dropdown-button-drop-${idx}`}
+                  size='sm'
+                  variant='light'
+                  title='Aksi'
+                >
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/DetailLaporanPengawasan/' + record.id)}
                   >
-                    <Dropdown.Item
-                      onClick={() => navigate('/pelaporan/DetailLaporanPengawasan/' + record.id)}
-                    >
-                      Detail
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() => navigate('/pelaporan/ubah-laporan-pengawasan/' + record.id)}
-                    >
-                      Ubah
-                    </Dropdown.Item>
-                  </DropdownType>
-                </>
+                    Detail
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/ubah-laporan-pengawasan/' + record.id)}
+                  >
+                    Ubah
+                  </Dropdown.Item>
+                </DropdownType>
+                // </>
               ))}
             </div>
           </Fragment>
