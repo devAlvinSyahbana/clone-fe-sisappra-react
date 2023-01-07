@@ -166,6 +166,7 @@ export const ListTamuDaerahPage: FC = () => {
       return setAksi(0)
     }
   }, [hakAkses])
+
   const vAdmin = () => {
     setAksi(1)
   }
