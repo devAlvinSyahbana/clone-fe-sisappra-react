@@ -715,14 +715,24 @@ export const ListKejadianPage: FC = () => {
                           </div>
                         ) : (
                           // VIEW PIMPINAN
-                          <Formik
-                            validationSchema={currentSchema}
-                            initialValues={initialState}
-                            onSubmit={filterPelaporanKejadian}
-                          >
-                            <Form id='list_pelaporan_Kejadian_filter'>
-                              <div className='row w-100 mt-10 mb-10'>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                          <div className='row w-100 mt-10 mb-10'>
+                            <div className='mb-10'>
+                              <div className='row'>
+                                <div className='col pt-2'>
+                                  <label className='form-label align-middle'>Bidang/Wilayah</label>
+                                </div>
+                                <div className='col'>
+                                  <AsyncSelect
+                                    name='filter_jenis_kejadian_id_selection'
+                                    defaultOptions
+                                    value={valJenisKejadian}
+                                    loadOptions={loadOptionsJenisKejadian}
+                                    onChange={handleChangeInputJenisKejadian}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            {/* <div className='col-md-6 col-lg-6 col-sm-12'>
                                   <div className='mb-10'>
                                     <div className='row'>
                                       <div className='col-4 pt-2'>
@@ -899,93 +909,89 @@ export const ListKejadianPage: FC = () => {
                                       </div>
                                     </div>
                                   </div>
-                                </div>
+                                </div> */}
 
-                                <div className='row g-8 mt-2'>
-                                  <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                    <Button className='btn btn-light-primary me-2'>
-                                      <KTSVG
-                                        path='/media/icons/duotune/general/gen021.svg'
-                                        className='svg-icon-2'
-                                      />
-                                      Cari
-                                    </Button>
-                                    <Link
-                                      to='#'
-                                      // onClick={handleFilterReset}
-                                    >
-                                      <button className='btn btn-light-primary'>
-                                        <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                        Reset
-                                      </button>
-                                    </Link>
-                                  </div>
-                                  <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                    {/* begin::Filter Button */}
-                                    <button
-                                      type='button'
-                                      className='btn btn-light-primary'
-                                      data-kt-menu-trigger='click'
-                                      data-kt-menu-placement='bottom-end'
-                                    >
-                                      {/* {btnLoadingUnduh ? (
+                            <div className='row g-8 mt-2'>
+                              <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                <Button className='btn btn-light-primary me-2'>
+                                  <KTSVG
+                                    path='/media/icons/duotune/general/gen021.svg'
+                                    className='svg-icon-2'
+                                  />
+                                  Cari
+                                </Button>
+                                <Link
+                                  to='#'
+                                  // onClick={handleFilterReset}
+                                >
+                                  <button className='btn btn-light-primary'>
+                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                    Reset
+                                  </button>
+                                </Link>
+                              </div>
+                              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                {/* begin::Filter Button */}
+                                <button
+                                  type='button'
+                                  className='btn btn-light-primary'
+                                  data-kt-menu-trigger='click'
+                                  data-kt-menu-placement='bottom-end'
+                                >
+                                  {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                      <>
-                                        <KTSVG
-                                          path='/media/icons/duotune/arrows/arr078.svg'
-                                          className='svg-icon-2'
-                                        />
-                                        Unduh
-                                      </>
-                                      {/* )} */}
-                                    </button>
-                                    {/* end::Filter Button */}
-                                    {/* begin::SubMenu */}
-                                    <div
-                                      className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                      data-kt-menu='true'
-                                    >
-                                      {/* begin::Header */}
-                                      <div className='px-7 py-5'>
-                                        <div className='fs-5 text-dark fw-bolder'>
-                                          Pilihan Unduh
-                                        </div>
-                                      </div>
-                                      {/* end::Header */}
-
-                                      {/* begin::Separator */}
-                                      <div className='separator border-gray-200'></div>
-                                      {/* end::Separator */}
-
-                                      {/* begin::Content */}
-                                      <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                        <button
-                                          //   onClick={handleUnduh}
-                                          className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                        >
-                                          Excel
-                                        </button>
-                                      </div>
-                                      {/* end::Content */}
-
-                                      {/* begin::Content */}
-                                      <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                        <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                          PDF
-                                        </button>
-                                      </div>
-                                      {/* end::Content */}
-                                    </div>
-                                    {/* end::SubMenu */}
+                                  <>
+                                    <KTSVG
+                                      path='/media/icons/duotune/arrows/arr078.svg'
+                                      className='svg-icon-2'
+                                    />
+                                    Unduh
+                                  </>
+                                  {/* )} */}
+                                </button>
+                                {/* end::Filter Button */}
+                                {/* begin::SubMenu */}
+                                <div
+                                  className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                  data-kt-menu='true'
+                                >
+                                  {/* begin::Header */}
+                                  <div className='px-7 py-5'>
+                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
                                   </div>
+                                  {/* end::Header */}
+
+                                  {/* begin::Separator */}
+                                  <div className='separator border-gray-200'></div>
+                                  {/* end::Separator */}
+
+                                  {/* begin::Content */}
+                                  <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                    <button
+                                      //   onClick={handleUnduh}
+                                      className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                    >
+                                      Excel
+                                    </button>
+                                  </div>
+                                  {/* end::Content */}
+
+                                  {/* begin::Content */}
+                                  <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                    <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                      PDF
+                                    </button>
+                                  </div>
+                                  {/* end::Content */}
                                 </div>
+                                {/* end::SubMenu */}
                               </div>
-                            </Form>
-                          </Formik>
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -1014,6 +1020,7 @@ export const ListKejadianPage: FC = () => {
                       konfirDel={konfirDel}
                     />
                   ) : (
+                    // Pimpinan
                     <>
                       <div className='row'>
                         <div className='col fs-4 mb-2 fw-semibold text-center'>

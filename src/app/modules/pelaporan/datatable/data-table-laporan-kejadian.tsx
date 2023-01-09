@@ -277,6 +277,60 @@ export const DtAdmin: FC<any> = ({
 }
 
 export function DtPimpinan(props: any) {
+  const [kota, setKota] = useState([])
+
+  const kotaList = async () => {
+    const responseKota = await axios.get(`http://localhost:3001/kota`)
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      bidang_wilayah: d.nama,
+    }))
+
+    setKota(dataKota)
+    // console.log(response.data.data)
+  }
+
+  useEffect(() => {
+    kotaList()
+  }, [])
+
+  const GetJumlah = ({row}: {row: number}) => {
+    const [valData, setValData] = useState(0)
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}`
+        )
+        const result = data.total_items
+        // console.log(result)
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const GetPerJenis = ({row, jenis}: any) => {
+    const [valData, setValData] = useState(0)
+    useEffect(() => {
+      async function fetchDT(id: number, jk: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}%20and%20kejadian__jenis_kejadian_id%20eq%20${jk}`
+        )
+        const result = data.total_items
+        console.log(result)
+        setValData(result)
+      }
+
+      fetchDT(row, jenis)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
   const columns3 = [
     {
       name: 'No',
@@ -285,139 +339,155 @@ export function DtPimpinan(props: any) {
     },
     {
       name: 'Bidang/Wilayah',
+      width: '200px',
       wrap: true,
       selector: (row: any) => row.bidang_wilayah,
     },
     {
       name: 'Jumlah Kejadian',
-      selector: (row: any) => row.jumlah_kejadian,
+      selector: (row: any) => row.no,
+      cell: (record: any) => <GetJumlah row={record.no} />,
     },
     {
       name: 'Banjir',
       selector: (row: any) => row.banjir,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={1} />,
     },
     {
       name: 'Hewan Buas dan Berbisa',
       wrap: true,
       selector: (row: any) => row.hewan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={2} />,
     },
     {
       name: 'Kebakaran',
       wrap: true,
       selector: (row: any) => row.kebakaran,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={3} />,
     },
     {
       name: 'Kecelakaan',
       wrap: true,
       selector: (row: any) => row.kecelakaan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={4} />,
     },
     {
       name: 'Pendampingan Kekerasan Pada Perempuan',
       wrap: true,
       selector: (row: any) => row.pendampingan_perempuan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={5} />,
     },
     {
       name: 'Kerusakan Konstruksi',
       wrap: true,
       selector: (row: any) => row.kerusakan_konstruksi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={6} />,
     },
     {
       name: 'Kriminalitas',
       wrap: true,
       selector: (row: any) => row.kriminalitas,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={7} />,
     },
     {
       name: 'Pembunuhan',
       wrap: true,
       selector: (row: any) => row.pembunuhan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={8} />,
     },
     {
       name: 'Penemuan Mayat',
       wrap: true,
       selector: (row: any) => row.penemuan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={9} />,
     },
     {
       name: 'Penyelamatan Orang',
       wrap: true,
       selector: (row: any) => row.penyelamatan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={10} />,
     },
     {
       name: 'Pohon Tumbang',
       wrap: true,
       selector: (row: any) => row.pohon,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={11} />,
     },
     {
       name: 'Tawuran',
       wrap: true,
       selector: (row: any) => row.tawuran,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={12} />,
     },
     {
       name: 'Terorisme',
       wrap: true,
       selector: (row: any) => row.terorisme,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={13} />,
     },
     {
       name: 'Unjuk Rasa',
       wrap: true,
       selector: (row: any) => row.unjuk_rasa,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={14} />,
     },
   ]
 
-  const data = [
-    {
-      id: 1,
-      no: '1',
-      bidang_wilayah: 'Kota Administrasi Jakarta Pusat',
-      jumlah_kejadian: '',
-      banjir: '12',
-      hewan_buas: '1',
-      kebakaran: '1',
-    },
-    {
-      id: 2,
-      no: '2',
-      bidang_wilayah: 'Kota Administrasi Jakarta Utara',
-      tanggal_kegiatan: '12',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-    },
-    {
-      id: 3,
-      no: '3',
-      bidang_wilayah: 'Kota Administrasi Jakarta Barat',
-      tanggal_kegiatan: '12',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-    },
-    {
-      id: 4,
-      no: '4',
-      bidang_wilayah: 'Kota Administrasi Jakarta Selatan',
-      tanggal_kegiatan: '12',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-    },
-    {
-      id: 5,
-      no: '5',
-      bidang_wilayah: 'Kota Administrasi Jakarta Timur',
-      tanggal_kegiatan: '12',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-    },
-    {
-      id: 6,
-      no: '6',
-      bidang_wilayah: 'Kabupaten Administrasi Kepulauan Seribu',
-      tanggal_kegiatan: '12',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-    },
-  ]
+  // const data = [
+  //   {
+  //     id: 1,
+  //     no: '1',
+  //     bidang_wilayah: 'Kota Administrasi Jakarta Pusat',
+  //     jumlah_kejadian: '',
+  //     banjir: '12',
+  //     hewan_buas: '1',
+  //     kebakaran: '1',
+  //   },
+  //   {
+  //     id: 2,
+  //     no: '2',
+  //     bidang_wilayah: 'Kota Administrasi Jakarta Utara',
+  //     tanggal_kegiatan: '12',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //   },
+  //   {
+  //     id: 3,
+  //     no: '3',
+  //     bidang_wilayah: 'Kota Administrasi Jakarta Barat',
+  //     tanggal_kegiatan: '12',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //   },
+  //   {
+  //     id: 4,
+  //     no: '4',
+  //     bidang_wilayah: 'Kota Administrasi Jakarta Selatan',
+  //     tanggal_kegiatan: '12',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //   },
+  //   {
+  //     id: 5,
+  //     no: '5',
+  //     bidang_wilayah: 'Kota Administrasi Jakarta Timur',
+  //     tanggal_kegiatan: '12',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //   },
+  //   {
+  //     id: 6,
+  //     no: '6',
+  //     bidang_wilayah: 'Kabupaten Administrasi Kepulauan Seribu',
+  //     tanggal_kegiatan: '12',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //   },
+  // ]
 
   return (
     <div>
-      <DataTable columns={columns3} data={data} pagination />
+      <DataTable columns={columns3} data={kota} pagination />
     </div>
   )
 }

@@ -294,202 +294,307 @@ export const DtAdmin: FC<any> = ({
 }
 
 export function DtPimpinan(props: any) {
+  const [kota, setKota] = useState([])
+
+  const kotaList = async () => {
+    const responseKota = await axios.get(`http://127.0.0.1:3000/master/bidang-wilayah/find`)
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      pelaksana: d.nama,
+    }))
+
+    setKota(dataKota)
+    // console.log(response.data.data)
+  }
+
+  useEffect(() => {
+    kotaList()
+  }, [])
+
+  const GetJumlah = ({row}: {row: number}) => {
+    const [valData, setValData] = useState(0)
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20${id}`
+        )
+        const result = data.total_items
+        // console.log(result)
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const GetPerJenis = ({row, jenis}: any) => {
+    const [valData, setValData] = useState(0)
+    useEffect(() => {
+      async function fetchDT(id: number, jk: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__administrasi__penyelesaian_id%20eq%20${jk}`
+        )
+        const result = data.total_items
+        console.log(result)
+        setValData(result)
+      }
+
+      fetchDT(row, jenis)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const GetPerJenisPenindakan = ({row, jenis}: any) => {
+    const [valData, setValData] = useState(0)
+    useEffect(() => {
+      async function fetchDT(id: number, jk: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__jenis_penindakan_id%20eq%20${jk}`
+        )
+        const result = data.total_items
+        console.log(result)
+        setValData(result)
+      }
+
+      fetchDT(row, jenis)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
   const columns3 = [
     {
-      name: '',
-      width: '60px',
+      name: 'No',
+      width: '80px',
       selector: (row: any) => row.no,
+      sortable: true,
     },
     {
-      name: '',
+      name: 'Bidang/Wilayah',
       wrap: true,
       width: '200px',
+      sortable: true,
       selector: (row: any) => row.pelaksana,
+      // cell: (record: any) => <GetJumlah row={record.no} />,
     },
     {
       name: 'Peringatan',
       selector: (row: any) => row.tanggal_kegiatan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={27} />,
     },
     {
       name: 'Penghalauan',
       selector: (row: any) => row.waktu_kegiatan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={17} />,
     },
     {
       name: 'Teguran Tertulis',
       selector: (row: any) => row.uraian_kegiatan,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={31} />,
     },
     {
       name: 'Penyegelan',
       selector: (row: any) => row.wilayah,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={24} />,
     },
     {
       name: 'Pembongkaran',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={10} />,
     },
     {
       name: 'Ditertibkan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={5} />,
     },
     {
       name: 'Pemusnahan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={13} />,
     },
     {
       name: 'Penghentian Kegiatan Sementara 1x24jam',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={19} />,
     },
     {
       name: 'Penghentian Kegiatan Sementara 3x24jam',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={20} />,
     },
     {
       name: 'Penghentian Kegiatan Sementara 7x24jam',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={21} />,
     },
     {
       name: 'Pencabutan Izin',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={15} />,
     },
     {
       name: 'Pembekuan Sementara Izin',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={8} />,
     },
     {
       name: 'Pembubaran',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={11} />,
     },
     {
       name: 'Pengusiran',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={22} />,
     },
     {
       name: 'Razia',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={29} />,
     },
     {
       name: 'Penjemputan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={23} />,
     },
     {
       name: 'Penangkapan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={14} />,
     },
     {
       name: 'Penyitaan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={26} />,
     },
     {
       name: 'Pembersihan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={9} />,
     },
     {
       name: 'Pencopotan/Pelepasan/Pencabutan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={16} />,
     },
     {
       name: 'Penyidikan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={25} />,
     },
     {
       name: 'Kerja Sosial',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={6} />,
     },
     {
       name: 'Denda Administratif',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={3} />,
     },
     {
       name: 'Terbit Izin',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={33} />,
     },
     {
       name: 'Dikembalikan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={4} />,
     },
     {
       name: 'Belum Ditertibkan',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={36} />,
     },
     {
       name: 'Lain-lain',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={39} />,
     },
     {
       name: 'Tidak Ditemukan Pelanggaran',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={42} />,
     },
     {
       name: 'Pengadilan (Yustitusi)',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={1} />,
     },
     {
       name: 'Non Pengadilan (PPKM)',
       selector: (row: any) => row.lokasi,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={2} />,
     },
   ]
 
-  const data = [
-    {
-      id: 1,
-      no: '1',
-      pelaksana: 'Kota Administrasi Jakarta Pusat',
-      tanggal_kegiatan: '1',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
-    },
-    {
-      id: 2,
-      no: '2',
-      pelaksana: 'Kota Administrasi Jakarta Utara',
-      tanggal_kegiatan: '1',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
-    },
-    {
-      id: 3,
-      no: '3',
-      pelaksana: 'Kota Administrasi Jakarta Barat',
-      tanggal_kegiatan: '1',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
-    },
-    {
-      id: 4,
-      no: '4',
-      pelaksana: 'Kota Administrasi Jakarta Selatan',
-      tanggal_kegiatan: '1',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
-    },
-    {
-      id: 5,
-      no: '5',
-      pelaksana: 'Kota Administrasi Jakarta Timur',
-      tanggal_kegiatan: '1',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
-    },
-    {
-      id: 6,
-      no: '6',
-      pelaksana: 'Kabupaten Administrasi Kepulauan Seribu',
-      tanggal_kegiatan: '1',
-      waktu_kegiatan: '1',
-      uraian_kegiatan: '1',
-      wilayah: '1',
-      lokasi: '1',
-    },
-  ]
+  // const data = [
+  //   {
+  //     id: 1,
+  //     no: '1',
+  //     pelaksana: 'Kota Administrasi Jakarta Pusat',
+  //     tanggal_kegiatan: '1',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //     wilayah: '1',
+  //     lokasi: '1',
+  //   },
+  //   {
+  //     id: 2,
+  //     no: '2',
+  //     pelaksana: 'Kota Administrasi Jakarta Utara',
+  //     tanggal_kegiatan: '1',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //     wilayah: '1',
+  //     lokasi: '1',
+  //   },
+  //   {
+  //     id: 3,
+  //     no: '3',
+  //     pelaksana: 'Kota Administrasi Jakarta Barat',
+  //     tanggal_kegiatan: '1',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //     wilayah: '1',
+  //     lokasi: '1',
+  //   },
+  //   {
+  //     id: 4,
+  //     no: '4',
+  //     pelaksana: 'Kota Administrasi Jakarta Selatan',
+  //     tanggal_kegiatan: '1',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //     wilayah: '1',
+  //     lokasi: '1',
+  //   },
+  //   {
+  //     id: 5,
+  //     no: '5',
+  //     pelaksana: 'Kota Administrasi Jakarta Timur',
+  //     tanggal_kegiatan: '1',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //     wilayah: '1',
+  //     lokasi: '1',
+  //   },
+  //   {
+  //     id: 6,
+  //     no: '6',
+  //     pelaksana: 'Kabupaten Administrasi Kepulauan Seribu',
+  //     tanggal_kegiatan: '1',
+  //     waktu_kegiatan: '1',
+  //     uraian_kegiatan: '1',
+  //     wilayah: '1',
+  //     lokasi: '1',
+  //   },
+  // ]
 
-  return <DataTable columns={columns3} data={data} pagination />
+  return <DataTable columns={columns3} data={kota} pagination />
 }

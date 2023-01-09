@@ -791,172 +791,24 @@ export const ListKegiatanPage: FC = () => {
                               <div className='mb-10'>
                                 <div className='row'>
                                   <div className='col-4 pt-2'>
-                                    <label className='form-label'>Pelaksana Kegiatan</label>
+                                    <label className='form-label align-middle'>
+                                      Bidang/Wilayah
+                                    </label>
                                   </div>
                                   <div className='col-8'>
-                                    {/* <Field
-                                    name='kecamatan'
-                                    target='kecamatan'
-                                    className='form-control'
-                                    component={SelectField}
-                                    // options={jenisKegiatanList}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Tanggal</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    {/* <Field
-                                    name='kegiatan__tanggal'
-                                    component={DatePickerField}
-                                    onChange={(o: any) => {
-                                      dispatch(changedValue(ToFieldStateCE(o)))
-                                    }}
-                                    placeholder='Masukkan Tanggal'
-                                  /> */}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Kota</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    {/* <Field
-                                    name='kecamatan'
-                                    target='kecamatan'
-                                    className='form-control'
-                                    component={SelectField}
-                                    options={inputValKota}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Kecamatan</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    {/* <Field
-                                    name='filter_jenis_kegiatan_id_selection'
-                                    target='filter_jenis_kegiatan_id'
-                                    className='form-control'
-                                    component={SelectField}
-                                    options={inputValKec}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Kelurahan</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    {/* <Field
-                                    name='kecamatan'
-                                    target='kecamatan'
-                                    className='form-control'
-                                    component={SelectField}
-                                    options={inputValKel}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Jenis Kegiatan</label>
-                                  </div>
-                                  <div className='col-8'>
+                                    <AsyncSelect
+                                      name='filter_jenis_kegiatan_id_selection'
+                                      defaultOptions
+                                      value={valJenisKegiatan}
+                                      loadOptions={loadOptionsJenisKegiatan}
+                                      onChange={handleChangeInputJenisKegiatan}
+                                    />
                                     {/* <Field
                                     name='filter_jenis_kegiatan_id_selection'
                                     target='filter_jenis_kegiatan_id'
                                     className='form-control'
                                     component={SelectField}
                                     // options={jenisKegiatanList}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Jenis Penertiban</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    {/* <Field
-                                    name='kecamatan'
-                                    target='kecamatan'
-                                    className='form-control'
-                                    component={SelectField}
-                                    options={inputValJpen}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Jenis Perda</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    {/* <Field
-                                    name='filter_jenis_kegiatan_id_selection'
-                                    target='filter_jenis_kegiatan_id'
-                                    className='form-control'
-                                    component={SelectField}
-                                    options={inputValJper}
                                     onChange={(o: ChangeEvent<any>) => {
                                       // dispatch(changedValue(ToFieldStateCE(o)))
                                       // updateJenisPasalList()
