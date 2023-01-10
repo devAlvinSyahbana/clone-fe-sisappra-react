@@ -1,15 +1,19 @@
 import React from 'react'
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import { LaporanKegiatan } from './components/LaporanKegiatan'
-import { TambahLaporanKegiatan } from './components/TambahLaporanKegiatan'
-import { LaporanKejadian } from './components/LaporanKejadian'
-import { TambahLaporanKejadian } from './components/TambahLaporanKejadian'
-import { LaporanPengawasan } from './components/LaporanPengawasan'
-import { LaporanTamuDaerah } from './components/LaporanTamuDaerah'
-import { TambahTamuDaerah } from './components/TambahTamuDaerah'
-import { DetailLaporanKegiatan } from './components/DetailLaporanKegiatan'
-
+import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
+import {PageLink, PageTitle} from '../../../_metronic/layout/core'
+import {LaporanKegiatan} from './pages/LaporanKegiatan'
+import {LaporanKejadian} from './pages/LaporanKejadian'
+import {AddKejadianPage} from './pages/add-kejadian.page'
+import {AddPengawasanPage} from './pages/add-pengawasan.page'
+import {LaporanPengawasan} from './pages/LaporanPengawasan'
+import {LaporanTamuDaerah} from './pages/LaporanTamuDaerah'
+import {AddTamuDaerahPage} from './pages/add-tamu-daerah.page'
+import {DetailLaporanKegiatan} from './pages/DetailLaporanKegiatan'
+import {AddKegiatanUmumPage} from './pages/add-kegiatan-umum.page'
+import {ListKegiatanPage} from './pages/list-kegiatan.page'
+import {ListKejadianPage} from './pages/list-kejadian.page'
+import {ListPengawasPage} from './pages/list-pengawas.page'
+import {ListTamuDaerahPage} from './pages/list-tamu-daerah.page'
 
 const pelaporanBreadCrumbs: Array<PageLink> = [
   {
@@ -31,7 +35,7 @@ const PelaporanPage: React.FC = () => {
     <Routes>
       <Route
         element={
-          <>          
+          <>
             <Outlet />
           </>
         }
@@ -41,7 +45,7 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Kegiatan</PageTitle>
-              <LaporanKegiatan />
+              <ListKegiatanPage />
             </>
           }
         />
@@ -50,16 +54,26 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Kegiatan</PageTitle>
-              <TambahLaporanKegiatan />
+              <AddKegiatanUmumPage />
             </>
           }
         />
         <Route
-          path='DetailLaporanKegiatan'
+          path='UbahLaporanKegiatan/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Ubah Laporan Kegiatan</PageTitle>
+              <AddKegiatanUmumPage />
+            </>
+          }
+        />
+        <Route
+          path='DetailLaporanKegiatan/:id'
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Detail Laporan Kegiatan</PageTitle>
-              <DetailLaporanKegiatan />
+              <AddKegiatanUmumPage />
+              {/* <DetailLaporanKegiatan /> */}
             </>
           }
         />
@@ -68,16 +82,35 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Kejadian</PageTitle>
-              <LaporanKejadian />
+              <ListKejadianPage />
             </>
           }
         />
         <Route
-          path='TambahLaporanKejadian'
+          path='tambah-laporan-kejadian'
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Kejadian</PageTitle>
-              <TambahLaporanKejadian />
+              <AddKejadianPage />
+            </>
+          }
+        />
+        <Route
+          path='ubah-laporan-kejadian/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Ubah Laporan Kejadian</PageTitle>
+              <AddKejadianPage />
+            </>
+          }
+        />
+        <Route
+          path='DetailLaporanKejadian/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Detail Laporan Kejadian</PageTitle>
+              <AddKejadianPage />
+              {/* <DetailLaporanKegiatan /> */}
             </>
           }
         />
@@ -86,7 +119,35 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Pengawasan</PageTitle>
-              <LaporanPengawasan />
+              <ListPengawasPage />
+            </>
+          }
+        />
+        <Route
+          path='tambah-laporan-pengawasan'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Laporan Pengawasan</PageTitle>
+              <AddPengawasanPage />
+            </>
+          }
+        />
+        <Route
+          path='ubah-laporan-pengawasan/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Ubah Laporan Pengawasan</PageTitle>
+              <AddPengawasanPage />
+            </>
+          }
+        />
+        <Route
+          path='DetailLaporanPengawasan/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Detail Laporan Pengawasan</PageTitle>
+              <AddPengawasanPage />
+              {/* <DetailLaporanKegiatan /> */}
             </>
           }
         />
@@ -95,20 +156,37 @@ const PelaporanPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Laporan Tamu Daerah</PageTitle>
-              <LaporanTamuDaerah />
+              <ListTamuDaerahPage />
             </>
           }
         />
         <Route
-          path='TambahTamuDaerah'
+          path='tambah-laporan-tamu-daerah'
           element={
             <>
               <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Tambah Tamu Daerah</PageTitle>
-              <TambahTamuDaerah />
+              <AddTamuDaerahPage />
             </>
           }
         />
-        
+        <Route
+          path='ubah-laporan-tamu-daerah/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Ubah Tamu Daerah</PageTitle>
+              <AddTamuDaerahPage />
+            </>
+          }
+        />
+        <Route
+          path='DetailLaporanTamuDaerah/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={pelaporanBreadCrumbs}>Detail Tamu Daerah</PageTitle>
+              <AddTamuDaerahPage />
+            </>
+          }
+        />
         <Route index element={<Navigate to='/pelaporan' />} />
       </Route>
     </Routes>
