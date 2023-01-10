@@ -276,11 +276,13 @@ export const DtAdmin: FC<any> = ({
   )
 }
 
-export function DtPimpinan(props: any) {
+export const DtPimpinan: FC<any> = ({aksi}) => {
   const [kota, setKota] = useState([])
 
   const kotaList = async () => {
-    const responseKota = await axios.get(`http://localhost:3001/kota`)
+    const responseKota = await axios.get(`http://localhost:3001/kota/`)
+    // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
+    console.log(responseKota)
     const dataKota = responseKota.data.data.map((d: any) => ({
       id: d.id,
       no: d.id,
@@ -293,7 +295,14 @@ export function DtPimpinan(props: any) {
 
   useEffect(() => {
     kotaList()
+    console.log(kotaList)
   }, [])
+
+  // const GetKota = ({row}: {row: number}) => {
+  //   const handleKota = valKota.data.data.find((i: any) => i.id === row)
+
+  //   return <>{handleKota?.nama}</>
+  // }
 
   const GetJumlah = ({row}: {row: number}) => {
     const [valData, setValData] = useState(0)
@@ -321,14 +330,18 @@ export function DtPimpinan(props: any) {
           `http://127.0.0.1:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}%20and%20kejadian__jenis_kejadian_id%20eq%20${jk}`
         )
         const result = data.total_items
-        console.log(result)
+        // console.log(result)
         setValData(result)
       }
 
       fetchDT(row, jenis)
     }, [valData, row])
 
-    return <>{valData}</>
+    return (
+      <>
+        <a onClick={() => aksi(jenis)}>{valData}</a>
+      </>
+    )
   }
 
   const columns3 = [
@@ -338,15 +351,20 @@ export function DtPimpinan(props: any) {
       selector: (row: any) => row.no,
     },
     {
-      name: 'Bidang/Wilayah',
+      name: 'Kota',
       width: '200px',
       wrap: true,
       selector: (row: any) => row.bidang_wilayah,
+      // cell: (record: any) => <GetKota row={record.id} />,
     },
     {
       name: 'Jumlah Kejadian',
       selector: (row: any) => row.no,
-      cell: (record: any) => <GetJumlah row={record.no} />,
+      cell: (record: any) => (
+        <a onClick={aksi}>
+          <GetJumlah row={record.no} />
+        </a>
+      ),
     },
     {
       name: 'Banjir',

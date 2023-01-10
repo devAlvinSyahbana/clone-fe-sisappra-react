@@ -312,24 +312,6 @@ export function DtPimpinan(props: any) {
     kotaList()
   }, [])
 
-  const GetJumlah = ({row}: {row: number}) => {
-    const [valData, setValData] = useState(0)
-    useEffect(() => {
-      async function fetchDT(id: number) {
-        const {data} = await axios.get(
-          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20${id}`
-        )
-        const result = data.total_items
-        // console.log(result)
-        setValData(result)
-      }
-
-      fetchDT(row)
-    }, [valData, row])
-
-    return <>{valData}</>
-  }
-
   const GetPerJenis = ({row, jenis}: any) => {
     const [valData, setValData] = useState(0)
     useEffect(() => {
@@ -524,12 +506,12 @@ export function DtPimpinan(props: any) {
     {
       name: 'Pengadilan (Yustitusi)',
       selector: (row: any) => row.lokasi,
-      cell: (record: any) => <GetPerJenis row={record.no} jenis={1} />,
+      cell: (record: any) => <GetPerJenisPenindakan row={record.no} jenis={1} />,
     },
     {
       name: 'Non Pengadilan (PPKM)',
       selector: (row: any) => row.lokasi,
-      cell: (record: any) => <GetPerJenis row={record.no} jenis={2} />,
+      cell: (record: any) => <GetPerJenisPenindakan row={record.no} jenis={2} />,
     },
   ]
 

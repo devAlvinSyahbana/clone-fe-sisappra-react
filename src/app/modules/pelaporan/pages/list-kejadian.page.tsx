@@ -66,6 +66,8 @@ export const ListKejadianPage: FC = () => {
   }, [])
 
   const [aksi, setAksi] = useState(0)
+  const [pimpinanView, setPV] = useState(0)
+  const [jenisKejadianId, setJKId] = useState(0)
   const [hakAksesData, setHakAksesData] = useState<any>([])
   let value: any = localStorage.getItem('kt-auth-react-v')
   let authValue = JSON.parse(value)
@@ -102,6 +104,13 @@ export const ListKejadianPage: FC = () => {
   }
   const vPimpinan = () => {
     setAksi(2)
+  }
+  const viewPimpinan = () => {
+    setPV(0)
+  }
+  const viewPimpinanDetail = (id: number) => {
+    setJKId(id)
+    setPV(1)
   }
 
   const [tanggalAwal, setTanggalAwal] = useState({val: ''})
@@ -142,6 +151,7 @@ export const ListKejadianPage: FC = () => {
   }
   const handleChangeInputJenisKejadian = (newValue: any) => {
     setValJenisKejadian((prevstate: any) => ({...prevstate, ...newValue}))
+    // console.log('ini val kejadian', valJenisKejadian)
   }
 
   const handleFilter = async () => {
@@ -174,13 +184,14 @@ export const ListKejadianPage: FC = () => {
 
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
+  const [dataPimpinan, setDataPimpinan] = useState([])
   const [perPage, setPerPage] = useState(10)
   const [totalRows, setTotalRows] = useState(0)
 
   const dataKejadian = (page: number) => {
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
+        `http://localhost:3002/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -204,9 +215,40 @@ export const ListKejadianPage: FC = () => {
       })
   }
 
+  const dataKejadianPimpinan = (page: number) => {
+    axios
+      .get(
+        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+      )
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kejadian: d.kejadian__tanggal,
+          waktu_mulai: d.kejadian__waktu_start,
+          waktu_selesai: d.kejadian__waktu_end,
+          jenis_kejadian: d.kejadian__jenis_kejadian_id,
+          uraian_kejadian: d.kejadian__uraian_kejadian,
+          // wilayah: d.kejadian__wilayah,
+          lokasi: d.kejadian__alamat,
+        }))
+        // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
+        setDataPimpinan(data)
+        setTotalRows(res.data.total_items)
+        setLoading(false)
+
+        return [dataPimpinan, setDataPimpinan] as const
+      })
+  }
+
   useEffect(() => {
     dataKejadian(0)
   }, [qParamFind, perPage])
+
+  useEffect(() => {
+    if (pimpinanView) dataKejadianPimpinan(0)
+  }, [jenisKejadianId, perPage, pimpinanView])
 
   const handlePageChange = (page: number) => {
     // const page1 = page++
@@ -1037,7 +1079,22 @@ export const ListKejadianPage: FC = () => {
                           PERIODE .................... s/d .......................
                         </div>
                       </div>
-                      <DtPimpinan />
+                      {pimpinanView === 0 ? (
+                        <DtPimpinan aksi={viewPimpinanDetail} />
+                      ) : (
+                        <>
+                          <DtKabid
+                            data={dataPimpinan}
+                            totalRows={totalRows}
+                            handlePerRowsChange={handlePerRowsChange}
+                            handlePageChange={handlePageChange}
+                            loading={loading}
+                            hakAkses={hakAkses}
+                            wilayahBidang={wilayahBidang}
+                          />{' '}
+                          <button onClick={viewPimpinan}>Back</button>
+                        </>
+                      )}
                       <div className='row'>
                         <div className='col-8'></div>
                         <div className='col-4 fs-6 mb-2 fw-semibold text-center'>

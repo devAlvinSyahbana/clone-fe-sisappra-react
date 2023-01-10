@@ -792,29 +792,71 @@ export const ListKegiatanPage: FC = () => {
                                 <div className='row'>
                                   <div className='col-4 pt-2'>
                                     <label className='form-label align-middle'>
-                                      Bidang/Wilayah
+                                      Jenis Kejadian
                                     </label>
                                   </div>
                                   <div className='col-8'>
                                     <AsyncSelect
-                                      name='filter_jenis_kegiatan_id_selection'
+                                      name='filter_jenis_kejadian_id_selection'
                                       defaultOptions
                                       value={valJenisKegiatan}
                                       loadOptions={loadOptionsJenisKegiatan}
                                       onChange={handleChangeInputJenisKegiatan}
                                     />
                                     {/* <Field
-                                    name='filter_jenis_kegiatan_id_selection'
-                                    target='filter_jenis_kegiatan_id'
-                                    className='form-control'
-                                    component={SelectField}
-                                    // options={jenisKegiatanList}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
+                                        name='filter_jenis_Kejadian_id_selection'
+                                        target='filter_jenis_Kejadian_id'
+                                        className='form-control'
+                                        component={SelectField}
+                                        options={jenisKejadianList}
+                                        onChange={(o: ChangeEvent<any>) => {
+                                          // dispatch(changedValue(ToFieldStateCE(o)))
+                                          // updateJenisPasalList()
+                                          // updateJenisPenyelesaianList()
+                                        }}
+                                      /> */}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className='col-md-6 col-lg-6 col-sm-12'>
+                              <div className='mb-10'>
+                                <div className='row'>
+                                  <div className='col-4 pt-2'>
+                                    <label className='form-label'>Tanggal Awal</label>
+                                  </div>
+                                  <div className='col-8'>
+                                    <input
+                                      type='date'
+                                      name='tanggal_kunjungan'
+                                      className='form-control'
+                                      value={tanggalAwal.val}
+                                      onChange={handleChangeInputTanggalAwal}
+                                      // onChange={(o: any) => {
+                                      //   setTanggalAwal(o.target.value)
+                                      // }}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className='col-md-6 col-lg-6 col-sm-12'>
+                              <div className='mb-10'>
+                                <div className='row'>
+                                  <div className='col-4 pt-2'>
+                                    <label className='form-label align-middle'>Tanggal Akhir</label>
+                                  </div>
+                                  <div className='col-8'>
+                                    <input
+                                      name='tanggal_kunjungan'
+                                      type='date'
+                                      className='form-control'
+                                      value={tanggalAkhir.val}
+                                      onChange={handleChangeInputTanggalAkhir}
+                                      // onChange={(o: any) => {
+                                      //   setTanggalAkhir(o.target.value)
+                                      // }}
+                                    />
                                   </div>
                                 </div>
                               </div>
