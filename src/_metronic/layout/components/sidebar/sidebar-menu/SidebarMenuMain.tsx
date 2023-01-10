@@ -97,7 +97,7 @@ const SidebarMenuMain = () => {
           title='Informasi Data Pegawai'
           hasBullet={true}
         />
-        {/* <SidebarMenuItem
+        <SidebarMenuItem
           to='/kepegawaian/HirarkiPegawai'
           title='Hirarki Pegawai'
           hasBullet={true}
@@ -117,7 +117,7 @@ const SidebarMenuMain = () => {
           title='Kehadiran Pegawai'
           hasBullet={true}
         />
-        <SidebarMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} /> */}
+        <SidebarMenuItem to='/kepegawaian/JadwalPiket' title='Jadwal Piket' hasBullet={true} />
       </SidebarMenuItemWithSub>
 
       <SidebarMenuItemWithSub
