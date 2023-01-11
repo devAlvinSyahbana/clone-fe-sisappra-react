@@ -48,6 +48,6 @@ export const HakAksesKontrol = () => {
   }, [allValues.listAksesKontrol.length, allValues.listModulPermission.length])
 
   console.log(allValues)
-  useEffect(() => {}, [currentLocation, allValues.hakAksesData.length])
+
   return <></>
 }
