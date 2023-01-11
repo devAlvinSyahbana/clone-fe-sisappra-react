@@ -878,7 +878,7 @@ export function TabDaftarUrutKepangkatan() {
                             {/* end::Content */}
 
                             {/* begin::Content */}
-                            <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                            {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
                               <button
                                 onClick={() =>
                                   navigate(
@@ -889,7 +889,7 @@ export function TabDaftarUrutKepangkatan() {
                               >
                                 PDF
                               </button>
-                            </div>
+                            </div> */}
                             {/* end::Content */}
                           </div>
                           {/* end::SubMenu */}
