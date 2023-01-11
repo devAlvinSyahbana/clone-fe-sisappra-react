@@ -198,7 +198,7 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
         <SidebarMenuItem to='/master/JenisPenertiban' title='Jenis Penertiban' hasBullet={true} />
       </SidebarMenuItemWithSub>
-      <SidebarMenuItemWithSub
+      {/* <SidebarMenuItemWithSub
         to='/manajemendata'
         title='Manajemen Data'
         fontIcon='bi-archive'
@@ -270,7 +270,7 @@ const SidebarMenuMain = () => {
           title='Laporan Penegakan Perda dan Perkada'
           hasBullet={true}
         />
-      </SidebarMenuItemWithSub>
+      </SidebarMenuItemWithSub> */}
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Pengaturan</span>
