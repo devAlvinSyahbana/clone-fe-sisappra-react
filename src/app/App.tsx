@@ -12,9 +12,9 @@ const App = () => {
       <I18nProvider>
         <LayoutProvider>
           <AuthInit>
+            <HakAksesKontrol />
             <Outlet />
             <MasterInit />
-            <HakAksesKontrol />
           </AuthInit>
         </LayoutProvider>
       </I18nProvider>
