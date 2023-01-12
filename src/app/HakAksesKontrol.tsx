@@ -23,11 +23,12 @@ export const HakAksesKontrol = () => {
   let value: any = localStorage.getItem('kt-auth-react-v')
   let res = JSON.parse(value)
   console.log(res)
+  if (!res) dispatch(reset())
 
   const initHaKAkses = async () => {
     dispatch(updateAksesKontrol())
     dispatch(updateModulPermission())
-    dispatch(updateHakAksesByIdData(res.data.hak_akses))
+    dispatch(updateHakAksesByIdData(res?.data.hak_akses))
     dispatch(
       changedValue({
         target: {
@@ -39,27 +40,23 @@ export const HakAksesKontrol = () => {
   }
 
   useEffect(() => {
-    initHaKAkses()
-  }, [])
-  //   useEffect(() => {
-  //     dispatch(
-  //       changedValue({
-  //         target: {
-  //           name: 'hakAksesData',
-  //           value: createdByHakAkses?.data,
-  //         },
-  //       })
-  //     )
-  //   }, [currentLocation])
-
-  //   useEffect(() => {
-  //     // initHaKAkses()
-  //     if (allValues.hakAksesData.hak_akses) )
-  //   }, [allValues.hakAksesData.hak_akses])
+    if (
+      res &&
+      (allValues.listAksesKontrol.length === 0 ||
+        allValues.listModulPermission.length === 0 ||
+        !allValues.hakAksesData)
+    ) {
+      initHaKAkses()
+      //   console.log('lagi mlakuy')
+    }
+  }, [currentLocation])
 
   useEffect(() => {
-    const data = [res.data.hak_akses, allValues]
-    dispatch(updateAksesKontrolMapping(data))
+    if (res && allValues.aksesKontrolMapping.length === 0) {
+      //   console.log('lagi jalan')
+      const data = [res?.data.hak_akses, allValues]
+      dispatch(updateAksesKontrolMapping(data))
+    }
   }, [allValues.listAksesKontrol.length, allValues.listModulPermission.length])
 
   console.log(allValues)
