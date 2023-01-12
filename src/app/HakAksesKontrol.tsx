@@ -22,7 +22,7 @@ export const HakAksesKontrol = () => {
 
   let value: any = localStorage.getItem('kt-auth-react-v')
   let res = JSON.parse(value)
-  console.log(res)
+  //   console.log(res)
   if (!res) dispatch(reset())
 
   const initHaKAkses = async () => {
@@ -59,7 +59,7 @@ export const HakAksesKontrol = () => {
     }
   }, [allValues.listAksesKontrol.length, allValues.listModulPermission.length])
 
-  console.log(allValues)
+  //   console.log(allValues)
 
   return <></>
 }
