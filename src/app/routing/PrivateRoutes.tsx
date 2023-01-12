@@ -1,4 +1,4 @@
-import {lazy, FC, Suspense} from 'react'
+import {lazy, FC, Suspense, useState, useEffect} from 'react'
 import {Route, Routes, Navigate} from 'react-router-dom'
 import {MasterLayout} from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
@@ -7,6 +7,8 @@ import {MenuTestPage} from '../pages/MenuTestPage'
 import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
 import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
+import {useSelector} from 'react-redux'
+import {RootState} from '../redux/store'
 
 const PrivateRoutes = () => {
   const DashboardPage = lazy(() => import('../modules/dashboard/DashboardPage'))
@@ -23,6 +25,12 @@ const PrivateRoutes = () => {
   const ManajemenPenggunaPage = lazy(() => import('../modules/apps/ManajemenPenggunaPage'))
   const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
 
+  const [publicAkses, setPublicAkses] = useState(false)
+  const hakAksesValues = useSelector((s: RootState) => s.hakAksesKontrol)
+  useEffect(() => {
+    if (!hakAksesValues.namaHakAkses.nama_hak_akses?.toLowerCase().includes('public'))
+      setPublicAkses(true)
+  }, [])
   return (
     <Routes>
       <Route element={<MasterLayout />}>
@@ -33,22 +41,26 @@ const PrivateRoutes = () => {
         <Route path='builder' element={<BuilderPageWrapper />} />
         <Route path='menu-test' element={<MenuTestPage />} />
         {/* Lazy Modules */}
-        <Route
-          path='dashboard/*'
-          element={
-            <SuspensedView>
-              <DashboardPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='sarana-prasarana/*'
-          element={
-            <SuspensedView>
-              <SaranaPrasaranaPage />
-            </SuspensedView>
-          }
-        />
+        {publicAkses && (
+          <>
+            <Route
+              path='dashboard/*'
+              element={
+                <SuspensedView>
+                  <DashboardPage />
+                </SuspensedView>
+              }
+            />
+            <Route
+              path='sarana-prasarana/*'
+              element={
+                <SuspensedView>
+                  <SaranaPrasaranaPage />
+                </SuspensedView>
+              }
+            />
+          </>
+        )}
         <Route
           path='kepegawaian/*'
           element={
@@ -65,7 +77,7 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />
-         <Route
+        <Route
           path='perdaperkada/*'
           element={
             <SuspensedView>
