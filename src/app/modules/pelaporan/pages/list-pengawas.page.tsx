@@ -74,6 +74,7 @@ export const ListPengawasPage: FC = () => {
 
   const [tanggalAwal, setTanggalAwal] = useState({val: ''})
   const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
+  const [pelaksana, setPelaksana] = useState({val: ''})
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
@@ -89,9 +90,60 @@ export const ListPengawasPage: FC = () => {
     setTanggalAkhir({val: event.target.value})
   }
 
+  const handleChangeInputPelaksana = (event: {
+    preventDefault: () => void
+    target: {value: any; name: any}
+  }) => {
+    setPelaksana({val: event.target.value})
+  }
+
   function loadOptionsKota() {
     return []
   }
+
+  interface SelectOption {
+    readonly value: string
+    readonly label: string
+  }
+
+  const [valJenisReklame, setValJenisReklame] = useState({value: '', label: ''})
+  const filterJenisReklame = async (inputValue: string) => {
+    const response = await axios.get(`http://localhost:3001/jenis-reklame/combobox`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.text, value: i.value}))
+  }
+  const loadOptionsJenisReklame = (
+    inputValue: string,
+    callback: (options: SelectOption[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterJenisReklame(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputJenisReklame = (newValue: any) => {
+    setValJenisReklame((prevstate: any) => ({...prevstate, ...newValue}))
+    // console.log('ini val kejadian', valJenisKejadian)
+  }
+
+  const [valStatusReklame, setValStatusReklame] = useState({value: '', label: ''})
+  const filterStatusReklame = async (inputValue: string) => {
+    const response = await axios.get(`http://localhost:3001/status-reklame/combobox`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.text, value: i.value}))
+  }
+  const loadOptionsStatusReklame = (
+    inputValue: string,
+    callback: (options: SelectOption[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterStatusReklame(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputStatusReklame = (newValue: any) => {
+    setValStatusReklame((prevstate: any) => ({...prevstate, ...newValue}))
+    // console.log('ini val kejadian', valJenisKejadian)
+  }
+
   const [hakAkses, setHakAkses] = useState([])
 
   const handleHakAkses = async () => {
@@ -123,26 +175,26 @@ export const ListPengawasPage: FC = () => {
   console.log('id hak akses', idHakAkses)
   console.log('aksi', aksi)
 
-  const findHakAksesData = async () => {
-    const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
-    // console.log(res.data.data)
-    setHakAksesData(res.data.data)
-  }
+  // const findHakAksesData = async () => {
+  //   const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
+  //   // console.log(res.data.data)
+  //   setHakAksesData(res.data.data)
+  // }
 
-  useEffect(() => {
-    findHakAksesData()
-  }, [])
-  useEffect(() => {
-    if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('admin')) {
-      return setAksi(1)
-    } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala satpol pp dki')) {
-      return setAksi(2)
-    } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala')) {
-      return setAksi(0)
-    } else {
-      return setAksi(3)
-    }
-  }, [hakAksesData])
+  // // useEffect(() => {
+  // //   findHakAksesData()
+  // // }, [])
+  // // useEffect(() => {
+  // //   if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('admin')) {
+  // //     return setAksi(1)
+  // //   } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala satpol pp dki')) {
+  // //     return setAksi(2)
+  // //   } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala')) {
+  // //     return setAksi(0)
+  // //   } else {
+  // //     return setAksi(3)
+  // //   }
+  // // }, [hakAksesData])
 
   const vKabid = () => {
     setAksi(0)
@@ -200,18 +252,42 @@ export const ListPengawasPage: FC = () => {
     } else if (tanggalAkhir.val !== '') {
       uriParam += `tgl_pengecekan%20eq%20%27${tanggalAkhir.val}%27`
     }
-    // if (instansi.val !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-    //   uriParam += `%20and%20asal_instansi%20eq%20%27${instansi.val}%27`
-    //   // console.log('2 on')
-    // } else if (instansi.val !== '') {
-    //   uriParam += `asal_instansi%20eq%20%27${instansi.val}%27`
-    // }
+    if (
+      pelaksana.val !== '' &&
+      (tanggalAwal.val || tanggalAkhir.val || valJenisReklame.value || valStatusReklame.value)
+    ) {
+      uriParam += `%20and%20created_by%20eq%20%27${pelaksana.val}%27`
+      // console.log('2 on')
+    } else if (pelaksana.val !== '') {
+      uriParam += `created_by%20eq%20%27${pelaksana.val}%27`
+    }
+    if (
+      valJenisReklame.value !== '' &&
+      (tanggalAwal.val || tanggalAkhir.val || pelaksana.val || valStatusReklame.value)
+    ) {
+      uriParam += `%20and%20jenis_reklame%20eq%20%27${valJenisReklame.value}%27`
+      // console.log('2 on')
+    } else if (valJenisReklame.value !== '') {
+      uriParam += `jenis_reklame%20eq%20%27${valJenisReklame.value}%27`
+    }
+    if (
+      valStatusReklame.value !== '' &&
+      (tanggalAwal.val || tanggalAkhir.val || pelaksana.val || valJenisReklame.value)
+    ) {
+      uriParam += `%20and%20status_reklame%20eq%20%27${valStatusReklame.value}%27`
+      // console.log('2 on')
+    } else if (valStatusReklame.value !== '') {
+      uriParam += `status_reklame%20eq%20%27${valStatusReklame.value}%27`
+    }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
     setTanggalAwal({val: ''})
     setTanggalAkhir({val: ''})
+    setPelaksana({val: ''})
+    setValJenisReklame({value: '', label: ''})
+    setValStatusReklame({value: '', label: ''})
     // setInstansi({val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
@@ -310,9 +386,9 @@ export const ListPengawasPage: FC = () => {
                         className='fs-6 collapse show ps-10'
                         data-bs-parent='#kt_accordion_2'
                       >
-                        {/* <Button onClick={vKabid}>Kabid</Button>
-                      <Button onClick={vAdmin}>Admin</Button>
-                      <Button onClick={vPimpinan}>Pimpinan</Button> */}
+                        <Button onClick={vKabid}>Kabid</Button>
+                        <Button onClick={vAdmin}>Admin</Button>
+                        <Button onClick={vPimpinan}>Pimpinan</Button>
                         {aksi === 0 ? (
                           <Formik
                             validationSchema={currentSchema}
@@ -629,7 +705,7 @@ export const ListPengawasPage: FC = () => {
                           >
                             <Form id='list_pelaporan_kegiatan_filter'>
                               <div className='row w-100 mt-10 mb-10'>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                                {/* <div className='col-md-6 col-lg-6 col-sm-12'>
                                   <div className='mb-10'>
                                     <div className='row'>
                                       <div className='col-4 pt-2'>
@@ -638,26 +714,23 @@ export const ListPengawasPage: FC = () => {
                                         </label>
                                       </div>
                                       <div className='col-8'>
-                                        <Field
-                                          name='kelurahan_selection'
-                                          target='kelurahan'
+                                        <input
+                                          type='text'
                                           className='form-control'
-                                          component={SelectField}
-                                          // options={kelurahanList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
+                                          value={pelaksana.val}
+                                          onChange={handleChangeInputPelaksana}
                                         />
                                       </div>
                                     </div>
                                   </div>
-                                </div>
+                                </div> */}
                                 <div className='col-md-6 col-lg-6 col-sm-12'>
                                   <div className='mb-10'>
                                     <div className='row'>
                                       <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>Tanggal</label>
+                                        <label className='form-label align-middle'>
+                                          Tanggal Awal
+                                        </label>
                                       </div>
                                       <div className='col-8'>
                                         <input
@@ -671,94 +744,27 @@ export const ListPengawasPage: FC = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                                <div className='col-md-10 col-lg-10 col-sm-24'>
                                   <div className='mb-10'>
                                     <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>Kota</label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kota_selection'
-                                          target='kota'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={kotaList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>Kecamatan</label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kecamatan_selection'
-                                          target='kecamatan'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={kecamatanList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>Kelurahan</label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kelurahan_selection'
-                                          target='kelurahan'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={kelurahanList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
+                                      <div className='col-2 pt-2'>
                                         <label className='form-label align-middle'>
-                                          Kawasan Kendali
+                                          Tanggal Akhir
                                         </label>
                                       </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kawasan_kendali_selection'
-                                          target='kawasan_kendali'
+                                      <div className='col-4 mx-10'>
+                                        <input
+                                          name='tgl_pengecekan'
+                                          type='date'
                                           className='form-control'
-                                          component={SelectField}
-                                          options={jeniskendaliList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
+                                          value={tanggalAkhir.val}
+                                          onChange={handleChangeInputTanggalAkhir}
                                         />
                                       </div>
                                     </div>
                                   </div>
                                 </div>
+
                                 <div className='col-md-6 col-lg-6 col-sm-12'>
                                   <div className='mb-10'>
                                     <div className='row'>
@@ -768,16 +774,12 @@ export const ListPengawasPage: FC = () => {
                                         </label>
                                       </div>
                                       <div className='col-8'>
-                                        <Field
-                                          name='jenis_reklame_selection'
-                                          target='jenis_reklame'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={jenisreklameList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
+                                        <AsyncSelect
+                                          name='filter_jenis_reklame_id_selection'
+                                          defaultOptions
+                                          value={valJenisReklame}
+                                          loadOptions={loadOptionsJenisReklame}
+                                          onChange={handleChangeInputJenisReklame}
                                         />
                                       </div>
                                     </div>
@@ -792,16 +794,12 @@ export const ListPengawasPage: FC = () => {
                                         </label>
                                       </div>
                                       <div className='col-8'>
-                                        <Field
-                                          name='status_reklame_selection'
-                                          target='status_reklame'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={statusReklameList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
+                                        <AsyncSelect
+                                          name='filter_jenis_reklame_id_selection'
+                                          defaultOptions
+                                          value={valStatusReklame}
+                                          loadOptions={loadOptionsStatusReklame}
+                                          onChange={handleChangeInputStatusReklame}
                                         />
                                       </div>
                                     </div>

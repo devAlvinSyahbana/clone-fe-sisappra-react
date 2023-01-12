@@ -294,6 +294,11 @@ export const DtPimpinan: FC<any> = ({
   wilayahBidang,
 }) => {
   const navigate = useNavigate()
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
 
   const GetStatusReklame = ({row}: {row: number}) => {
     const [valData, setValData] = useState('')
@@ -322,6 +327,7 @@ export const DtPimpinan: FC<any> = ({
       name: 'Pelaksana',
       width: '140px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal',
