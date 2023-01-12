@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from './redux/store'
 import {
   changedValue,
+  reset,
   updateAksesKontrol,
   updateAksesKontrolMapping,
   updateHakAksesByIdData,
@@ -20,29 +21,40 @@ export const HakAksesKontrol = () => {
   const allValues = useSelector((s: RootState) => s.hakAksesKontrol)
 
   let value: any = localStorage.getItem('kt-auth-react-v')
-  let createdByHakAkses = JSON.parse(value)
+  let res = JSON.parse(value)
+  console.log(res)
+  if (!res) dispatch(reset())
 
   const initHaKAkses = async () => {
     dispatch(updateAksesKontrol())
     dispatch(updateModulPermission())
+    dispatch(updateHakAksesByIdData(res?.data.hak_akses))
     dispatch(
       changedValue({
         target: {
           name: 'hakAksesData',
-          value: createdByHakAkses.data,
+          value: res?.data,
         },
       })
     )
   }
 
   useEffect(() => {
-    initHaKAkses()
-  }, [])
+    if (
+      res &&
+      (allValues.listAksesKontrol.length === 0 ||
+        allValues.listModulPermission.length === 0 ||
+        !allValues.hakAksesData)
+    ) {
+      initHaKAkses()
+      //   console.log('lagi mlakuy')
+    }
+  }, [currentLocation])
 
   useEffect(() => {
-    const data = [allValues.hakAksesData.hak_akses, allValues]
-    if (allValues.hakAksesData.hak_akses) {
-      dispatch(updateHakAksesByIdData(allValues.hakAksesData.hak_akses))
+    if (res && allValues.aksesKontrolMapping.length === 0) {
+      //   console.log('lagi jalan')
+      const data = [res?.data.hak_akses, allValues]
       dispatch(updateAksesKontrolMapping(data))
     }
   }, [allValues.listAksesKontrol.length, allValues.listModulPermission.length])

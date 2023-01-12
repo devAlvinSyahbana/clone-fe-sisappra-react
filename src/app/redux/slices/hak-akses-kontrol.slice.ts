@@ -34,7 +34,6 @@ export const updateAksesKontrol: any = createAsyncThunk(
   'hakAksesKontrol/updateAksesKontrol',
   async (thunkAPI) => {
     const res = await axios.get(`${API_URL}/manajemen-pengguna/akses-kontrol/find-all`)
-    console.log(res.data.data)
 
     return res.data.data
   }

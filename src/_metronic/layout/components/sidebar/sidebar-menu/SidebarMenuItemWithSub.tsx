@@ -24,7 +24,7 @@ const SidebarMenuItemWithSub: React.FC<Props & WithChildren> = ({
   const isActive = checkIsActive(pathname, to)
   const {config} = useLayout()
   const {app} = config
-  if (isActive) console.log(pathname)
+  // if (isActive) console.log(pathname)
 
   return (
     <div
