@@ -117,7 +117,17 @@ export const DtKabid: FC<any> = ({
 
   return (
     <div>
-      <DataTable columns={columns1} data={data} pagination />
+      <DataTable
+        columns={columns1}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
     </div>
   )
 }
@@ -276,7 +286,7 @@ export const DtAdmin: FC<any> = ({
   )
 }
 
-export const DtPimpinan: FC<any> = ({aksi}) => {
+export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
   const [kota, setKota] = useState([])
 
   const kotaList = async () => {
@@ -304,7 +314,7 @@ export const DtPimpinan: FC<any> = ({aksi}) => {
   //   return <>{handleKota?.nama}</>
   // }
 
-  const GetJumlah = ({row}: {row: number}) => {
+  const GetJumlah = ({row}: any) => {
     const [valData, setValData] = useState(0)
     useEffect(() => {
       async function fetchDT(id: number) {
@@ -317,9 +327,13 @@ export const DtPimpinan: FC<any> = ({aksi}) => {
       }
 
       fetchDT(row)
-    }, [valData, row])
+    }, [])
 
-    return <>{valData}</>
+    return (
+      <>
+        <a onClick={() => jumlah(row)}>{valData}</a>
+      </>
+    )
   }
 
   const GetPerJenis = ({row, jenis}: any) => {
@@ -335,11 +349,11 @@ export const DtPimpinan: FC<any> = ({aksi}) => {
       }
 
       fetchDT(row, jenis)
-    }, [valData, row])
+    }, [])
 
     return (
       <>
-        <a onClick={() => aksi(jenis)}>{valData}</a>
+        <a onClick={() => aksi(jenis, row)}>{valData}</a>
       </>
     )
   }
@@ -360,11 +374,7 @@ export const DtPimpinan: FC<any> = ({aksi}) => {
     {
       name: 'Jumlah Kejadian',
       selector: (row: any) => row.no,
-      cell: (record: any) => (
-        <a onClick={aksi}>
-          <GetJumlah row={record.no} />
-        </a>
-      ),
+      cell: (record: any) => <GetJumlah row={record.no} />,
     },
     {
       name: 'Banjir',
