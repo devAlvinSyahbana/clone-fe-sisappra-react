@@ -175,26 +175,26 @@ export const ListPengawasPage: FC = () => {
   console.log('id hak akses', idHakAkses)
   console.log('aksi', aksi)
 
-  // const findHakAksesData = async () => {
-  //   const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
-  //   // console.log(res.data.data)
-  //   setHakAksesData(res.data.data)
-  // }
+  const findHakAksesData = async () => {
+    const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
+    // console.log(res.data.data)
+    setHakAksesData(res.data.data)
+  }
 
-  // // useEffect(() => {
-  // //   findHakAksesData()
-  // // }, [])
-  // // useEffect(() => {
-  // //   if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('admin')) {
-  // //     return setAksi(1)
-  // //   } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala satpol pp dki')) {
-  // //     return setAksi(2)
-  // //   } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala')) {
-  // //     return setAksi(0)
-  // //   } else {
-  // //     return setAksi(3)
-  // //   }
-  // // }, [hakAksesData])
+  useEffect(() => {
+    findHakAksesData()
+  }, [])
+  useEffect(() => {
+    if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('admin')) {
+      return setAksi(1)
+    } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala satpol pp dki')) {
+      return setAksi(2)
+    } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala')) {
+      return setAksi(0)
+    } else {
+      return setAksi(3)
+    }
+  }, [hakAksesData])
 
   const vKabid = () => {
     setAksi(0)
@@ -386,9 +386,9 @@ export const ListPengawasPage: FC = () => {
                         className='fs-6 collapse show ps-10'
                         data-bs-parent='#kt_accordion_2'
                       >
-                        <Button onClick={vKabid}>Kabid</Button>
+                        {/* <Button onClick={vKabid}>Kabid</Button>
                         <Button onClick={vAdmin}>Admin</Button>
-                        <Button onClick={vPimpinan}>Pimpinan</Button>
+                        <Button onClick={vPimpinan}>Pimpinan</Button> */}
                         {aksi === 0 ? (
                           <Formik
                             validationSchema={currentSchema}
