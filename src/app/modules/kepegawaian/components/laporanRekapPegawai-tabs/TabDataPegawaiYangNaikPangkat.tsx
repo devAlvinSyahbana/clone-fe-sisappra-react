@@ -763,7 +763,7 @@ export function TabDataPegawaiYangNaikPangkat() {
                     Excel
                   </button>
                 </div>
-                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
                   <button
                     onClick={() =>
                       navigate(`/kepegawaian/LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf`)
@@ -772,7 +772,7 @@ export function TabDataPegawaiYangNaikPangkat() {
                   >
                     PDF
                   </button>
-                </div>
+                </div> */}
                 {/* end::Content */}
               </div>
               {/* end::SubMenu */}
