@@ -386,9 +386,9 @@ export const ListPengawasPage: FC = () => {
                         className='fs-6 collapse show ps-10'
                         data-bs-parent='#kt_accordion_2'
                       >
-                        <Button onClick={vKabid}>Kabid</Button>
+                        {/* <Button onClick={vKabid}>Kabid</Button>
                         <Button onClick={vAdmin}>Admin</Button>
-                        <Button onClick={vPimpinan}>Pimpinan</Button>
+                        <Button onClick={vPimpinan}>Pimpinan</Button> */}
                         {aksi === 0 ? (
                           <Formik
                             validationSchema={currentSchema}
