@@ -14,7 +14,7 @@ const SidebarMenuMain = () => {
     }
     setPublicAkses(true)
   }, [hakAksesValues.namaHakAkses.nama_hak_akses])
-  console.log(publicAkses, hakAksesValues.namaHakAkses.nama_hak_akses?.toLowerCase())
+  // console.log(publicAkses, hakAksesValues.namaHakAkses.nama_hak_akses?.toLowerCase())
 
   return (
     <>
