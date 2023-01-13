@@ -1108,7 +1108,11 @@ export const ListKejadianPage: FC = () => {
                         </div>
                       </div>
                       {pimpinanView === 0 ? (
-                        <DtPimpinan aksi={viewPimpinanDetail} jumlah={viewPimpinanDetailJumlah} />
+                        <DtPimpinan
+                          aksi={viewPimpinanDetail}
+                          jumlah={viewPimpinanDetailJumlah}
+                          pelaporanUrl={PELAPORAN_URL}
+                        />
                       ) : (
                         <>
                           <DtKabid
