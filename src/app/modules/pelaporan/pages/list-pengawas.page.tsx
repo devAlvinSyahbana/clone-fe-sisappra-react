@@ -386,9 +386,9 @@ export const ListPengawasPage: FC = () => {
                         className='fs-6 collapse show ps-10'
                         data-bs-parent='#kt_accordion_2'
                       >
-                        {/* <Button onClick={vKabid}>Kabid</Button>
+                        <Button onClick={vKabid}>Kabid</Button>
                         <Button onClick={vAdmin}>Admin</Button>
-                        <Button onClick={vPimpinan}>Pimpinan</Button> */}
+                        <Button onClick={vPimpinan}>Pimpinan</Button>
                         {aksi === 0 ? (
                           <Formik
                             validationSchema={currentSchema}
@@ -440,15 +440,16 @@ export const ListPengawasPage: FC = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <div className='col-md-10 col-lg-10 col-sm-24'>
+                                <div className='col-md-6 col-lg-6 col-sm-12'></div>
+                                <div className='col-md-6 col-lg-6 col-sm-12'>
                                   <div className='mb-10'>
                                     <div className='row'>
-                                      <div className='col-2 pt-2'>
+                                      <div className='col-4 pt-2'>
                                         <label className='form-label align-middle'>
                                           Tanggal Akhir
                                         </label>
                                       </div>
-                                      <div className='col-4 mx-10'>
+                                      <div className='col-8'>
                                         <input
                                           name='tgl_pengecekan'
                                           type='date'
@@ -744,15 +745,15 @@ export const ListPengawasPage: FC = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <div className='col-md-10 col-lg-10 col-sm-24'>
+                                <div className='col-md-6 col-lg-6 col-sm-24'>
                                   <div className='mb-10'>
                                     <div className='row'>
-                                      <div className='col-2 pt-2'>
+                                      <div className='col-4 pt-2'>
                                         <label className='form-label align-middle'>
                                           Tanggal Akhir
                                         </label>
                                       </div>
-                                      <div className='col-4 mx-10'>
+                                      <div className='col-8'>
                                         <input
                                           name='tgl_pengecekan'
                                           type='date'
