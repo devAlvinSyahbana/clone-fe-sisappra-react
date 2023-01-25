@@ -81,7 +81,7 @@ export const ListTamuDaerahPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/tamu-daerah/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
+        `${PELAPORAN_URL}/tamu-daerah/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -116,7 +116,7 @@ export const ListTamuDaerahPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/tamu-daerah/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+        `${PELAPORAN_URL}/tamu-daerah/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -191,7 +191,7 @@ export const ListTamuDaerahPage: FC = () => {
             deleted_by: 'string',
           },
         }
-        const response = await axios.delete(`http://127.0.0.1:3002/tamu-daerah/${id}`, bodyParam)
+        const response = await axios.delete(`${PELAPORAN_URL}/tamu-daerah/${id}`, bodyParam)
         if (response) {
           dataTamuDaerah(0)
           Swal.fire({

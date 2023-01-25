@@ -7,6 +7,8 @@ import {useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
 const LoadingAnimation = (props: any) => {
   return (
@@ -51,7 +53,7 @@ export const DtKabid: FC<any> = ({
     useEffect(() => {
       async function fetchDT(id: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+          `${MASTERDATA_URL}/status-reklame/?%24filter=id%20eq%20${id}`
         )
         const result: string = data.data[0].nama
         setValData(result)
@@ -163,7 +165,7 @@ export const DtAdmin: FC<any> = ({
     useEffect(() => {
       async function fetchDT(id: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+          `${MASTERDATA_URL}/status-reklame/?%24filter=id%20eq%20${id}`
         )
         const result: string = data.data[0].nama
         setValData(result)
@@ -300,7 +302,7 @@ export const DtPimpinan: FC<any> = ({
     useEffect(() => {
       async function fetchDT(id: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3001/status-reklame/?%24filter=id%20eq%20${id}`
+          `${MASTERDATA_URL}/status-reklame/?%24filter=id%20eq%20${id}`
         )
         const result: string = data.data[0].nama
         setValData(result)

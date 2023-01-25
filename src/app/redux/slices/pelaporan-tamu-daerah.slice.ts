@@ -8,6 +8,8 @@ import {
 import * as Yup from 'yup'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
 export interface PelaporanTamuDaerahState extends Record<string, any> {
   tanggal_kunjungan: string
@@ -48,12 +50,12 @@ export const createSchemaPelaporanTamuDaerah = [
 // export const updateJenisKegiatanList: any = createAsyncThunk(
 //   'pelaporanKegiatan/updateJenisKegiatanList',
 //   async (thunkAPI) => {
-//     const res = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`)
+//     const res = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox?$orderby=nama`)
 //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 //     return data
 //   }
 // )
-//  axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
+//  axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
 //    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 //    // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
 //    dispatch(changedValue(ToFieldStateBNV('list_jenis_kegiatan', data)))

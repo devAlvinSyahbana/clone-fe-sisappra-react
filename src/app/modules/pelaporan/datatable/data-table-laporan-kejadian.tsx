@@ -7,6 +7,9 @@ import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {useNavigate} from 'react-router-dom'
 
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
 const LoadingAnimation = (props: any) => {
   return (
     <>
@@ -26,7 +29,7 @@ const GetJenisKejadian = ({row}: {row: number}) => {
   useEffect(() => {
     async function fetchDT(id: number) {
       const {data} = await axios.get(
-        `http://127.0.0.1:3001/jenis-kejadian/?%24filter=id%20eq%20${id}`
+        `${MASTERDATA_URL}/jenis-kejadian/?%24filter=id%20eq%20${id}`
       )
       const result: string = data.data[0].nama
       setValData(result)
@@ -290,7 +293,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, pelaporanUrl}) => {
   const [kota, setKota] = useState([])
 
   const kotaList = async () => {
-    const responseKota = await axios.get(`http://localhost:3001/kota/`)
+    const responseKota = await axios.get(`${MASTERDATA_URL}/kota/`)
     // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
     // console.log(responseKota)
     const dataKota = responseKota.data.data.map((d: any) => ({
@@ -319,7 +322,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, pelaporanUrl}) => {
     useEffect(() => {
       async function fetchDT(id: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}`
+          `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}`
         )
         const result = data.total_items
         // console.log(result)

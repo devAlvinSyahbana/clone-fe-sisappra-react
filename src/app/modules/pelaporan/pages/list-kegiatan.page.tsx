@@ -40,7 +40,7 @@ export const ListKegiatanPage: FC = () => {
   // const [jenisKegiatan, setJenisKegiatan] = useState([])
 
   // const updateJenisKegiatanList = () => {
-  //   axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
+  //   axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
   //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
   //     // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
   //     setJenisKegiatanList(data)
@@ -58,7 +58,7 @@ export const ListKegiatanPage: FC = () => {
   // const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
 
   // const filterPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
-  //   const res = await axios.get(`http://localhost:3002/kegiatan-umum`)
+  //   const res = await axios.get(`${PELAPORAN_URL}/kegiatan-umum`)
   //   const data = res.data.data
   //   // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
   //   setCurrentSchema(data)
@@ -177,7 +177,7 @@ export const ListKegiatanPage: FC = () => {
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
   const filterJenisKegiatan = async (inputValue: string) => {
-    const response = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox`)
+    const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
     return json.map((i: any) => ({label: i.text, value: i.value}))
@@ -243,7 +243,7 @@ export const ListKegiatanPage: FC = () => {
   const dataKegiatan = (page: number) => {
     axios
       .get(
-        `http://localhost:3002/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -281,7 +281,7 @@ export const ListKegiatanPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -336,7 +336,7 @@ export const ListKegiatanPage: FC = () => {
             deleted_by: 'string',
           },
         }
-        const response = await axios.delete(`http://127.0.0.1:3002/kegiatan-umum/${id}`, bodyParam)
+        const response = await axios.delete(`${PELAPORAN_URL}/kegiatan-umum/${id}`, bodyParam)
         if (response) {
           dataKegiatan(0)
           Swal.fire({

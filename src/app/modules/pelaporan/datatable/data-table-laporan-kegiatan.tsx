@@ -7,6 +7,10 @@ import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {useNavigate} from 'react-router-dom'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
 const LoadingAnimation = (props: any) => {
   return (
     <>
@@ -155,7 +159,7 @@ export const DtAdmin: FC<any> = ({
     // useEffect(() => {
     //   async function fetchDT(id: number) {
     //     const {data} = await axios.get(
-    //       `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
+    //       `${MASTERDATA_URL}/jenis-kegiatan/?%24filter=id%20eq%20${id}`
     //     )
     //     const result: string = data.data[0].nama
     //     setValData(result)
@@ -297,7 +301,7 @@ export function DtPimpinan(props: any) {
   const [kota, setKota] = useState([])
 
   const kotaList = async () => {
-    const responseKota = await axios.get(`http://127.0.0.1:3000/master/bidang-wilayah/find`)
+    const responseKota = await axios.get(`${API_URL}/master/bidang-wilayah/find`)
     const dataKota = responseKota.data.data.map((d: any) => ({
       id: d.id,
       no: d.id,
@@ -317,7 +321,7 @@ export function DtPimpinan(props: any) {
     useEffect(() => {
       async function fetchDT(id: number, jk: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__administrasi__penyelesaian_id%20eq%20${jk}`
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__administrasi__penyelesaian_id%20eq%20${jk}`
         )
         const result = data.total_items
         console.log(result)
@@ -335,7 +339,7 @@ export function DtPimpinan(props: any) {
     useEffect(() => {
       async function fetchDT(id: number, jk: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__jenis_penindakan_id%20eq%20${jk}`
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__jenis_penindakan_id%20eq%20${jk}`
         )
         const result = data.total_items
         console.log(result)

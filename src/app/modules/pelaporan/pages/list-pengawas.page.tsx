@@ -49,17 +49,17 @@ export const ListPengawasPage: FC = () => {
   const kelurahanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kelurahan)
 
   const updateList = () => {
-    axios.get(`http://localhost:3001/jenis-kendali/combobox?$orderby=nama`).then((res) => {
+    axios.get(`${MASTERDATA_URL}/jenis-kendali/combobox?$orderby=nama`).then((res) => {
       const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
       // .filter((v: any) => !excludeJenisKendali.includes(v.label))
       setJenisKendaliList(data)
     })
-    axios.get(`http://localhost:3001/jenis-reklame/combobox?$orderby=nama`).then((res) => {
+    axios.get(`${MASTERDATA_URL}/jenis-reklame/combobox?$orderby=nama`).then((res) => {
       const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
       // .filter((v: any) => !excludeJenisKejadian.includes(v.label))
       setJenisReklameList(data)
     })
-    axios.get(`http://localhost:3001/status-reklame/combobox?$orderby=nama`).then((res) => {
+    axios.get(`${MASTERDATA_URL}/status-reklame/combobox?$orderby=nama`).then((res) => {
       const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
       // .filter((v: any) => !excludeJenisKejadian.includes(v.label))
       setStatusReklameList(data)
@@ -109,7 +109,7 @@ export const ListPengawasPage: FC = () => {
   const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
 
   const filterPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
-    const res = await axios.get(`http://localhost:3002/kegiatan-umum`)
+    const res = await axios.get(`${PELAPORAN_URL}/kegiatan-umum`)
     const data = res.data.data
     setCurrentSchema(data)
     console.log(res)
@@ -158,7 +158,7 @@ export const ListPengawasPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/reklame/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
+        `${PELAPORAN_URL}/reklame/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -224,7 +224,7 @@ export const ListPengawasPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/reklame/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+        `${PELAPORAN_URL}/reklame/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
