@@ -24,6 +24,7 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 import Swal from 'sweetalert2'
+import ReactToPrint from 'react-to-print'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -32,6 +33,7 @@ export const MASTER_URL = `${API_URL}/master`
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 
 export const ListKejadianPage: FC = () => {
+  let componentRef: any
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKejadian[0])
@@ -68,6 +70,7 @@ export const ListKejadianPage: FC = () => {
   const [aksi, setAksi] = useState(0)
   const [pimpinanView, setPV] = useState(0)
   const [jenisKejadianId, setJKId] = useState(0)
+  const [kotaId, setKotaId] = useState(0)
   const [hakAksesData, setHakAksesData] = useState<any>([])
   let value: any = localStorage.getItem('kt-auth-react-v')
   let authValue = JSON.parse(value)
@@ -108,8 +111,14 @@ export const ListKejadianPage: FC = () => {
   const viewPimpinan = () => {
     setPV(0)
   }
-  const viewPimpinanDetail = (id: number) => {
+  const viewPimpinanDetail = (id: number, kota: number) => {
+    setKotaId(kota)
     setJKId(id)
+    setPV(1)
+  }
+
+  const viewPimpinanDetailJumlah = (kota: number) => {
+    setKotaId(kota)
     setPV(1)
   }
 
@@ -182,9 +191,59 @@ export const ListKejadianPage: FC = () => {
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
+  const handleFilterDetailJumlah = async () => {
+    let uriParam = ''
+    if (tanggalAwal.val && tanggalAkhir.val) {
+      uriParam += `%20and%20kejadian__tanggal%20ge%20%27${tanggalAwal.val}%27%20and%20kejadian__tanggal%20le%20%27${tanggalAkhir.val}%27`
+      // console.log('2 on')
+    } else if (tanggalAwal.val !== '') {
+      // console.log('start on')
+      uriParam += `%20and%20kejadian__tanggal%20eq%20%27${tanggalAwal.val}%27`
+    } else if (tanggalAkhir.val !== '') {
+      uriParam += `%20and%20kejadian__tanggal%20eq%20%27${tanggalAkhir.val}%27`
+    }
+    if (valJenisKejadian.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
+      uriParam += `%20and%20kejadian__jenis_kejadian_id%20eq%20%27${valJenisKejadian.value}%27`
+      // console.log('2 on')
+    } else if (valJenisKejadian.value !== '') {
+      uriParam += `%20and%20kejadian__jenis_kejadian_id%20eq%20%27${valJenisKejadian.value}%27`
+    }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterResetDetailJumlah = () => {
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    setValJenisKejadian({value: '', label: ''})
+    // setInstansi({val: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+
+  const handleFilterDetail = async () => {
+    let uriParam = ''
+    if (tanggalAwal.val && tanggalAkhir.val) {
+      uriParam += `%20and%20kejadian__tanggal%20ge%20%27${tanggalAwal.val}%27%20and%20kejadian__tanggal%20le%20%27${tanggalAkhir.val}%27`
+      // console.log('2 on')
+    } else if (tanggalAwal.val !== '') {
+      // console.log('start on')
+      uriParam += `%20and%20kejadian__tanggal%20eq%20%27${tanggalAwal.val}%27`
+    } else if (tanggalAkhir.val !== '') {
+      uriParam += `%20and%20kejadian__tanggal%20eq%20%27${tanggalAkhir.val}%27`
+    }
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+  }
+
+  const handleFilterResetDetail = () => {
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    // setInstansi({val: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
   const [dataPimpinan, setDataPimpinan] = useState([])
+  const [dataPimpinanJumlah, setDataPimpinanJumlah] = useState([])
   const [perPage, setPerPage] = useState(10)
   const [totalRows, setTotalRows] = useState(0)
 
@@ -215,10 +274,38 @@ export const ListKejadianPage: FC = () => {
       })
   }
 
-  const dataKejadianPimpinan = (page: number) => {
+  const dataKejadianJumlah = (page: number) => {
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+      )
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kejadian: d.kejadian__tanggal,
+          waktu_mulai: d.kejadian__waktu_start,
+          waktu_selesai: d.kejadian__waktu_end,
+          jenis_kejadian: d.kejadian__jenis_kejadian_id,
+          uraian_kejadian: d.kejadian__uraian_kejadian,
+          // wilayah: d.kejadian__wilayah,
+          lokasi: d.kejadian__alamat,
+        }))
+        // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
+        setDataPimpinanJumlah(data)
+        setTotalRows(res.data.total_items)
+        setLoading(false)
+
+        return [data, setDataPimpinanJumlah] as const
+      })
+  }
+
+  const dataKejadianPimpinan = (page: number) => {
+    setLoading(true)
+    axios
+      .get(
+        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -238,7 +325,7 @@ export const ListKejadianPage: FC = () => {
         setTotalRows(res.data.total_items)
         setLoading(false)
 
-        return [dataPimpinan, setDataPimpinan] as const
+        return [data, setDataPimpinan] as const
       })
   }
 
@@ -247,8 +334,12 @@ export const ListKejadianPage: FC = () => {
   }, [qParamFind, perPage])
 
   useEffect(() => {
-    if (pimpinanView) dataKejadianPimpinan(0)
-  }, [jenisKejadianId, perPage, pimpinanView])
+    if (kotaId !== 0 && jenisKejadianId !== 0) {
+      dataKejadianPimpinan(0)
+    } else {
+      dataKejadianJumlah(0)
+    }
+  }, [kotaId, jenisKejadianId, perPage, pimpinanView, qParamFind])
 
   const handlePageChange = (page: number) => {
     // const page1 = page++
@@ -277,6 +368,38 @@ export const ListKejadianPage: FC = () => {
         }))
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setData(data)
+        setPerPage(newPerPage)
+        setLoading(false)
+      })
+  }
+
+  const handlePageChangeDetail = (page: number) => {
+    // const page1 = page++
+    dataKejadianPimpinan(page - 1)
+    // console.log('ini page', page1, '&', page)
+  }
+
+  const handlePerRowsChangeDetail = async (newPerPage: number, page: number) => {
+    setLoading(true)
+    axios
+      .get(
+        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+      )
+      .then((res) => {
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kejadian: d.kejadian__tanggal,
+          waktu_mulai: d.kejadian__waktu_start,
+          waktu_selesai: d.kejadian__waktu_end,
+          jenis_kejadian: d.kejadian__jenis_kejadian_id,
+          uraian_kejadian: d.kejadian__uraian_kejadian,
+          // wilayah: d.kejadian__wilayah,
+          lokasi: d.kejadian__alamat,
+        }))
+        // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
+        setDataPimpinan(data)
         setPerPage(newPerPage)
         setLoading(false)
       })
@@ -408,9 +531,9 @@ export const ListKejadianPage: FC = () => {
                         className='fs-6 collapse show ps-10'
                         data-bs-parent='#kt_accordion_2'
                       >
-                        {/* <Button onClick={vKabid}>Kabid</Button>
+                        <Button onClick={vKabid}>Kabid</Button>
                         <Button onClick={vAdmin}>Admin</Button>
-                        <Button onClick={vPimpinan}>Pimpinan</Button> */}
+                        <Button onClick={vPimpinan}>Pimpinan</Button>
                         {aksi === 0 ? (
                           // VIEW KABID
 
@@ -758,281 +881,268 @@ export const ListKejadianPage: FC = () => {
                         ) : (
                           // VIEW PIMPINAN
                           <div className='row w-100 mt-10 mb-10'>
-                            <div className='mb-10'>
-                              <div className='row'>
-                                <div className='col pt-2'>
-                                  <label className='form-label align-middle'>Bidang/Wilayah</label>
-                                </div>
-                                <div className='col'>
-                                  <AsyncSelect
-                                    name='filter_jenis_kejadian_id_selection'
-                                    defaultOptions
-                                    value={valJenisKejadian}
-                                    loadOptions={loadOptionsJenisKejadian}
-                                    onChange={handleChangeInputJenisKejadian}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            {/* <div className='col-md-6 col-lg-6 col-sm-12'>
+                            {pimpinanView === 0 ? (
+                              <>
+                                <div className='col-md-6 col-lg-6 col-sm-12'>
                                   <div className='mb-10'>
                                     <div className='row'>
-                                      <div className='col-4 pt-2'>
+                                      <div className='col pt-2'>
                                         <label className='form-label align-middle'>
-                                          Pelaksana Kejadian
+                                          Bidang/Wilayah
                                         </label>
                                       </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kelurahan_selection'
-                                          target='kelurahan'
-                                          className='form-control'
-                                          component={SelectField}
-                                          // options={kelurahanList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
+                                      <div className='col'>
+                                        <AsyncSelect
+                                          name='filter_jenis_kejadian_id_selection'
+                                          defaultOptions
+                                          value={valJenisKejadian}
+                                          loadOptions={loadOptionsJenisKejadian}
+                                          onChange={handleChangeInputJenisKejadian}
                                         />
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>Tanggal</label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='Kejadian__tanggal'
-                                          component={DatePickerFieldRange}
-                                          onChange={(o: any) => {
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
+                                <div className='row g-8 mt-2'>
+                                  <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                    <Button
+                                      className='btn btn-light-primary me-2'
+                                      onClick={
+                                        kotaId !== 0 && jenisKejadianId !== 0
+                                          ? handleFilterDetail
+                                          : handleFilterDetailJumlah
+                                      }
+                                    >
+                                      <KTSVG
+                                        path='/media/icons/duotune/general/gen021.svg'
+                                        className='svg-icon-2'
+                                      />
+                                      Cari
+                                    </Button>
+                                    <Button
+                                      className='btn btn-light-primary me-2'
+                                      onClick={
+                                        kotaId !== 0 && jenisKejadianId !== 0
+                                          ? handleFilterResetDetail
+                                          : handleFilterResetDetailJumlah
+                                      }
+                                    >
+                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                      Reset
+                                    </Button>
                                   </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>Kota</label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kota_selection'
-                                          target='kota'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={kotaList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>Kecamatan</label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kecamatan_selection'
-                                          target='kecamatan'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={kecamatanList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>Kelurahan</label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kelurahan_selection'
-                                          target='kelurahan'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={kelurahanList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>
-                                          Jenis Kejadian
-                                        </label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='kawasan_kendali_selection'
-                                          target='kawasan_kendali'
-                                          className='form-control'
-                                          component={SelectField}
-                                          options={jenisKejadianList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>
-                                          Jenis Bantuan
-                                        </label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='jenis_reklame_selection'
-                                          target='jenis_reklame'
-                                          className='form-control'
-                                          component={SelectField}
-                                          // options={jenisreklameList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                  <div className='mb-10'>
-                                    <div className='row'>
-                                      <div className='col-4 pt-2'>
-                                        <label className='form-label align-middle'>
-                                          Jenis Korban Jiwa
-                                        </label>
-                                      </div>
-                                      <div className='col-8'>
-                                        <Field
-                                          name='status_reklame_selection'
-                                          target='status_reklame'
-                                          className='form-control'
-                                          component={SelectField}
-                                          // options={statusReklameList}
-                                          onChange={(o: ChangeEvent<any>) => {
-                                            console.log(o)
-                                            dispatch(changedValue(ToFieldStateCE(o)))
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div> */}
+                                  <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                    {/* begin::Filter Button */}
+                                    <ReactToPrint
+                                      trigger={() => (
+                                        <button
+                                          type='button'
+                                          className='btn btn-light-primary'
+                                          data-kt-menu-trigger='click'
+                                          data-kt-menu-placement='bottom-end'
+                                        >
+                                          <>
+                                            <KTSVG
+                                              path='/media/icons/duotune/arrows/arr078.svg'
+                                              className='svg-icon-2'
+                                            />
+                                            Unduh PDF
+                                          </>
+                                          {/* )} */}
+                                        </button>
+                                      )}
+                                      pageStyle='
+                                      @page {
+                                        size: auto;
+                                        margin: 20mm;
+                                      }
+                                      @media print {
+                                        html,
+                                        body {
+                                          height: 100%; /* Use 100% here to support printing more than a single page*/
+                                          margin: 0 !important;
+                                          padding: 0 !important;
+                                          overflow: hidden;
+                                        }
+                                      }
+                                      @media all {
+                                        .pagebreak {
+                                          display: inline;
+                                        }
+                                      }'
+                                      content={() => componentRef}
+                                    />
 
-                            <div className='row g-8 mt-2'>
-                              <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                <Button className='btn btn-light-primary me-2'>
-                                  <KTSVG
-                                    path='/media/icons/duotune/general/gen021.svg'
-                                    className='svg-icon-2'
-                                  />
-                                  Cari
-                                </Button>
-                                <Link
-                                  to='#'
-                                  // onClick={handleFilterReset}
-                                >
-                                  <button className='btn btn-light-primary'>
-                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                    Reset
-                                  </button>
-                                </Link>
-                              </div>
-                              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                {/* begin::Filter Button */}
-                                <button
-                                  type='button'
-                                  className='btn btn-light-primary'
-                                  data-kt-menu-trigger='click'
-                                  data-kt-menu-placement='bottom-end'
-                                >
-                                  {/* {btnLoadingUnduh ? (
+                                    {/* end::Filter Button */}
+                                    {/* begin::SubMenu */}
+
+                                    {/* end::SubMenu */}
+                                  </div>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                {kotaId !== 0 && jenisKejadianId !== 0 ? (
+                                  ''
+                                ) : (
+                                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                                    <div className='mb-10'>
+                                      <div className='row'>
+                                        <div className='col-4 pt-2'>
+                                          <label className='form-label align-middle'>
+                                            Jenis Kejadian
+                                          </label>
+                                        </div>
+                                        <div className='col-8'>
+                                          <AsyncSelect
+                                            name='filter_jenis_kejadian_id_selection'
+                                            defaultOptions
+                                            value={valJenisKejadian}
+                                            loadOptions={loadOptionsJenisKejadian}
+                                            onChange={handleChangeInputJenisKejadian}
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                                  <div className='mb-10'>
+                                    <div className='row'>
+                                      <div className='col-4 pt-2'>
+                                        <label className='form-label'>Tanggal Awal</label>
+                                      </div>
+                                      <div className='col-8'>
+                                        <input
+                                          type='date'
+                                          name='tanggal_kunjungan'
+                                          className='form-control'
+                                          value={tanggalAwal.val}
+                                          onChange={handleChangeInputTanggalAwal}
+                                          // onChange={(o: any) => {
+                                          //   setTanggalAwal(o.target.value)
+                                          // }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                                  <div className='mb-10'>
+                                    <div className='row'>
+                                      <div className='col-4 pt-2'>
+                                        <label className='form-label align-middle'>
+                                          Tanggal Akhir
+                                        </label>
+                                      </div>
+                                      <div className='col-8'>
+                                        <input
+                                          name='tanggal_kunjungan'
+                                          type='date'
+                                          className='form-control'
+                                          value={tanggalAkhir.val}
+                                          onChange={handleChangeInputTanggalAkhir}
+                                          // onChange={(o: any) => {
+                                          //   setTanggalAkhir(o.target.value)
+                                          // }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='row g-8 mt-2'>
+                                  <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                    <Button
+                                      className='btn btn-light-primary me-2'
+                                      onClick={
+                                        kotaId !== 0 && jenisKejadianId !== 0
+                                          ? handleFilterDetail
+                                          : handleFilterDetailJumlah
+                                      }
+                                    >
+                                      <KTSVG
+                                        path='/media/icons/duotune/general/gen021.svg'
+                                        className='svg-icon-2'
+                                      />
+                                      Cari
+                                    </Button>
+                                    <Button
+                                      className='btn btn-light-primary me-2'
+                                      onClick={
+                                        kotaId !== 0 && jenisKejadianId !== 0
+                                          ? handleFilterResetDetail
+                                          : handleFilterResetDetailJumlah
+                                      }
+                                    >
+                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                      Reset
+                                    </Button>
+                                  </div>
+                                  <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                    {/* begin::Filter Button */}
+                                    <button
+                                      type='button'
+                                      className='btn btn-light-primary'
+                                      data-kt-menu-trigger='click'
+                                      data-kt-menu-placement='bottom-end'
+                                    >
+                                      {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                  <>
-                                    <KTSVG
-                                      path='/media/icons/duotune/arrows/arr078.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Unduh
-                                  </>
-                                  {/* )} */}
-                                </button>
-                                {/* end::Filter Button */}
-                                {/* begin::SubMenu */}
-                                <div
-                                  className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                  data-kt-menu='true'
-                                >
-                                  {/* begin::Header */}
-                                  <div className='px-7 py-5'>
-                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                  </div>
-                                  {/* end::Header */}
-
-                                  {/* begin::Separator */}
-                                  <div className='separator border-gray-200'></div>
-                                  {/* end::Separator */}
-
-                                  {/* begin::Content */}
-                                  <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                    <button
-                                      //   onClick={handleUnduh}
-                                      className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                      <>
+                                        <KTSVG
+                                          path='/media/icons/duotune/arrows/arr078.svg'
+                                          className='svg-icon-2'
+                                        />
+                                        Unduh
+                                      </>
+                                      {/* )} */}
+                                    </button>
+                                    {/* end::Filter Button */}
+                                    {/* begin::SubMenu */}
+                                    <div
+                                      className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                      data-kt-menu='true'
                                     >
-                                      Excel
-                                    </button>
-                                  </div>
-                                  {/* end::Content */}
+                                      {/* begin::Header */}
+                                      <div className='px-7 py-5'>
+                                        <div className='fs-5 text-dark fw-bolder'>
+                                          Pilihan Unduh
+                                        </div>
+                                      </div>
+                                      {/* end::Header */}
 
-                                  {/* begin::Content */}
-                                  <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                    <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                      PDF
-                                    </button>
+                                      {/* begin::Separator */}
+                                      <div className='separator border-gray-200'></div>
+                                      {/* end::Separator */}
+
+                                      {/* begin::Content */}
+                                      <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                        <button
+                                          //   onClick={handleUnduh}
+                                          className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                        >
+                                          Excel
+                                        </button>
+                                      </div>
+                                      {/* end::Content */}
+
+                                      {/* begin::Content */}
+                                      <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                        <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                          PDF
+                                        </button>
+                                      </div>
+                                      {/* end::Content */}
+                                    </div>
+                                    {/* end::SubMenu */}
                                   </div>
-                                  {/* end::Content */}
                                 </div>
-                                {/* end::SubMenu */}
-                              </div>
-                            </div>
+                              </>
+                            )}
                           </div>
                         )}
                       </div>
@@ -1063,7 +1173,7 @@ export const ListKejadianPage: FC = () => {
                     />
                   ) : (
                     // Pimpinan
-                    <>
+                    <div ref={(el) => (componentRef = el)}>
                       <div className='row'>
                         <div className='col fs-4 mb-2 fw-semibold text-center'>
                           LAPORAN HASIL KEJADIAN
@@ -1080,14 +1190,22 @@ export const ListKejadianPage: FC = () => {
                         </div>
                       </div>
                       {pimpinanView === 0 ? (
-                        <DtPimpinan aksi={viewPimpinanDetail} />
+                        <DtPimpinan
+                          aksi={viewPimpinanDetail}
+                          jumlah={viewPimpinanDetailJumlah}
+                          pelaporanUrl={PELAPORAN_URL}
+                        />
                       ) : (
                         <>
                           <DtKabid
-                            data={dataPimpinan}
+                            data={
+                              kotaId !== 0 && jenisKejadianId !== 0
+                                ? dataPimpinan
+                                : dataPimpinanJumlah
+                            }
                             totalRows={totalRows}
-                            handlePerRowsChange={handlePerRowsChange}
-                            handlePageChange={handlePageChange}
+                            handlePerRowsChange={handlePerRowsChangeDetail}
+                            handlePageChange={handlePageChangeDetail}
                             loading={loading}
                             hakAkses={hakAkses}
                             wilayahBidang={wilayahBidang}
@@ -1109,7 +1227,7 @@ export const ListKejadianPage: FC = () => {
                           </div>
                         </div>
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>
