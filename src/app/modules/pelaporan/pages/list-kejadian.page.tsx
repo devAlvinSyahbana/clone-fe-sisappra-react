@@ -170,7 +170,7 @@ export const ListKejadianPage: FC = () => {
   const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
 
   const filterPelaporanKejadian = async (values: PelaporanKejadianState, actions: FormikValues) => {
-    const res = await axios.get(`http://localhost:3002/Kejadian-umum`)
+    const res = await axios.get(`${PELAPORAN_URL}/Kejadian-umum`)
     const data = res.data.data
     // .filter((v: any) => !excludeJenisKejadian.includes(v.label))
     setCurrentSchema(data)
@@ -178,7 +178,7 @@ export const ListKejadianPage: FC = () => {
   }
 
   const updateList = () => {
-    axios.get(`http://localhost:3001/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
+    axios.get(`${MASTERDATA_URL}/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
       const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
       // .filter((v: any) => !excludeJenisKendali.includes(v.label))
       setJenisKejadianList(data)
@@ -270,7 +270,7 @@ export const ListKejadianPage: FC = () => {
 
   const [valJenisKejadian, setValJenisKejadian] = useState({value: '', label: ''})
   const filterJenisKejadian = async (inputValue: string) => {
-    const response = await axios.get(`http://localhost:3001/jenis-kejadian/combobox`)
+    const response = await axios.get(`${MASTERDATA_URL}/jenis-kejadian/combobox`)
     const json = await response.data.data
     return json.map((i: any) => ({label: i.text, value: i.value}))
   }
@@ -374,7 +374,7 @@ export const ListKejadianPage: FC = () => {
   const dataKejadian = (page: number) => {
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -401,7 +401,7 @@ export const ListKejadianPage: FC = () => {
   const dataKejadianJumlah = (page: number) => {
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -429,7 +429,7 @@ export const ListKejadianPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -475,7 +475,7 @@ export const ListKejadianPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -507,7 +507,7 @@ export const ListKejadianPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -566,7 +566,7 @@ export const ListKejadianPage: FC = () => {
             deleted_by: 'string',
           },
         }
-        const response = await axios.delete(`http://localhost:3002/kejadian-umum/${id}`, bodyParam)
+        const response = await axios.delete(`${PELAPORAN_URL}/kejadian-umum/${id}`, bodyParam)
         if (response) {
           dataKejadian(0)
           Swal.fire({

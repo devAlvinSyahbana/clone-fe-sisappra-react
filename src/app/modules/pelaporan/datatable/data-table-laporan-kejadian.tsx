@@ -7,6 +7,10 @@ import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {useNavigate} from 'react-router-dom'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
 const LoadingAnimation = (props: any) => {
   return (
     <>
@@ -25,9 +29,7 @@ const GetJenisKejadian = ({row}: {row: number}) => {
   const [valData, setValData] = useState('')
   useEffect(() => {
     async function fetchDT(id: number) {
-      const {data} = await axios.get(
-        `http://127.0.0.1:3001/jenis-kejadian/?%24filter=id%20eq%20${id}`
-      )
+      const {data} = await axios.get(`${MASTERDATA_URL}/jenis-kejadian/?%24filter=id%20eq%20${id}`)
       const result: string = data.data[0].nama
       setValData(result)
       // console.log(data)
@@ -294,7 +296,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, theme}) => {
   const [kota, setKota] = useState([])
 
   const kotaList = async () => {
-    const responseKota = await axios.get(`http://localhost:3001/kota/`)
+    const responseKota = await axios.get(`${MASTERDATA_URL}/kota/`)
     // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
     console.log(responseKota)
     const dataKota = responseKota.data.data.map((d: any) => ({
@@ -323,7 +325,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, theme}) => {
     useEffect(() => {
       async function fetchDT(id: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}`
+          `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}`
         )
         const result = data.total_items
         // console.log(result)
@@ -345,7 +347,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, theme}) => {
     useEffect(() => {
       async function fetchDT(id: number, jk: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}%20and%20kejadian__jenis_kejadian_id%20eq%20${jk}`
+          `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}%20and%20kejadian__jenis_kejadian_id%20eq%20${jk}`
         )
         const result = data.total_items
         // console.log(result)

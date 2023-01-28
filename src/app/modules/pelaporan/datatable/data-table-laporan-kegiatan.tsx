@@ -4,6 +4,10 @@ import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useNavigate} from 'react-router-dom'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
 const LoadingAnimation = (props: any) => {
   return (
     <>
@@ -328,7 +332,7 @@ export const DtPimpinan: FC<any> = ({
     useEffect(() => {
       async function fetchDT(id: number, jk: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__administrasi__penyelesaian_id%20eq%20${jk}`
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__administrasi__penyelesaian_id%20eq%20${jk}`
         )
         const result = data.total_items
         console.log(result)
@@ -346,7 +350,7 @@ export const DtPimpinan: FC<any> = ({
     useEffect(() => {
       async function fetchDT(id: number, jk: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__jenis_penindakan_id%20eq%20${jk}`
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__jenis_penindakan_id%20eq%20${jk}`
         )
         const result = data.total_items
         console.log(result)
@@ -368,7 +372,7 @@ export const DtPimpinan: FC<any> = ({
     useEffect(() => {
       async function fetchDT(id: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27`
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27`
         )
         const result = data.total_items
         // console.log(result)
