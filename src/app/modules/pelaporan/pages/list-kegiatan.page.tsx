@@ -196,8 +196,8 @@ export const ListKegiatanPage: FC = () => {
   let value: any = localStorage.getItem('kt-auth-react-v')
   let authValue = JSON.parse(value)
   let idHakAkses = authValue.data.hak_akses
-  console.log('id hak akses', idHakAkses)
-  console.log('aksi', aksi)
+  // console.log('id hak akses', idHakAkses)
+  // console.log('aksi', aksi)
 
   const findHakAksesData = async () => {
     const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
@@ -468,7 +468,7 @@ export const ListKegiatanPage: FC = () => {
             deleted_by: 'string',
           },
         }
-        const response = await axios.delete(`http://127.0.0.1:3002/kegiatan-umum/${id}`, bodyParam)
+        const response = await axios.delete(`${PELAPORAN_URL}/kegiatan-umum/${id}`, bodyParam)
         if (response) {
           dataKegiatan(0)
           Swal.fire({

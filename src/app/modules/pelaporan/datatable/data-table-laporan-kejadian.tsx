@@ -300,7 +300,7 @@ export const DtAdmin: FC<any> = ({
   )
 }
 
-export const DtPimpinan: FC<any> = ({aksi, jumlah, theme, kota}) => {
+export const DtPimpinan: FC<any> = ({aksi, jumlah, theme, kota, pelaporanUrl}) => {
   // const [kota, setKota] = useState([])
 
   // const kotaList = async () => {
@@ -350,24 +350,36 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, theme, kota}) => {
     )
   }
 
+  // console.log(totalRows)
+
+  const [totalKejadian, setTotalKejadian] = useState([])
+  useEffect(() => {
+    const fetchDTPimpinan = async () => {
+      const {data} = await axios.get(
+        `${pelaporanUrl}/kejadian-umum/?%24top=1&%24select=id%2C%20kejadian__kota_id%2C%20kejadian__jenis_kejadian_id`
+      )
+      const res = await axios.get(
+        `${pelaporanUrl}/kejadian-umum/?%24top=${data.total_items}&%24select=id%2C%20kejadian__kota_id%2C%20kejadian__jenis_kejadian_id`
+      )
+      setTotalKejadian(res.data.data)
+    }
+    fetchDTPimpinan()
+  }, [])
+  // console.log(totalKejadian)
+
   const GetPerJenis = ({row, jenis}: any) => {
-    const [valData, setValData] = useState(0)
-    useEffect(() => {
-      async function fetchDT(id: number, jk: number) {
-        const {data} = await axios.get(
-          `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}%20and%20kejadian__jenis_kejadian_id%20eq%20${jk}`
-        )
-        const result = data.total_items
-        // console.log(result)
-        setValData(result)
-      }
-
-      fetchDT(row, jenis)
-    }, [])
-
+    let countJumlah = 0
+    if (row && !jenis) {
+      countJumlah = totalKejadian.filter((item: any) => item.kejadian__kota_id === row).length
+    }
+    if (row && jenis) {
+      countJumlah = totalKejadian.filter(
+        (item: any) => item.kejadian__kota_id === row && item.kejadian__jenis_kejadian_id === jenis
+      ).length
+    }
     return (
       <>
-        <a onClick={() => aksi(jenis, row)}>{valData}</a>
+        <a onClick={() => aksi(jenis, row)}>{countJumlah}</a>
       </>
     )
   }
@@ -392,7 +404,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, theme, kota}) => {
     {
       name: 'Jumlah Kejadian',
       selector: (row: any) => row.no,
-      cell: (record: any) => <GetJumlah row={record.no} />,
+      cell: (record: any) => <GetPerJenis row={record.no} />,
     },
     {
       name: 'Banjir',

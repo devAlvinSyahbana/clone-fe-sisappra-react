@@ -23,7 +23,7 @@ import {
 import {Formik, Form, FormikValues} from 'formik'
 import Swal from 'sweetalert2'
 
-export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_PELAPORAN_URL
 
 export const AddPengawasanPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanPengawasan[0])
@@ -54,7 +54,7 @@ export const AddPengawasanPage: FC = () => {
   let createdByHakAkses = JSON.parse(value)
 
   const editPelaporanPengawasan = async () => {
-    const res = await axios.get(`${API_URL}/reklame/?%24filter=id%20eq%20${id}`)
+    const res = await axios.get(`${PELAPORAN_URL}/reklame/?%24filter=id%20eq%20${id}`)
     // const data = res.data.data[0]
     const filteredData = Object.fromEntries(
       Object.entries(res.data.data[0]).filter(
@@ -127,9 +127,9 @@ export const AddPengawasanPage: FC = () => {
     let res
     try {
       if (id) {
-        res = await axios.put(`${API_URL}/reklame/${id}`, allValues)
+        res = await axios.put(`${PELAPORAN_URL}/reklame/${id}`, allValues)
       } else {
-        res = await axios.post(`${API_URL}/reklame/`, allValues)
+        res = await axios.post(`${PELAPORAN_URL}/reklame/`, allValues)
       }
       if (res) {
         console.log('laststep', values)

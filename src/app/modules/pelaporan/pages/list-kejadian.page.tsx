@@ -16,6 +16,7 @@ import Swal from 'sweetalert2'
 import {createTheme} from 'react-data-table-component'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../_metronic/partials'
+import ReactToPrint from 'react-to-print'
 
 // Dark Theme
 // createTheme creates a new theme named solarized that overrides the build in dark theme
@@ -145,6 +146,7 @@ export const MASTER_URL = `${API_URL}/master`
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 
 export const ListKejadianPage: FC = () => {
+  let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -188,8 +190,8 @@ export const ListKejadianPage: FC = () => {
   let value: any = localStorage.getItem('kt-auth-react-v')
   let authValue = JSON.parse(value)
   let idHakAkses = authValue.data.hak_akses
-  console.log('id hak akses', idHakAkses)
-  console.log('aksi', aksi)
+  // console.log('id hak akses', idHakAkses)
+  // console.log('aksi', aksi)
 
   const findHakAksesData = async () => {
     const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
@@ -1393,7 +1395,7 @@ export const ListKejadianPage: FC = () => {
                     />
                   ) : (
                     // Pimpinan
-                    <>
+                    <div ref={(el) => (componentRef = el)}>
                       <div className='row'>
                         <div className='col fs-4 mb-2 fw-semibold text-center'>
                           LAPORAN HASIL KEJADIAN
@@ -1415,6 +1417,7 @@ export const ListKejadianPage: FC = () => {
                           jumlah={viewPimpinanDetailJumlah}
                           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                           kota={kota}
+                          pelaporanUrl={PELAPORAN_URL}
                         />
                       ) : (
                         <>
@@ -1452,7 +1455,7 @@ export const ListKejadianPage: FC = () => {
                           </div>
                         </div>
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>

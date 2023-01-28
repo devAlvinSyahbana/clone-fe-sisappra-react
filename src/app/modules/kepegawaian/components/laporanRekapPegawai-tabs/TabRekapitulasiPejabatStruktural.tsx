@@ -8,7 +8,9 @@ import Footer from 'react-multi-date-picker/plugins/range_picker_footer'
 import {Button, Collapse} from 'react-bootstrap'
 import clsx from 'clsx'
 import {SelectOptionAutoCom} from '../KepegawaianInterface'
+import FileDownload from 'js-file-download'
 import AsyncSelect from 'react-select/async'
+import {KTSVG} from '../../../../../_metronic/helpers'
 
 export interface SelectOption {
   readonly value: string
@@ -25,10 +27,12 @@ export const KECAMATAN_URL = `${API_URL}/master/kecamatan`
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 export const JABATAN_URL = `${API_URL}/master/jabatan`
 export const MASTER_BIDANG_WILAYAH = `${API_URL}/master/bidang-wilayah`
+export const REKAPITULASI_PEJABAT_STRUKTURAL = `${API_URL}/kepegawaian-unduh`
 
 export function TabRekapitulasiPejabatStruktural() {
   const [open, setOpen] = useState(false)
 
+  const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
   const [valFilternama, setFilternama] = useState({val: ''})
   const [valFilterkepegawaian_nip, setFilterkepegawaian_nip] = useState({val: ''})
   const [valFilterkepegawaian_nrk, setFilterkepegawaian_nrk] = useState({val: ''})
@@ -305,6 +309,18 @@ export function TabRekapitulasiPejabatStruktural() {
     fetchData(page)
   }
 
+  const handleUnduh = async () => {
+    setbtnLoadingUnduh(true)
+    await axios({
+      url: `${REKAPITULASI_PEJABAT_STRUKTURAL}/unduh-data-pegawai-struktural?q=1${qParamFind.strparam}`,
+      method: 'GET',
+      responseType: 'blob', // Important
+    }).then((response) => {
+      FileDownload(response.data, 'DATA REKAPITULASI PEJABAT STRUKTURAL.xlsx')
+      setbtnLoadingUnduh(false)
+    })
+  }
+
   return (
     <>
       {/* Header */}
@@ -419,7 +435,7 @@ export function TabRekapitulasiPejabatStruktural() {
               </div>
             </div>
           </div>
-          <div className='row'>
+          <div className='row g-8 mt-2'>
             <div className='col-sm-4 col-md-6 col-lg-6'>
               <Link to='#'>
                 <Button onClick={handleFilter} className='btn btn-primary me-2'>
@@ -434,16 +450,55 @@ export function TabRekapitulasiPejabatStruktural() {
                 </button>
               </Link>
             </div>
-            <div className='col-sm-3 col-md-6 col-lg-6 d-flex justify-content-end gap-2'>
-              <Dropdown>
-                <Dropdown.Toggle variant='success' id='dropdown-basic'>
-                  Unduh
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href='#/'>Excel</Dropdown.Item>
-                  <Dropdown.Item href='#/'>PDF</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+
+            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+              {/* begin::Filter Button */}
+              <button
+                type='button'
+                className='btn btn-light-primary'
+                data-kt-menu-trigger='click'
+                data-kt-menu-placement='bottom-end'
+              >
+                {btnLoadingUnduh ? (
+                  <>
+                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                    Memproses Unduh...
+                  </>
+                ) : (
+                  <>
+                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                    Unduh
+                  </>
+                )}
+              </button>
+              {/* end::Filter Button */}
+              {/* begin::SubMenu */}
+              <div
+                className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                data-kt-menu='true'
+              >
+                {/* begin::Header */}
+                <div className='px-7 py-5'>
+                  <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
+                </div>
+                {/* end::Header */}
+
+                {/* begin::Separator */}
+                <div className='separator border-gray-200'></div>
+                {/* end::Separator */}
+
+                {/* begin::Content */}
+                <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                  <button
+                    onClick={handleUnduh}
+                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                  >
+                    Excel
+                  </button>
+                </div>
+                {/* end::Content */}
+              </div>
+              {/* end::SubMenu */}
             </div>
           </div>
         </div>

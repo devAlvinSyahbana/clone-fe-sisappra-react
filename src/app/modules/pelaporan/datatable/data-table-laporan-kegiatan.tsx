@@ -163,7 +163,7 @@ export const DtAdmin: FC<any> = ({
     // useEffect(() => {
     //   async function fetchDT(id: number) {
     //     const {data} = await axios.get(
-    //       `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
+    //       `${MASTERDATA_URL}/jenis-kegiatan/?%24filter=id%20eq%20${id}`
     //     )
     //     const result: string = data.data[0].nama
     //     setValData(result)
