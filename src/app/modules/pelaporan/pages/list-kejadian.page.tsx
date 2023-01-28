@@ -1,19 +1,8 @@
-import React, {ChangeEvent, FC, useEffect, useState} from 'react'
-import DatePicker from 'react-multi-date-picker'
+import {FC, useEffect, useState} from 'react'
 import AsyncSelect from 'react-select/async'
-import {Link} from 'react-router-dom'
-import {Formik, Field, Form, FormikValues} from 'formik'
+import {FormikValues} from 'formik'
 import {
-  DatePickerField,
-  DatePickerFieldRange,
-  SelectField,
-  ToFieldStateBNV,
-  ToFieldStateCE,
-} from '../components/fields.formikcto'
-import {
-  changedValue,
   createSchemaPelaporanKejadian,
-  initialState,
   PelaporanKejadianState,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
 import {useDispatch, useSelector} from 'react-redux'
@@ -406,6 +395,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setData(data)
         setTotalRows(res.data.total_items)
@@ -433,6 +425,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setDataPimpinanJumlah(data)
         setTotalRows(res.data.total_items)
@@ -461,6 +456,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setDataPimpinan(data)
         setTotalRows(res.data.total_items)
@@ -507,6 +505,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setData(data)
         setPerPage(newPerPage)
@@ -539,6 +540,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setDataPimpinan(data)
         setPerPage(newPerPage)
@@ -618,6 +622,9 @@ export const ListKejadianPage: FC = () => {
       no: d.id,
       bidang_wilayah: d.nama,
     }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
 
     setKota(dataKota)
 

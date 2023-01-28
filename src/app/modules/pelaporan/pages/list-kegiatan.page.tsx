@@ -384,6 +384,9 @@ export const ListKegiatanPage: FC = () => {
           // wilayah: d.kegiatan__wilayah,
           lokasi: d.kegiatan__lokasi,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
         setData(data)
         setTotalRows(res.data.total_items)
@@ -422,6 +425,9 @@ export const ListKegiatanPage: FC = () => {
           wilayah: d.created_by,
           lokasi: d.kegiatan__lokasi,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
         setData(data)
         setPerPage(newPerPage)
@@ -494,6 +500,9 @@ export const ListKegiatanPage: FC = () => {
       no: d.id,
       pelaksana: d.nama,
     }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
 
     setKota(dataKota)
     // console.log(response.data.data)

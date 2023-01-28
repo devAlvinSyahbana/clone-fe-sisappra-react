@@ -356,6 +356,9 @@ export const ListPengawasPage: FC = () => {
           konten_iklan: d.konten_iklan,
           longtitude: d.longtitude,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         setData(data)
         setTotalRows(res.data.total_items)
         setLoading(false)
@@ -440,6 +443,9 @@ export const ListPengawasPage: FC = () => {
           alamat: d.alamat,
           tgl_pengecekan: d.tgl_pengecekan,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         setData(data)
         setPerPage(newPerPage)
         setLoading(false)

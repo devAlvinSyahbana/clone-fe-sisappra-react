@@ -224,6 +224,9 @@ export const ListTamuDaerahPage: FC = () => {
           tempat_kunjungan: d.tempat_kunjungan,
           total_items: d.total_items,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         setData(data)
         setTotalRows(res.data.total_items)
         setLoading(false)
@@ -259,6 +262,9 @@ export const ListTamuDaerahPage: FC = () => {
           tempat_kunjungan: d.tempat_kunjungan,
           total_items: d.total_items,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         setData(data)
         setPerPage(newPerPage)
         setLoading(false)
