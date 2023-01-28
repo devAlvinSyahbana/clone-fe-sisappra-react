@@ -163,7 +163,7 @@ export const ListKejadianPage: FC = () => {
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKejadian[0])
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [jenisKejadianList, setJenisKejadianList] = useState([])
-  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
   const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
   const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
@@ -214,6 +214,7 @@ export const ListKejadianPage: FC = () => {
   useEffect(() => {
     if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('admin')) {
       return setAksi(1)
+      // return setAksi(2)
     } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala satpol pp dki')) {
       return setAksi(2)
     } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala')) {
@@ -223,15 +224,16 @@ export const ListKejadianPage: FC = () => {
     }
   }, [hakAksesData])
 
-  const vKabid = () => {
-    setAksi(0)
-  }
-  const vAdmin = () => {
-    setAksi(1)
-  }
-  const vPimpinan = () => {
-    setAksi(2)
-  }
+  // const vKabid = () => {
+  //   setAksi(0)
+  // }
+  // const vAdmin = () => {
+  //   setAksi(1)
+  // }
+  // const vPimpinan = () => {
+  //   setAksi(2)
+  //   setPV(0)
+  // }
   const viewPimpinan = () => {
     setPV(0)
   }
@@ -274,6 +276,7 @@ export const ListKejadianPage: FC = () => {
     const json = await response.data.data
     return json.map((i: any) => ({label: i.text, value: i.value}))
   }
+  // console.log(valJenisKejadian)
   const loadOptionsJenisKejadian = (
     inputValue: string,
     callback: (options: SelectOption[]) => void
@@ -313,6 +316,20 @@ export const ListKejadianPage: FC = () => {
     setValJenisKejadian({value: '', label: ''})
     // setInstansi({val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+  // FILTER KOTA
+  const handleFilterKota = async () => {
+    let uriParam = ''
+    if (valKota.value !== '') {
+      uriParam += `/?%24filter=id%20eq%20${valKota.value}`
+    }
+    setUriFindKota((prevState) => ({...prevState, strparamkota: uriParam}))
+  }
+
+  const handleFilterResetKota = () => {
+    setValKota({value: '', label: ''})
+    // setInstansi({val: ''})
+    setUriFindKota((prevState) => ({...prevState, strparamkota: ''}))
   }
 
   const handleFilterDetailJumlah = async () => {
@@ -589,6 +606,47 @@ export const ListKejadianPage: FC = () => {
     })
   }
 
+  const [kota, setKota] = useState([])
+  const [qParamFindKota, setUriFindKota] = useState({strparamkota: ''})
+
+  const kotaList = async () => {
+    const responseKota = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strparamkota}`)
+    // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
+    // console.log(responseKota)
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      bidang_wilayah: d.nama,
+    }))
+
+    setKota(dataKota)
+
+    return [kota, setKota] as const
+    // console.log(response.data.data)
+  }
+
+  useEffect(() => {
+    kotaList()
+    // console.log(kotaList)
+  }, [qParamFindKota])
+
+  const [valKota, setValKota] = useState({value: '', label: ''})
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(`${MASTERDATA_URL}/kota/combobox`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.text, value: i.value}))
+    // console.log(response)
+  }
+  const loadOptionsKota = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputKota = (newValue: any) => {
+    setValKota((prevstate: any) => ({...prevstate, ...newValue}))
+    // console.log('ini val kejadian', valJenisKejadian)
+  }
+
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
       <div className='d-flex flex-column flex-column-fluid'>
@@ -657,9 +715,9 @@ export const ListKejadianPage: FC = () => {
                             className='fs-6 collapse show ps-10'
                             data-bs-parent='#kt_accordion_2'
                           >
-                            <Button onClick={vKabid}>Kabid</Button>
+                            {/* <Button onClick={vKabid}>Kabid</Button>
                             <Button onClick={vAdmin}>Admin</Button>
-                            <Button onClick={vPimpinan}>Pimpinan</Button>
+                            <Button onClick={vPimpinan}>Pimpinan</Button> */}
                             {aksi === 0 ? (
                               // VIEW KABID
 
@@ -1024,37 +1082,35 @@ export const ListKejadianPage: FC = () => {
                               </div>
                             ) : (
                               // VIEW PIMPINAN
-                              <div className='row w-100 mt-10 mb-10'>
+                              <div className='row mt-10 mb-10'>
                                 {pimpinanView === 0 ? (
                                   <div className='mb-10'>
-                                    <div className='col-md-6 col-lg-6 col-sm-12'>
-                                      <div className='row'>
-                                        <div className='col pt-2'>
-                                          <label className='form-label align-middle'>
-                                            Bidang/Wilayah
-                                          </label>
-                                        </div>
-                                        <div className='col'>
-                                          <AsyncSelect
-                                            name='filter_jenis_kejadian_id_selection'
-                                            defaultOptions
-                                            value={valJenisKejadian}
-                                            loadOptions={loadOptionsJenisKejadian}
-                                            onChange={handleChangeInputJenisKejadian}
-                                            styles={
-                                              calculatedMode === 'dark'
-                                                ? reactSelectDarkThem
-                                                : reactSelectLightThem
-                                            }
-                                          />
-                                        </div>
+                                    {/* <div className='col-md-6 col-lg-6 col-sm-12'> */}
+                                    <div className='row'>
+                                      <div className='col pt-2'>
+                                        <label className='form-label align-middle'>Kota</label>
                                       </div>
+                                      <div className='col'>
+                                        <AsyncSelect
+                                          name='id'
+                                          defaultOptions
+                                          value={valKota}
+                                          loadOptions={loadOptionsKota}
+                                          onChange={handleChangeInputKota}
+                                          styles={
+                                            calculatedMode === 'dark'
+                                              ? reactSelectDarkThem
+                                              : reactSelectLightThem
+                                          }
+                                        />
+                                      </div>
+                                      {/* </div> */}
                                     </div>
                                     <div className='row g-8 mt-2'>
                                       <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
                                         <Button
                                           className='btn btn-light-primary me-2'
-                                          onClick={handleFilter}
+                                          onClick={handleFilterKota}
                                         >
                                           <KTSVG
                                             path='/media/icons/duotune/general/gen021.svg'
@@ -1064,7 +1120,7 @@ export const ListKejadianPage: FC = () => {
                                         </Button>
                                         <Button
                                           className='btn btn-light-primary me-2'
-                                          onClick={handleFilterReset}
+                                          onClick={handleFilterResetKota}
                                         >
                                           <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                                           Reset
@@ -1351,6 +1407,7 @@ export const ListKejadianPage: FC = () => {
                           aksi={viewPimpinanDetail}
                           jumlah={viewPimpinanDetailJumlah}
                           theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                          kota={kota}
                         />
                       ) : (
                         <>

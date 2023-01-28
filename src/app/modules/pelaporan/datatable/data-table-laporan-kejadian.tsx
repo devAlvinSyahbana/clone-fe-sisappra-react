@@ -292,27 +292,27 @@ export const DtAdmin: FC<any> = ({
   )
 }
 
-export const DtPimpinan: FC<any> = ({aksi, jumlah, theme}) => {
-  const [kota, setKota] = useState([])
+export const DtPimpinan: FC<any> = ({aksi, jumlah, theme, kota}) => {
+  // const [kota, setKota] = useState([])
 
-  const kotaList = async () => {
-    const responseKota = await axios.get(`${MASTERDATA_URL}/kota/`)
-    // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
-    console.log(responseKota)
-    const dataKota = responseKota.data.data.map((d: any) => ({
-      id: d.id,
-      no: d.id,
-      bidang_wilayah: d.nama,
-    }))
+  // const kotaList = async () => {
+  //   const responseKota = await axios.get(`${MASTERDATA_URL}/kota/`)
+  //   // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
+  //   console.log(responseKota)
+  //   const dataKota = responseKota.data.data.map((d: any) => ({
+  //     id: d.id,
+  //     no: d.id,
+  //     bidang_wilayah: d.nama,
+  //   }))
 
-    setKota(dataKota)
-    // console.log(response.data.data)
-  }
+  //   setKota(dataKota)
+  //   // console.log(response.data.data)
+  // }
 
-  useEffect(() => {
-    kotaList()
-    console.log(kotaList)
-  }, [])
+  // useEffect(() => {
+  //   kotaList()
+  //   console.log(kotaList)
+  // }, [])
 
   // const GetKota = ({row}: {row: number}) => {
   //   const handleKota = valKota.data.data.find((i: any) => i.id === row)
@@ -466,58 +466,6 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, theme}) => {
       cell: (record: any) => <GetPerJenis row={record.no} jenis={14} />,
     },
   ]
-
-  // const data = [
-  //   {
-  //     id: 1,
-  //     no: '1',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Pusat',
-  //     jumlah_kejadian: '',
-  //     banjir: '12',
-  //     hewan_buas: '1',
-  //     kebakaran: '1',
-  //   },
-  //   {
-  //     id: 2,
-  //     no: '2',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Utara',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 3,
-  //     no: '3',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Barat',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 4,
-  //     no: '4',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Selatan',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 5,
-  //     no: '5',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Timur',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 6,
-  //     no: '6',
-  //     bidang_wilayah: 'Kabupaten Administrasi Kepulauan Seribu',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  // ]
 
   return (
     <div>
