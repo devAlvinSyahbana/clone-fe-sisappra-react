@@ -25,6 +25,7 @@ export const DtAdmin: FC<any> = ({
   handlePageChange,
   loading,
   konfirDel,
+  theme,
 }) => {
   const navigate = useNavigate()
 
@@ -134,6 +135,7 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -145,6 +147,7 @@ export const DtPimpinan: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  theme,
 }) => {
   const columns = [
     {
@@ -211,6 +214,7 @@ export const DtPimpinan: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )

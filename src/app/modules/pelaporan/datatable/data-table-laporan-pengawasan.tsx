@@ -30,6 +30,7 @@ export const DtKabid: FC<any> = ({
   loading,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const dispatch = useDispatch()
 
@@ -128,6 +129,7 @@ export const DtKabid: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -142,6 +144,7 @@ export const DtAdmin: FC<any> = ({
   // jenisKegiatanList,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const navigate = useNavigate()
 
@@ -278,6 +281,7 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -292,6 +296,7 @@ export const DtPimpinan: FC<any> = ({
   // jenisKegiatanList,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const navigate = useNavigate()
   const GetHakAkses = ({row}: {row: number}) => {
@@ -420,6 +425,7 @@ export const DtPimpinan: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )

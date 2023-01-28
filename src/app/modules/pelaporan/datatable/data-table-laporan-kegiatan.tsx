@@ -1,10 +1,7 @@
 import axios from 'axios'
 import {FC, Fragment, useEffect, useState} from 'react'
-import {ButtonGroup, Dropdown, DropdownButton, Table} from 'react-bootstrap'
+import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../../../redux/store'
-import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {useNavigate} from 'react-router-dom'
 
 const LoadingAnimation = (props: any) => {
@@ -32,6 +29,7 @@ export const DtKabid: FC<any> = ({
   jenisKegiatanList,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
@@ -132,6 +130,7 @@ export const DtKabid: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -147,6 +146,7 @@ export const DtAdmin: FC<any> = ({
   hakAkses,
   wilayahBidang,
   konfirDel,
+  theme,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
@@ -288,29 +288,40 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
 }
 
-export function DtPimpinan(props: any) {
-  const [kota, setKota] = useState([])
+export const DtPimpinan: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+  jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
+  theme,
+}) => {
+  // const [kota, setKota] = useState([])
 
-  const kotaList = async () => {
-    const responseKota = await axios.get(`http://127.0.0.1:3000/master/bidang-wilayah/find`)
-    const dataKota = responseKota.data.data.map((d: any) => ({
-      id: d.id,
-      no: d.id,
-      pelaksana: d.nama,
-    }))
+  // const kotaList = async () => {
+  //   const responseKota = await axios.get(`http://127.0.0.1:3000/master/bidang-wilayah/find`)
+  //   const dataKota = responseKota.data.data.map((d: any) => ({
+  //     id: d.id,
+  //     no: d.id,
+  //     pelaksana: d.nama,
+  //   }))
 
-    setKota(dataKota)
-    // console.log(response.data.data)
-  }
+  //   setKota(dataKota)
+  //   // console.log(response.data.data)
+  // }
 
-  useEffect(() => {
-    kotaList()
-  }, [])
+  // useEffect(() => {
+  //   kotaList()
+  // }, [])
 
   const GetPerJenis = ({row, jenis}: any) => {
     const [valData, setValData] = useState(0)
@@ -325,7 +336,7 @@ export function DtPimpinan(props: any) {
       }
 
       fetchDT(row, jenis)
-    }, [valData, row])
+    }, [])
 
     return <>{valData}</>
   }
@@ -343,9 +354,36 @@ export function DtPimpinan(props: any) {
       }
 
       fetchDT(row, jenis)
-    }, [valData, row])
+    }, [])
 
     return <>{valData}</>
+  }
+
+  // useEffect(){
+
+  // }
+
+  const GetJumlah = ({row}: any) => {
+    const [valData, setValData] = useState(0)
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27`
+        )
+        const result = data.total_items
+        // console.log(result)
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [])
+
+    return (
+      <>
+        {valData}
+        {/* <a onClick={() => jumlah(row)}>{valData}</a> */}
+      </>
+    )
   }
 
   const columns3 = [
@@ -578,5 +616,5 @@ export function DtPimpinan(props: any) {
   //   },
   // ]
 
-  return <DataTable columns={columns3} data={kota} pagination />
+  return <DataTable columns={columns3} data={data} pagination theme={theme} />
 }

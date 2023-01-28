@@ -46,6 +46,7 @@ export const DtKabid: FC<any> = ({
   loading,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const GetHakAkses = ({row}: {row: number}) => {
     const handleHakAkses = hakAkses.find((i: any) => i.id === row)
@@ -127,6 +128,7 @@ export const DtKabid: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -141,6 +143,7 @@ export const DtAdmin: FC<any> = ({
   hakAkses,
   wilayahBidang,
   konfirDel,
+  theme,
 }) => {
   const navigate = useNavigate()
 
@@ -281,12 +284,13 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
 }
 
-export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
+export const DtPimpinan: FC<any> = ({aksi, jumlah, theme}) => {
   const [kota, setKota] = useState([])
 
   const kotaList = async () => {
@@ -515,7 +519,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
 
   return (
     <div>
-      <DataTable columns={columns3} data={kota} pagination />
+      <DataTable columns={columns3} data={kota} pagination theme={theme} />
     </div>
   )
 }
