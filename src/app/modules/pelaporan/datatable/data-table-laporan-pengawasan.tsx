@@ -32,6 +32,7 @@ export const DtKabid: FC<any> = ({
   loading,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const dispatch = useDispatch()
 
@@ -68,8 +69,12 @@ export const DtKabid: FC<any> = ({
   const columns1 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
@@ -130,6 +135,7 @@ export const DtKabid: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -144,6 +150,7 @@ export const DtAdmin: FC<any> = ({
   // jenisKegiatanList,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const navigate = useNavigate()
 
@@ -180,8 +187,12 @@ export const DtAdmin: FC<any> = ({
   const columns2 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
@@ -280,6 +291,7 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -294,8 +306,14 @@ export const DtPimpinan: FC<any> = ({
   // jenisKegiatanList,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const navigate = useNavigate()
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
 
   const GetStatusReklame = ({row}: {row: number}) => {
     const [valData, setValData] = useState('')
@@ -317,13 +335,18 @@ export const DtPimpinan: FC<any> = ({
   const columns = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
       width: '140px',
       selector: (row: any) => row.pelaksana,
+      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Tanggal',
@@ -416,6 +439,7 @@ export const DtPimpinan: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )

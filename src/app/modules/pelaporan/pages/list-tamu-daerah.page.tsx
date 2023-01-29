@@ -6,6 +6,130 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 import Swal from 'sweetalert2'
+import {createTheme} from 'react-data-table-component'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials'
+
+// Dark Theme
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -13,6 +137,9 @@ export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
 export const ListTamuDaerahPage: FC = () => {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
+
   const [tanggalAwal, setTanggalAwal] = useState({val: ''})
   const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
   const [instansi, setInstansi] = useState({val: ''})
@@ -97,6 +224,9 @@ export const ListTamuDaerahPage: FC = () => {
           tempat_kunjungan: d.tempat_kunjungan,
           total_items: d.total_items,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         setData(data)
         setTotalRows(res.data.total_items)
         setLoading(false)
@@ -132,6 +262,9 @@ export const ListTamuDaerahPage: FC = () => {
           tempat_kunjungan: d.tempat_kunjungan,
           total_items: d.total_items,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         setData(data)
         setPerPage(newPerPage)
         setLoading(false)
@@ -145,8 +278,9 @@ export const ListTamuDaerahPage: FC = () => {
   let value: any = localStorage.getItem('kt-auth-react-v')
   let authValue = JSON.parse(value)
   let idHakAkses = authValue.data.hak_akses
-  console.log('id hak akses', idHakAkses)
-  console.log('aksi', aksi)
+  // console.log('id hak akses', idHakAkses)
+  // console.log('aksi', aksi)
+  console.log(MASTERDATA_URL)
 
   const findHakAksesData = async () => {
     const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
@@ -591,6 +725,7 @@ export const ListTamuDaerahPage: FC = () => {
                       handlePageChange={handlePageChange}
                       loading={loading}
                       konfirDel={konfirDel}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                     />
                   </div>
                 ) : (
@@ -622,6 +757,7 @@ export const ListTamuDaerahPage: FC = () => {
                         handlePerRowsChange={handlePerRowsChange}
                         handlePageChange={handlePageChange}
                         loading={loading}
+                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                       />
                     </div>
                     <div className='row'>

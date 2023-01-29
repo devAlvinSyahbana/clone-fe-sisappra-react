@@ -1,19 +1,8 @@
-import React, {ChangeEvent, FC, useEffect, useState} from 'react'
-import DatePicker from 'react-multi-date-picker'
+import {FC, useEffect, useState} from 'react'
 import AsyncSelect from 'react-select/async'
-import {Link} from 'react-router-dom'
-import {Formik, Field, Form, FormikValues} from 'formik'
+import {FormikValues} from 'formik'
 import {
-  DatePickerField,
-  DatePickerFieldRange,
-  SelectField,
-  ToFieldStateBNV,
-  ToFieldStateCE,
-} from '../components/fields.formikcto'
-import {
-  changedValue,
   createSchemaPelaporanKejadian,
-  initialState,
   PelaporanKejadianState,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
 import {useDispatch, useSelector} from 'react-redux'
@@ -24,7 +13,131 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 import Swal from 'sweetalert2'
+import {createTheme} from 'react-data-table-component'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials'
 import ReactToPrint from 'react-to-print'
+
+// Dark Theme
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -35,11 +148,13 @@ export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const ListKejadianPage: FC = () => {
   let componentRef: any
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   const dispatch = useDispatch()
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKejadian[0])
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [jenisKejadianList, setJenisKejadianList] = useState([])
-  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
   const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
   const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
@@ -90,6 +205,7 @@ export const ListKejadianPage: FC = () => {
   useEffect(() => {
     if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('admin')) {
       return setAksi(1)
+      // return setAksi(2)
     } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala satpol pp dki')) {
       return setAksi(2)
     } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala')) {
@@ -99,15 +215,16 @@ export const ListKejadianPage: FC = () => {
     }
   }, [hakAksesData])
 
-  const vKabid = () => {
-    setAksi(0)
-  }
-  const vAdmin = () => {
-    setAksi(1)
-  }
-  const vPimpinan = () => {
-    setAksi(2)
-  }
+  // const vKabid = () => {
+  //   setAksi(0)
+  // }
+  // const vAdmin = () => {
+  //   setAksi(1)
+  // }
+  // const vPimpinan = () => {
+  //   setAksi(2)
+  //   setPV(0)
+  // }
   const viewPimpinan = () => {
     setPV(0)
   }
@@ -150,6 +267,7 @@ export const ListKejadianPage: FC = () => {
     const json = await response.data.data
     return json.map((i: any) => ({label: i.text, value: i.value}))
   }
+  // console.log(valJenisKejadian)
   const loadOptionsJenisKejadian = (
     inputValue: string,
     callback: (options: SelectOption[]) => void
@@ -189,6 +307,20 @@ export const ListKejadianPage: FC = () => {
     setValJenisKejadian({value: '', label: ''})
     // setInstansi({val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
+  }
+  // FILTER KOTA
+  const handleFilterKota = async () => {
+    let uriParam = ''
+    if (valKota.value !== '') {
+      uriParam += `/?%24filter=id%20eq%20${valKota.value}`
+    }
+    setUriFindKota((prevState) => ({...prevState, strparamkota: uriParam}))
+  }
+
+  const handleFilterResetKota = () => {
+    setValKota({value: '', label: ''})
+    // setInstansi({val: ''})
+    setUriFindKota((prevState) => ({...prevState, strparamkota: ''}))
   }
 
   const handleFilterDetailJumlah = async () => {
@@ -265,6 +397,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setData(data)
         setTotalRows(res.data.total_items)
@@ -292,6 +427,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setDataPimpinanJumlah(data)
         setTotalRows(res.data.total_items)
@@ -320,6 +458,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setDataPimpinan(data)
         setTotalRows(res.data.total_items)
@@ -366,6 +507,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setData(data)
         setPerPage(newPerPage)
@@ -398,6 +542,9 @@ export const ListKejadianPage: FC = () => {
           // wilayah: d.kejadian__wilayah,
           lokasi: d.kejadian__alamat,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJeniskejadian.includes(v.label))
         setDataPimpinan(data)
         setPerPage(newPerPage)
@@ -465,6 +612,50 @@ export const ListKejadianPage: FC = () => {
     })
   }
 
+  const [kota, setKota] = useState([])
+  const [qParamFindKota, setUriFindKota] = useState({strparamkota: ''})
+
+  const kotaList = async () => {
+    const responseKota = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strparamkota}`)
+    // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
+    // console.log(responseKota)
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      bidang_wilayah: d.nama,
+    }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+
+    setKota(dataKota)
+
+    return [kota, setKota] as const
+    // console.log(response.data.data)
+  }
+
+  useEffect(() => {
+    kotaList()
+    // console.log(kotaList)
+  }, [qParamFindKota])
+
+  const [valKota, setValKota] = useState({value: '', label: ''})
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(`${MASTERDATA_URL}/kota/combobox`)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.text, value: i.value}))
+    // console.log(response)
+  }
+  const loadOptionsKota = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputKota = (newValue: any) => {
+    setValKota((prevstate: any) => ({...prevstate, ...newValue}))
+    // console.log('ini val kejadian', valJenisKejadian)
+  }
+
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
       <div className='d-flex flex-column flex-column-fluid'>
@@ -490,55 +681,57 @@ export const ListKejadianPage: FC = () => {
               </div>
             ) : (
               <div className='card'>
-                <div className='card-header border-1 pt-6'>
-                  <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
-                    <div className='mb-5'>
-                      <div
-                        className='accordion-header py-3 d-flex'
-                        data-bs-toggle='collapse'
-                        data-bs-target='#kt_accordion_2_item_1'
-                      >
-                        <span className='accordion-icon'>
-                          <span className='svg-icon svg-icon-4'>
-                            <svg
-                              width='24'
-                              height='24'
-                              viewBox='0 0 24 24'
-                              fill='none'
-                              xmlns='http://www.w3.org/2000/svg'
-                            >
-                              <rect
-                                opacity='0.5'
-                                x='18'
-                                y='13'
-                                width='13'
-                                height='2'
-                                rx='1'
-                                transform='rotate(-180 18 13)'
-                                fill='currentColor'
-                              />
-                              <path
-                                d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
-                                fill='currentColor'
-                              />
-                            </svg>
-                          </span>
-                        </span>
-                        <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
-                      </div>
-                      <div
-                        id='kt_accordion_2_item_1'
-                        className='fs-6 collapse show ps-10'
-                        data-bs-parent='#kt_accordion_2'
-                      >
-                        <Button onClick={vKabid}>Kabid</Button>
-                        <Button onClick={vAdmin}>Admin</Button>
-                        <Button onClick={vPimpinan}>Pimpinan</Button>
-                        {aksi === 0 ? (
-                          // VIEW KABID
+                <div className='card card-flush h-xl-100'>
+                  <div className='card-header border-1 pt-6'>
+                    <div className='col-xl-12 mb-xl-12 mt-6'>
+                      <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
+                        <div className='mb-5'>
+                          <div
+                            className='accordion-header py-3 d-flex'
+                            data-bs-toggle='collapse'
+                            data-bs-target='#kt_accordion_2_item_1'
+                          >
+                            <span className='accordion-icon'>
+                              <span className='svg-icon svg-icon-4'>
+                                <svg
+                                  width='24'
+                                  height='24'
+                                  viewBox='0 0 24 24'
+                                  fill='none'
+                                  xmlns='http://www.w3.org/2000/svg'
+                                >
+                                  <rect
+                                    opacity='0.5'
+                                    x='18'
+                                    y='13'
+                                    width='13'
+                                    height='2'
+                                    rx='1'
+                                    transform='rotate(-180 18 13)'
+                                    fill='currentColor'
+                                  />
+                                  <path
+                                    d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
+                                    fill='currentColor'
+                                  />
+                                </svg>
+                              </span>
+                            </span>
+                            <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
+                          </div>
+                          <div
+                            id='kt_accordion_2_item_1'
+                            className='fs-6 collapse show ps-10'
+                            data-bs-parent='#kt_accordion_2'
+                          >
+                            {/* <Button onClick={vKabid}>Kabid</Button>
+                            <Button onClick={vAdmin}>Admin</Button>
+                            <Button onClick={vPimpinan}>Pimpinan</Button> */}
+                            {aksi === 0 ? (
+                              // VIEW KABID
 
-                          <div className='row w-100 mt-10 mb-10'>
-                            {/* <div className='col-md-6 col-lg-6 col-sm-12'>
+                              <div className='row w-100 mt-10 mb-10'>
+                                {/* <div className='col-md-6 col-lg-6 col-sm-12'>
                             <div className='mb-10'>
                               <div className='row'>
                                 <div className='col-4 pt-2'>
@@ -549,463 +742,31 @@ export const ListKejadianPage: FC = () => {
                               </div>
                             </div>
                           </div> */}
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label align-middle'>
-                                      Jenis Kejadian
-                                    </label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <AsyncSelect
-                                      name='filter_jenis_kejadian_id_selection'
-                                      defaultOptions
-                                      value={valJenisKejadian}
-                                      loadOptions={loadOptionsJenisKejadian}
-                                      onChange={handleChangeInputJenisKejadian}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Tanggal Awal</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <input
-                                      type='date'
-                                      name='tanggal_kunjungan'
-                                      className='form-control'
-                                      value={tanggalAwal.val}
-                                      onChange={handleChangeInputTanggalAwal}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAwal(o.target.value)
-                                      // }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label align-middle'>Tanggal Akhir</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <input
-                                      name='tanggal_kunjungan'
-                                      type='date'
-                                      className='form-control'
-                                      value={tanggalAkhir.val}
-                                      onChange={handleChangeInputTanggalAkhir}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAkhir(o.target.value)
-                                      // }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className='row g-8 mt-2'>
-                              <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                <Button
-                                  className='btn btn-light-primary me-2'
-                                  onClick={handleFilter}
-                                >
-                                  <KTSVG
-                                    path='/media/icons/duotune/general/gen021.svg'
-                                    className='svg-icon-2'
-                                  />
-                                  Cari
-                                </Button>
-                                <Button
-                                  className='btn btn-light-primary me-2'
-                                  onClick={handleFilterReset}
-                                >
-                                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                  Reset
-                                </Button>
-                              </div>
-                              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                {/* begin::Filter Button */}
-                                <Button
-                                  onClick={() => navigate('/pelaporan/tambah-laporan-kejadian')}
-                                  className='btn btn-primary me-2'
-                                >
-                                  {/* begin::Add user */}
-                                  <KTSVG
-                                    path='/media/icons/duotune/arrows/arr075.svg'
-                                    className='svg-icon-2'
-                                  />
-                                  Tambah
-                                  {/* end::Add user */}
-                                </Button>
-                                <button
-                                  type='button'
-                                  className='btn btn-light-primary'
-                                  data-kt-menu-trigger='click'
-                                  data-kt-menu-placement='bottom-end'
-                                >
-                                  {/* {btnLoadingUnduh ? (
-             <>
-               <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-               Memproses Unduh...
-             </>
-           ) : ( */}
-                                  <>
-                                    <KTSVG
-                                      path='/media/icons/duotune/arrows/arr078.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Unduh
-                                  </>
-                                  {/* )} */}
-                                </button>
-                                {/* end::Filter Button */}
-                                {/* begin::SubMenu */}
-                                <div
-                                  className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                  data-kt-menu='true'
-                                >
-                                  {/* begin::Header */}
-                                  <div className='px-7 py-5'>
-                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                  </div>
-                                  {/* end::Header */}
-
-                                  {/* begin::Separator */}
-                                  <div className='separator border-gray-200'></div>
-                                  {/* end::Separator */}
-
-                                  {/* begin::Content */}
-                                  <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                    <button
-                                      //   onClick={handleUnduh}
-                                      className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                    >
-                                      Excel
-                                    </button>
-                                  </div>
-                                  {/* end::Content */}
-
-                                  {/* begin::Content */}
-                                  <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                    <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                      PDF
-                                    </button>
-                                  </div>
-                                  {/* end::Content */}
-                                </div>
-                                {/* end::SubMenu */}
-                              </div>
-                            </div>
-                          </div>
-                        ) : aksi === 1 ? (
-                          // VIEW ADMIN
-                          <div className='row w-100 mt-10 mb-10'>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label align-middle'>
-                                      Jenis Kejadian
-                                    </label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <AsyncSelect
-                                      name='filter_jenis_kejadian_id_selection'
-                                      defaultOptions
-                                      value={valJenisKejadian}
-                                      loadOptions={loadOptionsJenisKejadian}
-                                      onChange={handleChangeInputJenisKejadian}
-                                    />
-                                    {/* <Field
-                                        name='filter_jenis_Kejadian_id_selection'
-                                        target='filter_jenis_Kejadian_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={jenisKejadianList}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      /> */}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Tanggal Awal</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <input
-                                      type='date'
-                                      name='tanggal_kunjungan'
-                                      className='form-control'
-                                      value={tanggalAwal.val}
-                                      onChange={handleChangeInputTanggalAwal}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAwal(o.target.value)
-                                      // }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label align-middle'>Tanggal Akhir</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <input
-                                      name='tanggal_kunjungan'
-                                      type='date'
-                                      className='form-control'
-                                      value={tanggalAkhir.val}
-                                      onChange={handleChangeInputTanggalAkhir}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAkhir(o.target.value)
-                                      // }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className='row g-8 mt-2'>
-                              <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                <Button
-                                  className='btn btn-light-primary me-2'
-                                  onClick={handleFilter}
-                                >
-                                  <KTSVG
-                                    path='/media/icons/duotune/general/gen021.svg'
-                                    className='svg-icon-2'
-                                  />
-                                  Cari
-                                </Button>
-                                <Button
-                                  className='btn btn-light-primary me-2'
-                                  onClick={handleFilterReset}
-                                >
-                                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                  Reset
-                                </Button>
-                              </div>
-                              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                {/* begin::Filter Button */}
-                                <Button
-                                  onClick={() => navigate('/pelaporan/tambah-laporan-kejadian')}
-                                  className='btn btn-primary me-2'
-                                >
-                                  {/* begin::Add user */}
-                                  <KTSVG
-                                    path='/media/icons/duotune/arrows/arr075.svg'
-                                    className='svg-icon-2'
-                                  />
-                                  Tambah
-                                  {/* end::Add user */}
-                                </Button>
-                                <button
-                                  type='button'
-                                  className='btn btn-light-primary'
-                                  data-kt-menu-trigger='click'
-                                  data-kt-menu-placement='bottom-end'
-                                >
-                                  {/* {btnLoadingUnduh ? (
-                                  <>
-                                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                    Memproses Unduh...
-                                  </>
-                                ) : ( */}
-                                  <>
-                                    <KTSVG
-                                      path='/media/icons/duotune/arrows/arr078.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Unduh
-                                  </>
-                                  {/* )} */}
-                                </button>
-                                {/* end::Filter Button */}
-                                {/* begin::SubMenu */}
-                                <div
-                                  className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                  data-kt-menu='true'
-                                >
-                                  {/* begin::Header */}
-                                  <div className='px-7 py-5'>
-                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                  </div>
-                                  {/* end::Header */}
-
-                                  {/* begin::Separator */}
-                                  <div className='separator border-gray-200'></div>
-                                  {/* end::Separator */}
-
-                                  {/* begin::Content */}
-                                  <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                    <button
-                                      //   onClick={handleUnduh}
-                                      className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                    >
-                                      Excel
-                                    </button>
-                                  </div>
-                                  {/* end::Content */}
-
-                                  {/* begin::Content */}
-                                  <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                    <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                      PDF
-                                    </button>
-                                  </div>
-                                  {/* end::Content */}
-                                </div>
-                                {/* end::SubMenu */}
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
-                          // VIEW PIMPINAN
-                          <div className='row w-100 mt-10 mb-10'>
-                            {pimpinanView === 0 ? (
-                              <>
                                 <div className='col-md-6 col-lg-6 col-sm-12'>
                                   <div className='mb-10'>
                                     <div className='row'>
-                                      <div className='col pt-2'>
+                                      <div className='col-4 pt-2'>
                                         <label className='form-label align-middle'>
-                                          Bidang/Wilayah
+                                          Jenis Kejadian
                                         </label>
                                       </div>
-                                      <div className='col'>
+                                      <div className='col-8'>
                                         <AsyncSelect
                                           name='filter_jenis_kejadian_id_selection'
                                           defaultOptions
                                           value={valJenisKejadian}
                                           loadOptions={loadOptionsJenisKejadian}
                                           onChange={handleChangeInputJenisKejadian}
+                                          styles={
+                                            calculatedMode === 'dark'
+                                              ? reactSelectDarkThem
+                                              : reactSelectLightThem
+                                          }
                                         />
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                                <div className='row g-8 mt-2'>
-                                  <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                    <Button
-                                      className='btn btn-light-primary me-2'
-                                      onClick={
-                                        kotaId !== 0 && jenisKejadianId !== 0
-                                          ? handleFilterDetail
-                                          : handleFilterDetailJumlah
-                                      }
-                                    >
-                                      <KTSVG
-                                        path='/media/icons/duotune/general/gen021.svg'
-                                        className='svg-icon-2'
-                                      />
-                                      Cari
-                                    </Button>
-                                    <Button
-                                      className='btn btn-light-primary me-2'
-                                      onClick={
-                                        kotaId !== 0 && jenisKejadianId !== 0
-                                          ? handleFilterResetDetail
-                                          : handleFilterResetDetailJumlah
-                                      }
-                                    >
-                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                      Reset
-                                    </Button>
-                                  </div>
-                                  <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                    {/* begin::Filter Button */}
-                                    <ReactToPrint
-                                      trigger={() => (
-                                        <button
-                                          type='button'
-                                          className='btn btn-light-primary'
-                                          data-kt-menu-trigger='click'
-                                          data-kt-menu-placement='bottom-end'
-                                        >
-                                          <>
-                                            <KTSVG
-                                              path='/media/icons/duotune/arrows/arr078.svg'
-                                              className='svg-icon-2'
-                                            />
-                                            Unduh PDF
-                                          </>
-                                          {/* )} */}
-                                        </button>
-                                      )}
-                                      pageStyle='
-                                      @page {
-                                        size: auto;
-                                        margin: 20mm;
-                                      }
-                                      @media print {
-                                        html,
-                                        body {
-                                          height: 100%; /* Use 100% here to support printing more than a single page*/
-                                          margin: 0 !important;
-                                          padding: 0 !important;
-                                          overflow: hidden;
-                                        }
-                                      }
-                                      @media all {
-                                        .pagebreak {
-                                          display: inline;
-                                        }
-                                      }'
-                                      content={() => componentRef}
-                                    />
-
-                                    {/* end::Filter Button */}
-                                    {/* begin::SubMenu */}
-
-                                    {/* end::SubMenu */}
-                                  </div>
-                                </div>
-                              </>
-                            ) : (
-                              <>
-                                {kotaId !== 0 && jenisKejadianId !== 0 ? (
-                                  ''
-                                ) : (
-                                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                      <div className='row'>
-                                        <div className='col-4 pt-2'>
-                                          <label className='form-label align-middle'>
-                                            Jenis Kejadian
-                                          </label>
-                                        </div>
-                                        <div className='col-8'>
-                                          <AsyncSelect
-                                            name='filter_jenis_kejadian_id_selection'
-                                            defaultOptions
-                                            value={valJenisKejadian}
-                                            loadOptions={loadOptionsJenisKejadian}
-                                            onChange={handleChangeInputJenisKejadian}
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
                                 <div className='col-md-6 col-lg-6 col-sm-12'>
                                   <div className='mb-10'>
                                     <div className='row'>
@@ -1050,15 +811,12 @@ export const ListKejadianPage: FC = () => {
                                     </div>
                                   </div>
                                 </div>
+
                                 <div className='row g-8 mt-2'>
                                   <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
                                     <Button
                                       className='btn btn-light-primary me-2'
-                                      onClick={
-                                        kotaId !== 0 && jenisKejadianId !== 0
-                                          ? handleFilterDetail
-                                          : handleFilterDetailJumlah
-                                      }
+                                      onClick={handleFilter}
                                     >
                                       <KTSVG
                                         path='/media/icons/duotune/general/gen021.svg'
@@ -1068,11 +826,7 @@ export const ListKejadianPage: FC = () => {
                                     </Button>
                                     <Button
                                       className='btn btn-light-primary me-2'
-                                      onClick={
-                                        kotaId !== 0 && jenisKejadianId !== 0
-                                          ? handleFilterResetDetail
-                                          : handleFilterResetDetailJumlah
-                                      }
+                                      onClick={handleFilterReset}
                                     >
                                       <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                                       Reset
@@ -1080,6 +834,18 @@ export const ListKejadianPage: FC = () => {
                                   </div>
                                   <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                                     {/* begin::Filter Button */}
+                                    <Button
+                                      onClick={() => navigate('/pelaporan/tambah-laporan-kejadian')}
+                                      className='btn btn-primary me-2'
+                                    >
+                                      {/* begin::Add user */}
+                                      <KTSVG
+                                        path='/media/icons/duotune/arrows/arr075.svg'
+                                        className='svg-icon-2'
+                                      />
+                                      Tambah
+                                      {/* end::Add user */}
+                                    </Button>
                                     <button
                                       type='button'
                                       className='btn btn-light-primary'
@@ -1087,11 +853,11 @@ export const ListKejadianPage: FC = () => {
                                       data-kt-menu-placement='bottom-end'
                                     >
                                       {/* {btnLoadingUnduh ? (
-                                    <>
-                                      <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                      Memproses Unduh...
-                                    </>
-                                  ) : ( */}
+                                  <>
+                                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                    Memproses Unduh...
+                                  </>
+                                ) : ( */}
                                       <>
                                         <KTSVG
                                           path='/media/icons/duotune/arrows/arr078.svg'
@@ -1141,10 +907,461 @@ export const ListKejadianPage: FC = () => {
                                     {/* end::SubMenu */}
                                   </div>
                                 </div>
-                              </>
+                              </div>
+                            ) : aksi === 1 ? (
+                              // VIEW ADMIN
+                              <div className='row w-100 mt-10 mb-10'>
+                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                                  <div className='mb-10'>
+                                    <div className='row'>
+                                      <div className='col-4 pt-2'>
+                                        <label className='form-label align-middle'>
+                                          Jenis Kejadian
+                                        </label>
+                                      </div>
+                                      <div className='col-8'>
+                                        <AsyncSelect
+                                          name='filter_jenis_kejadian_id_selection'
+                                          defaultOptions
+                                          value={valJenisKejadian}
+                                          loadOptions={loadOptionsJenisKejadian}
+                                          onChange={handleChangeInputJenisKejadian}
+                                          styles={
+                                            calculatedMode === 'dark'
+                                              ? reactSelectDarkThem
+                                              : reactSelectLightThem
+                                          }
+                                        />
+                                        {/* <Field
+                                        name='filter_jenis_Kejadian_id_selection'
+                                        target='filter_jenis_Kejadian_id'
+                                        className='form-control'
+                                        component={SelectField}
+                                        options={jenisKejadianList}
+                                        onChange={(o: ChangeEvent<any>) => {
+                                          // dispatch(changedValue(ToFieldStateCE(o)))
+                                          // updateJenisPasalList()
+                                          // updateJenisPenyelesaianList()
+                                        }}
+                                      /> */}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                                  <div className='mb-10'>
+                                    <div className='row'>
+                                      <div className='col-4 pt-2'>
+                                        <label className='form-label'>Tanggal Awal</label>
+                                      </div>
+                                      <div className='col-8'>
+                                        <input
+                                          type='date'
+                                          name='tanggal_kunjungan'
+                                          className='form-control'
+                                          value={tanggalAwal.val}
+                                          onChange={handleChangeInputTanggalAwal}
+                                          // onChange={(o: any) => {
+                                          //   setTanggalAwal(o.target.value)
+                                          // }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                                  <div className='mb-10'>
+                                    <div className='row'>
+                                      <div className='col-4 pt-2'>
+                                        <label className='form-label align-middle'>
+                                          Tanggal Akhir
+                                        </label>
+                                      </div>
+                                      <div className='col-8'>
+                                        <input
+                                          name='tanggal_kunjungan'
+                                          type='date'
+                                          className='form-control'
+                                          value={tanggalAkhir.val}
+                                          onChange={handleChangeInputTanggalAkhir}
+                                          // onChange={(o: any) => {
+                                          //   setTanggalAkhir(o.target.value)
+                                          // }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className='row g-8 mt-2'>
+                                  <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                    <Button
+                                      className='btn btn-light-primary me-2'
+                                      onClick={handleFilter}
+                                    >
+                                      <KTSVG
+                                        path='/media/icons/duotune/general/gen021.svg'
+                                        className='svg-icon-2'
+                                      />
+                                      Cari
+                                    </Button>
+                                    <Button
+                                      className='btn btn-light-primary me-2'
+                                      onClick={handleFilterReset}
+                                    >
+                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                      Reset
+                                    </Button>
+                                  </div>
+                                  <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                    {/* begin::Filter Button */}
+                                    <Button
+                                      onClick={() => navigate('/pelaporan/tambah-laporan-kejadian')}
+                                      className='btn btn-primary me-2'
+                                    >
+                                      {/* begin::Add user */}
+                                      <KTSVG
+                                        path='/media/icons/duotune/arrows/arr075.svg'
+                                        className='svg-icon-2'
+                                      />
+                                      Tambah
+                                      {/* end::Add user */}
+                                    </Button>
+                                    <button
+                                      type='button'
+                                      className='btn btn-light-primary'
+                                      data-kt-menu-trigger='click'
+                                      data-kt-menu-placement='bottom-end'
+                                    >
+                                      {/* {btnLoadingUnduh ? (
+                                  <>
+                                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                    Memproses Unduh...
+                                  </>
+                                ) : ( */}
+                                      <>
+                                        <KTSVG
+                                          path='/media/icons/duotune/arrows/arr078.svg'
+                                          className='svg-icon-2'
+                                        />
+                                        Unduh
+                                      </>
+                                      {/* )} */}
+                                    </button>
+                                    {/* end::Filter Button */}
+                                    {/* begin::SubMenu */}
+                                    <div
+                                      className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                      data-kt-menu='true'
+                                    >
+                                      {/* begin::Header */}
+                                      <div className='px-7 py-5'>
+                                        <div className='fs-5 text-dark fw-bolder'>
+                                          Pilihan Unduh
+                                        </div>
+                                      </div>
+                                      {/* end::Header */}
+
+                                      {/* begin::Separator */}
+                                      <div className='separator border-gray-200'></div>
+                                      {/* end::Separator */}
+
+                                      {/* begin::Content */}
+                                      <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                        <button
+                                          //   onClick={handleUnduh}
+                                          className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                        >
+                                          Excel
+                                        </button>
+                                      </div>
+                                      {/* end::Content */}
+
+                                      {/* begin::Content */}
+                                      <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                        <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                          PDF
+                                        </button>
+                                      </div>
+                                      {/* end::Content */}
+                                    </div>
+                                    {/* end::SubMenu */}
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              // VIEW PIMPINAN
+                              <div className='row mt-10 mb-10'>
+                                {pimpinanView === 0 ? (
+                                  <div className='mb-10'>
+                                    {/* <div className='col-md-6 col-lg-6 col-sm-12'> */}
+                                    <div className='row'>
+                                      <div className='col pt-2'>
+                                        <label className='form-label align-middle'>Kota</label>
+                                      </div>
+                                      <div className='col'>
+                                        <AsyncSelect
+                                          name='id'
+                                          defaultOptions
+                                          value={valKota}
+                                          loadOptions={loadOptionsKota}
+                                          onChange={handleChangeInputKota}
+                                          styles={
+                                            calculatedMode === 'dark'
+                                              ? reactSelectDarkThem
+                                              : reactSelectLightThem
+                                          }
+                                        />
+                                      </div>
+                                      {/* </div> */}
+                                    </div>
+                                    <div className='row g-8 mt-2'>
+                                      <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                        <Button
+                                          className='btn btn-light-primary me-2'
+                                          onClick={handleFilterKota}
+                                        >
+                                          <KTSVG
+                                            path='/media/icons/duotune/general/gen021.svg'
+                                            className='svg-icon-2'
+                                          />
+                                          Cari
+                                        </Button>
+                                        <Button
+                                          className='btn btn-light-primary me-2'
+                                          onClick={handleFilterResetKota}
+                                        >
+                                          <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                          Reset
+                                        </Button>
+                                      </div>
+                                      <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                        {/* begin::Filter Button */}
+                                        <ReactToPrint
+                                          trigger={() => (
+                                            <button
+                                              type='button'
+                                              className='btn btn-light-primary'
+                                              data-kt-menu-trigger='click'
+                                              data-kt-menu-placement='bottom-end'
+                                            >
+                                              <>
+                                                <KTSVG
+                                                  path='/media/icons/duotune/arrows/arr078.svg'
+                                                  className='svg-icon-2'
+                                                />
+                                                Unduh PDF
+                                              </>
+                                              {/* )} */}
+                                            </button>
+                                          )}
+                                          pageStyle='
+                                      @page {
+                                        size: auto;
+                                        margin: 20mm;
+                                      }
+                                      @media print {
+                                        html,
+                                        body {
+                                          height: 100%; /* Use 100% here to support printing more than a single page*/
+                                          margin: 0 !important;
+                                          padding: 0 !important;
+                                          overflow: hidden;
+                                        }
+                                      }
+                                      @media all {
+                                        .pagebreak {
+                                          display: inline;
+                                        }
+                                      }'
+                                          content={() => componentRef}
+                                        />
+
+                                        {/* end::Filter Button */}
+                                        {/* begin::SubMenu */}
+
+                                        {/* end::SubMenu */}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <>
+                                    {kotaId !== 0 && jenisKejadianId !== 0 ? (
+                                      ''
+                                    ) : (
+                                      <div className='col-md-6 col-lg-6 col-sm-12'>
+                                        <div className='mb-10'>
+                                          <div className='row'>
+                                            <div className='col-4 pt-2'>
+                                              <label className='form-label align-middle'>
+                                                Jenis Kejadian
+                                              </label>
+                                            </div>
+                                            <div className='col-8'>
+                                              <AsyncSelect
+                                                name='filter_jenis_kejadian_id_selection'
+                                                defaultOptions
+                                                value={valJenisKejadian}
+                                                loadOptions={loadOptionsJenisKejadian}
+                                                onChange={handleChangeInputJenisKejadian}
+                                                styles={
+                                                  calculatedMode === 'dark'
+                                                    ? reactSelectDarkThem
+                                                    : reactSelectLightThem
+                                                }
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                    <div className='col-md-6 col-lg-6 col-sm-12'>
+                                      <div className='mb-10'>
+                                        <div className='row'>
+                                          <div className='col-4 pt-2'>
+                                            <label className='form-label'>Tanggal Awal</label>
+                                          </div>
+                                          <div className='col-8'>
+                                            <input
+                                              type='date'
+                                              name='tanggal_kunjungan'
+                                              className='form-control'
+                                              value={tanggalAwal.val}
+                                              onChange={handleChangeInputTanggalAwal}
+                                              // onChange={(o: any) => {
+                                              //   setTanggalAwal(o.target.value)
+                                              // }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className='col-md-6 col-lg-6 col-sm-12'>
+                                      <div className='mb-10'>
+                                        <div className='row'>
+                                          <div className='col-4 pt-2'>
+                                            <label className='form-label align-middle'>
+                                              Tanggal Akhir
+                                            </label>
+                                          </div>
+                                          <div className='col-8'>
+                                            <input
+                                              name='tanggal_kunjungan'
+                                              type='date'
+                                              className='form-control'
+                                              value={tanggalAkhir.val}
+                                              onChange={handleChangeInputTanggalAkhir}
+                                              // onChange={(o: any) => {
+                                              //   setTanggalAkhir(o.target.value)
+                                              // }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className='row g-8 mt-2'>
+                                      <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                        <Button
+                                          className='btn btn-light-primary me-2'
+                                          onClick={
+                                            kotaId !== 0 && jenisKejadianId !== 0
+                                              ? handleFilterDetail
+                                              : handleFilterDetailJumlah
+                                          }
+                                        >
+                                          <KTSVG
+                                            path='/media/icons/duotune/general/gen021.svg'
+                                            className='svg-icon-2'
+                                          />
+                                          Cari
+                                        </Button>
+                                        <Button
+                                          className='btn btn-light-primary me-2'
+                                          onClick={
+                                            kotaId !== 0 && jenisKejadianId !== 0
+                                              ? handleFilterResetDetail
+                                              : handleFilterResetDetailJumlah
+                                          }
+                                        >
+                                          <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                          Reset
+                                        </Button>
+                                      </div>
+                                      <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                        {/* begin::Filter Button */}
+                                        <button
+                                          type='button'
+                                          className='btn btn-light-primary'
+                                          data-kt-menu-trigger='click'
+                                          data-kt-menu-placement='bottom-end'
+                                        >
+                                          {/* {btnLoadingUnduh ? (
+                                    <>
+                                      <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
+                                      Memproses Unduh...
+                                    </>
+                                  ) : ( */}
+                                          <>
+                                            <KTSVG
+                                              path='/media/icons/duotune/arrows/arr078.svg'
+                                              className='svg-icon-2'
+                                            />
+                                            Unduh
+                                          </>
+                                          {/* )} */}
+                                        </button>
+                                        {/* end::Filter Button */}
+                                        {/* begin::SubMenu */}
+                                        <div
+                                          className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
+                                          data-kt-menu='true'
+                                        >
+                                          {/* begin::Header */}
+                                          <div className='px-7 py-5'>
+                                            <div className='fs-5 text-dark fw-bolder'>
+                                              Pilihan Unduh
+                                            </div>
+                                          </div>
+                                          {/* end::Header */}
+
+                                          {/* begin::Separator */}
+                                          <div className='separator border-gray-200'></div>
+                                          {/* end::Separator */}
+
+                                          {/* begin::Content */}
+                                          <div
+                                            className='px-7 py-5'
+                                            data-kt-user-table-filter='form'
+                                          >
+                                            <button
+                                              //   onClick={handleUnduh}
+                                              className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
+                                            >
+                                              Excel
+                                            </button>
+                                          </div>
+                                          {/* end::Content */}
+
+                                          {/* begin::Content */}
+                                          <div
+                                            className='px-7 py-2'
+                                            data-kt-user-table-filter='form'
+                                          >
+                                            <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
+                                              PDF
+                                            </button>
+                                          </div>
+                                          {/* end::Content */}
+                                        </div>
+                                        {/* end::SubMenu */}
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
                             )}
                           </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1159,6 +1376,7 @@ export const ListKejadianPage: FC = () => {
                       loading={loading}
                       hakAkses={hakAkses}
                       wilayahBidang={wilayahBidang}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                     />
                   ) : aksi === 1 ? (
                     <DtAdmin
@@ -1170,6 +1388,7 @@ export const ListKejadianPage: FC = () => {
                       hakAkses={hakAkses}
                       wilayahBidang={wilayahBidang}
                       konfirDel={konfirDel}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                     />
                   ) : (
                     // Pimpinan
@@ -1193,6 +1412,8 @@ export const ListKejadianPage: FC = () => {
                         <DtPimpinan
                           aksi={viewPimpinanDetail}
                           jumlah={viewPimpinanDetailJumlah}
+                          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                          kota={kota}
                           pelaporanUrl={PELAPORAN_URL}
                         />
                       ) : (
@@ -1209,8 +1430,12 @@ export const ListKejadianPage: FC = () => {
                             loading={loading}
                             hakAkses={hakAkses}
                             wilayahBidang={wilayahBidang}
+                            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                           />{' '}
-                          <button onClick={viewPimpinan}>Back</button>
+                          <Button className='btn btn-secondary me-2' onClick={viewPimpinan}>
+                            <i className='fa-solid fa-arrow-left'></i>
+                            Kembali
+                          </Button>
                         </>
                       )}
                       <div className='row'>
