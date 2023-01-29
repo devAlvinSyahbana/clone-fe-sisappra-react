@@ -18,6 +18,10 @@ import {
   ToFieldStateCE,
 } from '../../components/fields.formikcto'
 import Swal from 'sweetalert2'
+import axios from 'axios'
+import AsyncSelect from 'react-select/async'
+import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 interface StepDetailKejadianProps {
   handleChange?: {
@@ -41,6 +45,7 @@ interface StepDetailKejadianProps {
   detailState: boolean
 }
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   handleChange,
   handleBlur,
@@ -55,14 +60,104 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
     (s: RootState) => s.pelaporanKejadian.kejadian__jenis_kejadian_id
   )
   const jenisKejadianSelect = values.kejadian__jenis_kejadian_selection?.label
-  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
+  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
+  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
   useEffect(() => {
     dispatch(updateKotaList())
     dispatch(updateKecamatanList())
     dispatch(updateKelurahanList())
   }, [jenisKejadianSelect])
+
+  // GET DATA
+  interface SelectOptionAutoCom {
+    readonly value: string
+    readonly label: string
+    readonly color: string
+    readonly isFixed?: boolean
+    readonly isDisabled?: boolean
+  }
+  
+  // GET Kota
+  const [valKota, setValKota] = useState({value: null, label: ''})
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(API_URL + '/kota/' + inputValue)
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
+  }
+  const loadOptionsKota = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputKota = (newValue: any) => {
+    setValKota((prevstate: any) => ({...prevstate, ...newValue}))
+    setIdKota((prevstate) => ({
+      ...prevstate,
+      id: newValue.value,
+    }))
+  }
+  const [kejadian__kota_id, setIdKota] = useState({id: ''})
+
+  // GET Kecamatan
+  const [valKecamatan, setValKecamatan] = useState({value: null, label: ''})
+  const filterKecamatan = async (inputValue: string) => {
+    const response = await axios.get(
+      `${API_URL}/kecamatan?kejadian__kecamatan_id=${parseInt(kejadian__kota_id.id)}${
+        inputValue !== '' && `&nama=${inputValue}`
+      }`
+    )
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
+  }
+  const loadOptionsKecamatan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterKecamatan(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputKecamatan = (newValue: any) => {
+    setValKecamatan((prevstate: any) => ({...prevstate, ...newValue}))
+    setIdKecamatan((prevstate) => ({
+      ...prevstate,
+      id: newValue.value,
+    }))
+  }
+  const [kejadian__kecamatan_id, setIdKecamatan] = useState({id: ''})
+  
+  // GET Kelurahan
+  const [valKelurahan, setValKelurahan] = useState({value: null, label: ''})
+  const filterKelurahan = async (inputValue: string) => {
+    const response = await axios.get(
+      `${API_URL}/kelurahan?kejadian__kelurahan_id=${parseInt(kejadian__kecamatan_id.id)}${
+        inputValue !== '' && `&nama=${inputValue}`
+      }`
+    )
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
+  }
+  const loadOptionsKelurahan = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterKelurahan(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputKelurahan = (newValue: any) => {
+    setValKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // const handleFilterReset = () => {
+  //   setValMasterKota({label: '', value:null})
+  //   setValMasterKecamatan({label: '', value:null})
+  //   setValMasterKelurahan({label: '', value:null})
+  // }
 
   return (
     <div className='w-50'>
@@ -155,17 +250,31 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kota</label>
-          <Field
-            name='kota_selection'
-            target='kejadian__kota_id'
-            className='form-control'
-            disabled={detailState}
-            component={SelectField}
-            options={kotaList}
-            onChange={(o: ChangeEvent<any>) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
+          <AsyncSelect
+            value={
+              valKota.value
+              ? valKota
+              : {value: '', label: 'Pilih Kota'}
+            }
+            loadOptions={loadOptionsKota}
+            defaultOptions
+            onChange={handleChangeInputKota}
+            placeholder={'Pilih'}
+            loadingMessage={() => 'Sedang mencari pilihan...'}
+            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
+            />
+              {/* <Field
+              // name='kota_selection'
+              // target='kejadian__kota_id'
+              // className='form-control'
+              // disabled={detailState}
+              // component={SelectField}
+              // options={kotaList}
+              // onChange={(o: ChangeEvent<any>) => {
+              //   dispatch(changedValue(ToFieldStateCE(o)))
+              // }}
+              /> */}
+              
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__kota_id' />
             <ErrorMessage name='kota_selection' />
@@ -173,17 +282,27 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kecamatan</label>
-          <Field
-            name='kecamatan_selection'
-            target='kejadian__kecamatan_id'
-            className='form-control'
-            component={SelectField}
-            disabled={detailState}
-            options={kecamatanList}
-            onChange={(o: ChangeEvent<any>) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
+          <AsyncSelect
+            loadOptions={loadOptionsKecamatan}
+            value={
+              valKecamatan.value
+              ? valKecamatan
+              : {value: '', label: 'Pilih Kecamatan'}
+            }
+            onChange={handleChangeInputKecamatan}
+            name='kejadian__kecamatan_id'
+            />
+            {/* <Field
+              name='kecamatan_selection'
+              target='kejadian__kecamatan_id'
+              className='form-control'
+              component={SelectField}
+              disabled={detailState}
+              options={kecamatanList}
+              onChange={(o: ChangeEvent<any>) => {
+                dispatch(changedValue(ToFieldStateCE(o)))
+              }}
+            /> */}
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__kecamatan_id' />
             <ErrorMessage name='kecamatan_selection' />
@@ -191,17 +310,27 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kelurahan</label>
-          <Field
-            name='kelurahan_selection'
-            target='kejadian__kelurahan_id'
-            className='form-control'
-            component={SelectField}
-            disabled={detailState}
-            options={kelurahanList}
-            onChange={(o: ChangeEvent<any>) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
+          <AsyncSelect
+            loadOptions={loadOptionsKelurahan}
+            value={
+              valKelurahan.value
+              ? valKelurahan
+              : {value: '', label: 'Pilih Kelurahan'}
+            }
+            onChange={handleChangeInputKelurahan}
+            name='id_kelurahan'
+            />
+            {/* <Field
+              name='kelurahan_selection'
+              target='kejadian__kelurahan_id'
+              className='form-control'
+              component={SelectField}
+              disabled={detailState}
+              options={kelurahanList}
+              onChange={(o: ChangeEvent<any>) => {
+                dispatch(changedValue(ToFieldStateCE(o)))
+              }}
+            /> */}
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__kelurahan_id' />
             <ErrorMessage name='kelurahan_selection' />
@@ -368,6 +497,6 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           </>
         )}
       </div>
-    </div>
+    </div>    
   )
 }
