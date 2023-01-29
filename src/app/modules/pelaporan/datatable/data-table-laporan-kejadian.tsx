@@ -1,12 +1,14 @@
 import axios from 'axios'
-import {FC, Fragment, useEffect, useState} from 'react'
+import {FC, Fragment, useEffect, useMemo, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {useNavigate} from 'react-router-dom'
+import {KTSVG} from '../../../../_metronic/helpers'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
@@ -24,13 +26,27 @@ const LoadingAnimation = (props: any) => {
   )
 }
 
+const Export = ({onExport}: {onExport: () => void}) => (
+  <button
+    type='button'
+    className='btn btn-light-primary'
+    data-kt-menu-trigger='click'
+    data-kt-menu-placement='bottom-end'
+    onClick={() => onExport()}
+  >
+    <>
+      <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+      Unduh CSV
+    </>
+    {/* )} */}
+  </button>
+)
+
 const GetJenisKejadian = ({row}: {row: number}) => {
   const [valData, setValData] = useState('')
   useEffect(() => {
     async function fetchDT(id: number) {
-      const {data} = await axios.get(
-        `${MASTERDATA_URL}/jenis-kejadian/?%24filter=id%20eq%20${id}`
-      )
+      const {data} = await axios.get(`${MASTERDATA_URL}/jenis-kejadian/?%24filter=id%20eq%20${id}`)
       const result: string = data.data[0].nama
       setValData(result)
       // console.log(data)
@@ -49,6 +65,7 @@ export const DtKabid: FC<any> = ({
   loading,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const GetHakAkses = ({row}: {row: number}) => {
     const handleHakAkses = hakAkses.find((i: any) => i.id === row)
@@ -66,8 +83,12 @@ export const DtKabid: FC<any> = ({
   const columns1 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
@@ -130,6 +151,7 @@ export const DtKabid: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -144,6 +166,7 @@ export const DtAdmin: FC<any> = ({
   hakAkses,
   wilayahBidang,
   konfirDel,
+  theme,
 }) => {
   const navigate = useNavigate()
 
@@ -162,11 +185,59 @@ export const DtAdmin: FC<any> = ({
   }
   // console.log(GetHakAkses, GetBidang)
 
+  const convertArrayOfObjectsToCSV = (array: any) => {
+    let result: any
+
+    const columnDelimiter = '|'
+    const lineDelimiter = '\n'
+    const keys = Object.keys(data[0])
+
+    result = ''
+    result += keys.join(columnDelimiter)
+    result += lineDelimiter
+
+    array.forEach((item: any) => {
+      let ctr = 0
+      keys.forEach((key) => {
+        if (ctr > 0) result += columnDelimiter
+
+        result += item[key]
+        // eslint-disable-next-line no-plusplus
+        ctr++
+      })
+      result += lineDelimiter
+    })
+
+    return result
+  }
+
+  const downloadCSV = (array: any) => {
+    const link = document.createElement('a')
+    let csv = convertArrayOfObjectsToCSV(array)
+    if (csv == null) return
+
+    const filename = 'export.csv'
+
+    if (!csv.match(/^data:text\/csv/i)) {
+      csv = `data:text/csv;charset=utf-8,${csv}`
+    }
+
+    link.setAttribute('href', encodeURI(csv))
+    link.setAttribute('download', filename)
+    link.click()
+  }
+
+  const actionsMemo = useMemo(() => <Export onExport={() => downloadCSV(data)} />, [])
+
   const columns2 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
@@ -275,6 +346,7 @@ export const DtAdmin: FC<any> = ({
   return (
     <div>
       <DataTable
+        actions={actionsMemo}
         columns={columns2}
         data={data}
         progressPending={loading}
@@ -284,32 +356,33 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
 }
 
-export const DtPimpinan: FC<any> = ({aksi, jumlah, pelaporanUrl}) => {
-  const [kota, setKota] = useState([])
+export const DtPimpinan: FC<any> = ({aksi, jumlah, theme, kota, pelaporanUrl}) => {
+  // const [kota, setKota] = useState([])
 
-  const kotaList = async () => {
-    const responseKota = await axios.get(`${MASTERDATA_URL}/kota/`)
-    // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
-    // console.log(responseKota)
-    const dataKota = responseKota.data.data.map((d: any) => ({
-      id: d.id,
-      no: d.id,
-      bidang_wilayah: d.nama,
-    }))
+  // const kotaList = async () => {
+  //   const responseKota = await axios.get(`${MASTERDATA_URL}/kota/`)
+  //   // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
+  //   console.log(responseKota)
+  //   const dataKota = responseKota.data.data.map((d: any) => ({
+  //     id: d.id,
+  //     no: d.id,
+  //     bidang_wilayah: d.nama,
+  //   }))
 
-    setKota(dataKota)
-    // console.log(response.data.data)
-  }
+  //   setKota(dataKota)
+  //   // console.log(response.data.data)
+  // }
 
-  useEffect(() => {
-    kotaList()
-    // console.log(kotaList)
-  }, [])
+  // useEffect(() => {
+  //   kotaList()
+  //   console.log(kotaList)
+  // }, [])
 
   // const GetKota = ({row}: {row: number}) => {
   //   const handleKota = valKota.data.data.find((i: any) => i.id === row)
@@ -376,8 +449,12 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, pelaporanUrl}) => {
   const columns3 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Kota',
@@ -476,61 +553,9 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, pelaporanUrl}) => {
     },
   ]
 
-  // const data = [
-  //   {
-  //     id: 1,
-  //     no: '1',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Pusat',
-  //     jumlah_kejadian: '',
-  //     banjir: '12',
-  //     hewan_buas: '1',
-  //     kebakaran: '1',
-  //   },
-  //   {
-  //     id: 2,
-  //     no: '2',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Utara',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 3,
-  //     no: '3',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Barat',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 4,
-  //     no: '4',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Selatan',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 5,
-  //     no: '5',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Timur',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 6,
-  //     no: '6',
-  //     bidang_wilayah: 'Kabupaten Administrasi Kepulauan Seribu',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  // ]
-
   return (
     <div>
-      <DataTable columns={columns3} data={kota} pagination />
+      <DataTable columns={columns3} data={kota} pagination theme={theme} />
     </div>
   )
 }
