@@ -24,6 +24,7 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 import Swal from 'sweetalert2'
+import ReactToPrint from 'react-to-print'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -32,6 +33,7 @@ export const MASTER_URL = `${API_URL}/master`
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 
 export const ListKejadianPage: FC = () => {
+  let componentRef: any
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKejadian[0])
@@ -44,7 +46,7 @@ export const ListKejadianPage: FC = () => {
   const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
 
   const filterPelaporanKejadian = async (values: PelaporanKejadianState, actions: FormikValues) => {
-    const res = await axios.get(`http://localhost:3002/Kejadian-umum`)
+    const res = await axios.get(`${PELAPORAN_URL}/Kejadian-umum`)
     const data = res.data.data
     // .filter((v: any) => !excludeJenisKejadian.includes(v.label))
     setCurrentSchema(data)
@@ -52,7 +54,7 @@ export const ListKejadianPage: FC = () => {
   }
 
   const updateList = () => {
-    axios.get(`http://localhost:3001/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
+    axios.get(`${MASTERDATA_URL}/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
       const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
       // .filter((v: any) => !excludeJenisKendali.includes(v.label))
       setJenisKejadianList(data)
@@ -73,8 +75,8 @@ export const ListKejadianPage: FC = () => {
   let value: any = localStorage.getItem('kt-auth-react-v')
   let authValue = JSON.parse(value)
   let idHakAkses = authValue.data.hak_akses
-  console.log('id hak akses', idHakAkses)
-  console.log('aksi', aksi)
+  // console.log('id hak akses', idHakAkses)
+  // console.log('aksi', aksi)
 
   const findHakAksesData = async () => {
     const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
@@ -144,7 +146,7 @@ export const ListKejadianPage: FC = () => {
 
   const [valJenisKejadian, setValJenisKejadian] = useState({value: '', label: ''})
   const filterJenisKejadian = async (inputValue: string) => {
-    const response = await axios.get(`http://localhost:3001/jenis-kejadian/combobox`)
+    const response = await axios.get(`${MASTERDATA_URL}/jenis-kejadian/combobox`)
     const json = await response.data.data
     return json.map((i: any) => ({label: i.text, value: i.value}))
   }
@@ -248,7 +250,7 @@ export const ListKejadianPage: FC = () => {
   const dataKejadian = (page: number) => {
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -275,7 +277,7 @@ export const ListKejadianPage: FC = () => {
   const dataKejadianJumlah = (page: number) => {
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -303,7 +305,7 @@ export const ListKejadianPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${perPage}&%24page=${page}&%24orderby=created_at%20asc`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -349,7 +351,7 @@ export const ListKejadianPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -381,7 +383,7 @@ export const ListKejadianPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+        `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${kotaId}%20and%20kejadian__jenis_kejadian_id%20eq%20${jenisKejadianId}${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -440,7 +442,7 @@ export const ListKejadianPage: FC = () => {
             deleted_by: 'string',
           },
         }
-        const response = await axios.delete(`http://localhost:3002/kejadian-umum/${id}`, bodyParam)
+        const response = await axios.delete(`${PELAPORAN_URL}/kejadian-umum/${id}`, bodyParam)
         if (response) {
           dataKejadian(0)
           Swal.fire({
@@ -529,9 +531,9 @@ export const ListKejadianPage: FC = () => {
                         className='fs-6 collapse show ps-10'
                         data-bs-parent='#kt_accordion_2'
                       >
-                        {/* <Button onClick={vKabid}>Kabid</Button>
+                        <Button onClick={vKabid}>Kabid</Button>
                         <Button onClick={vAdmin}>Admin</Button>
-                        <Button onClick={vPimpinan}>Pimpinan</Button> */}
+                        <Button onClick={vPimpinan}>Pimpinan</Button>
                         {aksi === 0 ? (
                           // VIEW KABID
 
@@ -880,24 +882,104 @@ export const ListKejadianPage: FC = () => {
                           // VIEW PIMPINAN
                           <div className='row w-100 mt-10 mb-10'>
                             {pimpinanView === 0 ? (
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col pt-2'>
-                                    <label className='form-label align-middle'>
-                                      Bidang/Wilayah
-                                    </label>
-                                  </div>
-                                  <div className='col'>
-                                    <AsyncSelect
-                                      name='filter_jenis_kejadian_id_selection'
-                                      defaultOptions
-                                      value={valJenisKejadian}
-                                      loadOptions={loadOptionsJenisKejadian}
-                                      onChange={handleChangeInputJenisKejadian}
-                                    />
+                              <>
+                                <div className='col-md-6 col-lg-6 col-sm-12'>
+                                  <div className='mb-10'>
+                                    <div className='row'>
+                                      <div className='col pt-2'>
+                                        <label className='form-label align-middle'>
+                                          Bidang/Wilayah
+                                        </label>
+                                      </div>
+                                      <div className='col'>
+                                        <AsyncSelect
+                                          name='filter_jenis_kejadian_id_selection'
+                                          defaultOptions
+                                          value={valJenisKejadian}
+                                          loadOptions={loadOptionsJenisKejadian}
+                                          onChange={handleChangeInputJenisKejadian}
+                                        />
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
+                                <div className='row g-8 mt-2'>
+                                  <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                    <Button
+                                      className='btn btn-light-primary me-2'
+                                      onClick={
+                                        kotaId !== 0 && jenisKejadianId !== 0
+                                          ? handleFilterDetail
+                                          : handleFilterDetailJumlah
+                                      }
+                                    >
+                                      <KTSVG
+                                        path='/media/icons/duotune/general/gen021.svg'
+                                        className='svg-icon-2'
+                                      />
+                                      Cari
+                                    </Button>
+                                    <Button
+                                      className='btn btn-light-primary me-2'
+                                      onClick={
+                                        kotaId !== 0 && jenisKejadianId !== 0
+                                          ? handleFilterResetDetail
+                                          : handleFilterResetDetailJumlah
+                                      }
+                                    >
+                                      <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                      Reset
+                                    </Button>
+                                  </div>
+                                  <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                    {/* begin::Filter Button */}
+                                    <ReactToPrint
+                                      trigger={() => (
+                                        <button
+                                          type='button'
+                                          className='btn btn-light-primary'
+                                          data-kt-menu-trigger='click'
+                                          data-kt-menu-placement='bottom-end'
+                                        >
+                                          <>
+                                            <KTSVG
+                                              path='/media/icons/duotune/arrows/arr078.svg'
+                                              className='svg-icon-2'
+                                            />
+                                            Unduh PDF
+                                          </>
+                                          {/* )} */}
+                                        </button>
+                                      )}
+                                      pageStyle='
+                                      @page {
+                                        size: auto;
+                                        margin: 20mm;
+                                      }
+                                      @media print {
+                                        html,
+                                        body {
+                                          height: 100%; /* Use 100% here to support printing more than a single page*/
+                                          margin: 0 !important;
+                                          padding: 0 !important;
+                                          overflow: hidden;
+                                        }
+                                      }
+                                      @media all {
+                                        .pagebreak {
+                                          display: inline;
+                                        }
+                                      }'
+                                      content={() => componentRef}
+                                    />
+
+                                    {/* end::Filter Button */}
+                                    {/* begin::SubMenu */}
+
+                                    {/* end::SubMenu */}
+                                  </div>
+                                </div>
+                              </>
                             ) : (
                               <>
                                 {kotaId !== 0 && jenisKejadianId !== 0 ? (
@@ -1091,7 +1173,7 @@ export const ListKejadianPage: FC = () => {
                     />
                   ) : (
                     // Pimpinan
-                    <>
+                    <div ref={(el) => (componentRef = el)}>
                       <div className='row'>
                         <div className='col fs-4 mb-2 fw-semibold text-center'>
                           LAPORAN HASIL KEJADIAN
@@ -1108,7 +1190,11 @@ export const ListKejadianPage: FC = () => {
                         </div>
                       </div>
                       {pimpinanView === 0 ? (
-                        <DtPimpinan aksi={viewPimpinanDetail} jumlah={viewPimpinanDetailJumlah} />
+                        <DtPimpinan
+                          aksi={viewPimpinanDetail}
+                          jumlah={viewPimpinanDetailJumlah}
+                          pelaporanUrl={PELAPORAN_URL}
+                        />
                       ) : (
                         <>
                           <DtKabid
@@ -1141,7 +1227,7 @@ export const ListKejadianPage: FC = () => {
                           </div>
                         </div>
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>
