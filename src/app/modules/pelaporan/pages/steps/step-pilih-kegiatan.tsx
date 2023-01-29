@@ -4,13 +4,16 @@ import {KTSVG} from "../../../../../_metronic/helpers";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import axios from "axios";
 
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
 export const StepPilihKegiatan: FC = () => {
 
     const {
         data: jenisKegiatanList,
         error,
         isLoading
-    } = useQuery(['jeniskegiatan'], async () => await axios.get('http://localhost:3001/jenis-kegiatan/combobox'))
+    } = useQuery(['jeniskegiatan'], async () => await axios.get('${MASTERDATA_URL}/jenis-kegiatan/combobox'))
 
     const excludeJenisKegiatan = ["SIDANG TIPIRING", "PENERTIBAN BANGUNAN", "KEGIATAN PPKM","LAPORAN MASYARAKAT","PENERTIBAN MINUMAN BERALKOHOL","PENGAMANAN"]
 

@@ -24,6 +24,130 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 import Swal from 'sweetalert2'
+import {createTheme} from 'react-data-table-component'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials'
+
+// Dark Theme
+// createTheme creates a new theme named solarized that overrides the build in dark theme
+createTheme(
+  'darkMetro',
+  {
+    text: {
+      primary: '#92929f',
+      secondary: '#92929f',
+    },
+    background: {
+      default: '#1e1e2e',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#2b2c41',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  },
+  'dark'
+)
+const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
+
+const reactSelectLightThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#5e6278',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#cccccc',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#cccccc',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+    boxShadow: '0 0 0 1px #f5f8fa',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#f5f8fa',
+    color: '#5e6278',
+    borderColor: 'hsl(204deg 33% 97%)',
+  }),
+}
+
+const reactSelectDarkThem = {
+  input: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  container: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+  indicatorsContainer: (base: object) => ({
+    ...base,
+    color: '#92929f',
+  }),
+  indicatorSeparator: (base: object) => ({
+    ...base,
+    backgroundColor: '#92929f',
+  }),
+  control: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+    boxShadow: '0 0 0 1px #1b1b29',
+  }),
+  singleValue: (base: object) => ({
+    ...base,
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+  }),
+  option: (base: object) => ({
+    ...base,
+    height: '100%',
+    backgroundColor: '#1b1b29',
+    color: '#92929f',
+    borderColor: 'hsl(240deg 13% 13%)',
+  }),
+}
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -33,6 +157,8 @@ export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 
 export const ListKegiatanPage: FC = () => {
   const navigate = useNavigate()
+  const {mode} = useThemeMode()
+  const calculatedMode = mode === 'system' ? systemMode : mode
   const dispatch = useDispatch()
   const [qParamFind, setUriFind] = useState({strparam: ''})
   // const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
@@ -40,7 +166,7 @@ export const ListKegiatanPage: FC = () => {
   // const [jenisKegiatan, setJenisKegiatan] = useState([])
 
   // const updateJenisKegiatanList = () => {
-  //   axios.get(`http://localhost:3001/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
+  //   axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox?$orderby=nama`).then((res) => {
   //     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
   //     // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
   //     setJenisKegiatanList(data)
@@ -58,7 +184,7 @@ export const ListKegiatanPage: FC = () => {
   // const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
 
   // const filterPelaporanKegiatan = async (values: PelaporanKegiatanState, actions: FormikValues) => {
-  //   const res = await axios.get(`http://localhost:3002/kegiatan-umum`)
+  //   const res = await axios.get(`${PELAPORAN_URL}/kegiatan-umum`)
   //   const data = res.data.data
   //   // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
   //   setCurrentSchema(data)
@@ -70,8 +196,8 @@ export const ListKegiatanPage: FC = () => {
   let value: any = localStorage.getItem('kt-auth-react-v')
   let authValue = JSON.parse(value)
   let idHakAkses = authValue.data.hak_akses
-  console.log('id hak akses', idHakAkses)
-  console.log('aksi', aksi)
+  // console.log('id hak akses', idHakAkses)
+  // console.log('aksi', aksi)
 
   const findHakAksesData = async () => {
     const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
@@ -94,15 +220,15 @@ export const ListKegiatanPage: FC = () => {
     }
   }, [hakAksesData])
 
-  const vKabid = () => {
-    setAksi(0)
-  }
-  const vAdmin = () => {
-    setAksi(1)
-  }
-  const vPimpinan = () => {
-    setAksi(2)
-  }
+  // const vKabid = () => {
+  //   setAksi(0)
+  // }
+  // const vAdmin = () => {
+  //   setAksi(1)
+  // }
+  // const vPimpinan = () => {
+  //   setAksi(2)
+  // }
 
   const [inputValKota, setDataKota] = useState([])
   const [inputValKec, setDataKec] = useState([])
@@ -177,7 +303,7 @@ export const ListKegiatanPage: FC = () => {
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
   const filterJenisKegiatan = async (inputValue: string) => {
-    const response = await axios.get(`http://localhost:3001/jenis-kegiatan/combobox`)
+    const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
     return json.map((i: any) => ({label: i.text, value: i.value}))
@@ -243,7 +369,7 @@ export const ListKegiatanPage: FC = () => {
   const dataKegiatan = (page: number) => {
     axios
       .get(
-        `http://localhost:3002/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -258,6 +384,9 @@ export const ListKegiatanPage: FC = () => {
           // wilayah: d.kegiatan__wilayah,
           lokasi: d.kegiatan__lokasi,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
         setData(data)
         setTotalRows(res.data.total_items)
@@ -281,7 +410,7 @@ export const ListKegiatanPage: FC = () => {
     setLoading(true)
     axios
       .get(
-        `http://localhost:3002/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
       )
       .then((res) => {
         const data = res.data.data.map((d: any) => ({
@@ -296,6 +425,9 @@ export const ListKegiatanPage: FC = () => {
           wilayah: d.created_by,
           lokasi: d.kegiatan__lokasi,
         }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
         // .filter((v: any) => !excludeJenisKegiatan.includes(v.label))
         setData(data)
         setPerPage(newPerPage)
@@ -336,7 +468,7 @@ export const ListKegiatanPage: FC = () => {
             deleted_by: 'string',
           },
         }
-        const response = await axios.delete(`http://127.0.0.1:3002/kegiatan-umum/${id}`, bodyParam)
+        const response = await axios.delete(`${PELAPORAN_URL}/kegiatan-umum/${id}`, bodyParam)
         if (response) {
           dataKegiatan(0)
           Swal.fire({
@@ -358,6 +490,45 @@ export const ListKegiatanPage: FC = () => {
       }
     })
   }
+
+  const [kota, setKota] = useState([])
+
+  const kotaList = async () => {
+    const responseKota = await axios.get(`http://127.0.0.1:3000/master/bidang-wilayah/find`)
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      pelaksana: d.nama,
+    }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+
+    setKota(dataKota)
+    // console.log(response.data.data)
+  }
+
+  const kotaFilterList = async (id: number) => {
+    const responseKota = await axios.get(
+      `http://127.0.0.1:3000/master/bidang-wilayah/findone/${id}`
+    )
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      pelaksana: d.nama,
+    }))
+
+    setKota(dataKota)
+    // console.log(response.data.data)
+  }
+
+  useEffect(() => {
+    kotaFilterList(0)
+  }, [])
+
+  useEffect(() => {
+    kotaList()
+  }, [])
 
   return (
     <div className='app-main flex-column flex-row-fluid' id='kt_app_main'>
@@ -426,8 +597,8 @@ export const ListKegiatanPage: FC = () => {
                         data-bs-parent='#kt_accordion_2'
                       >
                         {/* <Button onClick={vKabid}>Kabid</Button>
-                      <Button onClick={vAdmin}>Admin</Button>
-                      <Button onClick={vPimpinan}>Pimpinan</Button> */}
+                        <Button onClick={vAdmin}>Admin</Button>
+                        <Button onClick={vPimpinan}>Pimpinan</Button> */}
                         {aksi === 0 ? (
                           <div className='row w-100 mt-10 mb-10'>
                             {/* START :: Filter Form */}
@@ -457,6 +628,11 @@ export const ListKegiatanPage: FC = () => {
                                       value={valJenisKegiatan}
                                       loadOptions={loadOptionsJenisKegiatan}
                                       onChange={handleChangeInputJenisKegiatan}
+                                      styles={
+                                        calculatedMode === 'dark'
+                                          ? reactSelectDarkThem
+                                          : reactSelectLightThem
+                                      }
                                     />
                                     {/* <Field
                                     name='filter_jenis_kegiatan_id_selection'
@@ -606,7 +782,7 @@ export const ListKegiatanPage: FC = () => {
                           //Admin
                           <div className='row w-100 mt-10 mb-10'>
                             {/* START :: Filter Form */}
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
+                            {/* <div className='col-md-6 col-lg-6 col-sm-12'>
                               <div className='mb-10'>
                                 <div className='row'>
                                   <div className='col-4 pt-2'>
@@ -623,7 +799,7 @@ export const ListKegiatanPage: FC = () => {
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </div> */}
                             <div className='col-md-6 col-lg-6 col-sm-12'>
                               <div className='mb-10'>
                                 <div className='row'>
@@ -639,6 +815,11 @@ export const ListKegiatanPage: FC = () => {
                                       value={valJenisKegiatan}
                                       loadOptions={loadOptionsJenisKegiatan}
                                       onChange={handleChangeInputJenisKegiatan}
+                                      styles={
+                                        calculatedMode === 'dark'
+                                          ? reactSelectDarkThem
+                                          : reactSelectLightThem
+                                      }
                                     />
                                   </div>
                                 </div>
@@ -802,6 +983,11 @@ export const ListKegiatanPage: FC = () => {
                                       value={valJenisKegiatan}
                                       loadOptions={loadOptionsJenisKegiatan}
                                       onChange={handleChangeInputJenisKegiatan}
+                                      styles={
+                                        calculatedMode === 'dark'
+                                          ? reactSelectDarkThem
+                                          : reactSelectLightThem
+                                      }
                                     />
                                     {/* <Field
                                         name='filter_jenis_Kejadian_id_selection'
@@ -819,48 +1005,7 @@ export const ListKegiatanPage: FC = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Tanggal Awal</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <input
-                                      type='date'
-                                      name='tanggal_kunjungan'
-                                      className='form-control'
-                                      value={tanggalAwal.val}
-                                      onChange={handleChangeInputTanggalAwal}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAwal(o.target.value)
-                                      // }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label align-middle'>Tanggal Akhir</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <input
-                                      name='tanggal_kunjungan'
-                                      type='date'
-                                      className='form-control'
-                                      value={tanggalAkhir.val}
-                                      onChange={handleChangeInputTanggalAkhir}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAkhir(o.target.value)
-                                      // }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+
                             {/* Search */}
                             <div className='row g-8 mt-2'>
                               <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
@@ -965,6 +1110,7 @@ export const ListKegiatanPage: FC = () => {
                       jenisKegiatanList={jenisKegiatanList}
                       hakAkses={hakAkses}
                       wilayahBidang={wilayahBidang}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                     />
                   ) : // Admin
                   aksi === 1 ? (
@@ -978,6 +1124,7 @@ export const ListKegiatanPage: FC = () => {
                       hakAkses={hakAkses}
                       wilayahBidang={wilayahBidang}
                       konfirDel={konfirDel}
+                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                     />
                   ) : (
                     // Pimpinan
@@ -998,7 +1145,10 @@ export const ListKegiatanPage: FC = () => {
                         </div>
                       </div>
 
-                      <DtPimpinan />
+                      <DtPimpinan
+                        data={kota}
+                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                      />
 
                       <div className='row'>
                         <div className='col-8'></div>

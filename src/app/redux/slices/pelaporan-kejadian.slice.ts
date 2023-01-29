@@ -346,7 +346,8 @@ export const pelaporanKejadianSlice = createSlice({
 export const isBanjir = (formikValues: any) =>
   formikValues.kejadian__jenis_kejadian_selection?.label === 'BANJIR'
 export const isPendampinganKekerasanPadaPerempuan = (formikValues: any) =>
-  formikValues.kejadian__jenis_kejadian_selection?.label === 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN'
+  formikValues.kejadian__jenis_kejadian_selection?.label ===
+  'PENDAMPINGAN KEKERASAN PADA PEREMPUAN DAN ANAK'
 export const isUnjukRasa = (formikValues: any) =>
   formikValues.kejadian__jenis_kejadian_selection?.label === 'UNJUK RASA'
 

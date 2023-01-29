@@ -25,18 +25,24 @@ export const DtAdmin: FC<any> = ({
   handlePageChange,
   loading,
   konfirDel,
+  theme,
 }) => {
   const navigate = useNavigate()
 
   const columns2 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Tanggal Kunjungan',
       width: '140px',
+      sortable: true,
       selector: (row: any) => row.tanggal_kunjungan,
     },
     {
@@ -57,8 +63,9 @@ export const DtAdmin: FC<any> = ({
     },
     {
       name: 'Jumlah Pengunjung',
-      width: '140px',
+      width: '160px',
       wrap: true,
+      sortable: true,
       // selector: (row: any) => row.jml_pengunjung,
       selector: (row: any) => row.jumlah,
     },
@@ -134,6 +141,7 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -145,12 +153,17 @@ export const DtPimpinan: FC<any> = ({
   handlePerRowsChange,
   handlePageChange,
   loading,
+  theme,
 }) => {
   const columns = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Tanggal Kunjungan',
@@ -211,6 +224,7 @@ export const DtPimpinan: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )

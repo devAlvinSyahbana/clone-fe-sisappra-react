@@ -7,6 +7,10 @@ import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import {useNavigate} from 'react-router-dom'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
 const LoadingAnimation = (props: any) => {
   return (
     <>
@@ -25,9 +29,7 @@ const GetJenisKejadian = ({row}: {row: number}) => {
   const [valData, setValData] = useState('')
   useEffect(() => {
     async function fetchDT(id: number) {
-      const {data} = await axios.get(
-        `http://127.0.0.1:3001/jenis-kejadian/?%24filter=id%20eq%20${id}`
-      )
+      const {data} = await axios.get(`${MASTERDATA_URL}/jenis-kejadian/?%24filter=id%20eq%20${id}`)
       const result: string = data.data[0].nama
       setValData(result)
       // console.log(data)
@@ -46,6 +48,7 @@ export const DtKabid: FC<any> = ({
   loading,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const GetHakAkses = ({row}: {row: number}) => {
     const handleHakAkses = hakAkses.find((i: any) => i.id === row)
@@ -63,8 +66,12 @@ export const DtKabid: FC<any> = ({
   const columns1 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
@@ -127,6 +134,7 @@ export const DtKabid: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -141,6 +149,7 @@ export const DtAdmin: FC<any> = ({
   hakAkses,
   wilayahBidang,
   konfirDel,
+  theme,
 }) => {
   const navigate = useNavigate()
 
@@ -162,8 +171,12 @@ export const DtAdmin: FC<any> = ({
   const columns2 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
@@ -281,32 +294,33 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
 }
 
-export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
-  const [kota, setKota] = useState([])
+export const DtPimpinan: FC<any> = ({aksi, jumlah, theme, kota, pelaporanUrl}) => {
+  // const [kota, setKota] = useState([])
 
-  const kotaList = async () => {
-    const responseKota = await axios.get(`http://localhost:3001/kota/`)
-    // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
-    console.log(responseKota)
-    const dataKota = responseKota.data.data.map((d: any) => ({
-      id: d.id,
-      no: d.id,
-      bidang_wilayah: d.nama,
-    }))
+  // const kotaList = async () => {
+  //   const responseKota = await axios.get(`${MASTERDATA_URL}/kota/`)
+  //   // const handleHakAkses = responsesKota.data.data.find((i: any) => i.id === row)
+  //   console.log(responseKota)
+  //   const dataKota = responseKota.data.data.map((d: any) => ({
+  //     id: d.id,
+  //     no: d.id,
+  //     bidang_wilayah: d.nama,
+  //   }))
 
-    setKota(dataKota)
-    // console.log(response.data.data)
-  }
+  //   setKota(dataKota)
+  //   // console.log(response.data.data)
+  // }
 
-  useEffect(() => {
-    kotaList()
-    console.log(kotaList)
-  }, [])
+  // useEffect(() => {
+  //   kotaList()
+  //   console.log(kotaList)
+  // }, [])
 
   // const GetKota = ({row}: {row: number}) => {
   //   const handleKota = valKota.data.data.find((i: any) => i.id === row)
@@ -319,7 +333,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
     useEffect(() => {
       async function fetchDT(id: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}`
+          `${PELAPORAN_URL}/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}`
         )
         const result = data.total_items
         // console.log(result)
@@ -336,24 +350,36 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
     )
   }
 
+  // console.log(totalRows)
+
+  const [totalKejadian, setTotalKejadian] = useState([])
+  useEffect(() => {
+    const fetchDTPimpinan = async () => {
+      const {data} = await axios.get(
+        `${pelaporanUrl}/kejadian-umum/?%24top=1&%24select=id%2C%20kejadian__kota_id%2C%20kejadian__jenis_kejadian_id`
+      )
+      const res = await axios.get(
+        `${pelaporanUrl}/kejadian-umum/?%24top=${data.total_items}&%24select=id%2C%20kejadian__kota_id%2C%20kejadian__jenis_kejadian_id`
+      )
+      setTotalKejadian(res.data.data)
+    }
+    fetchDTPimpinan()
+  }, [])
+  // console.log(totalKejadian)
+
   const GetPerJenis = ({row, jenis}: any) => {
-    const [valData, setValData] = useState(0)
-    useEffect(() => {
-      async function fetchDT(id: number, jk: number) {
-        const {data} = await axios.get(
-          `http://127.0.0.1:3002/kejadian-umum/?%24filter=kejadian__kota_id%20eq%20${id}%20and%20kejadian__jenis_kejadian_id%20eq%20${jk}`
-        )
-        const result = data.total_items
-        // console.log(result)
-        setValData(result)
-      }
-
-      fetchDT(row, jenis)
-    }, [])
-
+    let countJumlah = 0
+    if (row && !jenis) {
+      countJumlah = totalKejadian.filter((item: any) => item.kejadian__kota_id === row).length
+    }
+    if (row && jenis) {
+      countJumlah = totalKejadian.filter(
+        (item: any) => item.kejadian__kota_id === row && item.kejadian__jenis_kejadian_id === jenis
+      ).length
+    }
     return (
       <>
-        <a onClick={() => aksi(jenis, row)}>{valData}</a>
+        <a onClick={() => aksi(jenis, row)}>{countJumlah}</a>
       </>
     )
   }
@@ -361,8 +387,12 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
   const columns3 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Kota',
@@ -374,7 +404,7 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
     {
       name: 'Jumlah Kejadian',
       selector: (row: any) => row.no,
-      cell: (record: any) => <GetJumlah row={record.no} />,
+      cell: (record: any) => <GetPerJenis row={record.no} />,
     },
     {
       name: 'Banjir',
@@ -461,61 +491,9 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
     },
   ]
 
-  // const data = [
-  //   {
-  //     id: 1,
-  //     no: '1',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Pusat',
-  //     jumlah_kejadian: '',
-  //     banjir: '12',
-  //     hewan_buas: '1',
-  //     kebakaran: '1',
-  //   },
-  //   {
-  //     id: 2,
-  //     no: '2',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Utara',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 3,
-  //     no: '3',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Barat',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 4,
-  //     no: '4',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Selatan',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 5,
-  //     no: '5',
-  //     bidang_wilayah: 'Kota Administrasi Jakarta Timur',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  //   {
-  //     id: 6,
-  //     no: '6',
-  //     bidang_wilayah: 'Kabupaten Administrasi Kepulauan Seribu',
-  //     tanggal_kegiatan: '12',
-  //     waktu_kegiatan: '1',
-  //     uraian_kegiatan: '1',
-  //   },
-  // ]
-
   return (
     <div>
-      <DataTable columns={columns3} data={kota} pagination />
+      <DataTable columns={columns3} data={kota} pagination theme={theme} />
     </div>
   )
 }
