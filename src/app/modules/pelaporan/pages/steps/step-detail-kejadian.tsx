@@ -81,7 +81,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   // GET Kota
   const [valKota, setValKota] = useState({value: null, label: ''})
   const filterKota = async (inputValue: string) => {
-    const response = await axios.get(API_URL + '/kota/' + inputValue)
+    const response = await axios.get(API_URL + `/kota/` + inputValue)
     const json = await response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
@@ -152,12 +152,6 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   const handleChangeInputKelurahan = (newValue: any) => {
     setValKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
   }
-
-  // const handleFilterReset = () => {
-  //   setValMasterKota({label: '', value:null})
-  //   setValMasterKecamatan({label: '', value:null})
-  //   setValMasterKelurahan({label: '', value:null})
-  // }
 
   return (
     <div className='w-50'>
@@ -291,6 +285,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             }
             onChange={handleChangeInputKecamatan}
             name='kejadian__kecamatan_id'
+            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
             />
             {/* <Field
               name='kecamatan_selection'
@@ -318,7 +313,8 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
               : {value: '', label: 'Pilih Kelurahan'}
             }
             onChange={handleChangeInputKelurahan}
-            name='id_kelurahan'
+            name='kejadian__kelurahan_id'
+            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
             />
             {/* <Field
               name='kelurahan_selection'
