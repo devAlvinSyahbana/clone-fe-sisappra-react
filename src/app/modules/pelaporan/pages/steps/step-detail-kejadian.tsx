@@ -70,15 +70,29 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         <h2 className='fw-bolder text-dark mb-10'>Kejadian</h2>
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kejadian</label>
-          <Field
-            name='kejadian__jenis_kejadian_selection'
-            target='kejadian__jenis_kejadian_id'
-            className='form-control'
-            disabled={values.id}
-            component={SelectField}
-            options={jenisKejadianList}
-            onChange={(o: ChangeEvent<any>) => {
-              if (jenisKejadianId !== 0) {
+          <div className='d-flex'>
+            <div className='w-100 me-2'>
+              <Field
+                name='kejadian__jenis_kejadian_selection'
+                target='kejadian__jenis_kejadian_id'
+                className='form-control'
+                disabled={values.id || jenisKejadianId !== 0}
+                component={SelectField}
+                options={jenisKejadianList}
+                onChange={(o: ChangeEvent<any>) => {
+                  dispatch(changedValue(ToFieldStateCE(o)))
+                }}
+              />
+            </div>
+            <button
+              className={`btn ${
+                values.id || jenisKejadianId === 0
+                  ? 'btn-secondary'
+                  : 'btn-outline-danger btn-outline'
+              }  btn-sm`}
+              type='reset'
+              disabled={values.id || jenisKejadianId === 0}
+              onClick={() => {
                 Swal.fire({
                   title: 'Apakah anda yakin?',
                   text: 'Anda akan mereset seluruh form yang telah anda isi di halaman ini!',
@@ -96,10 +110,12 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
                     Swal.fire('Silahkan mengisi kembali!')
                   }
                 })
-              }
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
+              }}
+            >
+              Reset
+            </button>
+          </div>
+
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__jenis_kejadian_id' />
             <ErrorMessage name='kejadian__jenis_kejadian_selection' />
