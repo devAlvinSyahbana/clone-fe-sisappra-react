@@ -39,12 +39,14 @@ interface StepDetailKejadianProps {
   listMasterKejadianValue: any
   allValues: any
   detailState: boolean
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
 }
 
 export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   handleChange,
   handleBlur,
   handleReset,
+  setFieldValue,
   values,
   detailState,
   listMasterKejadianValue,
@@ -54,10 +56,17 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   const jenisKejadianId = useSelector(
     (s: RootState) => s.pelaporanKejadian.kejadian__jenis_kejadian_id
   )
+  const allValues = useSelector((s: RootState) => s.pelaporanKejadian)
   const jenisKejadianSelect = values.kejadian__jenis_kejadian_selection?.label
+  const kota = values.kejadian__kota_id
+  const kecamatan = values.kejadian__kecamatan_id
   const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
   const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
   const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
+
+  console.log('kejadian', allValues)
+  console.log('kejadian val', values)
+
   useEffect(() => {
     dispatch(updateKotaList())
     dispatch(updateKecamatanList())
@@ -180,6 +189,24 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             options={kotaList}
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
+              setFieldValue('kecamatan_selection', [])
+              setFieldValue('kelurahan_selection', [])
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'kecamatan_selection',
+                    value: 0,
+                  },
+                })
+              )
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'kelurahan_selection',
+                    value: 0,
+                  },
+                })
+              )
             }}
           />
           <div className='text-danger mt-2'>
@@ -195,9 +222,23 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             className='form-control'
             component={SelectField}
             disabled={detailState}
-            options={kecamatanList}
+            options={
+              kota !== 0
+                ? kecamatanList.filter((obj: any) => obj.kodeKota === 'KOBA' + kota)
+                : kecamatanList
+            }
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
+              setFieldValue('kelurahan_selection', [])
+
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'kelurahan_selection',
+                    value: 0,
+                  },
+                })
+              )
             }}
           />
           <div className='text-danger mt-2'>
@@ -213,7 +254,11 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
             className='form-control'
             component={SelectField}
             disabled={detailState}
-            options={kelurahanList}
+            options={
+              kota !== 0
+                ? kelurahanList.filter((obj: any) => obj.kodeKecamatan === 'KEC' + kecamatan)
+                : kelurahanList
+            }
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}

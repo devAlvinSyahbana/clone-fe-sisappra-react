@@ -226,16 +226,28 @@ export const updateKotaList: any = createAsyncThunk(
 export const updateKecamatanList: any = createAsyncThunk(
   'pelaporanKejadian/updateKecamatanList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/kecamatan/combobox`)
-    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    const res = await axios.get(
+      `${API_URL}/kecamatan/?%24top=100&%24select=id%2C%20nama%2C%20kode%2C%20kode_kota`
+    )
+    const data = res.data.data.map((d: any) => ({
+      label: d.nama,
+      value: String(d.id),
+      kodeKota: d.kode_kota,
+    }))
     return data
   }
 )
 export const updateKelurahanList: any = createAsyncThunk(
   'pelaporanKejadian/updateKelurahanList',
   async () => {
-    const res = await axios.get(`${API_URL}/kelurahan/combobox`)
-    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    const res = await axios.get(
+      `${API_URL}/kelurahan/?%24top=300&%24select=id%2C%20nama%2C%20kode%2C%20kode_kecamatan`
+    )
+    const data = res.data.data.map((d: any) => ({
+      label: d.nama,
+      value: String(d.id),
+      kodeKecamatan: d.kode_kecamatan,
+    }))
     return data
   }
 )
