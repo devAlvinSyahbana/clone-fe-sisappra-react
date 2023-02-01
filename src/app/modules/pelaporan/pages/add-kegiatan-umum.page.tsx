@@ -196,6 +196,7 @@ export const AddKegiatanUmumPage: FC = () => {
           actions.resetForm(initialState)
           dispatch(reset())
           listMasterJenisValue()
+          navigate(-1)
         }
       }
     } catch (error) {

@@ -205,6 +205,7 @@ export const AddKejadianPage: FC = () => {
                           listMasterKejadianValue={listMasterKejadianValue}
                           allValues={allValues}
                           detailState={detailState}
+                          setFieldValue={setFieldValue}
                         />
                       </div>
                       <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>
