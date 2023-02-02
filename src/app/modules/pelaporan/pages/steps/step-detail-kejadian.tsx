@@ -43,6 +43,7 @@ interface StepDetailKejadianProps {
   listMasterKejadianValue: any
   allValues: any
   detailState: boolean
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
 }
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -50,6 +51,7 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   handleChange,
   handleBlur,
   handleReset,
+  setFieldValue,
   values,
   detailState,
   listMasterKejadianValue,
@@ -59,10 +61,17 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   const jenisKejadianId = useSelector(
     (s: RootState) => s.pelaporanKejadian.kejadian__jenis_kejadian_id
   )
+  const allValues = useSelector((s: RootState) => s.pelaporanKejadian)
   const jenisKejadianSelect = values.kejadian__jenis_kejadian_selection?.label
-  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
+  const kota = values.kejadian__kota_id
+  const kecamatan = values.kejadian__kecamatan_id
+  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
+  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
+
+  console.log('kejadian', allValues)
+  console.log('kejadian val', values)
+
   useEffect(() => {
     dispatch(updateKotaList())
     dispatch(updateKecamatanList())
@@ -159,15 +168,29 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         <h2 className='fw-bolder text-dark mb-10'>Kejadian</h2>
         <div className='mb-10'>
           <label className='required form-label'>Jenis Kejadian</label>
-          <Field
-            name='kejadian__jenis_kejadian_selection'
-            target='kejadian__jenis_kejadian_id'
-            className='form-control'
-            disabled={values.id}
-            component={SelectField}
-            options={jenisKejadianList}
-            onChange={(o: ChangeEvent<any>) => {
-              if (jenisKejadianId !== 0) {
+          <div className='d-flex'>
+            <div className='w-100 me-2'>
+              <Field
+                name='kejadian__jenis_kejadian_selection'
+                target='kejadian__jenis_kejadian_id'
+                className='form-control'
+                disabled={values.id || jenisKejadianId !== 0}
+                component={SelectField}
+                options={jenisKejadianList}
+                onChange={(o: ChangeEvent<any>) => {
+                  dispatch(changedValue(ToFieldStateCE(o)))
+                }}
+              />
+            </div>
+            <button
+              className={`btn ${
+                values.id || jenisKejadianId === 0
+                  ? 'btn-secondary'
+                  : 'btn-outline-danger btn-outline'
+              }  btn-sm`}
+              type='reset'
+              disabled={values.id || jenisKejadianId === 0}
+              onClick={() => {
                 Swal.fire({
                   title: 'Apakah anda yakin?',
                   text: 'Anda akan mereset seluruh form yang telah anda isi di halaman ini!',
@@ -185,10 +208,12 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
                     Swal.fire('Silahkan mengisi kembali!')
                   }
                 })
-              }
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
+              }}
+            >
+              Reset
+            </button>
+          </div>
+
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__jenis_kejadian_id' />
             <ErrorMessage name='kejadian__jenis_kejadian_selection' />
@@ -244,31 +269,35 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kota</label>
-          <AsyncSelect
-            value={
-              valKota.value
-              ? valKota
-              : {value: '', label: 'Pilih Kota'}
-            }
-            loadOptions={loadOptionsKota}
-            defaultOptions
-            onChange={handleChangeInputKota}
-            placeholder={'Pilih'}
-            loadingMessage={() => 'Sedang mencari pilihan...'}
-            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
-            />
-              {/* <Field
-              // name='kota_selection'
-              // target='kejadian__kota_id'
-              // className='form-control'
-              // disabled={detailState}
-              // component={SelectField}
-              // options={kotaList}
-              // onChange={(o: ChangeEvent<any>) => {
-              //   dispatch(changedValue(ToFieldStateCE(o)))
-              // }}
-              /> */}
-              
+          <Field
+            name='kota_selection'
+            target='kejadian__kota_id'
+            className='form-control'
+            disabled={detailState}
+            component={SelectField}
+            options={kotaList}
+            onChange={(o: ChangeEvent<any>) => {
+              dispatch(changedValue(ToFieldStateCE(o)))
+              setFieldValue('kecamatan_selection', [])
+              setFieldValue('kelurahan_selection', [])
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'kecamatan_selection',
+                    value: 0,
+                  },
+                })
+              )
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'kelurahan_selection',
+                    value: 0,
+                  },
+                })
+              )
+            }}
+          />
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__kota_id' />
             <ErrorMessage name='kota_selection' />
@@ -276,28 +305,31 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kecamatan</label>
-          <AsyncSelect
-            loadOptions={loadOptionsKecamatan}
-            value={
-              valKecamatan.value
-              ? valKecamatan
-              : {value: '', label: 'Pilih Kecamatan'}
+          <Field
+            name='kecamatan_selection'
+            target='kejadian__kecamatan_id'
+            className='form-control'
+            component={SelectField}
+            disabled={detailState}
+            options={
+              kota !== 0
+                ? kecamatanList.filter((obj: any) => obj.kodeKota === 'KOBA' + kota)
+                : kecamatanList
             }
-            onChange={handleChangeInputKecamatan}
-            name='kejadian__kecamatan_id'
-            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
-            />
-            {/* <Field
-              name='kecamatan_selection'
-              target='kejadian__kecamatan_id'
-              className='form-control'
-              component={SelectField}
-              disabled={detailState}
-              options={kecamatanList}
-              onChange={(o: ChangeEvent<any>) => {
-                dispatch(changedValue(ToFieldStateCE(o)))
-              }}
-            /> */}
+            onChange={(o: ChangeEvent<any>) => {
+              dispatch(changedValue(ToFieldStateCE(o)))
+              setFieldValue('kelurahan_selection', [])
+
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'kelurahan_selection',
+                    value: 0,
+                  },
+                })
+              )
+            }}
+          />
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__kecamatan_id' />
             <ErrorMessage name='kecamatan_selection' />
@@ -305,28 +337,21 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kelurahan</label>
-          <AsyncSelect
-            loadOptions={loadOptionsKelurahan}
-            value={
-              valKelurahan.value
-              ? valKelurahan
-              : {value: '', label: 'Pilih Kelurahan'}
+          <Field
+            name='kelurahan_selection'
+            target='kejadian__kelurahan_id'
+            className='form-control'
+            component={SelectField}
+            disabled={detailState}
+            options={
+              kota !== 0
+                ? kelurahanList.filter((obj: any) => obj.kodeKecamatan === 'KEC' + kecamatan)
+                : kelurahanList
             }
-            onChange={handleChangeInputKelurahan}
-            name='kejadian__kelurahan_id'
-            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
-            />
-            {/* <Field
-              name='kelurahan_selection'
-              target='kejadian__kelurahan_id'
-              className='form-control'
-              component={SelectField}
-              disabled={detailState}
-              options={kelurahanList}
-              onChange={(o: ChangeEvent<any>) => {
-                dispatch(changedValue(ToFieldStateCE(o)))
-              }}
-            /> */}
+            onChange={(o: ChangeEvent<any>) => {
+              dispatch(changedValue(ToFieldStateCE(o)))
+            }}
+          />
           <div className='text-danger mt-2'>
             <ErrorMessage name='kejadian__kelurahan_id' />
             <ErrorMessage name='kelurahan_selection' />

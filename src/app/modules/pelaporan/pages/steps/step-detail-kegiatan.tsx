@@ -83,16 +83,31 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
         <h1 className='fw-bolder text-dark mb-10'>Kegiatan</h1>
         <div className='form-group mb-10'>
           <label className='required form-label'>Jenis Kegiatan</label>
-          <Field
-            name='kegiatan__jenis_kegiatan_selection'
-            target='kegiatan__jenis_kegiatan_id'
-            className='form-control'
-            disabled={values.id}
-            component={SelectField}
-            options={jenisKegiatanList}
-            onChange={(o: ChangeEvent<any>) => {
-              const data = [o.target.value, allValues]
-              if (jenisKegiatanId !== 0) {
+          <div className='d-flex'>
+            <div className='w-100 me-2'>
+              <Field
+                name='kegiatan__jenis_kegiatan_selection'
+                target='kegiatan__jenis_kegiatan_id'
+                className='form-control'
+                disabled={values.id || jenisKegiatanId !== 0}
+                component={SelectField}
+                options={jenisKegiatanList}
+                onChange={(o: ChangeEvent<any>) => {
+                  const data = [o.target.value, allValues]
+                  dispatch(updateDetailJenisPasalKegiatanList(data))
+                  dispatch(changedValue(ToFieldStateCE(o)))
+                }}
+              />
+            </div>
+            <button
+              className={`btn ${
+                values.id || jenisKegiatanId === 0
+                  ? 'btn-secondary'
+                  : 'btn-outline-danger btn-outline'
+              }  btn-sm`}
+              type='reset'
+              disabled={values.id || jenisKegiatanId === 0}
+              onClick={() => {
                 Swal.fire({
                   title: 'Apakah anda yakin?',
                   text: 'Anda akan mereset seluruh form yang telah anda isi di halaman ini!',
@@ -110,11 +125,11 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
                     Swal.fire('Silahkan mengisi kembali!')
                   }
                 })
-              }
-              dispatch(updateDetailJenisPasalKegiatanList(data))
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
+              }}
+            >
+              Reset
+            </button>
+          </div>
           <div className='text-danger mt-2'>
             <ErrorMessage name='kegiatan__jenis_kegiatan_id' />
             <ErrorMessage name='kegiatan__jenis_kegiatan_selection' />

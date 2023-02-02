@@ -9,6 +9,10 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
 import {unparse} from 'papaparse'
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+
 const LoadingAnimation = (props: any) => {
   return (
     <>
@@ -45,6 +49,7 @@ export const DtKabid: FC<any> = ({
   jenisKegiatanList,
   hakAkses,
   wilayahBidang,
+  theme,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
@@ -68,8 +73,12 @@ export const DtKabid: FC<any> = ({
   const columns2 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
@@ -157,6 +166,7 @@ export const DtKabid: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
@@ -172,6 +182,7 @@ export const DtAdmin: FC<any> = ({
   hakAkses,
   wilayahBidang,
   konfirDel,
+  theme,
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
@@ -180,7 +191,7 @@ export const DtAdmin: FC<any> = ({
     // useEffect(() => {
     //   async function fetchDT(id: number) {
     //     const {data} = await axios.get(
-    //       `http://127.0.0.1:3001/jenis-kegiatan/?%24filter=id%20eq%20${id}`
+    //       `${MASTERDATA_URL}/jenis-kegiatan/?%24filter=id%20eq%20${id}`
     //     )
     //     const result: string = data.data[0].nama
     //     setValData(result)
@@ -208,8 +219,12 @@ export const DtAdmin: FC<any> = ({
   const columns2 = [
     {
       name: 'No',
-      width: '60px',
-      selector: (row: any) => row.no,
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Pelaksana',
@@ -324,36 +339,47 @@ export const DtAdmin: FC<any> = ({
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        theme={theme}
       />
     </div>
   )
 }
 
-export function DtPimpinan(props: any) {
-  const [kota, setKota] = useState([])
+export const DtPimpinan: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+  jenisKegiatanList,
+  hakAkses,
+  wilayahBidang,
+  theme,
+}) => {
+  // const [kota, setKota] = useState([])
 
-  const kotaList = async () => {
-    const responseKota = await axios.get(`http://127.0.0.1:3000/master/bidang-wilayah/find`)
-    const dataKota = responseKota.data.data.map((d: any) => ({
-      id: d.id,
-      no: d.id,
-      pelaksana: d.nama,
-    }))
+  // const kotaList = async () => {
+  //   const responseKota = await axios.get(`http://127.0.0.1:3000/master/bidang-wilayah/find`)
+  //   const dataKota = responseKota.data.data.map((d: any) => ({
+  //     id: d.id,
+  //     no: d.id,
+  //     pelaksana: d.nama,
+  //   }))
 
-    setKota(dataKota)
-    // console.log(response.data.data)
-  }
+  //   setKota(dataKota)
+  //   // console.log(response.data.data)
+  // }
 
-  useEffect(() => {
-    kotaList()
-  }, [])
+  // useEffect(() => {
+  //   kotaList()
+  // }, [])
 
   const GetPerJenis = ({row, jenis}: any) => {
     const [valData, setValData] = useState(0)
     useEffect(() => {
       async function fetchDT(id: number, jk: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__administrasi__penyelesaian_id%20eq%20${jk}`
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__administrasi__penyelesaian_id%20eq%20${jk}`
         )
         const result = data.total_items
         console.log(result)
@@ -361,7 +387,7 @@ export function DtPimpinan(props: any) {
       }
 
       fetchDT(row, jenis)
-    }, [valData, row])
+    }, [])
 
     return <>{valData}</>
   }
@@ -371,7 +397,7 @@ export function DtPimpinan(props: any) {
     useEffect(() => {
       async function fetchDT(id: number, jk: number) {
         const {data} = await axios.get(
-          `http://127.0.0.1:3002/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__jenis_penindakan_id%20eq%20${jk}`
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__jenis_penindakan_id%20eq%20${jk}`
         )
         const result = data.total_items
         console.log(result)
@@ -379,17 +405,47 @@ export function DtPimpinan(props: any) {
       }
 
       fetchDT(row, jenis)
-    }, [valData, row])
+    }, [])
 
     return <>{valData}</>
+  }
+
+  // useEffect(){
+
+  // }
+
+  const GetJumlah = ({row}: any) => {
+    const [valData, setValData] = useState(0)
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const {data} = await axios.get(
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27`
+        )
+        const result = data.total_items
+        // console.log(result)
+        setValData(result)
+      }
+
+      fetchDT(row)
+    }, [])
+
+    return (
+      <>
+        {valData}
+        {/* <a onClick={() => jumlah(row)}>{valData}</a> */}
+      </>
+    )
   }
 
   const columns3 = [
     {
       name: 'No',
       width: '80px',
-      selector: (row: any) => row.no,
+      selector: (row: any) => row.serial,
       sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
     {
       name: 'Bidang/Wilayah',
@@ -622,13 +678,13 @@ export function DtPimpinan(props: any) {
         data-kt-menu-placement='bottom-end'
         style={{float: 'right', marginRight: '50px'}}
         className='btn btn-light-primary'
-        onClick={() => unduhCSV(kota)}>
+        onClick={() => unduhCSV(data)}>
         <>
           <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
           Unduh CSV
         </>
       </button> 
-      <DataTable columns={columns3} data={kota} pagination />
+      <DataTable columns={columns3} data={data} pagination />
   </div>
   )
 }
