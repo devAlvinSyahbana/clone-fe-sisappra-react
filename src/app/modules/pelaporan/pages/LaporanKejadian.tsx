@@ -412,8 +412,8 @@ export function LaporanKejadian() {
                               className="fa-solid fa-trash"></i> Hapus</a>
                             <div className="my-1 me-0">
                               <select className="form-select form-select-sm form-select-solid w-180px"
-                                data-control="select2" data-placeholder="Select Hours" data-hide-search="true">
-                                <option disabled selected>Unduh</option>
+                                data-control="select2" data-placeholder="Select Hours" data-hide-search="false">
+                                <option selected>Unduh</option>
                                 <option value="2">Excel</option>
                                 <option value="3">Pdf</option>
                               </select>

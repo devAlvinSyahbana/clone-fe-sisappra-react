@@ -1,8 +1,10 @@
 import axios from 'axios'
-import {FC, Fragment, useEffect, useState} from 'react'
+import {FC, Fragment, useEffect, useMemo, useState} from 'react'
 import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useNavigate} from 'react-router-dom'
+import {unparse} from 'papaparse'
+import {KTSVG} from '../../../../_metronic/helpers'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -23,6 +25,21 @@ const LoadingAnimation = (props: any) => {
 }
 
 // export const jenisKegiatanList = async () => {}
+// const Export = ({onExport}: {onExport: () => void}) => (
+//   <button
+//     type='button'
+//     className='btn btn-light-primary'
+//     data-kt-menu-trigger='click'
+//     data-kt-menu-placement='bottom-end'
+//     onClick={() => onExport()}
+//   >
+//     <>
+//       <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+//       Unduh CSV
+//     </>
+//     {/* )} */}
+//   </button>
+// )\
 
 export const DtKabid: FC<any> = ({
   data,
@@ -53,6 +70,50 @@ export const DtKabid: FC<any> = ({
     // console.log(handleHakAkses?.wilayah_bidang, handleBidang?.nama)
     return <>{handleBidang?.nama}</>
   }
+
+  const convertArrayOfObjectsToCSV = (array: any) => {
+    let result: any
+
+    const columnDelimiter = '|'
+    const lineDelimiter = '\n'
+    const keys = Object.keys(data[0])
+
+    result = ''
+    result += keys.join(columnDelimiter)
+    result += lineDelimiter
+
+    array.forEach((item: any) => {
+      let ctr = 0
+      keys.forEach((key) => {
+        if (ctr > 0) result += columnDelimiter
+
+        result += item[key]
+        // eslint-disable-next-line no-plusplus
+        ctr++
+      })
+      result += lineDelimiter
+    })
+
+    return result
+  }
+
+  const downloadCSV = (array: any) => {
+    const link = document.createElement('a')
+    let csv = convertArrayOfObjectsToCSV(array)
+    if (csv == null) return
+
+    const filename = 'Laporan Kejadian.csv'
+
+    if (!csv.match(/^data:text\/csv/i)) {
+      csv = `data:text/csv;charset=utf-8,${csv}`
+    }
+
+    link.setAttribute('href', encodeURI(csv))
+    link.setAttribute('download', filename)
+    link.click()
+  }
+
+  // const actionsMemo = useMemo(() => <Export onExport={() => downloadCSV(data)} />, [])
 
   const columns2 = [
     {
@@ -142,6 +203,17 @@ export const DtKabid: FC<any> = ({
       />
     </div>
   )
+}
+
+const unduhCSV = (data: any[]) => {
+  const csvData = unparse(data)
+  const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.setAttribute('download', 'Laporan Kegiatan.csv')
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
 }
 
 export const DtAdmin: FC<any> = ({
@@ -290,6 +362,17 @@ export const DtAdmin: FC<any> = ({
   console.log(data)
   return (
     <div>
+      <button
+        data-kt-menu-trigger='click'
+        data-kt-menu-placement='bottom-end'
+        className='btn btn-light-primary'
+        onClick={() => unduhCSV(data)}
+        style={{float: 'right', marginRight: '50px'}}
+      >
+        <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+        Unduh CSV
+      </button>
+      
       <DataTable
         columns={columns2}
         data={data}

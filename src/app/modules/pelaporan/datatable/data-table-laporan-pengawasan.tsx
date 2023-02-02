@@ -5,6 +5,8 @@ import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
+import {unparse} from 'papaparse'
+import {KTSVG} from '../../../../_metronic/helpers'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -65,6 +67,48 @@ export const DtKabid: FC<any> = ({
 
     return <>{valData}</>
   }
+
+   const convertArrayOfObjectsToCSV = (array: any) => {
+     let result: any
+
+     const columnDelimiter = '|'
+     const lineDelimiter = '\n'
+     const keys = Object.keys(data[0])
+
+     result = ''
+     result += keys.join(columnDelimiter)
+     result += lineDelimiter
+
+     array.forEach((item: any) => {
+       let ctr = 0
+       keys.forEach((key) => {
+         if (ctr > 0) result += columnDelimiter
+
+         result += item[key]
+         // eslint-disable-next-line no-plusplus
+         ctr++
+       })
+       result += lineDelimiter
+     })
+
+     return result
+   }
+
+   const downloadCSV = (array: any) => {
+     const link = document.createElement('a')
+     let csv = convertArrayOfObjectsToCSV(array)
+     if (csv == null) return
+
+     const filename = 'Laporan Pengawasan.csv'
+
+     if (!csv.match(/^data:text\/csv/i)) {
+       csv = `data:text/csv;charset=utf-8,${csv}`
+     }
+
+     link.setAttribute('href', encodeURI(csv))
+     link.setAttribute('download', filename)
+     link.click()
+   }
 
   const columns1 = [
     {
@@ -139,6 +183,17 @@ export const DtKabid: FC<any> = ({
       />
     </div>
   )
+}
+
+const unduhCSV = (data: any[]) => {
+  const csvData = unparse(data)
+  const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.setAttribute('download', 'Laporan Pengawasan.csv')
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
 }
 
 export const DtAdmin: FC<any> = ({
@@ -281,6 +336,16 @@ export const DtAdmin: FC<any> = ({
 
   return (
     <div>
+      <button
+        data-kt-menu-trigger='click'
+        data-kt-menu-placement='bottom-end'
+        className='btn btn-light-primary'
+        onClick={() => unduhCSV(data)}
+        style={{float: 'right', marginRight: '50px'}}
+      >
+        <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+        Unduh CSV
+      </button>
       <DataTable
         columns={columns2}
         data={data}
