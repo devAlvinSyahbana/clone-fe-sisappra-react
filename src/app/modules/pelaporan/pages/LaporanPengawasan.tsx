@@ -498,7 +498,7 @@ export function LaporanPengawasan() {
                               <a href="#" className="btn btn-sm btn-danger me-1"
                                 data-bs-toggle="modal"><i
                                   className="fa-solid fa-trash"></i> Hapus</a>
-                              <div className="my-1 me-0">
+                              {/* <div className="my-1 me-0">
                                 <select
                                   className="form-select form-select-sm form-select-solid w-180px"
                                   data-control="select2"
@@ -508,7 +508,7 @@ export function LaporanPengawasan() {
                                   <option value="2">Excell</option>
                                   <option value="3">Pdf</option>
                                 </select>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>

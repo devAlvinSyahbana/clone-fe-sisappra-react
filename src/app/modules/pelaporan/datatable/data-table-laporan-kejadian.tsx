@@ -1,11 +1,13 @@
 import axios from 'axios'
 import {FC, Fragment, useEffect, useState} from 'react'
-import {ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
+import {ButtonGroup, Dropdown, DropdownButton, Button} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
+import {KTSVG} from '../../../../_metronic/helpers'
 import {useNavigate} from 'react-router-dom'
+import {unparse} from 'papaparse'
 
 const LoadingAnimation = (props: any) => {
   return (
@@ -36,6 +38,17 @@ const GetJenisKejadian = ({row}: {row: number}) => {
   }, [valData, row])
 
   return <>{valData}</>
+}
+
+const unduhCSV = (data: any[]) => {
+  const csvData = unparse(data)
+  const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.setAttribute('download', 'LAPORAN KEJADIAN.csv')
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
 }
 
 export const DtKabid: FC<any> = ({
@@ -117,6 +130,18 @@ export const DtKabid: FC<any> = ({
 
   return (
     <div>
+      <button
+        type='button'
+        data-kt-menu-trigger='click'
+        data-kt-menu-placement='bottom-end'
+        style={{float: 'right', marginRight: '50px'}}
+        className='btn btn-light-primary'
+        onClick={() => unduhCSV(data)}>
+          <>
+          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+            Unduh CSV
+          </>
+      </button>
       <DataTable
         columns={columns1}
         data={data}
@@ -270,19 +295,33 @@ export const DtAdmin: FC<any> = ({
   // ]
 
   return (
-    <div>
-      <DataTable
-        columns={columns2}
-        data={data}
-        progressPending={loading}
-        pagination
-        paginationServer
-        progressComponent={<LoadingAnimation />}
-        paginationTotalRows={totalRows}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
-      />
-    </div>
+    <>
+      <div>
+        <button
+          type='button'
+          data-kt-menu-trigger='click'
+          data-kt-menu-placement='bottom-end'
+          style={{float: 'right', marginRight: '50px'}}
+          className='btn btn-light-primary'
+          onClick={() => unduhCSV(data)}>
+            <>
+            <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+              Unduh CSV
+            </>
+        </button>
+        <DataTable
+          columns={columns2}
+          data={data}
+          progressPending={loading}
+          pagination
+          paginationServer
+          progressComponent={<LoadingAnimation />}
+          paginationTotalRows={totalRows}
+          onChangeRowsPerPage={handlePerRowsChange}
+          onChangePage={handlePageChange}
+        />
+      </div>
+    </>
   )
 }
 
@@ -515,6 +554,17 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah}) => {
 
   return (
     <div>
+      <button
+        type='button'
+        className='btn btn-light-primary'
+        data-kt-menu-trigger='click'
+        data-kt-menu-placement='bottom-end'    
+        onClick={() => unduhCSV(kota)}>
+          <>
+            <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+            Unduh CSV
+          </>
+      </button>
       <DataTable columns={columns3} data={kota} pagination />
     </div>
   )

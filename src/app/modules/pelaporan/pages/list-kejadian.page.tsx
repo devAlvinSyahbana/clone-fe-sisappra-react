@@ -644,27 +644,27 @@ export const ListKejadianPage: FC = () => {
                                   Tambah
                                   {/* end::Add user */}
                                 </Button>
-                                <button
+                                {/* <button
                                   type='button'
                                   className='btn btn-light-primary'
                                   data-kt-menu-trigger='click'
                                   data-kt-menu-placement='bottom-end'
-                                >
+                                > */}
                                   {/* {btnLoadingUnduh ? (
              <>
                <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                Memproses Unduh...
              </>
            ) : ( */}
-                                  <>
+                                  {/* <>
                                     <KTSVG
                                       path='/media/icons/duotune/arrows/arr078.svg'
                                       className='svg-icon-2'
                                     />
                                     Unduh
-                                  </>
+                                  </> */}
                                   {/* )} */}
-                                </button>
+                                {/* </button> */}
                                 {/* end::Filter Button */}
                                 {/* begin::SubMenu */}
                                 <div
@@ -682,22 +682,22 @@ export const ListKejadianPage: FC = () => {
                                   {/* end::Separator */}
 
                                   {/* begin::Content */}
-                                  <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                  {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
                                     <button
                                       //   onClick={handleUnduh}
                                       className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
                                     >
                                       Excel
                                     </button>
-                                  </div>
+                                  </div> */}
                                   {/* end::Content */}
 
                                   {/* begin::Content */}
-                                  <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                  {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
                                     <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
                                       PDF
                                     </button>
-                                  </div>
+                                  </div> */}
                                   {/* end::Content */}
                                 </div>
                                 {/* end::SubMenu */}
@@ -816,27 +816,27 @@ export const ListKejadianPage: FC = () => {
                                   Tambah
                                   {/* end::Add user */}
                                 </Button>
-                                <button
+                                {/* <button
                                   type='button'
                                   className='btn btn-light-primary'
                                   data-kt-menu-trigger='click'
                                   data-kt-menu-placement='bottom-end'
-                                >
+                                > */}
                                   {/* {btnLoadingUnduh ? (
                                   <>
                                     <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                     Memproses Unduh...
                                   </>
                                 ) : ( */}
-                                  <>
+                                  {/* <>
                                     <KTSVG
                                       path='/media/icons/duotune/arrows/arr078.svg'
                                       className='svg-icon-2'
                                     />
                                     Unduh
-                                  </>
+                                  </> */}
                                   {/* )} */}
-                                </button>
+                                {/* </button> */}
                                 {/* end::Filter Button */}
                                 {/* begin::SubMenu */}
                                 <div
