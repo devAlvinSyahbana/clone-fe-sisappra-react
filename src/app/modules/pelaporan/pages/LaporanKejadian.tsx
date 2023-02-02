@@ -410,14 +410,14 @@ export function LaporanKejadian() {
                             </Link>
                             <a href="#" className="btn btn-sm btn-danger me-1" data-bs-toggle="modal"><i
                               className="fa-solid fa-trash"></i> Hapus</a>
-                            <div className="my-1 me-0">
+                            {/* <div className="my-1 me-0">
                               <select className="form-select form-select-sm form-select-solid w-180px"
                                 data-control="select2" data-placeholder="Select Hours" data-hide-search="true">
                                 <option disabled selected>Unduh</option>
                                 <option value="2">Excel</option>
                                 <option value="3">Pdf</option>
                               </select>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>

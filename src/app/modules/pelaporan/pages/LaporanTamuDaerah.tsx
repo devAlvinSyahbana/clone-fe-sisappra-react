@@ -245,13 +245,13 @@ export function LaporanTamuDaerah() {
                                 Tambah
                               </button>
                               </Link>
-                            <div className="my-1 me-0">
+                            {/* <div className="my-1 me-0">
                               <select className="form-select form-select-sm form-select-solid w-100px"
                                 data-control="select2" data-placeholder="Download" data-hide-search="true">
                                 <option value="1">Excell</option>
                                 <option value="2">Pdf</option>
                               </select>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
