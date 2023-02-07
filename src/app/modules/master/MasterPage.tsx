@@ -34,6 +34,9 @@ import {LihatJenisPertolongan} from './components/Lihat-master/LihatJenisPertolo
 import {UpdateJenisPertolongan} from './components/Update-master/UpdateJenisPertolongan'
 
 import {JenisPerdaPerkada} from './components/JenisPerdaPerkada'
+import {LihatJenisPerdaPerkada} from './components/Lihat-master/LihatJenisPerdaPerkada'
+import {UpdateJenisPerdaPerkada} from './components/Update-master/UpdateJenisPerdaPerkada'
+import {TambahJenisPerdaPerkada} from './components/Tambah-master/TambahJenisPerdaPerkada'
 
 import {JenisPenindakan} from './components/JenisPenindakan'
 import {LihatJenisPenindakan} from './components/Lihat-master/LihatJenisPenindakan'
@@ -743,6 +746,33 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Perda / Perkada</PageTitle>
               <JenisPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='JenisPerdaPerkada/LihatJenisPerdaPerkada/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Jenis Perda / Perkada</PageTitle>
+              <LihatJenisPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='JenisPerdaPerkada/UpdateJenisPerdaPerkada/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Update Jenis Perda / Perkada</PageTitle>
+              <UpdateJenisPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='JenisPerdaPerkada/TambahJenisPerdaPerkada'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Tambah Jenis Perda / Perkada</PageTitle>
+              <TambahJenisPerdaPerkada />
             </>
           }
         />
