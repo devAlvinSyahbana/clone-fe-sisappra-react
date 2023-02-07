@@ -98,7 +98,7 @@ export function TambahJenisPerdaPerkada() {
                   <div className='row mt-2'>
                     <div className='col-5 mb-6'>
                       <div className='form-group'>
-                        <Form.Label>Jenis Perda / Perkada</Form.Label>
+                        <Form.Label>Judul</Form.Label>
                         <Form.Control
                           name='judul'
                           className='form-control form-control-solid'

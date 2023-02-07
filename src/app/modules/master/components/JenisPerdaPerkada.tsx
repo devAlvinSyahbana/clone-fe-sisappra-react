@@ -450,10 +450,23 @@ export function JenisPerdaPerkada() {
     setAksi(0)
     setValuesFormik({
       judul: '',
-      deskripsi: '',
+      // deskripsi: '',
     })
   }
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
+  
+  // GET ID FOR UPDATE
+  const getDetail = async (idparam: any) => {
+    const {data} = await axios.get(`${JENIS_PERDA_PERKADA_URL}/findone/${parseInt(idparam)}`)
+    setIdEditData((prevstate) => ({
+      ...prevstate,
+      id: parseInt(idparam),
+    }))
+    setValuesFormik((prevstate) => ({
+      ...prevstate,
+      ...data.data,
+    }))
+  }
   
   // DELETE
   const konfirDel = (id: number) => {
@@ -542,7 +555,7 @@ export function JenisPerdaPerkada() {
         </div>
         
         <div className="d-flex justify-content-end col-md-6 col-lg-6 col-sm-12">
-          <Link to='master/JenisPerdaPerkada/TambahJenisPerdaPerkada'>
+          <Link to='/master/JenisPerdaPerkada/TambahJenisPerdaPerkada'>
             <button className='btn btn-primary me-5'>
               <i className="fa-solid fa-plus"></i>
               Tambah
@@ -633,19 +646,6 @@ export function JenisPerdaPerkada() {
       }
     />
     )}
-      {/* <DataTable
-        columns={columns}
-        data={data}
-        progressPending={loading}
-        progressComponent={<LoadingAnimation />}
-        pagination
-        paginationServer
-        paginationTotalRows={totalRows}
-        sortServer
-        onSort={handleSort}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
-      /> */}
     </div>
     {/* end::Body */}
     </div>
