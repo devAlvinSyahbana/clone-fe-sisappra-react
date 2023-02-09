@@ -615,49 +615,49 @@ export const ListPengawasPage: FC = () => {
                                           Reset
                                         </Button>
                                       </div>
-                                      <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                      {/* <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'> */}
                                         {/* begin::Filter Button */}
-                                        <button
+                                        {/* <button
                                           type='button'
                                           className='btn btn-light-primary'
                                           data-kt-menu-trigger='click'
                                           data-kt-menu-placement='bottom-end'
-                                        >
+                                        > */}
                                           {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                          <>
+                                          {/* <>
                                             <KTSVG
                                               path='/media/icons/duotune/arrows/arr078.svg'
                                               className='svg-icon-2'
                                             />
                                             Unduh
-                                          </>
+                                          </> */}
                                           {/* )} */}
-                                        </button>
+                                        {/* </button> */}
                                         {/* end::Filter Button */}
                                         {/* begin::SubMenu */}
-                                        <div
+                                        {/* <div
                                           className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
                                           data-kt-menu='true'
-                                        >
+                                        > */}
                                           {/* begin::Header */}
-                                          <div className='px-7 py-5'>
+                                          {/* <div className='px-7 py-5'>
                                             <div className='fs-5 text-dark fw-bolder'>
                                               Pilihan Unduh
                                             </div>
-                                          </div>
+                                          </div> */}
                                           {/* end::Header */}
 
                                           {/* begin::Separator */}
-                                          <div className='separator border-gray-200'></div>
+                                          {/* <div className='separator border-gray-200'></div> */}
                                           {/* end::Separator */}
 
                                           {/* begin::Content */}
-                                          <div
+                                          {/* <div
                                             className='px-7 py-5'
                                             data-kt-user-table-filter='form'
                                           >
@@ -667,22 +667,22 @@ export const ListPengawasPage: FC = () => {
                                             >
                                               Excel
                                             </button>
-                                          </div>
+                                          </div> */}
                                           {/* end::Content */}
 
                                           {/* begin::Content */}
-                                          <div
+                                          {/* <div
                                             className='px-7 py-2'
                                             data-kt-user-table-filter='form'
                                           >
                                             <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
                                               PDF
                                             </button>
-                                          </div>
+                                          </div> */}
                                           {/* end::Content */}
-                                        </div>
+                                        {/* </div> */}
                                         {/* end::SubMenu */}
-                                      </div>
+                                      {/* </div> */}
                                     </div>
                                   </div>
                                 </Form>
@@ -772,47 +772,47 @@ export const ListPengawasPage: FC = () => {
                                           Tambah
                                           {/* end::Add user */}
                                         </Button>
-                                        <button
+                                        {/* <button
                                           type='button'
                                           className='btn btn-light-primary'
                                           data-kt-menu-trigger='click'
                                           data-kt-menu-placement='bottom-end'
-                                        >
+                                        > */}
                                           {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                          <>
+                                          {/* <>
                                             <KTSVG
                                               path='/media/icons/duotune/arrows/arr078.svg'
                                               className='svg-icon-2'
                                             />
                                             Unduh
-                                          </>
+                                          </> */}
                                           {/* )} */}
-                                        </button>
+                                        {/* </button> */}
                                         {/* end::Filter Button */}
                                         {/* begin::SubMenu */}
-                                        <div
+                                        {/* <div
                                           className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
                                           data-kt-menu='true'
-                                        >
+                                        > */}
                                           {/* begin::Header */}
-                                          <div className='px-7 py-5'>
+                                          {/* <div className='px-7 py-5'>
                                             <div className='fs-5 text-dark fw-bolder'>
                                               Pilihan Unduh
                                             </div>
-                                          </div>
+                                          </div> */}
                                           {/* end::Header */}
 
                                           {/* begin::Separator */}
-                                          <div className='separator border-gray-200'></div>
+                                          {/* <div className='separator border-gray-200'></div> */}
                                           {/* end::Separator */}
 
                                           {/* begin::Content */}
-                                          <div
+                                          {/* <div
                                             className='px-7 py-5'
                                             data-kt-user-table-filter='form'
                                           >
@@ -822,20 +822,20 @@ export const ListPengawasPage: FC = () => {
                                             >
                                               Excel
                                             </button>
-                                          </div>
+                                          </div> */}
                                           {/* end::Content */}
 
                                           {/* begin::Content */}
-                                          <div
+                                          {/* <div
                                             className='px-7 py-2'
                                             data-kt-user-table-filter='form'
                                           >
                                             <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
                                               PDF
                                             </button>
-                                          </div>
+                                          </div> */}
                                           {/* end::Content */}
-                                        </div>
+                                        {/* </div> */}
                                         {/* end::SubMenu */}
                                       </div>
                                     </div>
@@ -984,47 +984,47 @@ export const ListPengawasPage: FC = () => {
                                       </div>
                                       <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                                         {/* begin::Filter Button */}
-                                        <button
+                                        {/* <button
                                           type='button'
                                           className='btn btn-light-primary'
                                           data-kt-menu-trigger='click'
                                           data-kt-menu-placement='bottom-end'
-                                        >
+                                        > */}
                                           {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                          <>
+                                          {/* <>
                                             <KTSVG
                                               path='/media/icons/duotune/arrows/arr078.svg'
                                               className='svg-icon-2'
                                             />
                                             Unduh
-                                          </>
+                                          </> */}
                                           {/* )} */}
-                                        </button>
+                                        {/* </button> */}
                                         {/* end::Filter Button */}
                                         {/* begin::SubMenu */}
-                                        <div
+                                        {/* <div
                                           className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
                                           data-kt-menu='true'
-                                        >
+                                        > */}
                                           {/* begin::Header */}
-                                          <div className='px-7 py-5'>
+                                          {/* <div className='px-7 py-5'>
                                             <div className='fs-5 text-dark fw-bolder'>
                                               Pilihan Unduh
                                             </div>
-                                          </div>
+                                          </div> */}
                                           {/* end::Header */}
 
                                           {/* begin::Separator */}
-                                          <div className='separator border-gray-200'></div>
+                                          {/* <div className='separator border-gray-200'></div> */}
                                           {/* end::Separator */}
 
                                           {/* begin::Content */}
-                                          <div
+                                          {/* <div
                                             className='px-7 py-5'
                                             data-kt-user-table-filter='form'
                                           >
@@ -1034,20 +1034,20 @@ export const ListPengawasPage: FC = () => {
                                             >
                                               Excel
                                             </button>
-                                          </div>
+                                          </div> */}
                                           {/* end::Content */}
 
                                           {/* begin::Content */}
-                                          <div
+                                          {/* <div
                                             className='px-7 py-2'
                                             data-kt-user-table-filter='form'
                                           >
                                             <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
                                               PDF
                                             </button>
-                                          </div>
+                                          </div> */}
                                           {/* end::Content */}
-                                        </div>
+                                        {/* </div> */}
                                         {/* end::SubMenu */}
                                       </div>
                                     </div>

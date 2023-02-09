@@ -18,6 +18,7 @@ import {
   ToFieldStateCE,
 } from '../../components/fields.formikcto'
 import axios from 'axios'
+import AsyncSelect from 'react-select/async'
 
 interface StepDetailKejadianProps {
   handleChange?: {
@@ -40,6 +41,7 @@ interface StepDetailKejadianProps {
   detailState: boolean
 }
 
+export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
   handleChange,
   values,
@@ -49,14 +51,102 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
   detailState,
 }) => {
   const dispatch = useDispatch()
-  const kotaList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kota)
-  const kecamatanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kecamatan)
-  const kelurahanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kelurahan)
+  // const kotaList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kota)
+  // const kecamatanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kecamatan)
+  // const kelurahanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kelurahan)
 
   useEffect(() => {
+    dispatch(updateKotaList())
+    dispatch(updateKecamatanList())
+    dispatch(updateKelurahanList())
     listMasterPengawasanValue()
   }, [])
   console.log(values)
+
+    // GET DATA
+    interface SelectOptionAutoCom {
+      readonly value: string
+      readonly label: string
+      readonly color: string
+      readonly isFixed?: boolean
+      readonly isDisabled?: boolean
+    }
+
+    // GET Kota
+    const [valMasterKota, setValMasterKota] = useState({value: null, label: ''})
+    const filterKota = async (inputValue: string) => {
+      const response = await axios.get(API_URL + `/kota/` + inputValue)
+      const json = await response.data.data
+      return json.map((i: any) => ({label: i.name, value: i.id}))
+    }
+    const loadOptionsKota = (
+      inputValue: string,
+      callback: (options: SelectOptionAutoCom[]) => void
+    ) => {
+      setTimeout(async () => {
+        callback(await filterKota(inputValue))
+      }, 1000)
+    }
+    const handleChangeInputKota = (newValue: any) => {
+      setValMasterKota((prevstate: any) => ({...prevstate, ...newValue}))
+      setIdKota((prevstate) => ({
+        ...prevstate,
+        id: newValue.value,
+      }))
+    }
+    const [filter_kota, setIdKota] = useState({id: ''})
+
+    // GET Kecamatan
+    const [valKecamatan, setValKecamatan] = useState({value: null, label: ''})
+    const filterKecamatan = async (inputValue: string) => {
+      const response = await axios.get(
+        `${API_URL}/kecamatan?filter_kecamatan=${parseInt(filter_kota.id)}${
+          inputValue !== '' && `&nama=${inputValue}`
+        }`
+      )
+      const json = await response.data.data
+      return json.map((i: any) => ({label: i.nama, value: i.id}))
+    }
+    const loadOptionsKecamatan = (
+      inputValue: string,
+      callback: (otions: SelectOptionAutoCom[]) => void
+    ) => {
+      setTimeout(async () => {
+        callback(await filterKecamatan(inputValue))
+      }, 1000)
+    }
+    const handleChangeInputKecamatan = (newValue: any) => {
+      setValKecamatan((prevstate: any) => ({...prevstate, ...newValue}))
+      setIdKecamatan((prevstate) => ({
+        ...prevstate,
+        id: newValue.value
+      })) 
+    }
+    const [filter_kecamatan, setIdKecamatan] = useState({id: ''})
+
+    // GET Kecamatan
+    const [valKelurahan, setValKelurahan] = useState({value: null, label: ''})
+    const filterKelurahan = async (inputValue: string) => {
+      const response = await axios.get(
+        `${API_URL}/kelurahan?filter_kelurahan=${parseInt(filter_kecamatan.id)}${
+          inputValue !== '' && `&nama=${inputValue}`
+        }`
+      )
+      const json = await response.data.data
+      return json.map((i: any) => ({label: i.nama, value: i.id}))
+    }
+    const loadOptionsKelurahan = (
+      inputValue: string,
+      callback: (otions: SelectOptionAutoCom[]) => void
+    ) => {
+      setTimeout(async () => {
+        callback(await filterKelurahan(inputValue))
+      }, 1000)
+    }
+    const handleChangeInputKelurahan = (newValue: any) => {
+      setValKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
+    }
+
   return (
     <div className='w-50'>
       <div className='pb-10 pb-lg-15'>
@@ -97,7 +187,20 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kota</label>
-          <Field
+          <AsyncSelect
+            value={
+              valMasterKota.value
+              ? valMasterKota
+              : {value: '', label: 'Pilih Kota'}
+            }
+            loadOptions={loadOptionsKota}
+            defaultOptions
+            onChange={handleChangeInputKota}
+            placeholder={'Pilih'}
+            loadingMessage={() => 'Sedang mencari pilihan...'}
+            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
+          />
+          {/* <Field
             name='kota_selection'
             target='kota'
             disabled={detailState}
@@ -107,7 +210,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
-          />
+          /> */}
           <div className='text-danger mt-2'>
             <ErrorMessage name='kota' />
             <ErrorMessage name='kota_selection' />
@@ -115,7 +218,18 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kecamatan</label>
-          <Field
+          <AsyncSelect
+            loadOptions={loadOptionsKecamatan}
+            value={
+              valKecamatan.value
+              ? valKecamatan
+              : {value: '', label: 'Pilih Kecamatan'}
+            }
+            onChange={handleChangeInputKecamatan}
+            name='filter_kecamatan'
+            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
+            />
+          {/* <Field
             name='kecamatan_selection'
             disabled={detailState}
             target='kecamatan'
@@ -125,7 +239,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
             }}
-          />
+          /> */}
           <div className='text-danger mt-2'>
             <ErrorMessage name='kecamatan' />
             <ErrorMessage name='kecamatan_selection' />
@@ -133,17 +247,17 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kelurahan</label>
-          <Field
-            name='kelurahan_selection'
-            disabled={detailState}
-            target='kelurahan'
-            className='form-control'
-            component={SelectField}
-            options={kelurahanList}
-            onChange={(o: ChangeEvent<any>) => {
-              dispatch(changedValue(ToFieldStateCE(o)))
-            }}
-          />
+          <AsyncSelect
+            loadOptions={loadOptionsKelurahan}
+            value={
+              valKelurahan.value
+              ? valKelurahan
+              : {value: '', label: 'Pilih Kelurahan'}
+            }
+            onChange={handleChangeInputKelurahan}
+            name='filter_kelurahan'
+            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
+            />
           <div className='text-danger mt-2'>
             <ErrorMessage name='kelurahan' />
             <ErrorMessage name='kelurahan_selection' />

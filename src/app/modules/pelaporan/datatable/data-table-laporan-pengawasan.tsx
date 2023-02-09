@@ -5,6 +5,8 @@ import DataTable from 'react-data-table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {RootState} from '../../../redux/store'
+import {KTSVG} from '../../../../_metronic/helpers'
+import {unparse} from 'papaparse'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -22,6 +24,17 @@ const LoadingAnimation = (props: any) => {
       </div>
     </>
   )
+}
+
+const unduhCSV = (data: any[]) => {
+  const csvData = unparse(data)
+  const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.setAttribute('download', 'LAPORAN PENGAWASAN.csv')
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
 }
 
 export const DtKabid: FC<any> = ({
@@ -125,6 +138,18 @@ export const DtKabid: FC<any> = ({
 
   return (
     <div>
+      <button
+        type='button'
+        data-kt-menu-trigger='click'
+        data-kt-menu-placement='bottom-end'
+        style={{float: 'right', marginRight: '50px'}}
+        className='btn btn-light-primary'
+        onClick={() => unduhCSV(data)}>
+          <>
+          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+            Unduh CSV
+          </>
+      </button>
       <DataTable
         columns={columns1}
         data={data}
@@ -281,6 +306,18 @@ export const DtAdmin: FC<any> = ({
 
   return (
     <div>
+      <button
+        type='button'
+        data-kt-menu-trigger='click'
+        data-kt-menu-placement='bottom-end'
+        style={{float: 'right', marginRight: '50px'}}
+        className='btn btn-light-primary'
+        onClick={() => unduhCSV(data)}>
+          <>
+          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+            Unduh CSV
+          </>
+      </button>
       <DataTable
         columns={columns2}
         data={data}
@@ -429,6 +466,18 @@ export const DtPimpinan: FC<any> = ({
 
   return (
     <div>
+      <button
+        type='button'
+        data-kt-menu-trigger='click'
+        data-kt-menu-placement='bottom-end'
+        style={{float: 'right', marginRight: '50px'}}
+        className='btn btn-light-primary'
+        onClick={() => unduhCSV(data)}>
+          <>
+          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+            Unduh CSV
+          </>
+      </button>
       <DataTable
         columns={columns}
         data={data}

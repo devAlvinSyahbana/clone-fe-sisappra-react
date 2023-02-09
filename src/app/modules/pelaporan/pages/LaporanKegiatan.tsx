@@ -1127,7 +1127,7 @@ export function LaporanKegiatan() {
                                     Hapus
                                   </Button>
                                 </Link>
-                                <div className='justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                {/* <div className='justify-content-end col-md-6 col-lg-6 col-sm-12'>
                                   <Dropdown>
                                     <Dropdown.Toggle variant='secondary' id='dropdown-basic'>
                                       Unduh
@@ -1138,7 +1138,7 @@ export function LaporanKegiatan() {
                                       <Dropdown.Item>PDF</Dropdown.Item>
                                     </Dropdown.Menu>
                                   </Dropdown>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                           </div>
