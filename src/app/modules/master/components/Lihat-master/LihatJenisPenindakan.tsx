@@ -65,7 +65,6 @@ export function LihatJenisPenindakan() {
                         />
                       </div>
                     </div>
-                    
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
                     <Link to='/master/Jenispenindakan'>

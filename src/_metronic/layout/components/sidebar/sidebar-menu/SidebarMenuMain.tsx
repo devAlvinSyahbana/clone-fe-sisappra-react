@@ -195,11 +195,11 @@ const SidebarMenuMain = () => {
               title='Jenis Perda / Perkada'
               hasBullet={true}
             />
-            <SidebarMenuItem
+            {/* <SidebarMenuItem
               to='/master/JenisPenindakan'
               title='Jenis Penindakan'
               hasBullet={true}
-            />
+            /> */}
             <SidebarMenuItem
               to='/master/JenisPelanggaran'
               title='Jenis Pelanggaran'
