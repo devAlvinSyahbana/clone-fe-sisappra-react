@@ -101,7 +101,7 @@ export const createSchemaPelaporanKejadian = [
       .integer()
       .moreThan(0)
       .required()
-      .label('Pelaporan Pengawasan'),
+      .label('Pelaporan Kejadian'),
     kejadian__jenis_kejadian_selection: Yup.object().required(),
     kejadian__kota_id: Yup.number().integer().moreThan(0).required().label('Kota'),
     kota_selection: Yup.object().required(),

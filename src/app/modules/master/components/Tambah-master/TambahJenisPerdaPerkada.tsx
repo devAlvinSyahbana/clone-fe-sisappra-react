@@ -12,8 +12,8 @@ export interface FormInput {
   created_by?: number
 }
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_PERDA_PERKADA_URL = `${API_URL}/master/jenis-perda-perkada` //http://localhost:3000/master/jenis-perda-perkada
+const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL //http://localhost:3001
+export const JENIS_PERDA_PERKADA_URL = `${API_URL}/jenis-perda-perkada` //http://localhost:3000/master/jenis-perda-perkada
 
 export function TambahJenisPerdaPerkada() {
   const navigate = useNavigate()

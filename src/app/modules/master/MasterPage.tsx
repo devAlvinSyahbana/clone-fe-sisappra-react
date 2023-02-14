@@ -97,6 +97,8 @@ import {UpdateEselon} from './components/Update-master/UpdateEselon'
 import {LihatEselon} from './components/Lihat-master/LihatEselon'
 
 import {Jabatan} from './components/Jabatan'
+import {LihatJabatan} from './components/Lihat-master/LihatJabatan'
+import {TambahJabatan} from './components/Tambah-master/TambahJabatan'
 
 import {SumberInformasi} from './components/SumberInformasi'
 import {UpdateSumberInformasi} from './components/Update-master/UpdateSumberInformasi'
@@ -106,13 +108,11 @@ import {JenisKekerasan} from './components/JenisKekerasan'
 import {UpdateJenisKekerasan} from './components/Update-master/UpdateJenisKekerasan'
 import {LihatJenisKekerasan} from './components/Lihat-master/LihatJenisKekerasan'
 
-import {JenisPenertiban} from './components/JenisPenertiban'
-import {UpdateJenisPenertiban} from './components/Update-master/UpdateJenisPenertiban'
-import {LihatJenisPenertiban} from './components/Lihat-master/LihatJenisPenertiban'
+// import {JenisPenertiban} from './components/JenisPenertiban'
+// import {UpdateJenisPenertiban} from './components/Update-master/UpdateJenisPenertiban'
+// import {LihatJenisPenertiban} from './components/Lihat-master/LihatJenisPenertiban'
 
 import {JenisPenyelesaian} from './components/JenisPenyelesaian'
-
-import {LihatJabatan} from './components/Lihat-master/LihatJabatan'
 
 import {StatusKenaikanPangkat} from './components/StatusKenaikanPangkat'
 import {LihatStatusKenaikanPangkat} from './components/Lihat-master/LihatStatusKenaikanPangkat'
@@ -560,11 +560,11 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
-          path='jabatan/tambah-jabatan'
+          path='Jabatan/TambahJabatan'
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Jabatan </PageTitle>
-              <Jabatan />
+              <TambahJabatan />
             </>
           }
         />
@@ -803,7 +803,7 @@ const MasterPage: React.FC = () => {
             </>
           }
         />
-        <Route
+        {/* <Route
           path='JenisPenertiban'
           element={
             <>
@@ -829,7 +829,7 @@ const MasterPage: React.FC = () => {
               <LihatJenisPenertiban />
             </>
           }
-        />
+        /> */}
         <Route
           path='JenisPenyelesaian'
           element={

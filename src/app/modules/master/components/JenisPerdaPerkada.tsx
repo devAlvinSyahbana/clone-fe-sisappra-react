@@ -16,8 +16,8 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 import clsx from 'clsx'
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_PERDA_PERKADA_URL = `${API_URL}/master/jenis-perda-perkada` //http://localhost:3000/jenis-perda-perkada
+const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL //http://localhost:3001
+export const JENIS_PERDA_PERKADA_URL = `${API_URL}/jenis-perda-perkada` //http://localhost:3000/jenis-perda-perkada
 
 // Theme for dark or light interface
 createTheme(
@@ -233,7 +233,7 @@ export function JenisPerdaPerkada() {
     )
   }
 
-  let number = 1
+  // let number = 1
   const columns = [
     {
       name: 'No',
@@ -314,7 +314,7 @@ export function JenisPerdaPerkada() {
       setLoading(true)
       console.log(qParamFind)
       const response = await axios.get(
-        `${JENIS_PERDA_PERKADA_URL}/filter/${qParamFind.strparam}`
+        `${JENIS_PERDA_PERKADA_URL}${qParamFind.strparam}`
       )
       setTotalRows(response.data.total_data)
       const timeout = setTimeout(() => {
@@ -340,7 +340,7 @@ export function JenisPerdaPerkada() {
 
   const fetchUsers = async (page: any) => { //urutan 3
     setLoading(true)
-    const value = await axios.get(`${JENIS_PERDA_PERKADA_URL}/find`)
+    const value = await axios.get(`${JENIS_PERDA_PERKADA_URL}`)
     const timeout = setTimeout(() => {
       let items = value.data.data
     Array.from(items).forEach((item: any, index: any) => {
