@@ -192,7 +192,9 @@ export const AddPengawasanPage: FC = () => {
                           values={values}
                           handleReset={handleReset}
                           listMasterPengawasanValue={listMasterPengawasanValue}
+                          allValues={allValues}
                           detailState={detailState}
+                          setFieldValue={setFieldValue}
                         />
                       </div>
                       <div className='tab-pane fade' id='kt_tab_pane_2' role='tabpanel'>

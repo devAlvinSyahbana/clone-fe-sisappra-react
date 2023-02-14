@@ -113,7 +113,7 @@ export function TambahJabatan() {
                 showConfirmButton: false,
                 timer: 1500,
               })
-              navigate('/master/jabatan', {replace: true})
+              navigate('/master/Jabatan', {replace: true})
             }
             return
           }
@@ -123,7 +123,7 @@ export function TambahJabatan() {
             showConfirmButton: false,
             timer: 1500,
           })
-          navigate('/master/jabatan', {replace: true})
+          navigate('/master/Jabatan', {replace: true})
         }
       } catch (error) {
         Swal.fire({
@@ -141,116 +141,116 @@ export function TambahJabatan() {
 
   return (
     <div>
-        <Modal
-            size='lg'
-            show={show}
-            onHide={handleClose}
-            aria-labelledby='example-modal-sizes-title-lg'
-            backdrop='static'
-            keyboard={false}
-            centered
-          >
-            <Modal.Header closeButton>
-              <Modal.Title id='example-modal-sizes-title-lg'>
-                {aksi === 0 ? 'Tambah' : 'Ubah'} Jabatan
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <form className='form' onSubmit={formik.handleSubmit}>
-                <div
-                  className='d-flex flex-column scroll-y me-n7 pe-7'
-                  id='kt_modal_add_user_scroll'
-                  data-kt-scroll='true'
-                  data-kt-scroll-activate='{default: false, lg: true}'
-                  data-kt-scroll-max-height='auto'
-                  data-kt-scroll-dependencies='#kt_modal_add_user_header'
-                  data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
-                  data-kt-scroll-offset='300px'
-                >
-                  <div className='fv-row mb-7'>
-                    <label className='required fw-semibold fs-6 mb-2'>jabatan</label>
-                    <input
-                      type='text'
-                      name='jabatan'
-                      placeholder='Jabatan'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid': formik.touched.jabatan && formik.errors.jabatan,
-                        },
-                        {
-                          'is-valid': formik.touched.jabatan && !formik.errors.jabatan,
-                        }
-                      )}
-                      onChange={handleChangeFormik}
-                      value={valuesFormik?.jabatan}
-                    />
-                    {formik.touched.jabatan && formik.errors.jabatan && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.jabatan}</span>
-                        </div>
-                      </div>
+      <Modal
+          size='lg'
+          show={show}
+          onHide={handleClose}
+          aria-labelledby='example-modal-sizes-title-lg'
+          backdrop='static'
+          keyboard={false}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id='example-modal-sizes-title-lg'>
+              {aksi === 0 ? 'Tambah' : 'Ubah'} Jabatan
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form className='form' onSubmit={formik.handleSubmit}>
+              <div
+                className='d-flex flex-column scroll-y me-n7 pe-7'
+                id='kt_modal_add_user_scroll'
+                data-kt-scroll='true'
+                data-kt-scroll-activate='{default: false, lg: true}'
+                data-kt-scroll-max-height='auto'
+                data-kt-scroll-dependencies='#kt_modal_add_user_header'
+                data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
+                data-kt-scroll-offset='300px'
+              >
+                <div className='fv-row mb-7'>
+                  <label className='required fw-semibold fs-6 mb-2'>jabatan</label>
+                  <input
+                    type='text'
+                    name='jabatan'
+                    placeholder='Jabatan'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.jabatan && formik.errors.jabatan,
+                      },
+                      {
+                        'is-valid': formik.touched.jabatan && !formik.errors.jabatan,
+                      }
                     )}
-                  </div>
-                  <div className='fv-row mb-7'>
-                    <div id='kt_docs_repeater_basic'>
-                      <div className='fv-row mb-7 mt-7'>
-                        <label className='required fw-semibold fs-6 mb-2'>Status</label>
-                        <select
-                          data-control='select2'
-                          data-placeholder='Status'
-                          name='status'
-                          className={clsx(
-                            'form-control form-control-solid mb-1',
-                            {
-                              'is-invalid':
-                                formik.touched.status && formik.errors.status,
-                            },
-                            {
-                              'is-valid':
-                                formik.touched.status && !formik.errors.status,
-                            }
-                          )}
-                          onChange={handleChangeFormik}
-                          value={valuesFormik?.status}
-                        >
-                          <option value=''>Pilih</option>
-                          <option value='JFT'>JFT</option>
-                          <option value='Non JFT'>Non JFT</option>
-                        </select>
-                        {formik.touched.status && formik.errors.status && (
-                          <div className='fv-plugins-message-container'>
-                            <div className='fv-help-block'>
-                              <span role='alert'>{formik.errors.status}</span>
-                            </div>
-                          </div>
-                        )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.jabatan}
+                  />
+                  {formik.touched.jabatan && formik.errors.jabatan && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.jabatan}</span>
                       </div>
+                    </div>
+                  )}
+                </div>
+                <div className='fv-row mb-7'>
+                  <div id='kt_docs_repeater_basic'>
+                    <div className='fv-row mb-7 mt-7'>
+                      <label className='required fw-semibold fs-6 mb-2'>Status</label>
+                      <select
+                        data-control='select2'
+                        data-placeholder='Status'
+                        name='status'
+                        className={clsx(
+                          'form-control form-control-solid mb-1',
+                          {
+                            'is-invalid':
+                              formik.touched.status && formik.errors.status,
+                          },
+                          {
+                            'is-valid':
+                              formik.touched.status && !formik.errors.status,
+                          }
+                        )}
+                        onChange={handleChangeFormik}
+                        value={valuesFormik?.status}
+                      >
+                        <option value=''>Pilih</option>
+                        <option value='JFT'>JFT</option>
+                        <option value='Non JFT'>Non JFT</option>
+                      </select>
+                      {formik.touched.status && formik.errors.status && (
+                        <div className='fv-plugins-message-container'>
+                          <div className='fv-help-block'>
+                            <span role='alert'>{formik.errors.status}</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-                <div className='p-0 mt-6'>
-                  <div className='text-center'>
-                    <button
-                      type='button'
-                      onClick={handleClose}
-                      className='float-none btn btn-light align-self-center m-1'
-                    >
-                      Tutup
-                    </button>
-                    <button
-                      type='submit'
-                      className='float-none btn btn-primary align-self-center m-1'
-                      disabled={formik.isSubmitting || !formik.isValid}
-                    >
-                      Simpan
-                    </button>
-                  </div>
+              </div>
+              <div className='p-0 mt-6'>
+                <div className='text-center'>
+                  <button
+                    type='button'
+                    onClick={handleClose}
+                    className='float-none btn btn-light align-self-center m-1'
+                  >
+                    Tutup
+                  </button>
+                  <button
+                    type='submit'
+                    className='float-none btn btn-primary align-self-center m-1'
+                    disabled={formik.isSubmitting || !formik.isValid}
+                  >
+                    Simpan
+                  </button>
                 </div>
-              </form>
-            </Modal.Body>
-          </Modal>
+              </div>
+            </form>
+          </Modal.Body>
+        </Modal>
     </div>
   )
 }
