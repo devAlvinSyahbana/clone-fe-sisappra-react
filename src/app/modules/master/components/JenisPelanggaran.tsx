@@ -161,6 +161,7 @@ const customStyles = {
 
 export interface FormInput {
   jenis_pelanggaran?: string
+  kode_penertiban?: string
 }
 
 const validatorForm = Yup.object().shape({
@@ -174,7 +175,7 @@ export function JenisPelanggaran() {
   const calculatedMode = mode === 'system' ? systemMode : mode
 
   const [valFilterJenisPelanggaran, setFilterJenisPelanggaran] = useState({val: ''})
-  
+
   const [data, setData] = useState([])
   const [temp, setTemp] = useState([])
   const [loading, setLoading] = useState(false)
@@ -226,11 +227,11 @@ export function JenisPelanggaran() {
   const columns = [
     {
       name: 'No',
-      selector: (row: any) => row.id,
+      selector: (row: any) => row.serial,
       sortable: true,
       width: '150px',
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{row.id}</div>
+        return <div className='mb-2 mt-2'>{row.serial}</div>
       },
       // sortField: 'id',
     },
@@ -243,7 +244,7 @@ export function JenisPelanggaran() {
       width: '200px',
     },
     {},
-    {},
+    // {},
     {
       name: 'Aksi',
       sortable: false,
@@ -352,9 +353,9 @@ export function JenisPelanggaran() {
     onSubmit: async (values, {setSubmitting}) => {
       setSubmitting(true)
       const bodyparam: FormInput = {
-        jenis_pelanggaran: valuesFormik?.jenis_pelanggaran, //? valuesFormik.jenis_sarana_prasarana : '', //? valuesFormik.kategori : '',
+        jenis_pelanggaran: valuesFormik?.jenis_pelanggaran,
+        kode_penertiban: '', //? valuesFormik.jenis_pelanggaran : '', //? valuesFormik.kategori : '',
       }
-
       try {
         if (aksi === 0) {
           const response = await axios.post(`${JENIS_PELANGGARAN_URL}/create`, bodyparam)
@@ -467,32 +468,6 @@ export function JenisPelanggaran() {
     })
   }
   // END : CRUD
-
-  // const handlePageChange = (page: any) => {
-  //   fetchUsers(page);
-  // };
-
-  // const handlePerRowsChange = async (newPerPage: any, page: any) => {
-  //   setLoading(true);
-
-  //   const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${newPerPage}delay=1`);
-
-  //   setData(response.data.data);
-  //   setPerPage(newPerPage);
-  //   setLoading(false);
-  // };
-
-  // const handleSort = (column: any, sortDirection: any) => {
-  //   // simulate server sort
-  //   console.log(column, sortDirection);
-  //   setLoading(true);
-
-  //   // instead of setTimeout this is where you would handle your API call.
-  //   setTimeout(() => {
-  //     setData(orderBy(data, column.sortField, sortDirection));
-  //     setLoading(false);
-  //   }, 100);
-  // };
 
   return (
     <div className={`card`}>
@@ -622,6 +597,32 @@ export function JenisPelanggaran() {
     </div>
   )
 }
+
+  // const handlePageChange = (page: any) => {
+  //   fetchUsers(page);
+  // };
+
+  // const handlePerRowsChange = async (newPerPage: any, page: any) => {
+  //   setLoading(true);
+
+  //   const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${newPerPage}delay=1`);
+
+  //   setData(response.data.data);
+  //   setPerPage(newPerPage);
+  //   setLoading(false);
+  // };
+
+  // const handleSort = (column: any, sortDirection: any) => {
+  //   // simulate server sort
+  //   console.log(column, sortDirection);
+  //   setLoading(true);
+
+  //   // instead of setTimeout this is where you would handle your API call.
+  //   setTimeout(() => {
+  //     setData(orderBy(data, column.sortField, sortDirection));
+  //     setLoading(false);
+  //   }, 100);
+  // };
 
 // function orderBy(data: never[], sortField: any, sortDirection: any): React.SetStateAction<never[]> {
 //   throw new Error('Function not implemented.');
