@@ -139,7 +139,7 @@ export function Kecamatan() {
       width: '200px',
     },
     {
-      name: 'kecamatan',
+      name: 'Kecamatan',
       selector: (row: any) => row.kecamatan,
       sortable: true,
       sortField: 'kecamatan',
@@ -153,7 +153,7 @@ export function Kecamatan() {
       width: '150px',
     },
     {
-      name: 'kota',
+      name: 'Kota',
       selector: (row: any) => row.kota,
       sortable: true,
       sortField: 'kota',
@@ -332,7 +332,7 @@ export function Kecamatan() {
             name='kota'
             value={valFilterKota.val}
             onChange={handleChangeInputKota}
-            placeholder='kota'
+            placeholder='Kota'
           />
           </div>
         </div>

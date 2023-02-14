@@ -242,11 +242,11 @@ const SidebarMenuMain = () => {
               hasBullet={true}
             />
             <SidebarMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
-            <SidebarMenuItem
+            {/* <SidebarMenuItem
               to='/master/JenisPenertiban'
               title='Jenis Penertiban'
               hasBullet={true}
-            />
+            /> */}
           </SidebarMenuItemWithSub>
         </>
       )}
