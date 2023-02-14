@@ -60,10 +60,10 @@ const GetJenisKejadian = ({row}: {row: number}) => {
 
 const unduhCSV = (data: any[]) => {
   const csvData = unparse(data)
-  const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
+  const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
-  link.setAttribute('download', 'Laporan Kejadian.csv')
+  link.setAttribute('download', 'LAPORAN KEJADIAN.csv')
   document.body.appendChild(link)
   link.click()
   link.remove()

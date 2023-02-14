@@ -246,12 +246,11 @@ export const DtPimpinan: FC<any> = ({
         data-kt-menu-placement='bottom-end'
         style={{float: 'right', marginRight: '50px'}}
         className='btn btn-light-primary'
-        onClick={() => unduhCSV(data)}
-      >
-        <>
+        onClick={() => unduhCSV(data)}>
+          <>
           <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-          Unduh CSV
-        </>
+            Unduh CSV
+          </>
       </button>
       <DataTable
         columns={columns}
