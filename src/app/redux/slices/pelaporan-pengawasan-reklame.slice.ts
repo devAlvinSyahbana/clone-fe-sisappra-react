@@ -42,9 +42,9 @@ export const initialState: PelaporanPengawasanState = {
   tgl_pengecekan: '',
   waktu_pengawasan: '',
 
+  kota: 0,
   kecamatan: 0,
   kelurahan: 0,
-  kota: 0,
   
   alamat: '',
   share_location: '',
