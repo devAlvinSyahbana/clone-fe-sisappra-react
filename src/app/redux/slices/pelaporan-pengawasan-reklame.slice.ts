@@ -73,11 +73,11 @@ export const initialState: PelaporanPengawasanState = {
 export const createSchemaFilterPelaporaPengawasan = [
   Yup.object({
     filter_kota: Yup.number().integer().moreThan(0).label('Kota'),
-    filter_kota_selection: Yup.object(),
-    filter_kecamatan: Yup.number().integer().moreThan(0).label('kecamatan'),
-    filter_kecamatan_selection: Yup.object(),
-    filter_kelurahan: Yup.number().integer().moreThan(0).label('kelurahan'),
-    filter_kelurahan_selection: Yup.object(),
+    filter_kota_selection: Yup.object().required(),
+    filter_kecamatan: Yup.number().integer().moreThan(0).label('Kecamatan'),
+    filter_kecamatan_selection: Yup.object().required(),
+    filter_kelurahan: Yup.number().integer().moreThan(0).label('Kelurahan'),
+    filter_kelurahan_selection: Yup.object().required(),
   }),
 ]
 

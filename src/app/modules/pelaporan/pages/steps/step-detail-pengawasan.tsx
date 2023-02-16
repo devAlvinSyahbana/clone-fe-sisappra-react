@@ -86,9 +86,9 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
     }
 
     // GET Kota
-    const [valMasterKota, setValMasterKota] = useState({value: null, label: ''})
+    const [valKota, setValKota] = useState({value: null, label: ''})
     const filterKota = async (inputValue: string) => {
-      const response = await axios.get(API_URL + `/kota/` + inputValue)
+      const response = await axios.get(API_URL + `/filter_kota/` + inputValue)
       const json = await response.data.data
       return json.map((i: any) => ({label: i.nama, value: i.id}))
     }
@@ -101,7 +101,7 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
       }, 1000)
     }
     const handleChangeInputKota = (newValue: any) => {
-      setValMasterKota((prevstate: any) => ({...prevstate, ...newValue}))
+      setValKota((prevstate: any) => ({...prevstate, ...newValue}))
       setIdKota((prevstate) => ({
         ...prevstate,
         id: newValue.value,
@@ -113,7 +113,7 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
     const [valKecamatan, setValKecamatan] = useState({value: null, label: ''})
     const filterKecamatan = async (inputValue: string) => {
       const response = await axios.get(
-        `${API_URL}/kecamatan?kecamatan=${parseInt(filter_kota.id)}${
+        `${API_URL}/kecamatan?filter_kecamatan=${parseInt(filter_kota.id)}${
           inputValue !== '' && `&nama=${inputValue}`
         }`
       )
@@ -122,7 +122,7 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
     }
     const loadOptionsKecamatan = (
       inputValue: string,
-      callback: (otions: SelectOptionAutoCom[]) => void
+      callback: (options: SelectOptionAutoCom[]) => void
     ) => {
       setTimeout(async () => {
         callback(await filterKecamatan(inputValue))
@@ -141,7 +141,7 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
     const [valKelurahan, setValKelurahan] = useState({value: null, label: ''})
     const filterKelurahan = async (inputValue: string) => {
       const response = await axios.get(
-        `${API_URL}/kelurahan?kelurahan=${parseInt(filter_kecamatan.id)}${
+        `${API_URL}/kelurahan?filter_kelurahan=${parseInt(filter_kecamatan.id)}${
           inputValue !== '' && `&nama=${inputValue}`
         }`
       )
@@ -150,7 +150,7 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
     }
     const loadOptionsKelurahan = (
       inputValue: string,
-      callback: (otions: SelectOptionAutoCom[]) => void
+      callback: (options: SelectOptionAutoCom[]) => void
     ) => {
       setTimeout(async () => {
         callback(await filterKelurahan(inputValue))
