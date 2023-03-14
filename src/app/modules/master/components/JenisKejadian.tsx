@@ -19,8 +19,8 @@ import clsx from 'clsx'
 import {Row} from 'react-bootstrap'
 
 // API
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const JENIS_KEJADIAN_URL = `${API_URL}/master/jenis-kejadian` 
+const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const JENIS_KEJADIAN_URL = `${API_URL}/jenis-kejadian` 
 
 
 // Theme for dark or light interface
@@ -227,6 +227,7 @@ export function JenisKejadian() {
   const columns = [
     {
       name: 'No',
+      width: '200px',
       selector: (row: any) => row.serial,
       sortable: true,
       cell: (row: any) => {
@@ -236,7 +237,7 @@ export function JenisKejadian() {
     {},
     {
       name: 'Jenis Kejadian',
-      selector: (row: any) => row.jenis_kejadian,
+      selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'jenis_kejadian',
     },
@@ -290,7 +291,8 @@ export function JenisKejadian() {
   useEffect(() => {
     async function fetchDT(page: number) {
       setLoading(true)
-      const response = await axios.get(`${JENIS_KEJADIAN_URL}/filter/${qParamFind.strparam}`)
+      const response = await axios.get(`${JENIS_KEJADIAN_URL}/?%24top=20`)
+      console.log(response.data)
       // setTemp(response.data.data)
       setTotalRows(response.data.total_data)
       const timeout = setTimeout(() => {
