@@ -19,11 +19,11 @@ import clsx from 'clsx'
 import {Row} from 'react-bootstrap'
 
 // API
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const JENIS_KEJADIAN_URL = `${API_URL}/master/jenis-kejadian` 
+const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const JENIS_KEJADIAN_URL = `${MASTERDATA_URL}/jenis-kejadian` 
 
 
-// Theme for dark or light interface
+// Theme for dark or light interface56
 createTheme(
   'darkMetro',
   {
@@ -162,12 +162,13 @@ const customStyles = {
   },
 }
 export interface FormInput {
-  jenis_kejadian?: string
+  nama?: string
+  kode?: string
 }
 
 const validatorForm = Yup.object().shape({
 
-  jenis_kejadian: Yup.string().required('Wajib diisi'),
+  nama: Yup.string().required('Wajib diisi'),
 })
 
 export function JenisKejadian() {
@@ -236,9 +237,9 @@ export function JenisKejadian() {
     {},
     {
       name: 'Jenis Kejadian',
-      selector: (row: any) => row.jenis_kejadian,
+      selector: (row: any) => row.nama,
       sortable: true,
-      sortField: 'jenis_kejadian',
+      sortField: 'nama',
     },
     {},
     {
@@ -290,7 +291,7 @@ export function JenisKejadian() {
   useEffect(() => {
     async function fetchDT(page: number) {
       setLoading(true)
-      const response = await axios.get(`${JENIS_KEJADIAN_URL}/filter/${qParamFind.strparam}`)
+      const response = await axios.get(`${JENIS_KEJADIAN_URL}/combobox`)
       // setTemp(response.data.data)
       setTotalRows(response.data.total_data)
       const timeout = setTimeout(() => {
@@ -346,7 +347,7 @@ export function JenisKejadian() {
     onSubmit: async (values, {setSubmitting}) => {
       setSubmitting(true)
       const bodyparam: FormInput = {
-        jenis_kejadian: valuesFormik?.jenis_kejadian, //? valuesFormik.jenis_kejadian : '', //? valuesFormik.kategori : '',
+        nama: valuesFormik?.nama, //? valuesFormik.jenis_kejadian : '', //? valuesFormik.kategori : '',
       }
       
       try {
@@ -396,7 +397,8 @@ export function JenisKejadian() {
     setShow(true)
     setAksi(0)
     setValuesFormik({
-      jenis_kejadian: '',
+      nama: '',
+      kode: '',
     })
   }
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
@@ -509,23 +511,23 @@ export function JenisKejadian() {
                 <div className='form-group'>
                   <Form.Label>Jenis Kejadian</Form.Label>
                   <Form.Control
-                      name='jenis_kejadian'
+                      name='nama'
                       className={clsx(
                         'form-control form-control-solid mb-1',
                         {
-                          'is-invalid': formik.touched.jenis_kejadian && formik.errors.jenis_kejadian,
+                          'is-invalid': formik.touched.nama && formik.errors.nama,
                         },
                         {
-                          'is-valid': formik.touched.jenis_kejadian && !formik.errors.jenis_kejadian,
+                          'is-valid': formik.touched.nama && !formik.errors.nama,
                         }
                       )}
                       onChange={handleChangeFormik}
-                      value={valuesFormik?.jenis_kejadian}
+                      value={valuesFormik?.nama}
                     />
-                    {formik.touched.jenis_kejadian && formik.errors.jenis_kejadian && (
+                    {formik.touched.nama && formik.errors.nama && (
                       <div className='fv-plugins-message-container'>
                         <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.jenis_kejadian}</span>
+                          <span role='alert'>{formik.errors.nama}</span>
                         </div>
                       </div>
                     )}
