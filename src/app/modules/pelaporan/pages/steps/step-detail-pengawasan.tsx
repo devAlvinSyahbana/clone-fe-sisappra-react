@@ -228,6 +228,7 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
                 })
               )
             }}
+            
           />
           <div className='text-danger mt-2'>
             <ErrorMessage name='filter_kota' />
@@ -236,6 +237,9 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kecamatan</label>
+          {/* {JSON.stringify
+          (kecamatanList.filter((obj: any) => obj.kodeKota === 'KOBA' + values.filter_kota))
+          } */}
           <Field
             name='filter_kecamatan_selection'
             target='filter_kecamatan'
@@ -268,6 +272,9 @@ export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kelurahan</label>
+          {/* {JSON.stringify
+          (kelurahanList.filter((obj: any) => obj.kodeKecamatan === 'KEC' + kecamatan))
+          } */}
           <Field
             name='filter_kelurahan_selection'
             target='filter_kelurahan'

@@ -21,8 +21,8 @@ interface GetDataInterface {
   jenis_kejadian?: string
 }
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const JENIS_KEJADIAN_URL = `${API_URL}/master/jenis-kejadian` //http://localhost:3000/jenis-kejadian
+const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL //http://localhost:3001
+export const JENIS_KEJADIAN_URL = `${API_URL}/jenis-kejadian` //http://localhost:3001/jenis-kejadian
 
 export function LihatJenisKejadian() {
   const {id} = useParams()

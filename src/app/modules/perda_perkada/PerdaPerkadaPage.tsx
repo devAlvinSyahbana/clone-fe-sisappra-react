@@ -2,14 +2,14 @@ import React from 'react'
 import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 import {LaporanSidangTipiring} from './components/LaporanSidangTipiring'
-import {LaporanPenerbitanMinumBeralkohol} from './components/LaporanPenerbitanMinumBeralkohol'
+import {LaporanPenertibanMinumBeralkohol} from './components/LaporanPenertibanMinumBeralkohol'
 import {RegisterPenegakanPerkaraPerdaPerda} from './components/RegisterPenegakanPerkaraPerdaPerda'
-import {LaporanPenegakanPerdaPerkada} from './components/LaporanPenegakanPerdaPerkada'
+import {LaporanPerdaPerkada} from './components/LaporanPerdaPerkada'
 
 const perda_perkadaBreadCrumbs: Array<PageLink> = [
   {
     title: 'Perda Perkada',
-    path: '/perdaperkada/LaporanSidangTipiring',
+    path: '/perdaperkada/LaporanPenegakanPerdaPerkada',
     isSeparator: false,
     isActive: false,
   },
@@ -41,13 +41,13 @@ const PerdaPerkadaPage: React.FC = () => {
           }
         />
         <Route
-          path='LaporanPenerbitanMinumBeralkohol'
+          path='LaporanPenertibanMinumBeralkohol'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Laporan Penerbitan Minum Beralkohol
+                Laporan Penertiban Minum Beralkohol
               </PageTitle>
-              <LaporanPenerbitanMinumBeralkohol />
+              <LaporanPenertibanMinumBeralkohol />
             </>
           }
         />
@@ -63,13 +63,13 @@ const PerdaPerkadaPage: React.FC = () => {
           }
         />
         <Route
-          path='LaporanPenegakanPerdaPerkada'
+          path='LaporanPerdaPerkada'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Laporan Penegakan Perda dan Perkada
+                Laporan Perda dan Perkada
               </PageTitle>
-              <LaporanPenegakanPerdaPerkada />
+              <LaporanPerdaPerkada />
             </>
           }
         />
