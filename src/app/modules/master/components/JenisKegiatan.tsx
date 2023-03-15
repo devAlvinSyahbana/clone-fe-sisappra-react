@@ -19,8 +19,8 @@ import clsx from 'clsx'
 import {Row} from 'react-bootstrap'
 
 // API
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const JENIS_KEGIATAN_URL = `${API_URL}/master/jenis-kegiatan`
+const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const JENIS_KEGIATAN_URL = `${API_URL}/jenis-kegiatan`
 
 
 // Theme for dark or light interface
@@ -234,7 +234,7 @@ export function JenisKegiatan() {
     },
     {
       name: 'Jenis Kegiatan',
-      selector: (row: any) => row.jenis_kegiatan,
+      selector: (row: any) => row.nama,
       sortable: true,
       sortField: 'jenis_kegiatan',
     },
@@ -293,7 +293,8 @@ export function JenisKegiatan() {
   useEffect(() => {
     async function fetchDT(page: number) {
       setLoading(true)
-      const response = await axios.get(`${JENIS_KEGIATAN_URL}/filter/${qParamFind.strparam}`)
+      const response = await axios.get(`${JENIS_KEGIATAN_URL}/?%24top=20`)
+      console.log(response.data)
       // setTemp(response.data.data)
       setTotalRows(response.data.total_data)
       const timeout = setTimeout(() => {
@@ -317,7 +318,7 @@ export function JenisKegiatan() {
     const value = await axios.get(`${JENIS_KEGIATAN_URL}/find`)
     const timeout = setTimeout(() => {
       let items = value.data.data
-    Array.from(items).forEach((item: any, index: any) => {
+      Array.from(items).forEach((item: any, index: any) => {
       item.serial = index + 1
     })
     setTemp(items)
