@@ -117,7 +117,7 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-export function LaporanPenegakanPerdaPerkada() {
+export function LaporanPerdaPerkada() {
   let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -148,13 +148,13 @@ export function LaporanPenegakanPerdaPerkada() {
   const columns = [
     {
       name: 'No',
-      // selector: (row: any) => row.id,
       sortable: true,
       sortField: 'id',
       wrap: true,
-      // cell: (row: any) => {
-      //   return <div className='mb-2 mt-2'>{row.skpd !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
-      // },
+      selector: (row: any) => row.id,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
 
     {

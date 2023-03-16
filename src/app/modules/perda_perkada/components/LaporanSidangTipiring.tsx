@@ -131,31 +131,31 @@ export function LaporanSidangTipiring() {
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({strparam: ''})
 
-  const LoadingAnimation = (props: any) => {
-    return (
-      <>
-        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
-          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
-          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
-          <div className='d-flex flex-column'>
-            <h5 className='mb-1'>Sedang mengambil data...</h5>
-          </div>
-        </div>
-      </>
-    )
-  }
+  // const LoadingAnimation = (props: any) => {
+  //   return (
+  //     <>
+  //       <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+  //         {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+  //         <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+  //         <div className='d-flex flex-column'>
+  //           <h5 className='mb-1'>Sedang mengambil data...</h5>
+  //         </div>
+  //       </div>
+  //     </>
+  //   )
+  // }
 
   var num = 1
   const columns = [
     {
       name: 'No',
-      // selector: (row: any) => row.id,
       sortable: true,
       sortField: 'id',
       wrap: true,
-      // cell: (row: any) => {
-      //   return <div className='mb-2 mt-2'>{row.skpd !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
-      // },
+      selector: (row: any) => row.serial,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
     },
 
     {
@@ -563,8 +563,8 @@ export function LaporanSidangTipiring() {
                     <DataTable
                       columns={columns}
                       data={data}
-                      progressPending={loading}
-                      progressComponent={<LoadingAnimation />}
+                      // progressPending={loading}
+                      // progressComponent={<LoadingAnimation />}
                       pagination
                       paginationServer
                       paginationTotalRows={totalRows}

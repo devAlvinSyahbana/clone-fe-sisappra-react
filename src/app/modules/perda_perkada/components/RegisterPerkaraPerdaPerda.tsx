@@ -117,7 +117,7 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-export function LaporanPenerbitanMinumBeralkohol() {
+export function RegisterPerkaraPerdaPerda() {
   let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -158,7 +158,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
     },
 
     {
-      name: 'Unit Organisasi ',
+      name: 'Kota/Kabupaten ',
       selector: (row: any) => row.kota,
       sortable: true,
       sortField: 'kota',
@@ -167,7 +167,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
       center: true,
     },
     {
-      name: 'Jumlah',
+      name: 'Kecamatan',
       selector: (row: any) => row.kecamatan,
       sortable: true,
       sortField: 'kecamatan',
@@ -176,25 +176,39 @@ export function LaporanPenerbitanMinumBeralkohol() {
       center: true,
     },
     {
-      name: 'Jenis/Merk',
+      name: 'Kelurahan',
       selector: (row: any) => row.kelurahan,
       sortable: true,
       sortField: 'kelurahan',
       wrap: true,
     },
     {
-      name: 'Tanggal',
+      name: 'Lokasi',
       selector: (row: any) => row.lokasi,
       sortable: true,
       sortField: 'lokasi',
       wrap: true,
     },
     {
-      name: 'Keterangan',
+      name: 'Titik Koordinat',
       selector: (row: any) => row.titik_koordinat,
       sortable: true,
       sortField: 'titik_koordinat',
       width: '200px',
+      wrap: true,
+    },
+    {
+      name: 'Kategori',
+      selector: (row: any) => row.kategori,
+      sortable: true,
+      sortField: 'kategori',
+      wrap: true,
+    },
+    {
+      name: 'Keterangan',
+      selector: (row: any) => row.keterangan,
+      sortable: true,
+      sortField: 'keterangan',
       wrap: true,
     },
   ]
@@ -403,11 +417,11 @@ export function LaporanPenerbitanMinumBeralkohol() {
       <div className={`card`}>
         {/* begin::Body */}
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Unit Organisasi
-              </label>
+          <div className='row g-8 mt-2 ms-5 me-5'>
+            <label>
+              <h3>Kategori Kasus</h3>
+            </label>
+            <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
               <AsyncSelect
                 className='mb-5'
                 value={
@@ -421,55 +435,15 @@ export function LaporanPenerbitanMinumBeralkohol() {
                 styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
               />
             </div>
-          </div>
-          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Tahun
-              </label>
-              <AsyncSelect
-                className='mb-5'
-                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsKecamatan}
-                defaultOptions={masterBidangWilayah}
-                onChange={handleChangeInputKecamatan}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-          </div>
-          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Bulan
-              </label>
-              <AsyncSelect
-                value={valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsJabatan}
-                defaultOptions={masterPelaksana}
-                onChange={handleChangeInputJabatan}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='row g-8 mt-2 ms-5 me-5'>
-            <div className='col-md-6 col-lg-6 col-sm-12'>
+            <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
               <Link to='#' onClick={handleFilter}>
+                {/* 1 */}
                 <button className='btn btn-light-primary me-2'>
                   <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
                   Cari
                 </button>
               </Link>
-              <Link to='#' onClick={handleFilterReset}>
-                <button className='btn btn-light-primary'>
-                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                  Reset
-                </button>
-              </Link>
             </div>
-
             <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
               {/* begin::Filter Button */}
               <button
@@ -531,6 +505,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
             </div>
           </div>
         </div>
+
         <div className='col-xl-12 mb-xl-12 mt-6'>
           <div className='card card-flush h-xl-100'>
             <div
