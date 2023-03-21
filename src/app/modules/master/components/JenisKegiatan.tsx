@@ -22,7 +22,6 @@ import {Row} from 'react-bootstrap'
 const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export const JENIS_KEGIATAN_URL = `${API_URL}/jenis-kegiatan`
 
-
 // Theme for dark or light interface
 createTheme(
   'darkMetro',
@@ -178,6 +177,7 @@ export function JenisKegiatan() {
 
   const [data, setData] = useState([])
   const [temp, setTemp] = useState<any[]>([])
+  const [filterTemp, setFilterTemp] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
@@ -185,24 +185,58 @@ export function JenisKegiatan() {
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
-  const handleFilter = async () => { //3
-    let uriParam = ''
-    if (valFilterJenisKegiatan.val !== '') {
-      uriParam += `${valFilterJenisKegiatan.val}`
-    }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  const handleFilter = async () => {
+    console.log('tes1', valFilterJenisKegiatan.val)
+    setUriFind((prevState) => ({...prevState, strparam: valFilterJenisKegiatan.val}))
+    const filterData: any = temp.filter(
+      (i: any) => i.nama.toLowerCase() === valFilterJenisKegiatan.val.toLowerCase()
+    )
+    setFilterTemp(filterData)
   }
+
+  // const handleFilter = async () => {
+  // let uriParam = '';
+  // if (valFilterJenisKegiatan.val !== '') {
+  //   uriParam += valFilterJenisKegiatan.val;
+  // }
+  // await setUriFind((prevState) => ({...prevState, strparam: uriParam}));
+  // console.log('tes1', qParamFind.strparam)
+  // if (qParamFind.strparam) {
+  //   console.log('tes if', qParamFind.strparam)
+  //   const filterData: any = temp.filter(
+  //     (i: any) => i.nama.toLowerCase() === qParamFind.strparam.toLowerCase()
+  //     );
+  //     setFilterTemp(filterData);
+  //   }
+  // };
+
+  // const handleFilter = async () => { //3
+  //   let uriParam = ''
+  //   if (valFilterJenisKegiatan.val !== '') {
+  //     uriParam += `${valFilterJenisKegiatan.val}`
+  //   }
+  //   await setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  //   const filterData: any = temp.filter(
+  //     (i: any) => i.nama.toLowerCase() === qParamFind.strparam.toLowerCase()
+  //   )
+  //   const timeout = setTimeout(() => {
+  //     setFilterTemp(filterData)
+  //   }, 500)
+
+  //   return () => clearTimeout(timeout)
+  // }
 
   const handleFilterReset = () => {
     setFilterJenisKegiatan({val: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const handleChangeInputJenisKegiatan = (event: { //5
+  const handleChangeInputJenisKegiatan = (event: {
+    //5
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setFilterJenisKegiatan({ val: event.target.value })
+    setFilterJenisKegiatan({val: event.target.value})
   }
 
   // START::CRUD
@@ -220,7 +254,6 @@ export function JenisKegiatan() {
     )
   }
 
-
   let number = 1
   // Kolom table
   const columns = [
@@ -229,7 +262,7 @@ export function JenisKegiatan() {
       selector: (row: any) => row.serial,
       sortable: true,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{ row.serial }</div>
+        return <div className='mb-2 mt-2'>{row.serial}</div>
       },
     },
     {
@@ -266,7 +299,9 @@ export function JenisKegiatan() {
                     <Dropdown.Item
                       href='#'
                       onClick={() =>
-                        navigate('/master/JenisKegiatan/LihatJenisKegiatan/' + record.id, {replace: true})
+                        navigate('/master/JenisKegiatan/LihatJenisKegiatan/' + record.id, {
+                          replace: true,
+                        })
                       }
                     >
                       Detail
@@ -299,31 +334,31 @@ export function JenisKegiatan() {
       setTotalRows(response.data.total_data)
       const timeout = setTimeout(() => {
         let items = response.data.data
-      Array.from(items).forEach((item: any, index: any) => {
-        item.serial = index + 1
-      })
-      setTemp(items)
-      setLoading(false)
-      }, 100);
-      
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 100)
+
       return () => clearTimeout(timeout)
-      
     }
-    fetchUsers(1)
+    // fetchUsers(1)
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchUsers = async (page: any) => { //urutan 3
+  const fetchUsers = async (page: any) => {
+    //urutan 3
     setLoading(true)
     const value = await axios.get(`${JENIS_KEGIATAN_URL}/find`)
     const timeout = setTimeout(() => {
       let items = value.data.data
       Array.from(items).forEach((item: any, index: any) => {
-      item.serial = index + 1
-    })
-    setTemp(items)
-    setLoading(false)
-    }, 50);
+        item.serial = index + 1
+      })
+      setTemp(items)
+      setLoading(false)
+    }, 50)
     return () => clearTimeout(timeout)
   }
   // END :: VIEW
@@ -354,7 +389,7 @@ export function JenisKegiatan() {
       }
       try {
         if (aksi === 0) {
-          const response = await axios.post(`${JENIS_KEGIATAN_URL}/create`, bodyparam)
+          const response = await axios.post(`${JENIS_KEGIATAN_URL}/create`)
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -363,7 +398,7 @@ export function JenisKegiatan() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers(1)
+            // fetchUsers(1)
             setSubmitting(false)
           }
         } else {
@@ -379,7 +414,7 @@ export function JenisKegiatan() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers(1)
+            // fetchUsers(1)
             setSubmitting(false)
           }
         }
@@ -403,7 +438,7 @@ export function JenisKegiatan() {
     })
   }
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
-  
+
   // GET ID FOR UPDATE
   const getDetail = async (idparam: any) => {
     const {data} = await axios.get(`${JENIS_KEGIATAN_URL}/findone/${parseInt(idparam)}`)
@@ -422,7 +457,7 @@ export function JenisKegiatan() {
     setAksi(1)
     getDetail(id)
   }
-  
+
   // DELETE
   const konfirDel = (id: number) => {
     Swal.fire({
@@ -443,7 +478,7 @@ export function JenisKegiatan() {
         }
         const response = await axios.delete(`${JENIS_KEGIATAN_URL}/delete/${id}`, bodyParam)
         if (response) {
-          fetchUsers(1)
+          // fetchUsers(1)
           Swal.fire({
             icon: 'success',
             text: 'Data berhasil dihapus',
@@ -484,8 +519,8 @@ export function JenisKegiatan() {
           />
         </div>
         <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-          <Link to='#' onClick={handleFilter}> 
-          {/* 1 */}
+          <Link to='#' onClick={handleFilter}>
+            {/* 1 */}
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
@@ -496,13 +531,13 @@ export function JenisKegiatan() {
           <Link to='#i'>
             <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah 
+              Tambah
             </button>
           </Link>
         </div>
       </div>
       <>
-        <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
+        <Modal show={show} backdrop='static' keyboard={false} centered>
           <Modal.Header closeButton>
             <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'} Jenis Kegiatan</Modal.Title>
           </Modal.Header>
@@ -512,26 +547,26 @@ export function JenisKegiatan() {
                 <div className='form-group'>
                   <Form.Label>Jenis Kegiatan</Form.Label>
                   <Form.Control
-                      name='jenis_kegiatan'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid': formik.touched.jenis_kegiatan && formik.errors.jenis_kegiatan,
-                        },
-                        {
-                          'is-valid': formik.touched.jenis_kegiatan && !formik.errors.jenis_kegiatan,
-                        }
-                      )}
-                      onChange={handleChangeFormik}
-                      value={valuesFormik?.jenis_kegiatan}
-                    />
-                    {formik.touched.jenis_kegiatan && formik.errors.jenis_kegiatan && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.jenis_kegiatan}</span>
-                        </div>
-                      </div>
+                    name='jenis_kegiatan'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.jenis_kegiatan && formik.errors.jenis_kegiatan,
+                      },
+                      {
+                        'is-valid': formik.touched.jenis_kegiatan && !formik.errors.jenis_kegiatan,
+                      }
                     )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.jenis_kegiatan}
+                  />
+                  {formik.touched.jenis_kegiatan && formik.errors.jenis_kegiatan && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.jenis_kegiatan}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className='p-0 mt-6'>
                   <div className='text-center'>
@@ -558,32 +593,31 @@ export function JenisKegiatan() {
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5 w'>
-      {temp?.length > 0 && temp && (
+        {temp?.length > 0 && temp && (
           <DataTable
-          columns={columns}
-          data={temp}
-          progressPending={loading}
-          customStyles={customStyles}
-          progressComponent={<LoadingAnimation />}
-          pagination
-          // paginationServer
-          paginationTotalRows={totalRows}
-          
-          //    expandableRowsComponent={(row) => (
-          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
-          // )}
-          // expandableRowsComponent={ExpandedComponent}
-          // onChangeRowsPerPage={handlePerRowsChange}
-          // onChangePage={handlePageChange}
-          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-          noDataComponent={
-            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-              <div className='d-flex flex-column'>
-                <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+            columns={columns}
+            data={qParamFind.strparam ? filterTemp : temp}
+            progressPending={loading}
+            customStyles={customStyles}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            // paginationServer
+            paginationTotalRows={totalRows}
+            //    expandableRowsComponent={(row) => (
+            //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+            // )}
+            // expandableRowsComponent={ExpandedComponent}
+            // onChangeRowsPerPage={handlePerRowsChange}
+            // onChangePage={handlePageChange}
+            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={
+              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                <div className='d-flex flex-column'>
+                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                </div>
               </div>
-            </div>
-          }
-        />
+            }
+          />
         )}
       </div>
       {/* end::Body */}

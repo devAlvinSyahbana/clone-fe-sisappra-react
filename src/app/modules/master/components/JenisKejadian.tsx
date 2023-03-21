@@ -22,7 +22,6 @@ import {Row} from 'react-bootstrap'
 const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export const JENIS_KEJADIAN_URL = `${API_URL}/jenis-kejadian` 
 
-
 // Theme for dark or light interface
 createTheme(
   'darkMetro',
@@ -166,7 +165,6 @@ export interface FormInput {
 }
 
 const validatorForm = Yup.object().shape({
-
   jenis_kejadian: Yup.string().required('Wajib diisi'),
 })
 
@@ -179,6 +177,7 @@ export function JenisKejadian() {
 
   const [data, setData] = useState([])
   const [temp, setTemp] = useState<any[]>([])
+  const [filterTemp, setFilterTemp] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [qParamFind, setUriFind] = useState({strparam: ''})
   const [show, setShow] = useState(false)
@@ -186,13 +185,30 @@ export function JenisKejadian() {
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
-  const handleFilter = async () => { //3
-    let uriParam = ''
-    if (valFilterJenisKejadian.val !== '') {
-      uriParam += `${valFilterJenisKejadian.val}`
-    }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  const handleFilter = async () => {
+    console.log('tes1', valFilterJenisKejadian.val)
+    setUriFind((prevState) => ({...prevState, strparam: valFilterJenisKejadian.val}))
+    const filterData: any = temp.filter(
+      (i: any) => i.nama.toLowerCase() === valFilterJenisKejadian.val.toLowerCase()
+    )
+    setFilterTemp(filterData)
   }
+
+  // const handleFilter = async () => {//3
+  //   let uriParam = ''
+  //   if (valFilterJenisKejadian.val !== '') {
+  //     uriParam += `${valFilterJenisKejadian.val}`
+  //   }
+  //   setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+  //   const filterData: any = temp.filter(
+  //     (i: any) => i.nama.toLowerCase() === qParamFind.strparam.toLowerCase()
+  //   )
+  //   const timeout = setTimeout(() => {
+  //     setFilterTemp(filterData)
+  //   }, 500)
+
+  //   return () => clearTimeout(timeout)
+  // }
 
   const handleFilterReset = () => {
     setFilterJenisKejadian({val: ''})
@@ -220,7 +236,6 @@ export function JenisKejadian() {
       </>
     )
   }
-
 
   let number = 1
   // Kolom table
@@ -307,7 +322,7 @@ export function JenisKejadian() {
       return () => clearTimeout(timeout)
       
     }
-    fetchUsers(1)
+    // fetchUsers(1)
     fetchDT(1)
   }, [qParamFind, perPage])
 
@@ -378,7 +393,7 @@ export function JenisKejadian() {
               timer: 1500,
             })
             handleClose()
-            fetchUsers(1)
+            // fetchUsers(1)
             setSubmitting(false)
           }
         }
@@ -483,8 +498,8 @@ export function JenisKejadian() {
           />
         </div>
         <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-          <Link to='#' onClick={handleFilter}> 
-          {/* 1 */}
+          <Link to='#' onClick={handleFilter}>
+            {/* 1 */}
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
@@ -495,7 +510,7 @@ export function JenisKejadian() {
           <Link to='#i'>
             <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah 
+              Tambah
             </button>
           </Link>
         </div>
@@ -511,26 +526,26 @@ export function JenisKejadian() {
                 <div className='form-group'>
                   <Form.Label>Jenis Kejadian</Form.Label>
                   <Form.Control
-                      name='jenis_kejadian'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid': formik.touched.jenis_kejadian && formik.errors.jenis_kejadian,
-                        },
-                        {
-                          'is-valid': formik.touched.jenis_kejadian && !formik.errors.jenis_kejadian,
-                        }
-                      )}
-                      onChange={handleChangeFormik}
-                      value={valuesFormik?.jenis_kejadian}
-                    />
-                    {formik.touched.jenis_kejadian && formik.errors.jenis_kejadian && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.jenis_kejadian}</span>
-                        </div>
-                      </div>
+                    name='jenis_kejadian'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.jenis_kejadian && formik.errors.jenis_kejadian,
+                      },
+                      {
+                        'is-valid': formik.touched.jenis_kejadian && !formik.errors.jenis_kejadian,
+                      }
                     )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.jenis_kejadian}
+                  />
+                  {formik.touched.jenis_kejadian && formik.errors.jenis_kejadian && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.jenis_kejadian}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className='p-0 mt-6'>
                   <div className='text-center'>
@@ -557,32 +572,31 @@ export function JenisKejadian() {
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5 w'>
-      {temp?.length > 0 && temp && (
+        {temp?.length > 0 && temp && (
           <DataTable
-          columns={columns}
-          data={temp}
-          progressPending={loading}
-          customStyles={customStyles}
-          progressComponent={<LoadingAnimation />}
-          pagination
-          // paginationServer
-          paginationTotalRows={totalRows}
-          
-          //    expandableRowsComponent={(row) => (
-          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
-          // )}
-          // expandableRowsComponent={ExpandedComponent}
-          // onChangeRowsPerPage={handlePerRowsChange}
-          // onChangePage={handlePageChange}
-          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-          noDataComponent={
-            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-              <div className='d-flex flex-column'>
-                <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+            columns={columns}
+            data={qParamFind.strparam ? filterTemp : temp}
+            progressPending={loading}
+            customStyles={customStyles}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            // paginationServer
+            paginationTotalRows={totalRows}
+            //    expandableRowsComponent={(row) => (
+            //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+            // )}
+            // expandableRowsComponent={ExpandedComponent}
+            // onChangeRowsPerPage={handlePerRowsChange}
+            // onChangePage={handlePageChange}
+            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={
+              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                <div className='d-flex flex-column'>
+                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                </div>
               </div>
-            </div>
-          }
-        />
+            }
+          />
         )}
       </div>
       {/* end::Body */}
