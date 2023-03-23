@@ -4,6 +4,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
 import AsyncSelect from 'react-select/async'
 import {KTSVG} from '../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
@@ -117,7 +118,7 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-export function RegisterPerkaraPerdaPerda() {
+export function RegisterPerdaPerkada() {
   let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -413,7 +414,7 @@ export function RegisterPerkaraPerdaPerda() {
 
   return (
     <>
-      {/* <LaporanRekapHeader /> */}
+      <LaporanPerdaPerkadaHeader />
       <div className={`card`}>
         {/* begin::Body */}
         <div className='row g-8 mt-2 ms-5 me-5'>
