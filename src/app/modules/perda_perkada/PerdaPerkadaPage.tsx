@@ -48,7 +48,7 @@ const PerdaPerkadaPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Laporan Penerbitan Minum Beralkohol
+                Laporan Penertiban Minum Beralkohol
               </PageTitle>
               <LaporanMinol />
             </>
@@ -70,7 +70,7 @@ const PerdaPerkadaPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Laporan Penegakan Perda dan Perkada
+                Laporan Perda dan Perkada
               </PageTitle>
               <LaporanPerdaPerkada />
             </>

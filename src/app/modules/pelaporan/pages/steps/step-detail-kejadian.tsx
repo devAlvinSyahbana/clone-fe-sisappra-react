@@ -18,10 +18,6 @@ import {
   ToFieldStateCE,
 } from '../../components/fields.formikcto'
 import Swal from 'sweetalert2'
-import axios from 'axios'
-import AsyncSelect from 'react-select/async'
-import {ThemeModeComponent} from '../../../../../_metronic/assets/ts/layout'
-import {useThemeMode} from '../../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 interface StepDetailKejadianProps {
   handleChange?: {
@@ -46,7 +42,6 @@ interface StepDetailKejadianProps {
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
 }
 
-export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
   handleChange,
   handleBlur,
@@ -77,90 +72,6 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
     dispatch(updateKecamatanList())
     dispatch(updateKelurahanList())
   }, [jenisKejadianSelect])
-
-  // GET DATA
-  interface SelectOptionAutoCom {
-    readonly value: string
-    readonly label: string
-    readonly color: string
-    readonly isFixed?: boolean
-    readonly isDisabled?: boolean
-  }
-  
-  // GET Kota
-  const [valKota, setValKota] = useState({value: null, label: ''})
-  const filterKota = async (inputValue: string) => {
-    const response = await axios.get(API_URL + `/kota/` + inputValue)
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
-  }
-  const loadOptionsKota = (
-    inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKota(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputKota = (newValue: any) => {
-    setValKota((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdKota((prevstate) => ({
-      ...prevstate,
-      id: newValue.value,
-    }))
-  }
-  const [kejadian__kota_id, setIdKota] = useState({id: ''})
-
-  // GET Kecamatan
-  const [valKecamatan, setValKecamatan] = useState({value: null, label: ''})
-  const filterKecamatan = async (inputValue: string) => {
-    const response = await axios.get(
-      `${API_URL}/kecamatan?kejadian__kecamatan_id=${parseInt(kejadian__kota_id.id)}${
-        inputValue !== '' && `&nama=${inputValue}`
-      }`
-    )
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
-  }
-  const loadOptionsKecamatan = (
-    inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKecamatan(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputKecamatan = (newValue: any) => {
-    setValKecamatan((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdKecamatan((prevstate) => ({
-      ...prevstate,
-      id: newValue.value,
-    }))
-  }
-  const [kejadian__kecamatan_id, setIdKecamatan] = useState({id: ''})
-  
-  // GET Kelurahan
-  const [valKelurahan, setValKelurahan] = useState({value: null, label: ''})
-  const filterKelurahan = async (inputValue: string) => {
-    const response = await axios.get(
-      `${API_URL}/kelurahan?kejadian__kelurahan_id=${parseInt(kejadian__kecamatan_id.id)}${
-        inputValue !== '' && `&nama=${inputValue}`
-      }`
-    )
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
-  }
-  const loadOptionsKelurahan = (
-    inputValue: string,
-    callback: (options: SelectOptionAutoCom[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKelurahan(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputKelurahan = (newValue: any) => {
-    setValKelurahan((prevstate: any) => ({...prevstate, ...newValue}))
-  }
 
   return (
     <div className='w-50'>
@@ -518,6 +429,6 @@ export const StepDetailKejadian: FC<StepDetailKejadianProps> = ({
           </>
         )}
       </div>
-    </div>    
+    </div>
   )
 }
