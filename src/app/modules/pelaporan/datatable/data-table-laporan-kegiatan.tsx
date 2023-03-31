@@ -7,7 +7,6 @@ import { RootState } from '../../../redux/store'
 import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
 import { KTSVG } from '../../../../_metronic/helpers'
 import { useNavigate } from 'react-router-dom'
-import { unparse } from 'papaparse'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -25,17 +24,6 @@ const LoadingAnimation = (props: any) => {
       </div>
     </>
   )
-}
-
-const unduhCSV = (data: any[]) => {
-  const csvData = unparse(data)
-  const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(blob)
-  link.setAttribute('download', 'LAPORAN KEGIATAN.csv')
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
 }
 
 // export const jenisKegiatanList = async () => {}
@@ -144,19 +132,6 @@ export const DtKabid: FC<any> = ({
 
   return (
     <div>
-      <button
-        type='button'
-        data-kt-menu-trigger='click'
-        data-kt-menu-placement='bottom-end'
-        style={{ float: 'right', marginRight: '50px' }}
-        className='btn btn-light-primary'
-        onClick={() => unduhCSV(data)}
-      >
-        <>
-          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-          Unduh CSV
-        </>
-      </button>
       <DataTable
         columns={columns2}
         data={data}
@@ -187,20 +162,7 @@ export const DtAdmin: FC<any> = ({
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({ row }: { row: number }) => {
-    // const [valData, setValData] = useState('')
     const jenisKegiatanLabel = jenisKegiatanList.find((i: any) => i.value === row)
-    // useEffect(() => {
-    //   async function fetchDT(id: number) {
-    //     const {data} = await axios.get(
-    //       `${MASTERDATA_URL}/jenis-kegiatan/?%24filter=id%20eq%20${id}`
-    //     )
-    //     const result: string = data.data[0].nama
-    //     setValData(result)
-    //     // console.log(data)
-    //   }
-    //   fetchDT(row)
-    // }, [valData, row])
-
     return <>{jenisKegiatanLabel?.text}</>
   }
 
@@ -318,19 +280,6 @@ export const DtAdmin: FC<any> = ({
 
   return (
     <div>
-      <button
-        type='button'
-        data-kt-menu-trigger='click'
-        data-kt-menu-placement='bottom-end'
-        style={{ float: 'right', marginRight: '50px' }}
-        className='btn btn-light-primary'
-        onClick={() => unduhCSV(data)}
-      >
-        <>
-          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-          Unduh CSV
-        </>
-      </button>
       <DataTable
         columns={columns2}
         data={data}
@@ -380,8 +329,8 @@ export const DtPimpinan: FC<any> = ({
     const [valData, setValData] = useState(0)
     useEffect(() => {
       async function fetchDT(id: number, jk: number) {
-        const {data} = await axios.get(
-          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut_administrasi_penyelesaian_id%20eq%20${jk}`
+        const { data } = await axios.get(
+          `${PELAPORAN_URL}/kegiatan-umum/?%24filter=created_by%20eq%20%27${id}%27%20and%20tindak_lanjut__administrasi__penyelesaian_id%20eq%20${jk}`
         )
         const result = data.total_items
         console.log(result)
@@ -674,21 +623,7 @@ export const DtPimpinan: FC<any> = ({
 
   return (
     <div>
-      <button
-        type='button'
-        data-kt-menu-trigger='click'
-        data-kt-menu-placement='bottom-end'
-        style={{ float: 'right', marginRight: '50px' }}
-        className='btn btn-light-primary'
-        onClick={() => unduhCSV(data)}
-      >
-        <>
-          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-          Unduh CSV
-        </>
-      </button>
       <DataTable columns={columns3} data={data} pagination />
-        
-    </div>
+    </div >
   )
 }

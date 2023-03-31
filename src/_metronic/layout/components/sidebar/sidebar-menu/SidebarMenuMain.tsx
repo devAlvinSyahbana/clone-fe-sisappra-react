@@ -107,18 +107,23 @@ const SidebarMenuMain = () => {
             icon='/media/icons/duotune/finance/fin001.svg'
           >
             <SidebarMenuItem
-              to='/perdaperkada/LaporanPenegakanPerdaPerkada'
+              to='/perdaperkada/LaporanPerdaPerkada'
               title='Laporan Penegakan Perda & Perkada'
               hasBullet={true}
             />
             <SidebarMenuItem
-              to='/perdaperkada/LaporanPenertibanMinumBeralkohol'
-              title='Laporan Penertiban Minuman Beralkohol'
+              to='/perdaperkada/LaporanSidangTipiring'
+              title='Laporan Sidang Tipiring'
+              hasBullet={true}
+            />
+            <SidebarMenuItem
+              to='/perdaperkada/LaporanMinol'
+              title='Laporan Penertiban Minuman Berakohol'
               hasBullet={true}
             />
             <SidebarMenuItem
               to='/perdaperkada/LaporanBangunan'
-              title='Laporan Bangunan'
+              title='Laporan Penertiban Bangunan'
               hasBullet={true}
             />
             <SidebarMenuItem

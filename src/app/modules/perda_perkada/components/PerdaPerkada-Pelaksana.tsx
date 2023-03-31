@@ -9,10 +9,9 @@ import {
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
 import { RootState } from '../../../redux/store'
-import { unparse } from 'papaparse'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { DtPerdaPerkada } from './data-table-laporan-perda-perkada'
+import { DtPerdaPerkadaPelaksana } from './data-table-laporan-perda-perkada'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
@@ -22,7 +21,6 @@ import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
 import { string } from 'yup'
-import { array } from '@amcharts/amcharts5'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -124,19 +122,19 @@ export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const MASTER_URL = `${API_URL}/master`
 
-interface jenisPenertibanInterface {
-  no: number
-  jenis_penertiban: string
-  jumlah_pelanggaran: number
-  peringatan: number
-  penutupan_penyegelan: number
-  pencabutan_izin: number
-  yang_lain: number
-  denda_pengadilan: string
-  denda_non_pengadilan: string
+interface pelaksanaInterface {
+  no : number
+  pelaksana : string
+  jumlah_pelanggaran : number
+  peringatan : number
+  penutupan_penyegelan : number
+  pencabutan_izin : number
+  yang_lain : number
+  denda_pengadilan : string
+  denda_non_pengadilan : string
 }
 
-export function LaporanPerdaPerkada() {
+export function PerdaPerkada_Pelaksana() {
   const navigate = useNavigate()
   const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -169,23 +167,11 @@ export function LaporanPerdaPerkada() {
   const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
   const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
 
-  const [data, setData] = useState<jenisPenertibanInterface[]>([])
+  const [data, setData] = useState<pelaksanaInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({ strparam: '' })
-
-  const unduhCSV = (data: any[]) => {
-    const csvData = unparse(data)
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.setAttribute('download', 'LAPORAN PENEGAKAN PERDA/PERKADA.csv')
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-  }
-
 
   const filterList = async () => {
     const resKota = await axios.get(`${MASTER_URL}/kota/find`)
@@ -309,25 +295,20 @@ export function LaporanPerdaPerkada() {
     } else if (tanggalAkhir.val !== '') {
       uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAkhir.val}%27`
     }
-    if (valJenisKegiatan.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-    } else if (valJenisKegiatan.value !== '') {
-      uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-    }
+    // if (valJenisKegiatan.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
+    //   uriParam += `%20and%20kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
+    // } else if (valJenisKegiatan.value !== '') {
+    //   uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
+    // }
     if (valJenisPenertiban.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
+      uriParam += `%20and%tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
     } else if (valJenisPenertiban.value !== '') {
       uriParam += `tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
     }
     if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
+      uriParam += `%20and%tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
     } else if (valJenisPerdaPerkada.value !== '') {
       uriParam += `tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    }
-    if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    } else if (valJenisPerdaPerkada.value !== '') {
-      uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
     }
     setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
@@ -357,16 +338,19 @@ export function LaporanPerdaPerkada() {
         //   jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
         //   uraian_kegiatan: d.kegiatan__uraian_kegiatan,
         //   lokasi: d.kegiatan__lokasi,
-        //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
-        //   denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
-        //   denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+        //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban
         // }))
         // Array.from(data).forEach((item: any, index: any) => {
         //   item.serial = index + 1
         // })
-        const arr: jenisPenertibanInterface[] = [{ no: 1, jenis_penertiban: 'TERTIB JALAN, ANGKUTAN JALAN DAN ANGKUTAN SUNGAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 2, jenis_penertiban: 'TERTIB JALUR HIJAU, TAMAN DAN TEMPAT UMUM', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 3, jenis_penertiban: 'TERTIB LINGKUNGAN', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 4, jenis_penertiban: 'TERTIB TEMPAT USAHA', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 5, jenis_penertiban: 'TERTIB SUNGAI, SALURAN, KOLAM DAN LEPAS PANTAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
+        const arr: pelaksanaInterface[] = [
+        { no: 1, pelaksana: 'KOTA ADMINISTRASI JAKARTA PUSAT', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
+        { no: 2, pelaksana: 'KOTA ADMINISTRASI JAKARTA UTARA', jumlah_pelanggaran: 70, peringatan: 10, penutupan_penyegelan: 20, pencabutan_izin: 0, yang_lain: 40, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
+        { no: 3, pelaksana: 'KOTA ADMINISTRASI JAKARTA BARAT', jumlah_pelanggaran: 100, peringatan: 15, penutupan_penyegelan: 25, pencabutan_izin: 0, yang_lain: 60, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
+        { no: 4, pelaksana: 'KOTA ADMINISTRASI JAKARTA SELATAN', jumlah_pelanggaran: 95, peringatan: 20, penutupan_penyegelan: 30, pencabutan_izin: 0, yang_lain: 45, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' },
+        { no: 5, pelaksana: 'KOTA ADMINISTRASI JAKARTA TIMUR', jumlah_pelanggaran: 95, peringatan: 20, penutupan_penyegelan: 30, pencabutan_izin: 0, yang_lain: 45, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
         setData(arr)
-        setTotalRows(5)
+        setTotalRows(res.data.total_items)
         setLoading(false)
 
         return [data, setData] as const
@@ -528,13 +512,27 @@ export function LaporanPerdaPerkada() {
     return [data, setData] as const
   }
 
+  //unduh
+  const handleUnduh = async () => {
+    setbtnLoadingUnduh(true)
+    await axios({
+      url: `${MASTERDATA_URL}unduh?status=${qParamFind.strparam}`,
+      method: 'GET',
+      responseType: 'blob', // Important
+    }).then((response) => {
+      FileDownload(response.data, 'DATA STATUS KENAIKAN PANGKAT.xlsx')
+      setbtnLoadingUnduh(false)
+    })
+  }
+  //end unduh
+
   const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -545,11 +543,9 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterBidangWilayah({id: newValue.value})
-    setValMasterPelaksana({value: null, label: ''})
-    // setValMasterJabatan({value: null, label: ''})
-    // console.log('cek', newValue.value)
+    setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setIdMasterBidangWilayah({ id: newValue.value })
+    setValMasterPelaksana({ value: null, label: '' })
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
@@ -560,25 +556,22 @@ export function LaporanPerdaPerkada() {
         item.value = item.id
       })
       setMasterBidangWilayah(items)
-      // console.log(items)
     }, 100)
 
     return () => clearTimeout(timeout)
   }
-  //end nama_hak_akses
 
   // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
   const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
-        inputValue !== '' && `&nama=${inputValue}`
+      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
       }`
     )
     const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsKecamatan = (
     inputValue: string,
@@ -641,16 +634,16 @@ export function LaporanPerdaPerkada() {
                       <div className='row'>
                         <div className='col-4 pt-2'>
                           <label className='form-label align-middle'>
-                            Jenis Kegiatan
+                            Pelaksana Kegiatan
                           </label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='filter_jenis_kegiatan_id_selection'
+                            name='pelaksana'
                             defaultOptions
-                            value={valJenisKegiatan}
-                            loadOptions={loadOptionsJenisKegiatan}
-                            onChange={handleChangeInputJenisKegiatan}
+                            // value={valJenisPenertiban}
+                            // loadOptions={loadOptionsJenisPenertiban}
+                            // onChange={handleChangeInputJenisPenertiban}
                             styles={
                               calculatedMode === 'dark'
                                 ? reactSelectDarkThem
@@ -666,16 +659,16 @@ export function LaporanPerdaPerkada() {
                       <div className='row'>
                         <div className='col-4 pt-2'>
                           <label className='form-label align-middle'>
-                            Jenis Penertiban
+                            Kota
                           </label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
                             name='jenis_penertiban'
                             defaultOptions
-                            value={valJenisPenertiban}
-                            loadOptions={loadOptionsJenisPenertiban}
-                            onChange={handleChangeInputJenisPenertiban}
+                            // value={valJenisPenertiban}
+                            // loadOptions={loadOptionsJenisPenertiban}
+                            // onChange={handleChangeInputJenisPenertiban}
                             styles={
                               calculatedMode === 'dark'
                                 ? reactSelectDarkThem
@@ -691,16 +684,41 @@ export function LaporanPerdaPerkada() {
                       <div className='row'>
                         <div className='col-4 pt-2'>
                           <label className='form-label align-middle'>
-                            Jenis Perda Perkada
+                            Kecamatan
                           </label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='jenis_perda_perkada'
+                            name='jenis_penertiban'
                             defaultOptions
-                            value={valJenisPerdaPerkada}
-                            loadOptions={loadOptionsJenisPerdaPerkada}
-                            onChange={handleChangeInputJenisPerdaPerkada}
+                            // value={valJenisPenertiban}
+                            // loadOptions={loadOptionsJenisPenertiban}
+                            // onChange={handleChangeInputJenisPenertiban}
+                            styles={
+                              calculatedMode === 'dark'
+                                ? reactSelectDarkThem
+                                : reactSelectLightThem
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                    <div className='mb-10'>
+                      <div className='row'>
+                        <div className='col-4 pt-2'>
+                          <label className='form-label align-middle'>
+                            Kelurahan
+                          </label>
+                        </div>
+                        <div className='col-8'>
+                          <AsyncSelect
+                            name='jenis_penertiban'
+                            defaultOptions
+                            // value={valJenisPenertiban}
+                            // loadOptions={loadOptionsJenisPenertiban}
+                            // onChange={handleChangeInputJenisPenertiban}
                             styles={
                               calculatedMode === 'dark'
                                 ? reactSelectDarkThem
@@ -774,18 +792,7 @@ export function LaporanPerdaPerkada() {
                         </Button>
                       </Link>
                     </div>
-                    <div className='d-flex justify-content-start col-md-4 col-lg-5 col-sm-6'>
-                      <button
-                        type='button'
-                        className='btn btn-light-primary'
-                        data-kt-menu-trigger='click'
-                        onClick={() => unduhCSV(data)}>
-                        <>
-                          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-                          Unduh CSV
-                        </>
-                      </button>
-                      <div className='d-flex justify-content-end col-md-4 col-lg-7 col-sm-12'>
+                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                       <Button
                         type='button'
                         className='btn btn-primary'
@@ -814,11 +821,11 @@ export function LaporanPerdaPerkada() {
 
                         {/* begin::Content */}
                         <div data-kt-user-table-filter='form'>
-                          <button
-                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                            className='btn btn-outline btn-active-light-primary w-100'
+                          <button 
+                          onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                          className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Pelaksana
+                          Pelaksana
                           </button>
                         </div>
                         {/* end::Content */}
@@ -827,7 +834,6 @@ export function LaporanPerdaPerkada() {
                     </div>
                   </div>
                   {/* END :: Button */}
-                </div>
                 </div>
               </div>
             </div>
@@ -849,7 +855,7 @@ export function LaporanPerdaPerkada() {
           </div>
         </div>
         <div className='card-body py-4'>
-          <DtPerdaPerkada
+          <DtPerdaPerkadaPelaksana
             data={data}
             totalRows={totalRows}
             handlePerRowsChange={handlePerRowsChange}
