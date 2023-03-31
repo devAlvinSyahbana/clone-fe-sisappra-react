@@ -159,11 +159,12 @@ export const DtKabid: FC<any> = ({
         data-kt-menu-placement='bottom-end'
         style={{float: 'right', marginRight: '50px'}}
         className='btn btn-light-primary'
-        onClick={() => unduhCSV(data)}>
-          <>
+        onClick={() => unduhCSV(data)}
+      >
+        <>
           <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-            Unduh CSV
-          </>
+          Unduh CSV
+        </>
       </button>
       <DataTable
         columns={columns1}
@@ -376,11 +377,12 @@ export const DtAdmin: FC<any> = ({
           data-kt-menu-placement='bottom-end'
           style={{float: 'right', marginRight: '50px'}}
           className='btn btn-light-primary'
-          onClick={() => unduhCSV(data)}>
-            <>
+          onClick={() => unduhCSV(data)}
+        >
+          <>
             <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-              Unduh CSV
-            </>
+            Unduh CSV
+          </>
         </button>
         <DataTable
           columns={columns2}
@@ -595,12 +597,13 @@ export const DtPimpinan: FC<any> = ({aksi, jumlah, theme, kota, pelaporanUrl}) =
         type='button'
         className='btn btn-light-primary'
         data-kt-menu-trigger='click'
-        data-kt-menu-placement='bottom-end'    
-        onClick={() => unduhCSV(kota)}>
-          <>
-            <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-            Unduh CSV
-          </>
+        data-kt-menu-placement='bottom-end'
+        onClick={() => unduhCSV(kota)}
+      >
+        <>
+          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+          Unduh CSV
+        </>
       </button>
       <DataTable columns={columns3} data={kota} pagination />
     </div>

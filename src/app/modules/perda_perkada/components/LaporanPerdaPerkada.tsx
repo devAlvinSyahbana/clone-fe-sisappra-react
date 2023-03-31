@@ -1,7 +1,15 @@
-import {useState, useEffect, Fragment} from 'react'
+import {useState, useEffect, FC} from 'react'
 import axios from 'axios'
 import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import DataTable, {createTheme, ExpanderComponentProps} from 'react-data-table-component'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import Dropdown from 'react-bootstrap/Dropdown'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
+import {useFormik} from 'formik'
+import Swal from 'sweetalert2'
+import {useDispatch, useSelector} from 'react-redux'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import AsyncSelect from 'react-select/async'
@@ -102,12 +110,25 @@ const reactSelectDarkThem = {
   }),
 }
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
-export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
-export const JABATAN_URL = `${API_URL}/master/jabatan`
-export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
-export const PANGKAT_URL = `${API_URL}/master/pangkat`
+export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+export const MASTER_URL = `${API_URL}/master`
+export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
+
+const LoadingAnimation = (props: any) => {
+  return (
+    <>
+      <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+        {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+        <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+        <div className='d-flex flex-column'>
+          <h5 className='mb-1'>Sedang mengambil data...</h5>
+        </div>
+      </div>
+    </>
+  )
+}
 
 export interface SelectOption {
   readonly value: string
@@ -117,12 +138,19 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-export function LaporanPenerbitanMinumBeralkohol() {
+export function LaporanPerdaPerkada() {
   let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
+  const dispatch = useDispatch()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
+  
+  let value: any = localStorage.getItem('kt-auth-react-v')
+  let authValue = JSON.parse(value)
+  let idHakAkses = authValue.data.hak_akses
+  const [aksi, setAksi] = useState(0)
+  const [hakAksesData, setHakAksesData] = useState<any>([])
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -130,35 +158,46 @@ export function LaporanPenerbitanMinumBeralkohol() {
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({strparam: ''})
 
-  const LoadingAnimation = (props: any) => {
-    return (
-      <>
-        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
-          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
-          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
-          <div className='d-flex flex-column'>
-            <h5 className='mb-1'>Sedang mengambil data...</h5>
-          </div>
-        </div>
-      </>
-    )
+  const findHakAksesData = async () => {
+    const res = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/findone/${idHakAkses}`)
+    // console.log(res.data.data)
+    setHakAksesData(res.data.data)
   }
+
+  useEffect(() => {
+    findHakAksesData()
+  }, [])
+  useEffect(() => {
+    if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('admin')) {
+      return setAksi(1)
+    } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala satpol pp dki')) {
+      return setAksi(2)
+    } else if (hakAksesData?.nama_hak_akses?.toLowerCase().includes('kepala')) {
+      return setAksi(0)
+    } else {
+      return setAksi(3)
+    }
+  }, [hakAksesData])
+
 
   var num = 1
   const columns = [
     {
       name: 'No',
-      // selector: (row: any) => row.id,
       sortable: true,
-      sortField: 'id',
+      selector: (row: any) => row.serial,
       wrap: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      }
+      // sortField: 'id',
       // cell: (row: any) => {
       //   return <div className='mb-2 mt-2'>{row.skpd !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
       // },
     },
 
     {
-      name: 'Unit Organisasi ',
+      name: 'Kota/Kabupaten ',
       selector: (row: any) => row.kota,
       sortable: true,
       sortField: 'kota',
@@ -167,7 +206,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
       center: true,
     },
     {
-      name: 'Jumlah',
+      name: 'Kecamatan',
       selector: (row: any) => row.kecamatan,
       sortable: true,
       sortField: 'kecamatan',
@@ -176,25 +215,39 @@ export function LaporanPenerbitanMinumBeralkohol() {
       center: true,
     },
     {
-      name: 'Jenis/Merk',
+      name: 'Kelurahan',
       selector: (row: any) => row.kelurahan,
       sortable: true,
       sortField: 'kelurahan',
       wrap: true,
     },
     {
-      name: 'Tanggal',
+      name: 'Lokasi',
       selector: (row: any) => row.lokasi,
       sortable: true,
       sortField: 'lokasi',
       wrap: true,
     },
     {
-      name: 'Keterangan',
+      name: 'Titik Koordinat',
       selector: (row: any) => row.titik_koordinat,
       sortable: true,
       sortField: 'titik_koordinat',
       width: '200px',
+      wrap: true,
+    },
+    {
+      name: 'Kategori',
+      selector: (row: any) => row.kategori,
+      sortable: true,
+      sortField: 'kategori',
+      wrap: true,
+    },
+    {
+      name: 'Keterangan',
+      selector: (row: any) => row.keterangan,
+      sortable: true,
+      sortField: 'keterangan',
       wrap: true,
     },
   ]
@@ -223,7 +276,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-        `${BIDANG_WILAYAH_URL}find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+        `${MASTERDATA_URL}find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -235,7 +288,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${BIDANG_WILAYAH_URL}find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
+      `${MASTERDATA_URL}find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -251,7 +304,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true)
     const response = await axios.get(
-      `${BIDANG_WILAYAH_URL}find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
+      `${MASTER_URL}find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
     )
     setData(response.data.data)
     setPerPage(newPerPage)
@@ -284,7 +337,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-      url: `${BIDANG_WILAYAH_URL}unduh?status=${qParamFind.strparam}`,
+      url: `${MASTERDATA_URL}unduh?status=${qParamFind.strparam}`,
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
@@ -298,7 +351,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
-    const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
+    const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
@@ -318,7 +371,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
     // console.log('cek', newValue.value)
     const timeout = setTimeout(async () => {
       const response = await axios.get(
-        `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
+        `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
       )
       let items = response.data.data
       Array.from(items).forEach(async (item: any) => {
@@ -339,7 +392,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
   const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
+      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
         inputValue !== '' && `&nama=${inputValue}`
       }`
     )
@@ -361,7 +414,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
     // console.log('cek', newValue.value)
     const timeout = setTimeout(async () => {
       const response = await axios.get(
-        `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${newValue.value}`
+        `${MASTERDATA_URL}/filter?id_master_tempat_seksi_pelaksanaan=${newValue.value}`
       )
       let items = response.data.data
       Array.from(items).forEach(async (item: any) => {
@@ -380,7 +433,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
   const [valMasterJabatan, setValMasterJabatan] = useState({value: null, label: ''})
   const filterjabatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(idMasterPelaksana.id)}${
+      `${MASTERDATA_URL}/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(idMasterPelaksana.id)}${
         inputValue !== '' && `&nama=${inputValue}`
       }`
     )
@@ -403,25 +456,6 @@ export function LaporanPenerbitanMinumBeralkohol() {
       <div className={`card`}>
         {/* begin::Body */}
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Unit Organisasi
-              </label>
-              <AsyncSelect
-                className='mb-5'
-                value={
-                  valMasterBidangWilayah.value
-                    ? valMasterBidangWilayah
-                    : {value: '', label: 'Pilih'}
-                }
-                loadOptions={loadOptionsbidangwilayah}
-                defaultOptions
-                onChange={handleChangeInputKota}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-          </div>
           <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
@@ -440,7 +474,37 @@ export function LaporanPenerbitanMinumBeralkohol() {
           <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
-                Bulan
+                Jenis
+              </label>
+              <AsyncSelect
+                className='mb-5'
+                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
+                loadOptions={loadOptionsKecamatan}
+                defaultOptions={masterBidangWilayah}
+                onChange={handleChangeInputKecamatan}
+                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+              />
+            </div>
+          </div>
+          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
+            <div className='form-group'>
+              <label htmlFor='' className='mb-3'>
+                Mulai Triwulan
+              </label>
+              <AsyncSelect
+                className='mb-5'
+                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
+                loadOptions={loadOptionsKecamatan}
+                defaultOptions={masterBidangWilayah}
+                onChange={handleChangeInputKecamatan}
+                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
+              />
+            </div>
+          </div>
+          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
+            <div className='form-group'>
+              <label htmlFor='' className='mb-3'>
+                sampai Triwulan
               </label>
               <AsyncSelect
                 value={valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}}

@@ -28,6 +28,7 @@ import {UpdateJenisKejadian} from './components/Update-master/UpdateJenisKejadia
 import {TambahJenisKejadian} from './components/Tambah-master/TambahJenisKejadian'
 
 import {JenisPelanggaran} from './components/JenisPelanggaran'
+import {LihatJenisPelanggaran} from './components/Lihat-master/LihatJenisPelanggaran'
 
 import {JenisPertolongan} from './components/JenisPertolongan'
 import {LihatJenisPertolongan} from './components/Lihat-master/LihatJenisPertolongan'
@@ -683,6 +684,15 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Jenis Pelanggaran</PageTitle>
               <JenisPelanggaran />
+            </>
+          }
+        />
+        <Route
+          path='JenisPelanggaran/LihatJenisPelanggaran/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Jenis Pelanggaran</PageTitle>
+              <LihatJenisPelanggaran />
             </>
           }
         />
