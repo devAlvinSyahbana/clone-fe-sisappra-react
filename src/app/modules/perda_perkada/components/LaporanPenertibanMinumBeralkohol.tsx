@@ -117,11 +117,7 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-<<<<<<<< HEAD:src/app/modules/perda_perkada/components/LaporanMinol.tsx
-export function LaporanMinol () {
-========
 export function LaporanPenertibanMinumBeralkohol() {
->>>>>>>> 1b7a3685b3ac9d697879c13af5ea6379918cd902:src/app/modules/perda_perkada/components/LaporanPenertibanMinumBeralkohol.tsx
   let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
