@@ -5,6 +5,7 @@ import {LaporanSidangTipiring} from './components/LaporanSidangTipiring'
 import {LaporanMinol} from './components/LaporanMinol'
 import {RegisterPerdaPerkada} from './components/RegisterPerdaPerkada'
 import {LaporanPerdaPerkada} from './components/LaporanPerdaPerkada'
+import {PerdaPerkada_Pelaksana} from './components/PerdaPerkada-Pelaksana'
 
 const perda_perkadaBreadCrumbs: Array<PageLink> = [
   {
@@ -72,6 +73,17 @@ const PerdaPerkadaPage: React.FC = () => {
                 Laporan Penegakan Perda dan Perkada
               </PageTitle>
               <LaporanPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='PerdaPerkada_Pelaksana'
+          element={
+            <>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
+                Laporan Penegakan Perda dan Perkada
+              </PageTitle>
+              <PerdaPerkada_Pelaksana />
             </>
           }
         />

@@ -1,8 +1,8 @@
-import React, {ChangeEvent, FC, useEffect, useState} from 'react'
+import React, { ChangeEvent, FC, useEffect, useState } from 'react'
 import DatePicker from 'react-multi-date-picker'
 import AsyncSelect from 'react-select/async'
-import {Link} from 'react-router-dom'
-import {Formik, Field, Form, FormikValues} from 'formik'
+import { Link } from 'react-router-dom'
+import { Formik, Field, Form, FormikValues } from 'formik'
 import {
   DatePickerField,
   DatePickerFieldRange,
@@ -16,20 +16,19 @@ import {
   initialState,
   PelaporanKegiatanState,
 } from '../../../redux/slices/pelaporan-kegiatan.slice'
-import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../../../redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../redux/store'
 import axios from 'axios'
-import {DtKabid, DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-kegiatan'
-import {KTSVG} from '../../../../_metronic/helpers'
-import {useNavigate} from 'react-router-dom'
-import {Button} from 'react-bootstrap'
+import { DtKabid, DtAdmin, DtPimpinan } from '../datatable/data-table-laporan-kegiatan'
+import { KTSVG } from '../../../../_metronic/helpers'
+import { useNavigate } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import {createTheme} from 'react-data-table-component'
-import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
-import {useThemeMode} from '../../../../_metronic/partials'
+import { createTheme } from 'react-data-table-component'
+import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../_metronic/partials'
 
 // Dark Theme
-// createTheme creates a new theme named solarized that overrides the build in dark theme
 createTheme(
   'darkMetro',
   {
@@ -157,10 +156,10 @@ export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 
 export const ListKegiatanPage: FC = () => {
   const navigate = useNavigate()
-  const {mode} = useThemeMode()
+  const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const dispatch = useDispatch()
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
   // const [currentSchema, setCurrentSchema] = useState(createSchemaFilterPelaporanKegiatan[0])
   // const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   // const [jenisKegiatan, setJenisKegiatan] = useState([])
@@ -278,21 +277,21 @@ export const ListKegiatanPage: FC = () => {
     handleWilayahBidang()
   }, [])
 
-  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
-  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
+  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
+  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAwal({val: event.target.value})
+    setTanggalAwal({ val: event.target.value })
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAkhir({val: event.target.value})
+    setTanggalAkhir({ val: event.target.value })
   }
 
   interface SelectOption {
@@ -301,12 +300,12 @@ export const ListKegiatanPage: FC = () => {
   }
 
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
+  const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
   const filterJenisKegiatan = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
+    return json.map((i: any) => ({ label: i.text, value: i.value }))
   }
   const loadOptionsJenisKegiatan = (
     inputValue: string,
@@ -317,7 +316,7 @@ export const ListKegiatanPage: FC = () => {
     }, 1000)
   }
   const handleChangeInputJenisKegiatan = (newValue: any) => {
-    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
+    setValJenisKegiatan((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   const handleFilter = async () => {
@@ -337,15 +336,15 @@ export const ListKegiatanPage: FC = () => {
     } else if (valJenisKegiatan.value !== '') {
       uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
-    setValJenisKegiatan({value: '', label: ''})
+    setTanggalAwal({ val: '' })
+    setTanggalAkhir({ val: '' })
+    setValJenisKegiatan({ value: '', label: '' })
     // setInstansi({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   // const handleChangePelaksanaKegiatan = (event: {
@@ -596,23 +595,8 @@ export const ListKegiatanPage: FC = () => {
                         className='fs-6 collapse show ps-10'
                         data-bs-parent='#kt_accordion_2'
                       >
-                        {/* <Button onClick={vKabid}>Kabid</Button>
-                        <Button onClick={vAdmin}>Admin</Button>
-                        <Button onClick={vPimpinan}>Pimpinan</Button> */}
                         {aksi === 0 ? (
                           <div className='row w-100 mt-10 mb-10'>
-                            {/* START :: Filter Form */}
-                            {/* <div className='col-md-6 col-lg-6 col-sm-12'>
-                            <div className='mb-10'>
-                              <div className='row'>
-                                <div className='col-4 pt-2'>
-                                  <label className='form-label'>Seksi/Kecamatan</label>
-                                </div>
-                                <div className='col-8'>
-                                </div>
-                              </div>
-                            </div>
-                          </div> */}
                             <div className='col-md-6 col-lg-6 col-sm-12'>
                               <div className='mb-10'>
                                 <div className='row'>
@@ -634,18 +618,6 @@ export const ListKegiatanPage: FC = () => {
                                           : reactSelectLightThem
                                       }
                                     />
-                                    {/* <Field
-                                    name='filter_jenis_kegiatan_id_selection'
-                                    target='filter_jenis_kegiatan_id'
-                                    className='form-control'
-                                    component={SelectField}
-                                    // options={jenisKegiatanList}
-                                    onChange={(o: ChangeEvent<any>) => {
-                                      // dispatch(changedValue(ToFieldStateCE(o)))
-                                      // updateJenisPasalList()
-                                      // updateJenisPenyelesaianList()
-                                    }}
-                                  /> */}
                                   </div>
                                 </div>
                               </div>
@@ -663,9 +635,6 @@ export const ListKegiatanPage: FC = () => {
                                       className='form-control'
                                       value={tanggalAwal.val}
                                       onChange={handleChangeInputTanggalAwal}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAwal(o.target.value)
-                                      // }}
                                     />
                                   </div>
                                 </div>
@@ -684,9 +653,6 @@ export const ListKegiatanPage: FC = () => {
                                       className='form-control'
                                       value={tanggalAkhir.val}
                                       onChange={handleChangeInputTanggalAkhir}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAkhir(o.target.value)
-                                      // }}
                                     />
                                   </div>
                                 </div>
@@ -723,20 +689,20 @@ export const ListKegiatanPage: FC = () => {
                                   data-kt-menu-trigger='click'
                                   data-kt-menu-placement='bottom-end'
                                 > */}
-                                  {/* {btnLoadingUnduh ? (
+                                {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                  {/* <>
+                                {/* <>
                                     <KTSVG
                                       path='/media/icons/duotune/arrows/arr078.svg'
                                       className='svg-icon-2'
                                     />
                                     Unduh
                                   </> */}
-                                  {/* )} */}
+                                {/* )} */}
                                 {/* </button> */}
                                 {/* end::Filter Button */}
                                 {/* begin::SubMenu */}
@@ -744,18 +710,18 @@ export const ListKegiatanPage: FC = () => {
                                   className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
                                   data-kt-menu='true'
                                 > */}
-                                  {/* begin::Header */}
-                                  {/* <div className='px-7 py-5'>
+                                {/* begin::Header */}
+                                {/* <div className='px-7 py-5'>
                                     <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
                                   </div> */}
-                                  {/* end::Header */}
+                                {/* end::Header */}
 
-                                  {/* begin::Separator */}
-                                  {/* <div className='separator border-gray-200'></div> */}
-                                  {/* end::Separator */}
+                                {/* begin::Separator */}
+                                {/* <div className='separator border-gray-200'></div> */}
+                                {/* end::Separator */}
 
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                {/* begin::Content */}
+                                {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
                                     <button
                                       //   onClick={handleUnduh}
                                       className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
@@ -763,15 +729,15 @@ export const ListKegiatanPage: FC = () => {
                                       Excel
                                     </button>
                                   </div> */}
-                                  {/* end::Content */}
+                                {/* end::Content */}
 
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                {/* begin::Content */}
+                                {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
                                     <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
                                       PDF
                                     </button>
                                   </div> */}
-                                  {/* end::Content */}
+                                {/* end::Content */}
                                 {/* </div> */}
                                 {/* end::SubMenu */}
                               </div>
@@ -781,25 +747,6 @@ export const ListKegiatanPage: FC = () => {
                         ) : aksi === 1 ? (
                           //Admin
                           <div className='row w-100 mt-10 mb-10'>
-                            {/* START :: Filter Form */}
-                            {/* <div className='col-md-6 col-lg-6 col-sm-12'>
-                              <div className='mb-10'>
-                                <div className='row'>
-                                  <div className='col-4 pt-2'>
-                                    <label className='form-label'>Pelaksana Kegiatan</label>
-                                  </div>
-                                  <div className='col-8'>
-                                    <AsyncSelect
-                                      name='filter_jenis_kegiatan_id_selection'
-                                      value={valJenisKegiatan}
-                                      defaultOptions
-                                      loadOptions={loadOptionsJenisKegiatan}
-                                      onChange={handleChangeInputJenisKegiatan}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div> */}
                             <div className='col-md-6 col-lg-6 col-sm-12'>
                               <div className='mb-10'>
                                 <div className='row'>
@@ -838,9 +785,9 @@ export const ListKegiatanPage: FC = () => {
                                       className='form-control'
                                       value={tanggalAwal.val}
                                       onChange={handleChangeInputTanggalAwal}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAwal(o.target.value)
-                                      // }}
+                                    // onChange={(o: any) => {
+                                    //   setTanggalAwal(o.target.value)
+                                    // }}
                                     />
                                   </div>
                                 </div>
@@ -859,9 +806,9 @@ export const ListKegiatanPage: FC = () => {
                                       className='form-control'
                                       value={tanggalAkhir.val}
                                       onChange={handleChangeInputTanggalAkhir}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAkhir(o.target.value)
-                                      // }}
+                                    // onChange={(o: any) => {
+                                    //   setTanggalAkhir(o.target.value)
+                                    // }}
                                     />
                                   </div>
                                 </div>
@@ -910,20 +857,20 @@ export const ListKegiatanPage: FC = () => {
                                   data-kt-menu-trigger='click'
                                   data-kt-menu-placement='bottom-end'
                                 > */}
-                                  {/* {btnLoadingUnduh ? (
+                                {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                  {/* <>
+                                {/* <>
                                     <KTSVG
                                       path='/media/icons/duotune/arrows/arr078.svg'
                                       className='svg-icon-2'
                                     />
                                     Unduh
                                   </> */}
-                                  {/* )} */}
+                                {/* )} */}
                                 {/* </button> */}
                                 {/* end::Filter Button */}
                                 {/* begin::SubMenu */}
@@ -931,18 +878,18 @@ export const ListKegiatanPage: FC = () => {
                                   className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
                                   data-kt-menu='true'
                                 > */}
-                                  {/* begin::Header */}
-                                  {/* <div className='px-7 py-5'>
+                                {/* begin::Header */}
+                                {/* <div className='px-7 py-5'>
                                     <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
                                   </div> */}
-                                  {/* end::Header */}
+                                {/* end::Header */}
 
-                                  {/* begin::Separator */}
-                                  {/* <div className='separator border-gray-200'></div> */}
-                                  {/* end::Separator */}
+                                {/* begin::Separator */}
+                                {/* <div className='separator border-gray-200'></div> */}
+                                {/* end::Separator */}
 
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                {/* begin::Content */}
+                                {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
                                     <button
                                       //   onClick={handleUnduh}
                                       className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
@@ -950,15 +897,15 @@ export const ListKegiatanPage: FC = () => {
                                       Excel
                                     </button>
                                   </div> */}
-                                  {/* end::Content */}
+                                {/* end::Content */}
 
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                {/* begin::Content */}
+                                {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
                                     <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
                                       PDF
                                     </button>
                                   </div> */}
-                                  {/* end::Content */}
+                                {/* end::Content */}
                                 {/* </div> */}
                                 {/* end::SubMenu */}
                               </div>
@@ -1011,7 +958,7 @@ export const ListKegiatanPage: FC = () => {
                               <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
                                 <Link
                                   to='#'
-                                  // onClick={handleFilter}
+                                // onClick={handleFilter}
                                 >
                                   <button className='btn btn-light-primary me-2'>
                                     <KTSVG
@@ -1023,7 +970,7 @@ export const ListKegiatanPage: FC = () => {
                                 </Link>
                                 <Link
                                   to='#'
-                                  // onClick={handleFilterReset}
+                                // onClick={handleFilterReset}
                                 >
                                   <button className='btn btn-light-primary'>
                                     <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
@@ -1039,20 +986,20 @@ export const ListKegiatanPage: FC = () => {
                                   data-kt-menu-trigger='click'
                                   data-kt-menu-placement='bottom-end'
                                 > */}
-                                  {/* {btnLoadingUnduh ? (
+                                {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                  {/* <>
+                                {/* <>
                                     <KTSVG
                                       path='/media/icons/duotune/arrows/arr078.svg'
                                       className='svg-icon-2'
                                     />
                                     Unduh
                                   </> */}
-                                  {/* )} */}
+                                {/* )} */}
                                 {/* </button> */}
                                 {/* end::Filter Button */}
                                 {/* begin::SubMenu */}
@@ -1060,18 +1007,18 @@ export const ListKegiatanPage: FC = () => {
                                   className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
                                   data-kt-menu='true'
                                 > */}
-                                  {/* begin::Header */}
-                                  {/* <div className='px-7 py-5'>
+                                {/* begin::Header */}
+                                {/* <div className='px-7 py-5'>
                                     <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
                                   </div> */}
-                                  {/* end::Header */}
+                                {/* end::Header */}
 
-                                  {/* begin::Separator */}
-                                  {/* <div className='separator border-gray-200'></div> */}
-                                  {/* end::Separator */}
+                                {/* begin::Separator */}
+                                {/* <div className='separator border-gray-200'></div> */}
+                                {/* end::Separator */}
 
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
+                                {/* begin::Content */}
+                                {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
                                     <button
                                       //   onClick={handleUnduh}
                                       className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
@@ -1079,15 +1026,15 @@ export const ListKegiatanPage: FC = () => {
                                       Excel
                                     </button>
                                   </div> */}
-                                  {/* end::Content */}
+                                {/* end::Content */}
 
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
+                                {/* begin::Content */}
+                                {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
                                     <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
                                       PDF
                                     </button>
                                   </div> */}
-                                  {/* end::Content */}
+                                {/* end::Content */}
                                 {/* </div> */}
                                 {/* end::SubMenu */}
                               </div>
@@ -1113,59 +1060,59 @@ export const ListKegiatanPage: FC = () => {
                       theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                     />
                   ) : // Admin
-                  aksi === 1 ? (
-                    <DtAdmin
-                      data={data}
-                      totalRows={totalRows}
-                      handlePerRowsChange={handlePerRowsChange}
-                      handlePageChange={handlePageChange}
-                      loading={loading}
-                      jenisKegiatanList={jenisKegiatanList}
-                      hakAkses={hakAkses}
-                      wilayahBidang={wilayahBidang}
-                      konfirDel={konfirDel}
-                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                    />
-                  ) : (
-                    // Pimpinan
-                    <>
-                      <div className='row'>
-                        <div className='col fs-4 mb-2 fw-semibold text-center'>
-                          LAPORAN HASIL KEGIATAN
-                        </div>
-                      </div>
-                      <div className='row'>
-                        <div className='col fs-4 mb-2 fw-semibold text-center'>
-                          PADA SATPOL PP......................................
-                        </div>
-                      </div>
-                      <div className='row'>
-                        <div className='col fs-4 mb-6 fw-semibold text-center'>
-                          PERIODE .................... s/d .......................
-                        </div>
-                      </div>
-
-                      <DtPimpinan
-                        data={kota}
+                    aksi === 1 ? (
+                      <DtAdmin
+                        data={data}
+                        totalRows={totalRows}
+                        handlePerRowsChange={handlePerRowsChange}
+                        handlePageChange={handlePageChange}
+                        loading={loading}
+                        jenisKegiatanList={jenisKegiatanList}
+                        hakAkses={hakAkses}
+                        wilayahBidang={wilayahBidang}
+                        konfirDel={konfirDel}
                         theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
                       />
-
-                      <div className='row'>
-                        <div className='col-8'></div>
-                        <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
-                          Jakarta, ..............................20...
-                          <div className='col fs-6 mb-15 fw-semibold text-center'>
-                            KEPALA SATUAN POLISI PAMONG PRAJA
-                            ...............................................................
-                          </div>
-                          <div className='col fs-6 mb-2 fw-semibold text-center'>NAMA</div>
-                          <div className='col fs-6 mb-2 fw-semibold text-center'>
-                            NIP. ......................
+                    ) : (
+                      // Pimpinan
+                      <>
+                        <div className='row'>
+                          <div className='col fs-4 mb-2 fw-semibold text-center'>
+                            LAPORAN HASIL KEGIATAN
                           </div>
                         </div>
-                      </div>
-                    </>
-                  )}
+                        <div className='row'>
+                          <div className='col fs-4 mb-2 fw-semibold text-center'>
+                            PADA SATPOL PP......................................
+                          </div>
+                        </div>
+                        <div className='row'>
+                          <div className='col fs-4 mb-6 fw-semibold text-center'>
+                            PERIODE .................... s/d .......................
+                          </div>
+                        </div>
+
+                        <DtPimpinan
+                          data={kota}
+                          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                        />
+
+                        <div className='row'>
+                          <div className='col-8'></div>
+                          <div className='col-4 fs-6 mb-2 fw-semibold text-center'>
+                            Jakarta, ..............................20...
+                            <div className='col fs-6 mb-15 fw-semibold text-center'>
+                              KEPALA SATUAN POLISI PAMONG PRAJA
+                              ...............................................................
+                            </div>
+                            <div className='col fs-6 mb-2 fw-semibold text-center'>NAMA</div>
+                            <div className='col fs-6 mb-2 fw-semibold text-center'>
+                              NIP. ......................
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
                 </div>
               </div>
             )}

@@ -186,20 +186,7 @@ export const DtAdmin: FC<any> = ({
 }) => {
   const navigate = useNavigate()
   const GetJenisKegiatan = ({row}: {row: number}) => {
-    // const [valData, setValData] = useState('')
     const jenisKegiatanLabel = jenisKegiatanList.find((i: any) => i.value === row)
-    // useEffect(() => {
-    //   async function fetchDT(id: number) {
-    //     const {data} = await axios.get(
-    //       `${MASTERDATA_URL}/jenis-kegiatan/?%24filter=id%20eq%20${id}`
-    //     )
-    //     const result: string = data.data[0].nama
-    //     setValData(result)
-    //     // console.log(data)
-    //   }
-    //   fetchDT(row)
-    // }, [valData, row])
-
     return <>{jenisKegiatanLabel?.text}</>
   }
 

@@ -117,7 +117,7 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-export function LaporanMinol() {
+export function LaporanMinol () {
   let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()

@@ -1,16 +1,27 @@
-import {useState, useEffect, Fragment} from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
-import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
-import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {
+  changedValue,
+  reset,
+  isBanjir,
+  updateKotaList,
+  updateKecamatanList,
+  updateKelurahanList,
+} from '../../../redux/slices/pelaporan-kejadian.slice'
+import { RootState } from '../../../redux/store'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { DtPerdaPerkada } from './data-table-laporan-perda-perkada'
+import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
+import { KTSVG } from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
-import {KTSVG} from '../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
 import { string } from 'yup'
-import { DropdownButton, ButtonGroup, Dropdown } from 'react-bootstrap'
+import { array } from '@amcharts/amcharts5'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -109,16 +120,29 @@ const reactSelectDarkThem = {
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
+export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const MASTER_URL = `${API_URL}/master`
+
+interface jenisPenertibanInterface {
+  no : number
+  jenis_penertiban : string
+  jumlah_pelanggaran : number
+  peringatan : number
+  penutupan_penyegelan : number
+  pencabutan_izin : number
+  yang_lain : number
+  denda_pengadilan : string
+  denda_non_pengadilan : string
+}
 
 export function LaporanPerdaPerkada() {
   const navigate = useNavigate()
-  const {mode} = useThemeMode()
+  const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
   const [aksi, setAksi] = useState(0)
-  
+
   const [inputValKota, setDataKota] = useState([])
   const [inputValKec, setDataKec] = useState([])
   const [inputValKel, setDataKel] = useState([])
@@ -126,31 +150,39 @@ export function LaporanPerdaPerkada() {
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
 
+  // // const kota = values.kejadian__kota_id
+  // // const kecamatan = values.kejadian__kecamatan_id
+  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
+  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
+
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
+  const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
   const [jenisPenertibanList, setJenisPenertibanList] = useState([])
-  const [valJenisPenertiban, setValJenisPenertiban] = useState({value: '', label: ''})
+  const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
   const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({value: '', label: ''})
+  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
 
   const [hakAkses, setHakAkses] = useState([])
   const [wilayahBidang, setWilayahBidang] = useState([])
-  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
-  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
-  
-  const [data, setData] = useState([])
+  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
+  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+
+  const [data, setData] = useState<jenisPenertibanInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
+
+  
 
   const filterList = async () => {
     const resKota = await axios.get(`${MASTER_URL}/kota/find`)
     const resKecamatan = await axios.get(`${MASTER_URL}/kecamatan/find`)
     const resKelurahan = await axios.get(`${MASTER_URL}/kelurahan/find`)
     const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-    const resJPen = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada`)
-    const resJPer = await axios.get(`${MASTER_URL}/jenis-perda-perkada/find`)
+    const resJPen = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
+    const resJPer = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
 
     const dataKota = resKota.data.data.map((d: any) => ({
       label: d.kota,
@@ -186,28 +218,29 @@ export function LaporanPerdaPerkada() {
 
   useEffect(() => {
     filterList()
+    handleHakAkses()
     handleWilayahBidang()
   }, [])
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAwal({val: event.target.value})
+    setTanggalAwal({ val: event.target.value })
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAkhir({val: event.target.value})
+    setTanggalAkhir({ val: event.target.value })
   }
 
   const filterJenisKegiatan = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
+    return json.map((i: any) => ({ label: i.text, value: i.value }))
   }
   const loadOptionsJenisKegiatan = (
     inputValue: string,
@@ -218,14 +251,14 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisKegiatan = (newValue: any) => {
-    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
+    setValJenisKegiatan((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   const filterJenisPenertiban = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/jenis-penertiban/find`)
+    const response = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
     const json = await response.data.data
     setJenisPenertibanList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
+    return json.map((i: any) => ({ label: i.jenis_penertiban, value: i.id }))
   }
   const loadOptionsJenisPenertiban = (
     inputValue: string,
@@ -236,13 +269,13 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisPenertiban = (newValue: any) => {
-    setValJenisPenertiban((prevstate: any) => ({...prevstate, ...newValue}))
+    setValJenisPenertiban((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
   const filterJenisPerdaPerkada = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada`)
+    const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
     const json = await response.data.data
     setJenisPerdaPerkadaList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
+    return json.map((i: any) => ({ label: i.text, value: i.value }))
   }
   const loadOptionsJenisPerdaPerkada = (
     inputValue: string,
@@ -253,7 +286,7 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-    setValJenisPerdaPerkada((prevstate: any) => ({...prevstate, ...newValue}))
+    setValJenisPerdaPerkada((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   const handleFilter = async () => {
@@ -271,20 +304,30 @@ export function LaporanPerdaPerkada() {
       uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
     }
     if (valJenisPenertiban.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
-    } else if (valJenisKegiatan.value !== '') {
-      uriParam += `jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
+      uriParam += `%20and%20tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
+    } else if (valJenisPenertiban.value !== '') {
+      uriParam += `tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
+      uriParam += `%20and%20tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
+    } else if (valJenisPerdaPerkada.value !== '') {
+      uriParam += `tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
+    }
+    if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
+      uriParam += `%20and%20tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
+    } else if (valJenisPerdaPerkada.value !== '') {
+      uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
+    }
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
-    setValJenisKegiatan({value: '', label: ''})
-    setValJenisPenertiban({value: '', label: ''})
-    setValJenisPerdaPerkada({value: '', label: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setTanggalAwal({ val: '' })
+    setTanggalAkhir({ val: '' })
+    setValJenisKegiatan({ value: '', label: '' })
+    setValJenisPenertiban({ value: '', label: '' })
+    setValJenisPerdaPerkada({ value: '', label: '' })
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   const dataPerdaPerkada = (page: number) => {
@@ -293,23 +336,26 @@ export function LaporanPerdaPerkada() {
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
-        const data = res.data.data.map((d: any) => ({
-          id: d.id,
-          no: d.id,
-          pelaksana: d.created_by,
-          tanggal_kegiatan: d.kegiatan__tanggal,
-          waktu_mulai: d.kegiatan__jam_start,
-          waktu_selesai: d.kegiatan__jam_end,
-          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-          lokasi: d.kegiatan__lokasi,
-          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban
-        }))
-        Array.from(data).forEach((item: any, index: any) => {
-          item.serial = index + 1
-        })
-        setData(data)
-        setTotalRows(res.data.total_items)
+        // const data = res.data.data.map((d: any) => ({
+        //   id: d.id,
+        //   no: d.id,
+        //   pelaksana: d.created_by,
+        //   tanggal_kegiatan: d.kegiatan__tanggal,
+        //   waktu_mulai: d.kegiatan__jam_start,
+        //   waktu_selesai: d.kegiatan__jam_end,
+        //   jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+        //   uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+        //   lokasi: d.kegiatan__lokasi,
+        //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
+        //   denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
+        //   denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+        // }))
+        // Array.from(data).forEach((item: any, index: any) => {
+        //   item.serial = index + 1
+        // })
+        const arr: jenisPenertibanInterface[] = [{ no: 1, jenis_penertiban: 'TERTIB JALAN, ANGKUTAN JALAN DAN ANGKUTAN SUNGAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 2, jenis_penertiban: 'TERTIB JALUR HIJAU, TAMAN DAN TEMPAT UMUM', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
+        setData(arr)
+        setTotalRows(5)
         setLoading(false)
 
         return [data, setData] as const
@@ -318,30 +364,6 @@ export function LaporanPerdaPerkada() {
 
   useEffect(() => {
     dataPerdaPerkada(0)
-  }, [qParamFind, perPage])
-
-  const dataPenertiban = (page: number) => {
-    axios
-      .get(
-        `${MASTERDATA_URL}/jenis-perda-perkada/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
-      )
-      .then((res) => {
-        const data = res.data.data.map((d: any) => ({
-          jenis_penertiban: d.jenis_penertiban,
-        }))
-        Array.from(data).forEach((item: any, index: any) => {
-          item.serial = index + 1
-        })
-        setData(data)
-        setTotalRows(res.data.total_items)
-        setLoading(false)
-
-        return [data, setData] as const
-      })
-  }
-
-  useEffect(() => {
-    dataPenertiban(0)
   }, [qParamFind, perPage])
 
   const handlePageChange = (page: number) => {
@@ -359,6 +381,7 @@ export function LaporanPerdaPerkada() {
         const data = res.data.data.map((d: any) => ({
           id: d.id,
           no: d.id,
+          total_item: d.total_item,
           pelaksana: d.created_by,
           tanggal_kegiatan: d.kegiatan__tanggal,
           waktu_mulai: d.kegiatan__jam_start,
@@ -376,19 +399,25 @@ export function LaporanPerdaPerkada() {
         setLoading(false)
       })
   }
-  // const LoadingAnimation = (props: any) => {
-  //   return (
-  //     <>
-  //       <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
-  //         {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
-  //         <span className='spinner-border spinner-border-xl align-middle me-3'></span>
-  //         <div className='d-flex flex-column'>
-  //           <h5 className='mb-1'>Sedang mengambil data...</h5>
-  //         </div>
-  //       </div>
-  //     </>
-  //   )
-  // }
+
+  const LoadingAnimation = (props: any) => {
+    return (
+      <>
+        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+          <div className='d-flex flex-column'>
+            <h5 className='mb-1'>Sedang mengambil data...</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  const handleHakAkses = async () => {
+    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
+    setHakAkses(response.data.data)
+  }
 
   const handleWilayahBidang = async () => {
     const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
@@ -442,137 +471,6 @@ export function LaporanPerdaPerkada() {
     readonly isFixed?: boolean
     readonly isDisabled?: boolean
   }
-
-  // const GetBidang = ({row}: {row: number}) => {
-  //   const handleHakAkses = hakAkses.find((i: any) => i.id === row)
-  //   const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses)
-
-  const GetJenisPenertiban = ({row}: {row: number}) => {
-    const jenisPenertibanLabel = jenisPenertibanList.find((i: any) => i.value === row)
-    console.log(jenisPenertibanLabel)
-    return <>{jenisPenertibanLabel}</>
-  }
-  const GetJenisKegiatan = ({row}: {row: number}) => {
-    const jenisKegiatanLabel = jenisKegiatanList.find((i: any) => i.value === row)
-    // console.log(jenisKegiatanLabel)
-    return <>{jenisKegiatanLabel}</>
-  }
-
-  var num = 1
-  const columns = [
-    {
-      name: 'No',
-      width: '80px',
-      sortable: true,
-      sortField: 'id',
-      wrap: true,
-      selector: (row: any) => row.serial,
-      cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{row.serial}</div>
-      },
-    },
-
-    {
-      name: 'Pelaksana',
-      sortable: true,
-      sortField: 'kota',
-      wrap: true,
-      width: '250px',
-      center: true,
-      selector: (row: any) => row.pelaksana,
-      cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{row.pelaksana}</div>
-      }
-    },
-    {
-      name: 'Jenis Penertiban',
-      sortable: true,
-      // sortField: 'Jenis Penertiban',
-      wrap: true,
-      width: '220px',
-      center: true,
-      selector: (row: any) => row.jenis_penertiban,
-      cell: (record: any) => <GetJenisPenertiban row={parseInt(record.jenis_penertiban)} />,
-    },
-    {
-      name: 'Jenis Kegiatan',
-      selector: (row: any) => row.jenis_kegiatan,
-      sortable: true,
-      // sortField: 'kelurahan',
-      width: '220px',
-      wrap: true,
-      cell: (record: any) => <GetJenisKegiatan row={parseInt(record.jenis_kegiatan)} />,
-    },
-    {
-      name: 'Lokasi',
-      selector: (row: any) => row.lokasi,
-      sortable: true,
-      sortField: 'lokasi',
-      wrap: true,
-    },
-    {
-      name: 'Titik Koordinat',
-      selector: (row: any) => row.titik_koordinat,
-      sortable: true,
-      sortField: 'titik_koordinat',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Kategori',
-      selector: (row: any) => row.kategori,
-      sortable: true,
-      sortField: 'kategori',
-      wrap: true,
-    },
-    {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
-      sortable: true,
-      sortField: 'keterangan',
-      wrap: true,
-    },
-    {
-      name: 'Aksi',
-      sortable: false,
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      fixed: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='d-flex mb-2 mt-2 flex-end'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <DropdownType
-                  as={ButtonGroup}
-                  key={idx}
-                  id={`dropdown-button-drop-${idx}`}
-                  size='sm'
-                  variant='light'
-                  title='Aksi'
-                >
-                  <Dropdown.Item
-                    onClick={() => navigate('/pelaporan/DetailLaporanKegiatan/' + record.id)}
-                  >
-                    Detail
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => navigate('/pelaporan/UbahLaporanKegiatan/' + record.id)}
-                  >
-                    Ubah
-                  </Dropdown.Item>
-                  <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
-                    Hapus
-                  </Dropdown.Item>
-                </DropdownType>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
-    },
-  ]
 
   const customStyles = {
     rows: {
@@ -633,13 +531,13 @@ export function LaporanPerdaPerkada() {
   }
   //end unduh
 
-  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
+  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -650,11 +548,9 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterBidangWilayah({id: newValue.value})
-    setValMasterPelaksana({value: null, label: ''})
-    setValMasterJabatan({value: null, label: ''})
-    // console.log('cek', newValue.value)
+    setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setIdMasterBidangWilayah({ id: newValue.value })
+    setValMasterPelaksana({ value: null, label: '' })
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
@@ -665,25 +561,22 @@ export function LaporanPerdaPerkada() {
         item.value = item.id
       })
       setMasterBidangWilayah(items)
-      // console.log(items)
     }, 100)
 
     return () => clearTimeout(timeout)
   }
-  //end nama_hak_akses
 
   // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
   const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
-        inputValue !== '' && `&nama=${inputValue}`
+      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
       }`
     )
     const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsKecamatan = (
     inputValue: string,
@@ -693,234 +586,267 @@ export function LaporanPerdaPerkada() {
       callback(await filterKecamatan(inputValue))
     }, 500)
   }
-  const handleChangeInputKecamatan = (newValue: any) => {
-    setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterPelaksana({id: newValue.value})
-    setValMasterJabatan({value: null, label: ''})
-    // console.log('cek', newValue.value)
-    const timeout = setTimeout(async () => {
-      const response = await axios.get(
-        `${MASTERDATA_URL}/filter?id_master_tempat_seksi_pelaksanaan=${newValue.value}`
-      )
-      let items = response.data.data
-      Array.from(items).forEach(async (item: any) => {
-        item.label = item.jabatan
-        item.value = item.id
-      })
-      setMasterPelaksana(items)
-    }, 100)
-
-    return () => clearTimeout(timeout)
-  }
-  //end kecamatan
-
-  //jabatan
-  const [valMasterJabatan, setValMasterJabatan] = useState({value: null, label: ''})
-  const filterjabatan = async (inputValue: string) => {
-    const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(idMasterPelaksana.id)}${
-        inputValue !== '' && `&nama=${inputValue}`
-      }`
-    )
-    const json = response.data.data
-    return json.map((i: any) => ({label: i.jabatan, value: i.id}))
-  }
-  const loadOptionsJabatan = (inputValue: string, callback: (options: SelectOption[]) => void) => {
-    setTimeout(async () => {
-      callback(await filterjabatan(inputValue))
-    }, 500)
-  }
-  const handleChangeInputJabatan = (newValue: any) => {
-    setValMasterJabatan((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-  //end jabatan
 
   return (
     <>
       <LaporanPerdaPerkadaHeader />
-      <div className={`card`}>
+      <div className='card'>
         {/* begin::Body */}
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Tahun
-              </label>
-              <AsyncSelect
-                className='mb-5'
-                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsKecamatan}
-                defaultOptions={masterBidangWilayah}
-                onChange={handleChangeInputKecamatan}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-          </div>
-          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Jenis
-              </label>
-              <AsyncSelect
-                className='mb-5'
-                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsKecamatan}
-                defaultOptions={masterBidangWilayah}
-                onChange={handleChangeInputKecamatan}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-          </div>
-          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                Mulai Triwulan
-              </label>
-              <AsyncSelect
-                className='mb-5'
-                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsKecamatan}
-                defaultOptions={masterBidangWilayah}
-                onChange={handleChangeInputKecamatan}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-          </div>
-          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
-            <div className='form-group'>
-              <label htmlFor='' className='mb-3'>
-                sampai Triwulan
-              </label>
-              <AsyncSelect
-                value={valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsJabatan}
-                defaultOptions={masterPelaksana}
-                onChange={handleChangeInputJabatan}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='row g-8 mt-2 ms-5 me-5'>
-            <div className='col-md-6 col-lg-6 col-sm-12'>
-              <Link to='#' onClick={handleFilter}>
-                <button className='btn btn-light-primary me-2'>
-                  <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
-                  Cari
-                </button>
-              </Link>
-              <Link to='#' onClick={handleFilterReset}>
-                <button className='btn btn-light-primary'>
-                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                  Reset
-                </button>
-              </Link>
-            </div>
-
-            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-              {/* begin::Filter Button */}
-              <button
-                type='button'
-                className='btn btn-light-primary'
-                data-kt-menu-trigger='click'
-                data-kt-menu-placement='bottom-end'
-              >
-                {btnLoadingUnduh ? (
-                  <>
-                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                    Memproses Unduh...
-                  </>
-                ) : (
-                  <>
-                    {/* <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' /> */}
-                    Unduh
-                  </>
-                )}
-              </button>
-              {/* end::Filter Button */}
-              {/* begin::SubMenu */}
+        <div className='card-header border-1 pt-6'>
+          <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
+            <div className='mb-5'>
               <div
-                className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                data-kt-menu='true'
+                className='accordion-header py-3 d-flex'
+                data-bs-toggle='collapse'
+                data-bs-target='#kt_accordion_2_item_1'
               >
-                {/* begin::Header */}
-                <div className='px-7 py-5'>
-                  <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                </div>
-                {/* end::Header */}
-
-                {/* begin::Separator */}
-                <div className='separator border-gray-200'></div>
-                {/* end::Separator */}
-
-                {/* begin::Content */}
-                <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                  <button
-                    onClick={handleUnduh}
-                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                  >
-                    Excel
-                  </button>
-                </div>
-                <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                  <button
-                    onClick={() =>
-                      navigate(`/kepegawaian/LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf`)
-                    }
-                    className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'
-                  >
-                    PDF
-                  </button>
-                </div>
-                {/* end::Content */}
+                <span className='accordion-icon'>
+                  <span className='svg-icon svg-icon-4'>
+                    <svg
+                      width='24'
+                      height='24'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <rect
+                        opacity='0.5'
+                        x='18'
+                        y='13'
+                        width='13'
+                        height='2'
+                        rx='1'
+                        transform='rotate(-180 18 13)'
+                        fill='currentColor'
+                      />
+                      <path
+                        d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
+                        fill='currentColor'
+                      />
+                    </svg>
+                  </span>
+                </span>
+                <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
               </div>
-              {/* end::SubMenu */}
-            </div>
-          </div>
-        </div>
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card card-flush h-xl-100'>
-            <div
-              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-              style={
-                {
-                  // backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
-                }
-              }
-              data-theme='light'
-            ></div>
-
-            <div className='card-body mt-n20'>
-              <div className='mt-n20 position-relatve'>
-                <div className='card border card-flush h-xl-100'>
-                  <div className='table-responsive mt-5 ms-5 me-5 w'>
-                    <DataTable
-                      // progressPending={loading}
-                      // progressComponent={<LoadingAnimation />}
-                      columns={columns}
-                      data={data}
-                      
-                      // konfirDel={konfirDel}
-                      pagination
-                      paginationServer
-                      // hakAkses={hakAkses}
-                      // jenisPenertibanList={jenisPenertibanList}
-                      // jenisKegiatanList={jenisKegiatanList}
-                      paginationTotalRows={totalRows}
-                      onChangeRowsPerPage={handlePerRowsChange}
-                      onChangePage={handlePageChange}
-                      customStyles={customStyles}
-                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                    />
+              <div
+                id='kt_accordion_2_item_1'
+                className='fs-6 collapse show ps-10'
+                data-bs-parent='#kt_accordion_2'
+              >
+                <div className='row w-100 mt-10 mb-10'>
+                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                    <div className='mb-10'>
+                      <div className='row'>
+                        <div className='col-4 pt-2'>
+                          <label className='form-label align-middle'>
+                            Jenis Kegiatan
+                          </label>
+                        </div>
+                        <div className='col-8'>
+                          <AsyncSelect
+                            name='filter_jenis_kegiatan_id_selection'
+                            defaultOptions
+                            value={valJenisKegiatan}
+                            loadOptions={loadOptionsJenisKegiatan}
+                            onChange={handleChangeInputJenisKegiatan}
+                            styles={
+                              calculatedMode === 'dark'
+                                ? reactSelectDarkThem
+                                : reactSelectLightThem
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                    <div className='mb-10'>
+                      <div className='row'>
+                        <div className='col-4 pt-2'>
+                          <label className='form-label align-middle'>
+                            Jenis Penertiban
+                          </label>
+                        </div>
+                        <div className='col-8'>
+                          <AsyncSelect
+                            name='jenis_penertiban'
+                            defaultOptions
+                            value={valJenisPenertiban}
+                            loadOptions={loadOptionsJenisPenertiban}
+                            onChange={handleChangeInputJenisPenertiban}
+                            styles={
+                              calculatedMode === 'dark'
+                                ? reactSelectDarkThem
+                                : reactSelectLightThem
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                    <div className='mb-10'>
+                      <div className='row'>
+                        <div className='col-4 pt-2'>
+                          <label className='form-label align-middle'>
+                            Jenis Perda Perkada
+                          </label>
+                        </div>
+                        <div className='col-8'>
+                          <AsyncSelect
+                            name='jenis_perda_perkada'
+                            defaultOptions
+                            value={valJenisPerdaPerkada}
+                            loadOptions={loadOptionsJenisPerdaPerkada}
+                            onChange={handleChangeInputJenisPerdaPerkada}
+                            styles={
+                              calculatedMode === 'dark'
+                                ? reactSelectDarkThem
+                                : reactSelectLightThem
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                    <div className='mb-10'>
+                      <div className='row'>
+                        <div className='col-4 pt-2'>
+                          <label className='form-label'>Tanggal Awal</label>
+                        </div>
+                        <div className='col-8'>
+                          <input
+                            type='date'
+                            name='tanggal_kunjungan'
+                            className='form-control'
+                            value={tanggalAwal.val}
+                            onChange={handleChangeInputTanggalAwal}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                    <div className='mb-10'>
+                      <div className='row'>
+                        <div className='col-4 pt-2'>
+                          <label className='form-label align-middle'>Tanggal Akhir</label>
+                        </div>
+                        <div className='col-8'>
+                          <input
+                            name='tanggal_kunjungan'
+                            type='date'
+                            className='form-control'
+                            value={tanggalAkhir.val}
+                            onChange={handleChangeInputTanggalAkhir}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* END :: Filter Form */}
+
+                  {/* Search and Reset */}
+                  <div className='row g-8 mt-2'>
+                    <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                      <Link to='#'>
+                        <Button
+                          className='btn btn-light-primary me-2'
+                          onClick={handleFilter}
+                        >
+                          <KTSVG
+                            path='/media/icons/duotune/general/gen021.svg'
+                            className='svg-icon-2'
+                          />
+                          Cari
+                        </Button>
+                      </Link>
+                      <Link to='#'>
+                        <Button
+                          className='btn btn-light-primary me-2'
+                          onClick={handleFilterReset}
+                        >
+                          <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                          Reset
+                        </Button>
+                      </Link>
+                    </div>
+                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                      <Button
+                        type='button'
+                        className='btn btn-primary'
+                        data-kt-menu-trigger='click'
+                        data-kt-menu-placement='bottom-end'
+                      >
+                        Pilih Tabel Berdasarkan
+                      </Button>
+                      <div
+                        className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
+                        data-kt-menu='true'
+                      >
+                        {/* begin::Separator */}
+                        <div className='separator border-gray-200'></div>
+                        {/* end::Separator */}
+
+                        {/* begin::Content */}
+                        <div data-kt-user-table-filter='form'>
+                          <button
+                            onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
+                            className='btn btn-outline btn-active-light-primary w-100'>
+                            Jenis Penertiban
+                          </button>
+                        </div>
+                        {/* end::Content */}
+
+                        {/* begin::Content */}
+                        <div data-kt-user-table-filter='form'>
+                          <button
+                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                            className='btn btn-outline btn-active-light-primary w-100'
+                          >
+                            Pelaksana
+                          </button>
+                        </div>
+                        {/* end::Content */}
+                      </div>
+                      {/*  end::SubMenu */}
+                    </div>
+                  </div>
+                  {/* END :: Button */}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* end::Body */}
+        <div className='row'>
+          <div className='col fs-4 mb-2 fw-semibold text-center'>
+            LAPORAN HASIL PENEGAKAN PERDA / PERKADA
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col fs-4 mb-2 fw-semibold text-center'>
+            PADA SATPOL PP......................................
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col fs-4 mb-6 fw-semibold text-center'>
+            PERIODE .................... s/d .......................
+          </div>
+        </div>
+        <div className='card-body py-4'>
+          <DtPerdaPerkada
+            data={data}
+            totalRows={totalRows}
+            handlePerRowsChange={handlePerRowsChange}
+            handlePageChange={handlePageChange}
+            loading={loading}
+            jenisKegiatanList={jenisKegiatanList}
+            hakAkses={hakAkses}
+            wilayahBidang={wilayahBidang}
+            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+          />
+        </div>
       </div>
     </>
   )

@@ -11,7 +11,7 @@ import {
 import { RootState } from '../../../redux/store'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { DtRegisterPerdaPerkada } from './data-table-laporan-register-perda-perkada'
+import { DtPerdaPerkadaPelaksana } from './data-table-laporan-perda-perkada'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
@@ -122,7 +122,7 @@ export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const MASTER_URL = `${API_URL}/master`
 
-export function RegisterPerdaPerkada() {
+export function PerdaPerkada_Pelaksana() {
   const navigate = useNavigate()
   const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -137,11 +137,11 @@ export function RegisterPerdaPerkada() {
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
 
-  // // const kota = values.kejadian__kota_id
-  // // const kecamatan = values.kejadian__kecamatan_id
-  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
+  // const kota = values.kejadian__kota_id
+  // const kecamatan = values.kejadian__kecamatan_id
+  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
+  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
@@ -283,25 +283,20 @@ export function RegisterPerdaPerkada() {
     } else if (tanggalAkhir.val !== '') {
       uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAkhir.val}%27`
     }
-    if (valJenisKegiatan.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-    } else if (valJenisKegiatan.value !== '') {
-      uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-    }
+    // if (valJenisKegiatan.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
+    //   uriParam += `%20and%20kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
+    // } else if (valJenisKegiatan.value !== '') {
+    //   uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
+    // }
     if (valJenisPenertiban.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
+      uriParam += `%20and%tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
     } else if (valJenisPenertiban.value !== '') {
       uriParam += `tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
     }
     if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
+      uriParam += `%20and%tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
     } else if (valJenisPerdaPerkada.value !== '') {
       uriParam += `tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    }
-    if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    } else if (valJenisPerdaPerkada.value !== '') {
-      uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
     }
     setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
@@ -331,9 +326,7 @@ export function RegisterPerdaPerkada() {
           jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
           uraian_kegiatan: d.kegiatan__uraian_kegiatan,
           lokasi: d.kegiatan__lokasi,
-          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
-          jenis_perda_perkada: d.tindak_lanjut__administrasi__perda_perkada,
-          denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban
         }))
         Array.from(data).forEach((item: any, index: any) => {
           item.serial = index + 1
@@ -623,41 +616,16 @@ export function RegisterPerdaPerkada() {
                       <div className='row'>
                         <div className='col-4 pt-2'>
                           <label className='form-label align-middle'>
-                            Jenis Kegiatan
-                          </label>
-                        </div>
-                        <div className='col-8'>
-                          <AsyncSelect
-                            name='filter_jenis_kegiatan_id_selection'
-                            defaultOptions
-                            value={valJenisKegiatan}
-                            loadOptions={loadOptionsJenisKegiatan}
-                            onChange={handleChangeInputJenisKegiatan}
-                            styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Jenis Penertiban
+                            Pelaksana Kegiatan
                           </label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
                             name='jenis_penertiban'
                             defaultOptions
-                            value={valJenisPenertiban}
-                            loadOptions={loadOptionsJenisPenertiban}
-                            onChange={handleChangeInputJenisPenertiban}
+                            // value={valJenisPenertiban}
+                            // loadOptions={loadOptionsJenisPenertiban}
+                            // onChange={handleChangeInputJenisPenertiban}
                             styles={
                               calculatedMode === 'dark'
                                 ? reactSelectDarkThem
@@ -673,16 +641,66 @@ export function RegisterPerdaPerkada() {
                       <div className='row'>
                         <div className='col-4 pt-2'>
                           <label className='form-label align-middle'>
-                            Jenis Perda Perkada
+                            Kota
                           </label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='jenis_perda_perkada'
+                            name='jenis_penertiban'
                             defaultOptions
-                            value={valJenisPerdaPerkada}
-                            loadOptions={loadOptionsJenisPerdaPerkada}
-                            onChange={handleChangeInputJenisPerdaPerkada}
+                            // value={valJenisPenertiban}
+                            // loadOptions={loadOptionsJenisPenertiban}
+                            // onChange={handleChangeInputJenisPenertiban}
+                            styles={
+                              calculatedMode === 'dark'
+                                ? reactSelectDarkThem
+                                : reactSelectLightThem
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                    <div className='mb-10'>
+                      <div className='row'>
+                        <div className='col-4 pt-2'>
+                          <label className='form-label align-middle'>
+                            Kecamatan
+                          </label>
+                        </div>
+                        <div className='col-8'>
+                          <AsyncSelect
+                            name='jenis_penertiban'
+                            defaultOptions
+                            // value={valJenisPenertiban}
+                            // loadOptions={loadOptionsJenisPenertiban}
+                            // onChange={handleChangeInputJenisPenertiban}
+                            styles={
+                              calculatedMode === 'dark'
+                                ? reactSelectDarkThem
+                                : reactSelectLightThem
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='col-md-6 col-lg-6 col-sm-12'>
+                    <div className='mb-10'>
+                      <div className='row'>
+                        <div className='col-4 pt-2'>
+                          <label className='form-label align-middle'>
+                            Kelurahan
+                          </label>
+                        </div>
+                        <div className='col-8'>
+                          <AsyncSelect
+                            name='jenis_penertiban'
+                            defaultOptions
+                            // value={valJenisPenertiban}
+                            // loadOptions={loadOptionsJenisPenertiban}
+                            // onChange={handleChangeInputJenisPenertiban}
                             styles={
                               calculatedMode === 'dark'
                                 ? reactSelectDarkThem
@@ -819,7 +837,7 @@ export function RegisterPerdaPerkada() {
           </div>
         </div>
         <div className='card-body py-4'>
-          <DtRegisterPerdaPerkada
+          <DtPerdaPerkadaPelaksana
             data={data}
             totalRows={totalRows}
             handlePerRowsChange={handlePerRowsChange}
