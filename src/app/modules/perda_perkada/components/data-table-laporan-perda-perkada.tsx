@@ -97,14 +97,14 @@ export const DtPerdaPerkada: FC<any> = ({
     {
       name: 'Yustisi',
       center: true,
-      width: '300px',
+      width: '200px',
       sortField: 'denda_pengadilan',
       selector: (row: any) => row.denda_pengadilan,
     },
     {
       name: 'Non Pengadilan',
       center: true,
-      width: '300px',
+      width: '200px',
       sortField: 'denda_non_pengadilan',
       selector: (row: any) => row.denda_non_pengadilan,
     },
@@ -152,9 +152,9 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
       width: '80px',
       sortField: 'id',
       wrap: true,
-      selector: (row: any) => row.serial,
+      selector: (row: any) => row.no,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{row.serial}</div>
+        return <div className='mb-2 mt-2'>{row.no}</div>
       },
     },
     {
@@ -163,95 +163,56 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
       width: '300px',
       center: true,
       selector: (row: any) => row.pelaksana,
-      cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
+      // cell: (record: any) => <GetHakAkses row={parseInt(record.pelaksana)} />,
     },
     {
       name: 'Jumlah Pelanggaran',
       center: true,
       width: '200px',
-      sortField: 'total_item',
-      selector: (row: any) => row.total_item,
+      sortField: 'jumlah_pelanggaran',
+      selector: (row: any) => row.jumlah_pelanggaran,
     },
     {
       name: 'Peringatan',
       center: true,
       width: '150px',
-      sortField: 'total_item',
-      selector: (row: any) => row.total_item,
+      sortField: 'peringatan',
+      selector: (row: any) => row.peringatan,
     },
     {
       name: 'Penutupan/Penyegelan',
       center: true,
       width: '200px',
-      sortField: 'total_item',
-      selector: (row: any) => row.total_item,
+      sortField: 'penutupan_penyegelan',
+      selector: (row: any) => row.penutupan_penyegelan,
     },
     {
       name: 'Pencabutan Izin',
       center: true,
       width: '150px',
-      sortField: 'total_item',
-      selector: (row: any) => row.total_item,
+      sortField: 'pencabutan_izin',
+      selector: (row: any) => row.pencabutan_izin,
     },
     {
       name: 'Yang Lain',
       center: true,
       width: '150px',
-      sortField: 'total_item',
-      selector: (row: any) => row.total_item,
+      sortField: 'yang_lain',
+      selector: (row: any) => row.yang_lain,
     },
     {
       name: 'Yustisi',
       center: true,
-      width: '300px',
-      sortField: 'total_item',
-      selector: (row: any) => row.total_item,
+      width: '200px',
+      sortField: 'denda_pengadilan',
+      selector: (row: any) => row.denda_pengadilan,
     },
     {
       name: 'Non Pengadilan',
       center: true,
-      width: '300px',
-      sortField: 'total_item',
-      selector: (row: any) => row.total_item,
-    },
-    {
-      name: 'Aksi',
-      className: 'action',
-      center: true,
-      allowOverflow: true,
-      fixed: true,
-      cell: (record: any) => {
-        return (
-          <Fragment>
-            <div className='d-flex mb-2 mt-2 flex-end'>
-              {[DropdownButton].map((DropdownType, idx) => (
-                <DropdownType
-                  as={ButtonGroup}
-                  key={idx}
-                  id={`dropdown-button-drop-${idx}`}
-                  size='sm'
-                  variant='light'
-                  title='Aksi'
-                >
-                  <Dropdown.Item
-                    onClick={() => navigate('/pelaporan/DetailLaporanKegiatan/' + record.id)}
-                  >
-                    Detail
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => navigate('/pelaporan/UbahLaporanKegiatan/' + record.id)}
-                  >
-                    Ubah
-                  </Dropdown.Item>
-                  <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
-                    Hapus
-                  </Dropdown.Item>
-                </DropdownType>
-              ))}
-            </div>
-          </Fragment>
-        )
-      },
+      width: '200px',
+      sortField: 'denda_non_pengadilan',
+      selector: (row: any) => row.denda_non_pengadilan,
     },
   ]
 

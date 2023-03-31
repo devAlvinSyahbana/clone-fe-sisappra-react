@@ -122,6 +122,18 @@ export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const MASTER_URL = `${API_URL}/master`
 
+interface pelaksanaInterface {
+  no : number
+  pelaksana : string
+  jumlah_pelanggaran : number
+  peringatan : number
+  penutupan_penyegelan : number
+  pencabutan_izin : number
+  yang_lain : number
+  denda_pengadilan : string
+  denda_non_pengadilan : string
+}
+
 export function PerdaPerkada_Pelaksana() {
   const navigate = useNavigate()
   const { mode } = useThemeMode()
@@ -137,11 +149,11 @@ export function PerdaPerkada_Pelaksana() {
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
 
-  // const kota = values.kejadian__kota_id
-  // const kecamatan = values.kejadian__kecamatan_id
-  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
+  // // const kota = values.kejadian__kota_id
+  // // const kecamatan = values.kejadian__kecamatan_id
+  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
+  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
@@ -155,7 +167,7 @@ export function PerdaPerkada_Pelaksana() {
   const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
   const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState<pelaksanaInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
@@ -316,22 +328,28 @@ export function PerdaPerkada_Pelaksana() {
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
-        const data = res.data.data.map((d: any) => ({
-          id: d.id,
-          no: d.id,
-          pelaksana: d.created_by,
-          tanggal_kegiatan: d.kegiatan__tanggal,
-          waktu_mulai: d.kegiatan__jam_start,
-          waktu_selesai: d.kegiatan__jam_end,
-          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-          lokasi: d.kegiatan__lokasi,
-          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban
-        }))
-        Array.from(data).forEach((item: any, index: any) => {
-          item.serial = index + 1
-        })
-        setData(data)
+        // const data = res.data.data.map((d: any) => ({
+        //   id: d.id,
+        //   no: d.id,
+        //   pelaksana: d.created_by,
+        //   tanggal_kegiatan: d.kegiatan__tanggal,
+        //   waktu_mulai: d.kegiatan__jam_start,
+        //   waktu_selesai: d.kegiatan__jam_end,
+        //   jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+        //   uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+        //   lokasi: d.kegiatan__lokasi,
+        //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban
+        // }))
+        // Array.from(data).forEach((item: any, index: any) => {
+        //   item.serial = index + 1
+        // })
+        const arr: pelaksanaInterface[] = [
+        { no: 1, pelaksana: 'KOTA ADMINISTRASI JAKARTA PUSAT', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
+        { no: 2, pelaksana: 'KOTA ADMINISTRASI JAKARTA UTARA', jumlah_pelanggaran: 70, peringatan: 10, penutupan_penyegelan: 20, pencabutan_izin: 0, yang_lain: 40, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
+        { no: 3, pelaksana: 'KOTA ADMINISTRASI JAKARTA BARAT', jumlah_pelanggaran: 100, peringatan: 15, penutupan_penyegelan: 25, pencabutan_izin: 0, yang_lain: 60, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
+        { no: 4, pelaksana: 'KOTA ADMINISTRASI JAKARTA SELATAN', jumlah_pelanggaran: 95, peringatan: 20, penutupan_penyegelan: 30, pencabutan_izin: 0, yang_lain: 45, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' },
+        { no: 5, pelaksana: 'KOTA ADMINISTRASI JAKARTA TIMUR', jumlah_pelanggaran: 95, peringatan: 20, penutupan_penyegelan: 30, pencabutan_izin: 0, yang_lain: 45, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
+        setData(arr)
         setTotalRows(res.data.total_items)
         setLoading(false)
 
@@ -621,7 +639,7 @@ export function PerdaPerkada_Pelaksana() {
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='jenis_penertiban'
+                            name='pelaksana'
                             defaultOptions
                             // value={valJenisPenertiban}
                             // loadOptions={loadOptionsJenisPenertiban}

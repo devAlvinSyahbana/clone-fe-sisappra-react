@@ -45,9 +45,9 @@ export const DtRegisterPerdaPerkada: FC<any> = ({
             width: '80px',
             sortField: 'id',
             wrap: true,
-            selector: (row: any) => row.serial,
+            selector: (row: any) => row.no,
             cell: (row: any) => {
-                return <div className='mb-2 mt-2'>{row.serial}</div>
+                return <div className='mb-2 mt-2'>{row.no}</div>
             },
         },
         {
@@ -113,45 +113,6 @@ export const DtRegisterPerdaPerkada: FC<any> = ({
             width: '300px',
             sortField: 'total_item',
             selector: (row: any) => row.total_item,
-        },
-        {
-            name: 'Aksi',
-            className: 'action',
-            center: true,
-            allowOverflow: true,
-            fixed: true,
-            cell: (record: any) => {
-                return (
-                    <Fragment>
-                        <div className='d-flex mb-2 mt-2 flex-end'>
-                            {[DropdownButton].map((DropdownType, idx) => (
-                                <DropdownType
-                                    as={ButtonGroup}
-                                    key={idx}
-                                    id={`dropdown-button-drop-${idx}`}
-                                    size='sm'
-                                    variant='light'
-                                    title='Aksi'
-                                >
-                                    <Dropdown.Item
-                                        onClick={() => navigate('/pelaporan/DetailLaporanKegiatan/' + record.id)}
-                                    >
-                                        Detail
-                                    </Dropdown.Item>
-                                    <Dropdown.Item
-                                        onClick={() => navigate('/pelaporan/UbahLaporanKegiatan/' + record.id)}
-                                    >
-                                        Ubah
-                                    </Dropdown.Item>
-                                    <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
-                                        Hapus
-                                    </Dropdown.Item>
-                                </DropdownType>
-                            ))}
-                        </div>
-                    </Fragment>
-                )
-            },
         },
     ]
 
