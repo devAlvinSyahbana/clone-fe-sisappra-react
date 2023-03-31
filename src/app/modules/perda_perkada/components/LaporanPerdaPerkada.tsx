@@ -9,6 +9,7 @@ import {
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
 import { RootState } from '../../../redux/store'
+import { unparse } from 'papaparse'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { DtPerdaPerkada } from './data-table-laporan-perda-perkada'
@@ -124,15 +125,15 @@ export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const MASTER_URL = `${API_URL}/master`
 
 interface jenisPenertibanInterface {
-  no : number
-  jenis_penertiban : string
-  jumlah_pelanggaran : number
-  peringatan : number
-  penutupan_penyegelan : number
-  pencabutan_izin : number
-  yang_lain : number
-  denda_pengadilan : string
-  denda_non_pengadilan : string
+  no: number
+  jenis_penertiban: string
+  jumlah_pelanggaran: number
+  peringatan: number
+  penutupan_penyegelan: number
+  pencabutan_izin: number
+  yang_lain: number
+  denda_pengadilan: string
+  denda_non_pengadilan: string
 }
 
 export function LaporanPerdaPerkada() {
@@ -174,7 +175,17 @@ export function LaporanPerdaPerkada() {
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({ strparam: '' })
 
-  
+  const unduhCSV = (data: any[]) => {
+    const csvData = unparse(data)
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.setAttribute('download', 'LAPORAN PENEGAKAN PERDA/PERKADA.csv')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
+
 
   const filterList = async () => {
     const resKota = await axios.get(`${MASTER_URL}/kota/find`)
@@ -517,20 +528,6 @@ export function LaporanPerdaPerkada() {
     return [data, setData] as const
   }
 
-  //unduh
-  const handleUnduh = async () => {
-    setbtnLoadingUnduh(true)
-    await axios({
-      url: `${MASTERDATA_URL}unduh?status=${qParamFind.strparam}`,
-      method: 'GET',
-      responseType: 'blob', // Important
-    }).then((response) => {
-      FileDownload(response.data, 'DATA STATUS KENAIKAN PANGKAT.xlsx')
-      setbtnLoadingUnduh(false)
-    })
-  }
-  //end unduh
-
   const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
@@ -772,7 +769,18 @@ export function LaporanPerdaPerkada() {
                         </Button>
                       </Link>
                     </div>
-                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                    <div className='d-flex justify-content-start col-md-4 col-lg-5 col-sm-6'>
+                      <button
+                        type='button'
+                        className='btn btn-light-primary'
+                        data-kt-menu-trigger='click'
+                        onClick={() => unduhCSV(data)}>
+                        <>
+                          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                          Unduh CSV
+                        </>
+                      </button>
+                      <div className='d-flex justify-content-end col-md-4 col-lg-7 col-sm-12'>
                       <Button
                         type='button'
                         className='btn btn-primary'
@@ -814,6 +822,7 @@ export function LaporanPerdaPerkada() {
                     </div>
                   </div>
                   {/* END :: Button */}
+                </div>
                 </div>
               </div>
             </div>

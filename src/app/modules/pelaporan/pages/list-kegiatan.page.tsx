@@ -2,6 +2,7 @@ import React, { ChangeEvent, FC, useEffect, useState } from 'react'
 import DatePicker from 'react-multi-date-picker'
 import AsyncSelect from 'react-select/async'
 import { Link } from 'react-router-dom'
+import { unparse } from 'papaparse'
 import { Formik, Field, Form, FormikValues } from 'formik'
 import {
   DatePickerField,
@@ -228,6 +229,17 @@ export const ListKegiatanPage: FC = () => {
   // const vPimpinan = () => {
   //   setAksi(2)
   // }
+
+  const unduhCSV = (data: any[]) => {
+    const csvData = unparse(data)
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.setAttribute('download', 'LAPORAN KEGIATAN.csv')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
 
   const [inputValKota, setDataKota] = useState([])
   const [inputValKec, setDataKec] = useState([])
@@ -682,6 +694,17 @@ export const ListKegiatanPage: FC = () => {
                                 </Button>
                               </div>
                               <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                <button
+                                  type='button'
+                                  className='btn btn-light-primary'
+                                  data-kt-menu-trigger='click'
+                                  data-kt-menu-placement='bottom-end'
+                                  onClick={() => unduhCSV(data)}>
+                                  <>
+                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                    Unduh CSV
+                                  </>
+                                </button>
                                 {/* begin::Filter Button */}
                                 {/* <button
                                   type='button'
@@ -851,6 +874,17 @@ export const ListKegiatanPage: FC = () => {
                                   Tambah
                                   {/* end::Add user */}
                                 </Button>
+                                <button
+                                  type='button'
+                                  className='btn btn-light-primary'
+                                  data-kt-menu-trigger='click'
+                                  data-kt-menu-placement='bottom-end'
+                                  onClick={() => unduhCSV(data)}>
+                                  <>
+                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                    Unduh CSV
+                                  </>
+                                </button>
                                 {/* <button
                                   type='button'
                                   className='btn btn-light-primary'
@@ -979,6 +1013,17 @@ export const ListKegiatanPage: FC = () => {
                                 </Link>
                               </div>
                               <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                <button
+                                  type='button'
+                                  className='btn btn-light-primary'
+                                  data-kt-menu-trigger='click'
+                                  data-kt-menu-placement='bottom-end'
+                                  onClick={() => unduhCSV(data)}>
+                                  <>
+                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                    Unduh CSV
+                                  </>
+                                </button>
                                 {/* begin::Filter Button */}
                                 {/* <button
                                   type='button'
