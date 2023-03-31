@@ -459,7 +459,7 @@ export function Jabatan() {
       }
     })
   }
-  // END DELET
+  // END DELETE
   const handleSort = (column: any, sortDirection: any) => {
     // simulate server sort
     console.log(column, sortDirection)
@@ -500,8 +500,8 @@ export function Jabatan() {
             </Link>
           </div>
           <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-            <Link to='#i'>
-              <button className='btn btn-primary me-2' onClick={doAdd}>
+            <Link to='/master/Jabatan/TambahJabatan'>
+              <button className='btn btn-primary me-2'>
                 <i className='fa-solid fa-plus'></i>
                 Tambah
               </button>
@@ -513,7 +513,7 @@ export function Jabatan() {
         <Modal show={show} onHide={handleClose} backdrop='static' keyboard={false} centered>
           <form onSubmit={formik.handleSubmit}>
             <Modal.Header closeButton>
-              {/* <Modal.Title {aksi === 0 ? 'Tambah' : 'Ubah'}>Tambah Jabatan</Modal.Title> */}
+              <Modal.Title>{aksi === 0 ? 'Tambah' : 'Ubah'}Tambah Jabatan</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <div className='mb-3 form-control-solid'>
@@ -554,7 +554,7 @@ export function Jabatan() {
             </Modal.Body>
             <Modal.Footer>
               <Button variant='secondary' onClick={handleClose}>
-                Close
+                Batal
               </Button>
               <Button variant='primary' type='submit'>
                 <i className='fa-solid fa-paper-plane'></i>

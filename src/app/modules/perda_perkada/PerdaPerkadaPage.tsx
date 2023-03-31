@@ -2,14 +2,15 @@ import React from 'react'
 import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 import {LaporanSidangTipiring} from './components/LaporanSidangTipiring'
-import {LaporanPenerbitanMinumBeralkohol} from './components/LaporanPenerbitanMinumBeralkohol'
-import {RegisterPenegakanPerkaraPerdaPerda} from './components/RegisterPenegakanPerkaraPerdaPerda'
-import {LaporanPenegakanPerdaPerkada} from './components/LaporanPenegakanPerdaPerkada'
+import {LaporanMinol} from './components/LaporanMinol'
+import {RegisterPerdaPerkada} from './components/RegisterPerdaPerkada'
+import {LaporanPerdaPerkada} from './components/LaporanPerdaPerkada'
+import {PerdaPerkada_Pelaksana} from './components/PerdaPerkada-Pelaksana'
 
 const perda_perkadaBreadCrumbs: Array<PageLink> = [
   {
     title: 'Perda Perkada',
-    path: '/perdaperkada/LaporanSidangTipiring',
+    path: '/perdaperkada/LaporanPerdaPerkada',
     isSeparator: false,
     isActive: false,
   },
@@ -35,41 +36,54 @@ const PerdaPerkadaPage: React.FC = () => {
           path='LaporanSidangTipiring'
           element={
             <>
-              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>Laporan Sidang Tipiring</PageTitle>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
+                Laporan Sidang Tipiring
+              </PageTitle>
               <LaporanSidangTipiring />
             </>
           }
         />
         <Route
-          path='LaporanPenerbitanMinumBeralkohol'
+          path='LaporanMinol'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Laporan Penerbitan Minum Beralkohol
+                Laporan Penertiban Minum Beralkohol
               </PageTitle>
-              <LaporanPenerbitanMinumBeralkohol />
+              <LaporanMinol />
             </>
           }
         />
         <Route
-          path='RegisterPenegakanPerkaraPerdaPerda'
+          path='RegisterPerdaPerkada'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Register Penegakan Perkara Perda / Perda
+                Register Penegakan Perda dan Perkada
               </PageTitle>
-              <RegisterPenegakanPerkaraPerdaPerda />
+              <RegisterPerdaPerkada />
             </>
           }
         />
         <Route
-          path='LaporanPenegakanPerdaPerkada'
+          path='LaporanPerdaPerkada'
+          element={
+            <>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
+                Laporan Perda dan Perkada
+              </PageTitle>
+              <LaporanPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='PerdaPerkada_Pelaksana'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
                 Laporan Penegakan Perda dan Perkada
               </PageTitle>
-              <LaporanPenegakanPerdaPerkada />
+              <PerdaPerkada_Pelaksana />
             </>
           }
         />

@@ -20,7 +20,7 @@ import {
 import axios from 'axios'
 import AsyncSelect from 'react-select/async'
 
-interface StepDetailKejadianProps {
+interface StepDetailPengawasanProps {
   handleChange?: {
     /** Classic React change handler, keyed by input name */
     (e: React.ChangeEvent<any>): void
@@ -38,22 +38,35 @@ interface StepDetailKejadianProps {
   }
   handleReset?: (e?: React.SyntheticEvent<any>) => void
   listMasterPengawasanValue: any
+  allValues: any
   detailState: boolean
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
 }
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
-export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
+export const StepDetailPengawasan: FC<StepDetailPengawasanProps> = ({
   handleChange,
-  values,
   handleBlur,
   handleReset,
-  listMasterPengawasanValue,
+  setFieldValue,
+  values,
   detailState,
+  listMasterPengawasanValue,
 }) => {
   const dispatch = useDispatch()
-  // const kotaList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kota)
-  // const kecamatanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kecamatan)
-  // const kelurahanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kelurahan)
+  // const jenisPengawasanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_jenis_pengawasan)
+  // const jenisPengawasanId = useSelector(
+  //   (s: RootState) => s.pelaporanPengawasan.filter_kota
+  // )
+  const allValues = useSelector((s: RootState) => s.pelaporanPengawasan)
+  const kota = values.filter_kota
+  const kecamatan = values.filter_kecamatan
+  const kotaList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kota)
+  const kecamatanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kecamatan)
+  const kelurahanList = useSelector((s: RootState) => s.pelaporanPengawasan.list_kelurahan)
+
+  console.log('pengawasan', allValues)
+  console.log('pengawasan val', values)
 
   useEffect(() => {
     dispatch(updateKotaList())
@@ -61,7 +74,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
     dispatch(updateKelurahanList())
     listMasterPengawasanValue()
   }, [])
-  console.log(values)
+  // console.log(values)
 
     // GET DATA
     interface SelectOptionAutoCom {
@@ -73,11 +86,11 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
     }
 
     // GET Kota
-    const [valMasterKota, setValMasterKota] = useState({value: null, label: ''})
+    const [valKota, setValKota] = useState({value: null, label: ''})
     const filterKota = async (inputValue: string) => {
-      const response = await axios.get(API_URL + `/kota/` + inputValue)
+      const response = await axios.get(API_URL + `/filter_kota/` + inputValue)
       const json = await response.data.data
-      return json.map((i: any) => ({label: i.name, value: i.id}))
+      return json.map((i: any) => ({label: i.nama, value: i.id}))
     }
     const loadOptionsKota = (
       inputValue: string,
@@ -88,7 +101,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
       }, 1000)
     }
     const handleChangeInputKota = (newValue: any) => {
-      setValMasterKota((prevstate: any) => ({...prevstate, ...newValue}))
+      setValKota((prevstate: any) => ({...prevstate, ...newValue}))
       setIdKota((prevstate) => ({
         ...prevstate,
         id: newValue.value,
@@ -109,7 +122,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
     }
     const loadOptionsKecamatan = (
       inputValue: string,
-      callback: (otions: SelectOptionAutoCom[]) => void
+      callback: (options: SelectOptionAutoCom[]) => void
     ) => {
       setTimeout(async () => {
         callback(await filterKecamatan(inputValue))
@@ -137,7 +150,7 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
     }
     const loadOptionsKelurahan = (
       inputValue: string,
-      callback: (otions: SelectOptionAutoCom[]) => void
+      callback: (options: SelectOptionAutoCom[]) => void
     ) => {
       setTimeout(async () => {
         callback(await filterKelurahan(inputValue))
@@ -187,80 +200,99 @@ export const StepDetailPengawasan: FC<StepDetailKejadianProps> = ({
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kota</label>
-          <AsyncSelect
-            value={
-              valMasterKota.value
-              ? valMasterKota
-              : {value: '', label: 'Pilih Kota'}
-            }
-            loadOptions={loadOptionsKota}
-            defaultOptions
-            onChange={handleChangeInputKota}
-            placeholder={'Pilih'}
-            loadingMessage={() => 'Sedang mencari pilihan...'}
-            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
-          />
-          {/* <Field
-            name='kota_selection'
-            target='kota'
-            disabled={detailState}
+          <Field
+            name='filter_kota_selection'
+            target='filter_kota'
             className='form-control'
+            disabled={detailState}
             component={SelectField}
             options={kotaList}
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
+              setFieldValue('filter_kecamatan_selection', [])
+              setFieldValue('filter_kelurahan_selection', [])
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'filter_kecamatan_selection',
+                    value: 0,
+                  },
+                })
+              )
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'filter_kelurahan_selection',
+                    value: 0,
+                  },
+                })
+              )
             }}
-          /> */}
+            
+          />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kota' />
-            <ErrorMessage name='kota_selection' />
+            <ErrorMessage name='filter_kota' />
+            <ErrorMessage name='filter_kota_selection' />
           </div>
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kecamatan</label>
-          <AsyncSelect
-            loadOptions={loadOptionsKecamatan}
-            value={
-              valKecamatan.value
-              ? valKecamatan
-              : {value: '', label: 'Pilih Kecamatan'}
-            }
-            onChange={handleChangeInputKecamatan}
-            name='filter_kecamatan'
-            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
-            />
-          {/* <Field
-            name='kecamatan_selection'
-            disabled={detailState}
-            target='kecamatan'
+          {/* {JSON.stringify
+          (kecamatanList.filter((obj: any) => obj.kodeKota === 'KOBA' + values.filter_kota))
+          } */}
+          <Field
+            name='filter_kecamatan_selection'
+            target='filter_kecamatan'
             className='form-control'
             component={SelectField}
-            options={kecamatanList}
+            disabled={detailState}
+            options={
+              kota !== 0
+                ? kecamatanList.filter((obj: any) => obj.kodeKota === 'KOBA' + kota)
+                : kecamatanList
+            }
             onChange={(o: ChangeEvent<any>) => {
               dispatch(changedValue(ToFieldStateCE(o)))
+              setFieldValue('filter_kelurahan_selection', [])
+
+              dispatch(
+                changedValue({
+                  target: {
+                    name: 'filter_kelurahan_selection',
+                    value: 0,
+                  },
+                })
+              )
             }}
-          /> */}
+          />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kecamatan' />
-            <ErrorMessage name='kecamatan_selection' />
+            <ErrorMessage name='filter_kecamatan' />
+            <ErrorMessage name='filter_kecamatan_selection' />
           </div>
         </div>
         <div className='mb-10'>
           <label className='required form-label'>Kelurahan</label>
-          <AsyncSelect
-            loadOptions={loadOptionsKelurahan}
-            value={
-              valKelurahan.value
-              ? valKelurahan
-              : {value: '', label: 'Pilih Kelurahan'}
+          {/* {JSON.stringify
+          (kelurahanList.filter((obj: any) => obj.kodeKecamatan === 'KEC' + kecamatan))
+          } */}
+          <Field
+            name='filter_kelurahan_selection'
+            target='filter_kelurahan'
+            className='form-control'
+            component={SelectField}
+            disabled={detailState}
+            options={
+              kota !== 0
+                ? kelurahanList.filter((obj: any) => obj.kodeKecamatan === 'KEC' + kecamatan)
+                : kelurahanList
             }
-            onChange={handleChangeInputKelurahan}
-            name='filter_kelurahan'
-            noOptionsMessage={() => 'Ketik untuk mencari pilihan...'}
-            />
+            onChange={(o: ChangeEvent<any>) => {
+              dispatch(changedValue(ToFieldStateCE(o)))
+            }}
+          />
           <div className='text-danger mt-2'>
-            <ErrorMessage name='kelurahan' />
-            <ErrorMessage name='kelurahan_selection' />
+            <ErrorMessage name='filter_kelurahan' />
+            <ErrorMessage name='filter_kelurahan_selection' />
           </div>
         </div>
         <div className='mb-10 form-group'>

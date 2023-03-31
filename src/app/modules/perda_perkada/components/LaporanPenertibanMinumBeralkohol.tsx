@@ -117,7 +117,11 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-export function LaporanPenerbitanMinumBeralkohol() {
+<<<<<<<< HEAD:src/app/modules/perda_perkada/components/LaporanMinol.tsx
+export function LaporanMinol () {
+========
+export function LaporanPenertibanMinumBeralkohol() {
+>>>>>>>> 1b7a3685b3ac9d697879c13af5ea6379918cd902:src/app/modules/perda_perkada/components/LaporanPenertibanMinumBeralkohol.tsx
   let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -158,16 +162,16 @@ export function LaporanPenerbitanMinumBeralkohol() {
     },
 
     {
-      name: 'Unit Organisasi ',
-      selector: (row: any) => row.kota,
+      name: 'Pelaksana',
+      selector: (row: any) => row.bidang_wilayah,
       sortable: true,
-      sortField: 'kota',
+      sortField: 'bidang_wilayah',
       wrap: true,
       width: '250px',
       center: true,
     },
     {
-      name: 'Jumlah',
+      name: 'Jumlah Minol',
       selector: (row: any) => row.kecamatan,
       sortable: true,
       sortField: 'kecamatan',
@@ -406,7 +410,7 @@ export function LaporanPenerbitanMinumBeralkohol() {
           <div className='col-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
-                Unit Organisasi
+                Pelaksana
               </label>
               <AsyncSelect
                 className='mb-5'

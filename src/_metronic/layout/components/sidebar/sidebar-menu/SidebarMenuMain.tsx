@@ -100,6 +100,38 @@ const SidebarMenuMain = () => {
               hasBullet={true}
             />
           </SidebarMenuItemWithSub>
+          <SidebarMenuItemWithSub
+            to='/perda_perkada'
+            title='Penegakan Perda & Perkada'
+            fontIcon='bi-archive'
+            icon='/media/icons/duotune/finance/fin001.svg'
+          >
+            <SidebarMenuItem
+              to='/perdaperkada/LaporanPerdaPerkada'
+              title='Laporan Penegakan Perda & Perkada'
+              hasBullet={true}
+            />
+            <SidebarMenuItem
+              to='/perdaperkada/LaporanSidangTipiring'
+              title='Laporan Sidang Tipiring'
+              hasBullet={true}
+            />
+            <SidebarMenuItem
+              to='/perdaperkada/LaporanMinol'
+              title='Laporan Penertiban Minuman Berakohol'
+              hasBullet={true}
+            />
+            <SidebarMenuItem
+              to='/perdaperkada/LaporanBangunan'
+              title='Laporan Penertiban Bangunan'
+              hasBullet={true}
+            />
+            <SidebarMenuItem
+              to='/perdaperkada/LaporanPPKM'
+              title='Laporan PPKM'
+              hasBullet={true}
+            />
+          </SidebarMenuItemWithSub>
         </>
       )}
       <SidebarMenuItemWithSub
@@ -195,11 +227,11 @@ const SidebarMenuMain = () => {
               title='Jenis Perda / Perkada'
               hasBullet={true}
             />
-            <SidebarMenuItem
+            {/* <SidebarMenuItem
               to='/master/JenisPenindakan'
               title='Jenis Penindakan'
               hasBullet={true}
-            />
+            /> */}
             <SidebarMenuItem
               to='/master/JenisPelanggaran'
               title='Jenis Pelanggaran'
@@ -242,11 +274,11 @@ const SidebarMenuMain = () => {
               hasBullet={true}
             />
             <SidebarMenuItem to='/master/JenisKekerasan' title='Jenis Kekerasan' hasBullet={true} />
-            <SidebarMenuItem
+            {/* <SidebarMenuItem
               to='/master/JenisPenertiban'
               title='Jenis Penertiban'
               hasBullet={true}
-            />
+            /> */}
           </SidebarMenuItemWithSub>
         </>
       )}

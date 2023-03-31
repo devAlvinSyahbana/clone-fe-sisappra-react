@@ -65,10 +65,9 @@ export function LihatJenisPenindakan() {
                         />
                       </div>
                     </div>
-                    
                   </div>
                   <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-                    <Link to='/master/Jenispenindakan'>
+                    <Link to='/master/JenisPenindakan'>
                       <button className='btn btn-secondary'>
                         <i className='fa-solid fa-arrow-left'></i>
                         Kembali

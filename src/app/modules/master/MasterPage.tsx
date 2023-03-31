@@ -28,12 +28,16 @@ import {UpdateJenisKejadian} from './components/Update-master/UpdateJenisKejadia
 import {TambahJenisKejadian} from './components/Tambah-master/TambahJenisKejadian'
 
 import {JenisPelanggaran} from './components/JenisPelanggaran'
+import {LihatJenisPelanggaran} from './components/Lihat-master/LihatJenisPelanggaran'
 
 import {JenisPertolongan} from './components/JenisPertolongan'
 import {LihatJenisPertolongan} from './components/Lihat-master/LihatJenisPertolongan'
 import {UpdateJenisPertolongan} from './components/Update-master/UpdateJenisPertolongan'
 
 import {JenisPerdaPerkada} from './components/JenisPerdaPerkada'
+import {LihatJenisPerdaPerkada} from './components/Lihat-master/LihatJenisPerdaPerkada'
+import {UpdateJenisPerdaPerkada} from './components/Update-master/UpdateJenisPerdaPerkada'
+import {TambahJenisPerdaPerkada} from './components/Tambah-master/TambahJenisPerdaPerkada'
 
 import {JenisPenindakan} from './components/JenisPenindakan'
 import {LihatJenisPenindakan} from './components/Lihat-master/LihatJenisPenindakan'
@@ -94,6 +98,8 @@ import {UpdateEselon} from './components/Update-master/UpdateEselon'
 import {LihatEselon} from './components/Lihat-master/LihatEselon'
 
 import {Jabatan} from './components/Jabatan'
+import {LihatJabatan} from './components/Lihat-master/LihatJabatan'
+import {TambahJabatan} from './components/Tambah-master/TambahJabatan'
 
 import {SumberInformasi} from './components/SumberInformasi'
 import {UpdateSumberInformasi} from './components/Update-master/UpdateSumberInformasi'
@@ -103,13 +109,11 @@ import {JenisKekerasan} from './components/JenisKekerasan'
 import {UpdateJenisKekerasan} from './components/Update-master/UpdateJenisKekerasan'
 import {LihatJenisKekerasan} from './components/Lihat-master/LihatJenisKekerasan'
 
-import {JenisPenertiban} from './components/JenisPenertiban'
-import {UpdateJenisPenertiban} from './components/Update-master/UpdateJenisPenertiban'
-import {LihatJenisPenertiban} from './components/Lihat-master/LihatJenisPenertiban'
+// import {JenisPenertiban} from './components/JenisPenertiban'
+// import {UpdateJenisPenertiban} from './components/Update-master/UpdateJenisPenertiban'
+// import {LihatJenisPenertiban} from './components/Lihat-master/LihatJenisPenertiban'
 
 import {JenisPenyelesaian} from './components/JenisPenyelesaian'
-
-import {LihatJabatan} from './components/Lihat-master/LihatJabatan'
 
 import {StatusKenaikanPangkat} from './components/StatusKenaikanPangkat'
 import {LihatStatusKenaikanPangkat} from './components/Lihat-master/LihatStatusKenaikanPangkat'
@@ -557,11 +561,11 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
-          path='jabatan/tambah-jabatan'
+          path='Jabatan/TambahJabatan'
           element={
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}> Jabatan </PageTitle>
-              <Jabatan />
+              <TambahJabatan />
             </>
           }
         />
@@ -684,6 +688,15 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
+          path='JenisPelanggaran/LihatJenisPelanggaran/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Jenis Pelanggaran</PageTitle>
+              <LihatJenisPelanggaran />
+            </>
+          }
+        />
+        <Route
           path='JenisPertolongan'
           element={
             <>
@@ -747,6 +760,33 @@ const MasterPage: React.FC = () => {
           }
         />
         <Route
+          path='JenisPerdaPerkada/LihatJenisPerdaPerkada/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Jenis Perda / Perkada</PageTitle>
+              <LihatJenisPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='JenisPerdaPerkada/UpdateJenisPerdaPerkada/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Update Jenis Perda / Perkada</PageTitle>
+              <UpdateJenisPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='JenisPerdaPerkada/TambahJenisPerdaPerkada'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Tambah Jenis Perda / Perkada</PageTitle>
+              <TambahJenisPerdaPerkada />
+            </>
+          }
+        />
+        <Route
           path='JenisKekerasan'
           element={
             <>
@@ -773,7 +813,7 @@ const MasterPage: React.FC = () => {
             </>
           }
         />
-        <Route
+        {/* <Route
           path='JenisPenertiban'
           element={
             <>
@@ -799,7 +839,7 @@ const MasterPage: React.FC = () => {
               <LihatJenisPenertiban />
             </>
           }
-        />
+        /> */}
         <Route
           path='JenisPenyelesaian'
           element={

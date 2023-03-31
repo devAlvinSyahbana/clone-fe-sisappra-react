@@ -161,7 +161,7 @@ export const ListKejadianPage: FC = () => {
   const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
 
   const filterPelaporanKejadian = async (values: PelaporanKejadianState, actions: FormikValues) => {
-    const res = await axios.get(`${PELAPORAN_URL}/Kejadian-umum`)
+    const res = await axios.get(`${PELAPORAN_URL}/kejadian-umum`)
     const data = res.data.data
     // .filter((v: any) => !excludeJenisKejadian.includes(v.label))
     setCurrentSchema(data)
