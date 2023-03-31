@@ -3,8 +3,9 @@ import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 import {LaporanSidangTipiring} from './components/LaporanSidangTipiring'
 import {LaporanPenertibanMinumBeralkohol} from './components/LaporanPenertibanMinumBeralkohol'
-import {RegisterPenegakanPerkaraPerdaPerda} from './components/RegisterPenegakanPerkaraPerdaPerda'
+import {RegisterPerdaPerkada} from './components/RegisterPerdaPerkada'
 import {LaporanPerdaPerkada} from './components/LaporanPerdaPerkada'
+import { LaporanMinol } from './components/LaporanMinol'
 
 const perda_perkadaBreadCrumbs: Array<PageLink> = [
   {
@@ -41,24 +42,24 @@ const PerdaPerkadaPage: React.FC = () => {
           }
         />
         <Route
-          path='LaporanPenertibanMinumBeralkohol'
+          path='LaporanMinol'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
                 Laporan Penertiban Minum Beralkohol
               </PageTitle>
-              <LaporanPenertibanMinumBeralkohol />
+              <LaporanMinol />
             </>
           }
         />
         <Route
-          path='RegisterPenegakanPerkaraPerdaPerda'
+          path='RegisterPerdaPerkada'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
                 Register Penegakan Perkara Perda / Perda
               </PageTitle>
-              <RegisterPenegakanPerkaraPerdaPerda />
+              <RegisterPerdaPerkada />
             </>
           }
         />

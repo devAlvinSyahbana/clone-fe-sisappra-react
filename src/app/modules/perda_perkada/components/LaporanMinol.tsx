@@ -7,10 +7,6 @@ import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/The
 import AsyncSelect from 'react-select/async'
 import {KTSVG} from '../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
-import Form from 'react-bootstrap/Form'
-import Swal from 'sweetalert2'
-import {string} from 'yup'
-
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -106,10 +102,7 @@ const reactSelectDarkThem = {
   }),
 }
 
-export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
-export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
-export const MASTER_URL = `${API_URL}/master`
+const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
 export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
 export const JABATAN_URL = `${API_URL}/master/jabatan`
@@ -124,8 +117,8 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-export function LaporanSidangTipiring() {
-  // let componentRef: any
+export function LaporanMinol() {
+  let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -137,32 +130,31 @@ export function LaporanSidangTipiring() {
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({strparam: ''})
 
-  // const LoadingAnimation = (props: any) => {
-  //   return (
-  //     <>
-  //       <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
-  //         {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
-  //         <span className='spinner-border spinner-border-xl align-middle me-3'></span>
-  //         <div className='d-flex flex-column'>
-  //           <h5 className='mb-1'>Sedang mengambil data...</h5>
-  //         </div>
-  //       </div>
-  //     </>
-  //   )
-  // }
+  const LoadingAnimation = (props: any) => {
+    return (
+      <>
+        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+          <div className='d-flex flex-column'>
+            <h5 className='mb-1'>Sedang mengambil data...</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   var num = 1
   const columns = [
     {
       name: 'No',
-      // width: '80px',
+      // selector: (row: any) => row.id,
       sortable: true,
       sortField: 'id',
       wrap: true,
-      selector: (row: any) => row.serial,
-      cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{row.serial}</div>
-      },
+      // cell: (row: any) => {
+      //   return <div className='mb-2 mt-2'>{row.skpd !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
+      // },
     },
 
     {
@@ -175,7 +167,7 @@ export function LaporanSidangTipiring() {
       center: true,
     },
     {
-      name: 'Jumlah Kasus (Berkas Perkara)',
+      name: 'Jumlah',
       selector: (row: any) => row.kecamatan,
       sortable: true,
       sortField: 'kecamatan',
@@ -184,21 +176,21 @@ export function LaporanSidangTipiring() {
       center: true,
     },
     {
-      name: 'Jumlah Penyelesaian Berkas Perkara P-21',
+      name: 'Jenis/Merk',
       selector: (row: any) => row.kelurahan,
       sortable: true,
       sortField: 'kelurahan',
       wrap: true,
     },
     {
-      name: 'Denda Tanggal Sidang ',
+      name: 'Tanggal',
       selector: (row: any) => row.lokasi,
       sortable: true,
       sortField: 'lokasi',
       wrap: true,
     },
     {
-      name: 'Dokumentasi',
+      name: 'Keterangan',
       selector: (row: any) => row.titik_koordinat,
       sortable: true,
       sortField: 'titik_koordinat',
@@ -411,28 +403,21 @@ export function LaporanSidangTipiring() {
       <div className={`card`}>
         {/* begin::Body */}
         <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
+          <div className='col-12'>
             <div className='form-group'>
-              <label className='form-label align-middle'>Wilayah</label>
+              <label htmlFor='' className='mb-3'>
+                Unit Organisasi
+              </label>
               <AsyncSelect
                 className='mb-5'
-                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsKecamatan}
-                defaultOptions={masterBidangWilayah}
-                onChange={handleChangeInputKecamatan}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-          </div>
-          <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
-            <div className='form-group'>
-              <label className='form-label align-middle'>Tahun</label>
-              <AsyncSelect
-                className='mb-5'
-                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsKecamatan}
-                defaultOptions={masterBidangWilayah}
-                onChange={handleChangeInputKecamatan}
+                value={
+                  valMasterBidangWilayah.value
+                    ? valMasterBidangWilayah
+                    : {value: '', label: 'Pilih'}
+                }
+                loadOptions={loadOptionsbidangwilayah}
+                defaultOptions
+                onChange={handleChangeInputKota}
                 styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
               />
             </div>
@@ -440,13 +425,14 @@ export function LaporanSidangTipiring() {
           <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
-                Unit Organisasi
+                Tahun
               </label>
               <AsyncSelect
-                value={valMasterJabatan.value ? valMasterJabatan : {value: '', label: 'Pilih'}}
-                loadOptions={loadOptionsJabatan}
-                defaultOptions={masterPelaksana}
-                onChange={handleChangeInputJabatan}
+                className='mb-5'
+                value={valMasterPelaksana.value ? valMasterPelaksana : {value: '', label: 'Pilih'}}
+                loadOptions={loadOptionsKecamatan}
+                defaultOptions={masterBidangWilayah}
+                onChange={handleChangeInputKecamatan}
                 styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
               />
             </div>
@@ -564,8 +550,8 @@ export function LaporanSidangTipiring() {
                     <DataTable
                       columns={columns}
                       data={data}
-                      // progressPending={loading}
-                      // progressComponent={<LoadingAnimation />}
+                      progressPending={loading}
+                      progressComponent={<LoadingAnimation />}
                       pagination
                       paginationServer
                       paginationTotalRows={totalRows}
