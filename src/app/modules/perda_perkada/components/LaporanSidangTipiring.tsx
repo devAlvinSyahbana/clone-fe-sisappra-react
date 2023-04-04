@@ -364,7 +364,7 @@ export function LaporanSidangTipiring() {
         const arr: SidangTipiringInterface[] = [
           {
             no: 1,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA PUSAT',
+            wilayah:'KOTA ADMINISTRASI JAKARTA PUSAT',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 5,
             jumlah_pelanggar_tidak_hadir: 0,
@@ -373,7 +373,7 @@ export function LaporanSidangTipiring() {
           },
           {
             no: 2,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA UTARA',
+            wilayah:'KOTA ADMINISTRASI JAKARTA UTARA',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
@@ -382,7 +382,7 @@ export function LaporanSidangTipiring() {
           },
           {
             no: 3,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA BARAT',
+            wilayah:'KOTA ADMINISTRASI JAKARTA BARAT',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
@@ -391,7 +391,7 @@ export function LaporanSidangTipiring() {
           },
           {
             no: 4,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA SELATAN',
+            wilayah:'KOTA ADMINISTRASI JAKARTA SELATAN',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
@@ -400,7 +400,7 @@ export function LaporanSidangTipiring() {
           },
           {
             no: 5,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA TIMUR',
+            wilayah:'KOTA ADMINISTRASI JAKARTA TIMUR',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
@@ -409,7 +409,7 @@ export function LaporanSidangTipiring() {
           },
           {
             no: 6,
-            wilayah: 'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
+            wilayah:'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
@@ -463,32 +463,24 @@ export function LaporanSidangTipiring() {
       })
   }
 
-  // const LoadingAnimation = (props: any) => {
-  //   return (
-  //     <>
-  //       <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
-  //         {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
-  //         <span className='spinner-border spinner-border-xl align-middle me-3'></span>
-  //         <div className='d-flex flex-column'>
-  //           <h5 className='mb-1'>Sedang mengambil data...</h5>
-  //         </div>
-  //       </div>
-  //     </>
-  //   )
-  // }
+  const LoadingAnimation = (props: any) => {
+    return (
+      <>
+        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+          <div className='d-flex flex-column'>
+            <h5 className='mb-1'>Sedang mengambil data...</h5>
+          </div>
+        </div>
+      </>
+    )
+  }
 
-  var num = 1
-  const columns = [
-    {
-      name: 'No',
-      // selector: (row: any) => row.id,
-      sortable: true,
-      sortField: 'id',
-      wrap: true,
-      // cell: (row: any) => {
-      //   return <div className='mb-2 mt-2'>{row.skpd !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
-      // },
-    },
+  const handleHakAkses = async () => {
+    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
+    setHakAkses(response.data.data)
+  }
 
   const handleWilayahBidang = async () => {
     const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
@@ -930,65 +922,41 @@ export function LaporanSidangTipiring() {
                         <div className='separator border-gray-200'></div>
                         {/* end::Separator */}
 
-                {/* begin::Content */}
-                <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                  <button
-                    onClick={handleUnduh}
-                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                  >
-                    Excel
-                  </button>
+                        {/* begin::Content */}
+                        <div data-kt-user-table-filter='form'>
+                          <button
+                            onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
+                            className='btn btn-outline btn-active-light-primary w-100'
+                          >
+                            Berdasarkan Wilayah
+                          </button>
+                        </div>
+                        {/* end::Content */}
+
+                        {/* begin::Content */}
+                        <div data-kt-user-table-filter='form'>
+                          <button
+                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                            className='btn btn-outline btn-active-light-primary w-100'
+                          >
+                            Berdasarkan Perda
+                          </button>
+                        </div>
+                        {/* end::Content */}
+                      </div>
+                      {/*  end::SubMenu */}
+                    </div>
+                  </div>
+                  {/* END :: Button */}
                 </div>
-                <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                  <button
-                    onClick={() =>
-                      navigate(`/kepegawaian/LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf`)
-                    }
-                    className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'
-                  >
-                    PDF
-                  </button>
-                </div>
-                {/* end::Content */}
               </div>
-              {/* end::SubMenu */}
             </div>
           </div>
         </div>
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card card-flush h-xl-100'>
-            <div
-              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-              style={
-                {
-                  // backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
-                }
-              }
-              data-theme='light'
-            ></div>
-
-            <div className='card-body mt-n20'>
-              <div className='mt-n20 position-relatve'>
-                <div className='card border card-flush h-xl-100'>
-                  <div className='table-responsive mt-5 ms-5 me-5 w'>
-                    <DataTable
-                      columns={columns}
-                      data={data}
-                      progressPending={loading}
-                      progressComponent={<LoadingAnimation />}
-                      pagination
-                      paginationServer
-                      paginationTotalRows={totalRows}
-                      onChangeRowsPerPage={handlePerRowsChange}
-                      onChangePage={handlePageChange}
-                      customStyles={customStyles}
-                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      </div>
+      <div className='row'>
+        <div className='col fs-4 mb-2 fw-semibold text-center'>
+          LAPORAN PELAKSANAAN SIDANG TINDAK PIDANA RINGAN (TIPIRING) HASIL PENEGAKAN PERDA/PERKADA
         </div>
       </div>
       <div className='row'>
