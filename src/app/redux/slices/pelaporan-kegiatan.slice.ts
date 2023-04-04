@@ -35,7 +35,7 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   tindak_lanjut__identitas_pelanggar__jenis_usaha_id: number
 
   tindak_lanjut__jenis_penindakan_id: number
-  // tindak_lanjut__jumlah_pelanggar: number
+  tindak_lanjut__jumlah_pelanggar: number
   // tindak_lanjut__jumlah_penindakan: number
   // tindak_lanjut__denda__non_pengadilan: number
   // tindak_lanjut__denda__tanggal_setor: string
@@ -209,11 +209,11 @@ export const createSchemaPelaporanKegiatan = [
         otherwise: Yup.object().required(),
       }
     ),
-    // tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
-    //   .min(3)
-    //   .max(64)
-    //   .required()
-    //   .label('Jenis Penertiban'),
+    tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
+      .min(3)
+      .max(64)
+      .required()
+      .label('Jenis Penertiban'),
     // tindak_lanjut__administrasi__jenis_pelanggaran: Yup.string()
     //   .min(3)
     //   .max(256)

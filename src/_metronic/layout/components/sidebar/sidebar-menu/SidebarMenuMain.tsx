@@ -112,13 +112,13 @@ const SidebarMenuMain = () => {
               hasBullet={true}
             />
             <SidebarMenuItem
-              to='/perdaperkada/LaporanSidangTipiring'
-              title='Laporan Sidang Tipiring'
+              to='/perdaperkada/LaporanPenertibanMinumBeralkohol'
+              title='Laporan Penertiban Minuman Beralkohol'
               hasBullet={true}
             />
             <SidebarMenuItem
-              to='/perdaperkada/LaporanMinol'
-              title='Laporan Penertiban Minuman Berakohol'
+              to='/perdaperkada/LaporanBangunan'
+              title='Laporan Bangunan'
               hasBullet={true}
             />
             <SidebarMenuItem
