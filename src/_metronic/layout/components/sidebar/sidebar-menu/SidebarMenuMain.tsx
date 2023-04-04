@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React, {useEffect, useState} from 'react'
-import {SidebarMenuItemWithSub} from './SidebarMenuItemWithSub'
-import {SidebarMenuItem} from './SidebarMenuItem'
-import {useSelector} from 'react-redux'
-import {RootState} from '../../../../../app/redux/store'
+import React, { useEffect, useState } from 'react'
+import { SidebarMenuItemWithSub } from './SidebarMenuItemWithSub'
+import { SidebarMenuItem } from './SidebarMenuItem'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../app/redux/store'
 
 const SidebarMenuMain = () => {
   const [publicAkses, setPublicAkses] = useState(true)
@@ -122,7 +122,7 @@ const SidebarMenuMain = () => {
               hasBullet={true}
             />
             <SidebarMenuItem
-              to='/perdaperkada/LaporanBangunan'
+              to='/perdaperkada/LaporanPenertibanBangunan'
               title='Laporan Penertiban Bangunan'
               hasBullet={true}
             />
@@ -378,4 +378,4 @@ const SidebarMenuMain = () => {
   )
 }
 
-export {SidebarMenuMain}
+export { SidebarMenuMain }
