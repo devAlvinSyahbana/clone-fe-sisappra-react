@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import {Link} from 'react-router-dom'
-import {useLocation} from 'react-router-dom'
-=======
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
 
 const LaporanPerdaPerkadaHeader = () => {
   const location = useLocation()
@@ -20,12 +15,8 @@ const LaporanPerdaPerkadaHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-<<<<<<< HEAD
-                      (location.pathname === '/perdaperkada/LaporanPerdaPerkada' && 'active')
-=======
                       (location.pathname === '/perdaperkada/LaporanPerdaPerkada' &&
                         'active')
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
                     }
                     to={`/perdaperkada/LaporanPerdaPerkada`}
                   >
@@ -52,8 +43,4 @@ const LaporanPerdaPerkadaHeader = () => {
   )
 }
 
-<<<<<<< HEAD
-export {LaporanPerdaPerkadaHeader}
-=======
 export { LaporanPerdaPerkadaHeader }
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d

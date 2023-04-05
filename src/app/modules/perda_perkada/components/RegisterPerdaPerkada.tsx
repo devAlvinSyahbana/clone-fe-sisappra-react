@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import {useState, useEffect, Fragment} from 'react'
-import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
-import DataTable from 'react-data-table-component'
-import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
-import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import AsyncSelect from 'react-select/async'
-import {KTSVG} from '../../../../_metronic/helpers'
-import FileDownload from 'js-file-download'
-=======
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import {
@@ -32,7 +21,6 @@ import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
 import { string } from 'yup'
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -128,30 +116,6 @@ const reactSelectDarkThem = {
   }),
 }
 
-<<<<<<< HEAD
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KELURAHAN_URL = `${API_URL}/master/kelurahan`
-export const BIDANG_WILAYAH_URL = `${API_URL}/master/bidang-wilayah`
-export const JABATAN_URL = `${API_URL}/master/jabatan`
-export const PELAKSANA_URL = `${API_URL}/master/pelaksana`
-export const PANGKAT_URL = `${API_URL}/master/pangkat`
-
-export interface SelectOption {
-  readonly value: string
-  readonly label: string
-  readonly color: string
-  readonly isFixed?: boolean
-  readonly isDisabled?: boolean
-}
-
-export function RegisterPerdaPerkada() {
-  let componentRef: any
-  const navigate = useNavigate()
-  const {mode} = useThemeMode()
-  const calculatedMode = mode === 'system' ? systemMode : mode
-  const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
-
-=======
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
@@ -191,14 +155,10 @@ export function RegisterPerdaPerkada() {
   const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
   const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
 
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-<<<<<<< HEAD
-  const [qParamFind, setUriFind] = useState({strparam: ''})
-=======
   const [qParamFind, setUriFind] = useState({ strparam: '' })
 
   const filterList = async () => {
@@ -423,7 +383,6 @@ export function RegisterPerdaPerkada() {
         setLoading(false)
       })
   }
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
 
   const LoadingAnimation = (props: any) => {
     return (
@@ -439,76 +398,6 @@ export function RegisterPerdaPerkada() {
     )
   }
 
-<<<<<<< HEAD
-  var num = 1
-  const columns = [
-    {
-      name: 'No',
-      // selector: (row: any) => row.id,
-      sortable: true,
-      sortField: 'id',
-      wrap: true,
-      // cell: (row: any) => {
-      //   return <div className='mb-2 mt-2'>{row.skpd !== 'Jumlah Keseluruhan' ? num++ : ''}</div>
-      // },
-    },
-
-    {
-      name: 'Kota/Kabupaten ',
-      selector: (row: any) => row.kota,
-      sortable: true,
-      sortField: 'kota',
-      wrap: true,
-      width: '250px',
-      center: true,
-    },
-    {
-      name: 'Kecamatan',
-      selector: (row: any) => row.kecamatan,
-      sortable: true,
-      sortField: 'kecamatan',
-      wrap: true,
-      width: '220px',
-      center: true,
-    },
-    {
-      name: 'Kelurahan',
-      selector: (row: any) => row.kelurahan,
-      sortable: true,
-      sortField: 'kelurahan',
-      wrap: true,
-    },
-    {
-      name: 'Lokasi',
-      selector: (row: any) => row.lokasi,
-      sortable: true,
-      sortField: 'lokasi',
-      wrap: true,
-    },
-    {
-      name: 'Titik Koordinat',
-      selector: (row: any) => row.titik_koordinat,
-      sortable: true,
-      sortField: 'titik_koordinat',
-      width: '200px',
-      wrap: true,
-    },
-    {
-      name: 'Kategori',
-      selector: (row: any) => row.kategori,
-      sortable: true,
-      sortField: 'kategori',
-      wrap: true,
-    },
-    {
-      name: 'Keterangan',
-      selector: (row: any) => row.keterangan,
-      sortable: true,
-      sortField: 'keterangan',
-      wrap: true,
-    },
-  ]
-=======
   const handleHakAkses = async () => {
     const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
     setHakAkses(response.data.data)
@@ -566,7 +455,6 @@ export function RegisterPerdaPerkada() {
     readonly isFixed?: boolean
     readonly isDisabled?: boolean
   }
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
 
   const customStyles = {
     rows: {
@@ -592,11 +480,7 @@ export function RegisterPerdaPerkada() {
     async function fetchDT(page: number) {
       setLoading(true)
       const response = await axios.get(
-<<<<<<< HEAD
-        `${BIDANG_WILAYAH_URL}find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
-=======
         `${MASTERDATA_URL}find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
       )
       setData(response.data.data)
       setTotalRows(response.data.total_data)
@@ -608,11 +492,7 @@ export function RegisterPerdaPerkada() {
   const fetchData = async (page: number) => {
     setLoading(true)
     const response = await axios.get(
-<<<<<<< HEAD
-      `${BIDANG_WILAYAH_URL}find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
-=======
       `${MASTERDATA_URL}find?limit=${perPage}&offset=${page}${qParamFind.strparam}`
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
     )
     setData(response.data.data)
     setTotalRows(response.data.total_data)
@@ -621,54 +501,11 @@ export function RegisterPerdaPerkada() {
     return [data, setData] as const
   }
 
-<<<<<<< HEAD
-  const handlePageChange = (page: number) => {
-    fetchData(page)
-  }
-
-  const handlePerRowsChange = async (newPerPage: number, page: number) => {
-    setLoading(true)
-    const response = await axios.get(
-      `${BIDANG_WILAYAH_URL}find?limit=${newPerPage}&offset=${page}${qParamFind.strparam}`
-    )
-    setData(response.data.data)
-    setPerPage(newPerPage)
-    setLoading(false)
-  }
-
-  const handleFilter = async () => {
-    let uriParam = ''
-    if (valMasterBidangWilayah.value) {
-      uriParam += `&id_tempat_tugas=${valMasterBidangWilayah.value}`
-    }
-    if (valMasterPelaksana.value) {
-      uriParam += `&id_seksi_kecamatan=${valMasterPelaksana.value}`
-    }
-    if (valMasterJabatan.value) {
-      uriParam += `&id_jabatan_kelurahan=${valMasterJabatan.value}`
-    }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
-  }
-
-  const handleFilterReset = () => {
-    setValMasterBidangWilayah({label: '', value: null})
-    setValMasterPelaksana({label: '', value: null})
-    setValMasterJabatan({label: '', value: null})
-
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
-  }
-
-=======
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   //unduh
   const handleUnduh = async () => {
     setbtnLoadingUnduh(true)
     await axios({
-<<<<<<< HEAD
-      url: `${BIDANG_WILAYAH_URL}unduh?status=${qParamFind.strparam}`,
-=======
       url: `${MASTERDATA_URL}unduh?status=${qParamFind.strparam}`,
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
       method: 'GET',
       responseType: 'blob', // Important
     }).then((response) => {
@@ -678,15 +515,6 @@ export function RegisterPerdaPerkada() {
   }
   //end unduh
 
-<<<<<<< HEAD
-  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
-  const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
-  const filterbidangwilayah = async (inputValue: string) => {
-    const response = await axios.get(`${BIDANG_WILAYAH_URL}/filter/${inputValue}`)
-    const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
-=======
   const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
@@ -694,7 +522,6 @@ export function RegisterPerdaPerkada() {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
     return json.map((i: any) => ({ label: i.nama, value: i.id }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -705,23 +532,12 @@ export function RegisterPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-<<<<<<< HEAD
-    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterBidangWilayah({id: newValue.value})
-    setValMasterPelaksana({value: null, label: ''})
-    setValMasterJabatan({value: null, label: ''})
-    // console.log('cek', newValue.value)
-    const timeout = setTimeout(async () => {
-      const response = await axios.get(
-        `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
-=======
     setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
     setIdMasterBidangWilayah({ id: newValue.value })
     setValMasterPelaksana({ value: null, label: '' })
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
       )
       let items = response.data.data
       Array.from(items).forEach(async (item: any) => {
@@ -729,30 +545,10 @@ export function RegisterPerdaPerkada() {
         item.value = item.id
       })
       setMasterBidangWilayah(items)
-<<<<<<< HEAD
-      // console.log(items)
-=======
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
     }, 100)
 
     return () => clearTimeout(timeout)
   }
-<<<<<<< HEAD
-  //end nama_hak_akses
-
-  // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
-  const [masterPelaksana, setMasterPelaksana] = useState([])
-  const filterKecamatan = async (inputValue: string) => {
-    const response = await axios.get(
-      `${PELAKSANA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
-        inputValue !== '' && `&nama=${inputValue}`
-      }`
-    )
-    const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
-=======
 
   // kecamatan
   const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
@@ -765,7 +561,6 @@ export function RegisterPerdaPerkada() {
     )
     const json = response.data.data
     return json.map((i: any) => ({ label: i.nama, value: i.id }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
   const loadOptionsKecamatan = (
     inputValue: string,
@@ -775,176 +570,6 @@ export function RegisterPerdaPerkada() {
       callback(await filterKecamatan(inputValue))
     }, 500)
   }
-<<<<<<< HEAD
-  const handleChangeInputKecamatan = (newValue: any) => {
-    setValMasterPelaksana((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterPelaksana({id: newValue.value})
-    setValMasterJabatan({value: null, label: ''})
-    // console.log('cek', newValue.value)
-    const timeout = setTimeout(async () => {
-      const response = await axios.get(
-        `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${newValue.value}`
-      )
-      let items = response.data.data
-      Array.from(items).forEach(async (item: any) => {
-        item.label = item.jabatan
-        item.value = item.id
-      })
-      setMasterPelaksana(items)
-      // console.log(items)
-    }, 100)
-
-    return () => clearTimeout(timeout)
-  }
-  //end kecamatan
-
-  //jabatan
-  const [valMasterJabatan, setValMasterJabatan] = useState({value: null, label: ''})
-  const filterjabatan = async (inputValue: string) => {
-    const response = await axios.get(
-      `${JABATAN_URL}/filter?id_master_tempat_seksi_pelaksanaan=${parseInt(idMasterPelaksana.id)}${
-        inputValue !== '' && `&nama=${inputValue}`
-      }`
-    )
-    const json = response.data.data
-    return json.map((i: any) => ({label: i.jabatan, value: i.id}))
-  }
-  const loadOptionsJabatan = (inputValue: string, callback: (options: SelectOption[]) => void) => {
-    setTimeout(async () => {
-      callback(await filterjabatan(inputValue))
-    }, 500)
-  }
-  const handleChangeInputJabatan = (newValue: any) => {
-    setValMasterJabatan((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-  //end jabatan
-
-  return (
-    <>
-      {/* <LaporanRekapHeader /> */}
-      <div className={`card`}>
-        {/* begin::Body */}
-        <div className='row g-8 mt-2 ms-5 me-5'>
-          <div className='row g-8 mt-2 ms-5 me-5'>
-            <label>
-              <h3>Kategori Kasus</h3>
-            </label>
-            <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-              <AsyncSelect
-                className='mb-5'
-                value={
-                  valMasterBidangWilayah.value
-                    ? valMasterBidangWilayah
-                    : {value: '', label: 'Pilih'}
-                }
-                loadOptions={loadOptionsbidangwilayah}
-                defaultOptions
-                onChange={handleChangeInputKota}
-                styles={calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem}
-              />
-            </div>
-            <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-              <Link to='#' onClick={handleFilter}>
-                {/* 1 */}
-                <button className='btn btn-light-primary me-2'>
-                  <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
-                  Cari
-                </button>
-              </Link>
-            </div>
-            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-              {/* begin::Filter Button */}
-              <button
-                type='button'
-                className='btn btn-light-primary'
-                data-kt-menu-trigger='click'
-                data-kt-menu-placement='bottom-end'
-              >
-                {btnLoadingUnduh ? (
-                  <>
-                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                    Memproses Unduh...
-                  </>
-                ) : (
-                  <>
-                    {/* <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' /> */}
-                    Unduh
-                  </>
-                )}
-              </button>
-              {/* end::Filter Button */}
-              {/* begin::SubMenu */}
-              <div
-                className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                data-kt-menu='true'
-              >
-                {/* begin::Header */}
-                <div className='px-7 py-5'>
-                  <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                </div>
-                {/* end::Header */}
-
-                {/* begin::Separator */}
-                <div className='separator border-gray-200'></div>
-                {/* end::Separator */}
-
-                {/* begin::Content */}
-                <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                  <button
-                    onClick={handleUnduh}
-                    className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                  >
-                    Excel
-                  </button>
-                </div>
-                <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                  <button
-                    onClick={() =>
-                      navigate(`/kepegawaian/LaporanRekapitulasiPegawai/UnduhNaikPangkatPdf`)
-                    }
-                    className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'
-                  >
-                    PDF
-                  </button>
-                </div>
-                {/* end::Content */}
-              </div>
-              {/* end::SubMenu */}
-            </div>
-          </div>
-        </div>
-
-        <div className='col-xl-12 mb-xl-12 mt-6'>
-          <div className='card card-flush h-xl-100'>
-            <div
-              className='card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px'
-              style={
-                {
-                  // backgroundImage: 'url(' + toAbsoluteUrl('/media/svg/shapes/top-blue.jpg') + ')',
-                }
-              }
-              data-theme='light'
-            ></div>
-
-            <div className='card-body mt-n20'>
-              <div className='mt-n20 position-relatve'>
-                <div className='card border card-flush h-xl-100'>
-                  <div className='table-responsive mt-5 ms-5 me-5 w'>
-                    <DataTable
-                      columns={columns}
-                      data={data}
-                      progressPending={loading}
-                      progressComponent={<LoadingAnimation />}
-                      pagination
-                      paginationServer
-                      paginationTotalRows={totalRows}
-                      onChangeRowsPerPage={handlePerRowsChange}
-                      onChangePage={handlePageChange}
-                      customStyles={customStyles}
-                      theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                    />
-                  </div>
-=======
 
   return (
     <>
@@ -1173,15 +798,11 @@ export function RegisterPerdaPerkada() {
                     </div>
                   </div>
                   {/* END :: Button */}
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
                 </div>
               </div>
             </div>
           </div>
         </div>
-<<<<<<< HEAD
-        {/* end::Body */}
-=======
         <div className='row'>
           <div className='col fs-4 mb-2 fw-semibold text-center'>
             LAPORAN HASIL PENEGAKAN PERDA / PERKADA
@@ -1210,7 +831,6 @@ export function RegisterPerdaPerkada() {
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
           />
         </div>
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
       </div>
     </>
   )

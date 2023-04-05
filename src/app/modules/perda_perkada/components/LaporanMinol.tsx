@@ -117,11 +117,7 @@ export interface SelectOption {
   readonly isDisabled?: boolean
 }
 
-<<<<<<< HEAD
 export function LaporanMinol() {
-=======
-export function LaporanMinol () {
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   let componentRef: any
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -162,27 +158,16 @@ export function LaporanMinol () {
     },
 
     {
-<<<<<<< HEAD
       name: 'Unit Organisasi ',
       selector: (row: any) => row.kota,
       sortable: true,
       sortField: 'kota',
-=======
-      name: 'Pelaksana',
-      selector: (row: any) => row.bidang_wilayah,
-      sortable: true,
-      sortField: 'bidang_wilayah',
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
       wrap: true,
       width: '250px',
       center: true,
     },
     {
-<<<<<<< HEAD
       name: 'Jumlah',
-=======
-      name: 'Jumlah Minol',
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
       selector: (row: any) => row.kecamatan,
       sortable: true,
       sortField: 'kecamatan',
@@ -421,11 +406,7 @@ export function LaporanMinol () {
           <div className='col-12'>
             <div className='form-group'>
               <label htmlFor='' className='mb-3'>
-<<<<<<< HEAD
                 Unit Organisasi
-=======
-                Pelaksana
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
               </label>
               <AsyncSelect
                 className='mb-5'

@@ -2,17 +2,10 @@ import React from 'react'
 import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 import {LaporanSidangTipiring} from './components/LaporanSidangTipiring'
-<<<<<<< HEAD
-import {LaporanPenertibanMinumBeralkohol} from './components/LaporanPenertibanMinumBeralkohol'
-import {RegisterPerdaPerkada} from './components/RegisterPerdaPerkada'
-import {LaporanPerdaPerkada} from './components/LaporanPerdaPerkada'
-import { LaporanMinol } from './components/LaporanMinol'
-=======
 import {LaporanMinol} from './components/LaporanMinol'
 import {RegisterPerdaPerkada} from './components/RegisterPerdaPerkada'
 import {LaporanPerdaPerkada} from './components/LaporanPerdaPerkada'
 import {PerdaPerkada_Pelaksana} from './components/PerdaPerkada-Pelaksana'
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
 
 const perda_perkadaBreadCrumbs: Array<PageLink> = [
   {

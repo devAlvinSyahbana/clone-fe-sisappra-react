@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import {useState, useEffect} from 'react'
-=======
-import { useState, useEffect } from 'react'
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
 import axios from 'axios'
 import {
   changedValue,
@@ -12,7 +8,6 @@ import {
   updateKecamatanList,
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
-<<<<<<< HEAD
 import {RootState} from '../../../redux/store'
 import {unparse} from 'papaparse'
 import {Link, useNavigate} from 'react-router-dom'
@@ -28,23 +23,6 @@ import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
 import {string} from 'yup'
 import {array} from '@amcharts/amcharts5'
-=======
-import { RootState } from '../../../redux/store'
-import { unparse } from 'papaparse'
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { DtPerdaPerkada } from './data-table-laporan-perda-perkada'
-import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
-import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
-import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
-import { KTSVG } from '../../../../_metronic/helpers'
-import AsyncSelect from 'react-select/async'
-import FileDownload from 'js-file-download'
-import Swal from 'sweetalert2'
-import { string } from 'yup'
-import { array } from '@amcharts/amcharts5'
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -160,11 +138,7 @@ interface jenisPenertibanInterface {
 
 export function LaporanPerdaPerkada() {
   const navigate = useNavigate()
-<<<<<<< HEAD
   const {mode} = useThemeMode()
-=======
-  const { mode } = useThemeMode()
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
@@ -184,7 +158,6 @@ export function LaporanPerdaPerkada() {
   // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-<<<<<<< HEAD
   const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
   const [jenisPenertibanList, setJenisPenertibanList] = useState([])
   const [valJenisPenertiban, setValJenisPenertiban] = useState({value: '', label: ''})
@@ -195,32 +168,16 @@ export function LaporanPerdaPerkada() {
   const [wilayahBidang, setWilayahBidang] = useState([])
   const [tanggalAwal, setTanggalAwal] = useState({val: ''})
   const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
-=======
-  const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
-  const [jenisPenertibanList, setJenisPenertibanList] = useState([])
-  const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
-  const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
-
-  const [hakAkses, setHakAkses] = useState([])
-  const [wilayahBidang, setWilayahBidang] = useState([])
-  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
-  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
 
   const [data, setData] = useState<jenisPenertibanInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [qParamFind, setUriFind] = useState({strparam: ''})
 
   const unduhCSV = (data: any[]) => {
     const csvData = unparse(data)
-<<<<<<< HEAD
     const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
-=======
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.setAttribute('download', 'LAPORAN PENEGAKAN PERDA/PERKADA.csv')
@@ -229,10 +186,6 @@ export function LaporanPerdaPerkada() {
     link.remove()
   }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   const filterList = async () => {
     const resKota = await axios.get(`${MASTER_URL}/kota/find`)
     const resKecamatan = await axios.get(`${MASTER_URL}/kecamatan/find`)
@@ -281,39 +234,23 @@ export function LaporanPerdaPerkada() {
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-<<<<<<< HEAD
     target: {value: any; name: any}
   }) => {
     setTanggalAwal({val: event.target.value})
-=======
-    target: { value: any; name: any }
-  }) => {
-    setTanggalAwal({ val: event.target.value })
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-<<<<<<< HEAD
     target: {value: any; name: any}
   }) => {
     setTanggalAkhir({val: event.target.value})
-=======
-    target: { value: any; name: any }
-  }) => {
-    setTanggalAkhir({ val: event.target.value })
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
 
   const filterJenisKegiatan = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
-<<<<<<< HEAD
     return json.map((i: any) => ({label: i.text, value: i.value}))
-=======
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
   const loadOptionsJenisKegiatan = (
     inputValue: string,
@@ -324,22 +261,14 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisKegiatan = (newValue: any) => {
-<<<<<<< HEAD
     setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
-=======
-    setValJenisKegiatan((prevstate: any) => ({ ...prevstate, ...newValue }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
 
   const filterJenisPenertiban = async (inputValue: string) => {
     const response = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
     const json = await response.data.data
     setJenisPenertibanList(json)
-<<<<<<< HEAD
     return json.map((i: any) => ({label: i.jenis_penertiban, value: i.id}))
-=======
-    return json.map((i: any) => ({ label: i.jenis_penertiban, value: i.id }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
   const loadOptionsJenisPenertiban = (
     inputValue: string,
@@ -350,21 +279,13 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisPenertiban = (newValue: any) => {
-<<<<<<< HEAD
     setValJenisPenertiban((prevstate: any) => ({...prevstate, ...newValue}))
-=======
-    setValJenisPenertiban((prevstate: any) => ({ ...prevstate, ...newValue }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
   const filterJenisPerdaPerkada = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
     const json = await response.data.data
     setJenisPerdaPerkadaList(json)
-<<<<<<< HEAD
     return json.map((i: any) => ({label: i.text, value: i.value}))
-=======
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
   const loadOptionsJenisPerdaPerkada = (
     inputValue: string,
@@ -375,11 +296,7 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-<<<<<<< HEAD
     setValJenisPerdaPerkada((prevstate: any) => ({...prevstate, ...newValue}))
-=======
-    setValJenisPerdaPerkada((prevstate: any) => ({ ...prevstate, ...newValue }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
 
   const handleFilter = async () => {
@@ -411,7 +328,6 @@ export function LaporanPerdaPerkada() {
     } else if (valJenisPerdaPerkada.value !== '') {
       uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
     }
-<<<<<<< HEAD
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
@@ -422,18 +338,6 @@ export function LaporanPerdaPerkada() {
     setValJenisPenertiban({value: '', label: ''})
     setValJenisPerdaPerkada({value: '', label: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
-=======
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
-  }
-
-  const handleFilterReset = () => {
-    setTanggalAwal({ val: '' })
-    setTanggalAkhir({ val: '' })
-    setValJenisKegiatan({ value: '', label: '' })
-    setValJenisPenertiban({ value: '', label: '' })
-    setValJenisPerdaPerkada({ value: '', label: '' })
-    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   }
 
   const dataPerdaPerkada = (page: number) => {
@@ -459,7 +363,6 @@ export function LaporanPerdaPerkada() {
         // Array.from(data).forEach((item: any, index: any) => {
         //   item.serial = index + 1
         // })
-<<<<<<< HEAD
         const arr: jenisPenertibanInterface[] = [
           {
             no: 1,
@@ -517,9 +420,6 @@ export function LaporanPerdaPerkada() {
             denda_non_pengadilan: '50.000.000',
           },
         ]
-=======
-        const arr: jenisPenertibanInterface[] = [{ no: 1, jenis_penertiban: 'TERTIB JALAN, ANGKUTAN JALAN DAN ANGKUTAN SUNGAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 2, jenis_penertiban: 'TERTIB JALUR HIJAU, TAMAN DAN TEMPAT UMUM', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 3, jenis_penertiban: 'TERTIB LINGKUNGAN', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 4, jenis_penertiban: 'TERTIB TEMPAT USAHA', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 5, jenis_penertiban: 'TERTIB SUNGAI, SALURAN, KOLAM DAN LEPAS PANTAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
         setData(arr)
         setTotalRows(5)
         setLoading(false)
@@ -683,13 +583,8 @@ export function LaporanPerdaPerkada() {
     return [data, setData] as const
   }
 
-<<<<<<< HEAD
   const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
-=======
-  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
@@ -800,13 +695,7 @@ export function LaporanPerdaPerkada() {
                     <div className='mb-10'>
                       <div className='row'>
                         <div className='col-4 pt-2'>
-<<<<<<< HEAD
                           <label className='form-label align-middle'>Jenis Kegiatan</label>
-=======
-                          <label className='form-label align-middle'>
-                            Jenis Kegiatan
-                          </label>
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
@@ -816,19 +705,12 @@ export function LaporanPerdaPerkada() {
                             loadOptions={loadOptionsJenisKegiatan}
                             onChange={handleChangeInputJenisKegiatan}
                             styles={
-<<<<<<< HEAD
                               calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-=======
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
                             }
                           />
                         </div>
                       </div>
                     </div>
-<<<<<<< HEAD
                   </div>
                   <div className='col-md-6 col-lg-6 col-sm-12'>
                     <div className='mb-10'>
@@ -987,176 +869,7 @@ export function LaporanPerdaPerkada() {
                       </div>
                     </div>
                     {/* END :: Button */}
-=======
->>>>>>> 824506315198835c33fd3fee5812e2a685102b7d
                   </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Jenis Penertiban
-                          </label>
-                        </div>
-                        <div className='col-8'>
-                          <AsyncSelect
-                            name='jenis_penertiban'
-                            defaultOptions
-                            value={valJenisPenertiban}
-                            loadOptions={loadOptionsJenisPenertiban}
-                            onChange={handleChangeInputJenisPenertiban}
-                            styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Jenis Perda Perkada
-                          </label>
-                        </div>
-                        <div className='col-8'>
-                          <AsyncSelect
-                            name='jenis_perda_perkada'
-                            defaultOptions
-                            value={valJenisPerdaPerkada}
-                            loadOptions={loadOptionsJenisPerdaPerkada}
-                            onChange={handleChangeInputJenisPerdaPerkada}
-                            styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label'>Tanggal Awal</label>
-                        </div>
-                        <div className='col-8'>
-                          <input
-                            type='date'
-                            name='tanggal_kunjungan'
-                            className='form-control'
-                            value={tanggalAwal.val}
-                            onChange={handleChangeInputTanggalAwal}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>Tanggal Akhir</label>
-                        </div>
-                        <div className='col-8'>
-                          <input
-                            name='tanggal_kunjungan'
-                            type='date'
-                            className='form-control'
-                            value={tanggalAkhir.val}
-                            onChange={handleChangeInputTanggalAkhir}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* END :: Filter Form */}
-
-                  {/* Search and Reset */}
-                  <div className='row g-8 mt-2'>
-                    <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                      <Link to='#'>
-                        <Button
-                          className='btn btn-light-primary me-2'
-                          onClick={handleFilter}
-                        >
-                          <KTSVG
-                            path='/media/icons/duotune/general/gen021.svg'
-                            className='svg-icon-2'
-                          />
-                          Cari
-                        </Button>
-                      </Link>
-                      <Link to='#'>
-                        <Button
-                          className='btn btn-light-primary me-2'
-                          onClick={handleFilterReset}
-                        >
-                          <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                          Reset
-                        </Button>
-                      </Link>
-                    </div>
-                    <div className='d-flex justify-content-start col-md-4 col-lg-5 col-sm-6'>
-                      <button
-                        type='button'
-                        className='btn btn-light-primary'
-                        data-kt-menu-trigger='click'
-                        onClick={() => unduhCSV(data)}>
-                        <>
-                          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-                          Unduh CSV
-                        </>
-                      </button>
-                      <div className='d-flex justify-content-end col-md-4 col-lg-7 col-sm-12'>
-                      <Button
-                        type='button'
-                        className='btn btn-primary'
-                        data-kt-menu-trigger='click'
-                        data-kt-menu-placement='bottom-end'
-                      >
-                        Pilih Tabel Berdasarkan
-                      </Button>
-                      <div
-                        className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                        data-kt-menu='true'
-                      >
-                        {/* begin::Separator */}
-                        <div className='separator border-gray-200'></div>
-                        {/* end::Separator */}
-
-                        {/* begin::Content */}
-                        <div data-kt-user-table-filter='form'>
-                          <button
-                            onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                            className='btn btn-outline btn-active-light-primary w-100'>
-                            Jenis Penertiban
-                          </button>
-                        </div>
-                        {/* end::Content */}
-
-                        {/* begin::Content */}
-                        <div data-kt-user-table-filter='form'>
-                          <button
-                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                            className='btn btn-outline btn-active-light-primary w-100'
-                          >
-                            Pelaksana
-                          </button>
-                        </div>
-                        {/* end::Content */}
-                      </div>
-                      {/*  end::SubMenu */}
-                    </div>
-                  </div>
-                  {/* END :: Button */}
-                </div>
                 </div>
               </div>
             </div>
