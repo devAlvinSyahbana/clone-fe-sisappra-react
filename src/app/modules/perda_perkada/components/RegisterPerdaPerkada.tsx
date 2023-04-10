@@ -10,9 +10,10 @@ import {
 } from '../../../redux/slices/pelaporan-kejadian.slice'
 import { RootState } from '../../../redux/store'
 import { Link, useNavigate } from 'react-router-dom'
+import { unparse } from 'papaparse'
 import { useDispatch, useSelector } from 'react-redux'
-import { DtRegisterPerdaPerkada } from './data-table-laporan-register-perda-perkada'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { DtRegisterPerdaPerkada } from './data-table-laporan-register-perda-perkada'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
@@ -160,6 +161,17 @@ export function RegisterPerdaPerkada() {
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
   const [qParamFind, setUriFind] = useState({ strparam: '' })
+
+  const unduhCSV = (data: any[]) => {
+    const csvData = unparse(data)
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.setAttribute('download', 'LAPORAN REGISTER PENEGAKAN PERDA/PERKADA.csv')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
 
   const filterList = async () => {
     const resKota = await axios.get(`${MASTER_URL}/kota/find`)
@@ -324,16 +336,18 @@ export function RegisterPerdaPerkada() {
         const data = res.data.data.map((d: any) => ({
           id: d.id,
           no: d.id,
+          total_item: d.total_item,
           pelaksana: d.created_by,
-          tanggal_kegiatan: d.kegiatan__tanggal,
-          waktu_mulai: d.kegiatan__jam_start,
-          waktu_selesai: d.kegiatan__jam_end,
-          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
           lokasi: d.kegiatan__lokasi,
+          waktu_selesai: d.kegiatan__jam_end,
+          waktu_mulai: d.kegiatan__jam_start,
+          tanggal_kegiatan: d.kegiatan__tanggal,
+          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
           jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
           jenis_perda_perkada: d.tindak_lanjut__administrasi__perda_perkada,
-          denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+          jenis_pelanggaran: d.tindak_lanjut__administrasi__jenis_pelanggaran
         }))
         Array.from(data).forEach((item: any, index: any) => {
           item.serial = index + 1
@@ -757,42 +771,52 @@ export function RegisterPerdaPerkada() {
                       </Link>
                     </div>
                     <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                      <Button
+                      <button
                         type='button'
-                        className='btn btn-primary'
-                        data-kt-menu-trigger='click'
+                        className='btn btn-light-primary me-2'
                         data-kt-menu-placement='bottom-end'
-                      >
-                        Pilih Tabel Berdasarkan
-                      </Button>
-                      <div
-                        className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                        data-kt-menu='true'
-                      >
-                        {/* begin::Separator */}
-                        <div className='separator border-gray-200'></div>
-                        {/* end::Separator */}
+                        data-kt-menu-trigger='click'
+                        onClick={() => unduhCSV(data)}>
+                        <>
+                          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                          Unduh CSV
+                        </>
+                      </button>
+                      <div>
+                        <Button
+                          type='button'
+                          className='btn btn-primary me-2'
+                          data-kt-menu-trigger='click'
+                          data-kt-menu-placement='bottom-end'
+                        >
+                          Pilih Tabel Berdasarkan
+                        </Button>
+                        <div
+                          className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
+                          data-kt-menu='true'
+                        >
 
-                        {/* begin::Content */}
-                        <div data-kt-user-table-filter='form'>
-                          <button
-                            onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                            className='btn btn-outline btn-active-light-primary w-100'>
-                            Jenis Penertiban
-                          </button>
-                        </div>
-                        {/* end::Content */}
+                          {/* begin::Content */}
+                          <div data-kt-user-table-filter='form'>
+                            <button
+                              onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
+                              className='btn btn-outline btn-active-light-primary w-100'>
+                              Jenis Penertiban
+                            </button>
+                          </div>
+                          {/* end::Content */}
 
-                        {/* begin::Content */}
-                        <div data-kt-user-table-filter='form'>
-                          <button 
-                          onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                          className='btn btn-outline btn-active-light-primary w-100'
-                          >
-                          Pelaksana
-                          </button>
+                          {/* begin::Content */}
+                          <div data-kt-user-table-filter='form'>
+                            <button
+                              onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                              className='btn btn-outline btn-active-light-primary w-100'
+                            >
+                              Pelaksana
+                            </button>
+                          </div>
+                          {/* end::Content */}
                         </div>
-                        {/* end::Content */}
                       </div>
                       {/*  end::SubMenu */}
                     </div>

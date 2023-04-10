@@ -34,9 +34,16 @@ export const DtSidangTipiring: FC<any> = ({
   theme,
 }) => {
   const navigate = useNavigate()
+  
   const GetHakAkses = ({ row }: { row: number }) => {
     const handleHakAkses = hakAkses.find((i: any) => i.id === row)
     return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+
+  const GetBidang = ({ row }: { row: number }) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    const handleBidang = wilayahBidang.find((i: any) => i.id === handleHakAkses?.wilayah_bidang)
+    return <>{handleBidang?.nama}</>
   }
 
   var num = 1

@@ -1,7 +1,5 @@
 import { FC, Fragment } from 'react'
-import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import { useTable, Column } from 'react-table'
 import { useNavigate } from 'react-router-dom'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
@@ -33,13 +31,7 @@ export const DtPerdaPerkada: FC<any> = ({
   konfirDel,
   theme,
 }) => {
-  const navigate = useNavigate()
-  const GetHakAkses = ({ row }: { row: number }) => {
-    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
-    return <>{handleHakAkses?.nama_hak_akses}</>
-  }
 
-  var num = 1
   const columns = [
     {
       name: 'No',
@@ -95,14 +87,14 @@ export const DtPerdaPerkada: FC<any> = ({
       selector: (row: any) => row.yang_lain,
     },
     {
-      name: 'Yustisi',
+      name: 'Denda Pengadilan',
       center: true,
       width: '200px',
       sortField: 'denda_pengadilan',
       selector: (row: any) => row.denda_pengadilan,
     },
     {
-      name: 'Non Pengadilan',
+      name: 'Denda Non Pengadilan',
       center: true,
       width: '200px',
       sortField: 'denda_non_pengadilan',
@@ -139,13 +131,7 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
   konfirDel,
   theme,
 }) => {
-  const navigate = useNavigate()
-  const GetHakAkses = ({ row }: { row: number }) => {
-    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
-    return <>{handleHakAkses?.nama_hak_akses}</>
-  }
 
-  var num = 1
   const columns = [
     {
       name: 'No',

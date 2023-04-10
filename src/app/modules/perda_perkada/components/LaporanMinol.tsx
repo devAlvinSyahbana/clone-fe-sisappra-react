@@ -164,6 +164,8 @@ export function LaporanMinol() {
   // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
   // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
+  const [jenisMinolList, setjenisMinolList] = useState([])
+  const [valjenisMinol, setValjenisMinol] = useState({ value: '', label: '' })
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
   const [jenisPenertibanList, setJenisPenertibanList] = useState([])
@@ -172,6 +174,7 @@ export function LaporanMinol() {
   const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
 
   const [hakAkses, setHakAkses] = useState([])
+  const [valHakAkses, setValHakAkses] = useState({ value: '', label: '' })
   const [wilayahBidang, setWilayahBidang] = useState([])
   const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
   const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
@@ -198,8 +201,9 @@ export function LaporanMinol() {
     const resKota = await axios.get(`${MASTER_URL}/kota/find`)
     const resKecamatan = await axios.get(`${MASTER_URL}/kecamatan/find`)
     const resKelurahan = await axios.get(`${MASTER_URL}/kelurahan/find`)
-    const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const resJPen = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
+    const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
+    const resPel = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/find`)
     const resJPer = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
 
     const dataKota = resKota.data.data.map((d: any) => ({
@@ -288,6 +292,23 @@ export function LaporanMinol() {
   }
   const handleChangeInputJenisPenertiban = (newValue: any) => {
     setValJenisPenertiban((prevstate: any) => ({ ...prevstate, ...newValue }))
+  }
+  const filterPelaksana = async (inputValue: string) => {
+    const response = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/find`)
+    const json = await response.data.data
+    setHakAkses(json)
+    return json.map((i: any) => ({ label: i.pelaksana, value: i.id }))
+  }
+  const loadOptionsPelaksana = (
+    inputValue: string,
+    callback: (options: SelectOption[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterPelaksana(inputValue))
+    }, 1000)
+  }
+  const handleChangeInputPelaksana = (newValue: any) => {
+    setValHakAkses((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
   const filterJenisPerdaPerkada = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)

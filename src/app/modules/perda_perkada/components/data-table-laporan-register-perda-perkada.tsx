@@ -51,12 +51,12 @@ export const DtRegisterPerdaPerkada: FC<any> = ({
             },
         },
         {
-            name: 'Jenis Perda & Perkada',
+            name: 'Jenis Pelanggaran',
             wrap: true,
             center: true,
-            width: '300px',
-            sortField: 'jenis_perda_perkada',
-            selector: (row: any) => row.jenis_perda_perkada,
+            width: '500px',
+            sortField: 'jenis_pelanggaran',
+            selector: (row: any) => row.jenis_pelanggaran,
           },
         {
             name: 'Jumlah Kasus',

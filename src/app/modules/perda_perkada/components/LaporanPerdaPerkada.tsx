@@ -770,10 +770,11 @@ export function LaporanPerdaPerkada() {
                         </Button>
                       </Link>
                     </div>
-                    <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                       <button
                         type='button'
-                        className='btn btn-light-primary'
+                        className='btn btn-light-primary me-2'
+                        data-kt-menu-placement='bottom-end'
                         data-kt-menu-trigger='click'
                         onClick={() => unduhCSV(data)}>
                         <>
@@ -781,10 +782,10 @@ export function LaporanPerdaPerkada() {
                           Unduh CSV
                         </>
                       </button>
-                      <div className='d-flex justify-content-end col-md-6 col-lg-7 col-sm-12'>
+                      <div>
                         <Button
                           type='button'
-                          className='btn btn-primary'
+                          className='btn btn-primary me-2'
                           data-kt-menu-trigger='click'
                           data-kt-menu-placement='bottom-end'
                         >
@@ -794,9 +795,6 @@ export function LaporanPerdaPerkada() {
                           className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
                           data-kt-menu='true'
                         >
-                          {/* begin::Separator */}
-                          <div className='separator border-gray-200'></div>
-                          {/* end::Separator */}
 
                           {/* begin::Content */}
                           <div data-kt-user-table-filter='form'>
@@ -819,32 +817,32 @@ export function LaporanPerdaPerkada() {
                           </div>
                           {/* end::Content */}
                         </div>
-                        {/*  end::SubMenu */}
                       </div>
+                      {/*  end::SubMenu */}
                     </div>
-                    {/* END :: Button */}
                   </div>
+                  {/* END :: Button */}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className='row'>
-          <div className='col fs-4 mb-2 fw-semibold text-center'>
-            LAPORAN HASIL PENEGAKAN PERDA / PERKADA
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col fs-4 mb-2 fw-semibold text-center'>
-            PADA SATPOL PP......................................
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col fs-4 mb-6 fw-semibold text-center'>
-            PERIODE .................... s/d .......................
-          </div>
-        </div>
         <div className='card-body py-4'>
+          <div className='row'>
+            <div className='col fs-4 mb-2 fw-semibold text-center'>
+              LAPORAN HASIL PENEGAKAN PERDA / PERKADA
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col fs-4 mb-2 fw-semibold text-center'>
+              PADA SATPOL PP......................................
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col fs-4 mb-6 fw-semibold text-center'>
+              PERIODE .................... s/d .......................
+            </div>
+          </div>
           <DtPerdaPerkada
             data={data}
             totalRows={totalRows}
@@ -855,9 +853,16 @@ export function LaporanPerdaPerkada() {
             hakAkses={hakAkses}
             wilayahBidang={wilayahBidang}
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={
+              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                <div className='d-flex flex-column'>
+                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                </div>
+              </div>
+            }
           />
         </div>
-      </div>
+      </div >
     </>
   )
 }
