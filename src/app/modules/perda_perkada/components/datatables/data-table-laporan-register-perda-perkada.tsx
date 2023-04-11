@@ -55,8 +55,8 @@ export const DtRegisterPerdaPerkada: FC<any> = ({
             wrap: true,
             center: true,
             width: '500px',
-            sortField: 'jenis_pelanggaran',
-            selector: (row: any) => row.jenis_pelanggaran,
+            sortField: 'jenis_penertiban',
+            selector: (row: any) => row.jenis_penertiban,
           },
         {
             name: 'Jumlah Kasus',

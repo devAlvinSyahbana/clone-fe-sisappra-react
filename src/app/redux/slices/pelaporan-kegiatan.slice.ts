@@ -410,7 +410,7 @@ export const updateDetailJenisPasalKegiatanList: any = createAsyncThunk(
       res.data.data.some((obj2: any) => obj2.perda_id === obj1.id)
     )
     const data = filteredArr.map((d: any) => ({
-      label: d.pasal,
+      label: d.pasal+ " (" + d.judul + ")",
       value: String(d.id),
       penertiban: d.jenis_penertiban,
       pelanggaran: d.jenis_pelanggaran,
