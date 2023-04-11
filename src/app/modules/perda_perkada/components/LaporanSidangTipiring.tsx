@@ -12,7 +12,7 @@ import {RootState} from '../../../redux/store'
 import {unparse} from 'papaparse'
 import {Link, useNavigate} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
-import {DtSidangTipiring} from './data-table-laporan-sidang-tipiring'
+import {DtSidangTipiring} from './datatables/data-table-laporan-sidang-tipiring'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import {Button, ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
@@ -841,6 +841,7 @@ export function LaporanSidangTipiring() {
                       </div>
                       <div className='col-8'>
                         <input
+                          placeholder='Isi Tanggal Kunjungan'
                           type='date'
                           name='tanggal_kunjungan'
                           className='form-control'
@@ -859,6 +860,7 @@ export function LaporanSidangTipiring() {
                       </div>
                       <div className='col-8'>
                         <input
+                          placeholder='Isi Tanggal Kunjungan'
                           name='tanggal_kunjungan'
                           type='date'
                           className='form-control'
@@ -890,10 +892,11 @@ export function LaporanSidangTipiring() {
                       </Button>
                     </Link>
                   </div>
-                  <div className='d-flex justify-content-start col-md-4 col-lg-5 col-sm-6'>
+                  <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                     <button
                       type='button'
-                      className='btn btn-light-primary'
+                      className='btn btn-light-primary me-2'
+                      data-kt-menu-placement='bottom-end'
                       data-kt-menu-trigger='click'
                       onClick={() => unduhCSV(data)}
                     >
@@ -905,10 +908,10 @@ export function LaporanSidangTipiring() {
                         Unduh CSV
                       </>
                     </button>
-                    <div className='d-flex justify-content-end col-md-4 col-lg-7 col-sm-12'>
+                    <div>
                       <Button
                         type='button'
-                        className='btn btn-primary'
+                        className='btn btn-primary me-2'
                         data-kt-menu-trigger='click'
                         data-kt-menu-placement='bottom-end'
                       >
@@ -918,10 +921,6 @@ export function LaporanSidangTipiring() {
                         className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
                         data-kt-menu='true'
                       >
-                        {/* begin::Separator */}
-                        <div className='separator border-gray-200'></div>
-                        {/* end::Separator */}
-
                         {/* begin::Content */}
                         <div data-kt-user-table-filter='form'>
                           <button
@@ -944,7 +943,6 @@ export function LaporanSidangTipiring() {
                         </div>
                         {/* end::Content */}
                       </div>
-                      {/*  end::SubMenu */}
                     </div>
                   </div>
                   {/* END :: Button */}

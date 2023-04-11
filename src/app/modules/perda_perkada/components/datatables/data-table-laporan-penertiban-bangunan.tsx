@@ -12,6 +12,7 @@ const LoadingAnimation = (props: any) => {
     return (
         <>
             <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+                {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
                 <span className='spinner-border spinner-border-xl align-middle me-3'></span>
                 <div className='d-flex flex-column'>
                     <h5 className='mb-1'>Sedang mengambil data...</h5>
@@ -21,7 +22,7 @@ const LoadingAnimation = (props: any) => {
     )
 }
 
-export const DtRegisterPerdaPerkada: FC<any> = ({
+export const DtPenertibanBangunan: FC<any> = ({
     data,
     totalRows,
     handlePerRowsChange,
@@ -51,68 +52,54 @@ export const DtRegisterPerdaPerkada: FC<any> = ({
             },
         },
         {
-            name: 'Jenis Perda & Perkada',
+            name: 'Pelaksana Kegiatan',
             wrap: true,
             center: true,
             width: '300px',
-            sortField: 'jenis_perda_perkada',
-            selector: (row: any) => row.jenis_perda_perkada,
-          },
-        {
-            name: 'Jumlah Kasus',
-            center: true,
-            width: '200px',
-            sortField: 'total_item',
-            selector: (row: any) => row.total_item,
+            sortField: 'pelaksana',
+            selector: (row: any) => row.pelaksana,
         },
         {
-            name: 'Yustisi',
+            name: 'Rekomtek Diterima',
             center: true,
             width: '150px',
-            sortField: 'total_item',
-            selector: (row: any) => row.total_item,
+            sortField: 'rekomtek',
+            selector: (row: any) => row.rekomtek,
         },
         {
-            name: 'Non Yustisi',
+            name: 'Diterbitkan',
             center: true,
-            width: '200px',
-            sortField: 'total_item',
-            selector: (row: any) => row.total_item,
+            width: '100px',
+            sortField: 'diterbitkan',
+            selector: (row: any) => row.diterbitkan,
         },
         {
-            name: 'Lidik',
-            center: true,
-            width: '150px',
-            sortField: 'total_item',
-            selector: (row: any) => row.total_item,
-        },
-        {
-            name: 'Sidik',
+            name: 'Bongkar Sendiri',
             center: true,
             width: '150px',
-            sortField: 'total_item',
-            selector: (row: any) => row.total_item,
+            sortField: 'bongkar_sendiri',
+            selector: (row: any) => row.bongkar_sendiri,
         },
         {
-            name: 'P-21',
+            name: 'Terbit Ijin',
             center: true,
-            width: '300px',
-            sortField: 'total_item',
-            selector: (row: any) => row.total_item,
+            width: '100px',
+            sortField: 'terbit_ijin',
+            selector: (row: any) => row.terbit_ijin,
         },
         {
-            name: 'SP-3',
+            name: 'Dikembalikan',
             center: true,
-            width: '300px',
-            sortField: 'total_item',
-            selector: (row: any) => row.total_item,
+            width: '120px',
+            sortField: 'dikembalikan',
+            selector: (row: any) => row.dikembalikan,
         },
         {
-            name: 'Dalam Proses',
+            name: 'Belum Dibongkar',
             center: true,
-            width: '300px',
-            sortField: 'total_item',
-            selector: (row: any) => row.total_item,
+            width: '150px',
+            sortField: 'belum_dibongkar',
+            selector: (row: any) => row.belum_dibongkar,
         },
     ]
 
