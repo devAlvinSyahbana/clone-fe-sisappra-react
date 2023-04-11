@@ -364,7 +364,7 @@ export function LaporanSidangTipiring() {
         const arr: SidangTipiringInterface[] = [
           {
             no: 1,
-            wilayah:'KOTA ADMINISTRASI JAKARTA PUSAT',
+            wilayah: 'KOTA ADMINISTRASI JAKARTA PUSAT',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 5,
             jumlah_pelanggar_tidak_hadir: 0,
@@ -373,48 +373,48 @@ export function LaporanSidangTipiring() {
           },
           {
             no: 2,
-            wilayah:'KOTA ADMINISTRASI JAKARTA UTARA',
+            wilayah: 'KOTA ADMINISTRASI JAKARTA UTARA',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '2.000.000',
+            denda_pengadilan: '4.000.000',
           },
           {
             no: 3,
-            wilayah:'KOTA ADMINISTRASI JAKARTA BARAT',
+            wilayah: 'KOTA ADMINISTRASI JAKARTA BARAT',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '2.000.000',
+            denda_pengadilan: '6.000.000',
           },
           {
             no: 4,
-            wilayah:'KOTA ADMINISTRASI JAKARTA SELATAN',
+            wilayah: 'KOTA ADMINISTRASI JAKARTA SELATAN',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '2.000.000',
+            denda_pengadilan: '8.000.000',
           },
           {
             no: 5,
-            wilayah:'KOTA ADMINISTRASI JAKARTA TIMUR',
+            wilayah: 'KOTA ADMINISTRASI JAKARTA TIMUR',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '2.000.000',
+            denda_pengadilan: '10.000.000',
           },
           {
             no: 6,
-            wilayah:'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
+            wilayah: 'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
             jumlah_penertiban: 2,
             jumlah_pelanggar: 2,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '2.000.000',
+            denda_pengadilan: '12.000.000',
           },
         ]
         setData(arr)
@@ -928,7 +928,7 @@ export function LaporanSidangTipiring() {
                             onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Berdasarkan Wilayah
+                            Wilayah
                           </button>
                         </div>
                         {/* end::Content */}
@@ -939,7 +939,7 @@ export function LaporanSidangTipiring() {
                             onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Berdasarkan Perda
+                            Perda
                           </button>
                         </div>
                         {/* end::Content */}
