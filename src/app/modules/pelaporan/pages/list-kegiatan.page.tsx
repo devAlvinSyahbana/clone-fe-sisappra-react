@@ -702,7 +702,7 @@ export const ListKegiatanPage: FC = () => {
                                   onClick={() => unduhCSV(data)}>
                                   <>
                                     <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-                                    Unduh CSV
+                                    Unduh
                                   </>
                                 </button>
                                 {/* begin::Filter Button */}
@@ -861,10 +861,23 @@ export const ListKegiatanPage: FC = () => {
                                 </Button>
                               </div>
                               <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                {/* begin::Button Unduh */}
+                                <button
+                                  type='button'
+                                  className='btn btn-light-primary me-2'
+                                  data-kt-menu-trigger='click'
+                                  data-kt-menu-placement='bottom-end'
+                                  onClick={() => unduhCSV(data)}>
+                                  <>
+                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                    Unduh
+                                  </>
+                                  {/* end::Button Unduh */}
+                                </button>
                                 {/* begin::Filter Button */}
                                 <Button
                                   onClick={() => navigate('/pelaporan/TambahLaporanKegiatan')}
-                                  className='btn btn-primary me-2'
+                                  className='btn btn-primary'
                                 >
                                   {/* begin::Add user */}
                                   <KTSVG
@@ -874,17 +887,6 @@ export const ListKegiatanPage: FC = () => {
                                   Tambah
                                   {/* end::Add user */}
                                 </Button>
-                                <button
-                                  type='button'
-                                  className='btn btn-light-primary'
-                                  data-kt-menu-trigger='click'
-                                  data-kt-menu-placement='bottom-end'
-                                  onClick={() => unduhCSV(data)}>
-                                  <>
-                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-                                    Unduh CSV
-                                  </>
-                                </button>
                                 {/* <button
                                   type='button'
                                   className='btn btn-light-primary'
