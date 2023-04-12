@@ -96,7 +96,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
         <h3 className='fw-bolder text-dark'>ADMINISTRASI</h3>
         <>
           <div className='mb-10 form-group'>
-            <label className='required form-label'>Jenis Pasal</label>
+            <label className=' form-label'>Jenis Pasal</label>
             <Field
               name='tindak_lanjut__administrasi__jenis_pasal_selection'
               target='tindak_lanjut__administrasi__jenis_pasal_id'
@@ -150,7 +150,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
           </div>
 
           <div className='mb-10 form-group'>
-            <label className='required form-label'>Jenis Penertiban</label>
+            <label className=' form-label'>Jenis Penertiban</label>
             <Field
               as='textarea'
               type='text'
@@ -165,7 +165,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
           </div>
 
           <div className='mb-10 form-group'>
-            <label className='required form-label'>Jenis Pelanggaran</label>
+            <label className=' form-label'>Jenis Pelanggaran</label>
             <Field
               as='textarea'
               type='text'
@@ -180,7 +180,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
           </div>
 
           <div className='mb-10 form-group'>
-            <label className='required form-label'>PERDA / PERKADA yang dilanggar</label>
+            <label className=' form-label'>PERDA / PERKADA yang dilanggar</label>
             <Field
               type='text'
               name='tindak_lanjut__administrasi__perda_perkada'
@@ -199,7 +199,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
           <div className='row'>
             <div className='col'>
               <div className='mb-10 form-group'>
-                <label className='required form-label'>Penyelesaian</label>
+                <label className=' form-label'>Penyelesaian</label>
                 <Field
                   name='tindak_lanjut__administrasi__penyelesaian_selection'
                   target='tindak_lanjut__administrasi__penyelesaian_id'
@@ -217,7 +217,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
               </div>
               {isTipiring(values) && (
                 <div className='mb-10 form-group'>
-                  <label className='required form-label'>Proses Khusus</label>
+                  <label className=' form-label'>Proses Khusus</label>
                   <Field
                     name='tindak_lanjut__administrasi__penyelesaian_khusus_selection'
                     target='tindak_lanjut__administrasi__penyelesaian_khusus_id'
@@ -241,7 +241,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                 <>
                   {isTipiring(values) ? (
                     <div className='mb-10 form-group'>
-                      <label className='required form-label'>Tanggal Sidang</label>
+                      <label className=' form-label'>Tanggal Sidang</label>
                       <Field
                         name='tindak_lanjut__sidang__tanggal'
                         className='form-control'
@@ -257,7 +257,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                     </div>
                   ) : (
                     <div className='mb-10 form-group'>
-                      <label className='required form-label'>Penindakan</label>
+                      <label className=' form-label'>Penindakan</label>
                       <Field
                         name='tindak_lanjut__jenis_penindakan_selection'
                         target='tindak_lanjut__jenis_penindakan_id'
@@ -279,7 +279,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                   {isTipiring(values) ? (
                     <>
                       <div className='mb-10 form-group'>
-                        <label className='required form-label'>Jumlah Pelanggar Hadir Sidang</label>
+                        <label className=' form-label'>Jumlah Pelanggar Hadir Sidang</label>
                         <Field
                           type='number'
                           min='0'
@@ -296,7 +296,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                         </div>
                       </div>
                       <div className='mb-10 form-group'>
-                        <label className='required form-label'>
+                        <label className=' form-label'>
                           Jumlah Pelanggar Tidak Hadir Sidang
                         </label>
                         <Field
@@ -315,7 +315,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                         </div>
                       </div>
                       <div className='mb-10 form-group'>
-                        <label className='required form-label'>Jumlah Pelanggar Verstek</label>
+                        <label className=' form-label'>Jumlah Pelanggar Verstek</label>
                         <Field
                           type='number'
                           min='0'
@@ -335,7 +335,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                   ) : !isPenertibanMinol(values) ? (
                     <>
                       <div className='mb-10 form-group'>
-                        <label className='required form-label'>Jumlah Pelanggar / Penindakan</label>
+                        <label className=' form-label'>Jumlah Pelanggar / Penindakan</label>
                         <Field
                           type='number'
                           min='0'
@@ -374,7 +374,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
               {!isPenertibanBangunan(values) ? (
                 <>
                   <div className='form-group mb-10'>
-                    <label className='required form-label'>Nomor BAP</label>
+                    <label className=' form-label'>Nomor BAP</label>
                     <Field
                       type='text'
                       name='tindak_lanjut__identitas_pelanggar__no_bap'

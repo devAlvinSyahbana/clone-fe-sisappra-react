@@ -53,9 +53,9 @@ export const initialState: PelaporanKejadianState = {
   list_korban_material: [],
 
   kejadian__jenis_kejadian_id: 0,
-  kejadian__tanggal: '2022-01-23',
-  kejadian__waktu_start: '08:00:00',
-  kejadian__waktu_end: '08:00:00',
+  kejadian__tanggal: ' ',
+  kejadian__waktu_start: ' ',
+  kejadian__waktu_end: ' ',
   kejadian__alamat: '',
   kejadian__uraian_kejadian: '',
   kejadian__jml_personil_satpolpp: 0,
@@ -168,39 +168,39 @@ export const createSchemaPelaporanKejadian = [
     kejadian__sumber_informasi_selection: Yup.object().when('kejadian__jenis_kejadian_selection', {
       is: (val: any) => val?.label !== 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN',
       then: Yup.object().notRequired(),
-      otherwise: Yup.object().required(),
+      otherwise: Yup.object().notRequired(),
     }),
     kejadian__sumber_informasi_id: Yup.number().when('kejadian__jenis_kejadian_selection', {
       is: (val: any) => val?.label !== 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN',
       then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Sumber Informasi'),
+      otherwise: Yup.number().integer().notRequired().label('Sumber Informasi'),
     }),
     kejadian__jenis_kekerasan_selection: Yup.object().when('kejadian__jenis_kejadian_selection', {
       is: (val: any) => val?.label !== 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN',
       then: Yup.object().notRequired(),
-      otherwise: Yup.object().required(),
+      otherwise: Yup.object().notRequired(),
     }),
     kejadian__jenis_kekerasan_id: Yup.number().when('kejadian__jenis_kejadian_selection', {
       is: (val: any) => val?.label !== 'PENDAMPINGAN KEKERASAN PADA PEREMPUAN',
       then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Kekerasan '),
+      otherwise: Yup.number().integer().notRequired().label('Jenis Kekerasan '),
     }),
 
     // Tindak Lanjut - Unjuk Rasa
     kejadian__jumlah_massa: Yup.number().when('kejadian__jenis_kejadian_selection', {
       is: (val: any) => val?.label !== 'UNJUK RASA',
       then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Massa'),
+      otherwise: Yup.number().integer().notRequired().label('Jumlah Massa'),
     }),
     kejadian__tuntutan: Yup.string().when('kejadian__jenis_kejadian_selection', {
       is: (val: any) => val?.label !== 'UNJUK RASA',
       then: Yup.string().notRequired(),
-      otherwise: Yup.string().min(5).max(500).required().label('Tuntutan'),
+      otherwise: Yup.string().min(5).max(500).notRequired().label('Tuntutan'),
     }),
     kejadian__penanggung_jawab_unras: Yup.string().when('kejadian__jenis_kejadian_selection', {
       is: (val: any) => val?.label !== 'UNJUK RASA',
       then: Yup.string().notRequired(),
-      otherwise: Yup.string().min(5).max(500).required().label('Penanggung Jawab Unjuk Rasa'),
+      otherwise: Yup.string().min(5).max(500).notRequired().label('Penanggung Jawab Unjuk Rasa'),
     }),
   }),
   Yup.object({}),

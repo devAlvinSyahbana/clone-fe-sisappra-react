@@ -33,7 +33,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
           <div className='col-6 form-group'>
             <div className='mb-10 form-group'>
               <div className='mb-10'>
-                <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+                <label htmlFor='kegiatan__jumlah_personil' className=' form-label'>
                   Posisi Reklame
                 </label>
                 <Field
@@ -53,7 +53,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
           </div>
           <div className='col-3 form-group'>
             <div className='mb-10'>
-              <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+              <label htmlFor='kegiatan__jumlah_personil' className=' form-label'>
                 Latitude
               </label>
               <Field
@@ -72,7 +72,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
           </div>
           <div className='col-3 form-group'>
             <div className='mb-10'>
-              <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+              <label htmlFor='kegiatan__jumlah_personil' className=' form-label'>
                 Longtitude
               </label>
               <Field
@@ -93,7 +93,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
 
         <div className='row'>
           <div className='col-6 mb-10 form-group'>
-            <label className='required form-label'>Kawasan Kendali</label>
+            <label className=' form-label'>Kawasan Kendali</label>
             <Field
               name='kawasan_kendali_selection'
               target='kawasan_kendali'
@@ -114,7 +114,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
 
         <div className='row'>
           <div className='col-6 mb-10 form-group'>
-            <label className='required form-label'>Jenis Reklame</label>
+            <label className=' form-label'>Jenis Reklame</label>
             <Field
               name='jenis_reklame_selection'
               target='jenis_reklame'
@@ -135,7 +135,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
         <div className='row'>
           <div className='col-6 form-group'>
             <div className='mb-10 form-group'>
-              <label className='required form-label'>Status Reklame</label>
+              <label className=' form-label'>Status Reklame</label>
               <Field
                 name='status_reklame_selection'
                 target='status_reklame'
@@ -154,7 +154,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
           </div>
           <div className='col-3 form-group'>
             <div className='mb-10'>
-              <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+              <label htmlFor='kegiatan__jumlah_personil' className=' form-label'>
                 Pemilik Reklame
               </label>
               <Field
@@ -173,7 +173,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
           </div>
           <div className='col-3 form-group'>
             <div className='mb-10'>
-              <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+              <label htmlFor='kegiatan__jumlah_personil' className=' form-label'>
                 Pemilik Kontruksi
               </label>
               <Field
@@ -195,7 +195,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
         <div className='row'>
           <div className='col-6 form-group'>
             <div className='mb-10'>
-              <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+              <label htmlFor='kegiatan__jumlah_personil' className=' form-label'>
                 Konten Iklan
               </label>
               <Field
@@ -214,7 +214,7 @@ export const StepTindakLanjutPengawasan: FC<StepTindakLanjutPengawasanProps> = (
           </div>
           <div className='col-3 form-group'>
             <div className='mb-10'>
-              <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+              <label htmlFor='kegiatan__jumlah_personil' className=' form-label'>
                 Ukuran
               </label>
               <Field

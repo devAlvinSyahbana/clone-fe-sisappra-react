@@ -8,11 +8,9 @@ import {
   updateKecamatanList,
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
-import { RootState } from '../../../redux/store'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { DtPerdaPerkadaPelaksana } from './data-table-laporan-perda-perkada'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { DtPerdaPerkadaPelaksana } from './datatables/data-table-laporan-perda-perkada'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'

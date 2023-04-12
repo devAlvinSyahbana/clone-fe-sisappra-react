@@ -1,14 +1,15 @@
-import {FC, SetStateAction, useEffect, useState} from 'react'
-import {Link} from 'react-router-dom'
+import { FC, SetStateAction, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
-import {DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-tamu-daerah'
-import {KTSVG} from '../../../../_metronic/helpers'
-import {useNavigate} from 'react-router-dom'
-import {Button} from 'react-bootstrap'
+import { unparse } from 'papaparse'
+import { DtAdmin, DtPimpinan } from '../datatable/data-table-laporan-tamu-daerah'
+import { KTSVG } from '../../../../_metronic/helpers'
+import { useNavigate } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import {createTheme} from 'react-data-table-component'
-import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
-import {useThemeMode} from '../../../../_metronic/partials'
+import { createTheme } from 'react-data-table-component'
+import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../_metronic/partials'
 
 // Dark Theme
 // createTheme creates a new theme named solarized that overrides the build in dark theme
@@ -137,17 +138,17 @@ export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 
 export const ListTamuDaerahPage: FC = () => {
   const navigate = useNavigate()
-  const {mode} = useThemeMode()
+  const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
 
-  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
-  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
-  const [instansi, setInstansi] = useState({val: ''})
+  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
+  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+  const [instansi, setInstansi] = useState({ val: '' })
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
   const [perPage, setPerPage] = useState(10)
   const [totalRows, setTotalRows] = useState(0)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
   const tanggal = [
     {
       tanggalAwal: tanggalAwal.val,
@@ -157,23 +158,23 @@ export const ListTamuDaerahPage: FC = () => {
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAwal({val: event.target.value})
+    setTanggalAwal({ val: event.target.value })
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAkhir({val: event.target.value})
+    setTanggalAkhir({ val: event.target.value })
   }
 
   const handleChangeInputInstansi = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setInstansi({val: event.target.value})
+    setInstansi({ val: event.target.value })
   }
 
   const handleFilter = async () => {
@@ -193,14 +194,14 @@ export const ListTamuDaerahPage: FC = () => {
     } else if (instansi.val !== '') {
       uriParam += `asal_instansi%20eq%20%27${instansi.val}%27`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
-    setInstansi({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setTanggalAwal({ val: '' })
+    setTanggalAkhir({ val: '' })
+    setInstansi({ val: '' })
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   // GET DATA FOR DATA TABLE
@@ -300,6 +301,17 @@ export const ListTamuDaerahPage: FC = () => {
       return setAksi(0)
     }
   }, [hakAkses])
+
+  const unduhCSV = (data: any[]) => {
+    const csvData = unparse(data)
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.setAttribute('download', 'LAPORAN PENGAWASAN.csv')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
 
   const vAdmin = () => {
     setAksi(1)
@@ -431,9 +443,9 @@ export const ListTamuDaerahPage: FC = () => {
                                       className='form-control'
                                       value={tanggalAwal.val}
                                       onChange={handleChangeInputTanggalAwal}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAwal(o.target.value)
-                                      // }}
+                                    // onChange={(o: any) => {
+                                    //   setTanggalAwal(o.target.value)
+                                    // }}
                                     />
                                     {/* {tanggalAwal.val} */}
                                   </div>
@@ -453,9 +465,9 @@ export const ListTamuDaerahPage: FC = () => {
                                       className='form-control'
                                       value={tanggalAkhir.val}
                                       onChange={handleChangeInputTanggalAkhir}
-                                      // onChange={(o: any) => {
-                                      //   setTanggalAkhir(o.target.value)
-                                      // }}
+                                    // onChange={(o: any) => {
+                                    //   setTanggalAkhir(o.target.value)
+                                    // }}
                                     />
                                     {/* {tanggalAkhir.val} */}
                                   </div>
@@ -477,7 +489,7 @@ export const ListTamuDaerahPage: FC = () => {
                                 </Button>
                                 <Link
                                   to='#'
-                                  // onClick={handleFilterReset}
+                                // onClick={handleFilterReset}
                                 >
                                   <Button
                                     className='btn btn-light-primary me-2'
@@ -489,6 +501,19 @@ export const ListTamuDaerahPage: FC = () => {
                                 </Link>
                               </div>
                               <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                {/* begin::Button Unduh */}
+                                <button
+                                  type='button'
+                                  className='btn btn-light-primary me-2'
+                                  data-kt-menu-trigger='click'
+                                  data-kt-menu-placement='bottom-end'
+                                  onClick={() => unduhCSV(data)}>
+                                  <>
+                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                    Unduh
+                                  </>
+                                  {/* end::Button Unduh */}
+                                </button>
                                 {/* begin::Filter Button */}
                                 <Button
                                   onClick={() => navigate('/pelaporan/tambah-laporan-tamu-daerah')}
@@ -502,63 +527,6 @@ export const ListTamuDaerahPage: FC = () => {
                                   Tambah
                                   {/* end::Add user */}
                                 </Button>
-                                {/* <button
-                                  type='button'
-                                  className='btn btn-light-primary'
-                                  data-kt-menu-trigger='click'
-                                  data-kt-menu-placement='bottom-end'
-                                > */}
-                                  {/* {btnLoadingUnduh ? (
-                                    <>
-                                      <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                      Memproses Unduh...
-                                    </>
-                                  ) : ( */}
-                                  {/* <>
-                                    <KTSVG
-                                      path='/media/icons/duotune/arrows/arr078.svg'
-                                      className='svg-icon-2'
-                                    />
-                                    Unduh
-                                  </> */}
-                                  {/* )} */}
-                                {/* </button> */}
-                                {/* end::Filter Button */}
-                                {/* begin::SubMenu */}
-                                {/* <div
-                                  className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                  data-kt-menu='true'
-                                > */}
-                                  {/* begin::Header */}
-                                  {/* <div className='px-7 py-5'>
-                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                  </div> */}
-                                  {/* end::Header */}
-
-                                  {/* begin::Separator */}
-                                  {/* <div className='separator border-gray-200'></div> */}
-                                  {/* end::Separator */}
-
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                    <button
-                                      //   onClick={handleUnduh}
-                                      className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                    >
-                                      Excel
-                                    </button>
-                                  </div> */}
-                                  {/* end::Content */}
-
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                    <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                      PDF
-                                    </button>
-                                  </div> */}
-                                  {/* end::Content */}
-                                {/* </div> */}
-                                {/* end::SubMenu */}
                               </div>
                             </div>
                           </div>
@@ -638,7 +606,7 @@ export const ListTamuDaerahPage: FC = () => {
                                 </Button>
                                 <Link
                                   to='#'
-                                  // onClick={handleFilterReset}
+                                // onClick={handleFilterReset}
                                 >
                                   <Button
                                     className='btn btn-light-primary me-2'
@@ -649,66 +617,21 @@ export const ListTamuDaerahPage: FC = () => {
                                   </Button>
                                 </Link>
                               </div>
-                              {/* <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'> */}
-                                {/* begin::Filter Button */}
-                                {/* <button
+                              <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                {/* begin::Button Unduh */}
+                                <button
                                   type='button'
-                                  className='btn btn-light-primary'
+                                  className='btn btn-light-primary me-2'
                                   data-kt-menu-trigger='click'
                                   data-kt-menu-placement='bottom-end'
-                                > */}
-                                  {/* {btnLoadingUnduh ? (
-                                    <>
-                                      <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                      Memproses Unduh...
-                                    </>
-                                  ) : ( */}
-                                  {/* <>
-                                    <KTSVG
-                                      path='/media/icons/duotune/arrows/arr078.svg'
-                                      className='svg-icon-2'
-                                    />
+                                  onClick={() => unduhCSV(data)}>
+                                  <>
+                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
                                     Unduh
-                                  </> */}
-                                  {/* )} */}
-                                {/* </button> */}
-                                {/* end::Filter Button */}
-                                {/* begin::SubMenu */}
-                                {/* <div
-                                  className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                  data-kt-menu='true'
-                                > */}
-                                  {/* begin::Header */}
-                                  {/* <div className='px-7 py-5'>
-                                    <div className='fs-5 text-dark fw-bolder'>Pilihan Unduh</div>
-                                  </div> */}
-                                  {/* end::Header */}
-
-                                  {/* begin::Separator */}
-                                  {/* <div className='separator border-gray-200'></div> */}
-                                  {/* end::Separator */}
-
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                    <button
-                                      //   onClick={handleUnduh}
-                                      className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                    >
-                                      Excel
-                                    </button>
-                                  </div> */}
-                                  {/* end::Content */}
-
-                                  {/* begin::Content */}
-                                  {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                    <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                      PDF
-                                    </button>
-                                  </div> */}
-                                  {/* end::Content */}
-                                {/* </div> */}
-                                {/* end::SubMenu */}
-                              {/* </div> */}
+                                  </>
+                                  {/* end::Button Unduh */}
+                                </button>
+                              </div>
                             </div>
                           </div>
                         )}

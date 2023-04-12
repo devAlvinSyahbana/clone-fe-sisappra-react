@@ -8,7 +8,7 @@ import {
 import * as Yup from 'yup'
 import axios from 'axios'
 
-export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const MASTER_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanKegiatanState extends Record<string, any> {
   // value: number
@@ -142,7 +142,6 @@ export const createSchemaPelaporanKegiatan = [
   Yup.object({
     kegiatan__jenis_kegiatan_id: Yup.number()
       .integer()
-      .moreThan(0)
       .required()
       .label('Jenis Kegiatan'),
     kegiatan__jenis_kegiatan_selection: Yup.object().required(),
@@ -198,7 +197,7 @@ export const createSchemaPelaporanKegiatan = [
       {
         is: (val: any) => NoPasalPenyelesaian.includes(val?.label),
         then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Pasal'),
+        otherwise: Yup.number().integer().notRequired().label('Jenis Pasal'),
       }
     ),
     tindak_lanjut__administrasi__jenis_pasal_selection: Yup.object().when(
@@ -206,23 +205,23 @@ export const createSchemaPelaporanKegiatan = [
       {
         is: (val: any) => NoPasalPenyelesaian.includes(val?.label),
         then: Yup.object().notRequired(),
-        otherwise: Yup.object().required(),
+        otherwise: Yup.object().notRequired(),
       }
     ),
-    tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
-      .min(3)
-      .max(64)
-      .required()
-      .label('Jenis Penertiban'),
+    // tindak_lanjut__administrasi__jenis_penertiban: Yup.string()
+    //   .min(3)
+    //   .max(256)
+    //   .notRequired()
+    //   .label('Jenis Penertiban'),
     // tindak_lanjut__administrasi__jenis_pelanggaran: Yup.string()
     //   .min(3)
     //   .max(256)
-    //   .required()
+    //   .notRequired()
     //   .label('Jenis Pelanggaran'),
     // tindak_lanjut__administrasi__perda_perkada: Yup.string()
     //   .min(3)
-    //   .max(64)
-    //   .required()
+    //   .max(256)
+    //   .notRequired()
     //   .label('Perda Perkada'),
 
     tindak_lanjut__administrasi__penyelesaian_id: Yup.number().notRequired(),
@@ -232,7 +231,7 @@ export const createSchemaPelaporanKegiatan = [
       {
         is: (val: any) => val?.label !== 'SIDANG TIPIRING',
         then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().moreThan(0).required().label('Proses Khusus'),
+        otherwise: Yup.number().integer().notRequired().label('Proses Khusus'),
       }
     ),
     tindak_lanjut__administrasi__penyelesaian_khusus_selection: Yup.object(),
@@ -266,7 +265,7 @@ export const createSchemaPelaporanKegiatan = [
           val?.label === 'RAPAT' ||
           val?.label === 'PENERTIBAN MINUMAN BERALKOHOL',
         then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Usaha'),
+        otherwise: Yup.number().integer().notRequired().label('Jenis Usaha'),
       }
     ),
     tindak_lanjut__identitas_pelanggar__jenis_usaha_selection: Yup.object(),
@@ -275,14 +274,14 @@ export const createSchemaPelaporanKegiatan = [
       {
         is: (val: any) => val?.label !== 'PENERTIBAN BANGUNAN',
         then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().required().label('Luas Bongkaran'),
+        otherwise: Yup.number().integer().notRequired().label('Luas Bongkaran'),
       }
     ),
 
     tindak_lanjut__jenis_penindakan_id: Yup.number().when('kegiatan__jenis_kegiatan_selection', {
       is: (val: any) => NoPenindakan.includes(val?.label),
       then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Penindakan'),
+      otherwise: Yup.number().integer().notRequired().label('Penindakan'),
     }),
     tindak_lanjut__jenis_penindakan_selection: Yup.object(),
 
@@ -290,20 +289,20 @@ export const createSchemaPelaporanKegiatan = [
       is: (val: any) =>
         NoPenindakan.includes(val?.label) || val?.label === 'PENERTIBAN MINUMAN BERALKOHOL',
       then: Yup.number().notRequired(),
-      otherwise: Yup.number().integer().moreThan(0).required().label('Jumlah Pelanggar'),
+      otherwise: Yup.number().integer().notRequired().label('Jumlah Pelanggar'),
     }),
 
     tindak_lanjut__sidang__tanggal: Yup.date().when('kegiatan__jenis_kegiatan_selection', {
       is: (val: any) => val?.label !== 'SIDANG TIPIRING',
       then: Yup.date().notRequired(),
-      otherwise: Yup.date().required().label('Tanggal Sidang'),
+      otherwise: Yup.date().notRequired().label('Tanggal Sidang'),
     }),
     tindak_lanjut__sidang__jumlah_pelanggar_hadir: Yup.number().when(
       'kegiatan__jenis_kegiatan_selection',
       {
         is: (val: any) => val?.label !== 'SIDANG TIPIRING',
         then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().required().label('Jumlah Pelanggar Hadir'),
+        otherwise: Yup.number().integer().notRequired().label('Jumlah Pelanggar Hadir'),
       }
     ),
     tindak_lanjut__sidang__jumlah_pelanggar_tidak_hadir: Yup.number().when(
@@ -311,7 +310,7 @@ export const createSchemaPelaporanKegiatan = [
       {
         is: (val: any) => val?.label !== 'SIDANG TIPIRING',
         then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().required().label('Jumlah Pelanggar Tidak Hadir'),
+        otherwise: Yup.number().integer().notRequired().label('Jumlah Pelanggar Tidak Hadir'),
       }
     ),
     tindak_lanjut__sidang__jumlah_pelanggar_verstek: Yup.number().when(
@@ -319,7 +318,7 @@ export const createSchemaPelaporanKegiatan = [
       {
         is: (val: any) => val?.label !== 'SIDANG TIPIRING',
         then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().required().label('Jumlah Pelanggar Verstek'),
+        otherwise: Yup.number().integer().notRequired().label('Jumlah Pelanggar Verstek'),
       }
     ),
 
@@ -332,7 +331,7 @@ export const createSchemaPelaporanKegiatan = [
       .notRequired()
       .label('Jumlah Denda Non Pengadilan'),
     tindak_lanjut__denda__tanggal_setor: Yup.date().notRequired().label('Tanggal Setor Denda'),
-    tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(32).notRequired().label('Nama Bank'),
+    tindak_lanjut__denda__nama_bank: Yup.string().min(3).max(64).notRequired().label('Nama Bank'),
     tindak_lanjut__denda__no_validasi_bank: Yup.string()
       .min(3)
       .max(32)
@@ -344,7 +343,7 @@ export const createSchemaPelaporanKegiatan = [
       {
         is: (val: any) => val?.label !== 'PENERTIBAN BANGUNAN',
         then: Yup.number().notRequired(),
-        otherwise: Yup.number().integer().moreThan(0).required().label('Jenis Pelanggaran'),
+        otherwise: Yup.number().integer().notRequired().label('Jenis Pelanggaran'),
       }
     ),
     tindak_lanjut__rekom_citata__jenis_pelanggaran_selection: Yup.object(),
@@ -367,7 +366,7 @@ const NoPenindakan = ['PENERTIBAN BANGUNAN', 'SIDANG TIPIRING', 'APEL', 'RAPAT']
 export const updateJenisKegiatanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisKegiatanList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-kegiatan/combobox?$orderby=nama`)
+    const res = await axios.get(`${MASTER_URL}/jenis-kegiatan/combobox?$orderby=nama`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
@@ -375,7 +374,7 @@ export const updateJenisKegiatanList: any = createAsyncThunk(
 export const updateJenisAsalLaporanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisAsalLaporanList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-asal-laporan/combobox`)
+    const res = await axios.get(`${MASTER_URL}/jenis-asal-laporan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
@@ -383,7 +382,7 @@ export const updateJenisAsalLaporanList: any = createAsyncThunk(
 export const updateJenisPengamananList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPengamananList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-pengamanan/combobox`)
+    const res = await axios.get(`${MASTER_URL}/jenis-pengamanan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
@@ -391,7 +390,7 @@ export const updateJenisPengamananList: any = createAsyncThunk(
 export const updateDetailJenisPasalList: any = createAsyncThunk(
   'pelaporanKegiatan/updateDetailJenisPasalList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-perda-perkada/?%24top=300`)
+    const res = await axios.get(`${MASTER_URL}/jenis-perda-perkada/?%24top=300`)
 
     return res.data.data
   }
@@ -403,14 +402,14 @@ export const updateDetailJenisPasalKegiatanList: any = createAsyncThunk(
     const jenisKegiatan = objKegiatan
     const reduxState = objState.list_detail_jenis_pasal
     const res = await axios.get(
-      `${API_URL}/map-master-perda/jenis-kegiatan?%24filter=jenis_kegiatan_id%20eq%20${jenisKegiatan}&%24top=300`
+      `${MASTER_URL}/map-master-perda/jenis-kegiatan?%24filter=jenis_kegiatan_id%20eq%20${jenisKegiatan}&%24top=300`
     )
 
     let filteredArr = reduxState.filter((obj1: any) =>
       res.data.data.some((obj2: any) => obj2.perda_id === obj1.id)
     )
     const data = filteredArr.map((d: any) => ({
-      label: d.pasal,
+      label: d.pasal + " (" + d.judul + ")",
       value: String(d.id),
       penertiban: d.jenis_penertiban,
       pelanggaran: d.jenis_pelanggaran,
@@ -427,7 +426,7 @@ export const updateDetailJenisPasalPenyelesaianList: any = createAsyncThunk(
     const [jenisPasal, objState] = val
     const reduxState = objState.list_jenis_penyelesaian
     const res = await axios.get(
-      `${API_URL}/map-master-perda/jenis-penyelesaian?%24filter=perda_id%20eq%20${jenisPasal}&%24top=100`
+      `${MASTER_URL}/map-master-perda/jenis-penyelesaian?%24filter=perda_id%20eq%20${jenisPasal}&%24top=100`
     )
 
     let filteredArr = reduxState.filter((obj1: any) =>
@@ -442,7 +441,7 @@ export const updateDetailJenisPasalPenyelesaianList: any = createAsyncThunk(
 export const updateJenisPenyelesaianList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPenyelesaianList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-penyelesaian/?%24top=40&%24select=nama%2C%20id`)
+    const res = await axios.get(`${MASTER_URL}/jenis-penyelesaian/?%24top=40&%24select=nama%2C%20id`)
 
     return res.data.data
   }
@@ -450,7 +449,7 @@ export const updateJenisPenyelesaianList: any = createAsyncThunk(
 export const updateJenisPenindakanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPenindakanList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-penindakan/combobox`)
+    const res = await axios.get(`${MASTER_URL}/jenis-penindakan/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
     return data
@@ -459,7 +458,7 @@ export const updateJenisPenindakanList: any = createAsyncThunk(
 export const updateJenisUsahaList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisUsahaList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-usaha/combobox?%24orderby=nama
+    const res = await axios.get(`${MASTER_URL}/jenis-usaha/combobox?%24orderby=nama
 `)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
@@ -469,7 +468,7 @@ export const updateJenisUsahaList: any = createAsyncThunk(
 export const updateJenisProsesKhusus: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisProsesKhusus',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-proses-khusus/combobox?%24orderby=nama
+    const res = await axios.get(`${MASTER_URL}/jenis-proses-khusus/combobox?%24orderby=nama
 `)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
@@ -479,7 +478,7 @@ export const updateJenisProsesKhusus: any = createAsyncThunk(
 export const updateJenisPelanggaranBangunan: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisPelanggaranBangunan',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-pelanggaran-bangunan/combobox?%24orderby=nama
+    const res = await axios.get(`${MASTER_URL}/jenis-pelanggaran-bangunan/combobox?%24orderby=nama
 `)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
