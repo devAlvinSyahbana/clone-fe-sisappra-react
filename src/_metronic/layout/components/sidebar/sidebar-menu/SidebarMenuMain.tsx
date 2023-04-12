@@ -227,6 +227,11 @@ const SidebarMenuMain = () => {
               title='Jenis Perda / Perkada'
               hasBullet={true}
             />
+            <SidebarMenuItem
+              to='/master/MapPerdaPerkada'
+              title='Mapping Perda / Perkada'
+              hasBullet={true}
+            />
             {/* <SidebarMenuItem
               to='/master/JenisPenindakan'
               title='Jenis Penindakan'
