@@ -8,15 +8,15 @@ import {
   updateKecamatanList,
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
-import { RootState } from '../../../redux/store'
-import { unparse } from 'papaparse'
-import { Link, useNavigate } from 'react-router-dom'
-import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
-import { DtPerdaPerkada } from './datatables/data-table-laporan-perda-perkada'
-import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
-import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
-import { KTSVG } from '../../../../_metronic/helpers'
+import {RootState} from '../../../redux/store'
+import {unparse} from 'papaparse'
+import {Link, useNavigate} from 'react-router-dom'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {DtPerdaPerkada} from './datatables/data-table-laporan-perda-perkada'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {Button, ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
+import {LaporanPerdaPerkadaHeader} from './LaporanPerdaPerkadaHeader'
+import {KTSVG} from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
@@ -585,7 +585,7 @@ export function LaporanPerdaPerkada() {
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -596,9 +596,9 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
-    setIdMasterBidangWilayah({ id: newValue.value })
-    setValMasterPelaksana({ value: null, label: '' })
+    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
+    setIdMasterBidangWilayah({id: newValue.value})
+    setValMasterPelaksana({value: null, label: ''})
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
@@ -617,16 +617,17 @@ export function LaporanPerdaPerkada() {
   //end nama_hak_akses
 
   // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
   const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
+      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
+        inputValue !== '' && `&nama=${inputValue}`
       }`
     )
     const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsKecamatan = (
     inputValue: string,
@@ -692,11 +693,13 @@ export function LaporanPerdaPerkada() {
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='filter_jenis_kegiatan_id_selection'
-                            defaultOptions
-                            value={valJenisKegiatan}
+                            cacheOptions
+                            // name='filter_jenis_kegiatan_id_selection'
                             loadOptions={loadOptionsJenisKegiatan}
+                            defaultOptions
+                            // value={valJenisKegiatan}
                             onChange={handleChangeInputJenisKegiatan}
+                            placeholder={'Pilih Jenis Kegiatan'}
                             styles={
                               calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
@@ -713,11 +716,13 @@ export function LaporanPerdaPerkada() {
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='jenis_penertiban'
-                            defaultOptions
-                            value={valJenisPenertiban}
+                            cacheOptions
+                            // name='jenis_penertiban'
                             loadOptions={loadOptionsJenisPenertiban}
+                            defaultOptions
+                            // value={valJenisPenertiban}
                             onChange={handleChangeInputJenisPenertiban}
+                            placeholder={'Pilih Jenis Penertiban'}
                             styles={
                               calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
@@ -734,11 +739,13 @@ export function LaporanPerdaPerkada() {
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='jenis_perda_perkada'
-                            defaultOptions
-                            value={valJenisPerdaPerkada}
+                            cacheOptions
+                            // name='jenis_perda_perkada'
                             loadOptions={loadOptionsJenisPerdaPerkada}
+                            defaultOptions
+                            // value={valJenisPerdaPerkada}
                             onChange={handleChangeInputJenisPerdaPerkada}
+                            placeholder={'Pilih Jenis Perda & Perkada'}
                             styles={
                               calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }

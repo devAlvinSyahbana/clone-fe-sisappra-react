@@ -23,6 +23,8 @@ import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
 import {string} from 'yup'
 import {array} from '@amcharts/amcharts5'
+import {KOTA_URL} from '../../master/components/Kota'
+import { KECAMATAN_URL, KELURAHAN_URL } from '../../kepegawaian/components/update-tabs/UpdateDataPribadi'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -134,6 +136,12 @@ interface SidangTipiringInterface {
   denda_pengadilan: string
 }
 
+// GET DATA
+interface SelectOptionAutoCom {
+  readonly value: string
+  readonly label: string
+}
+
 export function LaporanSidangTipiring() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
@@ -142,9 +150,60 @@ export function LaporanSidangTipiring() {
 
   const [aksi, setAksi] = useState(0)
 
-  const [inputValKota, setDataKota] = useState([])
-  const [inputValKec, setDataKec] = useState([])
-  const [inputValKel, setDataKel] = useState([])
+  // GET KOTA
+  const [inputValKota, setDataKota] = useState({label: '', value: null})
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(KOTA_URL + '/find')
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kota, value: i.kota}))
+  }
+  const loadOptionsKota = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleInputKota = (newValue: any) => {
+    setDataKota((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  //  GET KECAMATAN
+  const [inputValKec, setDataKec] = useState({label: '', value: null})
+  const filterKec = async (inputValue: string) => {
+    const response = await axios.get(KECAMATAN_URL + '/find')
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
+  }
+
+  const loadOptionsKec = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKec(inputValue))
+    }, 1000)
+  }
+
+  const handleInputKec = (newValue: any) => {
+    setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // GET KELURAHAN
+   const [inputValKel, setDataKel] = useState({label: '', value: null})
+   const filterKel = async (inputValue: string) => {
+     const response = await axios.get(KELURAHAN_URL + '/find')
+     const json = await response.data.data
+     return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
+   }
+   const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+     setTimeout(async () => {
+       callback(await filterKel(inputValue))
+     }, 1000)
+   }
+   const handleInputKel = (newValue: any) => {
+     setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
+   }
+
+
   const [inputValJkeg, setDataJkeg] = useState([])
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
@@ -694,11 +753,13 @@ export function LaporanSidangTipiring() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='filter_jenis_kegiatan_id_selection'
-                          defaultOptions
-                          value={valJenisKegiatan}
+                          // name='filter_jenis_kegiatan_id_selection'
+                          cacheOptions
+                          // value={valJenisKegiatan}
                           loadOptions={loadOptionsJenisKegiatan}
+                          defaultOptions
                           onChange={handleChangeInputJenisKegiatan}
+                          placeholder={'Pilih Pelaksana Kegiatan'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -714,12 +775,13 @@ export function LaporanSidangTipiring() {
                         <label className='form-label align-middle'>Kota</label>
                       </div>
                       <div className='col-8'>
+                        {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
                         <AsyncSelect
-                          name='jenis_penertiban'
+                          cacheOptions
+                          loadOptions={loadOptionsKota}
                           defaultOptions
-                          value={valJenisPenertiban}
-                          loadOptions={loadOptionsJenisPenertiban}
-                          onChange={handleChangeInputJenisPenertiban}
+                          onChange={handleInputKota}
+                          placeholder={'Pilih Kota'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -735,12 +797,14 @@ export function LaporanSidangTipiring() {
                         <label className='form-label align-middle'>Kecamatan</label>
                       </div>
                       <div className='col-8'>
+                        {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
                         <AsyncSelect
-                          name='jenis_perda_perkada'
+                          cacheOptions
+                          // value={inputValKec.value ? inputValKec : {value: '', label: 'Pilih'}}
+                          loadOptions={loadOptionsKec}
                           defaultOptions
-                          value={valJenisPerdaPerkada}
-                          loadOptions={loadOptionsJenisPerdaPerkada}
-                          onChange={handleChangeInputJenisPerdaPerkada}
+                          onChange={handleInputKec}
+                          placeholder={'Pilih Kecamatan'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -757,11 +821,11 @@ export function LaporanSidangTipiring() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='jenis_perda_perkada'
+                          cacheOptions
+                          loadOptions={loadOptionsKel}
                           defaultOptions
-                          value={valJenisPerdaPerkada}
-                          loadOptions={loadOptionsJenisPerdaPerkada}
-                          onChange={handleChangeInputJenisPerdaPerkada}
+                          onChange={handleInputKel}
+                          placeholder={'Pilih Kelurahan'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -778,11 +842,12 @@ export function LaporanSidangTipiring() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='jenis_perda_perkada'
+                          // name='jenis_perda_perkada'
                           defaultOptions
-                          value={valJenisPerdaPerkada}
+                          // value={valJenisPerdaPerkada}
                           loadOptions={loadOptionsJenisPerdaPerkada}
                           onChange={handleChangeInputJenisPerdaPerkada}
+                          placeholder={'Pilih Pasal'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -799,11 +864,12 @@ export function LaporanSidangTipiring() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='jenis_perda_perkada'
+                          // name='jenis_perda_perkada'
                           defaultOptions
-                          value={valJenisPerdaPerkada}
+                          // value={valJenisPerdaPerkada}
                           loadOptions={loadOptionsJenisPerdaPerkada}
                           onChange={handleChangeInputJenisPerdaPerkada}
+                          placeholder={'Pilih Jenis Pelanggaran'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -820,11 +886,12 @@ export function LaporanSidangTipiring() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='jenis_perda_perkada'
+                          // name='jenis_perda_perkada'
                           defaultOptions
-                          value={valJenisPerdaPerkada}
+                          // value={valJenisPerdaPerkada}
                           loadOptions={loadOptionsJenisPerdaPerkada}
                           onChange={handleChangeInputJenisPerdaPerkada}
+                          placeholder={'Pilih Jenis Perda & Perkada'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }

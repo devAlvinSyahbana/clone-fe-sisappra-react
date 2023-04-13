@@ -53,9 +53,9 @@ export const initialState: PelaporanKejadianState = {
   list_korban_material: [],
 
   kejadian__jenis_kejadian_id: 0,
-  kejadian__tanggal: '2022-01-23',
-  kejadian__waktu_start: '08:00:00',
-  kejadian__waktu_end: '08:00:00',
+  kejadian__tanggal: '',
+  kejadian__waktu_start: '',
+  kejadian__waktu_end: '',
   kejadian__alamat: '',
   kejadian__uraian_kejadian: '',
   kejadian__jml_personil_satpolpp: 0,

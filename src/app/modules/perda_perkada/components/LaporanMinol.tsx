@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import {useState, useEffect} from 'react'
 import axios from 'axios'
 import {
   changedValue,
@@ -8,21 +8,24 @@ import {
   updateKecamatanList,
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
-import { RootState } from '../../../redux/store'
-import { unparse } from 'papaparse'
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { DtSidangTipiring } from './datatables/data-table-laporan-minol'
-import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
-import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
-import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
-import { KTSVG } from '../../../../_metronic/helpers'
+import {RootState} from '../../../redux/store'
+import {unparse} from 'papaparse'
+import {Link, useNavigate} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+import {DtSidangTipiring} from './datatables/data-table-laporan-minol'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {Button, ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
+import {LaporanPerdaPerkadaHeader} from './LaporanPerdaPerkadaHeader'
+import {KTSVG} from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
-import { string } from 'yup'
-import { array } from '@amcharts/amcharts5'
+import {string} from 'yup'
+import {array} from '@amcharts/amcharts5'
+import { KOTA_URL } from '../../master/components/Kota'
+import { KECAMATAN_URL } from '../../master/components/Kecamatan'
+import { KELURAHAN_URL } from '../../master/components/Kelurahan'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -143,17 +146,72 @@ interface minolInterface {
   lainnya: number
 }
 
+interface SelectOptionAutoCom {
+  readonly value: string
+  readonly label: string
+}
+
 export function LaporanMinol() {
   const navigate = useNavigate()
-  const { mode } = useThemeMode()
+  const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
   const [aksi, setAksi] = useState(0)
 
-  const [inputValKota, setDataKota] = useState([])
-  const [inputValKec, setDataKec] = useState([])
-  const [inputValKel, setDataKel] = useState([])
+  // GET KOTA
+  const [inputValKota, setDataKota] = useState({label: '', value: null})
+  const filterKota = async (inputValue: string) => {
+    const response = await axios.get(KOTA_URL + '/find')
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kota, value: i.kota}))
+  }
+  const loadOptionsKota = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
+    setTimeout(async () => {
+      callback(await filterKota(inputValue))
+    }, 1000)
+  }
+  const handleInputKota = (newValue: any) => {
+    setDataKota((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  //  GET KECAMATAN
+  const [inputValKec, setDataKec] = useState({label: '', value: null})
+  const filterKec = async (inputValue: string) => {
+    const response = await axios.get(KECAMATAN_URL + '/find')
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
+  }
+
+  const loadOptionsKec = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKec(inputValue))
+    }, 1000)
+  }
+
+  const handleInputKec = (newValue: any) => {
+    setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
+  // GET KELURAHAN
+  const [inputValKel, setDataKel] = useState({label: '', value: null})
+  const filterKel = async (inputValue: string) => {
+    const response = await axios.get(KELURAHAN_URL + '/find')
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
+  }
+  const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKel(inputValue))
+    }, 1000)
+  }
+  const handleInputKel = (newValue: any) => {
+    setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
+  }
+
   const [inputValJkeg, setDataJkeg] = useState([])
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
@@ -165,29 +223,29 @@ export function LaporanMinol() {
   // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   const [jenisMinolList, setjenisMinolList] = useState([])
-  const [valjenisMinol, setValjenisMinol] = useState({ value: '', label: '' })
+  const [valjenisMinol, setValjenisMinol] = useState({value: '', label: ''})
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
+  const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
   const [jenisPenertibanList, setJenisPenertibanList] = useState([])
-  const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
+  const [valJenisPenertiban, setValJenisPenertiban] = useState({value: '', label: ''})
   const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
+  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({value: '', label: ''})
 
   const [hakAkses, setHakAkses] = useState([])
-  const [valHakAkses, setValHakAkses] = useState({ value: '', label: '' })
+  const [valHakAkses, setValHakAkses] = useState({value: '', label: ''})
   const [wilayahBidang, setWilayahBidang] = useState([])
-  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
-  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
+  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
 
   const [data, setData] = useState<minolInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [qParamFind, setUriFind] = useState({strparam: ''})
 
   const unduhCSV = (data: any[]) => {
     const csvData = unparse(data)
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.setAttribute('download', 'LAPORAN PENEGAKAN PERDA/PERKADA.csv')
@@ -195,7 +253,6 @@ export function LaporanMinol() {
     link.click()
     link.remove()
   }
-
 
   const filterList = async () => {
     const resKota = await axios.get(`${MASTER_URL}/kota/find`)
@@ -246,23 +303,23 @@ export function LaporanMinol() {
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setTanggalAwal({ val: event.target.value })
+    setTanggalAwal({val: event.target.value})
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setTanggalAkhir({ val: event.target.value })
+    setTanggalAkhir({val: event.target.value})
   }
 
   const filterJenisKegiatan = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
+    return json.map((i: any) => ({label: i.text, value: i.value}))
   }
   const loadOptionsJenisKegiatan = (
     inputValue: string,
@@ -273,14 +330,14 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputJenisKegiatan = (newValue: any) => {
-    setValJenisKegiatan((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const filterJenisPenertiban = async (inputValue: string) => {
     const response = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
     const json = await response.data.data
     setJenisPenertibanList(json)
-    return json.map((i: any) => ({ label: i.jenis_penertiban, value: i.id }))
+    return json.map((i: any) => ({label: i.jenis_penertiban, value: i.id}))
   }
   const loadOptionsJenisPenertiban = (
     inputValue: string,
@@ -291,13 +348,13 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputJenisPenertiban = (newValue: any) => {
-    setValJenisPenertiban((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisPenertiban((prevstate: any) => ({...prevstate, ...newValue}))
   }
   const filterPelaksana = async (inputValue: string) => {
     const response = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/find`)
     const json = await response.data.data
     setHakAkses(json)
-    return json.map((i: any) => ({ label: i.pelaksana, value: i.id }))
+    return json.map((i: any) => ({label: i.pelaksana, value: i.id}))
   }
   const loadOptionsPelaksana = (
     inputValue: string,
@@ -308,13 +365,13 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputPelaksana = (newValue: any) => {
-    setValHakAkses((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValHakAkses((prevstate: any) => ({...prevstate, ...newValue}))
   }
   const filterJenisPerdaPerkada = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
     const json = await response.data.data
     setJenisPerdaPerkadaList(json)
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
+    return json.map((i: any) => ({label: i.text, value: i.value}))
   }
   const loadOptionsJenisPerdaPerkada = (
     inputValue: string,
@@ -325,7 +382,7 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-    setValJenisPerdaPerkada((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisPerdaPerkada((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const handleFilter = async () => {
@@ -357,16 +414,16 @@ export function LaporanMinol() {
     } else if (valJenisPerdaPerkada.value !== '') {
       uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
     }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({ val: '' })
-    setTanggalAkhir({ val: '' })
-    setValJenisKegiatan({ value: '', label: '' })
-    setValJenisPenertiban({ value: '', label: '' })
-    setValJenisPerdaPerkada({ value: '', label: '' })
-    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    setValJenisKegiatan({value: '', label: ''})
+    setValJenisPenertiban({value: '', label: ''})
+    setValJenisPerdaPerkada({value: '', label: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
   const dataPerdaPerkada = (page: number) => {
@@ -646,13 +703,13 @@ export function LaporanMinol() {
     return [data, setData] as const
   }
 
-  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
+  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -663,9 +720,9 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
-    setIdMasterBidangWilayah({ id: newValue.value })
-    setValMasterPelaksana({ value: null, label: '' })
+    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
+    setIdMasterBidangWilayah({id: newValue.value})
+    setValMasterPelaksana({value: null, label: ''})
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
@@ -684,16 +741,17 @@ export function LaporanMinol() {
   //end nama_hak_akses
 
   // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
   const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
+      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
+        inputValue !== '' && `&nama=${inputValue}`
       }`
     )
     const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsKecamatan = (
     inputValue: string,
@@ -757,11 +815,13 @@ export function LaporanMinol() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='filter_jenis_kegiatan_id_selection'
-                          defaultOptions
-                          value={valJenisKegiatan}
+                          // name='filter_jenis_kegiatan_id_selection'
+                          cacheOptions
+                          // value={valJenisKegiatan}
                           loadOptions={loadOptionsJenisKegiatan}
+                          defaultOptions
                           onChange={handleChangeInputJenisKegiatan}
+                          placeholder={'Pilih Pelaksana Kegiatan'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -778,11 +838,11 @@ export function LaporanMinol() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='jenis_penertiban'
+                          cacheOptions
+                          loadOptions={loadOptionsKota}
                           defaultOptions
-                          value={valJenisPenertiban}
-                          loadOptions={loadOptionsJenisPenertiban}
-                          onChange={handleChangeInputJenisPenertiban}
+                          onChange={handleInputKota}
+                          placeholder={'Pilih Kota'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -799,11 +859,12 @@ export function LaporanMinol() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='jenis_perda_perkada'
+                          cacheOptions
+                          // value={inputValKec.value ? inputValKec : {value: '', label: 'Pilih'}}
+                          loadOptions={loadOptionsKec}
                           defaultOptions
-                          value={valJenisPerdaPerkada}
-                          loadOptions={loadOptionsJenisPerdaPerkada}
-                          onChange={handleChangeInputJenisPerdaPerkada}
+                          onChange={handleInputKec}
+                          placeholder={'Pilih Kecamatan'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -820,11 +881,11 @@ export function LaporanMinol() {
                       </div>
                       <div className='col-8'>
                         <AsyncSelect
-                          name='jenis_perda_perkada'
+                          cacheOptions
+                          loadOptions={loadOptionsKel}
                           defaultOptions
-                          value={valJenisPerdaPerkada}
-                          loadOptions={loadOptionsJenisPerdaPerkada}
-                          onChange={handleChangeInputJenisPerdaPerkada}
+                          onChange={handleInputKel}
+                          placeholder={'Pilih Kelurahan'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
