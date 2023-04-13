@@ -631,9 +631,7 @@ export function PerdaPerkada_Pelaksana() {
                     <div className='mb-10'>
                       <div className='row'>
                         <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Pelaksana Kegiatan
-                          </label>
+                          <label className='form-label align-middle'>Pelaksana Kegiatan</label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
@@ -643,9 +641,7 @@ export function PerdaPerkada_Pelaksana() {
                             // loadOptions={loadOptionsJenisPenertiban}
                             // onChange={handleChangeInputJenisPenertiban}
                             styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
+                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
                           />
                         </div>
@@ -656,9 +652,7 @@ export function PerdaPerkada_Pelaksana() {
                     <div className='mb-10'>
                       <div className='row'>
                         <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Kota
-                          </label>
+                          <label className='form-label align-middle'>Kota</label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
@@ -668,9 +662,7 @@ export function PerdaPerkada_Pelaksana() {
                             // loadOptions={loadOptionsJenisPenertiban}
                             // onChange={handleChangeInputJenisPenertiban}
                             styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
+                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
                           />
                         </div>
@@ -681,9 +673,7 @@ export function PerdaPerkada_Pelaksana() {
                     <div className='mb-10'>
                       <div className='row'>
                         <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Kecamatan
-                          </label>
+                          <label className='form-label align-middle'>Kecamatan</label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
@@ -693,9 +683,7 @@ export function PerdaPerkada_Pelaksana() {
                             // loadOptions={loadOptionsJenisPenertiban}
                             // onChange={handleChangeInputJenisPenertiban}
                             styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
+                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
                           />
                         </div>
@@ -706,9 +694,7 @@ export function PerdaPerkada_Pelaksana() {
                     <div className='mb-10'>
                       <div className='row'>
                         <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Kelurahan
-                          </label>
+                          <label className='form-label align-middle'>Kelurahan</label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
@@ -718,9 +704,7 @@ export function PerdaPerkada_Pelaksana() {
                             // loadOptions={loadOptionsJenisPenertiban}
                             // onChange={handleChangeInputJenisPenertiban}
                             styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
+                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
                           />
                         </div>
@@ -735,6 +719,7 @@ export function PerdaPerkada_Pelaksana() {
                         </div>
                         <div className='col-8'>
                           <input
+                            placeholder='Isi Tanggal Kunjungan'
                             type='date'
                             name='tanggal_kunjungan'
                             className='form-control'
@@ -753,6 +738,7 @@ export function PerdaPerkada_Pelaksana() {
                         </div>
                         <div className='col-8'>
                           <input
+                            placeholder='Isi Tanggal Kunjungan'
                             name='tanggal_kunjungan'
                             type='date'
                             className='form-control'
@@ -769,10 +755,7 @@ export function PerdaPerkada_Pelaksana() {
                   <div className='row g-8 mt-2'>
                     <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
                       <Link to='#'>
-                        <Button
-                          className='btn btn-light-primary me-2'
-                          onClick={handleFilter}
-                        >
+                        <Button className='btn btn-light-primary me-2' onClick={handleFilter}>
                           <KTSVG
                             path='/media/icons/duotune/general/gen021.svg'
                             className='svg-icon-2'
@@ -781,10 +764,7 @@ export function PerdaPerkada_Pelaksana() {
                         </Button>
                       </Link>
                       <Link to='#'>
-                        <Button
-                          className='btn btn-light-primary me-2'
-                          onClick={handleFilterReset}
-                        >
+                        <Button className='btn btn-light-primary me-2' onClick={handleFilterReset}>
                           <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                           Reset
                         </Button>
@@ -811,7 +791,8 @@ export function PerdaPerkada_Pelaksana() {
                         <div data-kt-user-table-filter='form'>
                           <button
                             onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                            className='btn btn-outline btn-active-light-primary w-100'>
+                            className='btn btn-outline btn-active-light-primary w-100'
+                          >
                             Jenis Penertiban
                           </button>
                         </div>
@@ -819,11 +800,11 @@ export function PerdaPerkada_Pelaksana() {
 
                         {/* begin::Content */}
                         <div data-kt-user-table-filter='form'>
-                          <button 
-                          onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                          className='btn btn-outline btn-active-light-primary w-100'
+                          <button
+                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                            className='btn btn-outline btn-active-light-primary w-100'
                           >
-                          Pelaksana
+                            Pelaksana
                           </button>
                         </div>
                         {/* end::Content */}

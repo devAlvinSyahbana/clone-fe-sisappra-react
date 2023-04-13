@@ -126,11 +126,7 @@ const SidebarMenuMain = () => {
               title='Laporan Penertiban Bangunan'
               hasBullet={true}
             />
-            <SidebarMenuItem
-              to='/perdaperkada/LaporanPPKM'
-              title='Laporan PPKM'
-              hasBullet={true}
-            />
+            <SidebarMenuItem to='/perdaperkada/LaporanPPKM' title='Laporan PPKM' hasBullet={true} />
           </SidebarMenuItemWithSub>
         </>
       )}
