@@ -16,8 +16,8 @@ import {useFormik} from 'formik'
 import Swal from 'sweetalert2'
 import clsx from 'clsx'
 
-const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL //http://localhost:3001
-export const JENIS_PERDA_PERKADA_URL = `${API_URL}/jenis-perda-perkada` //http://localhost:3000/jenis-perda-perkada
+export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL //http://localhost:3001
+export const JENIS_PERDA_PERKADA_URL = `${MASTERDATA_URL}/jenis-perda-perkada` //http://localhost:3001/jenis-perda-perkada
 
 // Theme for dark or light interface
 createTheme(
@@ -160,7 +160,7 @@ const customStyles = {
 
 export interface FormInput {
   judul?: string
-  deskripsi?: string
+  pasal?: string
 }
 
 const validatorForm = Yup.object().shape({
@@ -399,7 +399,7 @@ export function JenisPerdaPerkada() {
       setSubmitting(true)
       const bodyparam: FormInput = {
         judul: valuesFormik?.judul,
-        deskripsi: valuesFormik?.deskripsi,
+        pasal: valuesFormik?.pasal,
       }
       
       try {

@@ -11,9 +11,8 @@ import {
 import { RootState } from '../../../redux/store'
 import { unparse } from 'papaparse'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { DtPerdaPerkada } from './data-table-laporan-perda-perkada'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { DtPerdaPerkada } from './datatables/data-table-laporan-perda-perkada'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
@@ -21,8 +20,6 @@ import { KTSVG } from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
-import { string } from 'yup'
-import { array } from '@amcharts/amcharts5'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -368,7 +365,6 @@ export function LaporanPerdaPerkada() {
         setData(arr)
         setTotalRows(5)
         setLoading(false)
-
         return [data, setData] as const
       })
   }
@@ -534,7 +530,7 @@ export function LaporanPerdaPerkada() {
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -545,11 +541,9 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterBidangWilayah({id: newValue.value})
-    setValMasterPelaksana({value: null, label: ''})
-    // setValMasterJabatan({value: null, label: ''})
-    // console.log('cek', newValue.value)
+    setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setIdMasterBidangWilayah({ id: newValue.value })
+    setValMasterPelaksana({ value: null, label: '' })
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
@@ -568,17 +562,16 @@ export function LaporanPerdaPerkada() {
   //end nama_hak_akses
 
   // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
   const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
-        inputValue !== '' && `&nama=${inputValue}`
+      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
       }`
     )
     const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsKecamatan = (
     inputValue: string,
@@ -774,10 +767,11 @@ export function LaporanPerdaPerkada() {
                         </Button>
                       </Link>
                     </div>
-                    <div className='d-flex justify-content-start col-md-4 col-lg-5 col-sm-6'>
+                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                       <button
                         type='button'
-                        className='btn btn-light-primary'
+                        className='btn btn-light-primary me-2'
+                        data-kt-menu-placement='bottom-end'
                         data-kt-menu-trigger='click'
                         onClick={() => unduhCSV(data)}>
                         <>
@@ -785,70 +779,67 @@ export function LaporanPerdaPerkada() {
                           Unduh CSV
                         </>
                       </button>
-                      <div className='d-flex justify-content-end col-md-4 col-lg-7 col-sm-12'>
-                      <Button
-                        type='button'
-                        className='btn btn-primary'
-                        data-kt-menu-trigger='click'
-                        data-kt-menu-placement='bottom-end'
-                      >
-                        Pilih Tabel Berdasarkan
-                      </Button>
-                      <div
-                        className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                        data-kt-menu='true'
-                      >
-                        {/* begin::Separator */}
-                        <div className='separator border-gray-200'></div>
-                        {/* end::Separator */}
+                      <div>
+                        <Button
+                          type='button'
+                          className='btn btn-primary me-2'
+                          data-kt-menu-trigger='click'
+                          data-kt-menu-placement='bottom-end'
+                        >
+                          Pilih Tabel Berdasarkan
+                        </Button>
+                        <div
+                          className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
+                          data-kt-menu='true'
+                        >
 
-                        {/* begin::Content */}
-                        <div data-kt-user-table-filter='form'>
-                          <button
-                            onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                            className='btn btn-outline btn-active-light-primary w-100'>
-                            Jenis Penertiban
-                          </button>
-                        </div>
-                        {/* end::Content */}
+                          {/* begin::Content */}
+                          <div data-kt-user-table-filter='form'>
+                            <button
+                              onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
+                              className='btn btn-outline btn-active-light-primary w-100'>
+                              Jenis Penertiban
+                            </button>
+                          </div>
+                          {/* end::Content */}
 
-                        {/* begin::Content */}
-                        <div data-kt-user-table-filter='form'>
-                          <button
-                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                            className='btn btn-outline btn-active-light-primary w-100'
-                          >
-                            Pelaksana
-                          </button>
+                          {/* begin::Content */}
+                          <div data-kt-user-table-filter='form'>
+                            <button
+                              onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                              className='btn btn-outline btn-active-light-primary w-100'
+                            >
+                              Pelaksana
+                            </button>
+                          </div>
+                          {/* end::Content */}
                         </div>
-                        {/* end::Content */}
                       </div>
                       {/*  end::SubMenu */}
                     </div>
                   </div>
                   {/* END :: Button */}
                 </div>
-                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className='row'>
-          <div className='col fs-4 mb-2 fw-semibold text-center'>
-            LAPORAN HASIL PENEGAKAN PERDA / PERKADA
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col fs-4 mb-2 fw-semibold text-center'>
-            PADA SATPOL PP......................................
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col fs-4 mb-6 fw-semibold text-center'>
-            PERIODE .................... s/d .......................
-          </div>
-        </div>
         <div className='card-body py-4'>
+          <div className='row'>
+            <div className='col fs-4 mb-2 fw-semibold text-center'>
+              LAPORAN HASIL PENEGAKAN PERDA / PERKADA
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col fs-4 mb-2 fw-semibold text-center'>
+              PADA SATPOL PP......................................
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col fs-4 mb-6 fw-semibold text-center'>
+              PERIODE .................... s/d .......................
+            </div>
+          </div>
           <DtPerdaPerkada
             data={data}
             totalRows={totalRows}
@@ -859,9 +850,16 @@ export function LaporanPerdaPerkada() {
             hakAkses={hakAkses}
             wilayahBidang={wilayahBidang}
             theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={
+              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                <div className='d-flex flex-column'>
+                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                </div>
+              </div>
+            }
           />
         </div>
-      </div>
+      </div >
     </>
   )
 }
