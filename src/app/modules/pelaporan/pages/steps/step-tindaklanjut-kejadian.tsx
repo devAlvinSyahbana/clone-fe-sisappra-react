@@ -142,7 +142,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
           <>
             <div className='row'>
               <div className='col-5 mb-10 form-group'>
-                <label className='required form-label'>Sumber Informasi</label>
+                <label className=' form-label'>Sumber Informasi</label>
                 <Field
                   name='kejadian__sumber_informasi_selection'
                   target='kejadian__sumber_informasi_id'
@@ -162,7 +162,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
 
             <div className='row'>
               <div className='col-5 mb-10 form-group'>
-                <label className='required form-label'>Jenis Kekerasan</label>
+                <label className=' form-label'>Jenis Kekerasan</label>
                 <Field
                   name='kejadian__jenis_kekerasan_selection'
                   target='kejadian__jenis_kekerasan_id'
@@ -188,7 +188,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
           <>
             <div className='row'>
               <div className='col-5 mb-10 form-group'>
-                <label className='required form-label'>Jumlah Massa</label>
+                <label className=' form-label'>Jumlah Massa</label>
                 <Field
                   type='number'
                   min='0'
@@ -208,7 +208,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
 
             <div className='row'>
               <div className='col-5 mb-10 form-group'>
-                <label className='required form-label'>Tuntutan</label>
+                <label className=' form-label'>Tuntutan</label>
                 <Field
                   type='text'
                   name='kejadian__tuntutan'
@@ -227,7 +227,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
 
             <div className='row'>
               <div className='col-5 mb-10 form-group'>
-                <label className='required form-label'>Penanggung Jawab Unras</label>
+                <label className=' form-label'>Penanggung Jawab Unras</label>
                 <Field
                   type='text'
                   name='kejadian__penanggung_jawab_unras'
@@ -248,7 +248,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
 
         <div className='row'>
           <div className='col-5 mb-10 form-group'>
-            <label className='required form-label'>Jenis Bantuan Satpol PP</label>
+            <label className=' form-label'>Jenis Bantuan Satpol PP</label>
             <Select
               name='tindak__jenis_bantuan_satpolpp'
               isMulti
@@ -267,7 +267,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
 
         <div className='row'>
           <div className='col-5 mb-10 form-group'>
-            <label className='required form-label'>Jenis Bantuan Instansi Terkait</label>
+            <label className=' form-label'>Jenis Bantuan Instansi Terkait</label>
             <Select
               name='tindak__jenis_bantuan_instansiterkait'
               isMulti
@@ -287,7 +287,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
         <div className='row'>
           <div className='col-5 form-group'>
             <div className='mb-10 form-group'>
-              <label className='required form-label'>Korban Jiwa</label>
+              <label className=' form-label'>Korban Jiwa</label>
               <Select
                 // name='tindak__korban_jiwa'
                 defaultValue={valuekjlabel}
@@ -310,7 +310,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
           </div>
           <div className='col-3 form-group'>
             <div className='mb-10'>
-              <label className='required form-label'>Jumlah Korban Pria</label>
+              <label className=' form-label'>Jumlah Korban Pria</label>
               <input
                 type='number'
                 min='0'
@@ -324,7 +324,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
           </div>
           <div className='col-3 form-group'>
             <div className='mb-10'>
-              <label className='required form-label'>Jumlah Korban Wanita</label>
+              <label className=' form-label'>Jumlah Korban Wanita</label>
               <input
                 type='number'
                 min='0'
@@ -377,7 +377,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
           <div className='row' key={i}>
             <div className='col-5 form-group'>
               <div className='mb-10 form-group'>
-                <label className='required form-label'>Korban Jiwa</label>
+                <label className=' form-label'>Korban Jiwa</label>
                 <Field
                   name={`tindak__korban_jiwa[${i}].id`}
                   className='form-control'
@@ -392,7 +392,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
             </div>
             <div className='col-3 form-group'>
               <div className='mb-10'>
-                <label className='required form-label'>Jumlah Korban Pria</label>
+                <label className=' form-label'>Jumlah Korban Pria</label>
                 <Field
                   type='number'
                   min='0'
@@ -408,7 +408,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
             </div>
             <div className='col-3 form-group'>
               <div className='mb-10'>
-                <label className='required form-label'>Jumlah Korban Wanita</label>
+                <label className=' form-label'>Jumlah Korban Wanita</label>
                 <Field
                   type='number'
                   min='0'
@@ -455,7 +455,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
             <div className='row mt-2'>
               <div className='col-5 form-group'>
                 <div className='mb-10 form-group'>
-                  <label className='required form-label'>Korban Material</label>
+                  <label className=' form-label'>Korban Material</label>
                   <Select
                     defaultValue={valuemlabel}
                     className='basic-single'
@@ -474,7 +474,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
               </div>
               <div className='col-3 form-group'>
                 <div className='mb-10'>
-                  <label className='required form-label'>Jumlah Korban Material</label>
+                  <label className=' form-label'>Jumlah Korban Material</label>
                   <input
                     type='number'
                     min='0'
@@ -532,7 +532,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
               <div className='row mt-2' key={i}>
                 <div className='col-5 form-group'>
                   <div className='mb-10 form-group'>
-                    <label className='required form-label'>Korban Material</label>
+                    <label className=' form-label'>Korban Material</label>
                     <Field
                       name={`tindak__korban_material[${i}].id`}
                       className='form-control'
@@ -550,7 +550,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
                 </div>
                 <div className='col-3 form-group'>
                   <div className='mb-10'>
-                    <label htmlFor='kegiatan__jumlah_personil' className='required form-label'>
+                    <label htmlFor='kegiatan__jumlah_personil' className=' form-label'>
                       Jumlah Korban Material
                     </label>
                     <Field
@@ -601,7 +601,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
           </>
         )}
         <div className='row mt-2'>
-          <label className='required form-label'>Dokumentasi</label>
+          <label className=' form-label'>Dokumentasi</label>
           <div className='col'>
             <DragDropImageUploader
               maxFile={4}

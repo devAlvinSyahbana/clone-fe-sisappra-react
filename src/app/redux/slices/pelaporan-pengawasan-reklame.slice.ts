@@ -8,15 +8,15 @@ import {
 import * as Yup from 'yup'
 import axios from 'axios'
 
-export const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const MASTER_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
 
 export interface PelaporanPengawasanState extends Record<string, any> {
   share_location: string
   lokasi_tiang: string
 
-  kota: number
-  kecamatan: number
-  kelurahan: number
+  filter_kota: number
+  filter_kecamatan: number
+  filter_kelurahan: number
   
   alamat: string
   tgl_pengecekan: string
@@ -42,9 +42,9 @@ export const initialState: PelaporanPengawasanState = {
   tgl_pengecekan: '',
   waktu_pengawasan: '',
 
-  kota: 0,
-  kecamatan: 0,
-  kelurahan: 0,
+  filter_kota: 0,
+  filter_kecamatan: 0,
+  filter_kelurahan: 0,
   
   alamat: '',
   share_location: '',
@@ -102,7 +102,7 @@ export const createSchemaPelaporanPengawasan = [
 export const updateKotaList: any = createAsyncThunk(
   'pelaporanPengawasan/updateKotaList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/kota/combobox`)
+    const res = await axios.get(`${MASTER_URL}/kota/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
@@ -110,7 +110,7 @@ export const updateKotaList: any = createAsyncThunk(
 export const updateKecamatanList: any = createAsyncThunk(
   'pelaporanPengawasan/updateKecamatanList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/kecamatan/?%24top=100&%24select=id%2C%20nama%2C%20kode%2C%20kode_kota`)
+    const res = await axios.get(`${MASTER_URL}/kecamatan/?%24top=100&%24select=id%2C%20nama%2C%20kode%2C%20kode_kota`)
     const data = res.data.data.map((d: any) => ({label: d.nama, value: String(d.id), kodeKota: d.kode_kota}))
     return data
   }
@@ -118,7 +118,7 @@ export const updateKecamatanList: any = createAsyncThunk(
 export const updateKelurahanList: any = createAsyncThunk(
   'pelaporanPengawasan/updateKelurahanList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/kelurahan/?%24top=300&%24select=id%2C%20nama%2C%20kode%2C%20kode_kecamatan`)
+    const res = await axios.get(`${MASTER_URL}/kelurahan/?%24top=300&%24select=id%2C%20nama%2C%20kode%2C%20kode_kecamatan`)
     const data = res.data.data.map((d: any) => ({label: d.nama, value: String(d.id), kodeKecamatan: d.kode_kecamatan}))
     return data
   }
@@ -126,7 +126,7 @@ export const updateKelurahanList: any = createAsyncThunk(
 export const updateKawasanKendaliList: any = createAsyncThunk(
   'pelaporanKegiatan/updateKawasanKendaliList',
   async () => {
-    const res = await axios.get(`${API_URL}/jenis-kendali/combobox`)
+    const res = await axios.get(`${MASTER_URL}/jenis-kendali/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
 
     return data
@@ -135,7 +135,7 @@ export const updateKawasanKendaliList: any = createAsyncThunk(
 export const updateJenisReklameList: any = createAsyncThunk(
   'pelaporanPengawasan/updateJenisReklameList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/jenis-reklame/combobox`)
+    const res = await axios.get(`${MASTER_URL}/jenis-reklame/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }
@@ -144,7 +144,7 @@ export const updateJenisReklameList: any = createAsyncThunk(
 export const updateStatusReklameList: any = createAsyncThunk(
   'pelaporanPengawasan/updateStatusReklameList',
   async (thunkAPI) => {
-    const res = await axios.get(`${API_URL}/status-reklame/combobox`)
+    const res = await axios.get(`${MASTER_URL}/status-reklame/combobox`)
     const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
     return data
   }

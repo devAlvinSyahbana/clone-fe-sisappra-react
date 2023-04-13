@@ -2,10 +2,6 @@ import axios from 'axios'
 import { FC, Fragment, useEffect, useState } from 'react'
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../redux/store'
-import PelaporanKegiatanState from '../../../redux/slices/pelaporan-kegiatan.slice'
-import { KTSVG } from '../../../../_metronic/helpers'
 import { useNavigate } from 'react-router-dom'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL

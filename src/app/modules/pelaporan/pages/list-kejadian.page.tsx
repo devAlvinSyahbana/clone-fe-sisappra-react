@@ -1,21 +1,22 @@
-import {FC, useEffect, useState} from 'react'
+import { FC, useEffect, useState } from 'react'
 import AsyncSelect from 'react-select/async'
-import {FormikValues} from 'formik'
+import { FormikValues } from 'formik'
 import {
   createSchemaPelaporanKejadian,
   PelaporanKejadianState,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
-import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../../../redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../redux/store'
+import { unparse } from 'papaparse'
 import axios from 'axios'
-import {DtKabid, DtAdmin, DtPimpinan} from '../datatable/data-table-laporan-kejadian'
-import {KTSVG} from '../../../../_metronic/helpers'
-import {useNavigate} from 'react-router-dom'
-import {Button} from 'react-bootstrap'
+import { DtKabid, DtAdmin, DtPimpinan } from '../datatable/data-table-laporan-kejadian'
+import { KTSVG } from '../../../../_metronic/helpers'
+import { useNavigate } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import {createTheme} from 'react-data-table-component'
-import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
-import {useThemeMode} from '../../../../_metronic/partials'
+import { createTheme } from 'react-data-table-component'
+import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../_metronic/partials'
 import ReactToPrint from 'react-to-print'
 
 // Dark Theme
@@ -148,17 +149,17 @@ export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const ListKejadianPage: FC = () => {
   let componentRef: any
   const navigate = useNavigate()
-  const {mode} = useThemeMode()
+  const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const dispatch = useDispatch()
   const [currentSchema, setCurrentSchema] = useState(createSchemaPelaporanKejadian[0])
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
   const [jenisKejadianList, setJenisKejadianList] = useState([])
   // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
   const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
   const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
-  const [period, setPeriod] = useState({start: Date.now() - 10, end: Date.now()})
+  const [period, setPeriod] = useState({ start: Date.now() - 10, end: Date.now() })
 
   const filterPelaporanKejadian = async (values: PelaporanKejadianState, actions: FormikValues) => {
     const res = await axios.get(`${PELAPORAN_URL}/kejadian-umum`)
@@ -170,7 +171,7 @@ export const ListKejadianPage: FC = () => {
 
   const updateList = () => {
     axios.get(`${MASTERDATA_URL}/jenis-kejadian/combobox?$orderby=nama`).then((res) => {
-      const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+      const data = res.data.data.map((d: any) => ({ label: d.text, value: String(d.value) }))
       // .filter((v: any) => !excludeJenisKendali.includes(v.label))
       setJenisKejadianList(data)
     })
@@ -215,6 +216,17 @@ export const ListKejadianPage: FC = () => {
     }
   }, [hakAksesData])
 
+  const unduhCSV = (data: any[]) => {
+    const csvData = unparse(data)
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.setAttribute('download', 'LAPORAN KEJADIAN.csv')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
+
   // const vKabid = () => {
   //   setAksi(0)
   // }
@@ -239,21 +251,21 @@ export const ListKejadianPage: FC = () => {
     setPV(1)
   }
 
-  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
-  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
+  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
+  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAwal({val: event.target.value})
+    setTanggalAwal({ val: event.target.value })
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAkhir({val: event.target.value})
+    setTanggalAkhir({ val: event.target.value })
   }
 
   interface SelectOption {
@@ -261,11 +273,11 @@ export const ListKejadianPage: FC = () => {
     readonly label: string
   }
 
-  const [valJenisKejadian, setValJenisKejadian] = useState({value: '', label: ''})
+  const [valJenisKejadian, setValJenisKejadian] = useState({ value: '', label: '' })
   const filterJenisKejadian = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-kejadian/combobox`)
     const json = await response.data.data
-    return json.map((i: any) => ({label: i.text, value: i.value}))
+    return json.map((i: any) => ({ label: i.text, value: i.value }))
   }
   // console.log(valJenisKejadian)
   const loadOptionsJenisKejadian = (
@@ -277,7 +289,7 @@ export const ListKejadianPage: FC = () => {
     }, 1000)
   }
   const handleChangeInputJenisKejadian = (newValue: any) => {
-    setValJenisKejadian((prevstate: any) => ({...prevstate, ...newValue}))
+    setValJenisKejadian((prevstate: any) => ({ ...prevstate, ...newValue }))
     // console.log('ini val kejadian', valJenisKejadian)
   }
 
@@ -298,15 +310,15 @@ export const ListKejadianPage: FC = () => {
     } else if (valJenisKejadian.value !== '') {
       uriParam += `kejadian__jenis_kejadian_id%20eq%20%27${valJenisKejadian.value}%27`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
-    setValJenisKejadian({value: '', label: ''})
+    setTanggalAwal({ val: '' })
+    setTanggalAkhir({ val: '' })
+    setValJenisKejadian({ value: '', label: '' })
     // setInstansi({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
   // FILTER KOTA
   const handleFilterKota = async () => {
@@ -314,13 +326,13 @@ export const ListKejadianPage: FC = () => {
     if (valKota.value !== '') {
       uriParam += `/?%24filter=id%20eq%20${valKota.value}`
     }
-    setUriFindKota((prevState) => ({...prevState, strparamkota: uriParam}))
+    setUriFindKota((prevState) => ({ ...prevState, strparamkota: uriParam }))
   }
 
   const handleFilterResetKota = () => {
-    setValKota({value: '', label: ''})
+    setValKota({ value: '', label: '' })
     // setInstansi({val: ''})
-    setUriFindKota((prevState) => ({...prevState, strparamkota: ''}))
+    setUriFindKota((prevState) => ({ ...prevState, strparamkota: '' }))
   }
 
   const handleFilterDetailJumlah = async () => {
@@ -340,15 +352,15 @@ export const ListKejadianPage: FC = () => {
     } else if (valJenisKejadian.value !== '') {
       uriParam += `%20and%20kejadian__jenis_kejadian_id%20eq%20%27${valJenisKejadian.value}%27`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterResetDetailJumlah = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
-    setValJenisKejadian({value: '', label: ''})
+    setTanggalAwal({ val: '' })
+    setTanggalAkhir({ val: '' })
+    setValJenisKejadian({ value: '', label: '' })
     // setInstansi({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   const handleFilterDetail = async () => {
@@ -362,14 +374,14 @@ export const ListKejadianPage: FC = () => {
     } else if (tanggalAkhir.val !== '') {
       uriParam += `%20and%20kejadian__tanggal%20eq%20%27${tanggalAkhir.val}%27`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterResetDetail = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
+    setTanggalAwal({ val: '' })
+    setTanggalAkhir({ val: '' })
     // setInstansi({val: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   const [loading, setLoading] = useState(false)
@@ -613,7 +625,7 @@ export const ListKejadianPage: FC = () => {
   }
 
   const [kota, setKota] = useState([])
-  const [qParamFindKota, setUriFindKota] = useState({strparamkota: ''})
+  const [qParamFindKota, setUriFindKota] = useState({ strparamkota: '' })
 
   const kotaList = async () => {
     const responseKota = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strparamkota}`)
@@ -639,11 +651,11 @@ export const ListKejadianPage: FC = () => {
     // console.log(kotaList)
   }, [qParamFindKota])
 
-  const [valKota, setValKota] = useState({value: '', label: ''})
+  const [valKota, setValKota] = useState({ value: '', label: '' })
   const filterKota = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/kota/combobox`)
     const json = await response.data.data
-    return json.map((i: any) => ({label: i.text, value: i.value}))
+    return json.map((i: any) => ({ label: i.text, value: i.value }))
     // console.log(response)
   }
   const loadOptionsKota = (inputValue: string, callback: (options: SelectOption[]) => void) => {
@@ -652,7 +664,7 @@ export const ListKejadianPage: FC = () => {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-    setValKota((prevstate: any) => ({...prevstate, ...newValue}))
+    setValKota((prevstate: any) => ({ ...prevstate, ...newValue }))
     // console.log('ini val kejadian', valJenisKejadian)
   }
 
@@ -681,9 +693,7 @@ export const ListKejadianPage: FC = () => {
               </div>
             ) : (
               <div className='card'>
-                <div className='card card-flush h-xl-100'>
                   <div className='card-header border-1 pt-6'>
-                    <div className='col-xl-12 mb-xl-12 mt-6'>
                       <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
                         <div className='mb-5'>
                           <div
@@ -780,9 +790,9 @@ export const ListKejadianPage: FC = () => {
                                           className='form-control'
                                           value={tanggalAwal.val}
                                           onChange={handleChangeInputTanggalAwal}
-                                          // onChange={(o: any) => {
-                                          //   setTanggalAwal(o.target.value)
-                                          // }}
+                                        // onChange={(o: any) => {
+                                        //   setTanggalAwal(o.target.value)
+                                        // }}
                                         />
                                       </div>
                                     </div>
@@ -803,9 +813,9 @@ export const ListKejadianPage: FC = () => {
                                           className='form-control'
                                           value={tanggalAkhir.val}
                                           onChange={handleChangeInputTanggalAkhir}
-                                          // onChange={(o: any) => {
-                                          //   setTanggalAkhir(o.target.value)
-                                          // }}
+                                        // onChange={(o: any) => {
+                                        //   setTanggalAkhir(o.target.value)
+                                        // }}
                                         />
                                       </div>
                                     </div>
@@ -833,6 +843,19 @@ export const ListKejadianPage: FC = () => {
                                     </Button>
                                   </div>
                                   <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                    {/* begin::Button Unduh */}
+                                    <button
+                                      type='button'
+                                      className='btn btn-light-primary me-2'
+                                      data-kt-menu-trigger='click'
+                                      data-kt-menu-placement='bottom-end'
+                                      onClick={() => unduhCSV(data)}>
+                                      <>
+                                        <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                        Unduh
+                                      </>
+                                      {/* end::Button Unduh */}
+                                    </button>
                                     {/* begin::Filter Button */}
                                     <Button
                                       onClick={() => navigate('/pelaporan/tambah-laporan-kejadian')}
@@ -846,65 +869,6 @@ export const ListKejadianPage: FC = () => {
                                       Tambah
                                       {/* end::Add user */}
                                     </Button>
-                                    <button
-                                      type='button'
-                                      className='btn btn-light-primary'
-                                      data-kt-menu-trigger='click'
-                                      data-kt-menu-placement='bottom-end'
-                                    >
-                                      {/* {btnLoadingUnduh ? (
-                                  <>
-                                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                    Memproses Unduh...
-                                  </>
-                                ) : ( */}
-                                      <>
-                                        <KTSVG
-                                          path='/media/icons/duotune/arrows/arr078.svg'
-                                          className='svg-icon-2'
-                                        />
-                                        Unduh
-                                      </>
-                                      {/* )} */}
-                                    </button>
-                                    {/* end::Filter Button */}
-                                    {/* begin::SubMenu */}
-                                    <div
-                                      className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                      data-kt-menu='true'
-                                    >
-                                      {/* begin::Header */}
-                                      <div className='px-7 py-5'>
-                                        <div className='fs-5 text-dark fw-bolder'>
-                                          Pilihan Unduh
-                                        </div>
-                                      </div>
-                                      {/* end::Header */}
-
-                                      {/* begin::Separator */}
-                                      <div className='separator border-gray-200'></div>
-                                      {/* end::Separator */}
-
-                                      {/* begin::Content */}
-                                      <div className='px-7 py-5' data-kt-user-table-filter='form'>
-                                        <button
-                                          //   onClick={handleUnduh}
-                                          className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                        >
-                                          Excel
-                                        </button>
-                                      </div>
-                                      {/* end::Content */}
-
-                                      {/* begin::Content */}
-                                      <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                        <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                          PDF
-                                        </button>
-                                      </div>
-                                      {/* end::Content */}
-                                    </div>
-                                    {/* end::SubMenu */}
                                   </div>
                                 </div>
                               </div>
@@ -932,18 +896,6 @@ export const ListKejadianPage: FC = () => {
                                               : reactSelectLightThem
                                           }
                                         />
-                                        {/* <Field
-                                        name='filter_jenis_Kejadian_id_selection'
-                                        target='filter_jenis_Kejadian_id'
-                                        className='form-control'
-                                        component={SelectField}
-                                        options={jenisKejadianList}
-                                        onChange={(o: ChangeEvent<any>) => {
-                                          // dispatch(changedValue(ToFieldStateCE(o)))
-                                          // updateJenisPasalList()
-                                          // updateJenisPenyelesaianList()
-                                        }}
-                                      /> */}
                                       </div>
                                     </div>
                                   </div>
@@ -961,9 +913,9 @@ export const ListKejadianPage: FC = () => {
                                           className='form-control'
                                           value={tanggalAwal.val}
                                           onChange={handleChangeInputTanggalAwal}
-                                          // onChange={(o: any) => {
-                                          //   setTanggalAwal(o.target.value)
-                                          // }}
+                                        // onChange={(o: any) => {
+                                        //   setTanggalAwal(o.target.value)
+                                        // }}
                                         />
                                       </div>
                                     </div>
@@ -984,9 +936,9 @@ export const ListKejadianPage: FC = () => {
                                           className='form-control'
                                           value={tanggalAkhir.val}
                                           onChange={handleChangeInputTanggalAkhir}
-                                          // onChange={(o: any) => {
-                                          //   setTanggalAkhir(o.target.value)
-                                          // }}
+                                        // onChange={(o: any) => {
+                                        //   setTanggalAkhir(o.target.value)
+                                        // }}
                                         />
                                       </div>
                                     </div>
@@ -1014,6 +966,19 @@ export const ListKejadianPage: FC = () => {
                                     </Button>
                                   </div>
                                   <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                    {/* begin::Button Unduh */}
+                                    <button
+                                      type='button'
+                                      className='btn btn-light-primary me-2'
+                                      data-kt-menu-trigger='click'
+                                      data-kt-menu-placement='bottom-end'
+                                      onClick={() => unduhCSV(data)}>
+                                      <>
+                                        <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                        Unduh
+                                      </>
+                                      {/* end::Button Unduh */}
+                                    </button>
                                     {/* begin::Filter Button */}
                                     <Button
                                       onClick={() => navigate('/pelaporan/tambah-laporan-kejadian')}
@@ -1027,65 +992,6 @@ export const ListKejadianPage: FC = () => {
                                       Tambah
                                       {/* end::Add user */}
                                     </Button>
-                                    {/* <button
-                                      type='button'
-                                      className='btn btn-light-primary'
-                                      data-kt-menu-trigger='click'
-                                      data-kt-menu-placement='bottom-end'
-                                    > */}
-                                      {/* {btnLoadingUnduh ? (
-                                  <>
-                                    <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                    Memproses Unduh...
-                                  </>
-                                ) : ( */}
-                                      {/* <>
-                                        <KTSVG
-                                          path='/media/icons/duotune/arrows/arr078.svg'
-                                          className='svg-icon-2'
-                                        />
-                                        Unduh
-                                      </> */}
-                                      {/* )} */}
-                                    {/* </button> */}
-                                    {/* end::Filter Button */}
-                                    {/* begin::SubMenu */}
-                                    {/* <div
-                                      className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                      data-kt-menu='true'
-                                    > */}
-                                      {/* begin::Header */}
-                                      {/* <div className='px-7 py-5'>
-                                        <div className='fs-5 text-dark fw-bolder'>
-                                          Pilihan Unduh
-                                        </div>
-                                      </div> */}
-                                      {/* end::Header */}
-
-                                      {/* begin::Separator */}
-                                      {/* <div className='separator border-gray-200'></div> */}
-                                      {/* end::Separator */}
-
-                                      {/* begin::Content */}
-                                      {/* <div className='px-7 py-5' data-kt-user-table-filter='form'> */}
-                                        {/* <button
-                                          //   onClick={handleUnduh}
-                                          className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                        >
-                                          Excel
-                                        </button>
-                                      </div> */}
-                                      {/* end::Content */}
-
-                                      {/* begin::Content */}
-                                      {/* <div className='px-7 py-2' data-kt-user-table-filter='form'>
-                                        <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                          PDF
-                                        </button>
-                                      </div> */}
-                                      {/* end::Content */}
-                                    {/* </div> */}
-                                    {/* end::SubMenu */}
                                   </div>
                                 </div>
                               </div>
@@ -1228,9 +1134,9 @@ export const ListKejadianPage: FC = () => {
                                               className='form-control'
                                               value={tanggalAwal.val}
                                               onChange={handleChangeInputTanggalAwal}
-                                              // onChange={(o: any) => {
-                                              //   setTanggalAwal(o.target.value)
-                                              // }}
+                                            // onChange={(o: any) => {
+                                            //   setTanggalAwal(o.target.value)
+                                            // }}
                                             />
                                           </div>
                                         </div>
@@ -1251,9 +1157,9 @@ export const ListKejadianPage: FC = () => {
                                               className='form-control'
                                               value={tanggalAkhir.val}
                                               onChange={handleChangeInputTanggalAkhir}
-                                              // onChange={(o: any) => {
-                                              //   setTanggalAkhir(o.target.value)
-                                              // }}
+                                            // onChange={(o: any) => {
+                                            //   setTanggalAkhir(o.target.value)
+                                            // }}
                                             />
                                           </div>
                                         </div>
@@ -1295,20 +1201,20 @@ export const ListKejadianPage: FC = () => {
                                           data-kt-menu-trigger='click'
                                           data-kt-menu-placement='bottom-end'
                                         > */}
-                                          {/* {btnLoadingUnduh ? (
+                                        {/* {btnLoadingUnduh ? (
                                     <>
                                       <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
                                       Memproses Unduh...
                                     </>
                                   ) : ( */}
-                                          {/* <>
+                                        {/* <>
                                             <KTSVG
                                               path='/media/icons/duotune/arrows/arr078.svg'
                                               className='svg-icon-2'
                                             />
                                             Unduh
                                           </> */}
-                                          {/* )} */}
+                                        {/* )} */}
                                         {/* </button> */}
                                         {/* end::Filter Button */}
                                         {/* begin::SubMenu */}
@@ -1316,20 +1222,20 @@ export const ListKejadianPage: FC = () => {
                                           className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
                                           data-kt-menu='true'
                                         > */}
-                                          {/* begin::Header */}
-                                          {/* <div className='px-7 py-5'>
+                                        {/* begin::Header */}
+                                        {/* <div className='px-7 py-5'>
                                             <div className='fs-5 text-dark fw-bolder'>
                                               Pilihan Unduh
                                             </div>
                                           </div> */}
-                                          {/* end::Header */}
+                                        {/* end::Header */}
 
-                                          {/* begin::Separator */}
-                                          {/* <div className='separator border-gray-200'></div> */}
-                                          {/* end::Separator */}
+                                        {/* begin::Separator */}
+                                        {/* <div className='separator border-gray-200'></div> */}
+                                        {/* end::Separator */}
 
-                                          {/* begin::Content */}
-                                          {/* <div
+                                        {/* begin::Content */}
+                                        {/* <div
                                             className='px-7 py-5'
                                             data-kt-user-table-filter='form'
                                           >
@@ -1340,10 +1246,10 @@ export const ListKejadianPage: FC = () => {
                                               Excel
                                             </button>
                                           </div> */}
-                                          {/* end::Content */}
+                                        {/* end::Content */}
 
-                                          {/* begin::Content */}
-                                          {/* <div
+                                        {/* begin::Content */}
+                                        {/* <div
                                             className='px-7 py-2'
                                             data-kt-user-table-filter='form'
                                           >
@@ -1351,7 +1257,7 @@ export const ListKejadianPage: FC = () => {
                                               PDF
                                             </button>
                                           </div> */}
-                                          {/* end::Content */}
+                                        {/* end::Content */}
                                         {/* </div> */}
                                         {/* end::SubMenu */}
                                       </div>
@@ -1363,9 +1269,7 @@ export const ListKejadianPage: FC = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
                   </div>
-                </div>
                 <div className='card-body py-4'>
                   {aksi === 0 ? (
                     <DtKabid
