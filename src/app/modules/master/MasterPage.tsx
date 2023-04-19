@@ -1,122 +1,127 @@
 import React from 'react'
-import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
-import {PageLink, PageTitle} from '../../../_metronic/layout/core'
+import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
+import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 
-import {Kota} from './components/Kota'
-import {LihatKota} from './components/Lihat-master/LihatKota'
-import {UpdateKota} from './components/Update-master/UpdateKota'
-import {TambahKota} from './components/Tambah-master/TambahKota'
+import { Kota } from './components/Kota'
+import { LihatKota } from './components/Lihat-master/LihatKota'
+import { UpdateKota } from './components/Update-master/UpdateKota'
+import { TambahKota } from './components/Tambah-master/TambahKota'
 
-import {Kecamatan} from './components/Kecamatan'
-import {LihatKecamatan} from './components/Lihat-master/LihatKecamatan'
-import {UpdateKecamatan} from './components/Update-master/UpdateKecamatan'
-import {TambahKecamatan} from './components/Tambah-master/TambahKecamatan'
+import { Kecamatan } from './components/Kecamatan'
+import { LihatKecamatan } from './components/Lihat-master/LihatKecamatan'
+import { UpdateKecamatan } from './components/Update-master/UpdateKecamatan'
+import { TambahKecamatan } from './components/Tambah-master/TambahKecamatan'
 
-import {Kelurahan} from './components/Kelurahan'
-import {LihatKelurahan} from './components/Lihat-master/LihatKelurahan'
-import {UpdateKelurahan} from './components/Update-master/UpdateKelurahan'
-import {TambahKelurahan} from './components/Tambah-master/TambahKelurahan'
+import { Kelurahan } from './components/Kelurahan'
+import { LihatKelurahan } from './components/Lihat-master/LihatKelurahan'
+import { UpdateKelurahan } from './components/Update-master/UpdateKelurahan'
+import { TambahKelurahan } from './components/Tambah-master/TambahKelurahan'
 
-import {JenisKegiatan} from './components/JenisKegiatan'
-import {LihatJenisKegiatan} from './components/Lihat-master/LihatJenisKegiatan'
-import {UpdateJenisKegiatan} from './components/Update-master/UpdateJenisKegiatan'
-import {TambahJenisKegiatan} from './components/Tambah-master/TambahJenisKegiatan'
+import { JenisKegiatan } from './components/JenisKegiatan'
+import { LihatJenisKegiatan } from './components/Lihat-master/LihatJenisKegiatan'
+import { UpdateJenisKegiatan } from './components/Update-master/UpdateJenisKegiatan'
+import { TambahJenisKegiatan } from './components/Tambah-master/TambahJenisKegiatan'
 
-import {JenisKejadian} from './components/JenisKejadian'
-import {LihatJenisKejadian} from './components/Lihat-master/LihatJenisKejadian'
-import {UpdateJenisKejadian} from './components/Update-master/UpdateJenisKejadian'
-import {TambahJenisKejadian} from './components/Tambah-master/TambahJenisKejadian'
+import { JenisKejadian } from './components/JenisKejadian'
+import { LihatJenisKejadian } from './components/Lihat-master/LihatJenisKejadian'
+import { UpdateJenisKejadian } from './components/Update-master/UpdateJenisKejadian'
+import { TambahJenisKejadian } from './components/Tambah-master/TambahJenisKejadian'
 
-import {JenisPelanggaran} from './components/JenisPelanggaran'
-import {LihatJenisPelanggaran} from './components/Lihat-master/LihatJenisPelanggaran'
+import { JenisPelanggaran } from './components/JenisPelanggaran'
+import { LihatJenisPelanggaran } from './components/Lihat-master/LihatJenisPelanggaran'
 
-import {JenisPertolongan} from './components/JenisPertolongan'
-import {LihatJenisPertolongan} from './components/Lihat-master/LihatJenisPertolongan'
-import {UpdateJenisPertolongan} from './components/Update-master/UpdateJenisPertolongan'
+import { JenisPertolongan } from './components/JenisPertolongan'
+import { LihatJenisPertolongan } from './components/Lihat-master/LihatJenisPertolongan'
+import { UpdateJenisPertolongan } from './components/Update-master/UpdateJenisPertolongan'
 
-import {JenisPerdaPerkada} from './components/JenisPerdaPerkada'
-import {LihatJenisPerdaPerkada} from './components/Lihat-master/LihatJenisPerdaPerkada'
-import {UpdateJenisPerdaPerkada} from './components/Update-master/UpdateJenisPerdaPerkada'
-import {TambahJenisPerdaPerkada} from './components/Tambah-master/TambahJenisPerdaPerkada'
+import { JenisPerdaPerkada } from './components/JenisPerdaPerkada'
+import { LihatJenisPerdaPerkada } from './components/Lihat-master/LihatJenisPerdaPerkada'
+import { UpdateJenisPerdaPerkada } from './components/Update-master/UpdateJenisPerdaPerkada'
+import { TambahJenisPerdaPerkada } from './components/Tambah-master/TambahJenisPerdaPerkada'
 
-import {JenisPenindakan} from './components/JenisPenindakan'
-import {LihatJenisPenindakan} from './components/Lihat-master/LihatJenisPenindakan'
-import {UpdateJenisPenindakan} from './components/Update-master/UpdateJenisPenindakan'
+import { MapPerdaPerkada } from './components/MapPerdaPerkada'
+import { LihatMapPerdaPerkada } from './components/Lihat-master/LihatMapPerdaPerkada'
+import { UpdateMapPerdaPerkada } from './components/Update-master/UpdateMapPerdaPerkada'
+import { TambahMapPerdaPerkada } from './components/Tambah-master/TambahMapPerdaPerkada'
 
-import {KorbanJiwa} from './components/KorbanJiwa'
-import {LihatKorbanJiwa} from './components/Lihat-master/LihatKorbanJiwa'
-import {UpdateKorbanJiwa} from './components/Update-master/UpdateKorbanJiwa'
-import {TambahKorbanJiwa} from './components/Tambah-master/TambahKorbanJiwa'
+import { JenisPenindakan } from './components/JenisPenindakan'
+import { LihatJenisPenindakan } from './components/Lihat-master/LihatJenisPenindakan'
+import { UpdateJenisPenindakan } from './components/Update-master/UpdateJenisPenindakan'
 
-import {KorbanMaterial} from './components/KorbanMaterial'
-import {LihatKorbanMaterial} from './components/Lihat-master/LihatKorbanMaterial'
-import {UpdateKorbanMaterial} from './components/Update-master/UpdateKorbanMaterial'
+import { KorbanJiwa } from './components/KorbanJiwa'
+import { LihatKorbanJiwa } from './components/Lihat-master/LihatKorbanJiwa'
+import { UpdateKorbanJiwa } from './components/Update-master/UpdateKorbanJiwa'
+import { TambahKorbanJiwa } from './components/Tambah-master/TambahKorbanJiwa'
 
-import {JenisBantuan} from './components/JenisBantuan'
-import {LihatJenisBantuan} from './components/Lihat-master/LihatJenisBantuan'
-import {UpdateJenisBantuan} from './components/Update-master/UpdateJenisBantuan'
+import { KorbanMaterial } from './components/KorbanMaterial'
+import { LihatKorbanMaterial } from './components/Lihat-master/LihatKorbanMaterial'
+import { UpdateKorbanMaterial } from './components/Update-master/UpdateKorbanMaterial'
 
-import {InstansiTerkait} from './components/InstansiTerkait'
+import { JenisBantuan } from './components/JenisBantuan'
+import { LihatJenisBantuan } from './components/Lihat-master/LihatJenisBantuan'
+import { UpdateJenisBantuan } from './components/Update-master/UpdateJenisBantuan'
 
-import {KondisiSaranaPrasarana} from './components/KondisiSaranaPrasarana'
-import {LihatKondisiSaranaPrasarana} from './components/Lihat-master/LihatKondisiSaranaPrasarana'
-import {UpdateKondisiSaranaPrasarana} from './components/Update-master/UpdateKondisiSaranaPrasarana'
+import { InstansiTerkait } from './components/InstansiTerkait'
 
-import {StatusSaranaPrasarana} from './components/StatusSaranaPrasarana'
-import {LihatStatusSaranaPrasarana} from './components/Lihat-master/LihatStatusSaranaPrasarana'
-import {UpdateStatusSaranaPrasarana} from './components/Update-master/UpdateStatusSaranaPrasarana'
+import { KondisiSaranaPrasarana } from './components/KondisiSaranaPrasarana'
+import { LihatKondisiSaranaPrasarana } from './components/Lihat-master/LihatKondisiSaranaPrasarana'
+import { UpdateKondisiSaranaPrasarana } from './components/Update-master/UpdateKondisiSaranaPrasarana'
 
-import {Agama} from './components/Agama'
-import {LihatAgama} from './components/Lihat-master/LihatAgama'
-import {UpdateAgama} from './components/Update-master/UpdateAgama'
-import {TambahAgama} from './components/Tambah-master/TambahAgama'
+import { StatusSaranaPrasarana } from './components/StatusSaranaPrasarana'
+import { LihatStatusSaranaPrasarana } from './components/Lihat-master/LihatStatusSaranaPrasarana'
+import { UpdateStatusSaranaPrasarana } from './components/Update-master/UpdateStatusSaranaPrasarana'
 
-import {Pangkat} from './components/Pangkat'
-import {UpdatePangkat} from './components/Update-master/UpdatePangkat'
-import {LihatPangkat} from './components/Lihat-master/LihatPangkat'
-import {TambahPangkat} from './components/Tambah-master/TambahPangkat'
+import { Agama } from './components/Agama'
+import { LihatAgama } from './components/Lihat-master/LihatAgama'
+import { UpdateAgama } from './components/Update-master/UpdateAgama'
+import { TambahAgama } from './components/Tambah-master/TambahAgama'
 
-import {TempatPelaksanaan} from './components/TempatPelaksanaan'
-import {UpdateTempatPelaksanaan} from './components/Update-master/UpdateTempatPelaksanaan'
-import {LihatTempatPelaksanaan} from './components/Lihat-master/LihatTempatPelaksanaan'
+import { Pangkat } from './components/Pangkat'
+import { UpdatePangkat } from './components/Update-master/UpdatePangkat'
+import { LihatPangkat } from './components/Lihat-master/LihatPangkat'
+import { TambahPangkat } from './components/Tambah-master/TambahPangkat'
 
-import {SKPD} from './components/SKPD'
-import {UpdateSKPD} from './components/Update-master/UpdateSKPD'
-import {LihatSKPD} from './components/Lihat-master/LihatSKPD'
+import { TempatPelaksanaan } from './components/TempatPelaksanaan'
+import { UpdateTempatPelaksanaan } from './components/Update-master/UpdateTempatPelaksanaan'
+import { LihatTempatPelaksanaan } from './components/Lihat-master/LihatTempatPelaksanaan'
 
-import {Pendidikan} from './components/Pendidikan'
-import {LihatPendidikan} from './components/Lihat-master/LihatPendidikan'
+import { SKPD } from './components/SKPD'
+import { UpdateSKPD } from './components/Update-master/UpdateSKPD'
+import { LihatSKPD } from './components/Lihat-master/LihatSKPD'
 
-import {JenisSaranaPrasarana} from './components/JenisSaranaPrasarana'
-import {UpdateJenisSaranaPrasarana} from './components/Update-master/UpdateJenisSaranaPrasarana'
-import {LihatJenisSaranaPrasarana} from './components/Lihat-master/LihatJenisSaranaPrasarana'
+import { Pendidikan } from './components/Pendidikan'
+import { LihatPendidikan } from './components/Lihat-master/LihatPendidikan'
 
-import {Golongan} from './components/Golongan'
+import { JenisSaranaPrasarana } from './components/JenisSaranaPrasarana'
+import { UpdateJenisSaranaPrasarana } from './components/Update-master/UpdateJenisSaranaPrasarana'
+import { LihatJenisSaranaPrasarana } from './components/Lihat-master/LihatJenisSaranaPrasarana'
 
-import {Eselon} from './components/Eselon'
-import {UpdateEselon} from './components/Update-master/UpdateEselon'
-import {LihatEselon} from './components/Lihat-master/LihatEselon'
+import { Golongan } from './components/Golongan'
 
-import {Jabatan} from './components/Jabatan'
-import {LihatJabatan} from './components/Lihat-master/LihatJabatan'
-import {TambahJabatan} from './components/Tambah-master/TambahJabatan'
+import { Eselon } from './components/Eselon'
+import { UpdateEselon } from './components/Update-master/UpdateEselon'
+import { LihatEselon } from './components/Lihat-master/LihatEselon'
 
-import {SumberInformasi} from './components/SumberInformasi'
-import {UpdateSumberInformasi} from './components/Update-master/UpdateSumberInformasi'
-import {LihatSumberInformasi} from './components/Lihat-master/LihatSumberInformasi'
+import { Jabatan } from './components/Jabatan'
+import { LihatJabatan } from './components/Lihat-master/LihatJabatan'
+import { TambahJabatan } from './components/Tambah-master/TambahJabatan'
 
-import {JenisKekerasan} from './components/JenisKekerasan'
-import {UpdateJenisKekerasan} from './components/Update-master/UpdateJenisKekerasan'
-import {LihatJenisKekerasan} from './components/Lihat-master/LihatJenisKekerasan'
+import { SumberInformasi } from './components/SumberInformasi'
+import { UpdateSumberInformasi } from './components/Update-master/UpdateSumberInformasi'
+import { LihatSumberInformasi } from './components/Lihat-master/LihatSumberInformasi'
+
+import { JenisKekerasan } from './components/JenisKekerasan'
+import { UpdateJenisKekerasan } from './components/Update-master/UpdateJenisKekerasan'
+import { LihatJenisKekerasan } from './components/Lihat-master/LihatJenisKekerasan'
 
 // import {JenisPenertiban} from './components/JenisPenertiban'
 // import {UpdateJenisPenertiban} from './components/Update-master/UpdateJenisPenertiban'
 // import {LihatJenisPenertiban} from './components/Lihat-master/LihatJenisPenertiban'
 
-import {JenisPenyelesaian} from './components/JenisPenyelesaian'
+import { JenisPenyelesaian } from './components/JenisPenyelesaian'
 
-import {StatusKenaikanPangkat} from './components/StatusKenaikanPangkat'
-import {LihatStatusKenaikanPangkat} from './components/Lihat-master/LihatStatusKenaikanPangkat'
+import { StatusKenaikanPangkat } from './components/StatusKenaikanPangkat'
+import { LihatStatusKenaikanPangkat } from './components/Lihat-master/LihatStatusKenaikanPangkat'
 
 const masterBreadCrumbs: Array<PageLink> = [
   {
@@ -783,6 +788,42 @@ const MasterPage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={masterBreadCrumbs}>Tambah Jenis Perda / Perkada</PageTitle>
               <TambahJenisPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='MapPerdaPerkada'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Mapping Perda / Perkada</PageTitle>
+              <MapPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='MapPerdaPerkada/LihatMapPerdaPerkada/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Lihat Map Perda / Perkada</PageTitle>
+              <LihatMapPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='MapPerdaPerkada/UpdateMapPerdaPerkada/:id'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Update Map Perda / Perkada</PageTitle>
+              <UpdateMapPerdaPerkada />
+            </>
+          }
+        />
+        <Route
+          path='MapPerdaPerkada/TambahMapPerdaPerkada'
+          element={
+            <>
+              <PageTitle breadcrumbs={masterBreadCrumbs}>Tambah Map Perda / Perkada</PageTitle>
+              <TambahMapPerdaPerkada />
             </>
           }
         />
