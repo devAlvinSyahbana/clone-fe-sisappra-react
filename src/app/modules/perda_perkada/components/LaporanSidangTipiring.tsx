@@ -8,6 +8,7 @@ import {
   updateKecamatanList,
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
+import buildQuery from 'odata-query-sequelize'
 import {RootState} from '../../../redux/store'
 import {unparse} from 'papaparse'
 import {Link, useNavigate} from 'react-router-dom'
@@ -24,7 +25,11 @@ import Swal from 'sweetalert2'
 import {string} from 'yup'
 import {array} from '@amcharts/amcharts5'
 import {KOTA_URL} from '../../master/components/Kota'
-import { KECAMATAN_URL, KELURAHAN_URL } from '../../kepegawaian/components/update-tabs/UpdateDataPribadi'
+import {
+  KECAMATAN_URL,
+  KELURAHAN_URL,
+} from '../../kepegawaian/components/update-tabs/UpdateDataPribadi'
+import {equal} from 'assert'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -149,13 +154,21 @@ export function LaporanSidangTipiring() {
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
   const [aksi, setAksi] = useState(0)
+  const dispatch = useDispatch()
+  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
+  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   // GET KOTA
   const [inputValKota, setDataKota] = useState({label: '', value: null})
   const filterKota = async (inputValue: string) => {
-    const response = await axios.get(KOTA_URL + '/find')
+    const filter = {nama: {startswith: inputValue}}
+    const query = buildQuery({filter})
+    console.log('query', query)
+    const response = await axios.get(KOTA_URL + '/combobox' + query)
     const json = await response.data.data
-    return json.map((i: any) => ({label: i.kota, value: i.kota}))
+    console.log(json)
+    return json.map((i: any) => ({label: i.text, value: i.value}))
   }
   const loadOptionsKota = (
     inputValue: string,
@@ -172,6 +185,9 @@ export function LaporanSidangTipiring() {
   //  GET KECAMATAN
   const [inputValKec, setDataKec] = useState({label: '', value: null})
   const filterKec = async (inputValue: string) => {
+    const filter = {nama: {startswith: inputValue}}
+    const query = buildQuery({filter})
+    console.log('query', query)
     const response = await axios.get(KECAMATAN_URL + '/find')
     const json = await response.data.data
     return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
@@ -188,21 +204,20 @@ export function LaporanSidangTipiring() {
   }
 
   // GET KELURAHAN
-   const [inputValKel, setDataKel] = useState({label: '', value: null})
-   const filterKel = async (inputValue: string) => {
-     const response = await axios.get(KELURAHAN_URL + '/find')
-     const json = await response.data.data
-     return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
-   }
-   const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
-     setTimeout(async () => {
-       callback(await filterKel(inputValue))
-     }, 1000)
-   }
-   const handleInputKel = (newValue: any) => {
-     setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
-   }
-
+  const [inputValKel, setDataKel] = useState({label: '', value: null})
+  const filterKel = async (inputValue: string) => {
+    const response = await axios.get(KELURAHAN_URL + '/find')
+    const json = await response.data.data
+    return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
+  }
+  const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+    setTimeout(async () => {
+      callback(await filterKel(inputValue))
+    }, 1000)
+  }
+  const handleInputKel = (newValue: any) => {
+    setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
+  }
 
   const [inputValJkeg, setDataJkeg] = useState([])
   const [inputValJpen, setDataJpen] = useState([])
@@ -287,6 +302,9 @@ export function LaporanSidangTipiring() {
     filterList()
     handleHakAkses()
     handleWilayahBidang()
+    dispatch(updateKotaList())
+    dispatch(updateKecamatanList())
+    dispatch(updateKelurahanList())
   }, [])
 
   const handleChangeInputTanggalAwal = (event: {
