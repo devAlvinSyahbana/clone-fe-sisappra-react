@@ -21,6 +21,7 @@ import { KTSVG } from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
+import { any, indexOf } from '@amcharts/amcharts5/.internal/core/util/Array'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -152,7 +153,7 @@ export function LaporanSidangTipiring() {
   const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   // GET KOTA
-  const [inputValKota, setDataKota] = useState({ label: '', value: null })
+  const [inputValKota, setDataKota] = useState<any>({})
   const filterKota = async (inputValue: string) => {
     const response = await axios.get(MASTERDATA_URL + "/kota");
     let json = await response.data.data
@@ -160,7 +161,7 @@ export function LaporanSidangTipiring() {
     if (inputValue !== "") {
       const mappingData: any[] = await json.filter((i: any) => {
         const valueLabel: string = i.nama.toLowerCase();
-        if (valueLabel.indexOf(inputValue.toLowerCase()) > 0) return i;
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
       })
       return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
 
@@ -183,26 +184,47 @@ export function LaporanSidangTipiring() {
     const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
     let json = await response.data.data
     setKec(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
-    setDataKota((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setDataKota({ ...newValue })
+    console.log(inputValKota)
   }
 
   //  GET KECAMATAN
-  const [inputValKec, setDataKec] = useState({ label: '', value: null })
+  const [inputValKec, setDataKec] = useState<any>({})
   const [inputKec, setKec] = useState<SelectOptionAutoCom[]>([])
 
   const filterKec = async (inputValue: string) => {
-    console.log('Input Kec', inputKec)
+    const filter = {
+      kode_kota: { eq: inputValKota.kode }
+    }
+    const query = buildQuery({ filter })
+    const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
+    let json = await response.data.data
+    console.log('Json',json)
+
+    if (inputValue !== "") {
+      const mappingData: any[] = await json.filter((i: any) => {
+        const valueLabel: string = i.nama.toLowerCase();
+        console.log('Label',valueLabel)
+        console.log('Input',inputValue)
+        console.log('index', i)
+
+        console.log('IndexOf',valueLabel.indexOf(inputValue.toLowerCase()))
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
+      })
+      console.log('Map', mappingData)
+      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+    }
     return inputKec
   }
 
-  const loadOptionsKec = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+  const loadOptionsKec = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void ) => {
+    console.log('loadOptionsKec hitted')
     setTimeout(async () => {
       callback(await filterKec(inputValue))
     }, 1000)
   }
 
   const handleInputKec = async (newValue: any) => {
-    console.log('value', newValue)
     const filter = {
       kode_kecamatan: { eq: newValue.kode }
     }
@@ -218,6 +240,27 @@ export function LaporanSidangTipiring() {
   const [inputKel, setKel] = useState<SelectOptionAutoCom[]>([])
 
   const filterKel = async (inputValue: string) => {
+    const filter = {
+      kode_kecamatan: { eq: inputValKec.kode }
+    }
+    const query = buildQuery({ filter })
+    const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
+    let json = await response.data.data
+    console.log('Json',json)
+
+    if (inputValue !== "") {
+      const mappingData: any[] = await json.filter((i: any) => {
+        const valueLabel: string = i.nama.toLowerCase();
+        console.log('Label',valueLabel)
+        console.log('Input',inputValue)
+        console.log('index', i)
+
+        console.log('IndexOf',valueLabel.indexOf(inputValue.toLowerCase()))
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
+      })
+      console.log('Map', mappingData)
+      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+    }
     return inputKel
   }
   const loadOptionsKel = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
@@ -232,12 +275,6 @@ export function LaporanSidangTipiring() {
   const [inputValJkeg, setDataJkeg] = useState([])
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
-
-  // // const kota = values.kejadian__kota_id
-  // // const kecamatan = values.kejadian__kecamatan_id
-  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
