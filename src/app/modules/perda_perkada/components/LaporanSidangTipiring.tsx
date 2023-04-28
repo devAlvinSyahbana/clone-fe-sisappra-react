@@ -181,7 +181,6 @@ export function LaporanSidangTipiring() {
     let json = await response.data.data
     setKec(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
     setDataKota({ ...newValue })
-    console.log(inputValKota)
   }
 
   //  GET KECAMATAN
@@ -715,49 +714,6 @@ export function LaporanSidangTipiring() {
     setTimeout(async () => {
       callback(await filterbidangwilayah(inputValue))
     }, 1000)
-  }
-  const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
-    setIdMasterBidangWilayah({ id: newValue.value })
-    setValMasterPelaksana({ value: null, label: '' })
-    // setValMasterJabatan({value: null, label: ''})
-    // console.log('cek', newValue.value)
-    const timeout = setTimeout(async () => {
-      const response = await axios.get(
-        `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
-      )
-      let items = response.data.data
-      Array.from(items).forEach(async (item: any) => {
-        item.label = item.nama
-        item.value = item.id
-      })
-      setMasterBidangWilayah(items)
-      // console.log(items)
-    }, 100)
-
-    return () => clearTimeout(timeout)
-  }
-  //end nama_hak_akses
-
-  // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
-  const [masterPelaksana, setMasterPelaksana] = useState([])
-  const filterKecamatan = async (inputValue: string) => {
-    const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
-      }`
-    )
-    const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
-  }
-  const loadOptionsKecamatan = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKecamatan(inputValue))
-    }, 500)
   }
 
   return (
