@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import {
-  changedValue,
-  reset,
-  isBanjir,
   updateKotaList,
   updateKecamatanList,
   updateKelurahanList,
@@ -21,7 +18,6 @@ import { KTSVG } from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
-import { any, indexOf } from '@amcharts/amcharts5/.internal/core/util/Array'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
