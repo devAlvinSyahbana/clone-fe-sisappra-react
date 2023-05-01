@@ -19,9 +19,8 @@ import clsx from 'clsx'
 import {Row} from 'react-bootstrap'
 
 // API
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
-export const KOTA_URL = `${API_URL}/master/kota`
-
+const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
+export const KOTA_URL = `${API_URL}/kota`
 
 // Theme for dark or light interface
 createTheme(
@@ -185,12 +184,13 @@ export function Kota() {
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
 
-  const handleFilter = async () => { //3
+  const handleFilter = async () => {
+    //3
     let uriParam = ''
     if (valFilterKota.val !== '') {
       uriParam += `${valFilterKota.val}`
     }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
@@ -198,11 +198,12 @@ export function Kota() {
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
-  const handleChangeInputKota = (event: { //5
+  const handleChangeInputKota = (event: {
+    //5
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setFilterKota({ val: event.target.value })
+    setFilterKota({val: event.target.value})
   }
 
   // START::CRUD
@@ -220,7 +221,6 @@ export function Kota() {
     )
   }
 
-
   let number = 1
   // Kolom table
   const columns = [
@@ -229,7 +229,7 @@ export function Kota() {
       selector: (row: any) => row.serial,
       sortable: true,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{ row.serial }</div>
+        return <div className='mb-2 mt-2'>{row.serial}</div>
       },
     },
     {
@@ -298,31 +298,31 @@ export function Kota() {
       setTotalRows(response.data.total_data)
       const timeout = setTimeout(() => {
         let items = response.data.data
-      Array.from(items).forEach((item: any, index: any) => {
-        item.serial = index + 1
-      })
-      setTemp(items)
-      setLoading(false)
-      }, 100);
-      
+        Array.from(items).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setTemp(items)
+        setLoading(false)
+      }, 100)
+
       return () => clearTimeout(timeout)
-      
     }
     fetchUsers(1)
     fetchDT(1)
   }, [qParamFind, perPage])
 
-  const fetchUsers = async (page: any) => { //urutan 3
+  const fetchUsers = async (page: any) => {
+    //urutan 3
     setLoading(true)
     const value = await axios.get(`${KOTA_URL}/find`)
     const timeout = setTimeout(() => {
       let items = value.data.data
-    Array.from(items).forEach((item: any, index: any) => {
-      item.serial = index + 1
-    })
-    setTemp(items)
-    setLoading(false)
-    }, 50);
+      Array.from(items).forEach((item: any, index: any) => {
+        item.serial = index + 1
+      })
+      setTemp(items)
+      setLoading(false)
+    }, 50)
     return () => clearTimeout(timeout)
   }
   // END :: VIEW
@@ -366,10 +366,7 @@ export function Kota() {
             setSubmitting(false)
           }
         } else {
-          const response = await axios.put(
-            `${KOTA_URL}/update/${idEditData.id}`,
-            bodyparam
-          )
+          const response = await axios.put(`${KOTA_URL}/update/${idEditData.id}`, bodyparam)
           if (response) {
             Swal.fire({
               icon: 'success',
@@ -402,7 +399,7 @@ export function Kota() {
     })
   }
   const [idEditData, setIdEditData] = useState<{id: number}>({id: 0})
-  
+
   // GET ID FOR UPDATE
   const getDetail = async (idparam: any) => {
     const {data} = await axios.get(`${KOTA_URL}/findone/${parseInt(idparam)}`)
@@ -421,7 +418,7 @@ export function Kota() {
     setAksi(1)
     getDetail(id)
   }
-  
+
   // DELETE
   const konfirDel = (id: number) => {
     Swal.fire({
@@ -483,8 +480,8 @@ export function Kota() {
           />
         </div>
         <div className='col-xxl-3 col-lg-3 col-md-3 col-sm-12'>
-          <Link to='#' onClick={handleFilter}> 
-          {/* 1 */}
+          <Link to='#' onClick={handleFilter}>
+            {/* 1 */}
             <button className='btn btn-light-primary me-2'>
               <KTSVG path='/media/icons/duotune/general/gen021.svg' className='svg-icon-2' />
               Cari
@@ -495,7 +492,7 @@ export function Kota() {
           <Link to='#i'>
             <button className='btn btn-primary me-2' onClick={doAdd}>
               <i className='fa-solid fa-plus'></i>
-              Tambah 
+              Tambah
             </button>
           </Link>
         </div>
@@ -511,26 +508,26 @@ export function Kota() {
                 <div className='form-group'>
                   <Form.Label>Kota</Form.Label>
                   <Form.Control
-                      name='kota'
-                      className={clsx(
-                        'form-control form-control-solid mb-1',
-                        {
-                          'is-invalid': formik.touched.kota && formik.errors.kota,
-                        },
-                        {
-                          'is-valid': formik.touched.kota && !formik.errors.kota,
-                        }
-                      )}
-                      onChange={handleChangeFormik}
-                      value={valuesFormik?.kota}
-                    />
-                    {formik.touched.kota && formik.errors.kota && (
-                      <div className='fv-plugins-message-container'>
-                        <div className='fv-help-block'>
-                          <span role='alert'>{formik.errors.kota}</span>
-                        </div>
-                      </div>
+                    name='kota'
+                    className={clsx(
+                      'form-control form-control-solid mb-1',
+                      {
+                        'is-invalid': formik.touched.kota && formik.errors.kota,
+                      },
+                      {
+                        'is-valid': formik.touched.kota && !formik.errors.kota,
+                      }
                     )}
+                    onChange={handleChangeFormik}
+                    value={valuesFormik?.kota}
+                  />
+                  {formik.touched.kota && formik.errors.kota && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{formik.errors.kota}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className='p-0 mt-6'>
                   <div className='text-center'>
@@ -557,32 +554,31 @@ export function Kota() {
         </Modal>
       </>
       <div className='table-responsive mt-5 ms-5 me-5 w'>
-      {temp?.length > 0 && temp && (
+        {temp?.length > 0 && temp && (
           <DataTable
-          columns={columns}
-          data={temp}
-          progressPending={loading}
-          customStyles={customStyles}
-          progressComponent={<LoadingAnimation />}
-          pagination
-          // paginationServer
-          paginationTotalRows={totalRows}
-          
-          //    expandableRowsComponent={(row) => (
-          //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
-          // )}
-          // expandableRowsComponent={ExpandedComponent}
-          // onChangeRowsPerPage={handlePerRowsChange}
-          // onChangePage={handlePageChange}
-          theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-          noDataComponent={
-            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-              <div className='d-flex flex-column'>
-                <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+            columns={columns}
+            data={temp}
+            progressPending={loading}
+            customStyles={customStyles}
+            progressComponent={<LoadingAnimation />}
+            pagination
+            // paginationServer
+            paginationTotalRows={totalRows}
+            //    expandableRowsComponent={(row) => (
+            //   <ExpandedComponent row={row} handleInputChange={handleInputChange} />
+            // )}
+            // expandableRowsComponent={ExpandedComponent}
+            // onChangeRowsPerPage={handlePerRowsChange}
+            // onChangePage={handlePageChange}
+            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+            noDataComponent={
+              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                <div className='d-flex flex-column'>
+                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                </div>
               </div>
-            </div>
-          }
-        />
+            }
+          />
         )}
       </div>
       {/* end::Body */}
