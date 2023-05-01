@@ -13,8 +13,8 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import {Kecamatan} from './Kecamatan'
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const KELURAHAN_URL = `${API_URL}/master/kelurahan` //http://localhost:3000/master/kelurahan
+const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL //http://localhost:3000
+export const KELURAHAN_URL = `${API_URL}/kelurahan` //http://localhost:3000/master/kelurahan
 
 createTheme(
   'darkMetro',

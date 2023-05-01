@@ -1,13 +1,11 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import {
-  changedValue,
-  reset,
-  isBanjir,
   updateKotaList,
   updateKecamatanList,
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
+import buildQuery from 'odata-query-sequelize'
 import {RootState} from '../../../redux/store'
 import {unparse} from 'papaparse'
 import {Link, useNavigate} from 'react-router-dom'
@@ -15,17 +13,11 @@ import {useDispatch, useSelector} from 'react-redux'
 import {DtSidangTipiring} from './datatables/data-table-laporan-minol'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import {Button, ButtonGroup, Dropdown, DropdownButton} from 'react-bootstrap'
-import {LaporanPerdaPerkadaHeader} from './LaporanPerdaPerkadaHeader'
+import {Button} from 'react-bootstrap'
 import {KTSVG} from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
-import {string} from 'yup'
-import {array} from '@amcharts/amcharts5'
-import { KOTA_URL } from '../../master/components/Kota'
-import { KECAMATAN_URL } from '../../master/components/Kecamatan'
-import { KELURAHAN_URL } from '../../master/components/Kelurahan'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -146,9 +138,11 @@ interface minolInterface {
   lainnya: number
 }
 
+// GET DATA
 interface SelectOptionAutoCom {
   readonly value: string
   readonly label: string
+  readonly kode: string
 }
 
 export function LaporanMinol() {
@@ -158,13 +152,25 @@ export function LaporanMinol() {
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
   const [aksi, setAksi] = useState(0)
+  const dispatch = useDispatch()
+  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
+  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
+  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   // GET KOTA
-  const [inputValKota, setDataKota] = useState({label: '', value: null})
+  const [inputValKota, setDataKota] = useState<any>({})
   const filterKota = async (inputValue: string) => {
-    const response = await axios.get(KOTA_URL + '/find')
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.kota, value: i.kota}))
+    const response = await axios.get(MASTERDATA_URL + '/kota')
+    let json = await response.data.data
+
+    if (inputValue !== '') {
+      const mappingData: any[] = await json.filter((i: any) => {
+        const valueLabel: string = i.nama.toLowerCase()
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
+      })
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
+    }
+    return json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
   }
   const loadOptionsKota = (
     inputValue: string,
@@ -174,36 +180,87 @@ export function LaporanMinol() {
       callback(await filterKota(inputValue))
     }, 1000)
   }
-  const handleInputKota = (newValue: any) => {
-    setDataKota((prevstate: any) => ({...prevstate, ...newValue}))
+  const handleInputKota = async (newValue: any) => {
+    const filter = {
+      kode_kota: {eq: newValue.kode},
+    }
+    const query = buildQuery({filter})
+    const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
+    let json = await response.data.data
+    setKec(json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode})))
+    setDataKota({...newValue})
   }
 
   //  GET KECAMATAN
-  const [inputValKec, setDataKec] = useState({label: '', value: null})
+  const [inputValKec, setDataKec] = useState<any>({})
+  const [inputKec, setKec] = useState<SelectOptionAutoCom[]>([])
+
   const filterKec = async (inputValue: string) => {
-    const response = await axios.get(KECAMATAN_URL + '/find')
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.kecamatan, value: i.id}))
+    const filter = {
+      kode_kota: {eq: inputValKota.kode},
+    }
+    const query = buildQuery({filter})
+    const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
+    let json = await response.data.data
+
+    if (inputValue !== '') {
+      const mappingData: any[] = await json.filter((i: any) => {
+        const valueLabel: string = i.nama.toLowerCase()
+
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
+      })
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
+    }
+    return inputKec
   }
 
-  const loadOptionsKec = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+  const loadOptionsKec = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
       callback(await filterKec(inputValue))
     }, 1000)
   }
 
-  const handleInputKec = (newValue: any) => {
+  const handleInputKec = async (newValue: any) => {
+    const filter = {
+      kode_kecamatan: {eq: newValue.kode},
+    }
+    const query = buildQuery({filter})
+    const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
+    let json = await response.data.data
+    setKel(json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode})))
     setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   // GET KELURAHAN
   const [inputValKel, setDataKel] = useState({label: '', value: null})
+  const [inputKel, setKel] = useState<SelectOptionAutoCom[]>([])
+
   const filterKel = async (inputValue: string) => {
-    const response = await axios.get(KELURAHAN_URL + '/find')
-    const json = await response.data.data
-    return json.map((i: any) => ({label: i.kelurahan, value: i.id}))
+    const filter = {
+      kode_kecamatan: {eq: inputValKec.kode},
+    }
+    const query = buildQuery({filter})
+    const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
+    let json = await response.data.data
+
+    if (inputValue !== '') {
+      const mappingData: any[] = await json.filter((i: any) => {
+        const valueLabel: string = i.nama.toLowerCase()
+
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
+      })
+
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
+    }
+    return inputKel
   }
-  const loadOptionsKel = (inputValue: string, callback: (options: SelectOption[]) => void) => {
+  const loadOptionsKel = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
       callback(await filterKel(inputValue))
     }, 1000)
@@ -248,7 +305,7 @@ export function LaporanMinol() {
     const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.setAttribute('download', 'LAPORAN PENEGAKAN PERDA/PERKADA.csv')
+    link.setAttribute('download', 'LAPORAN PENERTIBAN MINUM BERALKOHOL.csv')
     document.body.appendChild(link)
     link.click()
     link.remove()
@@ -260,7 +317,6 @@ export function LaporanMinol() {
     const resKelurahan = await axios.get(`${MASTER_URL}/kelurahan/find`)
     const resJPen = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
     const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-    const resPel = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/find`)
     const resJPer = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
 
     const dataKota = resKota.data.data.map((d: any) => ({
@@ -299,6 +355,9 @@ export function LaporanMinol() {
     filterList()
     handleHakAkses()
     handleWilayahBidang()
+    dispatch(updateKotaList())
+    dispatch(updateKecamatanList())
+    dispatch(updateKelurahanList())
   }, [])
 
   const handleChangeInputTanggalAwal = (event: {
@@ -862,7 +921,7 @@ export function LaporanMinol() {
                           cacheOptions
                           // value={inputValKec.value ? inputValKec : {value: '', label: 'Pilih'}}
                           loadOptions={loadOptionsKec}
-                          defaultOptions
+                          defaultOptions={inputKec}
                           onChange={handleInputKec}
                           placeholder={'Pilih Kecamatan'}
                           styles={
@@ -883,7 +942,7 @@ export function LaporanMinol() {
                         <AsyncSelect
                           cacheOptions
                           loadOptions={loadOptionsKel}
-                          defaultOptions
+                          defaultOptions={inputKel}
                           onChange={handleInputKel}
                           placeholder={'Pilih Kelurahan'}
                           styles={

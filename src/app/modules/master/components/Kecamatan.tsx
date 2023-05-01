@@ -12,8 +12,8 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
-const API_URL = process.env.REACT_APP_SISAPPRA_API_URL //http://localhost:3000
-export const KECAMATAN_URL = `${API_URL}/master/kecamatan` //http://localhost:3000/master/kecamatan
+const API_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL //http://localhost:3000
+export const KECAMATAN_URL = `${API_URL}/kecamatan` //http://localhost:3000/master/kecamatan
 
 createTheme(
   'darkMetro',

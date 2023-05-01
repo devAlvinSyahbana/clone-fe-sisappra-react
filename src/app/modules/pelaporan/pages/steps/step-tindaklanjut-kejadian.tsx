@@ -319,6 +319,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
                 className='form-control'
                 onFocus={(e: any) => e.target.select()}
                 onChange={(e) => setValueP(Number(e.target.value))}
+                placeholder={'Masukkan Jumlah Korban'}
               />
             </div>
           </div>
@@ -333,6 +334,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
                 className='form-control'
                 onFocus={(e: any) => e.target.select()}
                 onChange={(e) => setValueW(Number(e.target.value))}
+                placeholder={'Masukkan Jumlah Korban'}
               />
             </div>
           </div>
@@ -483,6 +485,7 @@ export const StepTindakLanjutKejadian: FC<StepDetailKejadianProps> = ({
                     className='form-control'
                     onFocus={(e: any) => e.target.select()}
                     onChange={(e) => setValueKM(Number(e.target.value))}
+                    placeholder={'Masukkan Jumlah Korban'}
                   />
                 </div>
               </div>
