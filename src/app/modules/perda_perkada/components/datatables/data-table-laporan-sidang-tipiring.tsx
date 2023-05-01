@@ -106,3 +106,123 @@ export const DtSidangTipiring: FC<any> = ({
     </div>
   )
 }
+
+export const DtSidangTipiringPerda: FC<any> = ({
+  data,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+  hakAkses,
+  wilayahBidang,
+  konfirDel,
+  theme,
+}) => {
+  const navigate = useNavigate()
+  const GetHakAkses = ({row}: {row: number}) => {
+    const handleHakAkses = hakAkses.find((i: any) => i.id === row)
+    return <>{handleHakAkses?.nama_hak_akses}</>
+  }
+
+  var num = 1
+  const columns = [
+    {
+      name: 'No',
+      width: '80px',
+      sortField: 'id',
+      wrap: true,
+      selector: (row: any) => row.no,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.no}</div>
+      },
+    },
+    {
+      name: 'Wilayah',
+      wrap: true,
+      center: false,
+      width: '300px',
+      sortField: 'wilayah',
+      selector: (row: any) => row.wilayah,
+    },
+    {
+      name: 'Perda/Perkada Yang Dilanggar',
+      center: true,
+      width: '300px',
+      sortField: 'perda_yang_dilanggar',
+      selector: (row: any) => row.perda_yang_dilanggar,
+    },
+    {
+      name: 'Jenis Tertib',
+      center: true,
+      width: '300px',
+      sortField: 'jenis_tertib',
+      selector: (row: any) => row.jenis_tertib,
+    },
+    {
+      name: 'Jenis Pelanggaran',
+      center: true,
+      width: '300px',
+      sortField: 'jenis_pelanggaran',
+      selector: (row: any) => row.jenis_pelanggaran,
+    },
+    {
+      name: 'Jenis Pasal',
+      center: true,
+      width: '300px',
+      sortField: 'jenis_pasal',
+      selector: (row: any) => row.jenis_pasal,
+    },
+    {
+      name: 'Jenis Penertiban',
+      center: true,
+      width: '300px',
+      sortField: 'jenis_penertiban',
+      selector: (row: any) => row.jenis_penertiban,
+    },
+    {
+      name: 'Jumlah Pelanggar',
+      center: true,
+      width: '300px',
+      sortField: 'jumlah_pelanggar',
+      selector: (row: any) => row.jumlah_pelanggar,
+    },
+    {
+      name: 'Jumlah Pelanggar Tidak Hadir',
+      center: true,
+      width: '300px',
+      sortField: 'jumlah_pelanggar_tidak_hadir',
+      selector: (row: any) => row.jumlah_pelanggar_tidak_hadir,
+    },
+    {
+      name: 'Verstek',
+      center: true,
+      width: '300px',
+      sortField: 'verstek',
+      selector: (row: any) => row.verstek,
+    },
+    {
+      name: 'Hari dan Tangal Sidang',
+      center: true,
+      width: '300px',
+      sortField: 'hari_tanggal_sidang',
+      selector: (row: any) => row.hari_tanggal_sidang,
+    },
+  ]
+
+  return (
+    <div>
+      <DataTable
+        columns={columns}
+        data={data}
+        progressPending={loading}
+        pagination
+        paginationServer
+        progressComponent={<LoadingAnimation />}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+        theme={theme}
+      />
+    </div>
+  )
+}

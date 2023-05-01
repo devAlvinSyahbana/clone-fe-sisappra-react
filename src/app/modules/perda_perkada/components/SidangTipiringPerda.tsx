@@ -10,7 +10,7 @@ import {RootState} from '../../../redux/store'
 import {unparse} from 'papaparse'
 import {Link, useNavigate} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
-import {DtSidangTipiring} from './datatables/data-table-laporan-sidang-tipiring'
+import {DtSidangTipiringPerda} from './datatables/data-table-laporan-sidang-tipiring'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import {Button} from 'react-bootstrap'
@@ -122,11 +122,15 @@ export const MASTER_URL = `${API_URL}/master`
 interface SidangTipiringInterface {
   no: number
   wilayah: string
-  jumlah_penertiban: number
+  perda_yang_dilanggar: number
+  jenis_tertib: number
+  jenis_pelanggaran: number
+  jenis_pasal: number
+  jenis_penertiban: number
   jumlah_pelanggar: number
   jumlah_pelanggar_tidak_hadir: number
   verstek: number
-  denda_pengadilan: string
+  hari_tanggal_sidang: string
 }
 
 // GET DATA
@@ -136,7 +140,7 @@ interface SelectOptionAutoCom {
   readonly kode: string
 }
 
-export function LaporanSidangTipiring() {
+export function SidangTipiringPerda() {
   const navigate = useNavigate()
   const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -477,56 +481,80 @@ export function LaporanSidangTipiring() {
           {
             no: 1,
             wilayah: 'KOTA ADMINISTRASI JAKARTA PUSAT',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 5,
+            perda_yang_dilanggar: 0,
+            jenis_tertib: 0,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '2.000.000',
+            hari_tanggal_sidang: 'MINGGU 30 APRIL 2023',
           },
           {
             no: 2,
             wilayah: 'KOTA ADMINISTRASI JAKARTA UTARA',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '4.000.000',
+            hari_tanggal_sidang: 'MINGGU 29 APRIL 2023',
           },
           {
             no: 3,
             wilayah: 'KOTA ADMINISTRASI JAKARTA BARAT',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '6.000.000',
+            hari_tanggal_sidang: 'MINGGU 28 APRIL 2023',
           },
           {
             no: 4,
             wilayah: 'KOTA ADMINISTRASI JAKARTA SELATAN',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '8.000.000',
+            hari_tanggal_sidang: 'MINGGU 27 APRIL 2023',
           },
           {
             no: 5,
             wilayah: 'KOTA ADMINISTRASI JAKARTA TIMUR',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '10.000.000',
+            hari_tanggal_sidang: 'MINGGU 26 APRIL 2023',
           },
           {
             no: 6,
             wilayah: 'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '12.000.000',
+            hari_tanggal_sidang: 'MINGGU 25 APRIL 2023',
           },
         ]
         setData(arr)
@@ -1029,21 +1057,21 @@ export function LaporanSidangTipiring() {
       </div>
       <div className='row'>
         <div className='col fs-4 mb-2 fw-semibold text-center'>
-          LAPORAN PELAKSANAAN SIDANG TINDAK PIDANA RINGAN (TIPIRING) HASIL PENEGAKAN PERDA/PERKADA
+          DATA KASUS PELANGGARAN PERDA DAN / ATAU PERKADA YANG DILAKUKAN SIDANG TINDAK PIDANA RINGAN
         </div>
       </div>
       <div className='row'>
         <div className='col fs-4 mb-2 fw-semibold text-center'>
-          PADA SATPOL PP......................................
+          PADA SATUAN POLISI PAMONG PRAJA …...................................................
         </div>
       </div>
       <div className='row'>
         <div className='col fs-4 mb-6 fw-semibold text-center'>
-          PERIODE .................... s/d .......................
+          PERIODE ....................... s/d .......................
         </div>
       </div>
       <div className='card-body py-4'>
-        <DtSidangTipiring
+        <DtSidangTipiringPerda
           data={data}
           totalRows={totalRows}
           handlePerRowsChange={handlePerRowsChange}
