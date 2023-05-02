@@ -1,20 +1,11 @@
-import { useState, useEffect } from 'react'
 import axios from 'axios'
-import {
-  changedValue,
-  reset,
-  isBanjir,
-  updateKotaList,
-  updateKecamatanList,
-  updateKelurahanList,
-} from '../../../redux/slices/pelaporan-kejadian.slice'
-import { RootState } from '../../../redux/store'
 import { unparse } from 'papaparse'
+import { Button } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
 import { DtPerdaPerkada } from './datatables/data-table-laporan-perda-perkada'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
 import { KTSVG } from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
@@ -139,25 +130,16 @@ export function LaporanPerdaPerkada() {
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
-  const [aksi, setAksi] = useState(0)
-
-  const [inputValKota, setDataKota] = useState([])
-  const [inputValKec, setDataKec] = useState([])
-  const [inputValKel, setDataKel] = useState([])
   const [inputValJkeg, setDataJkeg] = useState([])
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
 
-  // // const kota = values.kejadian__kota_id
-  // // const kecamatan = values.kejadian__kecamatan_id
-  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
   const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
-  const [jenisPenertibanList, setJenisPenertibanList] = useState([])
   const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
+  const [jenisPenertibanList, setJenisPenertibanList] = useState([])
+
   const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
   const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
 
@@ -185,25 +167,9 @@ export function LaporanPerdaPerkada() {
 
 
   const filterList = async () => {
-    const resKota = await axios.get(`${MASTER_URL}/kota/find`)
-    const resKecamatan = await axios.get(`${MASTER_URL}/kecamatan/find`)
-    const resKelurahan = await axios.get(`${MASTER_URL}/kelurahan/find`)
     const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const resJPen = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
     const resJPer = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
-
-    const dataKota = resKota.data.data.map((d: any) => ({
-      label: d.kota,
-      value: String(d.kode_kota),
-    }))
-    const dataKec = resKecamatan.data.data.map((d: any) => ({
-      label: d.kecamatan,
-      value: String(d.kode_kecamatan),
-    }))
-    const dataKel = resKelurahan.data.data.map((d: any) => ({
-      label: d.kelurahan,
-      value: String(d.kode_kelurahan),
-    }))
     const dataJKeg = resJKeg.data.data.map((d: any) => ({
       label: d.nama,
       value: String(d.id),
@@ -216,9 +182,6 @@ export function LaporanPerdaPerkada() {
       label: d.judul,
       value: String(d.id),
     }))
-    setDataKota(dataKota)
-    setDataKec(dataKec)
-    setDataKel(dataKel)
     setDataJkeg(dataJKeg)
     setDataJpen(dataJPen)
     setDataJper(dataJPer)
@@ -263,10 +226,10 @@ export function LaporanPerdaPerkada() {
   }
 
   const filterJenisPenertiban = async (inputValue: string) => {
-    const response = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
+    const response = await axios.get(`${MASTERDATA_URL}/jenis-penertiban/combobox`)
     const json = await response.data.data
     setJenisPenertibanList(json)
-    return json.map((i: any) => ({ label: i.jenis_penertiban, value: i.id }))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsJenisPenertiban = (
     inputValue: string,
@@ -344,25 +307,25 @@ export function LaporanPerdaPerkada() {
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
-        // const data = res.data.data.map((d: any) => ({
-        //   id: d.id,
-        //   no: d.id,
-        //   pelaksana: d.created_by,
-        //   tanggal_kegiatan: d.kegiatan__tanggal,
-        //   waktu_mulai: d.kegiatan__jam_start,
-        //   waktu_selesai: d.kegiatan__jam_end,
-        //   jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-        //   uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-        //   lokasi: d.kegiatan__lokasi,
-        //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
-        //   denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
-        //   denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
-        // }))
-        // Array.from(data).forEach((item: any, index: any) => {
-        //   item.serial = index + 1
-        // })
-        const arr: jenisPenertibanInterface[] = [{ no: 1, jenis_penertiban: 'TERTIB JALAN, ANGKUTAN JALAN DAN ANGKUTAN SUNGAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 2, jenis_penertiban: 'TERTIB JALUR HIJAU, TAMAN DAN TEMPAT UMUM', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 3, jenis_penertiban: 'TERTIB LINGKUNGAN', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 4, jenis_penertiban: 'TERTIB TEMPAT USAHA', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 5, jenis_penertiban: 'TERTIB SUNGAI, SALURAN, KOLAM DAN LEPAS PANTAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
-        setData(arr)
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kegiatan: d.kegiatan__tanggal,
+          waktu_mulai: d.kegiatan__jam_start,
+          waktu_selesai: d.kegiatan__jam_end,
+          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+          lokasi: d.kegiatan__lokasi,
+          // jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
+          denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
+          denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+        }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        // const arr: jenisPenertibanInterface[] = [{ no: 1, jenis_penertiban: 'TERTIB JALAN, ANGKUTAN JALAN DAN ANGKUTAN SUNGAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 2, jenis_penertiban: 'TERTIB JALUR HIJAU, TAMAN DAN TEMPAT UMUM', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 3, jenis_penertiban: 'TERTIB LINGKUNGAN', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 4, jenis_penertiban: 'TERTIB TEMPAT USAHA', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 5, jenis_penertiban: 'TERTIB SUNGAI, SALURAN, KOLAM DAN LEPAS PANTAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
+        setData(data)
         setTotalRows(5)
         setLoading(false)
         return [data, setData] as const
@@ -373,9 +336,32 @@ export function LaporanPerdaPerkada() {
     dataPerdaPerkada(0)
   }, [qParamFind, perPage])
 
+  const [penertiban, setPenertiban] = useState([])
+  const [qParamFindPenertiban, setUriFindPenertiban] = useState({strParamPenertiban: ''})
+
+  const dataPenertiban = async (page:number) => {
+    const response = await axios.get(`${MASTERDATA_URL}/jenis-penertiban${qParamFindPenertiban.strParamPenertiban}?%24top=18&%24page=${page}`)
+    const dataPenertiban = response.data.data.map((d:any) => ({
+      id: d.id,
+      no: d.id,
+      jenis_penertiban: d.nama,
+      kode: d.kode,
+    }))
+    Array.from(dataPenertiban).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+    setPenertiban(dataPenertiban)
+
+    return [penertiban, setPenertiban] as const
+  }
+
+  useEffect(() => {
+    dataPenertiban(0)
+  }, [qParamFindPenertiban, perPage])
+
   const handlePageChange = (page: number) => {
     dataPerdaPerkada(page - 1)
-    console.log('ini page', page)
+    dataPenertiban(page - 1)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -524,64 +510,6 @@ export function LaporanPerdaPerkada() {
     return [data, setData] as const
   }
 
-  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
-  const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
-  const filterbidangwilayah = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
-    const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
-  }
-  const loadOptionsbidangwilayah = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterbidangwilayah(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
-    setIdMasterBidangWilayah({ id: newValue.value })
-    setValMasterPelaksana({ value: null, label: '' })
-    const timeout = setTimeout(async () => {
-      const response = await axios.get(
-        `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
-      )
-      let items = response.data.data
-      Array.from(items).forEach(async (item: any) => {
-        item.label = item.nama
-        item.value = item.id
-      })
-      setMasterBidangWilayah(items)
-      // console.log(items)
-    }, 100)
-
-    return () => clearTimeout(timeout)
-  }
-  //end nama_hak_akses
-
-  // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
-  const [masterPelaksana, setMasterPelaksana] = useState([])
-  const filterKecamatan = async (inputValue: string) => {
-    const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
-      }`
-    )
-    const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
-  }
-  const loadOptionsKecamatan = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterKecamatan(inputValue))
-    }, 500)
-  }
-
   return (
     <>
       <LaporanPerdaPerkadaHeader />
@@ -644,6 +572,7 @@ export function LaporanPerdaPerkada() {
                             value={valJenisKegiatan}
                             loadOptions={loadOptionsJenisKegiatan}
                             onChange={handleChangeInputJenisKegiatan}
+                            placeholder= 'Pilih Jenis Kegiatan'
                             styles={
                               calculatedMode === 'dark'
                                 ? reactSelectDarkThem
@@ -669,6 +598,7 @@ export function LaporanPerdaPerkada() {
                             value={valJenisPenertiban}
                             loadOptions={loadOptionsJenisPenertiban}
                             onChange={handleChangeInputJenisPenertiban}
+                            placeholder= 'Pilih Jenis Penertiban'
                             styles={
                               calculatedMode === 'dark'
                                 ? reactSelectDarkThem
@@ -693,6 +623,7 @@ export function LaporanPerdaPerkada() {
                             defaultOptions
                             value={valJenisPerdaPerkada}
                             loadOptions={loadOptionsJenisPerdaPerkada}
+                            placeholder= {'Pilih Jenis Perda Perkada'}
                             onChange={handleChangeInputJenisPerdaPerkada}
                             styles={
                               calculatedMode === 'dark'
@@ -845,7 +776,9 @@ export function LaporanPerdaPerkada() {
             totalRows={totalRows}
             handlePerRowsChange={handlePerRowsChange}
             handlePageChange={handlePageChange}
+            progressComponent={<LoadingAnimation />}
             loading={loading}
+            penertiban={penertiban}
             jenisKegiatanList={jenisKegiatanList}
             hakAkses={hakAkses}
             wilayahBidang={wilayahBidang}

@@ -20,6 +20,10 @@ export interface PelaporanKegiatanState extends Record<string, any> {
   kegiatan__jam_end: string
   kegiatan__lokasi: string
 
+  kegiatan__kota_id: number
+  kegiatan__kecamatan_id: number
+  kegiatan__kelurahan_id: number
+
   tindak_lanjut__administrasi__jenis_pasal_id: number
   // tindak_lanjut__administrasi__jenis_penertiban: string
   // tindak_lanjut__administrasi__jenis_pelanggaran: string
@@ -59,6 +63,10 @@ export const initialState: PelaporanKegiatanState = {
   list_jenis_pelanggaran_bangunan: [],
 
   filter_jenis_kegiatan_id: 0,
+
+  kegiatan__kota_id: 0,
+  kegiatan__kecamatan_id: 0,
+  kegiatan__kelurahan_id: 0,
 
   kegiatan__jenis_kegiatan_id: 0,
   kegiatan__jumlah_personil: 0,
@@ -145,6 +153,12 @@ export const createSchemaPelaporanKegiatan = [
       .required()
       .label('Jenis Kegiatan'),
     kegiatan__jenis_kegiatan_selection: Yup.object().required(),
+    kegiatan__kota_id: Yup.number().integer().moreThan(0).required().label('Kota'),
+    kota_selection: Yup.object().required(),
+    kegiatan__kecamatan_id: Yup.number().integer().moreThan(0).required().label('Kecamatan'),
+    kecamatan_selection: Yup.object().required(),
+    kegiatan__kelurahan_id: Yup.number().integer().moreThan(0).required().label('Kelurahan'),
+    kegiatan_selection: Yup.object().required(),
     kegiatan__jumlah_personil: Yup.number()
       .integer()
       .moreThan(0)
@@ -371,6 +385,44 @@ export const updateJenisKegiatanList: any = createAsyncThunk(
     return data
   }
 )
+
+export const updateKotaList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateKotaList',
+  async (thunkAPI) => {
+    const res = await axios.get(`${MASTER_URL}/kota/combobox`)
+    const data = res.data.data.map((d: any) => ({label: d.text, value: String(d.value)}))
+    return data
+  }
+)
+export const updateKecamatanList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateKecamatanList',
+  async (thunkAPI) => {
+    const res = await axios.get(
+      `${MASTER_URL}/kecamatan/?%24top=100&%24select=id%2C%20nama%2C%20kode%2C%20kode_kota`
+    )
+    const data = res.data.data.map((d: any) => ({
+      label: d.nama,
+      value: String(d.id),
+      kodeKota: d.kode_kota,
+    }))
+    return data
+  }
+)
+export const updateKelurahanList: any = createAsyncThunk(
+  'pelaporanKegiatan/updateKelurahanList',
+  async () => {
+    const res = await axios.get(
+      `${MASTER_URL}/kelurahan/?%24top=300&%24select=id%2C%20nama%2C%20kode%2C%20kode_kecamatan`
+    )
+    const data = res.data.data.map((d: any) => ({
+      label: d.nama,
+      value: String(d.id),
+      kodeKecamatan: d.kode_kecamatan,
+    }))
+    return data
+  }
+)
+
 export const updateJenisAsalLaporanList: any = createAsyncThunk(
   'pelaporanKegiatan/updateJenisAsalLaporanList',
   async (thunkAPI) => {
@@ -492,6 +544,15 @@ export const pelaporanKegiatanSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(updateJenisKegiatanList.fulfilled, (state, action) => {
       state.list_jenis_kegiatan = action.payload
+    })
+    builder.addCase(updateKotaList.fulfilled, (state, action) => {
+      state.list_kota = action.payload
+    })
+    builder.addCase(updateKecamatanList.fulfilled, (state, action) => {
+      state.list_kecamatan = action.payload
+    })
+    builder.addCase(updateKelurahanList.fulfilled, (state, action) => {
+      state.list_kelurahan = action.payload
     })
     builder.addCase(updateJenisAsalLaporanList.fulfilled, (state, action) => {
       state.list_jenis_asal_laporan = action.payload

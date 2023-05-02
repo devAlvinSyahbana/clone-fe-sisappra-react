@@ -1,28 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FC } from 'react'
 import axios from 'axios'
-import {
-    changedValue,
-    reset,
-    isBanjir,
-    updateKotaList,
-    updateKecamatanList,
-    updateKelurahanList,
-} from '../../../redux/slices/pelaporan-kejadian.slice'
-import { RootState } from '../../../redux/store'
 import { unparse } from 'papaparse'
+import buildQuery from 'odata-query-sequelize'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { DtSidangTipiring } from './datatables/data-table-laporan-minol'
+import { DtPPKM } from './datatables/data-table-laporan-ppkm'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
-import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
+import { Button } from 'react-bootstrap'
 import { KTSVG } from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
-import { string } from 'yup'
-import { array } from '@amcharts/amcharts5'
+
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -124,7 +113,7 @@ export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const MASTER_URL = `${API_URL}/master`
 
-interface minolInterface {
+interface PPKMInterface {
     no: number
     pelaksana_kegiatan: string
     jumlah_minol: number
@@ -143,26 +132,21 @@ interface minolInterface {
     lainnya: number
 }
 
+interface SelectOptionAutoCom {
+    readonly label: string
+    readonly value: string
+    readonly kode: string
+}
+
 export function LaporanPPKM() {
     const navigate = useNavigate()
     const { mode } = useThemeMode()
     const calculatedMode = mode === 'system' ? systemMode : mode
     const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
-    const [aksi, setAksi] = useState(0)
-
-    const [inputValKota, setDataKota] = useState([])
-    const [inputValKec, setDataKec] = useState([])
-    const [inputValKel, setDataKel] = useState([])
     const [inputValJkeg, setDataJkeg] = useState([])
     const [inputValJpen, setDataJpen] = useState([])
     const [inputValJper, setDataJper] = useState([])
-
-    // // const kota = values.kejadian__kota_id
-    // // const kecamatan = values.kejadian__kecamatan_id
-    // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-    // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-    // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
     const [jenisKegiatanList, setJenisKegiatanList] = useState([])
     const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
@@ -176,7 +160,7 @@ export function LaporanPPKM() {
     const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
     const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
 
-    const [data, setData] = useState<minolInterface[]>([])
+    const [data, setData] = useState<PPKMInterface[]>([])
     const [loading, setLoading] = useState(false)
     const [totalRows, setTotalRows] = useState(0)
     const [perPage, setPerPage] = useState(10)
@@ -193,49 +177,7 @@ export function LaporanPPKM() {
         link.remove()
     }
 
-
-    const filterList = async () => {
-        const resKota = await axios.get(`${MASTER_URL}/kota/find`)
-        const resKecamatan = await axios.get(`${MASTER_URL}/kecamatan/find`)
-        const resKelurahan = await axios.get(`${MASTER_URL}/kelurahan/find`)
-        const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-        const resJPen = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
-        const resJPer = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
-
-        const dataKota = resKota.data.data.map((d: any) => ({
-            label: d.kota,
-            value: String(d.kode_kota),
-        }))
-        const dataKec = resKecamatan.data.data.map((d: any) => ({
-            label: d.kecamatan,
-            value: String(d.kode_kecamatan),
-        }))
-        const dataKel = resKelurahan.data.data.map((d: any) => ({
-            label: d.kelurahan,
-            value: String(d.kode_kelurahan),
-        }))
-        const dataJKeg = resJKeg.data.data.map((d: any) => ({
-            label: d.nama,
-            value: String(d.id),
-        }))
-        const dataJPen = resJPen.data.data.map((d: any) => ({
-            label: d.jenis_penertiban,
-            value: String(d.id),
-        }))
-        const dataJPer = resJPer.data.data.map((d: any) => ({
-            label: d.judul,
-            value: String(d.id),
-        }))
-        setDataKota(dataKota)
-        setDataKec(dataKec)
-        setDataKel(dataKel)
-        setDataJkeg(dataJKeg)
-        setDataJpen(dataJPen)
-        setDataJper(dataJPer)
-    }
-
     useEffect(() => {
-        filterList()
         handleHakAkses()
         handleWilayahBidang()
     }, [])
@@ -252,59 +194,6 @@ export function LaporanPPKM() {
         target: { value: any; name: any }
     }) => {
         setTanggalAkhir({ val: event.target.value })
-    }
-
-    const filterJenisKegiatan = async (inputValue: string) => {
-        const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-        const json = await response.data.data
-        setJenisKegiatanList(json)
-        return json.map((i: any) => ({ label: i.text, value: i.value }))
-    }
-    const loadOptionsJenisKegiatan = (
-        inputValue: string,
-        callback: (options: SelectOption[]) => void
-    ) => {
-        setTimeout(async () => {
-            callback(await filterJenisKegiatan(inputValue))
-        }, 1000)
-    }
-    const handleChangeInputJenisKegiatan = (newValue: any) => {
-        setValJenisKegiatan((prevstate: any) => ({ ...prevstate, ...newValue }))
-    }
-
-    const filterJenisPenertiban = async (inputValue: string) => {
-        const response = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
-        const json = await response.data.data
-        setJenisPenertibanList(json)
-        return json.map((i: any) => ({ label: i.jenis_penertiban, value: i.id }))
-    }
-    const loadOptionsJenisPenertiban = (
-        inputValue: string,
-        callback: (options: SelectOption[]) => void
-    ) => {
-        setTimeout(async () => {
-            callback(await filterJenisPenertiban(inputValue))
-        }, 1000)
-    }
-    const handleChangeInputJenisPenertiban = (newValue: any) => {
-        setValJenisPenertiban((prevstate: any) => ({ ...prevstate, ...newValue }))
-    }
-    const filterJenisPerdaPerkada = async (inputValue: string) => {
-        const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
-        const json = await response.data.data
-        setJenisPerdaPerkadaList(json)
-        return json.map((i: any) => ({ label: i.text, value: i.value }))
-    }
-    const loadOptionsJenisPerdaPerkada = (
-        inputValue: string,
-        callback: (options: SelectOption[]) => void
-    ) => {
-        setTimeout(async () => {
-            callback(await filterJenisPerdaPerkada(inputValue))
-        }, 1000)
-    }
-    const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-        setValJenisPerdaPerkada((prevstate: any) => ({ ...prevstate, ...newValue }))
     }
 
     const handleFilter = async () => {
@@ -354,116 +243,116 @@ export function LaporanPPKM() {
                 `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
             )
             .then((res) => {
-                // const data = res.data.data.map((d: any) => ({
-                //   id: d.id,
-                //   no: d.id,
-                //   pelaksana: d.created_by,
-                //   tanggal_kegiatan: d.kegiatan__tanggal,
-                //   waktu_mulai: d.kegiatan__jam_start,
-                //   waktu_selesai: d.kegiatan__jam_end,
-                //   jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-                //   uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-                //   lokasi: d.kegiatan__lokasi,
-                //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
-                //   denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
-                //   denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
-                // }))
-                // Array.from(data).forEach((item: any, index: any) => {
-                //   item.serial = index + 1
-                // })
-                const arr: minolInterface[] = [
-                    {
-                        no: 1,
-                        pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA PUSAT',
-                        jumlah_minol: 35,
-                        wine: 5,
-                        bir: 10,
-                        sake: 0,
-                        gin: 20,
-                        tequilla: 20,
-                        brandy: 20,
-                        wiski: 20,
-                        vodka: 20,
-                        rum: 20,
-                        soju: 20,
-                        anggur: 20,
-                        absinth: 20,
-                        lainnya: 20,
-                    },
-                    {
-                        no: 2,
-                        pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA UTARA',
-                        jumlah_minol: 35,
-                        wine: 5,
-                        bir: 10,
-                        sake: 0,
-                        gin: 20,
-                        tequilla: 20,
-                        brandy: 20,
-                        wiski: 20,
-                        vodka: 20,
-                        rum: 20,
-                        soju: 20,
-                        anggur: 20,
-                        absinth: 20,
-                        lainnya: 20,
-                    },
-                    {
-                        no: 3,
-                        pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA BARAT',
-                        jumlah_minol: 35,
-                        wine: 5,
-                        bir: 10,
-                        sake: 0,
-                        gin: 20,
-                        tequilla: 20,
-                        brandy: 20,
-                        wiski: 20,
-                        vodka: 20,
-                        rum: 20,
-                        soju: 20,
-                        anggur: 20,
-                        absinth: 20,
-                        lainnya: 20,
-                    },
-                    {
-                        no: 4,
-                        pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA SELATAN',
-                        jumlah_minol: 35,
-                        wine: 5,
-                        bir: 10,
-                        sake: 0,
-                        gin: 20,
-                        tequilla: 20,
-                        brandy: 20,
-                        wiski: 20,
-                        vodka: 20,
-                        rum: 20,
-                        soju: 20,
-                        anggur: 20,
-                        absinth: 20,
-                        lainnya: 20,
-                    },
-                    {
-                        no: 5,
-                        pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA TIMUR',
-                        jumlah_minol: 35,
-                        wine: 5,
-                        bir: 10,
-                        sake: 0,
-                        gin: 20,
-                        tequilla: 20,
-                        brandy: 20,
-                        wiski: 20,
-                        vodka: 20,
-                        rum: 20,
-                        soju: 20,
-                        anggur: 20,
-                        absinth: 20,
-                        lainnya: 20,
-                    },
-                ]
-                setData(arr)
+                const data = res.data.data.map((d: any) => ({
+                    id: d.id,
+                    no: d.id,
+                    pelaksana: d.created_by,
+                    tanggal_kegiatan: d.kegiatan__tanggal,
+                    waktu_mulai: d.kegiatan__jam_start,
+                    waktu_selesai: d.kegiatan__jam_end,
+                    jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+                    uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+                    lokasi: d.kegiatan__lokasi,
+                    jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
+                    denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
+                    denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+                }))
+                Array.from(data).forEach((item: any, index: any) => {
+                    item.serial = index + 1
+                })
+                // const arr: PPKMInterface[] = [
+                //     {
+                //         no: 1,
+                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA PUSAT',
+                //         jumlah_minol: 35,
+                //         wine: 5,
+                //         bir: 10,
+                //         sake: 0,
+                //         gin: 20,
+                //         tequilla: 20,
+                //         brandy: 20,
+                //         wiski: 20,
+                //         vodka: 20,
+                //         rum: 20,
+                //         soju: 20,
+                //         anggur: 20,
+                //         absinth: 20,
+                //         lainnya: 20,
+                //     },
+                //     {
+                //         no: 2,
+                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA UTARA',
+                //         jumlah_minol: 35,
+                //         wine: 5,
+                //         bir: 10,
+                //         sake: 0,
+                //         gin: 20,
+                //         tequilla: 20,
+                //         brandy: 20,
+                //         wiski: 20,
+                //         vodka: 20,
+                //         rum: 20,
+                //         soju: 20,
+                //         anggur: 20,
+                //         absinth: 20,
+                //         lainnya: 20,
+                //     },
+                //     {
+                //         no: 3,
+                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA BARAT',
+                //         jumlah_minol: 35,
+                //         wine: 5,
+                //         bir: 10,
+                //         sake: 0,
+                //         gin: 20,
+                //         tequilla: 20,
+                //         brandy: 20,
+                //         wiski: 20,
+                //         vodka: 20,
+                //         rum: 20,
+                //         soju: 20,
+                //         anggur: 20,
+                //         absinth: 20,
+                //         lainnya: 20,
+                //     },
+                //     {
+                //         no: 4,
+                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA SELATAN',
+                //         jumlah_minol: 35,
+                //         wine: 5,
+                //         bir: 10,
+                //         sake: 0,
+                //         gin: 20,
+                //         tequilla: 20,
+                //         brandy: 20,
+                //         wiski: 20,
+                //         vodka: 20,
+                //         rum: 20,
+                //         soju: 20,
+                //         anggur: 20,
+                //         absinth: 20,
+                //         lainnya: 20,
+                //     },
+                //     {
+                //         no: 5,
+                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA TIMUR',
+                //         jumlah_minol: 35,
+                //         wine: 5,
+                //         bir: 10,
+                //         sake: 0,
+                //         gin: 20,
+                //         tequilla: 20,
+                //         brandy: 20,
+                //         wiski: 20,
+                //         vodka: 20,
+                //         rum: 20,
+                //         soju: 20,
+                //         anggur: 20,
+                //         absinth: 20,
+                //         lainnya: 20,
+                //     },
+                // ]
+                setData(data)
                 setTotalRows(5)
                 setLoading(false)
                 return [data, setData] as const
@@ -530,46 +419,6 @@ export function LaporanPPKM() {
     const handleWilayahBidang = async () => {
         const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
         setWilayahBidang(response.data.data)
-    }
-
-    const konfirDel = (id: number) => {
-        Swal.fire({
-            text: 'Anda yakin ingin menghapus data ini',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya!',
-            cancelButtonText: 'Tidak!',
-            color: '#000000',
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const bodyParam = {
-                    data: {
-                        deleted_by: 'string',
-                    },
-                }
-                const response = await axios.delete(`${PELAPORAN_URL}/kegiatan-umum/${id}`, bodyParam)
-                if (response) {
-                    dataPerdaPerkada(0)
-                    Swal.fire({
-                        icon: 'success',
-                        text: 'Data berhasil dihapus',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        color: '#000000',
-                    })
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        text: 'Data gagal dihapus, harap mencoba lagi',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        color: '#000000',
-                    })
-                }
-            }
-        })
     }
 
     interface SelectOption {
@@ -641,46 +490,111 @@ export function LaporanPPKM() {
             callback(await filterbidangwilayah(inputValue))
         }, 1000)
     }
-    const handleChangeInputKota = (newValue: any) => {
-        setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
-        setIdMasterBidangWilayah({ id: newValue.value })
-        setValMasterPelaksana({ value: null, label: '' })
-        const timeout = setTimeout(async () => {
-            const response = await axios.get(
-                `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
-            )
-            let items = response.data.data
-            Array.from(items).forEach(async (item: any) => {
-                item.label = item.nama
-                item.value = item.id
+
+    // GET KOTA
+    const [inputValKota, setDataKota] = useState<any>({})
+    const filterKota = async (inputValue: string) => {
+        const response = await axios.get(MASTERDATA_URL + "/kota");
+        let json = await response.data.data
+
+        if (inputValue !== "") {
+            const mappingData: any[] = await json.filter((i: any) => {
+                const valueLabel: string = i.nama.toLowerCase();
+                if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
             })
-            setMasterBidangWilayah(items)
-            // console.log(items)
-        }, 100)
+            return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
 
-        return () => clearTimeout(timeout)
-    }
-    //end nama_hak_akses
-
-    // kecamatan
-    const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
-    const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
-    const [masterPelaksana, setMasterPelaksana] = useState([])
-    const filterKecamatan = async (inputValue: string) => {
-        const response = await axios.get(
-            `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
-            }`
-        )
-        const json = response.data.data
-        return json.map((i: any) => ({ label: i.nama, value: i.id }))
-    }
-    const loadOptionsKecamatan = (
+        }
+        return json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }));
+    };
+    const loadOptionsKota = (
         inputValue: string,
-        callback: (options: SelectOption[]) => void
+        callback: (options: SelectOptionAutoCom[]) => void
     ) => {
         setTimeout(async () => {
-            callback(await filterKecamatan(inputValue))
-        }, 500)
+            callback(await filterKota(inputValue))
+        }, 1000)
+    }
+    const handleInputKota = async (newValue: any) => {
+        const filter = {
+            kode_kota: { eq: newValue.kode }
+        }
+        const query = buildQuery({ filter })
+        const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
+        let json = await response.data.data
+        setKec(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
+        setDataKota({ ...newValue })
+    }
+
+    // GET KECAMATAN
+    const [inputValKec, setDataKec] = useState<any>({})
+    const [inputKec, setKec] = useState<SelectOptionAutoCom[]>([])
+
+    const filterKec = async (inputValue: string) => {
+        const filter = {
+            kode_kota: { eq: inputValKota.kode }
+        }
+        const query = buildQuery({ filter })
+        const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
+        let json = await response.data.data
+
+        if (inputValue !== "") {
+            const mappingData: any[] = await json.filter((i: any) => {
+                const valueLabel: string = i.nama.toLowerCase()
+                if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
+            })
+            return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+        }
+        return inputKec
+    }
+
+    const loadOptionsKec = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterKec(inputValue))
+        }, 1000)
+    }
+
+    const handleInputKec = async (newValue: any) => {
+        const filter = {
+            kode_kecamatan: { eq: newValue.kode }
+        }
+        const query = buildQuery({ filter })
+        const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
+        let json = await response.data.data
+        setKel(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
+        setDataKec((prevstate: any) => ({ ...prevstate, ...newValue }))
+    }
+
+    // GET KELURAHAN
+    const [inputValKel, setDataKel] = useState<any>({})
+    const [inputKel, setKel] = useState<SelectOptionAutoCom[]>([])
+
+    const filterKel = async (inputValue: string) => {
+        const filter = {
+            kode_kecamatan: { eq: inputValKec.kode }
+        }
+        const query = buildQuery({ filter })
+        const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
+        let json = await response.data.data
+        console.log('Json', json)
+
+        if (inputValue !== "") {
+            const mappingData: any[] = await json.filter((i: any) => {
+                const valueLabel: string = i.nama.toLowerCase()
+                if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
+            })
+            console.log('Map', mappingData)
+            return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+        }
+        return inputKel
+    }
+    const loadOptionsKel = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+        setTimeout(async () => {
+            callback(await filterKel(inputValue))
+        }, 1000)
+    }
+    const handleInputKel = (newValue: any) => {
+        setDataKel((prevstate: any) => ({ ...prevstate, ...newValue }))
     }
 
     return (
@@ -741,8 +655,8 @@ export function LaporanPPKM() {
                                                     name='filter_jenis_kegiatan_id_selection'
                                                     defaultOptions
                                                     value={valJenisKegiatan}
-                                                    loadOptions={loadOptionsJenisKegiatan}
-                                                    onChange={handleChangeInputJenisKegiatan}
+                                                    // loadOptions={loadOptionsJenisKegiatan}
+                                                    // onChange={handleChangeInputJenisKegiatan}
                                                     styles={
                                                         calculatedMode === 'dark'
                                                             ? reactSelectDarkThem
@@ -763,15 +677,13 @@ export function LaporanPPKM() {
                                             </div>
                                             <div className='col-8'>
                                                 <AsyncSelect
-                                                    name='jenis_penertiban'
+                                                    cacheOptions
+                                                    loadOptions={loadOptionsKota}
                                                     defaultOptions
-                                                    value={valJenisPenertiban}
-                                                    loadOptions={loadOptionsJenisPenertiban}
-                                                    onChange={handleChangeInputJenisPenertiban}
+                                                    onChange={handleInputKota}
+                                                    placeholder={'Pilih Kota'}
                                                     styles={
-                                                        calculatedMode === 'dark'
-                                                            ? reactSelectDarkThem
-                                                            : reactSelectLightThem
+                                                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                                                     }
                                                 />
                                             </div>
@@ -788,15 +700,13 @@ export function LaporanPPKM() {
                                             </div>
                                             <div className='col-8'>
                                                 <AsyncSelect
-                                                    name='jenis_perda_perkada'
-                                                    defaultOptions
-                                                    value={valJenisPerdaPerkada}
-                                                    loadOptions={loadOptionsJenisPerdaPerkada}
-                                                    onChange={handleChangeInputJenisPerdaPerkada}
+                                                    cacheOptions
+                                                    loadOptions={loadOptionsKec}
+                                                    defaultOptions={inputKec}
+                                                    onChange={handleInputKec}
+                                                    placeholder={'Pilih Kecamatan'}
                                                     styles={
-                                                        calculatedMode === 'dark'
-                                                            ? reactSelectDarkThem
-                                                            : reactSelectLightThem
+                                                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                                                     }
                                                 />
                                             </div>
@@ -813,15 +723,13 @@ export function LaporanPPKM() {
                                             </div>
                                             <div className='col-8'>
                                                 <AsyncSelect
-                                                    name='jenis_perda_perkada'
-                                                    defaultOptions
-                                                    value={valJenisPerdaPerkada}
-                                                    loadOptions={loadOptionsJenisPerdaPerkada}
-                                                    onChange={handleChangeInputJenisPerdaPerkada}
+                                                    cacheOptions
+                                                    loadOptions={loadOptionsKel}
+                                                    defaultOptions={inputKel}
+                                                    onChange={handleInputKel}
+                                                    placeholder={'Pilih Kelurahan'}
                                                     styles={
-                                                        calculatedMode === 'dark'
-                                                            ? reactSelectDarkThem
-                                                            : reactSelectLightThem
+                                                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                                                     }
                                                 />
                                             </div>
@@ -964,7 +872,7 @@ export function LaporanPPKM() {
                 </div>
             </div>
             <div className='card-body py-4'>
-                <DtSidangTipiring
+                <DtPPKM
                     data={data}
                     totalRows={totalRows}
                     handlePerRowsChange={handlePerRowsChange}
