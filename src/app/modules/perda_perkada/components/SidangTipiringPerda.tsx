@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import {useState, useEffect} from 'react'
 import axios from 'axios'
 import {
   updateKotaList,
@@ -6,15 +6,15 @@ import {
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
 import buildQuery from 'odata-query-sequelize'
-import { RootState } from '../../../redux/store'
-import { unparse } from 'papaparse'
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { DtSidangTipiring } from './datatables/data-table-laporan-sidang-tipiring'
-import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
-import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { Button } from 'react-bootstrap'
-import { KTSVG } from '../../../../_metronic/helpers'
+import {RootState} from '../../../redux/store'
+import {unparse} from 'papaparse'
+import {Link, useNavigate} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+import {DtSidangTipiringPerda} from './datatables/data-table-laporan-sidang-tipiring'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {Button} from 'react-bootstrap'
+import {KTSVG} from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
@@ -122,11 +122,15 @@ export const MASTER_URL = `${API_URL}/master`
 interface SidangTipiringInterface {
   no: number
   wilayah: string
-  jumlah_penertiban: number
+  perda_yang_dilanggar: number
+  jenis_tertib: number
+  jenis_pelanggaran: number
+  jenis_pasal: number
+  jenis_penertiban: number
   jumlah_pelanggar: number
   jumlah_pelanggar_tidak_hadir: number
   verstek: number
-  denda_pengadilan: string
+  hari_tanggal_sidang: string
 }
 
 // GET DATA
@@ -136,9 +140,9 @@ interface SelectOptionAutoCom {
   readonly kode: string
 }
 
-export function LaporanSidangTipiring() {
+export function SidangTipiringPerda() {
   const navigate = useNavigate()
-  const { mode } = useThemeMode()
+  const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
@@ -151,19 +155,18 @@ export function LaporanSidangTipiring() {
   // GET KOTA
   const [inputValKota, setDataKota] = useState<any>({})
   const filterKota = async (inputValue: string) => {
-    const response = await axios.get(MASTERDATA_URL + "/kota");
+    const response = await axios.get(MASTERDATA_URL + '/kota')
     let json = await response.data.data
 
-    if (inputValue !== "") {
+    if (inputValue !== '') {
       const mappingData: any[] = await json.filter((i: any) => {
-        const valueLabel: string = i.nama.toLowerCase();
-        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
+        const valueLabel: string = i.nama.toLowerCase()
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
-      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
-
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
     }
-    return json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }));
-  }; 
+    return json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
+  }
   const loadOptionsKota = (
     inputValue: string,
     callback: (options: SelectOptionAutoCom[]) => void
@@ -174,13 +177,13 @@ export function LaporanSidangTipiring() {
   }
   const handleInputKota = async (newValue: any) => {
     const filter = {
-      kode_kota: { eq: newValue.kode }
+      kode_kota: {eq: newValue.kode},
     }
-    const query = buildQuery({ filter })
+    const query = buildQuery({filter})
     const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
     let json = await response.data.data
-    setKec(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
-    setDataKota({ ...newValue })
+    setKec(json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode})))
+    setDataKota({...newValue})
   }
 
   //  GET KECAMATAN
@@ -189,23 +192,27 @@ export function LaporanSidangTipiring() {
 
   const filterKec = async (inputValue: string) => {
     const filter = {
-      kode_kota: { eq: inputValKota.kode }
+      kode_kota: {eq: inputValKota.kode},
     }
-    const query = buildQuery({ filter })
+    const query = buildQuery({filter})
     const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
     let json = await response.data.data
 
-    if (inputValue !== "") {
+    if (inputValue !== '') {
       const mappingData: any[] = await json.filter((i: any) => {
         const valueLabel: string = i.nama.toLowerCase()
+
         if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
-      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
     }
     return inputKec
   }
 
-  const loadOptionsKec = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void ) => {
+  const loadOptionsKec = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
       callback(await filterKec(inputValue))
     }, 1000)
@@ -213,45 +220,48 @@ export function LaporanSidangTipiring() {
 
   const handleInputKec = async (newValue: any) => {
     const filter = {
-      kode_kecamatan: { eq: newValue.kode }
+      kode_kecamatan: {eq: newValue.kode},
     }
-    const query = buildQuery({ filter })
+    const query = buildQuery({filter})
     const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
     let json = await response.data.data
-    setKel(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
-    setDataKec((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setKel(json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode})))
+    setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   // GET KELURAHAN
-  const [inputValKel, setDataKel] = useState<any>({})
+  const [inputValKel, setDataKel] = useState({label: '', value: null})
   const [inputKel, setKel] = useState<SelectOptionAutoCom[]>([])
 
   const filterKel = async (inputValue: string) => {
     const filter = {
-      kode_kecamatan: { eq: inputValKec.kode }
+      kode_kecamatan: {eq: inputValKec.kode},
     }
-    const query = buildQuery({ filter })
+    const query = buildQuery({filter})
     const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
     let json = await response.data.data
-    console.log('Json',json)
 
-    if (inputValue !== "") {
+    if (inputValue !== '') {
       const mappingData: any[] = await json.filter((i: any) => {
         const valueLabel: string = i.nama.toLowerCase()
-        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
+
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
-      console.log('Map', mappingData)
-      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
     }
     return inputKel
   }
-  const loadOptionsKel = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+  const loadOptionsKel = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
       callback(await filterKel(inputValue))
     }, 1000)
   }
   const handleInputKel = (newValue: any) => {
-    setDataKel((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const [inputValJkeg, setDataJkeg] = useState([])
@@ -259,26 +269,26 @@ export function LaporanSidangTipiring() {
   const [inputValJper, setDataJper] = useState([])
 
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
+  const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
   const [jenisPenertibanList, setJenisPenertibanList] = useState([])
-  const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
+  const [valJenisPenertiban, setValJenisPenertiban] = useState({value: '', label: ''})
   const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
+  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({value: '', label: ''})
 
   const [hakAkses, setHakAkses] = useState([])
   const [wilayahBidang, setWilayahBidang] = useState([])
-  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
-  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
+  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
 
   const [data, setData] = useState<SidangTipiringInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [qParamFind, setUriFind] = useState({strparam: ''})
 
   const unduhCSV = (data: any[]) => {
     const csvData = unparse(data)
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.setAttribute('download', 'LAPORAN SIDANG TIPIRING.csv')
@@ -338,23 +348,23 @@ export function LaporanSidangTipiring() {
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setTanggalAwal({ val: event.target.value })
+    setTanggalAwal({val: event.target.value})
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setTanggalAkhir({ val: event.target.value })
+    setTanggalAkhir({val: event.target.value})
   }
 
   const filterJenisKegiatan = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
+    return json.map((i: any) => ({label: i.text, value: i.value}))
   }
   const loadOptionsJenisKegiatan = (
     inputValue: string,
@@ -365,14 +375,14 @@ export function LaporanSidangTipiring() {
     }, 1000)
   }
   const handleChangeInputJenisKegiatan = (newValue: any) => {
-    setValJenisKegiatan((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const filterJenisPenertiban = async (inputValue: string) => {
     const response = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
     const json = await response.data.data
     setJenisPenertibanList(json)
-    return json.map((i: any) => ({ label: i.jenis_penertiban, value: i.id }))
+    return json.map((i: any) => ({label: i.jenis_penertiban, value: i.id}))
   }
   const loadOptionsJenisPenertiban = (
     inputValue: string,
@@ -383,13 +393,13 @@ export function LaporanSidangTipiring() {
     }, 1000)
   }
   const handleChangeInputJenisPenertiban = (newValue: any) => {
-    setValJenisPenertiban((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisPenertiban((prevstate: any) => ({...prevstate, ...newValue}))
   }
   const filterJenisPerdaPerkada = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
     const json = await response.data.data
     setJenisPerdaPerkadaList(json)
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
+    return json.map((i: any) => ({label: i.text, value: i.value}))
   }
   const loadOptionsJenisPerdaPerkada = (
     inputValue: string,
@@ -400,7 +410,7 @@ export function LaporanSidangTipiring() {
     }, 1000)
   }
   const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-    setValJenisPerdaPerkada((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisPerdaPerkada((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const handleFilter = async () => {
@@ -432,18 +442,16 @@ export function LaporanSidangTipiring() {
     } else if (valJenisPerdaPerkada.value !== '') {
       uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
     }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({ val: '' })
-    setTanggalAkhir({ val: '' })
-    setDataKel({ value: '', label: '' })
-    setDataKec({ value: '', label: '' })
-    setDataKota({ value: '', label: '' })
-    setValJenisKegiatan({ value: '', label: '' })
-    setValJenisPerdaPerkada({ value: '', label: '' })
-    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    setValJenisKegiatan({value: '', label: ''})
+    setValJenisPenertiban({value: '', label: ''})
+    setValJenisPerdaPerkada({value: '', label: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
   const dataPerdaPerkada = (page: number) => {
@@ -473,56 +481,80 @@ export function LaporanSidangTipiring() {
           {
             no: 1,
             wilayah: 'KOTA ADMINISTRASI JAKARTA PUSAT',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 5,
+            perda_yang_dilanggar: 0,
+            jenis_tertib: 0,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '2.000.000',
+            hari_tanggal_sidang: 'MINGGU 30 APRIL 2023',
           },
           {
             no: 2,
             wilayah: 'KOTA ADMINISTRASI JAKARTA UTARA',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '4.000.000',
+            hari_tanggal_sidang: 'MINGGU 29 APRIL 2023',
           },
           {
             no: 3,
             wilayah: 'KOTA ADMINISTRASI JAKARTA BARAT',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '6.000.000',
+            hari_tanggal_sidang: 'MINGGU 28 APRIL 2023',
           },
           {
             no: 4,
             wilayah: 'KOTA ADMINISTRASI JAKARTA SELATAN',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '8.000.000',
+            hari_tanggal_sidang: 'MINGGU 27 APRIL 2023',
           },
           {
             no: 5,
             wilayah: 'KOTA ADMINISTRASI JAKARTA TIMUR',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '10.000.000',
+            hari_tanggal_sidang: 'MINGGU 26 APRIL 2023',
           },
           {
             no: 6,
             wilayah: 'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
-            jumlah_penertiban: 2,
-            jumlah_pelanggar: 2,
+            perda_yang_dilanggar: 2,
+            jenis_tertib: 5,
+            jenis_pelanggaran: 0,
+            jenis_pasal: 0,
+            jenis_penertiban: 0,
+            jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            denda_pengadilan: '12.000.000',
+            hari_tanggal_sidang: 'MINGGU 25 APRIL 2023',
           },
         ]
         setData(arr)
@@ -687,13 +719,13 @@ export function LaporanSidangTipiring() {
     return [data, setData] as const
   }
 
-  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
+  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -779,6 +811,7 @@ export function LaporanSidangTipiring() {
                         <label className='form-label align-middle'>Kota</label>
                       </div>
                       <div className='col-8'>
+                        {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
                         <AsyncSelect
                           cacheOptions
                           loadOptions={loadOptionsKota}
@@ -798,11 +831,12 @@ export function LaporanSidangTipiring() {
                     <div className='row'>
                       <div className='col-4 pt-2'>
                         <label className='form-label align-middle'>Kecamatan</label>
-                      </div>                      
+                      </div>
                       <div className='col-8'>
                         {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
                         <AsyncSelect
                           cacheOptions
+                          // value={inputValKec.value ? inputValKec : {value: '', label: 'Pilih'}}
                           loadOptions={loadOptionsKec}
                           defaultOptions={inputKec}
                           onChange={handleInputKec}
@@ -993,7 +1027,7 @@ export function LaporanSidangTipiring() {
                         {/* begin::Content */}
                         <div data-kt-user-table-filter='form'>
                           <button
-                            onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
+                            onClick={() => navigate('/perdaperkada/LaporanSidangTipiring/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
                             Wilayah
@@ -1004,7 +1038,7 @@ export function LaporanSidangTipiring() {
                         {/* begin::Content */}
                         <div data-kt-user-table-filter='form'>
                           <button
-                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                            onClick={() => navigate('/perdaperkada/SidangTipiringPerda/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
                             Perda
@@ -1023,21 +1057,21 @@ export function LaporanSidangTipiring() {
       </div>
       <div className='row'>
         <div className='col fs-4 mb-2 fw-semibold text-center'>
-          LAPORAN PELAKSANAAN SIDANG TINDAK PIDANA RINGAN (TIPIRING) HASIL PENEGAKAN PERDA/PERKADA
+          DATA KASUS PELANGGARAN PERDA DAN / ATAU PERKADA YANG DILAKUKAN SIDANG TINDAK PIDANA RINGAN
         </div>
       </div>
       <div className='row'>
         <div className='col fs-4 mb-2 fw-semibold text-center'>
-          PADA SATPOL PP......................................
+          PADA SATUAN POLISI PAMONG PRAJA …...................................................
         </div>
       </div>
       <div className='row'>
         <div className='col fs-4 mb-6 fw-semibold text-center'>
-          PERIODE .................... s/d .......................
+          PERIODE ....................... s/d .......................
         </div>
       </div>
       <div className='card-body py-4'>
-        <DtSidangTipiring
+        <DtSidangTipiringPerda
           data={data}
           totalRows={totalRows}
           handlePerRowsChange={handlePerRowsChange}

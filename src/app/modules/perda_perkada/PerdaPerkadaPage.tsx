@@ -1,13 +1,15 @@
 import React from 'react'
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import { LaporanSidangTipiring } from './components/LaporanSidangTipiring'
-import { LaporanMinol } from './components/LaporanMinol'
-import { RegisterPerdaPerkada } from './components/RegisterPerdaPerkada'
-import { LaporanPerdaPerkada } from './components/LaporanPerdaPerkada'
-import { PerdaPerkada_Pelaksana } from './components/PerdaPerkada-Pelaksana'
-import { LaporanPenertibanBangunan } from './components/LaporanPenertibanBangunan'
-import { LaporanPPKM } from './components/LaporanPPKM'
+import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
+import {PageLink, PageTitle} from '../../../_metronic/layout/core'
+import {LaporanSidangTipiring} from './components/LaporanSidangTipiring'
+import {LaporanMinol} from './components/LaporanMinol'
+import {RegisterPerdaPerkada} from './components/RegisterPerdaPerkada'
+import {LaporanPerdaPerkada} from './components/LaporanPerdaPerkada'
+import {PerdaPerkada_Pelaksana} from './components/PerdaPerkada-Pelaksana'
+import {LaporanPenertibanBangunan} from './components/LaporanPenertibanBangunan'
+import {LaporanPPKM} from './components/LaporanPPKM'
+import { SidangTipiringPerda } from './components/SidangTipiringPerda'
+
 
 const perda_perkadaBreadCrumbs: Array<PageLink> = [
   {
@@ -38,13 +40,21 @@ const PerdaPerkadaPage: React.FC = () => {
           path='LaporanSidangTipiring'
           element={
             <>
-              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Laporan Sidang Tipiring
-              </PageTitle>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>Laporan Sidang Tipiring</PageTitle>
               <LaporanSidangTipiring />
             </>
           }
         />
+        <Route
+          path='SidangTipiringPerda'
+          element={
+            <>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>Laporan Sidang Tipiring</PageTitle>
+              <SidangTipiringPerda />
+            </>
+          }
+        />
+
         <Route
           path='LaporanMinol'
           element={
@@ -104,9 +114,7 @@ const PerdaPerkadaPage: React.FC = () => {
           path='LaporanPPKM'
           element={
             <>
-              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Laporan PPKM
-              </PageTitle>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>Laporan PPKM</PageTitle>
               <LaporanPPKM />
             </>
           }

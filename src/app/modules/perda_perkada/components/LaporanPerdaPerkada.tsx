@@ -126,7 +126,7 @@ interface jenisPenertibanInterface {
 
 export function LaporanPerdaPerkada() {
   const navigate = useNavigate()
-  const { mode } = useThemeMode()
+  const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
@@ -141,22 +141,22 @@ export function LaporanPerdaPerkada() {
   const [jenisPenertibanList, setJenisPenertibanList] = useState([])
 
   const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
+  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({value: '', label: ''})
 
   const [hakAkses, setHakAkses] = useState([])
   const [wilayahBidang, setWilayahBidang] = useState([])
-  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
-  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
+  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
 
   const [data, setData] = useState<jenisPenertibanInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [qParamFind, setUriFind] = useState({strparam: ''})
 
   const unduhCSV = (data: any[]) => {
     const csvData = unparse(data)
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.setAttribute('download', 'LAPORAN PENEGAKAN PERDA/PERKADA.csv')
@@ -164,7 +164,6 @@ export function LaporanPerdaPerkada() {
     link.click()
     link.remove()
   }
-
 
   const filterList = async () => {
     const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
@@ -195,23 +194,23 @@ export function LaporanPerdaPerkada() {
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setTanggalAwal({ val: event.target.value })
+    setTanggalAwal({val: event.target.value})
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setTanggalAkhir({ val: event.target.value })
+    setTanggalAkhir({val: event.target.value})
   }
 
   const filterJenisKegiatan = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
+    return json.map((i: any) => ({label: i.text, value: i.value}))
   }
   const loadOptionsJenisKegiatan = (
     inputValue: string,
@@ -222,7 +221,7 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisKegiatan = (newValue: any) => {
-    setValJenisKegiatan((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const filterJenisPenertiban = async (inputValue: string) => {
@@ -240,13 +239,13 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisPenertiban = (newValue: any) => {
-    setValJenisPenertiban((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisPenertiban((prevstate: any) => ({...prevstate, ...newValue}))
   }
   const filterJenisPerdaPerkada = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
     const json = await response.data.data
     setJenisPerdaPerkadaList(json)
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
+    return json.map((i: any) => ({label: i.text, value: i.value}))
   }
   const loadOptionsJenisPerdaPerkada = (
     inputValue: string,
@@ -257,7 +256,7 @@ export function LaporanPerdaPerkada() {
     }, 1000)
   }
   const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-    setValJenisPerdaPerkada((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setValJenisPerdaPerkada((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   const handleFilter = async () => {
@@ -289,16 +288,16 @@ export function LaporanPerdaPerkada() {
     } else if (valJenisPerdaPerkada.value !== '') {
       uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
     }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({ val: '' })
-    setTanggalAkhir({ val: '' })
-    setValJenisKegiatan({ value: '', label: '' })
-    setValJenisPenertiban({ value: '', label: '' })
-    setValJenisPerdaPerkada({ value: '', label: '' })
-    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    setValJenisKegiatan({value: '', label: ''})
+    setValJenisPenertiban({value: '', label: ''})
+    setValJenisPerdaPerkada({value: '', label: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
   const dataPerdaPerkada = (page: number) => {
@@ -561,22 +560,19 @@ export function LaporanPerdaPerkada() {
                     <div className='mb-10'>
                       <div className='row'>
                         <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Jenis Kegiatan
-                          </label>
+                          <label className='form-label align-middle'>Jenis Kegiatan</label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='filter_jenis_kegiatan_id_selection'
-                            defaultOptions
-                            value={valJenisKegiatan}
+                            cacheOptions
+                            // name='filter_jenis_kegiatan_id_selection'
                             loadOptions={loadOptionsJenisKegiatan}
+                            defaultOptions
+                            // value={valJenisKegiatan}
                             onChange={handleChangeInputJenisKegiatan}
-                            placeholder= 'Pilih Jenis Kegiatan'
+                            placeholder={'Pilih Jenis Kegiatan'}
                             styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
+                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
                           />
                         </div>
@@ -587,22 +583,19 @@ export function LaporanPerdaPerkada() {
                     <div className='mb-10'>
                       <div className='row'>
                         <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Jenis Penertiban
-                          </label>
+                          <label className='form-label align-middle'>Jenis Penertiban</label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='jenis_penertiban'
-                            defaultOptions
-                            value={valJenisPenertiban}
+                            cacheOptions
+                            // name='jenis_penertiban'
                             loadOptions={loadOptionsJenisPenertiban}
+                            defaultOptions
+                            // value={valJenisPenertiban}
                             onChange={handleChangeInputJenisPenertiban}
-                            placeholder= 'Pilih Jenis Penertiban'
+                            placeholder={'Pilih Jenis Penertiban'}
                             styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
+                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
                           />
                         </div>
@@ -613,22 +606,19 @@ export function LaporanPerdaPerkada() {
                     <div className='mb-10'>
                       <div className='row'>
                         <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>
-                            Jenis Perda Perkada
-                          </label>
+                          <label className='form-label align-middle'>Jenis Perda Perkada</label>
                         </div>
                         <div className='col-8'>
                           <AsyncSelect
-                            name='jenis_perda_perkada'
-                            defaultOptions
-                            value={valJenisPerdaPerkada}
+                            cacheOptions
+                            // name='jenis_perda_perkada'
                             loadOptions={loadOptionsJenisPerdaPerkada}
-                            placeholder= {'Pilih Jenis Perda Perkada'}
+                            defaultOptions
+                            // value={valJenisPerdaPerkada}
                             onChange={handleChangeInputJenisPerdaPerkada}
+                            placeholder={'Pilih Jenis Perda & Perkada'}
                             styles={
-                              calculatedMode === 'dark'
-                                ? reactSelectDarkThem
-                                : reactSelectLightThem
+                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                             }
                           />
                         </div>
@@ -643,6 +633,7 @@ export function LaporanPerdaPerkada() {
                         </div>
                         <div className='col-8'>
                           <input
+                            placeholder='Isi Tanggal Kunjungan'
                             type='date'
                             name='tanggal_kunjungan'
                             className='form-control'
@@ -661,6 +652,7 @@ export function LaporanPerdaPerkada() {
                         </div>
                         <div className='col-8'>
                           <input
+                            placeholder='Isi Tanggal Kunjungan'
                             name='tanggal_kunjungan'
                             type='date'
                             className='form-control'
@@ -677,10 +669,7 @@ export function LaporanPerdaPerkada() {
                   <div className='row g-8 mt-2'>
                     <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
                       <Link to='#'>
-                        <Button
-                          className='btn btn-light-primary me-2'
-                          onClick={handleFilter}
-                        >
+                        <Button className='btn btn-light-primary me-2' onClick={handleFilter}>
                           <KTSVG
                             path='/media/icons/duotune/general/gen021.svg'
                             className='svg-icon-2'
@@ -689,10 +678,7 @@ export function LaporanPerdaPerkada() {
                         </Button>
                       </Link>
                       <Link to='#'>
-                        <Button
-                          className='btn btn-light-primary me-2'
-                          onClick={handleFilterReset}
-                        >
+                        <Button className='btn btn-light-primary me-2' onClick={handleFilterReset}>
                           <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                           Reset
                         </Button>
@@ -704,9 +690,13 @@ export function LaporanPerdaPerkada() {
                         className='btn btn-light-primary me-2'
                         data-kt-menu-placement='bottom-end'
                         data-kt-menu-trigger='click'
-                        onClick={() => unduhCSV(data)}>
+                        onClick={() => unduhCSV(data)}
+                      >
                         <>
-                          <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                          <KTSVG
+                            path='/media/icons/duotune/arrows/arr078.svg'
+                            className='svg-icon-2'
+                          />
                           Unduh CSV
                         </>
                       </button>
@@ -723,12 +713,12 @@ export function LaporanPerdaPerkada() {
                           className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
                           data-kt-menu='true'
                         >
-
                           {/* begin::Content */}
                           <div data-kt-user-table-filter='form'>
                             <button
                               onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                              className='btn btn-outline btn-active-light-primary w-100'>
+                              className='btn btn-outline btn-active-light-primary w-100'
+                            >
                               Jenis Penertiban
                             </button>
                           </div>
@@ -746,8 +736,8 @@ export function LaporanPerdaPerkada() {
                           {/* end::Content */}
                         </div>
                       </div>
-                      {/*  end::SubMenu */}
                     </div>
+                    {/* END :: Button */}
                   </div>
                   {/* END :: Button */}
                 </div>
@@ -792,7 +782,7 @@ export function LaporanPerdaPerkada() {
             }
           />
         </div>
-      </div >
+      </div>
     </>
   )
 }

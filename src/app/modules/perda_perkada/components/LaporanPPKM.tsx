@@ -12,7 +12,6 @@ import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
 
-
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
 const reactSelectLightThem = {
