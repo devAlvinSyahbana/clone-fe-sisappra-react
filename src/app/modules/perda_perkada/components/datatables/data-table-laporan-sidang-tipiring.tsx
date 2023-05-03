@@ -87,6 +87,46 @@ export const DtSidangTipiring: FC<any> = ({
       sortField: 'denda_pengadilan',
       selector: (row: any) => row.denda_pengadilan,
     },
+    {
+      name: 'Aksi',
+      sortable: false,
+      className: 'action',
+      center: true,
+      allowOverflow: true,
+      fixed: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='d-flex mb-2 mt-2 flex-end'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <DropdownType
+                  as={ButtonGroup}
+                  key={idx}
+                  id={`dropdown-button-drop-${idx}`}
+                  size='sm'
+                  variant='light'
+                  title='Aksi'
+                >
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/DetailLaporanKejadian/' + record.id)}
+                  >
+                    Detail
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/ubah-laporan-kejadian/' + record.id)}
+                  >
+                    Ubah
+                  </Dropdown.Item>
+                  <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                    Hapus
+                  </Dropdown.Item>
+                </DropdownType>
+              ))}
+            </div>
+          </Fragment>
+        )
+      },
+    },
   ]
 
   return (
@@ -206,6 +246,46 @@ export const DtSidangTipiringPerda: FC<any> = ({
       width: '300px',
       sortField: 'hari_tanggal_sidang',
       selector: (row: any) => row.hari_tanggal_sidang,
+    },
+    {
+      name: 'Aksi',
+      sortable: false,
+      className: 'action',
+      center: true,
+      allowOverflow: true,
+      fixed: true,
+      cell: (record: any) => {
+        return (
+          <Fragment>
+            <div className='d-flex mb-2 mt-2 flex-end'>
+              {[DropdownButton].map((DropdownType, idx) => (
+                <DropdownType
+                  as={ButtonGroup}
+                  key={idx}
+                  id={`dropdown-button-drop-${idx}`}
+                  size='sm'
+                  variant='light'
+                  title='Aksi'
+                >
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/DetailLaporanKejadian/' + record.id)}
+                  >
+                    Detail
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => navigate('/pelaporan/ubah-laporan-kejadian/' + record.id)}
+                  >
+                    Ubah
+                  </Dropdown.Item>
+                  <Dropdown.Item href='#' onClick={() => konfirDel(record.id)}>
+                    Hapus
+                  </Dropdown.Item>
+                </DropdownType>
+              ))}
+            </div>
+          </Fragment>
+        )
+      },
     },
   ]
 

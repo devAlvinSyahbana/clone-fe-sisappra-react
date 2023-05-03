@@ -613,7 +613,6 @@ export function LaporanMinol() {
 
   const handlePageChange = (page: number) => {
     dataPerdaPerkada(page - 1)
-    console.log('ini page', page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -792,7 +791,6 @@ export function LaporanMinol() {
         item.value = item.id
       })
       setMasterBidangWilayah(items)
-      // console.log(items)
     }, 100)
 
     return () => clearTimeout(timeout)
@@ -1015,9 +1013,9 @@ export function LaporanMinol() {
                   <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                     <button
                       type='button'
-                      className='btn btn-light-primary'
-                      data-kt-menu-trigger='click'
+                      className='btn btn-light-primary me-2'
                       data-kt-menu-placement='bottom-end'
+                      data-kt-menu-trigger='click'
                       onClick={() => unduhCSV(data)}
                     >
                       <>
@@ -1028,37 +1026,42 @@ export function LaporanMinol() {
                         Unduh CSV
                       </>
                     </button>
-                    <div
-                      className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                      data-kt-menu='true'
-                    >
-                      {/* begin::Separator */}
-                      <div className='separator border-gray-200'></div>
-                      {/* end::Separator */}
+                    <div>
+                      <Button
+                        type='button'
+                        className='btn btn-primary me-2'
+                        data-kt-menu-trigger='click'
+                        data-kt-menu-placement='bottom-end'
+                      >
+                        Pilih Tabel Berdasarkan
+                      </Button>
+                      <div
+                        className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
+                        data-kt-menu='true'
+                      >
+                        {/* begin::Content */}
+                        <div data-kt-user-table-filter='form'>
+                          <button
+                            onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
+                            className='btn btn-outline btn-active-light-primary w-100'
+                          >
+                            Pelaksana Bidang/Wilayah
+                          </button>
+                        </div>
+                        {/* end::Content */}
 
-                      {/* begin::Content */}
-                      <div data-kt-user-table-filter='form'>
-                        <button
-                          onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                          className='btn btn-outline btn-active-light-primary w-100'
-                        >
-                          Jenis Penertiban
-                        </button>
+                        {/* begin::Content */}
+                        <div data-kt-user-table-filter='form'>
+                          <button
+                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                            className='btn btn-outline btn-active-light-primary w-100'
+                          >
+                            Jenis Pelanggaran
+                          </button>
+                        </div>
+                        {/* end::Content */}
                       </div>
-                      {/* end::Content */}
-
-                      {/* begin::Content */}
-                      <div data-kt-user-table-filter='form'>
-                        <button
-                          onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                          className='btn btn-outline btn-active-light-primary w-100'
-                        >
-                          Pelaksana
-                        </button>
-                      </div>
-                      {/* end::Content */}
                     </div>
-                    {/*  end::SubMenu */}
                   </div>
                   {/* END :: Button */}
                 </div>

@@ -556,7 +556,7 @@ export function LaporanPenertibanBangunan() {
 
   const handlePageChange = (page: number) => {
     dataPerdaPerkada(page - 1)
-    console.log('ini page', page)
+    // console.log('ini page', page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {

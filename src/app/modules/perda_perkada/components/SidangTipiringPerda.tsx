@@ -502,7 +502,7 @@ export function SidangTipiringPerda() {
             jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 29 APRIL 2023',
+            hari_tanggal_sidang: 'MINGGU 23 APRIL 2023',
           },
           {
             no: 3,
@@ -515,7 +515,7 @@ export function SidangTipiringPerda() {
             jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 28 APRIL 2023',
+            hari_tanggal_sidang: 'MINGGU 16 APRIL 2023',
           },
           {
             no: 4,
@@ -528,7 +528,7 @@ export function SidangTipiringPerda() {
             jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 27 APRIL 2023',
+            hari_tanggal_sidang: 'MINGGU 9 APRIL 2023',
           },
           {
             no: 5,
@@ -541,7 +541,7 @@ export function SidangTipiringPerda() {
             jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 26 APRIL 2023',
+            hari_tanggal_sidang: 'MINGGU 2 APRIL 2023',
           },
           {
             no: 6,
@@ -554,7 +554,7 @@ export function SidangTipiringPerda() {
             jumlah_pelanggar: 0,
             jumlah_pelanggar_tidak_hadir: 0,
             verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 25 APRIL 2023',
+            hari_tanggal_sidang: 'MINGGU 26 MARET 2023',
           },
         ]
         setData(arr)
