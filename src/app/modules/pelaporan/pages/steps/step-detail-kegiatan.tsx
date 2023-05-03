@@ -1,7 +1,7 @@
-import React, {ChangeEvent, FC, useEffect} from 'react'
-import Select, {OptionProps} from 'react-select'
-import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../../../../redux/store'
+import React, { ChangeEvent, FC, useEffect } from 'react'
+import Select, { OptionProps } from 'react-select'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../../redux/store'
 import {
   changedValue,
   reset,
@@ -17,7 +17,7 @@ import {
   isPenertibanBangunan,
   updateJenisPelanggaranBangunan,
 } from '../../../../redux/slices/pelaporan-kegiatan.slice'
-import {ErrorMessage, Field, FormikValues} from 'formik'
+import { ErrorMessage, Field, FormikValues } from 'formik'
 import {
   DatePickerField,
   SelectField,
@@ -100,11 +100,10 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
               />
             </div>
             <button
-              className={`btn ${
-                values.id || jenisKegiatanId === 0
+              className={`btn ${values.id || jenisKegiatanId === 0
                   ? 'btn-secondary'
                   : 'btn-outline-danger btn-outline'
-              }  btn-sm`}
+                }  btn-sm`}
               type='reset'
               disabled={values.id || jenisKegiatanId === 0}
               onClick={() => {

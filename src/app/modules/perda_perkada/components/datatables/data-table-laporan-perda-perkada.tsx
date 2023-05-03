@@ -1,6 +1,8 @@
-import { FC, Fragment } from 'react'
+import axios from 'axios'
+import { FC, useState, useEffect } from 'react'
 import DataTable from 'react-data-table-component'
 import { useNavigate } from 'react-router-dom'
+import { string } from 'yup'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -22,15 +24,49 @@ const LoadingAnimation = (props: any) => {
 
 export const DtPerdaPerkada: FC<any> = ({
   data,
+  aksi,
   totalRows,
-  handlePerRowsChange,
+  penertiban,
   handlePageChange,
-  loading,
-  hakAkses,
+  handlePerRowsChange,
   wilayahBidang,
   konfirDel,
+  hakAkses,
+  loading,
   theme,
 }) => {
+
+  const [totalKegiatan, setTotalKegiatan] = useState([])
+  useEffect(() => {
+    const fetchDTPimpinan = async () => {
+      const { data } = await axios.get(
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban`
+      )
+      const res = await axios.get(
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban`
+      )
+      setTotalKegiatan(res.data.data)
+    }
+    fetchDTPimpinan()
+  }, [])
+
+  const GetPerJenis = ({ row, jenis }: any) => {
+    let countJumlah = 0
+    if (row === string && !jenis) {
+      countJumlah = totalKegiatan.filter((item: any) => item.tindak_lanjut__administrasi__jenis_penertiban === row).length
+    }
+    if (row && jenis) {
+      countJumlah = totalKegiatan.filter(
+        (item: any) => item.tindak_lanjut__administrasi__jenis_penertiban === row && item.tindak_lanjut__administrasi__penyelesaian_id === jenis
+      ).length
+    }
+    console.log('tes', GetPerJenis)
+    return (
+      <>
+        {countJumlah}
+      </>
+    )
+  }
 
   const columns = [
     {
@@ -38,32 +74,30 @@ export const DtPerdaPerkada: FC<any> = ({
       width: '80px',
       sortField: 'id',
       wrap: true,
-      selector: (row: any) => row.no,
+      selector: (row: any) => row.serial,
       cell: (row: any) => {
-        return <div className='mb-2 mt-2'>{row.no}</div>
+        return <div className='mb-2 mt-2'>{row.serial}</div>
       },
     },
     {
       name: 'Jenis Penertiban',
       wrap: true,
-      center: true,
       width: '300px',
-      sortField: 'jenis_penertiban',
       selector: (row: any) => row.jenis_penertiban,
     },
     {
       name: 'Jumlah Pelanggaran',
       center: true,
       width: '200px',
-      sortField: 'jumlah_pelanggaran',
-      selector: (row: any) => row.jumlah_pelanggaran,
+      selector: (row: any) => row.no,
+      cell: (record: any) => <GetPerJenis row={record.no} />,
     },
     {
       name: 'Peringatan',
       center: true,
       width: '150px',
-      sortField: 'peringatan',
-      selector: (row: any) => row.peringatan,
+      selector: (row: any) => row.no,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={7} />,
     },
     {
       name: 'Penutupan/Penyegelan',
@@ -106,7 +140,7 @@ export const DtPerdaPerkada: FC<any> = ({
     <div>
       <DataTable
         columns={columns}
-        data={data}
+        data={penertiban}
         progressPending={loading}
         pagination
         paginationServer
