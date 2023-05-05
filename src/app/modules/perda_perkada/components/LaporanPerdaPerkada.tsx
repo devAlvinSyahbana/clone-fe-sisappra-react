@@ -360,7 +360,7 @@ export function LaporanPerdaPerkada() {
 
   const handlePageChange = (page: number) => {
     dataPerdaPerkada(page - 1)
-    dataPenertiban(page - 1)
+    // console.log('ini page', page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {

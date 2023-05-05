@@ -148,9 +148,6 @@ export function SidangTipiringPerda() {
 
   const [aksi, setAksi] = useState(0)
   const dispatch = useDispatch()
-  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   // GET KOTA
   const [inputValKota, setDataKota] = useState<any>({})
@@ -460,104 +457,104 @@ export function SidangTipiringPerda() {
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
-        // const data = res.data.data.map((d: any) => ({
-        //   id: d.id,
-        //   no: d.id,
-        //   pelaksana: d.created_by,
-        //   tanggal_kegiatan: d.kegiatan__tanggal,
-        //   waktu_mulai: d.kegiatan__jam_start,
-        //   waktu_selesai: d.kegiatan__jam_end,
-        //   jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-        //   uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-        //   lokasi: d.kegiatan__lokasi,
-        //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
-        //   denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
-        //   denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
-        // }))
-        // Array.from(data).forEach((item: any, index: any) => {
-        //   item.serial = index + 1
-        // })
-        const arr: SidangTipiringInterface[] = [
-          {
-            no: 1,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA PUSAT',
-            perda_yang_dilanggar: 0,
-            jenis_tertib: 0,
-            jenis_pelanggaran: 0,
-            jenis_pasal: 0,
-            jenis_penertiban: 0,
-            jumlah_pelanggar: 0,
-            jumlah_pelanggar_tidak_hadir: 0,
-            verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 30 APRIL 2023',
-          },
-          {
-            no: 2,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA UTARA',
-            perda_yang_dilanggar: 2,
-            jenis_tertib: 5,
-            jenis_pelanggaran: 0,
-            jenis_pasal: 0,
-            jenis_penertiban: 0,
-            jumlah_pelanggar: 0,
-            jumlah_pelanggar_tidak_hadir: 0,
-            verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 23 APRIL 2023',
-          },
-          {
-            no: 3,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA BARAT',
-            perda_yang_dilanggar: 2,
-            jenis_tertib: 5,
-            jenis_pelanggaran: 0,
-            jenis_pasal: 0,
-            jenis_penertiban: 0,
-            jumlah_pelanggar: 0,
-            jumlah_pelanggar_tidak_hadir: 0,
-            verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 16 APRIL 2023',
-          },
-          {
-            no: 4,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA SELATAN',
-            perda_yang_dilanggar: 2,
-            jenis_tertib: 5,
-            jenis_pelanggaran: 0,
-            jenis_pasal: 0,
-            jenis_penertiban: 0,
-            jumlah_pelanggar: 0,
-            jumlah_pelanggar_tidak_hadir: 0,
-            verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 9 APRIL 2023',
-          },
-          {
-            no: 5,
-            wilayah: 'KOTA ADMINISTRASI JAKARTA TIMUR',
-            perda_yang_dilanggar: 2,
-            jenis_tertib: 5,
-            jenis_pelanggaran: 0,
-            jenis_pasal: 0,
-            jenis_penertiban: 0,
-            jumlah_pelanggar: 0,
-            jumlah_pelanggar_tidak_hadir: 0,
-            verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 2 APRIL 2023',
-          },
-          {
-            no: 6,
-            wilayah: 'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
-            perda_yang_dilanggar: 2,
-            jenis_tertib: 5,
-            jenis_pelanggaran: 0,
-            jenis_pasal: 0,
-            jenis_penertiban: 0,
-            jumlah_pelanggar: 0,
-            jumlah_pelanggar_tidak_hadir: 0,
-            verstek: 0,
-            hari_tanggal_sidang: 'MINGGU 26 MARET 2023',
-          },
-        ]
-        setData(arr)
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kegiatan: d.kegiatan__tanggal,
+          waktu_mulai: d.kegiatan__jam_start,
+          waktu_selesai: d.kegiatan__jam_end,
+          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+          lokasi: d.kegiatan__lokasi,
+          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
+          denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
+          denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+        }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        // const arr: SidangTipiringInterface[] = [
+        //   {
+        //     no: 1,
+        //     wilayah: 'KOTA ADMINISTRASI JAKARTA PUSAT',
+        //     perda_yang_dilanggar: 0,
+        //     jenis_tertib: 0,
+        //     jenis_pelanggaran: 0,
+        //     jenis_pasal: 0,
+        //     jenis_penertiban: 0,
+        //     jumlah_pelanggar: 0,
+        //     jumlah_pelanggar_tidak_hadir: 0,
+        //     verstek: 0,
+        //     hari_tanggal_sidang: 'MINGGU 30 APRIL 2023',
+        //   },
+        //   {
+        //     no: 2,
+        //     wilayah: 'KOTA ADMINISTRASI JAKARTA UTARA',
+        //     perda_yang_dilanggar: 2,
+        //     jenis_tertib: 5,
+        //     jenis_pelanggaran: 0,
+        //     jenis_pasal: 0,
+        //     jenis_penertiban: 0,
+        //     jumlah_pelanggar: 0,
+        //     jumlah_pelanggar_tidak_hadir: 0,
+        //     verstek: 0,
+        //     hari_tanggal_sidang: 'MINGGU 23 APRIL 2023',
+        //   },
+        //   {
+        //     no: 3,
+        //     wilayah: 'KOTA ADMINISTRASI JAKARTA BARAT',
+        //     perda_yang_dilanggar: 2,
+        //     jenis_tertib: 5,
+        //     jenis_pelanggaran: 0,
+        //     jenis_pasal: 0,
+        //     jenis_penertiban: 0,
+        //     jumlah_pelanggar: 0,
+        //     jumlah_pelanggar_tidak_hadir: 0,
+        //     verstek: 0,
+        //     hari_tanggal_sidang: 'MINGGU 16 APRIL 2023',
+        //   },
+        //   {
+        //     no: 4,
+        //     wilayah: 'KOTA ADMINISTRASI JAKARTA SELATAN',
+        //     perda_yang_dilanggar: 2,
+        //     jenis_tertib: 5,
+        //     jenis_pelanggaran: 0,
+        //     jenis_pasal: 0,
+        //     jenis_penertiban: 0,
+        //     jumlah_pelanggar: 0,
+        //     jumlah_pelanggar_tidak_hadir: 0,
+        //     verstek: 0,
+        //     hari_tanggal_sidang: 'MINGGU 9 APRIL 2023',
+        //   },
+        //   {
+        //     no: 5,
+        //     wilayah: 'KOTA ADMINISTRASI JAKARTA TIMUR',
+        //     perda_yang_dilanggar: 2,
+        //     jenis_tertib: 5,
+        //     jenis_pelanggaran: 0,
+        //     jenis_pasal: 0,
+        //     jenis_penertiban: 0,
+        //     jumlah_pelanggar: 0,
+        //     jumlah_pelanggar_tidak_hadir: 0,
+        //     verstek: 0,
+        //     hari_tanggal_sidang: 'MINGGU 2 APRIL 2023',
+        //   },
+        //   {
+        //     no: 6,
+        //     wilayah: 'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
+        //     perda_yang_dilanggar: 2,
+        //     jenis_tertib: 5,
+        //     jenis_pelanggaran: 0,
+        //     jenis_pasal: 0,
+        //     jenis_penertiban: 0,
+        //     jumlah_pelanggar: 0,
+        //     jumlah_pelanggar_tidak_hadir: 0,
+        //     verstek: 0,
+        //     hari_tanggal_sidang: 'MINGGU 26 MARET 2023',
+        //   },
+        // ]
+        setData(data)
         setTotalRows(5)
         setLoading(false)
 
@@ -665,6 +662,28 @@ export function SidangTipiringPerda() {
       }
     })
   }
+
+  const [kota, setKota] = useState([])
+  const [qParamFindKota, setUriFindKota] = useState({strparamkota: ''})
+
+  const kotaList = async () => {
+    const responseKota = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strparamkota}`)
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      pelaksana: d.nama,
+    }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+
+    setKota(dataKota)
+    // console.log(response.data.data)
+  }
+
+  useEffect(() => {
+    kotaList()
+  }, [])
 
   interface SelectOption {
     readonly value: string
@@ -1073,6 +1092,7 @@ export function SidangTipiringPerda() {
       <div className='card-body py-4'>
         <DtSidangTipiringPerda
           data={data}
+          kota={kota}
           totalRows={totalRows}
           handlePerRowsChange={handlePerRowsChange}
           handlePageChange={handlePageChange}
