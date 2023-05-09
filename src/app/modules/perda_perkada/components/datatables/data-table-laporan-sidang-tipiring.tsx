@@ -44,10 +44,10 @@ export const DtSidangTipiring: FC<any> = ({
   useEffect(() => {
     const fetchDTSidangTipiring = async () => {
       const {data} = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id%2C%20kegiatan__kota_id%2C%20kejadian__jenis_kejadian_id`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=kegiatan__jenis_kegiatan_id%20eq%20%2711%27&%24top=1&%24select=id`
       )
       const res = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20kegiatan__kota_id%2C%20kegiatan__jenis_kegiatan_id`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24filter=kegiatan__jenis_kegiatan_id%20eq%20%2711%27&%24select=id%2Ckegiatan__kota_id%2C%20tindak_lanjut__sidang__jumlah_pelanggar_hadir%2C%20tindak_lanjut__sidang__jumlah_pelanggar_tidak_hadir%2C%20tindak_lanjut__sidang__jumlah_pelanggar_verstek%2Ctindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
       )
       setTotalKegiatan(res.data.data)
     }
@@ -61,9 +61,12 @@ export const DtSidangTipiring: FC<any> = ({
       countJumlah = totalKegiatan.filter((item: any) => item.kegiatan__kota_id === row).length
     }
     if (row && jenis) {
-      countJumlah = totalKegiatan.filter(
-        (item: any) => item.kegaiatan__kota_id === row && item.kegiatan__jenis_kegiatan_id === jenis
-      ).length
+      const jumlah = totalKegiatan.filter(
+        (item: any) =>
+        item.kegiatan__kota_id === row && item[jenis]
+      )
+      countJumlah = jumlah.reduce((acc, item) => acc + item[jenis], 0)
+      // console.log(row, jenis, jumlah)
     }
     return <>{countJumlah}</>
   }
@@ -88,18 +91,13 @@ export const DtSidangTipiring: FC<any> = ({
       selector: (row: any) => row.pelaksana,
     },
     {
-      name: 'Jumlah Penertiban',
-      center: true,
-      width: '300px',
-      sortField: 'jumlah_penertiban',
-      selector: (row: any) => row.jumlah_penertiban,
-    },
-    {
-      name: 'Jumlah Pelanggar',
+      name: 'Jumlah Pelanggar Hadir',
       center: true,
       width: '300px',
       selector: (row: any) => row.no,
-      cell: (record: any) => <GetPerJenis row={record.no} />,
+      cell: (record: any) => (
+        <GetPerJenis row={record.no} jenis={'tindak_lanjut__sidang__jumlah_pelanggar_hadir'} />
+      ),
     },
     {
       name: 'Jumlah Pelanggar Tidak Hadir',
@@ -107,6 +105,12 @@ export const DtSidangTipiring: FC<any> = ({
       width: '300px',
       sortField: 'jumlah_pelanggar_tidak_hadir',
       selector: (row: any) => row.jumlah_pelanggar_tidak_hadir,
+      cell: (record: any) => (
+        <GetPerJenis
+          row={record.no}
+          jenis={'tindak_lanjut__sidang__jumlah_pelanggar_tidak_hadir'}
+        />
+      ),
     },
     {
       name: 'Verstek',
@@ -114,6 +118,9 @@ export const DtSidangTipiring: FC<any> = ({
       width: '300px',
       sortField: 'verstek',
       selector: (row: any) => row.verstek,
+      cell: (record: any) => (
+        <GetPerJenis row={record.no} jenis={'tindak_lanjut__sidang__jumlah_pelanggar_verstek'} />
+      ),
     },
     {
       name: 'Denda',
@@ -121,6 +128,9 @@ export const DtSidangTipiring: FC<any> = ({
       width: '300px',
       sortField: 'denda',
       selector: (row: any) => row.denda,
+      cell: (record: any) => (
+        <GetPerJenis row={record.no} jenis={'tindak_lanjut__denda__pengadilan'} />
+      ),
     },
   ]
 
@@ -202,46 +212,18 @@ export const DtSidangTipiringPerda: FC<any> = ({
       },
     },
     {
-      name: 'Pelaksana Kegiatan',
+      name: 'Jenis Perda & Perkada',
       wrap: true,
       center: false,
       width: '300px',
-      selector: (row: any) => row.pelaksana,
+      selector: (row: any) => row.jenis_perda_perkada,
     },
     {
-      name: 'Perda/Perkada Yang Dilanggar',
+      name: 'Jumlah Penertiban',
       center: true,
       width: '300px',
-      sortField: 'perda_yang_dilanggar',
-      selector: (row: any) => row.perda_yang_dilanggar,
-    },
-    {
-      name: 'Jenis Tertib',
-      center: true,
-      width: '300px',
-      sortField: 'jenis_tertib',
-      selector: (row: any) => row.jenis_tertib,
-    },
-    {
-      name: 'Jenis Pelanggaran',
-      center: true,
-      width: '300px',
-      sortField: 'jenis_pelanggaran',
-      selector: (row: any) => row.jenis_pelanggaran,
-    },
-    {
-      name: 'Jenis Pasal',
-      center: true,
-      width: '300px',
-      sortField: 'jenis_pasal',
-      selector: (row: any) => row.jenis_pasal,
-    },
-    {
-      name: 'Jenis Penertiban',
-      center: true,
-      width: '300px',
-      sortField: 'jenis_penertiban',
-      selector: (row: any) => row.jenis_penertiban,
+      sortField: 'jumlah_penertiban',
+      selector: (row: any) => row.jumlah_penertiban,
     },
     {
       name: 'Jumlah Pelanggar',
@@ -265,11 +247,11 @@ export const DtSidangTipiringPerda: FC<any> = ({
       selector: (row: any) => row.verstek,
     },
     {
-      name: 'Hari dan Tangal Sidang',
+      name: 'Denda',
       center: true,
       width: '300px',
-      sortField: 'hari_tanggal_sidang',
-      selector: (row: any) => row.hari_tanggal_sidang,
+      sortField: 'denda',
+      selector: (row: any) => row.denda,
     },
   ]
 
