@@ -1,17 +1,16 @@
-import { useState, useEffect, FC } from 'react'
+import {useState, useEffect, FC} from 'react'
 import axios from 'axios'
-import { Button } from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 import buildQuery from 'odata-query-sequelize'
-import { Link, useNavigate } from 'react-router-dom'
-import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
-import { DtPerdaPerkadaPelaksana } from './datatables/data-table-laporan-perda-perkada'
-import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
-import { KTSVG } from '../../../../_metronic/helpers'
+import {Link, useNavigate} from 'react-router-dom'
+import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
+import {DtPerdaPerkadaPelaksana} from './datatables/data-table-laporan-perda-perkada'
+import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {LaporanPerdaPerkadaHeader} from './LaporanPerdaPerkadaHeader'
+import {KTSVG} from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
-
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -133,24 +132,24 @@ interface SelectOptionAutoCom {
 
 export const PerdaPerkada_Pelaksana: FC = () => {
   const navigate = useNavigate()
-  const { mode } = useThemeMode()
+  const {mode} = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
+  const [valJenisPenertiban, setValJenisPenertiban] = useState({value: '', label: ''})
+  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({value: '', label: ''})
 
   const [hakAkses, setHakAkses] = useState([])
   const [wilayahBidang, setWilayahBidang] = useState([])
-  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
-  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
+  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
 
   const [data, setData] = useState<pelaksanaInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({ strparam: '' })
+  const [qParamFind, setUriFind] = useState({strparam: ''})
   useEffect(() => {
     handleHakAkses()
     handleWilayahBidang()
@@ -158,16 +157,16 @@ export const PerdaPerkada_Pelaksana: FC = () => {
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setTanggalAwal({ val: event.target.value })
+    setTanggalAwal({val: event.target.value})
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: { value: any; name: any }
+    target: {value: any; name: any}
   }) => {
-    setTanggalAkhir({ val: event.target.value })
+    setTanggalAkhir({val: event.target.value})
   }
 
   const handleFilter = async () => {
@@ -189,16 +188,16 @@ export const PerdaPerkada_Pelaksana: FC = () => {
     } else if (valJenisPerdaPerkada.value !== '') {
       uriParam += `tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
     }
-    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
+    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({ val: '' })
-    setTanggalAkhir({ val: '' })
-    setDataKota({ value: '', label: '' })
-    setDataKec({ value: '', label: '' })
-    setDataKel({ value: '', label: '' })
-    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
+    setTanggalAwal({val: ''})
+    setTanggalAkhir({val: ''})
+    setDataKota({value: '', label: ''})
+    setDataKec({value: '', label: ''})
+    setDataKel({value: '', label: ''})
+    setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
   const dataPerdaPerkada = (page: number) => {
@@ -217,15 +216,15 @@ export const PerdaPerkada_Pelaksana: FC = () => {
           jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
           uraian_kegiatan: d.kegiatan__uraian_kegiatan,
           lokasi: d.kegiatan__lokasi,
-          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban
+          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
         }))
         Array.from(data).forEach((item: any, index: any) => {
           item.serial = index + 1
         })
         // const arr: pelaksanaInterface[] = [
-        // { no: 1, pelaksana: 'KOTA ADMINISTRASI JAKARTA PUSAT', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
-        // { no: 2, pelaksana: 'KOTA ADMINISTRASI JAKARTA UTARA', jumlah_pelanggaran: 70, peringatan: 10, penutupan_penyegelan: 20, pencabutan_izin: 0, yang_lain: 40, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
-        // { no: 3, pelaksana: 'KOTA ADMINISTRASI JAKARTA BARAT', jumlah_pelanggaran: 100, peringatan: 15, penutupan_penyegelan: 25, pencabutan_izin: 0, yang_lain: 60, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, 
+        // { no: 1, pelaksana: 'KOTA ADMINISTRASI JAKARTA PUSAT', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' },
+        // { no: 2, pelaksana: 'KOTA ADMINISTRASI JAKARTA UTARA', jumlah_pelanggaran: 70, peringatan: 10, penutupan_penyegelan: 20, pencabutan_izin: 0, yang_lain: 40, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' },
+        // { no: 3, pelaksana: 'KOTA ADMINISTRASI JAKARTA BARAT', jumlah_pelanggaran: 100, peringatan: 15, penutupan_penyegelan: 25, pencabutan_izin: 0, yang_lain: 60, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' },
         // { no: 4, pelaksana: 'KOTA ADMINISTRASI JAKARTA SELATAN', jumlah_pelanggaran: 95, peringatan: 20, penutupan_penyegelan: 30, pencabutan_izin: 0, yang_lain: 45, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' },
         // { no: 5, pelaksana: 'KOTA ADMINISTRASI JAKARTA TIMUR', jumlah_pelanggaran: 95, peringatan: 20, penutupan_penyegelan: 30, pencabutan_izin: 0, yang_lain: 45, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
         setData(data)
@@ -240,9 +239,31 @@ export const PerdaPerkada_Pelaksana: FC = () => {
     dataPerdaPerkada(0)
   }, [qParamFind, perPage])
 
+  const [kota, setKota] = useState([])
+  const [qParamFindKota, setUriFindKota] = useState({strParamKota: ''})
+
+  const kotaList = async () => {
+    const response = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strParamKota}`)
+    const dataKota = response.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      pelaksana_kegiatan: d.nama,
+    }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+    setKota(dataKota)
+
+    return [kota, setKota] as const
+  }
+
+  useEffect(() => {
+    kotaList()
+  }, [qParamFindKota])
+
   const handlePageChange = (page: number) => {
     dataPerdaPerkada(page - 1)
-    // console.log('ini page', page)
+    console.log('ini page', page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -407,7 +428,7 @@ export const PerdaPerkada_Pelaksana: FC = () => {
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -427,13 +448,11 @@ export const PerdaPerkada_Pelaksana: FC = () => {
     if (inputValue !== '') {
       const mappingData: any[] = await json.filter((i: any) => {
         const valueLabel: string = i.nama.toLowerCase()
-        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0)
-          return i
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
-      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
-
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
     }
-    return json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+    return json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
   }
 
   const loadOptionsKota = (
@@ -447,14 +466,13 @@ export const PerdaPerkada_Pelaksana: FC = () => {
 
   const handleChangeInputKota = async (newValue: any) => {
     const filter = {
-      kode_kota: { eq: newValue.kode }
+      kode_kota: {eq: newValue.kode},
     }
-    const query = buildQuery({ filter })
+    const query = buildQuery({filter})
     const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
     let json = await response.data.data
-    setKec(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
-    setDataKota({ ...newValue })
-
+    setKec(json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode})))
+    setDataKota({...newValue})
   }
 
   // GET KECAMATAN
@@ -463,22 +481,25 @@ export const PerdaPerkada_Pelaksana: FC = () => {
 
   const filterKec = async (inputValue: string) => {
     const filter = {
-      kode_kota: { eq: inputValKota.kode }
+      kode_kota: {eq: inputValKota.kode},
     }
-    const query = buildQuery({ filter })
+    const query = buildQuery({filter})
     const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
     let json = response.data.data
 
-    if (inputValue !== "") {
+    if (inputValue !== '') {
       const mappingData: any[] = await json.filter((i: any) => {
         const valueLabel: string = i.nama.toLowerCase()
         if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
-      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
     }
     return inputKec
   }
-  const loadOptionsKec = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+  const loadOptionsKec = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
       callback(await filterKec(inputValue))
     }, 1000)
@@ -486,13 +507,13 @@ export const PerdaPerkada_Pelaksana: FC = () => {
 
   const handleInputKec = async (newValue: any) => {
     const filter = {
-      kode_kecamatan: { eq: newValue.kode }
+      kode_kecamatan: {eq: newValue.kode},
     }
-    const query = buildQuery({ filter })
+    const query = buildQuery({filter})
     const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
     let json = await response.data.data
-    setKel(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
-    setDataKec((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setKel(json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode})))
+    setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   // GET KELURAHAN
@@ -501,28 +522,31 @@ export const PerdaPerkada_Pelaksana: FC = () => {
 
   const filterKel = async (inputValue: string) => {
     const filter = {
-      kode_kecamatan: { eq: inputValKec.kode }
+      kode_kecamatan: {eq: inputValKec.kode},
     }
-    const query = buildQuery({ filter })
+    const query = buildQuery({filter})
     const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
     let json = await response.data.data
 
-    if (inputValue !== "") {
+    if (inputValue !== '') {
       const mappingData: any[] = await json.filter((i: any) => {
-        const valueLabel: string = i.nama.toLowerCase();
-        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
+        const valueLabel: string = i.nama.toLowerCase()
+        if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
-      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
+      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
     }
     return inputKel
   }
-  const loadOptionsKel = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
+  const loadOptionsKel = (
+    inputValue: string,
+    callback: (options: SelectOptionAutoCom[]) => void
+  ) => {
     setTimeout(async () => {
       callback(await filterKel(inputValue))
     }, 1000)
   }
   const handleInputKel = (newValue: any) => {
-    setDataKel((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
   return (
@@ -778,6 +802,7 @@ export const PerdaPerkada_Pelaksana: FC = () => {
         <div className='card-body py-4'>
           <DtPerdaPerkadaPelaksana
             data={data}
+            kota={kota}
             totalRows={totalRows}
             handlePerRowsChange={handlePerRowsChange}
             handlePageChange={handlePageChange}

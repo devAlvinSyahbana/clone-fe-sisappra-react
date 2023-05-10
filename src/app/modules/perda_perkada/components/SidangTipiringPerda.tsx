@@ -121,16 +121,12 @@ export const MASTER_URL = `${API_URL}/master`
 
 interface SidangTipiringInterface {
   no: number
-  wilayah: string
-  perda_yang_dilanggar: number
-  jenis_tertib: number
-  jenis_pelanggaran: number
-  jenis_pasal: number
-  jenis_penertiban: number
+  jenis_perda_perkada: string
+  jumlah_penertiban: number
   jumlah_pelanggar: number
   jumlah_pelanggar_tidak_hadir: number
   verstek: number
-  hari_tanggal_sidang: string
+  denda: number
 }
 
 // GET DATA
