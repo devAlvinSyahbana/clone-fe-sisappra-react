@@ -64,7 +64,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
     (s: RootState) => s.pelaporanKegiatan.tindak_lanjut__jenis_penindakan_id
   )
   const denda = useSelector((s: RootState) => {
-    if (isTipiring(values)) return s.pelaporanKegiatan.tindak_lanjut__denda__pengadilan
+    if (isTipiring(values) || jenisPenindakan === 2 ) return s.pelaporanKegiatan.tindak_lanjut__denda__pengadilan
     return s.pelaporanKegiatan.tindak_lanjut__denda__non_pengadilan
   })
   const minolItems = values?.tindak_lanjut__jumlah_minol_merk
@@ -599,7 +599,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                   </div>
                   <div className='form-group mb-10'>
                     <label className='form-label'>
-                      {isTipiring(values) || jenisPenindakan === 1
+                      {isTipiring(values) || jenisPenindakan === 2
                         ? 'Denda Pengadilan'
                         : 'Denda Non Pengadilan'}
                     </label>
@@ -610,7 +610,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                       <Field
                         type='number'
                         name={
-                          isTipiring(values) || jenisPenindakan === 1
+                          isTipiring(values) || jenisPenindakan === 2
                             ? 'tindak_lanjut__denda__pengadilan'
                             : 'tindak_lanjut__denda__non_pengadilan'
                         }
@@ -626,7 +626,7 @@ export const StepTindaklanjut: FC<StepTindakLanjutProps> = ({
                     <div className='text-danger mt-2'>
                       <ErrorMessage
                         name={
-                          isTipiring(values) || jenisPenindakan === 1
+                          isTipiring(values) || jenisPenindakan === 2
                             ? 'tindak_lanjut__denda__pengadilan'
                             : 'tindak_lanjut__denda__non_pengadilan'
                         }
