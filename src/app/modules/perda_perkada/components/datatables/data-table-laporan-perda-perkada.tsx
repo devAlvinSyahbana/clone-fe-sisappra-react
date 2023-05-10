@@ -38,18 +38,11 @@ export const DtPerdaPerkada: FC<any> = ({
   useEffect(() => {
     const fetchDTPerdaPerkada = async () => {
       const { data } = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
       )
       const res = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
       )
-      // const { denda } = await axios.get(
-      //   `${PELAPORAN_URL}/kegiatan-umum/?24top=1&%24select=id%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__administrasi__jenis__penertiban`
-      // )
-      // const resDenda = await axios.get(
-      //   `${PELAPORAN_URL}/kegiatan-umum/?24top=${denda.total_item}&%24select=id%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__administrasi__jenis__penertiban`
-      // )
-      // setTotalDendaPengadilan(resDenda.data.data)
       setTotalKegiatan(res.data.data)
     }
     fetchDTPerdaPerkada()
@@ -59,7 +52,7 @@ export const DtPerdaPerkada: FC<any> = ({
     let countJumlah = 0
     // console.log('row', row)
     // console.log('jenis', jenis)
-    console.log('total',totalKegiatan)
+    // console.log('total',totalKegiatan)
     if (row && !jenis) {
       countJumlah = totalKegiatan.filter((item: any) => item.tindak_lanjut__administrasi__jenis_penertiban === row).length
     }
@@ -77,6 +70,21 @@ export const DtPerdaPerkada: FC<any> = ({
         {countJumlah}
       </>
     )
+  }
+
+  const GetPerDenda = ({ row, jenis }: any) => {
+    let totalDenda = 0
+    if (row && !jenis) {
+      totalDenda = totalKegiatan.filter((item: any) => item.tindak_lanjut__administrasi__jenis_penertiban === row).length
+    }
+    if (row && jenis) {
+      const jumlah = totalKegiatan.filter(
+        (item: any) => item.tindak_lanjut__administrasi__jenis_penertiban === row && item[jenis]
+      )
+      totalDenda = jumlah.reduce((acc, item) => acc + item[jenis], 0)
+      console.log(row, jenis, jumlah)
+    }
+    return <>{totalDenda}</>
   }
 
   const columns = [
@@ -110,41 +118,45 @@ export const DtPerdaPerkada: FC<any> = ({
       selector: (row: any) => row.jenis_penertiban,
       cell: (record: any) => <GetPerJenis row={record.jenis_penertiban} jenis={[6, 11, 12, 22, 27, 28, 30, 32, 35, 37, 40]} />,
     },
-      {
-        name: 'Penutupan/Penyegelan',
-        center: true,
-        width: '200px',
-        selector: (row: any) => row.jenis_penertiban,
-        cell: (record: any) => <GetPerJenis row={record.jenis_penertiban} jenis={[2, 3, 10, 13, 14, 18, 19, 20, 21, 24]} />,
-      },
-      {
-        name: 'Pencabutan Izin',
-        center: true,
-        width: '150px',
-        selector: (row: any) => row.jenis_penertiban,
-        cell: (record: any) => <GetPerJenis row={record.jenis_penertiban} jenis={[8, 15, 16, 38]} />,
-      },
-      {
-        name: 'Yang Lain',
-        center: true,
-        width: '150px',
-        selector: (row: any) => row.jenis_penertiban,
-        cell: (record: any) => <GetPerJenis row={record.jenis_penertiban} jenis={[1, 4, 5, 7, 9, 17, 23, 25, 26, 29, 32, 33, 34, 36, 39, 41, 42, 43]} />,
-      },
-      {
-        name: 'Denda Pengadilan',
-        center: true,
-        width: '200px',
-        sortField: 'denda_pengadilan',
-        selector: (row: any) => row.denda_pengadilan,
-      },
-      {
-        name: 'Denda Non Pengadilan',
-        center: true,
-        width: '200px',
-        sortField: 'denda_non_pengadilan',
-        selector: (row: any) => row.denda_non_pengadilan,
-      },
+    {
+      name: 'Penutupan/Penyegelan',
+      center: true,
+      width: '200px',
+      selector: (row: any) => row.jenis_penertiban,
+      cell: (record: any) => <GetPerJenis row={record.jenis_penertiban} jenis={[2, 3, 10, 13, 14, 18, 19, 20, 21, 24]} />,
+    },
+    {
+      name: 'Pencabutan Izin',
+      center: true,
+      width: '150px',
+      selector: (row: any) => row.jenis_penertiban,
+      cell: (record: any) => <GetPerJenis row={record.jenis_penertiban} jenis={[8, 15, 16, 38]} />,
+    },
+    {
+      name: 'Yang Lain',
+      center: true,
+      width: '150px',
+      selector: (row: any) => row.jenis_penertiban,
+      cell: (record: any) => <GetPerJenis row={record.jenis_penertiban} jenis={[1, 4, 5, 7, 9, 17, 23, 25, 26, 29, 32, 33, 34, 36, 39, 41, 42, 43]} />,
+    },
+    {
+      name: 'Denda Pengadilan',
+      center: true,
+      width: '200px',
+      selector: (row: any) => row.jenis_penertiban,
+      cell: (record: any) => (
+        <GetPerDenda row={record.jenis_penertiban} jenis={'tindak_lanjut__denda__pengadilan'} />
+      ),
+    },
+    {
+      name: 'Denda Non Pengadilan',
+      center: true,
+      width: '200px',
+      selector: (row: any) => row.jenis_penertiban,
+      cell: (record: any) => (
+        <GetPerDenda row={record.jenis_penertiban} jenis={'tindak_lanjut__denda__non_pengadilan'} />
+      ),
+    },
   ]
 
   // console.log('penertiban', penertiban)
@@ -180,10 +192,10 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
   useEffect(() => {
     const fetchDTPerdaPerkadaPelaksana = async () => {
       const { data } = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id%2C%20kegiatan__kota_id%2C%20kegiatan__jenis_kegiatan_id`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id%2C%20kegiatan__kota_id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
       )
       const res = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20kegiatan__kota_id%2C%20kegiatan__jenis_kegiatan_id`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20kegiatan__kota_id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
       )
       setTotalKegiatan(res.data.data)
     }
@@ -191,10 +203,8 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
   }, [])
 
   const GetPerJenis = ({ row, jenis }: any) => {
-    console.log('row', row)
-    console.log('jenis', jenis)
-    console.log('total',totalKegiatan)
     let countJumlah = 0
+    console.log('Total', totalKegiatan)
     if (row && !jenis) {
       countJumlah = totalKegiatan.filter((item: any) => item.kegiatan__kota_id === row).length
     }
@@ -202,7 +212,7 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
       let jumlahJenis = 0
       for (let i = 0; i < jenis.length; i++) {
         jumlahJenis = totalKegiatan.filter(
-          (item: any) => item.kegiatan__kota_id === row && item.kegiatan__jenis_kegiatan_id === jenis[i]
+          (item: any) => item.kegiatan__kota_id === row && item.tindak_lanjut__administrasi__penyelesaian_id === jenis[i]
         ).length;
         countJumlah += jumlahJenis
       }
@@ -212,6 +222,21 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
         {countJumlah}
       </>
     )
+  }
+
+  const GetPerDenda = ({ row, jenis }: any) => {
+    let totalDenda = 0
+    if (row && !jenis) {
+      totalDenda = totalKegiatan.filter((item: any) => item.kegiatan__kota_id === row).length
+    }
+    if (row && jenis) {
+      const jumlah = totalKegiatan.filter(
+        (item: any) => item.kegiatan__kota_id === row && item[jenis]
+      )
+      totalDenda = jumlah.reduce((acc, item) => acc + item[jenis], 0)
+      console.log(row, jenis, jumlah)
+    }
+    return <>{totalDenda}</>
   }
 
   const columns = [
@@ -246,40 +271,44 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
       selector: (row: any) => row.no,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={[6, 11, 12, 22, 27, 28, 30, 32, 35, 37, 40]} />,
     },
-      {
-        name: 'Penutupan/Penyegelan',
-        center: true,
-        width: '200px',
-        selector: (row: any) => row.no,
-        cell: (record: any) => <GetPerJenis row={record.no} jenis={[2, 3, 10, 13, 14, 18, 19, 20, 21, 24]} />,
-      },
-      {
-        name: 'Pencabutan Izin',
-        center: true,
-        width: '150px',
-        selector: (row: any) => row.no,
-        cell: (record: any) => <GetPerJenis row={record.no} jenis={[8, 15, 16, 38]} />,
-      },
-      {
-        name: 'Yang Lain',
-        center: true,
-        width: '150px',
-        selector: (row: any) => row.no,
-        cell: (record: any) => <GetPerJenis row={record.no} jenis={[1, 4, 5, 7, 9, 17, 23, 25, 26, 29, 32, 33, 34, 36, 39, 41, 42, 43]} />,
-      },
+    {
+      name: 'Penutupan/Penyegelan',
+      center: true,
+      width: '200px',
+      selector: (row: any) => row.no,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={[2, 3, 10, 13, 14, 18, 19, 20, 21, 24]} />,
+    },
+    {
+      name: 'Pencabutan Izin',
+      center: true,
+      width: '150px',
+      selector: (row: any) => row.no,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={[8, 15, 16, 38]} />,
+    },
+    {
+      name: 'Yang Lain',
+      center: true,
+      width: '150px',
+      selector: (row: any) => row.no,
+      cell: (record: any) => <GetPerJenis row={record.no} jenis={[1, 4, 5, 7, 9, 17, 23, 25, 26, 29, 32, 33, 34, 36, 39, 41, 42, 43]} />,
+    },
     {
       name: 'Denda Pengadilan',
       center: true,
       width: '200px',
-      sortField: 'denda_pengadilan',
-      selector: (row: any) => row.denda_pengadilan,
+      selector: (row: any) => row.no,
+      cell: (record: any) => (
+        <GetPerDenda row={record.no} jenis={'tindak_lanjut__denda__pengadilan'} />
+      ),
     },
     {
       name: 'Denda Non Pengadilan',
       center: true,
       width: '200px',
-      sortField: 'denda_non_pengadilan',
-      selector: (row: any) => row.denda_non_pengadilan,
+      selector: (row: any) => row.no,
+      cell: (record: any) => (
+        <GetPerDenda row={record.no} jenis={'tindak_lanjut__denda__non_pengadilan'} />
+      ),
     },
   ]
 

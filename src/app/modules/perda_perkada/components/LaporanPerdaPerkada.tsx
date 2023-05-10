@@ -167,7 +167,7 @@ export function LaporanPerdaPerkada() {
 
   const filterList = async () => {
     const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-    const resJPen = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
+    const resJPen = await axios.get(`${MASTERDATA_URL}/jenis-penertiban/combobox`)
     const resJPer = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
     const dataJKeg = resJKeg.data.data.map((d: any) => ({
       label: d.nama,
@@ -228,7 +228,7 @@ export function LaporanPerdaPerkada() {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-penertiban/combobox`)
     const json = await response.data.data
     setJenisPenertibanList(json)
-    return json.map((i: any) => ({ label: i.nama, value: i.id }))
+    return json.map((i: any) => ({ label: i.text, value: i.value }))
   }
   const loadOptionsJenisPenertiban = (
     inputValue: string,
