@@ -799,43 +799,6 @@ export function LaporanPPKMRumahMakan() {
                                                     Unduh CSV
                                                 </>
                                             </button>
-                                            <div>
-                                                <Button
-                                                    type='button'
-                                                    className='btn btn-primary'
-                                                    data-kt-menu-placement='bottom-end'
-                                                    data-kt-menu-trigger='click'
-                                                >
-                                                    Pilih Tabel Berdasarkan
-                                                </Button>
-                                                <div
-                                                    className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                                                    data-kt-menu='true'
-                                                >
-
-                                                    {/* begin::Content */}
-                                                    <div data-kt-user-table-filter='form'>
-                                                        <button
-                                                            onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                                                            className='btn btn-outline btn-active-light-primary w-100'>
-                                                            Jenis Penertiban
-                                                        </button>
-                                                    </div>
-                                                    {/* end::Content */}
-
-                                                    {/* begin::Content */}
-                                                    <div data-kt-user-table-filter='form'>
-                                                        <button
-                                                            onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                                                            className='btn btn-outline btn-active-light-primary w-100'
-                                                        >
-                                                            Pelaksana
-                                                        </button>
-                                                    </div>
-                                                    {/* end::Content */}
-                                                </div>
-                                            </div>
-                                            {/*  end::SubMenu */}
                                         </div>
                                         {/* END :: Button */}
                                     </div>
