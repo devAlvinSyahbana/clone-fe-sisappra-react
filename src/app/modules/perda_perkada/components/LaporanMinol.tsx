@@ -10,7 +10,7 @@ import {RootState} from '../../../redux/store'
 import {unparse} from 'papaparse'
 import {Link, useNavigate} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
-import {DtSidangTipiring} from './datatables/data-table-laporan-minol'
+import {DtMinol} from './datatables/data-table-laporan-minol'
 import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
 import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import {Button} from 'react-bootstrap'
@@ -151,11 +151,8 @@ export function LaporanMinol() {
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
-  const [aksi, setAksi] = useState(0)
+  
   const dispatch = useDispatch()
-  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   // GET KOTA
   const [inputValKota, setDataKota] = useState<any>({})
@@ -273,11 +270,6 @@ export function LaporanMinol() {
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
 
-  // // const kota = values.kejadian__kota_id
-  // // const kecamatan = values.kejadian__kecamatan_id
-  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   const [jenisMinolList, setjenisMinolList] = useState([])
   const [valjenisMinol, setValjenisMinol] = useState({value: '', label: ''})
@@ -491,116 +483,116 @@ export function LaporanMinol() {
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
-        // const data = res.data.data.map((d: any) => ({
-        //   id: d.id,
-        //   no: d.id,
-        //   pelaksana: d.created_by,
-        //   tanggal_kegiatan: d.kegiatan__tanggal,
-        //   waktu_mulai: d.kegiatan__jam_start,
-        //   waktu_selesai: d.kegiatan__jam_end,
-        //   jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-        //   uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-        //   lokasi: d.kegiatan__lokasi,
-        //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
-        //   denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
-        //   denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
-        // }))
-        // Array.from(data).forEach((item: any, index: any) => {
-        //   item.serial = index + 1
-        // })
-        const arr: minolInterface[] = [
-          {
-            no: 1,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA PUSAT',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-          {
-            no: 2,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA UTARA',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-          {
-            no: 3,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA BARAT',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-          {
-            no: 4,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA SELATAN',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-          {
-            no: 5,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA TIMUR',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-        ]
-        setData(arr)
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kegiatan: d.kegiatan__tanggal,
+          waktu_mulai: d.kegiatan__jam_start,
+          waktu_selesai: d.kegiatan__jam_end,
+          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+          lokasi: d.kegiatan__lokasi,
+          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
+          denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
+          denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+        }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        // const arr: minolInterface[] = [
+        //   {
+        //     no: 1,
+        //     pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA PUSAT',
+        //     jumlah_minol: 35,
+        //     wine: 5,
+        //     bir: 10,
+        //     sake: 0,
+        //     gin: 20,
+        //     tequilla: 20,
+        //     brandy: 20,
+        //     wiski: 20,
+        //     vodka: 20,
+        //     rum: 20,
+        //     soju: 20,
+        //     anggur: 20,
+        //     absinth: 20,
+        //     lainnya: 20,
+        //   },
+        //   {
+        //     no: 2,
+        //     pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA UTARA',
+        //     jumlah_minol: 35,
+        //     wine: 5,
+        //     bir: 10,
+        //     sake: 0,
+        //     gin: 20,
+        //     tequilla: 20,
+        //     brandy: 20,
+        //     wiski: 20,
+        //     vodka: 20,
+        //     rum: 20,
+        //     soju: 20,
+        //     anggur: 20,
+        //     absinth: 20,
+        //     lainnya: 20,
+        //   },
+        //   {
+        //     no: 3,
+        //     pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA BARAT',
+        //     jumlah_minol: 35,
+        //     wine: 5,
+        //     bir: 10,
+        //     sake: 0,
+        //     gin: 20,
+        //     tequilla: 20,
+        //     brandy: 20,
+        //     wiski: 20,
+        //     vodka: 20,
+        //     rum: 20,
+        //     soju: 20,
+        //     anggur: 20,
+        //     absinth: 20,
+        //     lainnya: 20,
+        //   },
+        //   {
+        //     no: 4,
+        //     pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA SELATAN',
+        //     jumlah_minol: 35,
+        //     wine: 5,
+        //     bir: 10,
+        //     sake: 0,
+        //     gin: 20,
+        //     tequilla: 20,
+        //     brandy: 20,
+        //     wiski: 20,
+        //     vodka: 20,
+        //     rum: 20,
+        //     soju: 20,
+        //     anggur: 20,
+        //     absinth: 20,
+        //     lainnya: 20,
+        //   },
+        //   {
+        //     no: 5,
+        //     pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA TIMUR',
+        //     jumlah_minol: 35,
+        //     wine: 5,
+        //     bir: 10,
+        //     sake: 0,
+        //     gin: 20,
+        //     tequilla: 20,
+        //     brandy: 20,
+        //     wiski: 20,
+        //     vodka: 20,
+        //     rum: 20,
+        //     soju: 20,
+        //     anggur: 20,
+        //     absinth: 20,
+        //     lainnya: 20,
+        //   },
+        // ]
+        setData(data)
         setTotalRows(5)
         setLoading(false)
         return [data, setData] as const
@@ -707,6 +699,28 @@ export function LaporanMinol() {
       }
     })
   }
+
+  const [kota, setKota] = useState([])
+  const [qParamFindKota, setUriFindKota] = useState({strparamkota: ''})
+
+  const kotaList = async () => {
+    const responseKota = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strparamkota}`)
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      pelaksana: d.nama,
+    }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+
+    setKota(dataKota)
+    // console.log(response.data.data)
+  }
+
+  useEffect(() => {
+    kotaList()
+  }, [])
 
   interface SelectOption {
     readonly value: string
@@ -955,6 +969,27 @@ export function LaporanMinol() {
                   <div className='mb-10'>
                     <div className='row'>
                       <div className='col-4 pt-2'>
+                        <label className='form-label align-middle'>Jenis Minuman Beralkohol</label>
+                      </div>
+                      <div className='col-8'>
+                        <AsyncSelect
+                          cacheOptions
+                          loadOptions={loadOptionsKel}
+                          defaultOptions={inputKel}
+                          onChange={handleInputKel}
+                          placeholder={'Pilih Jenis Minuman Beralkohol'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='col-md-6 col-lg-6 col-sm-12'>
+                  <div className='mb-10'>
+                    <div className='row'>
+                      <div className='col-4 pt-2'>
                         <label className='form-label'>Tanggal Awal</label>
                       </div>
                       <div className='col-8'>
@@ -1086,8 +1121,9 @@ export function LaporanMinol() {
         </div>
       </div>
       <div className='card-body py-4'>
-        <DtSidangTipiring
+        <DtMinol
           data={data}
+          kota={kota}
           totalRows={totalRows}
           handlePerRowsChange={handlePerRowsChange}
           handlePageChange={handlePageChange}
