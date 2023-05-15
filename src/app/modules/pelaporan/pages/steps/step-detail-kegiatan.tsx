@@ -7,6 +7,7 @@ import {
   reset,
   isLaporanMasyarakat,
   isPengamanan,
+  updateKotaList,
   updateJenisKegiatanList,
   updateDetailJenisPasalList,
   updateDetailJenisPasalKegiatanList,
@@ -64,6 +65,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
   const jenisKegiatanId = useSelector(
     (s: RootState) => s.pelaporanKegiatan.kegiatan__jenis_kegiatan_id
   )
+  const kotaList = useSelector((s: RootState) => s.pelaporanKegiatan.list_kota)
   const jenisKegiatanSelect = values.kegiatan__jenis_kegiatan_selection?.label
   const asalLaporan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_asal_laporan)
   const jenisPengamanan = useSelector((s: RootState) => s.pelaporanKegiatan.list_jenis_pengamanan)
@@ -73,6 +75,7 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
     if (isPengamanan(values)) dispatch(updateJenisPengamananList())
     if (isTipiring(values)) dispatch(updateJenisProsesKhusus())
     if (isPenertibanBangunan(values)) dispatch(updateJenisPelanggaranBangunan())
+    dispatch(updateKotaList())
   }, [jenisKegiatanSelect])
 
   // console.log(values)
@@ -101,8 +104,8 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
             </div>
             <button
               className={`btn ${values.id || jenisKegiatanId === 0
-                  ? 'btn-secondary'
-                  : 'btn-outline-danger btn-outline'
+                ? 'btn-secondary'
+                : 'btn-outline-danger btn-outline'
                 }  btn-sm`}
               type='reset'
               disabled={values.id || jenisKegiatanId === 0}
@@ -331,6 +334,23 @@ export const StepDetailKegiatan: FC<StepDetailKegiatanProps> = ({
           />
           <div className='text-danger mt-2'>
             <ErrorMessage name='kegiatan__lokasi' />
+          </div>
+        </div>
+        <div className='mb-10'>
+          <label className='required form-label'>Kota</label>
+          <Field
+            name='kota_selection'
+            target='kegiatan__kota_id'
+            className='form-control'
+            disabled={detailState}
+            component={SelectField}
+            options={kotaList}
+            onChange={(o: ChangeEvent<any>) => {
+              dispatch(changedValue(ToFieldStateCE(o)))
+            }}
+          />
+          <div className='text-danger mt-2'>
+            <ErrorMessage name='kegiatan__kota_id' />
           </div>
         </div>
       </div>

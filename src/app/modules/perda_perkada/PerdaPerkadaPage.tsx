@@ -1,13 +1,17 @@
 import React from 'react'
-import {Navigate, Route, Routes, Outlet} from 'react-router-dom'
-import {PageLink, PageTitle} from '../../../_metronic/layout/core'
-import {LaporanSidangTipiring} from './components/LaporanSidangTipiring'
-import {LaporanMinol} from './components/LaporanMinol'
-import {RegisterPerdaPerkada} from './components/RegisterPerdaPerkada'
-import {LaporanPerdaPerkada} from './components/LaporanPerdaPerkada'
-import {PerdaPerkada_Pelaksana} from './components/PerdaPerkada-Pelaksana'
-import {LaporanPenertibanBangunan} from './components/LaporanPenertibanBangunan'
-import {LaporanPPKM} from './components/LaporanPPKM'
+import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
+import { PageLink, PageTitle } from '../../../_metronic/layout/core'
+import { LaporanSidangTipiring } from './components/LaporanSidangTipiring'
+import { LaporanMinol } from './components/LaporanMinol'
+import { RegisterPerdaPerkada } from './components/RegisterPerdaPerkada'
+import { LaporanPerdaPerkada } from './components/LaporanPerdaPerkada'
+import { PerdaPerkada_Pelaksana } from './components/PerdaPerkada-Pelaksana'
+import { LaporanPenertibanBangunan } from './components/LaporanPenertibanBangunan'
+import { LaporanPPKMPKL } from './components/LaporanPPKM-PKL'
+import { LaporanPPKMMasker } from './components/LaporanPPKM-Masker'
+import { LaporanPPKMBangunan } from './components/LaporanPPKM-Bangunan'
+import { LaporanPPKMKerumunan } from './components/LaporanPPKM-Kerumunan'
+import { LaporanPPKMRumahMakan } from './components/LaporanPPKM-RumahMakan'
 import { SidangTipiringPerda } from './components/SidangTipiringPerda'
 
 
@@ -111,11 +115,47 @@ const PerdaPerkadaPage: React.FC = () => {
           }
         />
         <Route
-          path='LaporanPPKM'
+          path='LaporanPPKM-Masker'
           element={
             <>
-              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>Laporan PPKM</PageTitle>
-              <LaporanPPKM />
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}> Penindakan Perorangan Tidak Menggunakan Masker</PageTitle>
+              <LaporanPPKMMasker />
+            </>
+          }
+        />
+        <Route
+          path='LaporanPPKM-Bangunan'
+          element={
+            <>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}> Pengawasan dan Penindakan Tempat Kerja, Usaha, Industri, Perhotelan</PageTitle>
+              <LaporanPPKMBangunan />
+            </>
+          }
+        />
+        <Route
+          path='LaporanPPKM-RumahMakan'
+          element={
+            <>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}> Pengawasan dan Penindakan Warung Makan, Restoran Atau Kafe</PageTitle>
+              <LaporanPPKMRumahMakan />
+            </>
+          }
+        />
+        <Route
+          path='LaporanPPKM-PKL'
+          element={
+            <>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}> Pengawasan dan Penindakan Pedagang Kaki Lima</PageTitle>
+              <LaporanPPKMPKL />
+            </>
+          }
+        />
+        <Route
+          path='LaporanPPKM-Kerumunan'
+          element={
+            <>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}> Pengawasan dan Penindakan Area Publik dan Kerumunan (PPKM)</PageTitle>
+              <LaporanPPKMPKL />
             </>
           }
         />
