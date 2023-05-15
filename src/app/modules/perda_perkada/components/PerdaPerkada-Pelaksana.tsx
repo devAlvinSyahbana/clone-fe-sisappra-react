@@ -241,16 +241,16 @@ export const PerdaPerkada_Pelaksana: FC = () => {
   }, [qParamFind, perPage])
 
   const [kota, setKota] = useState([])
-  const [qParamFindKota, setUriFindKota] = useState({strParamKota: ''})
+  const [qParamFindKota, setUriFindKota] = useState({ strParamKota: '' })
 
   const kotaList = async () => {
     const response = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strParamKota}`)
-    const dataKota = response.data.data.map((d:any) => ({
+    const dataKota = response.data.data.map((d: any) => ({
       id: d.id,
       no: d.id,
-      pelaksana_kegiatan: d. nama,
+      pelaksana_kegiatan: d.nama,
     }))
-    Array.from(dataKota).forEach((item:any, index:any) => {
+    Array.from(dataKota).forEach((item: any, index: any) => {
       item.serial = index + 1
     })
     setKota(dataKota)
@@ -757,7 +757,7 @@ export const PerdaPerkada_Pelaksana: FC = () => {
                             onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Jenis Penertiban
+                            Pelaksana Kegiatan
                           </button>
                         </div>
                         {/* end::Content */}
@@ -768,7 +768,7 @@ export const PerdaPerkada_Pelaksana: FC = () => {
                             onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Pelaksana
+                            Jenis Penertiban
                           </button>
                         </div>
                         {/* end::Content */}

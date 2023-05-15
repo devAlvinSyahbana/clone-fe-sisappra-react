@@ -730,7 +730,7 @@ export function LaporanPerdaPerkada() {
                               onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
                               className='btn btn-outline btn-active-light-primary w-100'
                             >
-                              Pelaksana
+                              Pelaksana Kegiatan
                             </button>
                           </div>
                           {/* end::Content */}
