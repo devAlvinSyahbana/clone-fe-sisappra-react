@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, Outlet } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 import { LaporanSidangTipiring } from './components/LaporanSidangTipiring'
 import { LaporanMinol } from './components/LaporanMinol'
+import { Minol_Pelanggaran } from './components/Minol-Pelanggaran'
 import { RegisterPerdaPerkada } from './components/RegisterPerdaPerkada'
 import { LaporanPerdaPerkada } from './components/LaporanPerdaPerkada'
 import { PerdaPerkada_Pelaksana } from './components/PerdaPerkada-Pelaksana'
@@ -71,6 +72,18 @@ const PerdaPerkadaPage: React.FC = () => {
           }
         />
         <Route
+          path='Minol_Pelanggaran'
+          element={
+            <>
+              <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
+                Laporan Penertiban Minum Beralkohol
+              </PageTitle>
+              <Minol_Pelanggaran />
+            </>
+          }
+        />
+
+        <Route
           path='RegisterPerdaPerkada'
           element={
             <>
@@ -86,7 +99,7 @@ const PerdaPerkadaPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>
-                Laporan Perda dan Perkada
+                Laporan Penegakan Perda dan Perkada
               </PageTitle>
               <LaporanPerdaPerkada />
             </>
@@ -155,7 +168,7 @@ const PerdaPerkadaPage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}> Pengawasan dan Penindakan Area Publik dan Kerumunan (PPKM)</PageTitle>
-              <LaporanPPKMPKL />
+              <LaporanPPKMKerumunan />
             </>
           }
         />
