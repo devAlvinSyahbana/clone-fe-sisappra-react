@@ -594,7 +594,7 @@ export function LaporanSidangTipiring() {
   }
 
   const handleWilayahBidang = async () => {
-    const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
+    const response = await axios.get('http://127.0.0.1:3001/bidang-wilayah/')
     setWilayahBidang(response.data.data)
   }
 
@@ -717,7 +717,7 @@ export function LaporanSidangTipiring() {
   const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
+    const response = await axios.get(`http://127.0.0.1:3001/bidang-wilayah/`)
     const json = response.data.data
     return json.map((i: any) => ({label: i.nama, value: i.id}))
   }
@@ -786,9 +786,9 @@ export function LaporanSidangTipiring() {
                           // name='filter_jenis_kegiatan_id_selection'
                           cacheOptions
                           // value={valJenisKegiatan}
-                          loadOptions={loadOptionsJenisKegiatan}
+                          loadOptions={loadOptionsbidangwilayah}
                           defaultOptions
-                          onChange={handleChangeInputJenisKegiatan}
+                          onChange={handleWilayahBidang}
                           placeholder={'Pilih Pelaksana Kegiatan'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
@@ -1024,7 +1024,7 @@ export function LaporanSidangTipiring() {
                             onClick={() => navigate('/perdaperkada/LaporanSidangTipiring/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Wilayah
+                            Pelaksana Kegiatan
                           </button>
                         </div>
                         {/* end::Content */}
@@ -1035,7 +1035,7 @@ export function LaporanSidangTipiring() {
                             onClick={() => navigate('/perdaperkada/SidangTipiringPerda/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Perda
+                            Jenis Perda Perkada
                           </button>
                         </div>
                         {/* end::Content */}
