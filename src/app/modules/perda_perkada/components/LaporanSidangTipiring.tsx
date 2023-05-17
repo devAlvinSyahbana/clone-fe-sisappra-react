@@ -1,10 +1,5 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import {
-  updateKotaList,
-  updateKecamatanList,
-  updateKelurahanList,
-} from '../../../redux/slices/pelaporan-kejadian.slice'
 import buildQuery from 'odata-query-sequelize'
 import {RootState} from '../../../redux/store'
 import {unparse} from 'papaparse'
@@ -142,12 +137,6 @@ export function LaporanSidangTipiring() {
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
-  const [aksi, setAksi] = useState(0)
-  const dispatch = useDispatch()
-  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
-
   // GET KOTA
   const [inputValKota, setDataKota] = useState<any>({})
   const filterKota = async (inputValue: string) => {
@@ -260,16 +249,7 @@ export function LaporanSidangTipiring() {
     setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
   }
 
-  const [inputValJkeg, setDataJkeg] = useState([])
-  const [inputValJpen, setDataJpen] = useState([])
-  const [inputValJper, setDataJper] = useState([])
-
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
-  const [jenisPenertibanList, setJenisPenertibanList] = useState([])
-  const [valJenisPenertiban, setValJenisPenertiban] = useState({value: '', label: ''})
-  const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({value: '', label: ''})
 
   const [hakAkses, setHakAkses] = useState([])
   const [wilayahBidang, setWilayahBidang] = useState([])
@@ -293,53 +273,9 @@ export function LaporanSidangTipiring() {
     link.remove()
   }
 
-  const filterList = async () => {
-    const resKota = await axios.get(`${MASTER_URL}/kota/find`)
-    const resKecamatan = await axios.get(`${MASTER_URL}/kecamatan/find`)
-    const resKelurahan = await axios.get(`${MASTER_URL}/kelurahan/find`)
-    const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-    const resJPen = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
-    const resJPer = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
-
-    const dataKota = resKota.data.data.map((d: any) => ({
-      label: d.kota,
-      value: String(d.kode_kota),
-    }))
-    const dataKec = resKecamatan.data.data.map((d: any) => ({
-      label: d.kecamatan,
-      value: String(d.kode_kecamatan),
-    }))
-    const dataKel = resKelurahan.data.data.map((d: any) => ({
-      label: d.kelurahan,
-      value: String(d.kode_kelurahan),
-    }))
-    const dataJKeg = resJKeg.data.data.map((d: any) => ({
-      label: d.nama,
-      value: String(d.id),
-    }))
-    const dataJPen = resJPen.data.data.map((d: any) => ({
-      label: d.jenis_penertiban,
-      value: String(d.id),
-    }))
-    const dataJPer = resJPer.data.data.map((d: any) => ({
-      label: d.judul,
-      value: String(d.id),
-    }))
-    setDataKota(dataKota)
-    setDataKec(dataKec)
-    setDataKel(dataKel)
-    setDataJkeg(dataJKeg)
-    setDataJpen(dataJPen)
-    setDataJper(dataJPer)
-  }
-
   useEffect(() => {
-    filterList()
     handleHakAkses()
     handleWilayahBidang()
-    dispatch(updateKotaList())
-    dispatch(updateKecamatanList())
-    dispatch(updateKelurahanList())
   }, [])
 
   const handleChangeInputTanggalAwal = (event: {
@@ -356,59 +292,6 @@ export function LaporanSidangTipiring() {
     setTanggalAkhir({val: event.target.value})
   }
 
-  const filterJenisKegiatan = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-    const json = await response.data.data
-    setJenisKegiatanList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
-  }
-  const loadOptionsJenisKegiatan = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterJenisKegiatan(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputJenisKegiatan = (newValue: any) => {
-    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-
-  const filterJenisPenertiban = async (inputValue: string) => {
-    const response = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
-    const json = await response.data.data
-    setJenisPenertibanList(json)
-    return json.map((i: any) => ({label: i.jenis_penertiban, value: i.id}))
-  }
-  const loadOptionsJenisPenertiban = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterJenisPenertiban(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputJenisPenertiban = (newValue: any) => {
-    setValJenisPenertiban((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-  const filterJenisPerdaPerkada = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
-    const json = await response.data.data
-    setJenisPerdaPerkadaList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
-  }
-  const loadOptionsJenisPerdaPerkada = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterJenisPerdaPerkada(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-    setValJenisPerdaPerkada((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-
   const handleFilter = async () => {
     let uriParam = ''
     if (tanggalAwal.val && tanggalAkhir.val) {
@@ -418,35 +301,12 @@ export function LaporanSidangTipiring() {
     } else if (tanggalAkhir.val !== '') {
       uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAkhir.val}%27`
     }
-    if (valJenisKegiatan.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-    } else if (valJenisKegiatan.value !== '') {
-      uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-    }
-    if (valJenisPenertiban.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
-    } else if (valJenisPenertiban.value !== '') {
-      uriParam += `tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
-    }
-    if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    } else if (valJenisPerdaPerkada.value !== '') {
-      uriParam += `tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    }
-    if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    } else if (valJenisPerdaPerkada.value !== '') {
-      uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    }
     setUriFind((prevState) => ({...prevState, strparam: uriParam}))
   }
 
   const handleFilterReset = () => {
     setTanggalAwal({val: ''})
     setTanggalAkhir({val: ''})
-    setValJenisKegiatan({value: '', label: ''})
-    setValJenisPenertiban({value: '', label: ''})
-    setValJenisPerdaPerkada({value: '', label: ''})
     setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
@@ -473,62 +333,6 @@ export function LaporanSidangTipiring() {
         Array.from(data).forEach((item: any, index: any) => {
           item.serial = index + 1
         })
-        // const arr: SidangTipiringInterface[] = [
-        //   {
-        //     no: 1,
-        //     wilayah: 'KOTA ADMINISTRASI JAKARTA PUSAT',
-        //     jumlah_penertiban: 2,
-        //     jumlah_pelanggar: 5,
-        //     jumlah_pelanggar_tidak_hadir: 0,
-        //     verstek: 0,
-        //     denda_pengadilan: '2.000.000',
-        //   },
-        //   {
-        //     no: 2,
-        //     wilayah: 'KOTA ADMINISTRASI JAKARTA UTARA',
-        //     jumlah_penertiban: 2,
-        //     jumlah_pelanggar: 2,
-        //     jumlah_pelanggar_tidak_hadir: 0,
-        //     verstek: 0,
-        //     denda_pengadilan: '4.000.000',
-        //   },
-        //   {
-        //     no: 3,
-        //     wilayah: 'KOTA ADMINISTRASI JAKARTA BARAT',
-        //     jumlah_penertiban: 2,
-        //     jumlah_pelanggar: 2,
-        //     jumlah_pelanggar_tidak_hadir: 0,
-        //     verstek: 0,
-        //     denda_pengadilan: '6.000.000',
-        //   },
-        //   {
-        //     no: 4,
-        //     wilayah: 'KOTA ADMINISTRASI JAKARTA SELATAN',
-        //     jumlah_penertiban: 2,
-        //     jumlah_pelanggar: 2,
-        //     jumlah_pelanggar_tidak_hadir: 0,
-        //     verstek: 0,
-        //     denda_pengadilan: '8.000.000',
-        //   },
-        //   {
-        //     no: 5,
-        //     wilayah: 'KOTA ADMINISTRASI JAKARTA TIMUR',
-        //     jumlah_penertiban: 2,
-        //     jumlah_pelanggar: 2,
-        //     jumlah_pelanggar_tidak_hadir: 0,
-        //     verstek: 0,
-        //     denda_pengadilan: '10.000.000',
-        //   },
-        //   {
-        //     no: 6,
-        //     wilayah: 'KABUPATEN ADMINISTRASI KEPULAUAN SERIBU',
-        //     jumlah_penertiban: 2,
-        //     jumlah_pelanggar: 2,
-        //     jumlah_pelanggar_tidak_hadir: 0,
-        //     verstek: 0,
-        //     denda_pengadilan: '12.000.000',
-        //   },
-        // ]
         setData(data)
         setTotalRows(5)
         setLoading(false)
@@ -786,9 +590,9 @@ export function LaporanSidangTipiring() {
                           // name='filter_jenis_kegiatan_id_selection'
                           cacheOptions
                           // value={valJenisKegiatan}
-                          loadOptions={loadOptionsJenisKegiatan}
+                          // loadOptions={loadOptionsJenisKegiatan}
                           defaultOptions
-                          onChange={handleChangeInputJenisKegiatan}
+                          // onChange={handleChangeInputJenisKegiatan}
                           placeholder={'Pilih Pelaksana Kegiatan'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
@@ -805,7 +609,6 @@ export function LaporanSidangTipiring() {
                         <label className='form-label align-middle'>Kota</label>
                       </div>
                       <div className='col-8'>
-                        {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
                         <AsyncSelect
                           cacheOptions
                           loadOptions={loadOptionsKota}
@@ -827,10 +630,8 @@ export function LaporanSidangTipiring() {
                         <label className='form-label align-middle'>Kecamatan</label>
                       </div>
                       <div className='col-8'>
-                        {/* <input className="form-control form-control-solid" placeholder="Pilih Kota" /> */}
                         <AsyncSelect
                           cacheOptions
-                          // value={inputValKec.value ? inputValKec : {value: '', label: 'Pilih'}}
                           loadOptions={loadOptionsKec}
                           defaultOptions={inputKec}
                           onChange={handleInputKec}
@@ -856,72 +657,6 @@ export function LaporanSidangTipiring() {
                           defaultOptions={inputKel}
                           onChange={handleInputKel}
                           placeholder={'Pilih Kelurahan'}
-                          styles={
-                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='col-md-6 col-lg-6 col-sm-12'>
-                  <div className='mb-10'>
-                    <div className='row'>
-                      <div className='col-4 pt-2'>
-                        <label className='form-label align-middle'>Jenis Pasal</label>
-                      </div>
-                      <div className='col-8'>
-                        <AsyncSelect
-                          // name='jenis_perda_perkada'
-                          defaultOptions
-                          // value={valJenisPerdaPerkada}
-                          loadOptions={loadOptionsJenisPerdaPerkada}
-                          onChange={handleChangeInputJenisPerdaPerkada}
-                          placeholder={'Pilih Pasal'}
-                          styles={
-                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='col-md-6 col-lg-6 col-sm-12'>
-                  <div className='mb-10'>
-                    <div className='row'>
-                      <div className='col-4 pt-2'>
-                        <label className='form-label align-middle'>Jenis Pelanggaran</label>
-                      </div>
-                      <div className='col-8'>
-                        <AsyncSelect
-                          // name='jenis_perda_perkada'
-                          defaultOptions
-                          // value={valJenisPerdaPerkada}
-                          loadOptions={loadOptionsJenisPerdaPerkada}
-                          onChange={handleChangeInputJenisPerdaPerkada}
-                          placeholder={'Pilih Jenis Pelanggaran'}
-                          styles={
-                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='col-md-6 col-lg-6 col-sm-12'>
-                  <div className='mb-10'>
-                    <div className='row'>
-                      <div className='col-4 pt-2'>
-                        <label className='form-label align-middle'>Jenis Perda & Perkada</label>
-                      </div>
-                      <div className='col-8'>
-                        <AsyncSelect
-                          // name='jenis_perda_perkada'
-                          defaultOptions
-                          // value={valJenisPerdaPerkada}
-                          loadOptions={loadOptionsJenisPerdaPerkada}
-                          onChange={handleChangeInputJenisPerdaPerkada}
-                          placeholder={'Pilih Jenis Perda & Perkada'}
                           styles={
                             calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
                           }
@@ -1024,7 +759,7 @@ export function LaporanSidangTipiring() {
                             onClick={() => navigate('/perdaperkada/LaporanSidangTipiring/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Wilayah
+                            Pelaksana Kegiatan
                           </button>
                         </div>
                         {/* end::Content */}
@@ -1035,7 +770,7 @@ export function LaporanSidangTipiring() {
                             onClick={() => navigate('/perdaperkada/SidangTipiringPerda/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Perda
+                            Jenis Perda Perkada
                           </button>
                         </div>
                         {/* end::Content */}

@@ -50,9 +50,6 @@ export const DtPerdaPerkada: FC<any> = ({
 
   const GetPerJenis = ({ row, jenis }: any) => {
     let countJumlah = 0
-    // console.log('row', row)
-    // console.log('jenis', jenis)
-    // console.log('total',totalKegiatan)
     if (row && !jenis) {
       countJumlah = totalKegiatan.filter((item: any) => item.tindak_lanjut__administrasi__jenis_penertiban === row).length
     }

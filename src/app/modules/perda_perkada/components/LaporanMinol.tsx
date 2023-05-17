@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import {
   updateKotaList,
@@ -6,15 +6,15 @@ import {
   updateKelurahanList,
 } from '../../../redux/slices/pelaporan-kejadian.slice'
 import buildQuery from 'odata-query-sequelize'
-import {RootState} from '../../../redux/store'
-import {unparse} from 'papaparse'
-import {Link, useNavigate} from 'react-router-dom'
-import {useDispatch, useSelector} from 'react-redux'
-import {DtSidangTipiring} from './datatables/data-table-laporan-minol'
-import {ThemeModeComponent} from '../../../../_metronic/assets/ts/layout'
-import {useThemeMode} from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import {Button} from 'react-bootstrap'
-import {KTSVG} from '../../../../_metronic/helpers'
+import { RootState } from '../../../redux/store'
+import { unparse } from 'papaparse'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { DtMinol } from './datatables/data-table-laporan-minol'
+import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { Button } from 'react-bootstrap'
+import { KTSVG } from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
 import Swal from 'sweetalert2'
@@ -147,15 +147,12 @@ interface SelectOptionAutoCom {
 
 export function LaporanMinol() {
   const navigate = useNavigate()
-  const {mode} = useThemeMode()
+  const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
-  const [aksi, setAksi] = useState(0)
+
   const dispatch = useDispatch()
-  const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   // GET KOTA
   const [inputValKota, setDataKota] = useState<any>({})
@@ -168,9 +165,9 @@ export function LaporanMinol() {
         const valueLabel: string = i.nama.toLowerCase()
         if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
-      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
+      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
     }
-    return json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
   }
   const loadOptionsKota = (
     inputValue: string,
@@ -182,13 +179,13 @@ export function LaporanMinol() {
   }
   const handleInputKota = async (newValue: any) => {
     const filter = {
-      kode_kota: {eq: newValue.kode},
+      kode_kota: { eq: newValue.kode },
     }
-    const query = buildQuery({filter})
+    const query = buildQuery({ filter })
     const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
     let json = await response.data.data
-    setKec(json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode})))
-    setDataKota({...newValue})
+    setKec(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
+    setDataKota({ ...newValue })
   }
 
   //  GET KECAMATAN
@@ -197,9 +194,9 @@ export function LaporanMinol() {
 
   const filterKec = async (inputValue: string) => {
     const filter = {
-      kode_kota: {eq: inputValKota.kode},
+      kode_kota: { eq: inputValKota.kode },
     }
-    const query = buildQuery({filter})
+    const query = buildQuery({ filter })
     const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
     let json = await response.data.data
 
@@ -209,7 +206,7 @@ export function LaporanMinol() {
 
         if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
-      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
+      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
     }
     return inputKec
   }
@@ -225,24 +222,24 @@ export function LaporanMinol() {
 
   const handleInputKec = async (newValue: any) => {
     const filter = {
-      kode_kecamatan: {eq: newValue.kode},
+      kode_kecamatan: { eq: newValue.kode },
     }
-    const query = buildQuery({filter})
+    const query = buildQuery({ filter })
     const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
     let json = await response.data.data
-    setKel(json.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode})))
-    setDataKec((prevstate: any) => ({...prevstate, ...newValue}))
+    setKel(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
+    setDataKec((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   // GET KELURAHAN
-  const [inputValKel, setDataKel] = useState({label: '', value: null})
+  const [inputValKel, setDataKel] = useState({ label: '', value: null })
   const [inputKel, setKel] = useState<SelectOptionAutoCom[]>([])
 
   const filterKel = async (inputValue: string) => {
     const filter = {
-      kode_kecamatan: {eq: inputValKec.kode},
+      kode_kecamatan: { eq: inputValKec.kode },
     }
-    const query = buildQuery({filter})
+    const query = buildQuery({ filter })
     const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
     let json = await response.data.data
 
@@ -253,7 +250,7 @@ export function LaporanMinol() {
         if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
       })
 
-      return mappingData.map((i: any) => ({label: i.nama, value: i.id, kode: i.kode}))
+      return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
     }
     return inputKel
   }
@@ -266,43 +263,38 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleInputKel = (newValue: any) => {
-    setDataKel((prevstate: any) => ({...prevstate, ...newValue}))
+    setDataKel((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   const [inputValJkeg, setDataJkeg] = useState([])
   const [inputValJpen, setDataJpen] = useState([])
   const [inputValJper, setDataJper] = useState([])
 
-  // // const kota = values.kejadian__kota_id
-  // // const kecamatan = values.kejadian__kecamatan_id
-  // const kotaList = useSelector((s: RootState) => s.pelaporanKejadian.list_kota)
-  // const kecamatanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kecamatan)
-  // const kelurahanList = useSelector((s: RootState) => s.pelaporanKejadian.list_kelurahan)
 
   const [jenisMinolList, setjenisMinolList] = useState([])
-  const [valjenisMinol, setValjenisMinol] = useState({value: '', label: ''})
+  const [valjenisMinol, setValjenisMinol] = useState({ value: '', label: '' })
   const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [valJenisKegiatan, setValJenisKegiatan] = useState({value: '', label: ''})
+  const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
   const [jenisPenertibanList, setJenisPenertibanList] = useState([])
-  const [valJenisPenertiban, setValJenisPenertiban] = useState({value: '', label: ''})
+  const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
   const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({value: '', label: ''})
+  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
 
   const [hakAkses, setHakAkses] = useState([])
-  const [valHakAkses, setValHakAkses] = useState({value: '', label: ''})
+  const [valHakAkses, setValHakAkses] = useState({ value: '', label: '' })
   const [wilayahBidang, setWilayahBidang] = useState([])
-  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
-  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
+  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
+  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
 
   const [data, setData] = useState<minolInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
 
   const unduhCSV = (data: any[]) => {
     const csvData = unparse(data)
-    const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.setAttribute('download', 'LAPORAN PENERTIBAN MINUM BERALKOHOL.csv')
@@ -362,23 +354,23 @@ export function LaporanMinol() {
 
   const handleChangeInputTanggalAwal = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAwal({val: event.target.value})
+    setTanggalAwal({ val: event.target.value })
   }
 
   const handleChangeInputTanggalAkhir = (event: {
     preventDefault: () => void
-    target: {value: any; name: any}
+    target: { value: any; name: any }
   }) => {
-    setTanggalAkhir({val: event.target.value})
+    setTanggalAkhir({ val: event.target.value })
   }
 
   const filterJenisKegiatan = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
     const json = await response.data.data
     setJenisKegiatanList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
+    return json.map((i: any) => ({ label: i.text, value: i.value }))
   }
   const loadOptionsJenisKegiatan = (
     inputValue: string,
@@ -389,14 +381,14 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputJenisKegiatan = (newValue: any) => {
-    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
+    setValJenisKegiatan((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   const filterJenisPenertiban = async (inputValue: string) => {
     const response = await axios.get(`${MASTER_URL}/jenis-penertiban/find`)
     const json = await response.data.data
     setJenisPenertibanList(json)
-    return json.map((i: any) => ({label: i.jenis_penertiban, value: i.id}))
+    return json.map((i: any) => ({ label: i.jenis_penertiban, value: i.id }))
   }
   const loadOptionsJenisPenertiban = (
     inputValue: string,
@@ -407,13 +399,13 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputJenisPenertiban = (newValue: any) => {
-    setValJenisPenertiban((prevstate: any) => ({...prevstate, ...newValue}))
+    setValJenisPenertiban((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
   const filterPelaksana = async (inputValue: string) => {
     const response = await axios.get(`${API_URL}/manajemen-pengguna/hak-akses/find`)
     const json = await response.data.data
     setHakAkses(json)
-    return json.map((i: any) => ({label: i.pelaksana, value: i.id}))
+    return json.map((i: any) => ({ label: i.pelaksana, value: i.id }))
   }
   const loadOptionsPelaksana = (
     inputValue: string,
@@ -424,13 +416,13 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputPelaksana = (newValue: any) => {
-    setValHakAkses((prevstate: any) => ({...prevstate, ...newValue}))
+    setValHakAkses((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
   const filterJenisPerdaPerkada = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
     const json = await response.data.data
     setJenisPerdaPerkadaList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
+    return json.map((i: any) => ({ label: i.text, value: i.value }))
   }
   const loadOptionsJenisPerdaPerkada = (
     inputValue: string,
@@ -441,7 +433,7 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-    setValJenisPerdaPerkada((prevstate: any) => ({...prevstate, ...newValue}))
+    setValJenisPerdaPerkada((prevstate: any) => ({ ...prevstate, ...newValue }))
   }
 
   const handleFilter = async () => {
@@ -473,16 +465,16 @@ export function LaporanMinol() {
     } else if (valJenisPerdaPerkada.value !== '') {
       uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
     }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
+    setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
   }
 
   const handleFilterReset = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
-    setValJenisKegiatan({value: '', label: ''})
-    setValJenisPenertiban({value: '', label: ''})
-    setValJenisPerdaPerkada({value: '', label: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
+    setTanggalAwal({ val: '' })
+    setTanggalAkhir({ val: '' })
+    setValJenisKegiatan({ value: '', label: '' })
+    setValJenisPenertiban({ value: '', label: '' })
+    setValJenisPerdaPerkada({ value: '', label: '' })
+    setUriFind((prevState) => ({ ...prevState, strparam: '' }))
   }
 
   const dataPerdaPerkada = (page: number) => {
@@ -491,116 +483,24 @@ export function LaporanMinol() {
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
       )
       .then((res) => {
-        // const data = res.data.data.map((d: any) => ({
-        //   id: d.id,
-        //   no: d.id,
-        //   pelaksana: d.created_by,
-        //   tanggal_kegiatan: d.kegiatan__tanggal,
-        //   waktu_mulai: d.kegiatan__jam_start,
-        //   waktu_selesai: d.kegiatan__jam_end,
-        //   jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-        //   uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-        //   lokasi: d.kegiatan__lokasi,
-        //   jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
-        //   denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
-        //   denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
-        // }))
-        // Array.from(data).forEach((item: any, index: any) => {
-        //   item.serial = index + 1
-        // })
-        const arr: minolInterface[] = [
-          {
-            no: 1,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA PUSAT',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-          {
-            no: 2,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA UTARA',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-          {
-            no: 3,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA BARAT',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-          {
-            no: 4,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA SELATAN',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-          {
-            no: 5,
-            pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA TIMUR',
-            jumlah_minol: 35,
-            wine: 5,
-            bir: 10,
-            sake: 0,
-            gin: 20,
-            tequilla: 20,
-            brandy: 20,
-            wiski: 20,
-            vodka: 20,
-            rum: 20,
-            soju: 20,
-            anggur: 20,
-            absinth: 20,
-            lainnya: 20,
-          },
-        ]
-        setData(arr)
+        const data = res.data.data.map((d: any) => ({
+          id: d.id,
+          no: d.id,
+          pelaksana: d.created_by,
+          tanggal_kegiatan: d.kegiatan__tanggal,
+          waktu_mulai: d.kegiatan__jam_start,
+          waktu_selesai: d.kegiatan__jam_end,
+          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+          lokasi: d.kegiatan__lokasi,
+          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
+          denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
+          denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+        }))
+        Array.from(data).forEach((item: any, index: any) => {
+          item.serial = index + 1
+        })
+        setData(data)
         setTotalRows(5)
         setLoading(false)
         return [data, setData] as const
@@ -613,7 +513,6 @@ export function LaporanMinol() {
 
   const handlePageChange = (page: number) => {
     dataPerdaPerkada(page - 1)
-    console.log('ini page', page)
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
@@ -709,6 +608,28 @@ export function LaporanMinol() {
     })
   }
 
+  const [kota, setKota] = useState([])
+  const [qParamFindKota, setUriFindKota] = useState({ strparamkota: '' })
+
+  const kotaList = async () => {
+    const responseKota = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strparamkota}`)
+    const dataKota = responseKota.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      pelaksana: d.nama,
+    }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+
+    setKota(dataKota)
+    // console.log(response.data.data)
+  }
+
+  useEffect(() => {
+    kotaList()
+  }, [])
+
   interface SelectOption {
     readonly value: string
     readonly label: string
@@ -762,13 +683,13 @@ export function LaporanMinol() {
     return [data, setData] as const
   }
 
-  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({id: ''})
-  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({value: null, label: ''})
+  const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
+  const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
   const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
   const filterbidangwilayah = async (inputValue: string) => {
     const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
     const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsbidangwilayah = (
     inputValue: string,
@@ -779,9 +700,9 @@ export function LaporanMinol() {
     }, 1000)
   }
   const handleChangeInputKota = (newValue: any) => {
-    setValMasterBidangWilayah((prevstate: any) => ({...prevstate, ...newValue}))
-    setIdMasterBidangWilayah({id: newValue.value})
-    setValMasterPelaksana({value: null, label: ''})
+    setValMasterBidangWilayah((prevstate: any) => ({ ...prevstate, ...newValue }))
+    setIdMasterBidangWilayah({ id: newValue.value })
+    setValMasterPelaksana({ value: null, label: '' })
     const timeout = setTimeout(async () => {
       const response = await axios.get(
         `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${newValue.value}`
@@ -792,7 +713,6 @@ export function LaporanMinol() {
         item.value = item.id
       })
       setMasterBidangWilayah(items)
-      // console.log(items)
     }, 100)
 
     return () => clearTimeout(timeout)
@@ -800,17 +720,16 @@ export function LaporanMinol() {
   //end nama_hak_akses
 
   // kecamatan
-  const [idMasterPelaksana, setIdMasterPelaksana] = useState({id: ''})
-  const [valMasterPelaksana, setValMasterPelaksana] = useState({value: null, label: ''})
+  const [idMasterPelaksana, setIdMasterPelaksana] = useState({ id: '' })
+  const [valMasterPelaksana, setValMasterPelaksana] = useState({ value: null, label: '' })
   const [masterPelaksana, setMasterPelaksana] = useState([])
   const filterKecamatan = async (inputValue: string) => {
     const response = await axios.get(
-      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${
-        inputValue !== '' && `&nama=${inputValue}`
+      `${MASTERDATA_URL}/filter?id_tempat_pelaksanaan=${idMasterBidangWilayah.id}${inputValue !== '' && `&nama=${inputValue}`
       }`
     )
     const json = response.data.data
-    return json.map((i: any) => ({label: i.nama, value: i.id}))
+    return json.map((i: any) => ({ label: i.nama, value: i.id }))
   }
   const loadOptionsKecamatan = (
     inputValue: string,
@@ -957,6 +876,27 @@ export function LaporanMinol() {
                   <div className='mb-10'>
                     <div className='row'>
                       <div className='col-4 pt-2'>
+                        <label className='form-label align-middle'>Jenis Minuman Beralkohol</label>
+                      </div>
+                      <div className='col-8'>
+                        <AsyncSelect
+                          cacheOptions
+                          loadOptions={loadOptionsKel}
+                          defaultOptions={inputKel}
+                          onChange={handleInputKel}
+                          placeholder={'Pilih Jenis Minuman Beralkohol'}
+                          styles={
+                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='col-md-6 col-lg-6 col-sm-12'>
+                  <div className='mb-10'>
+                    <div className='row'>
+                      <div className='col-4 pt-2'>
                         <label className='form-label'>Tanggal Awal</label>
                       </div>
                       <div className='col-8'>
@@ -1015,9 +955,9 @@ export function LaporanMinol() {
                   <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
                     <button
                       type='button'
-                      className='btn btn-light-primary'
-                      data-kt-menu-trigger='click'
+                      className='btn btn-light-primary me-2'
                       data-kt-menu-placement='bottom-end'
+                      data-kt-menu-trigger='click'
                       onClick={() => unduhCSV(data)}
                     >
                       <>
@@ -1028,37 +968,42 @@ export function LaporanMinol() {
                         Unduh CSV
                       </>
                     </button>
-                    <div
-                      className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                      data-kt-menu='true'
-                    >
-                      {/* begin::Separator */}
-                      <div className='separator border-gray-200'></div>
-                      {/* end::Separator */}
+                    <div>
+                      <Button
+                        type='button'
+                        className='btn btn-primary me-2'
+                        data-kt-menu-trigger='click'
+                        data-kt-menu-placement='bottom-end'
+                      >
+                        Pilih Tabel Berdasarkan
+                      </Button>
+                      <div
+                        className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
+                        data-kt-menu='true'
+                      >
+                        {/* begin::Content */}
+                        <div data-kt-user-table-filter='form'>
+                          <button
+                            onClick={() => navigate('/perdaperkada/LaporanMinol/')}
+                            className='btn btn-outline btn-active-light-primary w-100'
+                          >
+                            Pelaksana Kegiatan
+                          </button>
+                        </div>
+                        {/* end::Content */}
 
-                      {/* begin::Content */}
-                      <div data-kt-user-table-filter='form'>
-                        <button
-                          onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                          className='btn btn-outline btn-active-light-primary w-100'
-                        >
-                          Jenis Penertiban
-                        </button>
+                        {/* begin::Content */}
+                        <div data-kt-user-table-filter='form'>
+                          <button
+                            onClick={() => navigate('/perdaperkada/Minol_Pelanggaran/')}
+                            className='btn btn-outline btn-active-light-primary w-100'
+                          >
+                            Jenis Pelanggaran
+                          </button>
+                        </div>
+                        {/* end::Content */}
                       </div>
-                      {/* end::Content */}
-
-                      {/* begin::Content */}
-                      <div data-kt-user-table-filter='form'>
-                        <button
-                          onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                          className='btn btn-outline btn-active-light-primary w-100'
-                        >
-                          Pelaksana
-                        </button>
-                      </div>
-                      {/* end::Content */}
                     </div>
-                    {/*  end::SubMenu */}
                   </div>
                   {/* END :: Button */}
                 </div>
@@ -1083,8 +1028,9 @@ export function LaporanMinol() {
         </div>
       </div>
       <div className='card-body py-4'>
-        <DtSidangTipiring
+        <DtMinol
           data={data}
+          kota={kota}
           totalRows={totalRows}
           handlePerRowsChange={handlePerRowsChange}
           handlePageChange={handlePageChange}
