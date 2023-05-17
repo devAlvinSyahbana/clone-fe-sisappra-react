@@ -15,23 +15,56 @@ const LaporanPPKMHeader = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/perdaperkada/LaporanPerdaPerkada' &&
+                      (location.pathname === '/perdaperkada/LaporanPPKM-Masker' &&
                         'active')
                     }
-                    to={`/perdaperkada/LaporanPerdaPerkada`}
+                    to={`/perdaperkada/LaporanPPKM-Masker`}
                   >
-                    Laporan Perda Perkada
+                     Penindakan Perorangan Tidak Menggunakan Masker
                   </Link>
                 </li>
                 <li className='nav-item'>
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname.includes('RegisterPerdaPerkada') && 'active')
+                      (location.pathname.includes('/LaporanPPKM-Bangunan') && 'active')
                     }
-                    to={`/perdaperkada/RegisterPerdaPerkada/`}
+                    to={`/perdaperkada/LaporanPPKM-Bangunan/`}
                   >
-                    Register Perda Perkada
+                     Pengawasan dan Penindakan Tempat Kerja, Usaha, Industri, Penginapan
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('LaporanPPKM-RumahMakan') && 'active')
+                    }
+                    to={`/perdaperkada/LaporanPPKM-RumahMakan/`}
+                  >
+                     Pengawasan dan Penindakan Warung Makan, Restoran Atau Kafe
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('LaporanPPKM-PKL') && 'active')
+                    }
+                    to={`/perdaperkada/LaporanPPKM-PKL/`}
+                  >
+                     Pengawasan dan Penindakan Pedagang Kaki Lima
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    className={
+                      `nav-link text-active-primary me-6 ` +
+                      (location.pathname.includes('LaporanPPKM-Kerumunan') && 'active')
+                    }
+                    to={`/perdaperkada/LaporanPPKM-Kerumunan/`}
+                  >
+                     Pengawasan dan Penindakan Area Publik dan Kerumunan
                   </Link>
                 </li>
               </ul>

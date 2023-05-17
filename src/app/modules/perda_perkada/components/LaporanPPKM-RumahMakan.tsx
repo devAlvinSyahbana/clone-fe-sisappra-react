@@ -3,14 +3,14 @@ import axios from 'axios'
 import { unparse } from 'papaparse'
 import buildQuery from 'odata-query-sequelize'
 import { Link, useNavigate } from 'react-router-dom'
-import { DtPPKM } from './datatables/data-table-laporan-ppkm'
+import { DtPPKMRumahMakan } from './datatables/data-table-laporan-ppkm'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { Button } from 'react-bootstrap'
+import { LaporanPPKMHeader } from './LaporanPPKMHeader'
 import { KTSVG } from '../../../../_metronic/helpers'
 import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
-import Swal from 'sweetalert2'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -115,20 +115,6 @@ export const MASTER_URL = `${API_URL}/master`
 interface PPKMInterface {
     no: number
     pelaksana_kegiatan: string
-    jumlah_minol: number
-    wine: number
-    bir: number
-    sake: number
-    gin: number
-    tequilla: number
-    brandy: number
-    wiski: number
-    vodka: number
-    rum: number
-    soju: number
-    anggur: number
-    absinth: number
-    lainnya: number
 }
 
 interface SelectOptionAutoCom {
@@ -137,15 +123,11 @@ interface SelectOptionAutoCom {
     readonly kode: string
 }
 
-export function LaporanPPKM() {
+export function LaporanPPKMRumahMakan() {
     const navigate = useNavigate()
     const { mode } = useThemeMode()
     const calculatedMode = mode === 'system' ? systemMode : mode
     const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
-
-    const [inputValJkeg, setDataJkeg] = useState([])
-    const [inputValJpen, setDataJpen] = useState([])
-    const [inputValJper, setDataJper] = useState([])
 
     const [jenisKegiatanList, setJenisKegiatanList] = useState([])
     const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
@@ -367,6 +349,28 @@ export function LaporanPPKM() {
         console.log('ini page', page)
     }
 
+    const [kota, setKota] = useState([])
+    const [qParamFindKota, setUriFindKota] = useState({ strParamKota: '' })
+
+    const kotaList = async () => {
+        const response = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strParamKota}`)
+        const dataKota = response.data.data.map((d: any) => ({
+            id: d.id,
+            no: d.id,
+            pelaksana_kegiatan: d.nama,
+        }))
+        Array.from(dataKota).forEach((item: any, index: any) => {
+            item.serial = index + 1
+        })
+        setKota(dataKota)
+
+        return [kota, setKota] as const
+    }
+
+    useEffect(() => {
+        kotaList()
+    }, [qParamFindKota])
+
     const handlePerRowsChange = async (newPerPage: number, page: number) => {
         setLoading(true)
         axios
@@ -471,23 +475,6 @@ export function LaporanPPKM() {
         setLoading(false)
 
         return [data, setData] as const
-    }
-
-    const [idMasterBidangWilayah, setIdMasterBidangWilayah] = useState({ id: '' })
-    const [valMasterBidangWilayah, setValMasterBidangWilayah] = useState({ value: null, label: '' })
-    const [masterBidangWilayah, setMasterBidangWilayah] = useState([])
-    const filterbidangwilayah = async (inputValue: string) => {
-        const response = await axios.get(`${MASTERDATA_URL}/filter/${inputValue}`)
-        const json = response.data.data
-        return json.map((i: any) => ({ label: i.nama, value: i.id }))
-    }
-    const loadOptionsbidangwilayah = (
-        inputValue: string,
-        callback: (options: SelectOption[]) => void
-    ) => {
-        setTimeout(async () => {
-            callback(await filterbidangwilayah(inputValue))
-        }, 1000)
     }
 
     // GET KOTA
@@ -597,292 +584,260 @@ export function LaporanPPKM() {
     }
 
     return (
-        <div className='card'>
-            {/* begin::Body */}
-            <div className='card-header border-1 pt-6'>
-                <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
-                    <div className='mb-5'>
-                        <div
-                            className='accordion-header py-3 d-flex'
-                            data-bs-toggle='collapse'
-                            data-bs-target='#kt_accordion_2_item_1'
-                        >
-                            <span className='accordion-icon'>
-                                <span className='svg-icon svg-icon-4'>
-                                    <svg
-                                        width='24'
-                                        height='24'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        xmlns='http://www.w3.org/2000/svg'
-                                    >
-                                        <rect
-                                            opacity='0.5'
-                                            x='18'
-                                            y='13'
-                                            width='13'
-                                            height='2'
-                                            rx='1'
-                                            transform='rotate(-180 18 13)'
-                                            fill='currentColor'
-                                        />
-                                        <path
-                                            d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
-                                            fill='currentColor'
-                                        />
-                                    </svg>
+        <>
+            <LaporanPPKMHeader />
+            <div className='card'>
+                {/* begin::Body */}
+                <div className='card-header border-1 pt-6'>
+                    <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
+                        <div className='mb-5'>
+                            <div
+                                className='accordion-header py-3 d-flex'
+                                data-bs-toggle='collapse'
+                                data-bs-target='#kt_accordion_2_item_1'
+                            >
+                                <span className='accordion-icon'>
+                                    <span className='svg-icon svg-icon-4'>
+                                        <svg
+                                            width='24'
+                                            height='24'
+                                            viewBox='0 0 24 24'
+                                            fill='none'
+                                            xmlns='http://www.w3.org/2000/svg'
+                                        >
+                                            <rect
+                                                opacity='0.5'
+                                                x='18'
+                                                y='13'
+                                                width='13'
+                                                height='2'
+                                                rx='1'
+                                                transform='rotate(-180 18 13)'
+                                                fill='currentColor'
+                                            />
+                                            <path
+                                                d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
+                                                fill='currentColor'
+                                            />
+                                        </svg>
+                                    </span>
                                 </span>
-                            </span>
-                            <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
-                        </div>
-                        <div
-                            id='kt_accordion_2_item_1'
-                            className='fs-6 collapse show ps-10'
-                            data-bs-parent='#kt_accordion_2'
-                        >
-                            <div className='row w-100 mt-10 mb-10'>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label align-middle'>
-                                                    Pelaksana Kegiatan
-                                                </label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <AsyncSelect
-                                                    name='filter_jenis_kegiatan_id_selection'
-                                                    defaultOptions
-                                                    value={valJenisKegiatan}
-                                                    // loadOptions={loadOptionsJenisKegiatan}
-                                                    // onChange={handleChangeInputJenisKegiatan}
-                                                    styles={
-                                                        calculatedMode === 'dark'
-                                                            ? reactSelectDarkThem
-                                                            : reactSelectLightThem
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label align-middle'>
-                                                    Kota
-                                                </label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <AsyncSelect
-                                                    cacheOptions
-                                                    loadOptions={loadOptionsKota}
-                                                    defaultOptions
-                                                    onChange={handleInputKota}
-                                                    placeholder={'Pilih Kota'}
-                                                    styles={
-                                                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                                                    }
-                                                />
+                                <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
+                            </div>
+                            <div
+                                id='kt_accordion_2_item_1'
+                                className='fs-6 collapse show ps-10'
+                                data-bs-parent='#kt_accordion_2'
+                            >
+                                <div className='row w-100 mt-10 mb-10'>
+                                    <div className='col-md-6 col-lg-6 col-sm-12'>
+                                        <div className='mb-10'>
+                                            <div className='row'>
+                                                <div className='col-4 pt-2'>
+                                                    <label className='form-label align-middle'>
+                                                        Pelaksana Kegiatan
+                                                    </label>
+                                                </div>
+                                                <div className='col-8'>
+                                                    <AsyncSelect
+                                                        name='filter_jenis_kegiatan_id_selection'
+                                                        defaultOptions
+                                                        value={valJenisKegiatan}
+                                                        // loadOptions={loadOptionsJenisKegiatan}
+                                                        // onChange={handleChangeInputJenisKegiatan}
+                                                        styles={
+                                                            calculatedMode === 'dark'
+                                                                ? reactSelectDarkThem
+                                                                : reactSelectLightThem
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label align-middle'>
-                                                    Kecamatan
-                                                </label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <AsyncSelect
-                                                    cacheOptions
-                                                    loadOptions={loadOptionsKec}
-                                                    defaultOptions={inputKec}
-                                                    onChange={handleInputKec}
-                                                    placeholder={'Pilih Kecamatan'}
-                                                    styles={
-                                                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label align-middle'>
-                                                    Kelurahan
-                                                </label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <AsyncSelect
-                                                    cacheOptions
-                                                    loadOptions={loadOptionsKel}
-                                                    defaultOptions={inputKel}
-                                                    onChange={handleInputKel}
-                                                    placeholder={'Pilih Kelurahan'}
-                                                    styles={
-                                                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                                                    }
-                                                />
+                                    <div className='col-md-6 col-lg-6 col-sm-12'>
+                                        <div className='mb-10'>
+                                            <div className='row'>
+                                                <div className='col-4 pt-2'>
+                                                    <label className='form-label align-middle'>
+                                                        Kota
+                                                    </label>
+                                                </div>
+                                                <div className='col-8'>
+                                                    <AsyncSelect
+                                                        cacheOptions
+                                                        loadOptions={loadOptionsKota}
+                                                        defaultOptions
+                                                        onChange={handleInputKota}
+                                                        placeholder={'Pilih Kota'}
+                                                        styles={
+                                                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label'>Tanggal Awal</label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <input
-                                                    type='date'
-                                                    name='tanggal_kunjungan'
-                                                    className='form-control'
-                                                    value={tanggalAwal.val}
-                                                    onChange={handleChangeInputTanggalAwal}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label align-middle'>Tanggal Akhir</label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <input
-                                                    name='tanggal_kunjungan'
-                                                    type='date'
-                                                    className='form-control'
-                                                    value={tanggalAkhir.val}
-                                                    onChange={handleChangeInputTanggalAkhir}
-                                                />
+                                    <div className='col-md-6 col-lg-6 col-sm-12'>
+                                        <div className='mb-10'>
+                                            <div className='row'>
+                                                <div className='col-4 pt-2'>
+                                                    <label className='form-label align-middle'>
+                                                        Kecamatan
+                                                    </label>
+                                                </div>
+                                                <div className='col-8'>
+                                                    <AsyncSelect
+                                                        cacheOptions
+                                                        loadOptions={loadOptionsKec}
+                                                        defaultOptions={inputKec}
+                                                        onChange={handleInputKec}
+                                                        placeholder={'Pilih Kecamatan'}
+                                                        styles={
+                                                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                {/* END :: Filter Form */}
+                                    <div className='col-md-6 col-lg-6 col-sm-12'>
+                                        <div className='mb-10'>
+                                            <div className='row'>
+                                                <div className='col-4 pt-2'>
+                                                    <label className='form-label align-middle'>
+                                                        Kelurahan
+                                                    </label>
+                                                </div>
+                                                <div className='col-8'>
+                                                    <AsyncSelect
+                                                        cacheOptions
+                                                        loadOptions={loadOptionsKel}
+                                                        defaultOptions={inputKel}
+                                                        onChange={handleInputKel}
+                                                        placeholder={'Pilih Kelurahan'}
+                                                        styles={
+                                                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='col-md-6 col-lg-6 col-sm-12'>
+                                        <div className='mb-10'>
+                                            <div className='row'>
+                                                <div className='col-4 pt-2'>
+                                                    <label className='form-label'>Tanggal Awal</label>
+                                                </div>
+                                                <div className='col-8'>
+                                                    <input
+                                                        type='date'
+                                                        name='tanggal_kunjungan'
+                                                        className='form-control'
+                                                        value={tanggalAwal.val}
+                                                        onChange={handleChangeInputTanggalAwal}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='col-md-6 col-lg-6 col-sm-12'>
+                                        <div className='mb-10'>
+                                            <div className='row'>
+                                                <div className='col-4 pt-2'>
+                                                    <label className='form-label align-middle'>Tanggal Akhir</label>
+                                                </div>
+                                                <div className='col-8'>
+                                                    <input
+                                                        name='tanggal_kunjungan'
+                                                        type='date'
+                                                        className='form-control'
+                                                        value={tanggalAkhir.val}
+                                                        onChange={handleChangeInputTanggalAkhir}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* END :: Filter Form */}
 
-                                {/* Search and Reset */}
-                                <div className='row g-8 mt-2'>
-                                    <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                        <Link to='#'>
-                                            <Button
-                                                className='btn btn-light-primary me-2'
-                                                onClick={handleFilter}
-                                            >
-                                                <KTSVG
-                                                    path='/media/icons/duotune/general/gen021.svg'
-                                                    className='svg-icon-2'
-                                                />
-                                                Cari
-                                            </Button>
-                                        </Link>
-                                        <Link to='#'>
-                                            <Button
-                                                className='btn btn-light-primary me-2'
-                                                onClick={handleFilterReset}
-                                            >
-                                                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                                Reset
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                        <button
-                                            type='button'
-                                            className='btn btn-light-primary me-2'
-                                            data-kt-menu-trigger='click'
-                                            data-kt-menu-placement='bottom-end'
-                                            onClick={() => unduhCSV(data)}>
-                                            <>
-                                                <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-                                                Unduh CSV
-                                            </>
-                                        </button>
-                                        <div>
-                                            <Button
+                                    {/* Search and Reset */}
+                                    <div className='row g-8 mt-2'>
+                                        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                            <Link to='#'>
+                                                <Button
+                                                    className='btn btn-light-primary me-2'
+                                                    onClick={handleFilter}
+                                                >
+                                                    <KTSVG
+                                                        path='/media/icons/duotune/general/gen021.svg'
+                                                        className='svg-icon-2'
+                                                    />
+                                                    Cari
+                                                </Button>
+                                            </Link>
+                                            <Link to='#'>
+                                                <Button
+                                                    className='btn btn-light-primary me-2'
+                                                    onClick={handleFilterReset}
+                                                >
+                                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                                    Reset
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                            <button
                                                 type='button'
-                                                className='btn btn-primary'
-                                                data-kt-menu-placement='bottom-end'
+                                                className='btn btn-light-primary me-2'
                                                 data-kt-menu-trigger='click'
-                                            >
-                                                Pilih Tabel Berdasarkan
-                                            </Button>
-                                            <div
-                                                className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                                                data-kt-menu='true'
-                                            >
-
-                                                {/* begin::Content */}
-                                                <div data-kt-user-table-filter='form'>
-                                                    <button
-                                                        onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                                                        className='btn btn-outline btn-active-light-primary w-100'>
-                                                        Jenis Penertiban
-                                                    </button>
-                                                </div>
-                                                {/* end::Content */}
-
-                                                {/* begin::Content */}
-                                                <div data-kt-user-table-filter='form'>
-                                                    <button
-                                                        onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                                                        className='btn btn-outline btn-active-light-primary w-100'
-                                                    >
-                                                        Pelaksana
-                                                    </button>
-                                                </div>
-                                                {/* end::Content */}
-                                            </div>
+                                                data-kt-menu-placement='bottom-end'
+                                                onClick={() => unduhCSV(data)}>
+                                                <>
+                                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
+                                                    Unduh CSV
+                                                </>
+                                            </button>
                                         </div>
-                                        {/*  end::SubMenu */}
+                                        {/* END :: Button */}
                                     </div>
-                                    {/* END :: Button */}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className='row'>
-                <div className='col fs-4 mb-2 fw-semibold text-center'>
-                    LAPORAN HASIL PENERTIBAN MINUMAN BERALKOHOL
+                <div className='row'>
+                    <div className='col fs-4 mb-2 fw-semibold text-center'>
+                        LAPORAN HASIL PENGAWASAN DAN PENINDAKAN WARUNG MAKAN, RUMAH MAKAN, KAFE ATAU 
+                        RESTORAN (PPKM)
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col fs-4 mb-2 fw-semibold text-center'>
+                        PADA SATPOL PP......................................
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col fs-4 mb-6 fw-semibold text-center'>
+                        PERIODE .................... s/d .......................
+                    </div>
+                </div>
+                <div className='card-body py-4'>
+                    <DtPPKMRumahMakan
+                        data={data}
+                        kota={kota}
+                        totalRows={totalRows}
+                        handlePerRowsChange={handlePerRowsChange}
+                        handlePageChange={handlePageChange}
+                        loading={loading}
+                        jenisKegiatanList={jenisKegiatanList}
+                        hakAkses={hakAkses}
+                        wilayahBidang={wilayahBidang}
+                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                    />
                 </div>
             </div>
-            <div className='row'>
-                <div className='col fs-4 mb-2 fw-semibold text-center'>
-                    PADA SATPOL PP......................................
-                </div>
-            </div>
-            <div className='row'>
-                <div className='col fs-4 mb-6 fw-semibold text-center'>
-                    PERIODE .................... s/d .......................
-                </div>
-            </div>
-            <div className='card-body py-4'>
-                <DtPPKM
-                    data={data}
-                    totalRows={totalRows}
-                    handlePerRowsChange={handlePerRowsChange}
-                    handlePageChange={handlePageChange}
-                    loading={loading}
-                    jenisKegiatanList={jenisKegiatanList}
-                    hakAkses={hakAkses}
-                    wilayahBidang={wilayahBidang}
-                    theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                />
-            </div>
-        </div>
+        </>
     )
 }

@@ -240,6 +240,28 @@ export const PerdaPerkada_Pelaksana: FC = () => {
     dataPerdaPerkada(0)
   }, [qParamFind, perPage])
 
+  const [kota, setKota] = useState([])
+  const [qParamFindKota, setUriFindKota] = useState({ strParamKota: '' })
+
+  const kotaList = async () => {
+    const response = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strParamKota}`)
+    const dataKota = response.data.data.map((d: any) => ({
+      id: d.id,
+      no: d.id,
+      pelaksana_kegiatan: d.nama,
+    }))
+    Array.from(dataKota).forEach((item: any, index: any) => {
+      item.serial = index + 1
+    })
+    setKota(dataKota)
+
+    return [kota, setKota] as const
+  }
+
+  useEffect(() => {
+    kotaList()
+  }, [qParamFindKota])
+
   const handlePageChange = (page: number) => {
     dataPerdaPerkada(page - 1)
     console.log('ini page', page)
@@ -735,7 +757,7 @@ export const PerdaPerkada_Pelaksana: FC = () => {
                             onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Jenis Penertiban
+                            Pelaksana Kegiatan
                           </button>
                         </div>
                         {/* end::Content */}
@@ -746,7 +768,7 @@ export const PerdaPerkada_Pelaksana: FC = () => {
                             onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
                             className='btn btn-outline btn-active-light-primary w-100'
                           >
-                            Pelaksana
+                            Jenis Penertiban
                           </button>
                         </div>
                         {/* end::Content */}
@@ -778,6 +800,7 @@ export const PerdaPerkada_Pelaksana: FC = () => {
         <div className='card-body py-4'>
           <DtPerdaPerkadaPelaksana
             data={data}
+            kota={kota}
             totalRows={totalRows}
             handlePerRowsChange={handlePerRowsChange}
             handlePageChange={handlePageChange}
