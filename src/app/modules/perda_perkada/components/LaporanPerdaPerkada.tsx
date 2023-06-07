@@ -1,16 +1,14 @@
 import axios from 'axios'
 import { unparse } from 'papaparse'
 import { Button } from 'react-bootstrap'
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { ChangeEvent, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
-import { DtPerdaPerkada } from './datatables/data-table-laporan-perda-perkada'
+import { DtPerdaPerkada, DtDetail } from './datatables/data-table-laporan-perda-perkada'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { LaporanPerdaPerkadaHeader } from './LaporanPerdaPerkadaHeader'
 import { KTSVG } from '../../../../_metronic/helpers'
-import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
-import Swal from 'sweetalert2'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -126,178 +124,33 @@ interface jenisPenertibanInterface {
 
 export function LaporanPerdaPerkada() {
   const navigate = useNavigate()
-  const {mode} = useThemeMode()
+  const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
   const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
-  const [inputValJkeg, setDataJkeg] = useState([])
-  const [inputValJpen, setDataJpen] = useState([])
-  const [inputValJper, setDataJper] = useState([])
+  const [detailView, setDV] = useState(false)
 
+  const [totalKegiatan, setTotalKegiatan] = useState([])
+  const [totalDetail, setTotalDetail] = useState([])
 
-  const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-  const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
-  const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
-  const [jenisPenertibanList, setJenisPenertibanList] = useState([])
-
-  const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-  const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({value: '', label: ''})
-
-  const [hakAkses, setHakAkses] = useState([])
-  const [wilayahBidang, setWilayahBidang] = useState([])
-  const [tanggalAwal, setTanggalAwal] = useState({val: ''})
-  const [tanggalAkhir, setTanggalAkhir] = useState({val: ''})
+  const [tanggalAwal, setTanggalAwal] = useState('')
+  const [tanggalAkhir, setTanggalAkhir] = useState('')
 
   const [data, setData] = useState<jenisPenertibanInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
-  const [qParamFind, setUriFind] = useState({strparam: ''})
+  const [qParamFind, setUriFind] = useState({ strparam: '' })
 
   const unduhCSV = (data: any[]) => {
     const csvData = unparse(data)
-    const blob = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.setAttribute('download', 'LAPORAN PENEGAKAN PERDA/PERKADA.csv')
     document.body.appendChild(link)
     link.click()
     link.remove()
-  }
-
-  const filterList = async () => {
-    const resJKeg = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-    const resJPen = await axios.get(`${MASTERDATA_URL}/jenis-penertiban/combobox`)
-    const resJPer = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
-    const dataJKeg = resJKeg.data.data.map((d: any) => ({
-      label: d.nama,
-      value: String(d.id),
-    }))
-    const dataJPen = resJPen.data.data.map((d: any) => ({
-      label: d.jenis_penertiban,
-      value: String(d.id),
-    }))
-    const dataJPer = resJPer.data.data.map((d: any) => ({
-      label: d.judul,
-      value: String(d.id),
-    }))
-    setDataJkeg(dataJKeg)
-    setDataJpen(dataJPen)
-    setDataJper(dataJPer)
-  }
-
-  useEffect(() => {
-    filterList()
-    handleHakAkses()
-    handleWilayahBidang()
-  }, [])
-
-  const handleChangeInputTanggalAwal = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setTanggalAwal({val: event.target.value})
-  }
-
-  const handleChangeInputTanggalAkhir = (event: {
-    preventDefault: () => void
-    target: {value: any; name: any}
-  }) => {
-    setTanggalAkhir({val: event.target.value})
-  }
-
-  const filterJenisKegiatan = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/jenis-kegiatan/combobox`)
-    const json = await response.data.data
-    setJenisKegiatanList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
-  }
-  const loadOptionsJenisKegiatan = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterJenisKegiatan(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputJenisKegiatan = (newValue: any) => {
-    setValJenisKegiatan((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-
-  const filterJenisPenertiban = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/jenis-penertiban/combobox`)
-    const json = await response.data.data
-    setJenisPenertibanList(json)
-    return json.map((i: any) => ({ label: i.text, value: i.value }))
-  }
-  const loadOptionsJenisPenertiban = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterJenisPenertiban(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputJenisPenertiban = (newValue: any) => {
-    setValJenisPenertiban((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-  const filterJenisPerdaPerkada = async (inputValue: string) => {
-    const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/combobox`)
-    const json = await response.data.data
-    setJenisPerdaPerkadaList(json)
-    return json.map((i: any) => ({label: i.text, value: i.value}))
-  }
-  const loadOptionsJenisPerdaPerkada = (
-    inputValue: string,
-    callback: (options: SelectOption[]) => void
-  ) => {
-    setTimeout(async () => {
-      callback(await filterJenisPerdaPerkada(inputValue))
-    }, 1000)
-  }
-  const handleChangeInputJenisPerdaPerkada = (newValue: any) => {
-    setValJenisPerdaPerkada((prevstate: any) => ({...prevstate, ...newValue}))
-  }
-
-  const handleFilter = async () => {
-    let uriParam = ''
-    if (tanggalAwal.val && tanggalAkhir.val) {
-      uriParam += `kegiatan__tanggal%20ge%20%27${tanggalAwal.val}%27%20and%20kegiatan__tanggal%20le%20%27${tanggalAkhir.val}%27`
-    } else if (tanggalAwal.val !== '') {
-      uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAwal.val}%27`
-    } else if (tanggalAkhir.val !== '') {
-      uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAkhir.val}%27`
-    }
-    if (valJenisKegiatan.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-    } else if (valJenisKegiatan.value !== '') {
-      uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-    }
-    if (valJenisPenertiban.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
-    } else if (valJenisPenertiban.value !== '') {
-      uriParam += `tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
-    }
-    if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    } else if (valJenisPerdaPerkada.value !== '') {
-      uriParam += `tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    }
-    if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-      uriParam += `%20and%20tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    } else if (valJenisPerdaPerkada.value !== '') {
-      uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
-    }
-    setUriFind((prevState) => ({...prevState, strparam: uriParam}))
-  }
-
-  const handleFilterReset = () => {
-    setTanggalAwal({val: ''})
-    setTanggalAkhir({val: ''})
-    setValJenisKegiatan({value: '', label: ''})
-    setValJenisPenertiban({value: '', label: ''})
-    setValJenisPerdaPerkada({value: '', label: ''})
-    setUriFind((prevState) => ({...prevState, strparam: ''}))
   }
 
   const dataPerdaPerkada = (page: number) => {
@@ -310,23 +163,21 @@ export function LaporanPerdaPerkada() {
           id: d.id,
           no: d.id,
           pelaksana: d.created_by,
-          tanggal_kegiatan: d.kegiatan__tanggal,
+          lokasi: d.kegiatan__lokasi,
           waktu_mulai: d.kegiatan__jam_start,
           waktu_selesai: d.kegiatan__jam_end,
-          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          tanggal_kegiatan: d.kegiatan__tanggal,
           uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-          lokasi: d.kegiatan__lokasi,
-          // jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
-          denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
-          denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
+          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban
         }))
         Array.from(data).forEach((item: any, index: any) => {
           item.serial = index + 1
         })
-        // const arr: jenisPenertibanInterface[] = [{ no: 1, jenis_penertiban: 'TERTIB JALAN, ANGKUTAN JALAN DAN ANGKUTAN SUNGAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 2, jenis_penertiban: 'TERTIB JALUR HIJAU, TAMAN DAN TEMPAT UMUM', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 3, jenis_penertiban: 'TERTIB LINGKUNGAN', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 4, jenis_penertiban: 'TERTIB TEMPAT USAHA', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }, { no: 5, jenis_penertiban: 'TERTIB SUNGAI, SALURAN, KOLAM DAN LEPAS PANTAI', jumlah_pelanggaran: 35, peringatan: 5, penutupan_penyegelan: 10, pencabutan_izin: 0, yang_lain: 20, denda_pengadilan: '2.000.000', denda_non_pengadilan: '50.000.000' }]
         setData(data)
-        setTotalRows(5)
+        setTotalRows(res.data.total_items)
         setLoading(false)
+
         return [data, setData] as const
       })
   }
@@ -335,12 +186,12 @@ export function LaporanPerdaPerkada() {
     dataPerdaPerkada(0)
   }, [qParamFind, perPage])
 
-  const [penertiban, setPenertiban] = useState([])
-  const [qParamFindPenertiban, setUriFindPenertiban] = useState({strParamPenertiban: ''})
+  const [penertiban, setPenertiban] = useState<any[]>([])
+  const [qParamFindPenertiban, setUriFindPenertiban] = useState({ strParamPenertiban: '' })
 
-  const dataPenertiban = async (page:number) => {
-    const response = await axios.get(`${MASTERDATA_URL}/jenis-penertiban${qParamFindPenertiban.strParamPenertiban}?%24top=18&%24page=${page}`)
-    const dataPenertiban = response.data.data.map((d:any) => ({
+  const dataPenertiban = async () => {
+    const response = await axios.get(`${MASTERDATA_URL}/jenis-penertiban${qParamFindPenertiban.strParamPenertiban}?%24top=20`)
+    const dataPenertiban = response.data.data.map((d: any) => ({
       id: d.id,
       no: d.id,
       jenis_penertiban: d.nama,
@@ -355,41 +206,58 @@ export function LaporanPerdaPerkada() {
   }
 
   useEffect(() => {
-    dataPenertiban(0)
-  }, [qParamFindPenertiban, perPage])
+    dataPenertiban()
+  }, [qParamFindPenertiban])
 
-  const handlePageChange = (page: number) => {
-    dataPerdaPerkada(page - 1)
-    dataPenertiban(page - 1)
+  const [filterData, setFilterData] = useState('')
+  const handleFilter = (e: ChangeEvent<HTMLInputElement>) => {
+    setFilterData(e.target.value)
   }
 
-  const handlePerRowsChange = async (newPerPage: number, page: number) => {
-    setLoading(true)
-    axios
-      .get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
-      )
-      .then((res) => {
-        const data = res.data.data.map((d: any) => ({
-          id: d.id,
-          no: d.id,
-          total_item: d.total_item,
-          pelaksana: d.created_by,
-          tanggal_kegiatan: d.kegiatan__tanggal,
-          waktu_mulai: d.kegiatan__jam_start,
-          waktu_selesai: d.kegiatan__jam_end,
-          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-          wilayah: d.created_by,
-          lokasi: d.kegiatan__lokasi,
-        }))
-        Array.from(data).forEach((item: any, index: any) => {
-          item.serial = index + 1
-        })
-        setData(data)
-        setPerPage(newPerPage)
-        setLoading(false)
+  const filteredData = penertiban.filter((item: any) => {
+    return item.jenis_penertiban.toLowerCase().includes(filterData.toLowerCase())
+  })
+
+  const handleFilterReset = () => {
+    setFilterData('')
+  }
+
+  const viewDetail = (row: string) => {
+    setDV(!detailView)
+
+    if (row) {
+      const filterDetail = totalKegiatan.filter((item: any) => item.tindak_lanjut__administrasi__jenis_penertiban === row)
+
+      Array.from(filterDetail).forEach((item: any, index: any) => {
+        item.serial = index + 1
       })
+      setTotalDetail(filterDetail)
+    }
+  }
+
+  // Filtering Tanggal
+  const handleChangeInputTanggalAwal = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTanggalAwal(event.target.value);
+  };
+
+  const handleChangeInputTanggalAkhir = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTanggalAkhir(event.target.value);
+  };
+
+  const awal = new Date(tanggalAwal)
+  const akhir = new Date(tanggalAkhir)
+
+  const handleFilterTanggal = async () => {
+    const filteredTanggal = totalDetail.filter((item: any) => {
+      const itemTanggal = new Date(item.kegiatan__tanggal);
+      return itemTanggal >= awal && itemTanggal <= akhir;
+    });
+    setTotalDetail(filteredTanggal)
+  }
+
+  const handleFilterResetTanggal = () => {
+    setTanggalAwal('');
+    setTanggalAkhir('');
   }
 
   const LoadingAnimation = (props: any) => {
@@ -404,64 +272,6 @@ export function LaporanPerdaPerkada() {
         </div>
       </>
     )
-  }
-
-  const handleHakAkses = async () => {
-    const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
-    setHakAkses(response.data.data)
-  }
-
-  const handleWilayahBidang = async () => {
-    const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
-    setWilayahBidang(response.data.data)
-  }
-
-  const konfirDel = (id: number) => {
-    Swal.fire({
-      text: 'Anda yakin ingin menghapus data ini',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya!',
-      cancelButtonText: 'Tidak!',
-      color: '#000000',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const bodyParam = {
-          data: {
-            deleted_by: 'string',
-          },
-        }
-        const response = await axios.delete(`${PELAPORAN_URL}/kegiatan-umum/${id}`, bodyParam)
-        if (response) {
-          dataPerdaPerkada(0)
-          Swal.fire({
-            icon: 'success',
-            text: 'Data berhasil dihapus',
-            showConfirmButton: false,
-            timer: 1500,
-            color: '#000000',
-          })
-        } else {
-          Swal.fire({
-            icon: 'error',
-            text: 'Data gagal dihapus, harap mencoba lagi',
-            showConfirmButton: false,
-            timer: 1500,
-            color: '#000000',
-          })
-        }
-      }
-    })
-  }
-
-  interface SelectOption {
-    readonly value: string
-    readonly label: string
-    readonly color: string
-    readonly isFixed?: boolean
-    readonly isDisabled?: boolean
   }
 
   const customStyles = {
@@ -514,273 +324,226 @@ export function LaporanPerdaPerkada() {
       <LaporanPerdaPerkadaHeader />
       <div className='card'>
         {/* begin::Body */}
-        <div className='card-header border-1 pt-6'>
-          <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
-            <div className='mb-5'>
-              <div
-                className='accordion-header py-3 d-flex'
-                data-bs-toggle='collapse'
-                data-bs-target='#kt_accordion_2_item_1'
-              >
-                <span className='accordion-icon'>
-                  <span className='svg-icon svg-icon-4'>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <rect
-                        opacity='0.5'
-                        x='18'
-                        y='13'
-                        width='13'
-                        height='2'
-                        rx='1'
-                        transform='rotate(-180 18 13)'
-                        fill='currentColor'
-                      />
-                      <path
-                        d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
-                        fill='currentColor'
-                      />
-                    </svg>
-                  </span>
-                </span>
-                <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
+        {!detailView ? (
+          <>
+            <div className='row g-8 mt-2 ms-10 me-2'>
+              <label>
+                <h3>Jenis Penertiban</h3>
+              </label>
+              <div className='col-xxl-10 col-lg-10 col-md-8 col-sm-6'>
+                <input
+                  id='search'
+                  type='text'
+                  className='form-control form-control form-control-solid'
+                  placeholder='Masukkan Jenis Penertiban'
+                  aria-label='Search Input'
+                  value={filterData}
+                  onChange={handleFilter}
+                />
               </div>
-              <div
-                id='kt_accordion_2_item_1'
-                className='fs-6 collapse show ps-10'
-                data-bs-parent='#kt_accordion_2'
-              >
-                <div className='row w-100 mt-10 mb-10'>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>Jenis Kegiatan</label>
-                        </div>
-                        <div className='col-8'>
-                          <AsyncSelect
-                            cacheOptions
-                            // name='filter_jenis_kegiatan_id_selection'
-                            loadOptions={loadOptionsJenisKegiatan}
-                            defaultOptions
-                            // value={valJenisKegiatan}
-                            onChange={handleChangeInputJenisKegiatan}
-                            placeholder={'Pilih Jenis Kegiatan'}
-                            styles={
-                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>Jenis Penertiban</label>
-                        </div>
-                        <div className='col-8'>
-                          <AsyncSelect
-                            cacheOptions
-                            // name='jenis_penertiban'
-                            loadOptions={loadOptionsJenisPenertiban}
-                            defaultOptions
-                            // value={valJenisPenertiban}
-                            onChange={handleChangeInputJenisPenertiban}
-                            placeholder={'Pilih Jenis Penertiban'}
-                            styles={
-                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>Jenis Perda Perkada</label>
-                        </div>
-                        <div className='col-8'>
-                          <AsyncSelect
-                            cacheOptions
-                            // name='jenis_perda_perkada'
-                            loadOptions={loadOptionsJenisPerdaPerkada}
-                            defaultOptions
-                            // value={valJenisPerdaPerkada}
-                            onChange={handleChangeInputJenisPerdaPerkada}
-                            placeholder={'Pilih Jenis Perda & Perkada'}
-                            styles={
-                              calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label'>Tanggal Awal</label>
-                        </div>
-                        <div className='col-8'>
-                          <input
-                            placeholder='Isi Tanggal Kunjungan'
-                            type='date'
-                            name='tanggal_kunjungan'
-                            className='form-control'
-                            value={tanggalAwal.val}
-                            onChange={handleChangeInputTanggalAwal}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-md-6 col-lg-6 col-sm-12'>
-                    <div className='mb-10'>
-                      <div className='row'>
-                        <div className='col-4 pt-2'>
-                          <label className='form-label align-middle'>Tanggal Akhir</label>
-                        </div>
-                        <div className='col-8'>
-                          <input
-                            placeholder='Isi Tanggal Kunjungan'
-                            name='tanggal_kunjungan'
-                            type='date'
-                            className='form-control'
-                            value={tanggalAkhir.val}
-                            onChange={handleChangeInputTanggalAkhir}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* END :: Filter Form */}
 
-                  {/* Search and Reset */}
-                  <div className='row g-8 mt-2'>
-                    <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                      <Link to='#'>
-                        <Button className='btn btn-light-primary me-2' onClick={handleFilter}>
-                          <KTSVG
-                            path='/media/icons/duotune/general/gen021.svg'
-                            className='svg-icon-2'
-                          />
-                          Cari
-                        </Button>
-                      </Link>
-                      <Link to='#'>
-                        <Button className='btn btn-light-primary me-2' onClick={handleFilterReset}>
-                          <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                          Reset
-                        </Button>
-                      </Link>
-                    </div>
-                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+              <div className='justify-content-end col-xxl-2 col-lg-2 col-md-3 col-sm-6'>
+                <Button className='btn btn-light-primary me-2' onClick={handleFilterReset}>
+                  <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                  Reset
+                </Button>
+              </div>
+            </div>
+
+            <div className='row g-8 mt-2 ms-10 me-2 mb-6'>
+              <div className='d-flex justify-content-end'>
+                <button
+                  type='button'
+                  className='btn btn-light-primary me-2'
+                  data-kt-menu-placement='bottom-end'
+                  data-kt-menu-trigger='click'
+                  onClick={() => unduhCSV(data)}
+                >
+                  <>
+                    <KTSVG
+                      path='/media/icons/duotune/arrows/arr078.svg'
+                      className='svg-icon-2'
+                    />
+                    Unduh CSV
+                  </>
+                </button>
+
+                <div>
+                  <Button
+                    type='button'
+                    className='btn btn-primary'
+                    data-kt-menu-trigger='click'
+                    data-kt-menu-placement='bottom-end'
+                  >
+                    Pilih Tabel Berdasarkan
+                  </Button>
+                  <div
+                    className='menu menu-sub menu-sub-dropdown w-200px w-md-200px'
+                    data-kt-menu='true'
+                  >
+                    {/* begin::Content */}
+                    <div data-kt-user-table-filter='form'>
                       <button
-                        type='button'
-                        className='btn btn-light-primary me-2'
-                        data-kt-menu-placement='bottom-end'
-                        data-kt-menu-trigger='click'
-                        onClick={() => unduhCSV(data)}
+                        onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
+                        className='btn btn-outline btn-active-light-primary w-100'
                       >
-                        <>
-                          <KTSVG
-                            path='/media/icons/duotune/arrows/arr078.svg'
-                            className='svg-icon-2'
-                          />
-                          Unduh CSV
-                        </>
+                        Jenis Penertiban
                       </button>
-                      <div>
-                        <Button
-                          type='button'
-                          className='btn btn-primary me-2'
-                          data-kt-menu-trigger='click'
-                          data-kt-menu-placement='bottom-end'
-                        >
-                          Pilih Tabel Berdasarkan
-                        </Button>
-                        <div
-                          className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                          data-kt-menu='true'
-                        >
-                          {/* begin::Content */}
-                          <div data-kt-user-table-filter='form'>
-                            <button
-                              onClick={() => navigate('/perdaperkada/LaporanPerdaPerkada/')}
-                              className='btn btn-outline btn-active-light-primary w-100'
-                            >
-                              Jenis Penertiban
-                            </button>
-                          </div>
-                          {/* end::Content */}
-
-                          {/* begin::Content */}
-                          <div data-kt-user-table-filter='form'>
-                            <button
-                              onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
-                              className='btn btn-outline btn-active-light-primary w-100'
-                            >
-                              Pelaksana Kegiatan
-                            </button>
-                          </div>
-                          {/* end::Content */}
-                        </div>
-                      </div>
                     </div>
-                    {/* END :: Button */}
+                    {/* end::Content */}
+
+                    {/* begin::Content */}
+                    <div data-kt-user-table-filter='form'>
+                      <button
+                        onClick={() => navigate('/perdaperkada/PerdaPerkada_Pelaksana/')}
+                        className='btn btn-outline btn-active-light-primary w-100'
+                      >
+                        Pelaksana Kegiatan
+                      </button>
+                    </div>
+                    {/* end::Content */}
                   </div>
-                  {/* END :: Button */}
+                </div>
+              </div>
+              {/* END :: Button */}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className='row mt-10 mb-10 px-10'>
+              <div className='col-md-6 col-lg-6 col-sm-12'>
+                <div className='mb-10'>
+                  <div className='row'>
+                    <div className='col-4 pt-2'>
+                      <label className='form-label'>Tanggal Awal</label>
+                    </div>
+                    <div className='col-8'>
+                      <input
+                        id='tanggalAwal'
+                        type='date'
+                        className='form-control'
+                        value={tanggalAwal}
+                        onChange={handleChangeInputTanggalAwal}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='col-md-6 col-lg-6 col-sm-12'>
+                <div className='mb-10'>
+                  <div className='row'>
+                    <div className='col-4 pt-2'>
+                      <label className='form-label align-middle'>
+                        Tanggal Akhir
+                      </label>
+                    </div>
+                    <div className='col-8'>
+                      <input
+                        id='tanggalAkhir'
+                        type='date'
+                        className='form-control'
+                        value={tanggalAkhir}
+                        onChange={handleChangeInputTanggalAkhir}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='row g-8 mt-2'>
+                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                  <Button
+                    className='btn btn-light-primary me-2'
+                    onClick={handleFilterTanggal}
+                  >
+                    <KTSVG
+                      path='/media/icons/duotune/general/gen021.svg'
+                      className='svg-icon-2'
+                    />
+                    Cari
+                  </Button>
+                  <Button
+                    className='btn btn-light-primary me-2'
+                    onClick={handleFilterResetTanggal}
+                  >
+                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                    Reset
+                  </Button>
+                </div>
+                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                  <button
+                    type='button'
+                    className='btn btn-light-primary me-2'
+                    data-kt-menu-placement='bottom-end'
+                    data-kt-menu-trigger='click'
+                    onClick={() => unduhCSV(totalDetail)}
+                  >
+                    <>
+                      <KTSVG
+                        path='/media/icons/duotune/arrows/arr078.svg'
+                        className='svg-icon-2'
+                      />
+                      Unduh CSV
+                    </>
+                  </button>
                 </div>
               </div>
             </div>
+          </>
+        )}
+        <div className='row'>
+          <div className='col fs-4 mb-2 fw-semibold text-center'>
+            LAPORAN HASIL PENEGAKAN PERDA / PERKADA
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col fs-4 mb-2 fw-semibold text-center'>
+            PADA SATPOL PP......................................
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col fs-4 mb-6 fw-semibold text-center'>
+            PERIODE .................... s/d .......................
           </div>
         </div>
         <div className='card-body py-4'>
-          <div className='row'>
-            <div className='col fs-4 mb-2 fw-semibold text-center'>
-              LAPORAN HASIL PENEGAKAN PERDA / PERKADA
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col fs-4 mb-2 fw-semibold text-center'>
-              PADA SATPOL PP......................................
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col fs-4 mb-6 fw-semibold text-center'>
-              PERIODE .................... s/d .......................
-            </div>
-          </div>
-          <DtPerdaPerkada
-            data={data}
-            totalRows={totalRows}
-            handlePerRowsChange={handlePerRowsChange}
-            handlePageChange={handlePageChange}
-            progressComponent={<LoadingAnimation />}
-            loading={loading}
-            penertiban={penertiban}
-            jenisKegiatanList={jenisKegiatanList}
-            hakAkses={hakAkses}
-            wilayahBidang={wilayahBidang}
-            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-            noDataComponent={
-              <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
-                <div className='d-flex flex-column'>
-                  <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+          {!detailView ? (
+            <DtPerdaPerkada
+              aksi={viewDetail}
+              totalKegiatan={totalKegiatan}
+              setTotalKegiatan={setTotalKegiatan}
+              penertiban={filteredData}
+              progressComponent={<LoadingAnimation />}
+              loading={loading}
+              theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+              noDataComponent={
+                <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                  <div className='d-flex flex-column'>
+                    <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                  </div>
                 </div>
-              </div>
-            }
-          />
+              }
+            />
+          ) : (
+            <>
+              <DtDetail
+                data={totalDetail}
+                progressComponent={<LoadingAnimation />}
+                loading={loading}
+                theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                noDataComponent={
+                  <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                    <div className='d-flex flex-column'>
+                      <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                    </div>
+                  </div>
+                }
+              />
+              <Button className='btn btn-secondary me-2' onClick={() => viewDetail('')}>
+                <i className='fa-solid fa-arrow-left'></i>
+                Kembali
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </>

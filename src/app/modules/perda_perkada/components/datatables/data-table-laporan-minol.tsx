@@ -1,7 +1,6 @@
-import {FC, Fragment, useEffect, useState} from 'react'
+import { FC, Fragment, useEffect, useState } from 'react'
 import axios from 'axios'
 import DataTable from 'react-data-table-component'
-import {useTable, Column} from 'react-table'
 
 export const API_URL = process.env.REACT_APP_SISAPPRA_API_URL
 export const MASTERDATA_URL = process.env.REACT_APP_SISAPPRA_MASTERDATA_API_URL
@@ -23,29 +22,27 @@ const LoadingAnimation = (props: any) => {
 
 export const DtMinol: FC<any> = ({
   kota,
-  totalRows,
-  handlePerRowsChange,
-  handlePageChange,
+  totalKegiatan,
+  setTotalKegiatan,
   loading,
   theme,
+  aksi,
 }) => {
 
-  const [totalKegiatan, setTotalKegiatan] = useState<any>([])
   useEffect(() => {
     const fetchDTMinol = async () => {
-      const {data} = await axios.get(
+      const { data } = await axios.get(
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=kegiatan__jenis_kegiatan_id%20eq%20%2716%27&%24top=1&%24select=tindak_lanjut__jumlah_minol_merk%2C%20id`
       )
       const res = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=kegiatan__jenis_kegiatan_id%20eq%20%2716%27&%24top=${data.total_items}&%24select=kegiatan__kota_id%2C%20tindak_lanjut__jumlah_minol_merk%2C%20id`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=kegiatan__jenis_kegiatan_id%20eq%20%2716%27&%24top=${data.total_items}&%24select=kegiatan__kota_id%2C%20tindak_lanjut__jumlah_minol_merk%2C%20id%2C%20tindak_lanjut__administrasi__jenis_pelanggaran%2C%20kegiatan__tanggal%2C%20kegiatan__jam_start%2C%20kegiatan__jam_end%2C%20kegiatan__uraian_kegiatan`
       )
       setTotalKegiatan(res.data.data)
     }
     fetchDTMinol()
   }, [])
-  console.log(totalKegiatan)
 
-  const GetPerJenis = ({row, jenis}: any) => {
+  const GetPerJenis = ({ row, jenis }: any) => {
     let countJumlah = 0
     const merkTertentu = [
       'wine',
@@ -78,7 +75,7 @@ export const DtMinol: FC<any> = ({
         }
       })
     })
-    // if pertama 
+
     if (row && !jenis) {
       for (const merk in jumlah_item) {
         if (jumlah_item.hasOwnProperty(merk)) {
@@ -86,11 +83,11 @@ export const DtMinol: FC<any> = ({
         }
       }
     }
-    // If kedua
+
     if (row && jumlah_item[jenis?.toLowerCase()]) {
       countJumlah = jumlah_item[jenis?.toLowerCase()]
     }
-    // if ketiga
+
     if (row && jenis === 'Lainnya') {
       for (const merk in jumlah_item) {
         if (jumlah_item.hasOwnProperty(merk) && !merkTertentu.includes(merk)) {
@@ -98,8 +95,7 @@ export const DtMinol: FC<any> = ({
         }
       }
     }
-    //  for loop
-    console.log(jumlah_item)
+
     return <>{countJumlah}</>
   }
 
@@ -119,12 +115,20 @@ export const DtMinol: FC<any> = ({
       wrap: true,
       width: '300px',
       selector: (row: any) => row.pelaksana,
+      cell: (row: any) => {
+        return (
+          <>
+            <a
+              className='table table-hover mb-0'
+              onClick={() => aksi(row.no)}>{row.pelaksana}</a>
+          </>
+        )
+      },
     },
     {
       name: 'Jumlah Minol',
       center: true,
       width: '150px',
-      sortField: 'jumlah_minol',
       selector: (row: any) => row.jumlah_minol,
       cell: (record: any) => <GetPerJenis row={record.no} />,
     },
@@ -132,7 +136,6 @@ export const DtMinol: FC<any> = ({
       name: 'Wine',
       center: true,
       width: '100px',
-      sortField: 'wine',
       selector: (row: any) => row.wine,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Wine'} />,
     },
@@ -140,7 +143,6 @@ export const DtMinol: FC<any> = ({
       name: 'Bir',
       center: true,
       width: '100px',
-      sortField: 'bir',
       selector: (row: any) => row.bir,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Bir'} />,
     },
@@ -148,7 +150,6 @@ export const DtMinol: FC<any> = ({
       name: 'Sake',
       center: true,
       width: '100px',
-      sortField: 'sake',
       selector: (row: any) => row.sake,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Sake'} />,
     },
@@ -156,7 +157,6 @@ export const DtMinol: FC<any> = ({
       name: 'Gin',
       center: true,
       width: '100px',
-      sortField: 'gin',
       selector: (row: any) => row.gin,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Gin'} />,
     },
@@ -164,7 +164,6 @@ export const DtMinol: FC<any> = ({
       name: 'Tequila',
       center: true,
       width: '100px',
-      sortField: 'tequila',
       selector: (row: any) => row.tequila,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Tequila'} />,
     },
@@ -172,7 +171,6 @@ export const DtMinol: FC<any> = ({
       name: 'Brandy',
       center: true,
       width: '100px',
-      sortField: 'brandy',
       selector: (row: any) => row.brandy,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Brandy'} />,
     },
@@ -180,7 +178,6 @@ export const DtMinol: FC<any> = ({
       name: 'Wiski',
       center: true,
       width: '100px',
-      sortField: 'wiski',
       selector: (row: any) => row.wiski,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Wiski'} />,
     },
@@ -188,7 +185,6 @@ export const DtMinol: FC<any> = ({
       name: 'Vodka',
       center: true,
       width: '100px',
-      sortField: 'vodka',
       selector: (row: any) => row.vodka,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Vodka'} />,
     },
@@ -196,7 +192,6 @@ export const DtMinol: FC<any> = ({
       name: 'Rum',
       center: true,
       width: '100px',
-      sortField: 'rum',
       selector: (row: any) => row.rum,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Rum'} />,
     },
@@ -204,7 +199,6 @@ export const DtMinol: FC<any> = ({
       name: 'Soju',
       center: true,
       width: '100px',
-      sortField: 'soju',
       selector: (row: any) => row.soju,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Soju'} />,
     },
@@ -212,7 +206,6 @@ export const DtMinol: FC<any> = ({
       name: 'Anggur',
       center: true,
       width: '100px',
-      sortField: 'anggur',
       selector: (row: any) => row.anggur,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Anggur'} />,
     },
@@ -220,7 +213,6 @@ export const DtMinol: FC<any> = ({
       name: 'Absinth',
       center: true,
       width: '100px',
-      sortField: 'absinth',
       selector: (row: any) => row.absinth,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Absinth'} />,
     },
@@ -228,7 +220,6 @@ export const DtMinol: FC<any> = ({
       name: 'Lainnya',
       center: true,
       width: '100px',
-      sortField: 'lainnya',
       selector: (row: any) => row.lainnya,
       cell: (record: any) => <GetPerJenis row={record.no} jenis={'Lainnya'} />,
     },
@@ -237,15 +228,11 @@ export const DtMinol: FC<any> = ({
   return (
     <div>
       <DataTable
-        columns={columns}
-        data={kota}
-        progressPending={loading}
         pagination
-        paginationServer
+        data={kota}
+        columns={columns}
+        progressPending={loading}
         progressComponent={<LoadingAnimation />}
-        paginationTotalRows={totalRows}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
         theme={theme}
       />
     </div>
@@ -254,28 +241,27 @@ export const DtMinol: FC<any> = ({
 
 export const DtMinolPelanggaran: FC<any> = ({
   pelanggaran,
-  totalRows,
-  handlePerRowsChange,
-  handlePageChange,
+  totalKegiatan,
+  setTotalKegiatan,
   loading,
   theme,
+  aksi,
 }) => {
-  const [totalKegiatan, setTotalKegiatan] = useState<any>([])
+
   useEffect(() => {
     const fetchDTMinol = async () => {
-      const {data} = await axios.get(
+      const { data } = await axios.get(
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=kegiatan__jenis_kegiatan_id%20eq%20%2716%27&%24top=1&%24select=tindak_lanjut__administrasi__jenis_pelanggaran%2C%20tindak_lanjut__jumlah_minol_merk%2C%20id`
       )
       const res = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=kegiatan__jenis_kegiatan_id%20eq%20%2716%27&%24top=${data.total_items}&%24select=tindak_lanjut__administrasi__jenis_pelanggaran%2C%20tindak_lanjut__jumlah_minol_merk%2C%20id`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=kegiatan__jenis_kegiatan_id%20eq%20%2716%27&%24top=${data.total_items}&%24select=kegiatan__kota_id%2C%20tindak_lanjut__administrasi__jenis_pelanggaran%2C%20tindak_lanjut__jumlah_minol_merk%2C%20id%2C%20tindak_lanjut__administrasi__jenis_pelanggaran%2C%20kegiatan__tanggal%2C%20kegiatan__jam_start%2C%20kegiatan__jam_end%2C%20kegiatan__uraian_kegiatan`
       )
       setTotalKegiatan(res.data.data)
     }
     fetchDTMinol()
   }, [])
-  console.log(totalKegiatan)
 
-  const GetPerJenis = ({row, jenis}: any) => {
+  const GetPerJenis = ({ row, jenis }: any) => {
     let countJumlah = 0
     const merkTertentu = [
       'wine',
@@ -308,7 +294,7 @@ export const DtMinolPelanggaran: FC<any> = ({
         }
       })
     })
-    // if pertama
+
     if (row && !jenis) {
       for (const merk in jumlah_item) {
         if (jumlah_item.hasOwnProperty(merk)) {
@@ -316,11 +302,11 @@ export const DtMinolPelanggaran: FC<any> = ({
         }
       }
     }
-    // If kedua
+
     if (row && jumlah_item[jenis?.toLowerCase()]) {
       countJumlah = jumlah_item[jenis?.toLowerCase()]
     }
-    // if ketiga
+
     if (row && jenis === 'Lainnya') {
       for (const merk in jumlah_item) {
         if (jumlah_item.hasOwnProperty(merk) && !merkTertentu.includes(merk)) {
@@ -328,8 +314,6 @@ export const DtMinolPelanggaran: FC<any> = ({
         }
       }
     }
-    //  for loop
-    console.log(jumlah_item)
     return <>{countJumlah}</>
   }
 
@@ -346,8 +330,17 @@ export const DtMinolPelanggaran: FC<any> = ({
     {
       name: 'Jenis Pelanggaran',
       wrap: true,
-      width: '300px',
+      width: '500px',
       selector: (row: any) => row.pelanggaran,
+      cell: (row: any) => {
+        return (
+          <>
+            <a
+              className='table table-hover mb-0'
+              onClick={() => aksi(row.pelanggaran)}>{row.pelanggaran}</a>
+          </>
+        )
+      },
     },
     {
       name: 'Jumlah Minol',
@@ -453,15 +446,112 @@ export const DtMinolPelanggaran: FC<any> = ({
   return (
     <div>
       <DataTable
+        pagination
         columns={columns}
         data={pelanggaran}
         progressPending={loading}
-        pagination
-        paginationServer
         progressComponent={<LoadingAnimation />}
-        paginationTotalRows={totalRows}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
+        theme={theme}
+      />
+    </div>
+  )
+}
+
+export const DtDetail: FC<any> = ({
+  data,
+  loading,
+  theme,
+}) => {
+
+  const GetKota = ({ row }: { row: number }) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const { data } = await axios.get(`${MASTERDATA_URL}/kota/?%24filter=id%20eq%20${id}`)
+        const result: string = data.data[0].nama
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const columns = [
+    {
+      name: 'No',
+      width: '80px',
+      sortable: true,
+      selector: (row: any) => row.serial,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
+    },
+    {
+      name: 'Pelaksana Kegiatan',
+      wrap: true,
+      center: true,
+      width: '300px',
+      selector: (row: any) => row.kegiatan__kota_id,
+      cell: (record: any) => <GetKota row={parseInt(record.kegiatan__kota_id)} />,
+    },
+    {
+      name: 'Jenis Pelanggaran',
+      wrap: true,
+      center: true,
+      width: '400px',
+      selector: (row: any) => row.tindak_lanjut__administrasi__jenis_pelanggaran,
+    },
+    {
+      name: 'Jenis Merk Minol',
+      wrap: true,
+      center: true,
+      width: '400px',
+      selector: (row: any) => row.tindak_lanjut__jumlah_minol_merk,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.merk}</div>
+      },
+    },
+    {
+      name: 'Tanggal Kegiatan',
+      center: true,
+      width: '140px',
+      selector: (row: any) => row.kegiatan__tanggal,
+    },
+    {
+      name: 'Waktu Mulai',
+      center: true,
+      width: '140px',
+      selector: (row: any) => row.kegiatan__jam_start,
+    },
+    {
+      name: 'Waktu Selesai',
+      center: true,
+      width: '140px',
+      selector: (row: any) => row.kegiatan__jam_end,
+    },
+    {
+      name: 'Uraian Kegiatan',
+      width: '300px',
+      wrap: true,
+      selector: (row: any) => row.kegiatan__uraian_kegiatan,
+    },
+    {
+      name: 'Wilayah',
+      width: '200px',
+      wrap: true,
+      selector: (row: any) => row.kegiatan__wilayah,
+    },
+  ]
+
+  return (
+    <div>
+      <DataTable
+        pagination
+        data={data}
+        columns={columns}
+        progressComponent={<LoadingAnimation />}
+        progressPending={loading}
         theme={theme}
       />
     </div>

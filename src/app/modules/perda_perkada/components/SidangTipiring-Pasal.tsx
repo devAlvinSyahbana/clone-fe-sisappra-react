@@ -2,8 +2,8 @@ import axios from 'axios'
 import { unparse } from 'papaparse'
 import { useNavigate } from 'react-router-dom'
 import { ChangeEvent, useState, useEffect } from 'react'
-import { DtMinol, DtDetail } from './datatables/data-table-laporan-minol'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
+import { DtSidangTipiringPasal, DtDetail } from './datatables/data-table-laporan-sidang-tipiring'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { KTSVG } from '../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
@@ -109,26 +109,17 @@ export const PELAPORAN_URL = process.env.REACT_APP_SISAPPRA_PELAPORAN_API_URL
 export const MANAJEMEN_PENGGUNA_URL = `${API_URL}/manajemen-pengguna`
 export const MASTER_URL = `${API_URL}/master`
 
-interface minolInterface {
+interface SidangTipiringInterface {
   no: number
-  pelaksana_kegiatan: string
-  jumlah_minol: number
-  wine: number
-  bir: number
-  sake: number
-  gin: number
-  tequilla: number
-  brandy: number
-  wiski: number
-  vodka: number
-  rum: number
-  soju: number
-  anggur: number
-  absinth: number
-  lainnya: number
+  jenis_perda_perkada: string
+  jumlah_penertiban: number
+  jumlah_pelanggar: number
+  jumlah_pelanggar_tidak_hadir: number
+  verstek: number
+  denda: number
 }
 
-export function LaporanMinol() {
+export function SidangTipiringPasal() {
   const navigate = useNavigate()
   const { mode } = useThemeMode()
   const calculatedMode = mode === 'system' ? systemMode : mode
@@ -142,7 +133,7 @@ export function LaporanMinol() {
   const [tanggalAwal, setTanggalAwal] = useState('')
   const [tanggalAkhir, setTanggalAkhir] = useState('')
 
-  const [data, setData] = useState<minolInterface[]>([])
+  const [data, setData] = useState<SidangTipiringInterface[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(0)
   const [perPage, setPerPage] = useState(10)
@@ -153,13 +144,13 @@ export function LaporanMinol() {
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.setAttribute('download', 'LAPORAN PENERTIBAN MINUM BERALKOHOL.csv')
+    link.setAttribute('download', 'LAPORAN SIDANG TIPIRING.csv')
     document.body.appendChild(link)
     link.click()
     link.remove()
   }
 
-  const dataPerdaPerkada = (page: number) => {
+  const dataTipiring = (page: number) => {
     axios
       .get(
         `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${perPage}&%24page=${page}`
@@ -169,15 +160,15 @@ export function LaporanMinol() {
           id: d.id,
           no: d.id,
           pelaksana: d.created_by,
-          lokasi: d.kegiatan__lokasi,
+          tanggal_kegiatan: d.kegiatan__tanggal,
           waktu_mulai: d.kegiatan__jam_start,
           waktu_selesai: d.kegiatan__jam_end,
-          tanggal_kegiatan: d.kegiatan__tanggal,
-          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
           jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
+          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
+          lokasi: d.kegiatan__lokasi,
+          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
           denda_pengadilan: d.tindak_lanjut__denda__pengadilan,
           denda_non_pengadilan: d.tindak_lanjut__denda__non_pengadilan,
-          jenis_penertiban: d.tindak_lanjut__administrasi__jenis_penertiban,
         }))
         Array.from(data).forEach((item: any, index: any) => {
           item.serial = index + 1
@@ -185,47 +176,48 @@ export function LaporanMinol() {
         setData(data)
         setTotalRows(5)
         setLoading(false)
+
         return [data, setData] as const
       })
   }
 
   useEffect(() => {
-    dataPerdaPerkada(0)
+    dataTipiring(0)
   }, [qParamFind, perPage])
 
-  const LoadingAnimation = (props: any) => {
-    return (
-      <>
-        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
-          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
-          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
-          <div className='d-flex flex-column'>
-            <h5 className='mb-1'>Sedang mengambil data...</h5>
-          </div>
-        </div>
-      </>
+  const [perdaPerkada, setPerdaPerkada] = useState([])
+  const [qParamFindPerdaPerkada, setUriFindPerdaPerkada] = useState({ strParamPerdaPerkada: '' })
+
+  const dataPerdaPerkada = async (page: number) => {
+    const response = await axios.get(
+      `${MASTERDATA_URL}/jenis-perda-perkada${qParamFindPerdaPerkada.strParamPerdaPerkada}?%24top=200&%24select=id%2C%20judul%2C%20pasal%2C%20jenis_penertiban%2C%20jenis_pelanggaran`
     )
-  }
+    const filter = await axios.get(
+      `${MASTERDATA_URL}/map-master-perda/jenis-kegiatan?%24filter=jenis_kegiatan_id%20eq%20%2711%27&%24select=id%2C%20perda_id%2C%20jenis_kegiatan_id`
+    )
 
-  const [kota, setKota] = useState([])
-  const [qParamFindKota, setUriFindKota] = useState({ strparamkota: '' })
-
-  const kotaList = async () => {
-    const responseKota = await axios.get(`${MASTERDATA_URL}/kota${qParamFindKota.strparamkota}`)
-    const dataKota = responseKota.data.data.map((d: any) => ({
+    let filteredArr = response.data.data.filter((obj1: any) =>
+      filter.data.data.some((obj2: any) => obj2.perda_id === obj1.id)
+    )
+    console.log('filter', filteredArr)
+    const data = filteredArr.map((d: any) => ({
+      pasal: d.pasal,
       id: d.id,
       no: d.id,
-      pelaksana: d.nama,
+      penertiban: d.jenis_penertiban,
+      pelanggaran: d.jenis_pelanggaran,
+      perda: d.judul,
     }))
-    Array.from(dataKota).forEach((item: any, index: any) => {
+    await Array.from(data).forEach((item: any, index: any) => {
       item.serial = index + 1
     })
+    setPerdaPerkada(data)
 
-    setKota(dataKota)
+    return [perdaPerkada, setPerdaPerkada] as const
   }
 
   useEffect(() => {
-    kotaList()
+    dataPerdaPerkada(0)
   }, [])
 
   const [filterData, setFilterData] = useState('')
@@ -233,8 +225,8 @@ export function LaporanMinol() {
     setFilterData(e.target.value)
   }
 
-  const filteredData = kota.filter((item: any) => {
-    return item.pelaksana.toLowerCase().includes(filterData.toLowerCase())
+  const filteredData = perdaPerkada.filter((item: any) => {
+    return item.pasal.toLowerCase().includes(filterData.toLowerCase())
   })
 
   const handleFilterReset = () => {
@@ -245,7 +237,7 @@ export function LaporanMinol() {
     setDV(!detailView)
 
     if (row) {
-      const filterDetail = totalKegiatan.filter((item: any) => item.kegiatan__kota_id === row)
+      const filterDetail = totalKegiatan.filter((item: any) => item.tindak_lanjut__administrasi__jenis_pasal_id === row)
 
       Array.from(filterDetail).forEach((item: any, index: any) => {
         item.serial = index + 1
@@ -276,6 +268,20 @@ export function LaporanMinol() {
   const handleFilterResetTanggal = () => {
     setTanggalAwal('');
     setTanggalAkhir('');
+  }
+
+  const LoadingAnimation = (props: any) => {
+    return (
+      <>
+        <div className='alert alert-primary d-flex align-items-center p-5 mb-10'>
+          {/* <span className="svg-icon svg-icon-2hx svg-icon-primary me-3">...</span> */}
+          <span className='spinner-border spinner-border-xl align-middle me-3'></span>
+          <div className='d-flex flex-column'>
+            <h5 className='mb-1'>Sedang mengambil data...</h5>
+          </div>
+        </div>
+      </>
+    )
   }
 
   const customStyles = {
@@ -330,14 +336,14 @@ export function LaporanMinol() {
         <>
           <div className='row g-8 mt-2 ms-10 me-2'>
             <label>
-              <h3>Pelaksana Kegiatan</h3>
+              <h3>Jenis Pasal</h3>
             </label>
             <div className='col-xxl-10 col-lg-10 col-md-8 col-sm-6'>
               <input
                 id='search'
                 type='text'
                 className='form-control form-control form-control-solid'
-                placeholder='Masukkan Pelaksana Kegiatan'
+                placeholder='Masukkan Jenis Pasal'
                 aria-label='Search Input'
                 value={filterData}
                 onChange={handleFilter}
@@ -386,10 +392,10 @@ export function LaporanMinol() {
                   {/* begin::Content */}
                   <div data-kt-user-table-filter='form'>
                     <button
-                      onClick={() => navigate('/perdaperkada/LaporanMinol/')}
+                      onClick={() => navigate('/perdaperkada/SidangTipiringPasal/')}
                       className='btn btn-outline btn-active-light-primary w-100'
                     >
-                      Pelaksana Kegiatan
+                      Jenis Pasal
                     </button>
                   </div>
                   {/* end::Content */}
@@ -397,10 +403,10 @@ export function LaporanMinol() {
                   {/* begin::Content */}
                   <div data-kt-user-table-filter='form'>
                     <button
-                      onClick={() => navigate('/perdaperkada/MinolPelanggaran/')}
+                      onClick={() => navigate('/perdaperkada/LaporanSidangTipiring/')}
                       className='btn btn-outline btn-active-light-primary w-100'
                     >
-                      Jenis Pelanggaran
+                      Pelaksana Kegiatan
                     </button>
                   </div>
                   {/* end::Content */}
@@ -426,7 +432,6 @@ export function LaporanMinol() {
                       className='form-control'
                       value={tanggalAwal}
                       onChange={handleChangeInputTanggalAwal}
-
                     />
                   </div>
                 </div>
@@ -447,7 +452,6 @@ export function LaporanMinol() {
                       className='form-control'
                       value={tanggalAkhir}
                       onChange={handleChangeInputTanggalAkhir}
-
                     />
                   </div>
                 </div>
@@ -496,7 +500,7 @@ export function LaporanMinol() {
       )}
       <div className='row'>
         <div className='col fs-4 mb-2 fw-semibold text-center'>
-          LAPORAN HASIL PENERTIBAN MINUMAN BERALKOHOL
+          LAPORAN PELAKSANAAN SIDANG TINDAK PIDANA RINGAN (TIPIRING) HASIL PENEGAKAN PERDA/PERKADA
         </div>
       </div>
       <div className='row'>
@@ -511,9 +515,9 @@ export function LaporanMinol() {
       </div>
       <div className='card-body py-4'>
         {!detailView ? (
-          <DtMinol
+          <DtSidangTipiringPasal
             aksi={viewDetail}
-            kota={filteredData}
+            perdaPerkada={filteredData}
             totalKegiatan={totalKegiatan}
             setTotalKegiatan={setTotalKegiatan}
             progressComponent={<LoadingAnimation />}
