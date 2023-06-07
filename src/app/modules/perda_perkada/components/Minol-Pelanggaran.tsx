@@ -1,16 +1,12 @@
-import { useState, useEffect } from 'react'
+import { ChangeEvent, useState, useEffect } from 'react'
 import axios from 'axios'
-import buildQuery from 'odata-query-sequelize'
 import { unparse } from 'papaparse'
-import { Link, useNavigate } from 'react-router-dom'
-import { DtMinolPelanggaran } from './datatables/data-table-laporan-minol'
+import { useNavigate } from 'react-router-dom'
+import { DtMinolPelanggaran, DtDetail } from './datatables/data-table-laporan-minol'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { Button } from 'react-bootstrap'
 import { KTSVG } from '../../../../_metronic/helpers'
-import AsyncSelect from 'react-select/async'
-import FileDownload from 'js-file-download'
-import Swal from 'sweetalert2'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -144,16 +140,13 @@ export function Minol_Pelanggaran() {
     const calculatedMode = mode === 'system' ? systemMode : mode
     const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
-    const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-    const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
-    const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
-    const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
+    const [detailView, setDV] = useState(false)
 
-    const [hakAkses, setHakAkses] = useState([])
-    const [valHakAkses, setValHakAkses] = useState({ value: '', label: '' })
-    const [wilayahBidang, setWilayahBidang] = useState([])
-    const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
-    const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+    const [totalKegiatan, setTotalKegiatan] = useState([])
+    const [totalDetail, setTotalDetail] = useState([])
+
+    const [tanggalAwal, setTanggalAwal] = useState('')
+    const [tanggalAkhir, setTanggalAkhir] = useState('')
 
     const [data, setData] = useState<minolInterface[]>([])
     const [loading, setLoading] = useState(false)
@@ -170,47 +163,6 @@ export function Minol_Pelanggaran() {
         document.body.appendChild(link)
         link.click()
         link.remove()
-    }
-
-    useEffect(() => {
-        handleHakAkses()
-        handleWilayahBidang()
-    }, [])
-
-    const handleChangeInputTanggalAwal = (event: {
-        preventDefault: () => void
-        target: { value: any; name: any }
-    }) => {
-        setTanggalAwal({ val: event.target.value })
-    }
-
-    const handleChangeInputTanggalAkhir = (event: {
-        preventDefault: () => void
-        target: { value: any; name: any }
-    }) => {
-        setTanggalAkhir({ val: event.target.value })
-    }
-
-    const handleFilterPelanggaran = async () => {
-        let uriParam = ''
-        // if (tanggalAwal.val && tanggalAkhir.val) {
-        //     uriParam += `kegiatan__tanggal%20ge%20%27${tanggalAwal.val}%27%20and%20kegiatan__tanggal%20le%20%27${tanggalAkhir.val}%27`
-        // } else if (tanggalAwal.val !== '') {
-        //     uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAwal.val}%27`
-        // } else if (tanggalAkhir.val !== '') {
-        //     uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAkhir.val}%27`
-        // }
-        if (valPelanggaran.value !== '') {
-            uriParam += `/?%24filter=id%20eq%20${valPelanggaran.value}`
-        }
-        setUriFindPelanggaran((prevState) => ({ ...prevState, strParamPelanggaran: uriParam }))
-    }
-
-    const handleFilterResetPelanggaran = () => {
-        setTanggalAwal({ val: '' })
-        setTanggalAkhir({ val: '' })
-        setValPelanggaran({ value: '', label: '' })
-        setUriFindPelanggaran((prevState) => ({ ...prevState, strParamPelanggaran: '' }))
     }
 
     const dataPerdaPerkada = (page: number) => {
@@ -262,9 +214,9 @@ export function Minol_Pelanggaran() {
             filter.data.data.some((obj2: any) => obj2.perda_id === obj1.id)
         )
         const data = filteredArr.map((d: any) => ({
-            pasal: d.pasal,
             id: d.id,
             no: d.id,
+            pasal: d.pasal,
             penertiban: d.jenis_penertiban,
             pelanggaran: d.jenis_pelanggaran,
             perda: d.judul,
@@ -281,54 +233,54 @@ export function Minol_Pelanggaran() {
         dataPelanggaran(0)
     }, [])
 
-    const [valPelanggaran, setValPelanggaran] = useState({ value: '', label: '' })
-    const filterPelanggaran = async (inputValue: string) => {
-        const response = await axios.get(`${MASTERDATA_URL}/jenis-perda-perkada/?%24filter=id%20eq%20%2792%27%20or%20id%20eq%20%2793%27%20or%20id%20eq%20%2797%27%20or%20id%20eq%20%2796%27%20or%20id%20eq%20%2798%27%20or%20id%20eq%20%27101%27%20or%20id%20eq%20%27104%27&%24select=id%2C%20jenis_pelanggaran`)
-        const json = await response.data.data
-        return json.map((i: any) => ({ label: i.jenis_pelanggaran, value: i.id }))
-        // console.log(response)
-    }
-    const loadOptionsPelanggaran = (inputValue: string, callback: (options: SelectOption[]) => void) => {
-        setTimeout(async () => {
-            callback(await filterPelanggaran(inputValue))
-        }, 1000)
-    }
-    const handleChangeInputPelanggaran = (newValue: any) => {
-        setValPelanggaran((prevstate: any) => ({ ...prevstate, ...newValue }))
-        // console.log('ini val kejadian', valJenisKejadian)
+    const [filterData, setFilterData] = useState('')
+    const handleFilter = (e: ChangeEvent<HTMLInputElement>) => {
+        setFilterData(e.target.value)
     }
 
-    const handlePageChange = (page: number) => {
-        dataPelanggaran(page - 1)
+    const filteredData = pelanggaran.filter((item: any) => {
+        return item.pelanggaran.toLowerCase().includes(filterData.toLowerCase())
+    })
+
+    const handleFilterReset = () => {
+        setFilterData('')
     }
 
-    const handlePerRowsChange = async (newPerPage: number, page: number) => {
-        setLoading(true)
-        axios
-            .get(
-                `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
-            )
-            .then((res) => {
-                const data = res.data.data.map((d: any) => ({
-                    id: d.id,
-                    no: d.id,
-                    total_item: d.total_item,
-                    pelaksana: d.created_by,
-                    tanggal_kegiatan: d.kegiatan__tanggal,
-                    waktu_mulai: d.kegiatan__jam_start,
-                    waktu_selesai: d.kegiatan__jam_end,
-                    jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-                    uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-                    wilayah: d.created_by,
-                    lokasi: d.kegiatan__lokasi,
-                }))
-                Array.from(data).forEach((item: any, index: any) => {
-                    item.serial = index + 1
-                })
-                setData(data)
-                setPerPage(newPerPage)
-                setLoading(false)
+    const viewDetail = (row: string) => {
+        setDV(!detailView)
+
+        if (row) {
+            const filterDetail = totalKegiatan.filter((item: any) => item.tindak_lanjut__administrasi__jenis_pelanggaran === row)
+
+            Array.from(filterDetail).forEach((item: any, index: any) => {
+                item.serial = index + 1
             })
+            setTotalDetail(filterDetail)
+        }
+    }
+
+    const handleChangeInputTanggalAwal = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTanggalAwal(event.target.value);
+    };
+
+    const handleChangeInputTanggalAkhir = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTanggalAkhir(event.target.value);
+    };
+
+    const awal = new Date(tanggalAwal)
+    const akhir = new Date(tanggalAkhir)
+
+    const handleFilterTanggal = async () => {
+        const filteredTanggal = totalDetail.filter((item: any) => {
+            const itemTanggal = new Date(item.kegiatan__tanggal);
+            return itemTanggal >= awal && itemTanggal <= akhir;
+        });
+        setTotalDetail(filteredTanggal)
+    }
+
+    const handleFilterResetTanggal = () => {
+        setTanggalAwal('');
+        setTanggalAkhir('');
     }
 
     const LoadingAnimation = (props: any) => {
@@ -343,16 +295,6 @@ export function Minol_Pelanggaran() {
                 </div>
             </>
         )
-    }
-
-    const handleHakAkses = async () => {
-        const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
-        setHakAkses(response.data.data)
-    }
-
-    const handleWilayahBidang = async () => {
-        const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
-        setWilayahBidang(response.data.data)
     }
 
     interface SelectOption {
@@ -411,187 +353,172 @@ export function Minol_Pelanggaran() {
     return (
         <div className='card'>
             {/* begin::Body */}
-            <div className='card-header border-1 pt-6'>
-                <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
-                    <div className='mb-5'>
-                        <div
-                            className='accordion-header py-3 d-flex'
-                            data-bs-toggle='collapse'
-                            data-bs-target='#kt_accordion_2_item_1'
-                        >
-                            <span className='accordion-icon'>
-                                <span className='svg-icon svg-icon-4'>
-                                    <svg
-                                        width='24'
-                                        height='24'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        xmlns='http://www.w3.org/2000/svg'
-                                    >
-                                        <rect
-                                            opacity='0.5'
-                                            x='18'
-                                            y='13'
-                                            width='13'
-                                            height='2'
-                                            rx='1'
-                                            transform='rotate(-180 18 13)'
-                                            fill='currentColor'
-                                        />
-                                        <path
-                                            d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
-                                            fill='currentColor'
-                                        />
-                                    </svg>
-                                </span>
-                            </span>
-                            <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
+            {!detailView ? (
+                <>
+                    <div className='row g-8 mt-2 ms-10 me-2'>
+                        <label>
+                            <h3>Jenis Pelanggaran</h3>
+                        </label>
+                        <div className='col-xxl-10 col-lg-10 col-md-8 col-sm-6'>
+                            <input
+                                id='search'
+                                type='text'
+                                className='form-control form-control form-control-solid'
+                                placeholder='Masukkan Jenis Pelanggaran'
+                                aria-label='Search Input'
+                                value={filterData}
+                                onChange={handleFilter}
+                            />
                         </div>
-                        <div
-                            id='kt_accordion_2_item_1'
-                            className='fs-6 collapse show ps-10'
-                            data-bs-parent='#kt_accordion_2'
-                        >
-                            <div className='row w-100 mt-10 mb-10'>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label align-middle'>Jenis Pelanggaran</label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <AsyncSelect
-                                                    name='jenis_pelanggaran'
-                                                    defaultOptions
-                                                    value={valPelanggaran}
-                                                    loadOptions={loadOptionsPelanggaran}
-                                                    onChange={handleChangeInputPelanggaran}
-                                                    placeholder={'Pilih Jenis Pelanggaran'}
-                                                    styles={
-                                                        calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label'>Tanggal Awal</label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <input
-                                                    type='date'
-                                                    name='tanggal_kunjungan'
-                                                    className='form-control'
-                                                    value={tanggalAwal.val}
-                                                    onChange={handleChangeInputTanggalAwal}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='col-md-6 col-lg-6 col-sm-12'>
-                                    <div className='mb-10'>
-                                        <div className='row'>
-                                            <div className='col-4 pt-2'>
-                                                <label className='form-label align-middle'>Tanggal Akhir</label>
-                                            </div>
-                                            <div className='col-8'>
-                                                <input
-                                                    name='tanggal_kunjungan'
-                                                    type='date'
-                                                    className='form-control'
-                                                    value={tanggalAkhir.val}
-                                                    onChange={handleChangeInputTanggalAkhir}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* END :: Filter Form */}
 
-                                {/* Search and Reset */}
-                                <div className='row g-8 mt-2'>
-                                    <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                        <Link to='#'>
-                                            <Button className='btn btn-light-primary me-2' onClick={handleFilterPelanggaran}>
-                                                <KTSVG
-                                                    path='/media/icons/duotune/general/gen021.svg'
-                                                    className='svg-icon-2'
-                                                />
-                                                Cari
-                                            </Button>
-                                        </Link>
-                                        <Link to='#'>
-                                            <Button className='btn btn-light-primary me-2' onClick={handleFilterResetPelanggaran}>
-                                                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                                Reset
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                    <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                        <div className='justify-content-end col-xxl-2 col-lg-2 col-md-3 col-sm-6'>
+                            <Button className='btn btn-light-primary me-2' onClick={handleFilterReset}>
+                                <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                Reset
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div className='row g-8 mt-2 ms-10 me-2 mb-6'>
+                        <div className='d-flex justify-content-end'>
+                            <button
+                                type='button'
+                                className='btn btn-light-primary me-2'
+                                data-kt-menu-placement='bottom-end'
+                                data-kt-menu-trigger='click'
+                                onClick={() => unduhCSV(data)}
+                            >
+                                <>
+                                    <KTSVG
+                                        path='/media/icons/duotune/arrows/arr078.svg'
+                                        className='svg-icon-2'
+                                    />
+                                    Unduh CSV
+                                </>
+                            </button>
+
+                            <div>
+                                <Button
+                                    type='button'
+                                    className='btn btn-primary'
+                                    data-kt-menu-trigger='click'
+                                    data-kt-menu-placement='bottom-end'
+                                >
+                                    Pilih Tabel Berdasarkan
+                                </Button>
+                                <div
+                                    className='menu menu-sub menu-sub-dropdown w-200px w-md-200px'
+                                    data-kt-menu='true'
+                                >
+                                    {/* begin::Content */}
+                                    <div data-kt-user-table-filter='form'>
                                         <button
-                                            type='button'
-                                            className='btn btn-light-primary me-2'
-                                            data-kt-menu-placement='bottom-end'
-                                            data-kt-menu-trigger='click'
-                                            onClick={() => unduhCSV(data)}
+                                            onClick={() => navigate('/perdaperkada/LaporanMinol/')}
+                                            className='btn btn-outline btn-active-light-primary w-100'
                                         >
-                                            <>
-                                                <KTSVG
-                                                    path='/media/icons/duotune/arrows/arr078.svg'
-                                                    className='svg-icon-2'
-                                                />
-                                                Unduh CSV
-                                            </>
+                                            Pelaksana Kegiatan
                                         </button>
-                                        <div>
-                                            <Button
-                                                type='button'
-                                                className='btn btn-primary me-2'
-                                                data-kt-menu-trigger='click'
-                                                data-kt-menu-placement='bottom-end'
-                                            >
-                                                Pilih Tabel Berdasarkan
-                                            </Button>
-                                            <div
-                                                className='menu menu-sub menu-sub-dropdown w-180px w-md-200px'
-                                                data-kt-menu='true'
-                                            >
-                                                {/* begin::Content */}
-                                                <div data-kt-user-table-filter='form'>
-                                                    <button
-                                                        onClick={() => navigate('/perdaperkada/LaporanMinol/')}
-                                                        className='btn btn-outline btn-active-light-primary w-100'
-                                                    >
-                                                        Pelaksana Kegiatan
-                                                    </button>
-                                                </div>
-                                                {/* end::Content */}
-
-                                                {/* begin::Content */}
-                                                <div data-kt-user-table-filter='form'>
-                                                    <button
-                                                        onClick={() => navigate('/perdaperkada/Minol_Pelanggaran/')}
-                                                        className='btn btn-outline btn-active-light-primary w-100'
-                                                    >
-                                                        Jenis Pelanggaran
-                                                    </button>
-                                                </div>
-                                                {/* end::Content */}
-                                            </div>
-                                        </div>
                                     </div>
-                                    {/* END :: Button */}
+                                    {/* end::Content */}
+
+                                    {/* begin::Content */}
+                                    <div data-kt-user-table-filter='form'>
+                                        <button
+                                            onClick={() => navigate('/perdaperkada/MinolPelanggaran/')}
+                                            className='btn btn-outline btn-active-light-primary w-100'
+                                        >
+                                            Jenis Pelanggaran
+                                        </button>
+                                    </div>
+                                    {/* end::Content */}
                                 </div>
                             </div>
                         </div>
+                        {/* END :: Button */}
                     </div>
-                </div>
-            </div>
+                </>
+            ) : (
+                <>
+                    <div className='row mt-10 mb-10 px-10'>
+                        <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                                <div className='row'>
+                                    <div className='col-4 pt-2'>
+                                        <label className='form-label'>Tanggal Awal</label>
+                                    </div>
+                                    <div className='col-8'>
+                                        <input
+                                            type='date'
+                                            name='tanggal_kunjungan'
+                                            className='form-control'
+                                            value={tanggalAwal}
+                                            onChange={handleChangeInputTanggalAwal}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='col-md-6 col-lg-6 col-sm-12'>
+                            <div className='mb-10'>
+                                <div className='row'>
+                                    <div className='col-4 pt-2'>
+                                        <label className='form-label align-middle'>
+                                            Tanggal Akhir
+                                        </label>
+                                    </div>
+                                    <div className='col-8'>
+                                        <input
+                                            name='tanggal_kunjungan'
+                                            type='date'
+                                            className='form-control'
+                                            value={tanggalAkhir}
+                                            onChange={handleChangeInputTanggalAkhir}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='row g-8 mt-2'>
+                            <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                <Button
+                                    className='btn btn-light-primary me-2'
+                                    onClick={handleFilterTanggal}
+                                >
+                                    <KTSVG
+                                        path='/media/icons/duotune/general/gen021.svg'
+                                        className='svg-icon-2'
+                                    />
+                                    Cari
+                                </Button>
+                                <Button
+                                    className='btn btn-light-primary me-2'
+                                    onClick={handleFilterResetTanggal}
+                                >
+                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                    Reset
+                                </Button>
+                            </div>
+                            <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                <button
+                                    type='button'
+                                    className='btn btn-light-primary me-2'
+                                    data-kt-menu-placement='bottom-end'
+                                    data-kt-menu-trigger='click'
+                                    onClick={() => unduhCSV(totalDetail)}
+                                >
+                                    <>
+                                        <KTSVG
+                                            path='/media/icons/duotune/arrows/arr078.svg'
+                                            className='svg-icon-2'
+                                        />
+                                        Unduh CSV
+                                    </>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
             <div className='row'>
                 <div className='col fs-4 mb-2 fw-semibold text-center'>
                     LAPORAN HASIL PENERTIBAN MINUMAN BERALKOHOL
@@ -608,18 +535,44 @@ export function Minol_Pelanggaran() {
                 </div>
             </div>
             <div className='card-body py-4'>
-                <DtMinolPelanggaran
-                    data={data}
-                    pelanggaran={pelanggaran}
-                    totalRows={totalRows}
-                    handlePerRowsChange={handlePerRowsChange}
-                    handlePageChange={handlePageChange}
-                    loading={loading}
-                    jenisKegiatanList={jenisKegiatanList}
-                    hakAkses={hakAkses}
-                    wilayahBidang={wilayahBidang}
-                    theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                />
+                {!detailView ? (
+                    <DtMinolPelanggaran
+                        aksi={viewDetail}
+                        pelanggaran={filteredData}
+                        totalKegiatan={totalKegiatan}
+                        setTotalKegiatan={setTotalKegiatan}
+                        progressComponent={<LoadingAnimation />}
+                        loading={loading}
+                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                        noDataComponent={
+                            <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                                <div className='d-flex flex-column'>
+                                    <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                                </div>
+                            </div>
+                        }
+                    />
+                ) : (
+                    <>
+                        <DtDetail
+                            data={totalDetail}
+                            progressComponent={<LoadingAnimation />}
+                            loading={loading}
+                            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                            noDataComponent={
+                                <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                                    <div className='d-flex flex-column'>
+                                        <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                                    </div>
+                                </div>
+                            }
+                        />
+                        <Button className='btn btn-secondary me-2' onClick={() => viewDetail('')}>
+                            <i className='fa-solid fa-arrow-left'></i>
+                            Kembali
+                        </Button>
+                    </>
+                )}
             </div>
         </div>
     )
