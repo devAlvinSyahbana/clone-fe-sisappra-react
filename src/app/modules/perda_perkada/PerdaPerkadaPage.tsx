@@ -13,7 +13,7 @@ import { LaporanPPKMMasker } from './components/LaporanPPKM-Masker'
 import { LaporanPPKMBangunan } from './components/LaporanPPKM-Bangunan'
 import { LaporanPPKMKerumunan } from './components/LaporanPPKM-Kerumunan'
 import { LaporanPPKMRumahMakan } from './components/LaporanPPKM-RumahMakan'
-import { SidangTipiringPerda } from './components/SidangTipiringPerda'
+import { SidangTipiringPasal } from './components/SidangTipiring-Pasal'
 
 
 const perda_perkadaBreadCrumbs: Array<PageLink> = [
@@ -51,11 +51,11 @@ const PerdaPerkadaPage: React.FC = () => {
           }
         />
         <Route
-          path='SidangTipiringPerda'
+          path='SidangTipiringPasal'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>Laporan Sidang Tipiring</PageTitle>
-              <SidangTipiringPerda />
+              <SidangTipiringPasal />
             </>
           }
         />
@@ -72,7 +72,7 @@ const PerdaPerkadaPage: React.FC = () => {
           }
         />
         <Route
-          path='Minol_Pelanggaran'
+          path='MinolPelanggaran'
           element={
             <>
               <PageTitle breadcrumbs={perda_perkadaBreadCrumbs}>

@@ -1,16 +1,13 @@
-import { useState, useEffect, FC } from 'react'
 import axios from 'axios'
 import { unparse } from 'papaparse'
-import buildQuery from 'odata-query-sequelize'
-import { Link, useNavigate } from 'react-router-dom'
-import { DtPPKMRumahMakan } from './datatables/data-table-laporan-ppkm'
+import { ChangeEvent, useState, useEffect } from 'react'
+import { DtPPKMRumahMakan, DtDetail } from './datatables/data-table-laporan-ppkm'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { Button } from 'react-bootstrap'
 import { LaporanPPKMHeader } from './LaporanPPKMHeader'
 import { KTSVG } from '../../../../_metronic/helpers'
-import AsyncSelect from 'react-select/async'
 import FileDownload from 'js-file-download'
+import { Button } from 'react-bootstrap'
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
@@ -117,29 +114,18 @@ interface PPKMInterface {
     pelaksana_kegiatan: string
 }
 
-interface SelectOptionAutoCom {
-    readonly label: string
-    readonly value: string
-    readonly kode: string
-}
-
 export function LaporanPPKMRumahMakan() {
-    const navigate = useNavigate()
     const { mode } = useThemeMode()
     const calculatedMode = mode === 'system' ? systemMode : mode
     const [btnLoadingUnduh, setbtnLoadingUnduh] = useState(false)
 
-    const [jenisKegiatanList, setJenisKegiatanList] = useState([])
-    const [valJenisKegiatan, setValJenisKegiatan] = useState({ value: '', label: '' })
-    const [jenisPenertibanList, setJenisPenertibanList] = useState([])
-    const [valJenisPenertiban, setValJenisPenertiban] = useState({ value: '', label: '' })
-    const [jenisPerdaPerkadaList, setJenisPerdaPerkadaList] = useState([])
-    const [valJenisPerdaPerkada, setValJenisPerdaPerkada] = useState({ value: '', label: '' })
+    const [detailView, setDV] = useState(false)
 
-    const [hakAkses, setHakAkses] = useState([])
-    const [wilayahBidang, setWilayahBidang] = useState([])
-    const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
-    const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+    const [totalKegiatan, setTotalKegiatan] = useState([])
+    const [totalDetail, setTotalDetail] = useState([])
+
+    const [tanggalAwal, setTanggalAwal] = useState('')
+    const [tanggalAkhir, setTanggalAkhir] = useState('')
 
     const [data, setData] = useState<PPKMInterface[]>([])
     const [loading, setLoading] = useState(false)
@@ -156,66 +142,6 @@ export function LaporanPPKMRumahMakan() {
         document.body.appendChild(link)
         link.click()
         link.remove()
-    }
-
-    useEffect(() => {
-        handleHakAkses()
-        handleWilayahBidang()
-    }, [])
-
-    const handleChangeInputTanggalAwal = (event: {
-        preventDefault: () => void
-        target: { value: any; name: any }
-    }) => {
-        setTanggalAwal({ val: event.target.value })
-    }
-
-    const handleChangeInputTanggalAkhir = (event: {
-        preventDefault: () => void
-        target: { value: any; name: any }
-    }) => {
-        setTanggalAkhir({ val: event.target.value })
-    }
-
-    const handleFilter = async () => {
-        let uriParam = ''
-        if (tanggalAwal.val && tanggalAkhir.val) {
-            uriParam += `kegiatan__tanggal%20ge%20%27${tanggalAwal.val}%27%20and%20kegiatan__tanggal%20le%20%27${tanggalAkhir.val}%27`
-        } else if (tanggalAwal.val !== '') {
-            uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAwal.val}%27`
-        } else if (tanggalAkhir.val !== '') {
-            uriParam += `kegiatan__tanggal%20eq%20%27${tanggalAkhir.val}%27`
-        }
-        if (valJenisKegiatan.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-            uriParam += `%20and%20kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-        } else if (valJenisKegiatan.value !== '') {
-            uriParam += `kegiatan__jenis_kegiatan_id%20eq%20%27${valJenisKegiatan.value}%27`
-        }
-        if (valJenisPenertiban.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-            uriParam += `%20and%20tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
-        } else if (valJenisPenertiban.value !== '') {
-            uriParam += `tindak_lanjut__administrasi__jenis_penertiban%20eq%20%27${valJenisPenertiban.value}%27`
-        }
-        if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-            uriParam += `%20and%20tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
-        } else if (valJenisPerdaPerkada.value !== '') {
-            uriParam += `tindak_lanjut__administrasi__perda_perkada%20eq%20%27${valJenisPerdaPerkada.value}%27`
-        }
-        if (valJenisPerdaPerkada.value !== '' && (tanggalAwal.val || tanggalAkhir.val)) {
-            uriParam += `%20and%20tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
-        } else if (valJenisPerdaPerkada.value !== '') {
-            uriParam += `tindak_lanjut__denda__pengadilan%20eq%20%27${valJenisPerdaPerkada.value}%27`
-        }
-        setUriFind((prevState) => ({ ...prevState, strparam: uriParam }))
-    }
-
-    const handleFilterReset = () => {
-        setTanggalAwal({ val: '' })
-        setTanggalAkhir({ val: '' })
-        setValJenisKegiatan({ value: '', label: '' })
-        setValJenisPenertiban({ value: '', label: '' })
-        setValJenisPerdaPerkada({ value: '', label: '' })
-        setUriFind((prevState) => ({ ...prevState, strparam: '' }))
     }
 
     const dataPerdaPerkada = (page: number) => {
@@ -241,98 +167,6 @@ export function LaporanPPKMRumahMakan() {
                 Array.from(data).forEach((item: any, index: any) => {
                     item.serial = index + 1
                 })
-                // const arr: PPKMInterface[] = [
-                //     {
-                //         no: 1,
-                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA PUSAT',
-                //         jumlah_minol: 35,
-                //         wine: 5,
-                //         bir: 10,
-                //         sake: 0,
-                //         gin: 20,
-                //         tequilla: 20,
-                //         brandy: 20,
-                //         wiski: 20,
-                //         vodka: 20,
-                //         rum: 20,
-                //         soju: 20,
-                //         anggur: 20,
-                //         absinth: 20,
-                //         lainnya: 20,
-                //     },
-                //     {
-                //         no: 2,
-                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA UTARA',
-                //         jumlah_minol: 35,
-                //         wine: 5,
-                //         bir: 10,
-                //         sake: 0,
-                //         gin: 20,
-                //         tequilla: 20,
-                //         brandy: 20,
-                //         wiski: 20,
-                //         vodka: 20,
-                //         rum: 20,
-                //         soju: 20,
-                //         anggur: 20,
-                //         absinth: 20,
-                //         lainnya: 20,
-                //     },
-                //     {
-                //         no: 3,
-                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA BARAT',
-                //         jumlah_minol: 35,
-                //         wine: 5,
-                //         bir: 10,
-                //         sake: 0,
-                //         gin: 20,
-                //         tequilla: 20,
-                //         brandy: 20,
-                //         wiski: 20,
-                //         vodka: 20,
-                //         rum: 20,
-                //         soju: 20,
-                //         anggur: 20,
-                //         absinth: 20,
-                //         lainnya: 20,
-                //     },
-                //     {
-                //         no: 4,
-                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA SELATAN',
-                //         jumlah_minol: 35,
-                //         wine: 5,
-                //         bir: 10,
-                //         sake: 0,
-                //         gin: 20,
-                //         tequilla: 20,
-                //         brandy: 20,
-                //         wiski: 20,
-                //         vodka: 20,
-                //         rum: 20,
-                //         soju: 20,
-                //         anggur: 20,
-                //         absinth: 20,
-                //         lainnya: 20,
-                //     },
-                //     {
-                //         no: 5,
-                //         pelaksana_kegiatan: 'KOTA ADMINISTRASI JAKARTA TIMUR',
-                //         jumlah_minol: 35,
-                //         wine: 5,
-                //         bir: 10,
-                //         sake: 0,
-                //         gin: 20,
-                //         tequilla: 20,
-                //         brandy: 20,
-                //         wiski: 20,
-                //         vodka: 20,
-                //         rum: 20,
-                //         soju: 20,
-                //         anggur: 20,
-                //         absinth: 20,
-                //         lainnya: 20,
-                //     },
-                // ]
                 setData(data)
                 setTotalRows(5)
                 setLoading(false)
@@ -343,11 +177,6 @@ export function LaporanPPKMRumahMakan() {
     useEffect(() => {
         dataPerdaPerkada(0)
     }, [qParamFind, perPage])
-
-    const handlePageChange = (page: number) => {
-        dataPerdaPerkada(page - 1)
-        console.log('ini page', page)
-    }
 
     const [kota, setKota] = useState([])
     const [qParamFindKota, setUriFindKota] = useState({ strParamKota: '' })
@@ -371,33 +200,54 @@ export function LaporanPPKMRumahMakan() {
         kotaList()
     }, [qParamFindKota])
 
-    const handlePerRowsChange = async (newPerPage: number, page: number) => {
-        setLoading(true)
-        axios
-            .get(
-                `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
-            )
-            .then((res) => {
-                const data = res.data.data.map((d: any) => ({
-                    id: d.id,
-                    no: d.id,
-                    total_item: d.total_item,
-                    pelaksana: d.created_by,
-                    tanggal_kegiatan: d.kegiatan__tanggal,
-                    waktu_mulai: d.kegiatan__jam_start,
-                    waktu_selesai: d.kegiatan__jam_end,
-                    jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-                    uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-                    wilayah: d.created_by,
-                    lokasi: d.kegiatan__lokasi,
-                }))
-                Array.from(data).forEach((item: any, index: any) => {
-                    item.serial = index + 1
-                })
-                setData(data)
-                setPerPage(newPerPage)
-                setLoading(false)
+    const [filterData, setFilterData] = useState('')
+    const handleFilter = (e: ChangeEvent<HTMLInputElement>) => {
+        setFilterData(e.target.value)
+    }
+
+    const filteredData = kota.filter((item: any) => {
+        return item.pelaksana_kegiatan.toLowerCase().includes(filterData.toLowerCase())
+    })
+
+    const handleFilterReset = () => {
+        setFilterData('')
+    }
+
+    const viewDetail = (row: string) => {
+        setDV(!detailView)
+
+        if (row) {
+            const filterDetail = totalKegiatan.filter((item: any) => item.kegiatan__kota_id === row)
+
+            Array.from(filterDetail).forEach((item: any, index: any) => {
+                item.serial = index + 1
             })
+            setTotalDetail(filterDetail)
+        }
+    }
+
+    const handleChangeInputTanggalAwal = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTanggalAwal(event.target.value);
+    };
+
+    const handleChangeInputTanggalAkhir = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTanggalAkhir(event.target.value);
+    };
+
+    const awal = new Date(tanggalAwal)
+    const akhir = new Date(tanggalAkhir)
+
+    const handleFilterTanggal = async () => {
+        const filteredTanggal = totalDetail.filter((item: any) => {
+            const itemTanggal = new Date(item.kegiatan__tanggal);
+            return itemTanggal >= awal && itemTanggal <= akhir;
+        });
+        setTotalDetail(filteredTanggal)
+    }
+
+    const handleFilterResetTanggal = () => {
+        setTanggalAwal('');
+        setTanggalAkhir('');
     }
 
     const LoadingAnimation = (props: any) => {
@@ -412,24 +262,6 @@ export function LaporanPPKMRumahMakan() {
                 </div>
             </>
         )
-    }
-
-    const handleHakAkses = async () => {
-        const response = await axios.get(`${MANAJEMEN_PENGGUNA_URL}/hak-akses/find`)
-        setHakAkses(response.data.data)
-    }
-
-    const handleWilayahBidang = async () => {
-        const response = await axios.get(`${MASTER_URL}/bidang-wilayah/find`)
-        setWilayahBidang(response.data.data)
-    }
-
-    interface SelectOption {
-        readonly value: string
-        readonly label: string
-        readonly color: string
-        readonly isFixed?: boolean
-        readonly isDisabled?: boolean
     }
 
     const customStyles = {
@@ -477,340 +309,143 @@ export function LaporanPPKMRumahMakan() {
         return [data, setData] as const
     }
 
-    // GET KOTA
-    const [inputValKota, setDataKota] = useState<any>({})
-    const filterKota = async (inputValue: string) => {
-        const response = await axios.get(MASTERDATA_URL + "/kota");
-        let json = await response.data.data
-
-        if (inputValue !== "") {
-            const mappingData: any[] = await json.filter((i: any) => {
-                const valueLabel: string = i.nama.toLowerCase();
-                if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
-            })
-            return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
-
-        }
-        return json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }));
-    };
-    const loadOptionsKota = (
-        inputValue: string,
-        callback: (options: SelectOptionAutoCom[]) => void
-    ) => {
-        setTimeout(async () => {
-            callback(await filterKota(inputValue))
-        }, 1000)
-    }
-    const handleInputKota = async (newValue: any) => {
-        const filter = {
-            kode_kota: { eq: newValue.kode }
-        }
-        const query = buildQuery({ filter })
-        const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
-        let json = await response.data.data
-        setKec(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
-        setDataKota({ ...newValue })
-    }
-
-    // GET KECAMATAN
-    const [inputValKec, setDataKec] = useState<any>({})
-    const [inputKec, setKec] = useState<SelectOptionAutoCom[]>([])
-
-    const filterKec = async (inputValue: string) => {
-        const filter = {
-            kode_kota: { eq: inputValKota.kode }
-        }
-        const query = buildQuery({ filter })
-        const response = await axios.get(MASTERDATA_URL + '/kecamatan' + query)
-        let json = await response.data.data
-
-        if (inputValue !== "") {
-            const mappingData: any[] = await json.filter((i: any) => {
-                const valueLabel: string = i.nama.toLowerCase()
-                if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i
-            })
-            return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
-        }
-        return inputKec
-    }
-
-    const loadOptionsKec = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
-        setTimeout(async () => {
-            callback(await filterKec(inputValue))
-        }, 1000)
-    }
-
-    const handleInputKec = async (newValue: any) => {
-        const filter = {
-            kode_kecamatan: { eq: newValue.kode }
-        }
-        const query = buildQuery({ filter })
-        const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
-        let json = await response.data.data
-        setKel(json.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode })))
-        setDataKec((prevstate: any) => ({ ...prevstate, ...newValue }))
-    }
-
-    // GET KELURAHAN
-    const [inputValKel, setDataKel] = useState<any>({})
-    const [inputKel, setKel] = useState<SelectOptionAutoCom[]>([])
-
-    const filterKel = async (inputValue: string) => {
-        const filter = {
-            kode_kecamatan: { eq: inputValKec.kode }
-        }
-        const query = buildQuery({ filter })
-        const response = await axios.get(MASTERDATA_URL + '/kelurahan' + query)
-        let json = await response.data.data
-        console.log('Json', json)
-
-        if (inputValue !== "") {
-            const mappingData: any[] = await json.filter((i: any) => {
-                const valueLabel: string = i.nama.toLowerCase()
-                if (valueLabel.indexOf(inputValue.toLowerCase()) >= 0) return i;
-            })
-            console.log('Map', mappingData)
-            return mappingData.map((i: any) => ({ label: i.nama, value: i.id, kode: i.kode }))
-        }
-        return inputKel
-    }
-    const loadOptionsKel = (inputValue: string, callback: (options: SelectOptionAutoCom[]) => void) => {
-        setTimeout(async () => {
-            callback(await filterKel(inputValue))
-        }, 1000)
-    }
-    const handleInputKel = (newValue: any) => {
-        setDataKel((prevstate: any) => ({ ...prevstate, ...newValue }))
-    }
-
     return (
         <>
             <LaporanPPKMHeader />
             <div className='card'>
                 {/* begin::Body */}
-                <div className='card-header border-1 pt-6'>
-                    <div className='accordion accordion-icon-toggle' id='kt_accordion_2'>
-                        <div className='mb-5'>
-                            <div
-                                className='accordion-header py-3 d-flex'
-                                data-bs-toggle='collapse'
-                                data-bs-target='#kt_accordion_2_item_1'
-                            >
-                                <span className='accordion-icon'>
-                                    <span className='svg-icon svg-icon-4'>
-                                        <svg
-                                            width='24'
-                                            height='24'
-                                            viewBox='0 0 24 24'
-                                            fill='none'
-                                            xmlns='http://www.w3.org/2000/svg'
-                                        >
-                                            <rect
-                                                opacity='0.5'
-                                                x='18'
-                                                y='13'
-                                                width='13'
-                                                height='2'
-                                                rx='1'
-                                                transform='rotate(-180 18 13)'
-                                                fill='currentColor'
-                                            />
-                                            <path
-                                                d='M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z'
-                                                fill='currentColor'
-                                            />
-                                        </svg>
-                                    </span>
-                                </span>
-                                <h3 className='fs-4 fw-semibold mb-0 ms-4'>Pilihan Filter</h3>
+                {!detailView ? (
+                    <>
+                        <div className='row g-8 mt-2 ms-10 me-2'>
+                            <label>
+                                <h3>Pelaksana Kegiatan</h3>
+                            </label>
+                            <div className='col-xxl-10 col-lg-10 col-md-8 col-sm-6'>
+                                <input
+                                    id='search'
+                                    type='text'
+                                    className='form-control form-control form-control-solid'
+                                    placeholder='Masukkan Pelaksana Kegiatan'
+                                    aria-label='Search Input'
+                                    value={filterData}
+                                    onChange={handleFilter}
+                                />
                             </div>
-                            <div
-                                id='kt_accordion_2_item_1'
-                                className='fs-6 collapse show ps-10'
-                                data-bs-parent='#kt_accordion_2'
-                            >
-                                <div className='row w-100 mt-10 mb-10'>
-                                    <div className='col-md-6 col-lg-6 col-sm-12'>
-                                        <div className='mb-10'>
-                                            <div className='row'>
-                                                <div className='col-4 pt-2'>
-                                                    <label className='form-label align-middle'>
-                                                        Pelaksana Kegiatan
-                                                    </label>
-                                                </div>
-                                                <div className='col-8'>
-                                                    <AsyncSelect
-                                                        name='filter_jenis_kegiatan_id_selection'
-                                                        defaultOptions
-                                                        value={valJenisKegiatan}
-                                                        // loadOptions={loadOptionsJenisKegiatan}
-                                                        // onChange={handleChangeInputJenisKegiatan}
-                                                        styles={
-                                                            calculatedMode === 'dark'
-                                                                ? reactSelectDarkThem
-                                                                : reactSelectLightThem
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='col-md-6 col-lg-6 col-sm-12'>
-                                        <div className='mb-10'>
-                                            <div className='row'>
-                                                <div className='col-4 pt-2'>
-                                                    <label className='form-label align-middle'>
-                                                        Kota
-                                                    </label>
-                                                </div>
-                                                <div className='col-8'>
-                                                    <AsyncSelect
-                                                        cacheOptions
-                                                        loadOptions={loadOptionsKota}
-                                                        defaultOptions
-                                                        onChange={handleInputKota}
-                                                        placeholder={'Pilih Kota'}
-                                                        styles={
-                                                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='col-md-6 col-lg-6 col-sm-12'>
-                                        <div className='mb-10'>
-                                            <div className='row'>
-                                                <div className='col-4 pt-2'>
-                                                    <label className='form-label align-middle'>
-                                                        Kecamatan
-                                                    </label>
-                                                </div>
-                                                <div className='col-8'>
-                                                    <AsyncSelect
-                                                        cacheOptions
-                                                        loadOptions={loadOptionsKec}
-                                                        defaultOptions={inputKec}
-                                                        onChange={handleInputKec}
-                                                        placeholder={'Pilih Kecamatan'}
-                                                        styles={
-                                                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='col-md-6 col-lg-6 col-sm-12'>
-                                        <div className='mb-10'>
-                                            <div className='row'>
-                                                <div className='col-4 pt-2'>
-                                                    <label className='form-label align-middle'>
-                                                        Kelurahan
-                                                    </label>
-                                                </div>
-                                                <div className='col-8'>
-                                                    <AsyncSelect
-                                                        cacheOptions
-                                                        loadOptions={loadOptionsKel}
-                                                        defaultOptions={inputKel}
-                                                        onChange={handleInputKel}
-                                                        placeholder={'Pilih Kelurahan'}
-                                                        styles={
-                                                            calculatedMode === 'dark' ? reactSelectDarkThem : reactSelectLightThem
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='col-md-6 col-lg-6 col-sm-12'>
-                                        <div className='mb-10'>
-                                            <div className='row'>
-                                                <div className='col-4 pt-2'>
-                                                    <label className='form-label'>Tanggal Awal</label>
-                                                </div>
-                                                <div className='col-8'>
-                                                    <input
-                                                        type='date'
-                                                        name='tanggal_kunjungan'
-                                                        className='form-control'
-                                                        value={tanggalAwal.val}
-                                                        onChange={handleChangeInputTanggalAwal}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='col-md-6 col-lg-6 col-sm-12'>
-                                        <div className='mb-10'>
-                                            <div className='row'>
-                                                <div className='col-4 pt-2'>
-                                                    <label className='form-label align-middle'>Tanggal Akhir</label>
-                                                </div>
-                                                <div className='col-8'>
-                                                    <input
-                                                        name='tanggal_kunjungan'
-                                                        type='date'
-                                                        className='form-control'
-                                                        value={tanggalAkhir.val}
-                                                        onChange={handleChangeInputTanggalAkhir}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* END :: Filter Form */}
 
-                                    {/* Search and Reset */}
-                                    <div className='row g-8 mt-2'>
-                                        <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
-                                            <Link to='#'>
-                                                <Button
-                                                    className='btn btn-light-primary me-2'
-                                                    onClick={handleFilter}
-                                                >
-                                                    <KTSVG
-                                                        path='/media/icons/duotune/general/gen021.svg'
-                                                        className='svg-icon-2'
-                                                    />
-                                                    Cari
-                                                </Button>
-                                            </Link>
-                                            <Link to='#'>
-                                                <Button
-                                                    className='btn btn-light-primary me-2'
-                                                    onClick={handleFilterReset}
-                                                >
-                                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
-                                                    Reset
-                                                </Button>
-                                            </Link>
+                            <div className='justify-content-end col-xxl-2 col-lg-2 col-md-3 col-sm-6'>
+                                <Button className='btn btn-light-primary me-2' onClick={handleFilterReset}>
+                                    <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                    Reset
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className='row g-8 mt-2 ms-10 me-2 mb-6'>
+                            <div className='d-flex justify-content-end'>
+                                <button
+                                    type='button'
+                                    className='btn btn-light-primary me-2'
+                                    data-kt-menu-placement='bottom-end'
+                                    data-kt-menu-trigger='click'
+                                    onClick={() => unduhCSV(data)}
+                                >
+                                    <>
+                                        <KTSVG
+                                            path='/media/icons/duotune/arrows/arr078.svg'
+                                            className='svg-icon-2'
+                                        />
+                                        Unduh CSV
+                                    </>
+                                </button>
+                            </div>
+                            {/* END :: Button */}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className='row mt-10 mb-10 px-10'>
+                            <div className='col-md-6 col-lg-6 col-sm-12'>
+                                <div className='mb-10'>
+                                    <div className='row'>
+                                        <div className='col-4 pt-2'>
+                                            <label className='form-label'>Tanggal Awal</label>
                                         </div>
-                                        <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                                            <button
-                                                type='button'
-                                                className='btn btn-light-primary me-2'
-                                                data-kt-menu-trigger='click'
-                                                data-kt-menu-placement='bottom-end'
-                                                onClick={() => unduhCSV(data)}>
-                                                <>
-                                                    <KTSVG path='/media/icons/duotune/arrows/arr078.svg' className='svg-icon-2' />
-                                                    Unduh CSV
-                                                </>
-                                            </button>
+                                        <div className='col-8'>
+                                            <input
+                                                type='date'
+                                                name='tanggal_kunjungan'
+                                                className='form-control'
+                                                value={tanggalAwal}
+                                                onChange={handleChangeInputTanggalAwal}
+                                            />
                                         </div>
-                                        {/* END :: Button */}
                                     </div>
                                 </div>
                             </div>
+                            <div className='col-md-6 col-lg-6 col-sm-12'>
+                                <div className='mb-10'>
+                                    <div className='row'>
+                                        <div className='col-4 pt-2'>
+                                            <label className='form-label align-middle'>
+                                                Tanggal Akhir
+                                            </label>
+                                        </div>
+                                        <div className='col-8'>
+                                            <input
+                                                name='tanggal_kunjungan'
+                                                type='date'
+                                                className='form-control'
+                                                value={tanggalAkhir}
+                                                onChange={handleChangeInputTanggalAkhir}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='row g-8 mt-2'>
+                                <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
+                                    <Button
+                                        className='btn btn-light-primary me-2'
+                                        onClick={handleFilterTanggal}
+                                    >
+                                        <KTSVG
+                                            path='/media/icons/duotune/general/gen021.svg'
+                                            className='svg-icon-2'
+                                        />
+                                        Cari
+                                    </Button>
+                                    <Button
+                                        className='btn btn-light-primary me-2'
+                                        onClick={handleFilterResetTanggal}
+                                    >
+                                        <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
+                                        Reset
+                                    </Button>
+                                </div>
+                                <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
+                                    <button
+                                        type='button'
+                                        className='btn btn-light-primary me-2'
+                                        data-kt-menu-placement='bottom-end'
+                                        data-kt-menu-trigger='click'
+                                        onClick={() => unduhCSV(totalDetail)}
+                                    >
+                                        <>
+                                            <KTSVG
+                                                path='/media/icons/duotune/arrows/arr078.svg'
+                                                className='svg-icon-2'
+                                            />
+                                            Unduh CSV
+                                        </>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </>
+                )}
                 <div className='row'>
                     <div className='col fs-4 mb-2 fw-semibold text-center'>
-                        LAPORAN HASIL PENGAWASAN DAN PENINDAKAN WARUNG MAKAN, RUMAH MAKAN, KAFE ATAU 
-                        RESTORAN (PPKM)
+                        LAPORAN HASIL PENGAWASAN DAN PENINDAKAN AREA PUBLIK DAN TEMPAT LAINNYA
                     </div>
                 </div>
                 <div className='row'>
@@ -824,18 +459,44 @@ export function LaporanPPKMRumahMakan() {
                     </div>
                 </div>
                 <div className='card-body py-4'>
-                    <DtPPKMRumahMakan
-                        data={data}
-                        kota={kota}
-                        totalRows={totalRows}
-                        handlePerRowsChange={handlePerRowsChange}
-                        handlePageChange={handlePageChange}
-                        loading={loading}
-                        jenisKegiatanList={jenisKegiatanList}
-                        hakAkses={hakAkses}
-                        wilayahBidang={wilayahBidang}
-                        theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
-                    />
+                    {!detailView ? (
+                        <DtPPKMRumahMakan
+                            aksi={viewDetail}
+                            kota={filteredData}
+                            totalKegiatan={totalKegiatan}
+                            setTotalKegiatan={setTotalKegiatan}
+                            progressComponent={<LoadingAnimation />}
+                            loading={loading}
+                            theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                            noDataComponent={
+                                <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                                    <div className='d-flex flex-column'>
+                                        <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                                    </div>
+                                </div>
+                            }
+                        />
+                    ) : (
+                        <>
+                            <DtDetail
+                                data={totalDetail}
+                                progressComponent={<LoadingAnimation />}
+                                loading={loading}
+                                theme={calculatedMode === 'dark' ? 'darkMetro' : 'light'}
+                                noDataComponent={
+                                    <div className='alert alert-primary d-flex align-items-center p-5 mt-10 mb-10'>
+                                        <div className='d-flex flex-column'>
+                                            <h5 className='mb-1 text-center'>Data tidak ditemukan..!</h5>
+                                        </div>
+                                    </div>
+                                }
+                            />
+                            <Button className='btn btn-secondary me-2' onClick={() => viewDetail('')}>
+                                <i className='fa-solid fa-arrow-left'></i>
+                                Kembali
+                            </Button>
+                        </>
+                    )}
                 </div>
             </div>
         </>
