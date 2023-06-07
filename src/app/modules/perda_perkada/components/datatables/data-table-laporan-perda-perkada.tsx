@@ -21,27 +21,21 @@ const LoadingAnimation = (props: any) => {
 }
 
 export const DtPerdaPerkada: FC<any> = ({
-  data,
-  totalRows,
+  totalKegiatan,
+  setTotalKegiatan,
   penertiban,
-  handlePageChange,
-  handlePerRowsChange,
-  wilayahBidang,
-  hakAkses,
   loading,
   theme,
+  aksi,
 }) => {
 
-  const [totalKegiatan, setTotalKegiatan] = useState([])
-  const [totalDendaPengadilan, setTotalDendaPengadilan] = useState([])
-  const [totalDendaNonPengadilan, setTotalDendaNonPengadilan] = useState([])
   useEffect(() => {
     const fetchDTPerdaPerkada = async () => {
       const { data } = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id`
       )
       const res = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20kegiatan__kota_id%2C%20tindak_lanjut__administrasi__jenis_penertiban%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan%2C%20kegiatan__tanggal%2C%20kegiatan__jam_start%2C%20kegiatan__jam_end%2C%20kegiatan__uraian_kegiatan`
       )
       setTotalKegiatan(res.data.data)
     }
@@ -78,8 +72,7 @@ export const DtPerdaPerkada: FC<any> = ({
       const jumlah = totalKegiatan.filter(
         (item: any) => item.tindak_lanjut__administrasi__jenis_penertiban === row && item[jenis]
       )
-      totalDenda = jumlah.reduce((acc, item) => acc + item[jenis], 0)
-      console.log(row, jenis, jumlah)
+      totalDenda = jumlah.reduce((acc: any, item: any) => acc + item[jenis], 0)
     }
     return <>{totalDenda}</>
   }
@@ -100,6 +93,15 @@ export const DtPerdaPerkada: FC<any> = ({
       wrap: true,
       width: '300px',
       selector: (row: any) => row.jenis_penertiban,
+      cell: (row: any) => {
+        return (
+          <>
+            <a
+              className='table table-hover mb-0'
+              onClick={() => aksi(row.jenis_penertiban)}>{row.jenis_penertiban}</a>
+          </>
+        )
+      },
     },
     {
       name: 'Jumlah Pelanggaran',
@@ -156,43 +158,36 @@ export const DtPerdaPerkada: FC<any> = ({
     },
   ]
 
-  // console.log('penertiban', penertiban)
   return (
     <div>
       <DataTable
+        pagination
+        theme={theme}
         columns={columns}
         data={penertiban}
         progressPending={loading}
-        pagination
-        paginationServer
         progressComponent={<LoadingAnimation />}
-        paginationTotalRows={totalRows}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
-        theme={theme}
       />
     </div>
   )
 }
 
 export const DtPerdaPerkadaPelaksana: FC<any> = ({
-  data,
   kota,
-  totalRows,
-  handlePerRowsChange,
-  handlePageChange,
+  aksi,
+  totalKegiatan,
+  setTotalKegiatan,
   loading,
   theme,
 }) => {
 
-  const [totalKegiatan, setTotalKegiatan] = useState([])
   useEffect(() => {
     const fetchDTPerdaPerkadaPelaksana = async () => {
       const { data } = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id%2C%20kegiatan__kota_id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=1&%24select=id`
       )
       const res = await axios.get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20kegiatan__kota_id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan`
+        `${PELAPORAN_URL}/kegiatan-umum/?%24top=${data.total_items}&%24select=id%2C%20kegiatan__kota_id%2C%20tindak_lanjut__administrasi__penyelesaian_id%2C%20tindak_lanjut__administrasi__jenis_penertiban%2C%20tindak_lanjut__denda__pengadilan%2C%20tindak_lanjut__denda__non_pengadilan%2C%20kegiatan__tanggal%2C%20kegiatan__jam_start%2C%20kegiatan__jam_end%2C%20kegiatan__uraian_kegiatan`
       )
       setTotalKegiatan(res.data.data)
     }
@@ -201,7 +196,6 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
 
   const GetPerJenis = ({ row, jenis }: any) => {
     let countJumlah = 0
-    console.log('Total', totalKegiatan)
     if (row && !jenis) {
       countJumlah = totalKegiatan.filter((item: any) => item.kegiatan__kota_id === row).length
     }
@@ -230,8 +224,7 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
       const jumlah = totalKegiatan.filter(
         (item: any) => item.kegiatan__kota_id === row && item[jenis]
       )
-      totalDenda = jumlah.reduce((acc, item) => acc + item[jenis], 0)
-      console.log(row, jenis, jumlah)
+      totalDenda = jumlah.reduce((acc: any, item: any) => acc + item[jenis], 0)
     }
     return <>{totalDenda}</>
   }
@@ -253,6 +246,15 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
       width: '300px',
       center: true,
       selector: (row: any) => row.pelaksana_kegiatan,
+      cell: (row: any) => {
+        return (
+          <>
+            <a
+              className='table table-hover mb-0'
+              onClick={() => aksi(row.no)}>{row.pelaksana_kegiatan}</a>
+          </>
+        )
+      },
     },
     {
       name: 'Jumlah Pelanggaran',
@@ -312,15 +314,115 @@ export const DtPerdaPerkadaPelaksana: FC<any> = ({
   return (
     <div>
       <DataTable
-        columns={columns}
-        data={kota}
-        progressPending={loading}
         pagination
-        paginationServer
+        data={kota}
+        theme={theme}
+        columns={columns}
+        progressPending={loading}
         progressComponent={<LoadingAnimation />}
-        paginationTotalRows={totalRows}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
+      />
+    </div>
+  )
+}
+
+
+export const DtDetail: FC<any> = ({
+  data,
+  loading,
+  theme,
+}) => {
+
+  const GetKota = ({ row }: { row: number }) => {
+    const [valData, setValData] = useState('')
+    useEffect(() => {
+      async function fetchDT(id: number) {
+        const { data } = await axios.get(`${MASTERDATA_URL}/kota/?%24filter=id%20eq%20${id}`)
+        const result: string = data.data[0].nama
+        setValData(result)
+      }
+      fetchDT(row)
+    }, [valData, row])
+
+    return <>{valData}</>
+  }
+
+  const columns = [
+    {
+      name: 'No',
+      width: '80px',
+      selector: (row: any) => row.serial,
+      sortable: true,
+      cell: (row: any) => {
+        return <div className='mb-2 mt-2'>{row.serial}</div>
+      },
+    },
+    {
+      name: 'Pelaksana Kegiatan',
+      wrap: true,
+      center: true,
+      width: '300px',
+      selector: (row: any) => row.kegiatan__kota_id,
+      cell: (record: any) => <GetKota row={parseInt(record.kegiatan__kota_id)} />,
+    },
+    {
+      name: 'Jenis Penertiban',
+      wrap: true,
+      center: true,
+      width: '300px',
+      selector: (row: any) => row.tindak_lanjut__administrasi__jenis_penertiban,
+    },
+    {
+      name: 'Denda Pengadilan',
+      center: true,
+      width: '200px',
+      selector: (row: any) => row.tindak_lanjut__denda__pengadilan,
+    },
+    {
+      name: 'Denda Non Pengadilan',
+      center: true,
+      width: '200px',
+      selector: (row: any) => row.tindak_lanjut__denda__non_pengadilan,
+    },
+    {
+      name: 'Tanggal Kegiatan',
+      center: true,
+      width: '140px',
+      selector: (row: any) => row.kegiatan__tanggal,
+    },
+    {
+      name: 'Waktu Mulai',
+      center: true,
+      width: '140px',
+      selector: (row: any) => row.kegiatan__jam_start,
+    },
+    {
+      name: 'Waktu Selesai',
+      center: true,
+      width: '140px',
+      selector: (row: any) => row.kegiatan__jam_end,
+    },
+    {
+      name: 'Uraian Kegiatan',
+      width: '300px',
+      wrap: true,
+      selector: (row: any) => row.kegiatan__uraian_kegiatan,
+    },
+    {
+      name: 'Wilayah',
+      width: '200px',
+      wrap: true,
+      selector: (row: any) => row.kegiatan__wilayah,
+    },
+  ]
+
+  return (
+    <div>
+      <DataTable
+        pagination
+        data={data}
+        columns={columns}
+        progressComponent={<LoadingAnimation />}
+        progressPending={loading}
         theme={theme}
       />
     </div>
