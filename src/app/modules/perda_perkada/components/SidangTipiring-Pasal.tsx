@@ -3,7 +3,7 @@ import { unparse } from 'papaparse'
 import { useNavigate } from 'react-router-dom'
 import { ChangeEvent, useState, useEffect } from 'react'
 import { ThemeModeComponent } from '../../../../_metronic/assets/ts/layout'
-import { DtSidangTipiringPerda, DtDetail } from './datatables/data-table-laporan-sidang-tipiring'
+import { DtSidangTipiringPasal, DtDetail } from './datatables/data-table-laporan-sidang-tipiring'
 import { useThemeMode } from '../../../../_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { KTSVG } from '../../../../_metronic/helpers'
 import FileDownload from 'js-file-download'
@@ -130,8 +130,8 @@ export function SidangTipiringPasal() {
   const [totalKegiatan, setTotalKegiatan] = useState([])
   const [totalDetail, setTotalDetail] = useState([])
 
-  const [tanggalAwal, setTanggalAwal] = useState({ val: '' })
-  const [tanggalAkhir, setTanggalAkhir] = useState({ val: '' })
+  const [tanggalAwal, setTanggalAwal] = useState('')
+  const [tanggalAkhir, setTanggalAkhir] = useState('')
 
   const [data, setData] = useState<SidangTipiringInterface[]>([])
   const [loading, setLoading] = useState(false)
@@ -148,20 +148,6 @@ export function SidangTipiringPasal() {
     document.body.appendChild(link)
     link.click()
     link.remove()
-  }
-
-  const handleChangeInputTanggalAwal = (event: {
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setTanggalAwal({ val: event.target.value })
-  }
-
-  const handleChangeInputTanggalAkhir = (event: {
-    preventDefault: () => void
-    target: { value: any; name: any }
-  }) => {
-    setTanggalAkhir({ val: event.target.value })
   }
 
   const dataTipiring = (page: number) => {
@@ -260,37 +246,28 @@ export function SidangTipiringPasal() {
     }
   }
 
-  const handlePageChange = (page: number) => {
-    dataTipiring(page - 1)
+  const handleChangeInputTanggalAwal = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTanggalAwal(event.target.value);
+  };
+
+  const handleChangeInputTanggalAkhir = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTanggalAkhir(event.target.value);
+  };
+
+  const awal = new Date(tanggalAwal)
+  const akhir = new Date(tanggalAkhir)
+
+  const handleFilterTanggal = async () => {
+    const filteredTanggal = totalDetail.filter((item: any) => {
+      const itemTanggal = new Date(item.kegiatan__tanggal);
+      return itemTanggal >= awal && itemTanggal <= akhir;
+    });
+    setTotalDetail(filteredTanggal)
   }
 
-  const handlePerRowsChange = async (newPerPage: number, page: number) => {
-    setLoading(true)
-    axios
-      .get(
-        `${PELAPORAN_URL}/kegiatan-umum/?%24filter=${qParamFind.strparam}&%24top=${newPerPage}&%24page=${page}`
-      )
-      .then((res) => {
-        const data = res.data.data.map((d: any) => ({
-          id: d.id,
-          no: d.id,
-          total_item: d.total_item,
-          pelaksana: d.created_by,
-          tanggal_kegiatan: d.kegiatan__tanggal,
-          waktu_mulai: d.kegiatan__jam_start,
-          waktu_selesai: d.kegiatan__jam_end,
-          jenis_kegiatan: d.kegiatan__jenis_kegiatan_id,
-          uraian_kegiatan: d.kegiatan__uraian_kegiatan,
-          wilayah: d.created_by,
-          lokasi: d.kegiatan__lokasi,
-        }))
-        Array.from(data).forEach((item: any, index: any) => {
-          item.serial = index + 1
-        })
-        setData(data)
-        setPerPage(newPerPage)
-        setLoading(false)
-      })
+  const handleFilterResetTanggal = () => {
+    setTanggalAwal('');
+    setTanggalAkhir('');
   }
 
   const LoadingAnimation = (props: any) => {
@@ -453,9 +430,8 @@ export function SidangTipiringPasal() {
                       type='date'
                       name='tanggal_kunjungan'
                       className='form-control'
-                      value={tanggalAwal.val}
+                      value={tanggalAwal}
                       onChange={handleChangeInputTanggalAwal}
-                      placeholder={'Pilih Tanggal'}
                     />
                   </div>
                 </div>
@@ -474,9 +450,8 @@ export function SidangTipiringPasal() {
                       name='tanggal_kunjungan'
                       type='date'
                       className='form-control'
-                      value={tanggalAkhir.val}
+                      value={tanggalAkhir}
                       onChange={handleChangeInputTanggalAkhir}
-                      placeholder={'Pilih Tanggal'}
                     />
                   </div>
                 </div>
@@ -486,6 +461,7 @@ export function SidangTipiringPasal() {
               <div className='d-flex justify-content-start col-md-6 col-lg-6 col-sm-6'>
                 <Button
                   className='btn btn-light-primary me-2'
+                  onClick={handleFilterTanggal}
                 >
                   <KTSVG
                     path='/media/icons/duotune/general/gen021.svg'
@@ -495,78 +471,28 @@ export function SidangTipiringPasal() {
                 </Button>
                 <Button
                   className='btn btn-light-primary me-2'
+                  onClick={handleFilterResetTanggal}
                 >
                   <i className='fa-solid fa-arrows-rotate svg-icon-2'></i>
                   Reset
                 </Button>
               </div>
               <div className='d-flex justify-content-end col-md-6 col-lg-6 col-sm-12'>
-                {/* begin::Filter Button */}
-                {/* <button
-                                          type='button'
-                                          className='btn btn-light-primary'
-                                          data-kt-menu-trigger='click'
-                                          data-kt-menu-placement='bottom-end'
-                                        > */}
-                {/* {btnLoadingUnduh ? (
-                                    <>
-                                      <span className='spinner-border spinner-border-md align-middle me-3'></span>{' '}
-                                      Memproses Unduh...
-                                    </>
-                                  ) : ( */}
-                {/* <>
-                                            <KTSVG
-                                              path='/media/icons/duotune/arrows/arr078.svg'
-                                              className='svg-icon-2'
-                                            />
-                                            Unduh
-                                          </> */}
-                {/* )} */}
-                {/* </button> */}
-                {/* end::Filter Button */}
-                {/* begin::SubMenu */}
-                {/* <div
-                                          className='menu menu-sub menu-sub-dropdown w-100px w-md-150px'
-                                          data-kt-menu='true'
-                                        > */}
-                {/* begin::Header */}
-                {/* <div className='px-7 py-5'>
-                                            <div className='fs-5 text-dark fw-bolder'>
-                                              Pilihan Unduh
-                                            </div>
-                                          </div> */}
-                {/* end::Header */}
-
-                {/* begin::Separator */}
-                {/* <div className='separator border-gray-200'></div> */}
-                {/* end::Separator */}
-
-                {/* begin::Content */}
-                {/* <div
-                                            className='px-7 py-5'
-                                            data-kt-user-table-filter='form'
-                                          >
-                                            <button
-                                              //   onClick={handleUnduh}
-                                              className='btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success w-100'
-                                            >
-                                              Excel
-                                            </button>
-                                          </div> */}
-                {/* end::Content */}
-
-                {/* begin::Content */}
-                {/* <div
-                                            className='px-7 py-2'
-                                            data-kt-user-table-filter='form'
-                                          >
-                                            <button className='btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger w-100'>
-                                              PDF
-                                            </button>
-                                          </div> */}
-                {/* end::Content */}
-                {/* </div> */}
-                {/* end::SubMenu */}
+                <button
+                  type='button'
+                  className='btn btn-light-primary me-2'
+                  data-kt-menu-placement='bottom-end'
+                  data-kt-menu-trigger='click'
+                  onClick={() => unduhCSV(totalDetail)}
+                >
+                  <>
+                    <KTSVG
+                      path='/media/icons/duotune/arrows/arr078.svg'
+                      className='svg-icon-2'
+                    />
+                    Unduh CSV
+                  </>
+                </button>
               </div>
             </div>
           </div>
@@ -589,7 +515,7 @@ export function SidangTipiringPasal() {
       </div>
       <div className='card-body py-4'>
         {!detailView ? (
-          <DtSidangTipiringPerda
+          <DtSidangTipiringPasal
             aksi={viewDetail}
             perdaPerkada={filteredData}
             totalKegiatan={totalKegiatan}
